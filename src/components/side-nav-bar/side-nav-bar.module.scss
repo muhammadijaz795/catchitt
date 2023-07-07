@@ -1,2 +1,56 @@
-.root {
+// .root {
+// }
+.cardDiv {
+  display: flex;
+  flex-direction: column;
+  width: 325px;
+  height: 312px;
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+}
+
+.navLink {
+  color: #5448b2;
+  display: flex;
+  width: 293px;
+  padding: 16px 149px 16px 16px;
+  align-items: center;
+  gap: 8px 8px;
+  justify-content: start;
+  align-content: center;
+}
+
+.selected {
+  background-color: #5448b2;
+  color: #ffffff;
+  display: flex;
+  width: 293px;
+  padding: 16px 149px 16px 16px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 6px;
+}
+
+.selectedStroke path {
+  stroke: #ffffff !important;
+}
+.selectedStroke circle {
+  stroke: #ffffff !important;
+}
+svg {
+  // font-size: 25px;
+  width: 24px;
+  height: 24px;
+}
+.linkWord {
+  margin: 0px -24px 0px 0px;
+  padding: 0px;
+  width: 100%;
 }
