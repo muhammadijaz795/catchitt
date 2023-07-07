@@ -10,7 +10,7 @@ import InputField from '../reusables/InputField';
 import IconButton from '@mui/material/IconButton';
 import { useAuthStore } from '../../store/authStore';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import cookies from 'js-cookie';
 
 export interface AuthenticationProps {
