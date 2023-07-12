@@ -40,7 +40,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                             stroke-linejoin="round"
                         />
                     </svg>
-                    <p>Home</p>
+                    <p className={styles.linkWord}>Home</p>
                 </div>
 
                 <div
@@ -88,7 +88,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                             stroke-linejoin="round"
                         />
                     </svg>
-                    <p>Chat</p>
+                    <p className={styles.linkWord}>Chat</p>
                 </div>
 
                 <div
@@ -124,7 +124,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                             stroke-linejoin="round"
                         />
                     </svg>
-                    <p>Discover</p>
+                    <p className={styles.linkWord}>Discover</p>
                 </div>
                 <div
                     className={classNames(
@@ -134,7 +134,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="30"
+                        width="24"
                         height="24"
                         viewBox="0 0 24 24"
                         fill="none"
@@ -145,19 +145,21 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                             clip-rule="evenodd"
                             d="M12 17.8476C17.6392 17.8476 20.2481 17.1242 20.5 14.2205C20.5 11.3188 18.6812 11.5054 18.6812 7.94511C18.6812 5.16414 16.0452 2 12 2C7.95477 2 5.31885 5.16414 5.31885 7.94511C5.31885 11.5054 3.5 11.3188 3.5 14.2205C3.75295 17.1352 6.36177 17.8476 12 17.8476Z"
                             stroke="#5448B2"
-                            stroke-width="2"
+                            stroke-width="1.5"
                             stroke-linecap="round"
                             stroke-linejoin="round"
                         />
                         <path
                             d="M14.3889 20.8572C13.0247 22.3719 10.8967 22.3899 9.51953 20.8572"
                             stroke="#5448B2"
-                            stroke-width="2"
+                            stroke-width="1.5"
                             stroke-linecap="round"
                             stroke-linejoin="round"
                         />
                     </svg>
-                    <p className={styles.linkWord}>Notifications</p>
+                    <p className={classNames(styles.linkWord, styles.notificationsP)}>
+                        Notifications
+                    </p>
                 </div>
                 <div
                     className={classNames(
@@ -192,7 +194,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                             stroke-linejoin="round"
                         />
                     </svg>
-                    <p>Settings</p>
+                    <p className={styles.linkWord}>Settings</p>
                 </div>
             </div>
         </div>

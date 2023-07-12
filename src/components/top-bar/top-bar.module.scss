@@ -42,3 +42,9 @@
   align-self: center;
   width: 85px;
 }
+.logoDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: start;
+}

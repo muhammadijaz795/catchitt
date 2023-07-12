@@ -13,7 +13,7 @@ export interface TopBarProps {
 export const TopBar = ({ className }: TopBarProps) => {
     return (
         <div className={classNames(styles.root, className)}>
-            <div>
+            <div className={styles.logoDiv}>
                 <img className={classNames('Logo', styles.logo)} src={coloredLogo} alt="" />
             </div>
             <div className={styles.searchPlusProfileDiv}>
