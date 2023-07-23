@@ -59,9 +59,13 @@
   line-height: 1;
 }
 .headerTitle {
-  color: #000;
-  padding-left: 0px;
-  padding-bottom: 0px;
+  color: var(--default-body, #222);
+  /* H2/Semibold */
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 21.6px */
 }
 .nameText {
   color: #000;

@@ -1,0 +1,144 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  justify-items: start;
+  gap: 0px 32px;
+  background-color: #fafafa;
+  // width: 676px;
+  // height: 753px;height:100px;height:100px;height:100%;height:100%;min-height:100px;min-height:100px;min-height:100px;min-height:100px;
+}
+.postContainer {
+  background-color: #754d4d;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  gap: 0px;
+}
+.postInteractionContainer {
+  width: 44px;
+  background-color: transparent;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: end;
+  gap: 24px;
+  padding-top: 0px;
+  justify-items: baseline;
+  align-content: end;
+  justify-content: end;
+  align-self: self-end;
+}
+.postCaptionContainer {
+  display: flex;
+  flex-direction: column;
+}
+.postCreator {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  background-color: transparent;
+}
+.postText {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+  padding-bottom: 11px;
+  row-gap: 10px;
+  margin-bottom: 13px;
+  align-items: baseline;
+}
+.postMediaContainer {
+  width: 602px;
+  height: 598px;
+}
+.profilePic-UserNameDiv {
+  display: flex;
+  flex-direction: row;
+  gap: 0px 16px;
+}
+.userNameText {
+  color: #000000;
+  /* Base/Medium */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 19.2px */
+}
+.userDetailsDiv {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+.profilePicImg {
+  width: 43px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.userSubText {
+  /* Small/Regular */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 21px */
+  color: #848484;
+}
+.followBtn {
+  border-radius: 6px;
+  background-color: #5448b2;
+  width: 108px;
+  display: flex;
+  height: 32px;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+  border-color: #5448b2;
+  color: #ffffff;
+  /* Small/Semibold */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 16.8px */
+}
+.captionText {
+  color: #848484;
+  /* Base/Regular */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+}
+.postMusicInfo {
+  display: flex;
+  flex-direction: row;
+  column-gap: 8px;
+}
+.musicIcon {
+  width: 20px;
+  height: 20px;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 32px;
+  height: 100%;
+}
+.interactionText {
+  color: var(--default-body, #222);
+  /* Extra Small/Medium */
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 14.4px */
+  padding-top: 8px;
+  padding-bottom: 0px;
+}
+.interactionDiv {
+}
