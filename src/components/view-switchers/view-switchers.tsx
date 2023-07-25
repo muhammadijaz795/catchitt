@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import styles from './view-switchers.module.scss';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export interface ViewSwitchersProps {
     className?: string;

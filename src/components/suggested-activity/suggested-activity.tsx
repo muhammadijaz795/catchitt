@@ -33,7 +33,7 @@ export const SuggestedActivity = ({
     showSuggestedContent,
     showActivity,
 }: SuggestedActivityProps) => {
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage] = useState('');
     const [accountsData, setAccountsData] = useState<Account[]>([]);
     const [activityData, setActivityData] = useState<Notification[]>([]);
     const API_KEY = process.env.VITE_API_URL;
@@ -41,7 +41,7 @@ export const SuggestedActivity = ({
     const activityEndPoint = '/notification';
     const token = useAuthStore((state) => state.token);
     // const avatar: string = '';
-    let avatarUrl: string = '';
+    // let avatarUrl: string = '';
 
     const handleFetchSuggestedAccounts = async () => {
         try {

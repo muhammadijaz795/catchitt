@@ -55,7 +55,7 @@ export const Authentication = ({ className }: AuthenticationProps) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode) || languages[0];
 
-    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    // const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const API_KEY = process.env.VITE_API_URL;
     const signUpEndPoint = '/auth/sign-up';
     const signInEndPoint = '/auth/sign-in';

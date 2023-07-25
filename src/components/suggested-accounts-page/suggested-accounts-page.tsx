@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './suggested-accounts-page.module.scss';
 import { TopBar } from '../top-bar/top-bar';

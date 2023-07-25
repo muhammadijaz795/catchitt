@@ -44,7 +44,7 @@ const languages: Languages[] = [
 export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode) || languages[0];
-    const [languageSelector, setLanguageSelector] = useState(currentLanguage.name);
+    const [, setLanguageSelector] = useState(currentLanguage.name);
 
     const API_KEY = process.env.VITE_API_URL;
     const forgotPwdEndPoint = '/auth/password/forgot';
@@ -74,7 +74,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { token } = responseData.data; // Extract token value from data object
+                // const { token } = responseData.data; // Extract token value from data object
                 console.log(responseData);
                 setResponseResult(responseData.message);
                 setResponse(true);

@@ -3,12 +3,12 @@ import styles from './set-newPassword..module.scss';
 import authSplashImg from '../../assets/authSplashImg.png';
 import Logo from '../../assets/Logo.png';
 import InputField from '../reusables/InputField';
-import atForgotPwd from '../../assets/atForgotPwd.png';
-import resend from '../../assets/resend.png';
+// import atForgotPwd from '../../assets/atForgotPwd.png';
+// import resend from '../../assets/resend.png';
 import { useState } from 'react';
 import cookies from 'js-cookie';
 import i18next from 'i18next';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 export interface SetNewPasswordProps {
     className?: string;
@@ -50,12 +50,12 @@ const languages: Languages[] = [
 export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode) || languages[0];
-    const [languageSelector, setLanguageSelector] = useState(currentLanguage.name);
+    const [, setLanguageSelector] = useState(currentLanguage.name);
 
     const API_KEY = process.env.VITE_API_URL;
     const forgotPwdEndPoint = '/auth//password/set-new';
     const [errorMessage, setErrorMessage] = useState('');
-    const [form, setForm] = useState('forgotPwd');
+    // const [form] = useState('forgotPwd');
     const [user, setUser] = useState(defaultUser);
     const [response, setResponse] = useState(false);
     const [responseResult, setResponseResult] = useState('');
@@ -80,7 +80,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { token } = responseData.data; // Extract token value from data object
+                // const { token } = responseData.data; // Extract token value from data object
                 console.log(responseData);
                 setResponseResult(responseData.message);
                 setResponse(true);
