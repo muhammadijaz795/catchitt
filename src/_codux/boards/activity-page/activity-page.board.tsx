@@ -1,9 +1,9 @@
 import { createBoard } from '@wixc3/react-board';
-import { SuggestedActivity } from '../../../components/suggested-activity/suggested-activity';
+import { ActivityPage } from '../../../components/activity-page/activity-page';
 
 export default createBoard({
-    name: 'SuggestedActivity',
-    Board: () => <SuggestedActivity />,
+    name: 'ActivityPage',
+    Board: () => <ActivityPage />,
     environmentProps: {
         canvasWidth: 1920,
         canvasHeight: 1080,

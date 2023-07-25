@@ -1,5 +1,6 @@
 // .root {
 // }
+
 .cardDiv {
   display: flex;
   flex-direction: column;
@@ -15,18 +16,20 @@
   font-weight: 600;
   line-height: 120%;
   justify-content: center;
+  text-decoration: none;
 }
 
 .navLink {
   color: #5448b2;
   display: flex;
-  width: 293px;
+  width: 100%;
   padding: 16px 149px 16px 16px;
   align-items: center;
   gap: 8px 8px;
   justify-content: start;
   align-content: center;
   justify-items: center;
+  text-decoration: none;
 }
 
 .selected {
@@ -42,6 +45,7 @@
   align-content: center;
   justify-items: center;
   border-radius: 6px;
+  text-decoration: none;
 }
 
 .selectedStroke path {
@@ -63,7 +67,9 @@
   width: 100%;
   display: flex;
   justify-items: start;
+  text-decoration: none;
 }
+
 // .notificationsP {
 //   margin: 0px -24px 0px 0px;
 // }

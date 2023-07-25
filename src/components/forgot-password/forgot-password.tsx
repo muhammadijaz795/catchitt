@@ -8,7 +8,7 @@ import resend from '../../assets/resend.png';
 import { useState } from 'react';
 import cookies from 'js-cookie';
 import i18next from 'i18next';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 export interface ForgotPasswordProps {
     className?: string;
@@ -49,7 +49,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
     const API_KEY = process.env.VITE_API_URL;
     const forgotPwdEndPoint = '/auth/password/forgot';
     const [errorMessage, setErrorMessage] = useState('');
-    const [form, setForm] = useState('forgotPwd');
+    // const [form, setForm] = useState('forgotPwd');
     const [user, setUser] = useState(defaultUser);
     const [response, setResponse] = useState(false);
     const [responseResult, setResponseResult] = useState('');

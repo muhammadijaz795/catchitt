@@ -10,6 +10,7 @@ import InputField from '../reusables/InputField';
 import IconButton from '@mui/material/IconButton';
 import { useAuthStore } from '../../store/authStore';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
 import cookies from 'js-cookie';
 
@@ -61,6 +62,7 @@ export const Authentication = ({ className }: AuthenticationProps) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [form, setForm] = useState('signin');
     const [user, setUser] = useState(defaultUser);
+    const navigate = useNavigate();
 
     const { login } = useAuthStore();
 
@@ -85,18 +87,27 @@ export const Authentication = ({ className }: AuthenticationProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { token } = responseData.data; // Extract token value from data object
-                login(name, email, token); // Call the login function from the Zustand store
+                const { token } = responseData.data; // Extract token from data object
+                const name = responseData.name; // Assuming the 'name' field is present in the response data
+                useAuthStore.setState({
+                    isLoggedIn: true,
+                    name: name,
+                    token: token,
+                });
+                // login(email, token, name); // Call the login function from the Zustand store
                 console.log(responseData);
-                // navigate('/dashboard');
+                navigate('/home');
             } else {
-                setErrorMessage('Invalid email or password');
+                // Handle the error response from the server
+                const errorResponseData = await response.json();
+                const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
+                setErrorMessage(errorMessageFromServer);
 
                 console.log(response);
             }
         } catch (error) {
             console.error(error);
-            setErrorMessage('Invalid email or password');
+            setErrorMessage('An error occurred while signing up');
         }
     };
 
@@ -123,12 +134,21 @@ export const Authentication = ({ className }: AuthenticationProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { token } = responseData.data; // Extract token value from data object
-                login(email, token); // Call the login function from the Zustand store
+                const { token, name } = responseData.data; // Extract token value from data object
+                // const name = responseData.data; // Assuming the 'name' field is present in the response data
+                useAuthStore.setState({
+                    isLoggedIn: true,
+                    name: name,
+                    token: token,
+                });
+                login(email, token, name); // Call the login function from the Zustand store
                 console.log(responseData);
-                // navigate('/dashboard');
+                navigate('/home');
             } else {
-                setErrorMessage('Invalid email or password');
+                // Handle the error response from the server
+                const errorResponseData = await response.json();
+                const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
+                setErrorMessage(errorMessageFromServer);
 
                 console.log(response);
             }

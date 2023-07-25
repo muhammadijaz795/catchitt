@@ -1,15 +1,19 @@
 import classNames from 'classnames';
 import styles from './side-nav-bar.module.scss';
-import React, { useState } from 'react';
-import homeIcon from '../../assets/homeIcon.svg';
+import { useState } from 'react';
+// import homeIcon from '../../assets/homeIcon.svg';
+import { Link } from 'react-router-dom';
+// import { useSelectedStore } from '../../store/authStore';
 
 export interface SideNavBarProps {
     className?: string;
+    selectedIndex: number | null;
 }
 
-export const SideNavBar = ({ className }: SideNavBarProps) => {
-    const [selectedLink, setSelectedLink] = useState<number | null>(null);
-
+export const SideNavBar = ({ className, selectedIndex }: SideNavBarProps) => {
+    const [selectedLink, setSelectedLink] = useState<number | null>(selectedIndex);
+    const selectedPage = selectedLink;
+    selectedIndex = selectedPage;
     const handleLinkClick = (index: number) => {
         setSelectedLink(index);
     };
@@ -17,36 +21,39 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
     return (
         <div className={classNames(styles.root, className)}>
             <div className={styles.cardDiv}>
-                <div
-                    className={classNames(
-                        `${selectedLink === 0 ? styles.selected : styles.navLink}`
-                    )}
-                    onClick={() => handleLinkClick(0)}
-                >
-                    {/* <img src={homeIcon} alt="" className={classNames(styles.selectedStroke)} /> */}
-                    <svg
-                        id="svg-section"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        className={classNames(`${selectedLink === 0 ? styles.selectedStroke : ''}`)}
+                <Link to="/home" style={{ textDecoration: 'none' }}>
+                    <div
+                        className={classNames(
+                            `${selectedIndex === 0 ? styles.selected : styles.navLink}`
+                        )}
+                        onClick={() => handleLinkClick(0)}
                     >
-                        <path
-                            d="M9.15722 20.7714V17.7047C9.1572 16.9246 9.79312 16.2908 10.581 16.2856H13.4671C14.2587 16.2856 14.9005 16.9209 14.9005 17.7047V17.7047V20.7809C14.9003 21.4432 15.4343 21.9845 16.103 22H18.0271C19.9451 22 21.5 20.4607 21.5 18.5618V18.5618V9.83784C21.4898 9.09083 21.1355 8.38935 20.538 7.93303L13.9577 2.6853C12.8049 1.77157 11.1662 1.77157 10.0134 2.6853L3.46203 7.94256C2.86226 8.39702 2.50739 9.09967 2.5 9.84736V18.5618C2.5 20.4607 4.05488 22 5.97291 22H7.89696C8.58235 22 9.13797 21.4499 9.13797 20.7714V20.7714"
-                            stroke="#5448B2"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                    </svg>
-                    <p className={styles.linkWord}>Home</p>
-                </div>
+                        <svg
+                            id="svg-section"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            className={classNames(
+                                `${selectedIndex === 0 ? styles.selectedStroke : ''}`
+                            )}
+                        >
+                            <path
+                                d="M9.15722 20.7714V17.7047C9.1572 16.9246 9.79312 16.2908 10.581 16.2856H13.4671C14.2587 16.2856 14.9005 16.9209 14.9005 17.7047V17.7047V20.7809C14.9003 21.4432 15.4343 21.9845 16.103 22H18.0271C19.9451 22 21.5 20.4607 21.5 18.5618V18.5618V9.83784C21.4898 9.09083 21.1355 8.38935 20.538 7.93303L13.9577 2.6853C12.8049 1.77157 11.1662 1.77157 10.0134 2.6853L3.46203 7.94256C2.86226 8.39702 2.50739 9.09967 2.5 9.84736V18.5618C2.5 20.4607 4.05488 22 5.97291 22H7.89696C8.58235 22 9.13797 21.4499 9.13797 20.7714V20.7714"
+                                stroke="#5448B2"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <p className={styles.linkWord}>Home</p>
+                    </div>
+                </Link>
 
                 <div
                     className={classNames(
-                        `${selectedLink === 1 ? styles.selected : styles.navLink}`
+                        `${selectedIndex === 1 ? styles.selected : styles.navLink}`
                     )}
                     onClick={() => handleLinkClick(1)}
                 >
@@ -57,7 +64,9 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                         height="24"
                         viewBox="0 0 24 24"
                         fill="none"
-                        className={classNames(`${selectedLink === 1 ? styles.selectedStroke : ''}`)}
+                        className={classNames(
+                            `${selectedIndex === 1 ? styles.selectedStroke : ''}`
+                        )}
                     >
                         <path
                             fill-rule="evenodd"
@@ -95,7 +104,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
 
                 <div
                     className={classNames(
-                        `${selectedLink === 2 ? styles.selected : styles.navLink}`
+                        `${selectedIndex === 2 ? styles.selected : styles.navLink}`
                     )}
                     onClick={() => handleLinkClick(2)}
                 >
@@ -106,7 +115,9 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                         height="24"
                         viewBox="0 0 24 24"
                         fill="none"
-                        className={classNames(`${selectedLink === 2 ? styles.selectedStroke : ''}`)}
+                        className={classNames(
+                            `${selectedIndex === 2 ? styles.selectedStroke : ''}`
+                        )}
                     >
                         <path
                             fill-rule="evenodd"
@@ -131,7 +142,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                 </div>
                 <div
                     className={classNames(
-                        `${selectedLink === 3 ? styles.selected : styles.navLink}`
+                        `${selectedIndex === 3 ? styles.selected : styles.navLink}`
                     )}
                     onClick={() => handleLinkClick(3)}
                 >
@@ -142,7 +153,9 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                         height="24"
                         viewBox="0 0 24 24"
                         fill="none"
-                        className={classNames(`${selectedLink === 3 ? styles.selectedStroke : ''}`)}
+                        className={classNames(
+                            `${selectedIndex === 3 ? styles.selectedStroke : ''}`
+                        )}
                     >
                         <path
                             fill-rule="evenodd"
@@ -167,7 +180,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                 </div>
                 <div
                     className={classNames(
-                        `${selectedLink === 4 ? styles.selected : styles.navLink}`
+                        `${selectedIndex === 4 ? styles.selected : styles.navLink}`
                     )}
                     onClick={() => handleLinkClick(4)}
                 >
@@ -178,7 +191,9 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                         height="24"
                         viewBox="0 0 24 24"
                         fill="none"
-                        className={classNames(`${selectedLink === 4 ? styles.selectedStroke : ''}`)}
+                        className={classNames(
+                            `${selectedIndex === 4 ? styles.selectedStroke : ''}`
+                        )}
                     >
                         <path
                             fill-rule="evenodd"

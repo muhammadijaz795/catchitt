@@ -14,9 +14,8 @@
 }
 .searchBar-Div {
   width: 100%;
-  margin-right: 193px;
+  margin-right: 200px;
   margin-left: 0px;
-  
 }
 .searchPlusProfileDiv {
   display: flex;
@@ -33,20 +32,38 @@
   gap: 16px;
 }
 .loggedName {
-  font-size: 16px;
+  /* Base/Medium */
   font-family: Poppins;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 120%;
-  padding-right: 0px;
-  padding-top: 0px;
-  color: #000000;
+  line-height: 120%; /* 19.2px */
+  // align-items: center;color:#fff;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  justify-items: start;
   align-self: center;
-  width: 85px;
+  min-width: auto;
 }
 .logoDiv {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-items: start;
+}
+.nameDiv {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  align-content: center;
+  justify-content: center;
+  align-self: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 500;
 }
