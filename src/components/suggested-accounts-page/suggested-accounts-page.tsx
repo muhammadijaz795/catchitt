@@ -20,7 +20,7 @@ interface Account {
 export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps) => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const token = useAuthStore((state) => state.token);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage] = useState(1);
     const itemsPerPage = 20; // 5 rows * 4 cards per row
 
     const [errorMessage, setErrorMessage] = useState('');

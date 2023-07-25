@@ -24,7 +24,7 @@ interface Activity {
 export const ActivityPage: React.FC<Activity> = ({ className, createdTime }) => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const token = useAuthStore((state) => state.token);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage] = useState(1);
     const itemsPerPage = 9;
     const [errorMessage, setErrorMessage] = useState('');
     const [activityData, setActivityData] = useState<Activity[]>([]);

@@ -40,7 +40,21 @@ function App() {
                     <Route path="/set-newpassword" element={<SetNewPassword />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
-                    <Route path="/notifications" element={<ActivityPage />} />
+                    <Route
+                        path="/notifications"
+                        element={
+                            <ActivityPage
+                                _id={''}
+                                userAvatar={''}
+                                userName={''}
+                                createdTime={0}
+                                triggeredUserName={''}
+                                triggeredUserAvatar={''}
+                                message={''}
+                                type={''}
+                            />
+                        }
+                    />
                 </Routes>
             </Router>
         </div>

@@ -209,7 +209,7 @@ export const SuggestedActivity = ({
                 <div className={styles.activityDiv}>
                     <div className={styles.suggestedHeader}>
                         <h4 className={styles.headerTitle}>Activity</h4>
-                        <a href="" className={styles.linkText}>
+                        <a href="/notifications" className={styles.linkText}>
                             See All
                         </a>
                     </div>
