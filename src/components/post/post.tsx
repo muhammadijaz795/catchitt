@@ -61,6 +61,7 @@ interface Post {
 }
 
 export const Post: React.FC<PostProps> = ({ className }) => {
+    const watchedMediaIds = useRef(new Map());
     const videoRef = useRef<any>(null); // Use `any` type to avoid TypeScript errors
     const [videoElement, inView] = useInView({
         triggerOnce: true,
@@ -68,8 +69,11 @@ export const Post: React.FC<PostProps> = ({ className }) => {
     });
 
     useEffect(() => {
+        console.log('RAN THIS USEEFFECT');
         if (inView) {
             videoRef.current?.play();
+            watchedMediaIds.current.set(currentMediaId, null);
+            console.log('MEMOOOOOO', watchedMediaIds.current);
         } else {
             videoRef.current?.pause();
         }
@@ -110,6 +114,8 @@ export const Post: React.FC<PostProps> = ({ className }) => {
 
     const [openCommentPopup, setOpenCommentPopup] = useState(false);
     const handleOpenCommentPopup = (event: React.MouseEvent<HTMLElement>, mediaId: string) => {
+        console.log('comment popup mediaid received', mediaId, currentMediaId);
+
         setCurrentMediaId(mediaId);
         setOpenCommentPopup(true);
     };
@@ -221,7 +227,11 @@ export const Post: React.FC<PostProps> = ({ className }) => {
         }
     };
 
-    const handleStartWatching = async (mediaId: string) => {
+    const handleStartWatching = async (mediaId: string): Promise<void> => {
+        if (watchedMediaIds.current.has(mediaId)) {
+            return;
+        }
+
         try {
             const response = await fetch(
                 `https://dev.seezitt.com/api/media-content/mark-as-started-watching/${mediaId}`,
@@ -239,7 +249,7 @@ export const Post: React.FC<PostProps> = ({ className }) => {
                 handleFetchActivity();
                 // console.log('video started watching');
             } else {
-                console.log(response);
+                // console.log(response);
                 const errorResponseData = await response.json();
                 const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
                 setErrorMessage(errorMessageFromServer);
@@ -251,6 +261,11 @@ export const Post: React.FC<PostProps> = ({ className }) => {
     };
 
     const handleEndWatching = async (mediaId: string) => {
+        if (watchedMediaIds.current.has(mediaId)) {
+            return;
+        }
+        watchedMediaIds.current.set(mediaId, null);
+
         try {
             const response = await fetch(
                 `https://dev.seezitt.com/api/media-content/mark-as-watched-till-end/${mediaId}`,
@@ -268,7 +283,7 @@ export const Post: React.FC<PostProps> = ({ className }) => {
                 handleFetchActivity();
                 // console.log('video ENDED watching');
             } else {
-                console.log(response);
+                // console.log(response);
                 const errorResponseData = await response.json();
                 const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
                 setErrorMessage(errorMessageFromServer);
