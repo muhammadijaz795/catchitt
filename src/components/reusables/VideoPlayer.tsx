@@ -54,8 +54,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, onStart, onEnd }) => {
                 src={src}
                 autoPlay={false} // Set to false, as we will manually handle play/pause
                 controls={false}
-                width="auto"
-                height="auto"
+                width="100%"
+                height="100%"
                 // loop
                 playerRef={playerRef}
                 onEnded={handleEnded}

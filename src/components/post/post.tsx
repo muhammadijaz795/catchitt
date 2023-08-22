@@ -69,11 +69,9 @@ export const Post: React.FC<PostProps> = ({ className }) => {
     });
 
     useEffect(() => {
-        console.log('RAN THIS USEEFFECT');
         if (inView) {
             videoRef.current?.play();
             watchedMediaIds.current.set(currentMediaId, null);
-            console.log('MEMOOOOOO', watchedMediaIds.current);
         } else {
             videoRef.current?.pause();
         }
@@ -84,7 +82,7 @@ export const Post: React.FC<PostProps> = ({ className }) => {
     const [currentBookmarkMediaId, setCurrentBookmarkMediaId] = useState('');
     const [currentPostUser, setCurrentPostUser] = useState('');
     const [currentMediaId, setCurrentMediaId] = useState('');
-    // const [currentCommentMediaId, setCurrentCommentMediaId] = useState('');
+    const [followLoading, setFollowLoading] = useState(false);
 
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const token = useAuthStore((state) => state.token);
@@ -115,9 +113,16 @@ export const Post: React.FC<PostProps> = ({ className }) => {
     const [openCommentPopup, setOpenCommentPopup] = useState(false);
     const handleOpenCommentPopup = (event: React.MouseEvent<HTMLElement>, mediaId: string) => {
         console.log('comment popup mediaid received', mediaId, currentMediaId);
-
         setCurrentMediaId(mediaId);
         setOpenCommentPopup(true);
+    };
+
+    const handleFollowBtnClicked = async (event: React.MouseEvent<HTMLElement>, post: Post) => {
+        console.log(post.user._id);
+        // setFollowLoading(true);
+        setCurrentPostUser(post.user._id);
+        await handleFollowClick(post);
+        // setFollowLoading(false);
     };
 
     const handleCloseSharePopup = () => setOpenSharePopup(false);
@@ -153,18 +158,10 @@ export const Post: React.FC<PostProps> = ({ className }) => {
         if (currentLikeMediaId !== '') {
             handleLikePost();
         }
-        // if (currentLikeMediaId !== '') {
-        //     handleLikePost();
-        // }
         if (currentBookmarkMediaId !== '') {
             handleBookmarkPost();
-            // handleFetchActivity();
         }
-        if (currentPostUser !== '') {
-            handleFollowClick();
-            // handleFetchActivity();
-        }
-    }, [currentLikeMediaId, currentBookmarkMediaId, currentPostUser]);
+    }, [currentLikeMediaId, currentBookmarkMediaId]);
 
     const handleLikePost = async () => {
         try {
@@ -180,8 +177,6 @@ export const Post: React.FC<PostProps> = ({ className }) => {
             );
 
             if (response.ok) {
-                // const responseData = await response.json();
-                // console.log(responseData);
                 handleFetchActivity();
                 setCurrentLikeMediaId('');
             } else {
@@ -294,10 +289,46 @@ export const Post: React.FC<PostProps> = ({ className }) => {
         }
     };
 
-    const handleFollowClick = async () => {
+    // const handleFollowClick = async (post: Post) => {
+    //     try {
+    //         const response = await fetch(
+    //             `https://dev.seezitt.com/api/profile/follow/${post.user._id}/`,
+    //             {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             }
+    //         );
+
+    //         if (response.ok) {
+    //             // const responseData = await response.json();
+    //             // console.log(responseData);
+    //             console.log(response);
+    //             console.log('follow btn clicked');
+    //             // handleFetchActivity();
+    //             // setCurrentPostUser('');
+    //         } else {
+    //             console.log(response);
+    //             const errorResponseData = await response.json();
+    //             const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
+    //             setErrorMessage(errorMessageFromServer);
+    //         }
+
+    //         await handleFetchActivity();
+    //     } catch (error) {
+    //         // console.error(error);
+    //         console.log(errorMessage);
+    //     }
+    // };
+
+    const handleFollowClick = async (post: Post) => {
         try {
+            setFollowLoading(true); // Set loading state before API call
+
             const response = await fetch(
-                `https://dev.seezitt.com/api/profile/follow/${currentPostUser}`,
+                `https://dev.seezitt.com/api/profile/follow/${post.user._id}/`,
                 {
                     method: 'POST',
                     headers: {
@@ -308,20 +339,15 @@ export const Post: React.FC<PostProps> = ({ className }) => {
             );
 
             if (response.ok) {
-                // const responseData = await response.json();
-                // console.log(responseData);
-                console.log(response);
-                handleFetchActivity();
-                setCurrentPostUser('');
+                // Handle success as needed
             } else {
-                console.log(response);
-                const errorResponseData = await response.json();
-                const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
-                setErrorMessage(errorMessageFromServer);
+                // Handle error as needed
             }
         } catch (error) {
-            // console.error(error);
-            console.log(errorMessage);
+            // Handle error as needed
+        } finally {
+            await handleFetchActivity();
+            setFollowLoading(false); // Set loading state back to false after API call
         }
     };
 
@@ -431,13 +457,14 @@ export const Post: React.FC<PostProps> = ({ className }) => {
 
     const handleFetchActivity = async () => {
         try {
-            const response = await fetch(`${API_KEY}${endPoint}`, {
+            const response = await fetch(`${API_KEY}${endPoint}/?page=${1}`, {
                 method: 'GET',
                 headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             });
 
             if (response.ok) {
                 const responseData = await response.json();
+                console.log(responseData);
                 setPostData(responseData.data);
                 // console.log(postData);
             } else {
@@ -808,9 +835,15 @@ export const Post: React.FC<PostProps> = ({ className }) => {
                                                         ? styles.followingBtn
                                                         : styles.followBtn
                                                 }
-                                                onClick={() => setCurrentPostUser(post.user._id)}
+                                                onClick={(event) =>
+                                                    handleFollowBtnClicked(event, post)
+                                                }
                                             >
-                                                {post.user.isFollowed ? 'Following' : 'Follow'}
+                                                {followLoading
+                                                    ? '...'
+                                                    : post.user.isFollowed
+                                                    ? 'Following'
+                                                    : 'Follow'}
                                             </button>
                                         </div>
                                     </div>

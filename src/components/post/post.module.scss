@@ -5,9 +5,6 @@
   gap: 0px 32px;
   background-color: #fafafa;
   overflow-y: auto;
-  
-  // width: 676px;
-  // height: 753px;height:100px;height:100px;height:100%;height:100%;min-height:100px;min-height:100px;min-height:100px;min-height:100px;
 }
 
 /* Hide the scrollbar for Chrome, Safari, and newer Edge */
@@ -29,10 +26,13 @@
   // background-color: #754d4d;
   width: 100%;
   height: 100%;
+  // width: 100%;
+  // height: 100%;
   display: flex;
   flex-direction: column;
   background-color: transparent;
   gap: 0px;
+  margin-right: 20px;
 }
 .postInteractionContainer {
   width: 44px;
@@ -71,8 +71,6 @@
 .postMediaContainer {
   width: 602px;
   height: 640px;
-  // min-height: 100%;
-  // margin-bottom: 100px;  
   background-color: #000000;
 }
 .profilePic-UserNameDiv {
@@ -172,6 +170,7 @@
   flex-direction: row;
   column-gap: 32px;
   height: 100%;
+  margin-right: 20px;
 }
 .interactionText {
   color: var(--default-body, #222);
