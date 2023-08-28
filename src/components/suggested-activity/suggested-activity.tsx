@@ -1,7 +1,9 @@
 import classNames from 'classnames';
-import { Key, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import styles from './suggested-activity.module.scss';
+import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
+
 import { Follow } from './svg-components/Follow';
 
 export interface SuggestedActivityProps {
@@ -160,6 +162,23 @@ export const SuggestedActivity = ({
         return shuffled.slice(0, count); // Return the first 'count' elements
     };
 
+    const elapsedTimeStrings = activityData.map(activity => {
+        const activityDate = new Date(activity.createdTime);
+        const now = new Date();
+
+        const daysDifference = differenceInDays(now, activityDate);
+        const hoursDifference = differenceInHours(now, activityDate);
+        const minutesDifference = differenceInMinutes(now, activityDate);
+
+        if (daysDifference > 0) {
+            return `${daysDifference}d`;
+        } else if (hoursDifference > 0) {
+            return `${hoursDifference}h`;
+        } else {
+            return `${minutesDifference}m`;
+        }
+    });
+
     return (
         <div className={classNames(styles.root, className)}>
             {showSuggestedContent && (
@@ -221,7 +240,7 @@ export const SuggestedActivity = ({
                         {/* Sort the accountsData in descending order based on timestamp */}
                         {activityData
                             .slice(0, 4) // Take the latest 4 notifications
-                            .map((activity) => (
+                            .map((activity, index) => (
                                 <>
                                     {/* {activity.isRead ? (
                                         <div></div>
@@ -238,10 +257,12 @@ export const SuggestedActivity = ({
                                                     className={styles.plusIconStyle}
                                                 />
                                                 <div className={styles.accountName}>
-                                                    <p
-                                                        className={styles.notificationMessage}
-                                                    >{`${activity?.message}`}</p>
-
+                                                    <h6 className={styles.notificationMessage}>
+                                                        {activity?.message}
+                                                        <span className={styles.timeText}>
+                                                            {elapsedTimeStrings[index]}
+                                                        </span>
+                                                    </h6>
                                                 </div>
                                                 <div>
                                                     {activity.type === 'Follow' ? (

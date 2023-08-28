@@ -288,22 +288,6 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
         setShowOverlay(false);
     }
 
-    const [sendCommentClicked, setSendCommentClicked] = useState(false);
-
-    const handleSendCommentClick = () => {
-        setSendCommentClicked(true);
-    };
-
-    // const handleSubmit = (e: any) => {
-    //     e.preventDefault();
-
-    //     if (sendCommentClicked) {
-    //         handleCommenting(message, post.mediaId);
-    //         setMessage('');
-    //         setSendCommentClicked(false);
-    //     }
-    // };
-
     return (
         <div className={classNames(styles.root, className)}>
             <div style={{ marginBottom: '32px' }}>

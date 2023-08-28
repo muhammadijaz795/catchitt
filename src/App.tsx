@@ -40,28 +40,8 @@ function App() {
                     <Route path="/set-newpassword" element={<SetNewPassword />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
-                    <Route
-                        path="/notifications"
-                        element={
-                            <ActivityPage
-                                _id={''}
-                                createdTime={0}
-                                message={''}
-                                type={''} user={{
-                                    id: undefined,
-                                    avatar: undefined,
-                                    username: undefined,
-                                    name: '',
-                                    isVerified: false
-                                }} triggeredUser={{
-                                    _id: '',
-                                    avatar: '',
-                                    isVerified: false,
-                                    username: '',
-                                    name: ''
-                                }} isRead={false}
-                            />
-                        }
+                    <Route path="/notifications" element={<ActivityPage />
+                    }
                     />
                 </Routes>
             </Router>

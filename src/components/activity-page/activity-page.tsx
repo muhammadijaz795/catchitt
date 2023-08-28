@@ -6,12 +6,14 @@ import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { useAuthStore } from '../../store/authStore';
 import { Navigate } from 'react-router-dom';
+import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
+
 import { Follow } from './svg-components/Follow'
 
-export interface ActivityPageProps { }
+export interface ActivityPageProps { className?: string }
 
 interface Activity {
-    className?: string;
+    // className?: string;
     _id?: string;
     createdTime: number;
     user: {
@@ -33,7 +35,7 @@ interface Activity {
     isRead: boolean,
 }
 
-export const ActivityPage: React.FC<Activity> = ({ className, createdTime }) => {
+export const ActivityPage = ({ className }: ActivityPageProps) => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const token = useAuthStore((state) => state.token);
     const [currentPage] = useState(1);
@@ -54,6 +56,7 @@ export const ActivityPage: React.FC<Activity> = ({ className, createdTime }) => 
                 const responseData = await response.json();
                 setActivityData(responseData.data.data);
                 // console.log(responseData);
+
             } else {
                 const errorResponseData = await response.json();
                 const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
@@ -77,18 +80,22 @@ export const ActivityPage: React.FC<Activity> = ({ className, createdTime }) => 
     const lastIndex = currentPage * itemsPerPage;
     const firstIndex = lastIndex - itemsPerPage;
 
-    // Convert createdTime to a Date object
-    const createdDate = new Date(createdTime);
+    const elapsedTimeStrings = activityData.map(activity => {
+        const activityDate = new Date(activity.createdTime);
+        const now = new Date();
 
-    // Get the current date as a Date object
-    const currentDate = new Date();
+        const daysDifference = differenceInDays(now, activityDate);
+        const hoursDifference = differenceInHours(now, activityDate);
+        const minutesDifference = differenceInMinutes(now, activityDate);
 
-    // Calculate the time difference in milliseconds
-    const timeDifferenceMs = currentDate.getTime() - createdDate.getTime();
-
-    // Calculate the time difference in minutes and hours
-    const minutesAgo = Math.floor(timeDifferenceMs / (1000 * 60));
-    const hoursAgo = Math.floor(timeDifferenceMs / (1000 * 60 * 60));
+        if (daysDifference > 0) {
+            return `${daysDifference}d`;
+        } else if (hoursDifference > 0) {
+            return `${hoursDifference}h`;
+        } else {
+            return `${minutesDifference}m`;
+        }
+    });
 
     return (
         <div className={classNames(styles.root, className)}>
@@ -106,7 +113,7 @@ export const ActivityPage: React.FC<Activity> = ({ className, createdTime }) => 
                 </div>
                 <div className={styles.middleSectionDiv}>
                     <div className={styles.suggestedContent}>
-                        {activityData.slice(firstIndex, lastIndex).map((activity) => (
+                        {activityData.slice(firstIndex, lastIndex).map((activity, index) => (
                             <div key={activity._id} className={styles.suggestedItem}>
                                 <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -118,16 +125,10 @@ export const ActivityPage: React.FC<Activity> = ({ className, createdTime }) => 
                                             className={styles.plusIconStyle}
                                         />
                                         <div className={styles.accountName}>
-                                            <h6>
-                                                <span className={styles.messageText}>
-                                                    {activity.message}
-                                                </span>{' '}
+                                            <h6 className={styles.messageText}>
+                                                {activity.message}
                                                 <span className={styles.timeText}>
-                                                    {/* {activity.createdTime}
-                                                {hoursAgo}
-                                                {hoursAgo > 59
-                                                    ? `${hoursAgo}hr`
-                                                    : `${minutesAgo}m`} */}
+                                                    {elapsedTimeStrings[index]}
                                                 </span>
                                             </h6>
                                         </div>
