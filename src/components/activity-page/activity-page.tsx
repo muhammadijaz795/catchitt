@@ -7,8 +7,12 @@ import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { useAuthStore } from '../../store/authStore';
 import { Navigate } from 'react-router-dom';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+
 
 import { Follow } from './svg-components/Follow'
+import { LeftArrow } from './svg-components/LeftArrow'
+import { IconButton, Button } from '@mui/material';
 
 export interface ActivityPageProps { className?: string }
 
@@ -44,6 +48,12 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
     const [activityData, setActivityData] = useState<Activity[]>([]);
     const API_KEY = process.env.VITE_API_URL;
     const activityEndPoint = '/notification';
+
+    const navigate = useNavigate();
+
+    const handleGoBack = () => {
+        navigate(-1); // Navigate back to the previous page
+    };
 
     const handleFetchActivity = async () => {
         try {
@@ -102,6 +112,7 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
             <div className={styles.topBarDiv}>
                 <TopBar />
             </div>
+
             <div className={styles.container}>
                 <div className={styles.leftSide}>
                     <div className={styles.sideNavDiv}>
@@ -112,6 +123,14 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                     </div>
                 </div>
                 <div className={styles.middleSectionDiv}>
+                    <div className={styles.pageHeader}>
+                        <IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
+                            onClick={handleGoBack}
+                        >
+                            <LeftArrow />
+                        </IconButton>
+                        <h4>Activity</h4>
+                    </div>
                     <div className={styles.suggestedContent}>
                         {activityData.slice(firstIndex, lastIndex).map((activity, index) => (
                             <div key={activity._id} className={styles.suggestedItem}>

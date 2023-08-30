@@ -8,7 +8,7 @@ interface User {
     isVerified: boolean;
 }
 
-interface Comment {
+export interface Comment {
     id: string;
     user: User;
     comment: string;
@@ -69,6 +69,8 @@ export interface PostProps {
     startedIds: MutableRefObject<Set<string>>;
     endedIds: MutableRefObject<Set<string>>;
     post: Post;
+	isBookmarked: boolean;
 
+	refetchBookmarks: Function;
     refetch: Function;
 }

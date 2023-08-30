@@ -2,15 +2,13 @@ import classNames from 'classnames';
 import styles from './top-bar.module.scss';
 import coloredLogo from '../../assets/coloredLogo.png';
 import plusIcon from '../../assets/plusIcon.png';
-// import profileIcon from '../../assets/profileIcon.png';
-// import searchBar from '../reusables/searchBar'
 import SearchBar from '../reusables/searchBar';
 import { useAuthStore } from '../../store/authStore';
 import { useEffect, useState } from 'react';
+import { Button } from '@mui/material';
 
 export interface TopBarProps {
     className?: string;
-    // avatar: string;
 }
 
 export const TopBar = ({ className }: TopBarProps) => {
@@ -19,8 +17,13 @@ export const TopBar = ({ className }: TopBarProps) => {
     const [errorMessage, setErrorMessage] = useState('');
     const API_KEY = process.env.VITE_API_URL;
     const endPoint = '/profile';
-    // const avatar: string = '';
     let avatarUrl: string = '';
+    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const logout = useAuthStore(state => state.logout);
+
+    const handleLogout = () => {
+        logout(); // Call the logout function
+    };
 
     const handleFetchProfileInfo = async () => {
         try {
@@ -32,9 +35,7 @@ export const TopBar = ({ className }: TopBarProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 const { avatar } = responseData.data; // Extract token value from data object
-                // avatar === '' ? 'https://via.placeholder.com/128' : '';
                 avatarUrl = avatar;
-                // console.log(responseData);
             } else {
                 setErrorMessage('Invalid email');
                 console.log(response);
@@ -56,7 +57,7 @@ export const TopBar = ({ className }: TopBarProps) => {
                 <img className={classNames('Logo', styles.logo)} src={coloredLogo} alt="" />
             </div>
             <div className={styles.searchPlusProfileDiv}>
-                <div className={styles['searchBar-Div']}>
+                <div className={styles.searchBarDiv}>
                     <SearchBar />
                 </div>
                 <div className={styles.plusProfileDiv}>
@@ -76,6 +77,17 @@ export const TopBar = ({ className }: TopBarProps) => {
                     <div className={styles.nameDiv}>
                         <h4 className={styles.loggedName}>{userName}</h4>
                     </div>
+                    {isLoggedIn ? (
+                        <button className={styles.logoutBtn}
+                            onClick={handleLogout}>
+                            Log Out
+                        </button>
+                    ) : (
+                        <button className={styles.loginBtn}>
+                            Log In
+                        </button>
+                    )
+                    }
                 </div>
             </div>
         </div>

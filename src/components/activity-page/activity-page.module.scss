@@ -4,6 +4,12 @@
     background-color: #fafafa;
     width: 100%;
   }
+
+  .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+  
+
   .topBarDiv {
     width: 100%;
   }
@@ -29,18 +35,15 @@
   
   .middleSectionDiv {    
     display: inline-flex;
+    gap: 15%;
     height: 100%;
     width: 100%;
+    max-width: 655px;
     background-color: transparent;
-    // padding-top: 0px;
-    margin: 40px 0px 0px 0px;
-    // padding: 16px 0px;
-    // row-gap: 40px;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     border-radius: 8px;
-    background: var(--default-white, #FFF);
 
   }
   .container {
@@ -48,7 +51,7 @@
     height: 100%;
     display: flex;
     flex-direction: row;
-    gap: 0px 200px;
+    gap: 0px 245px;
     padding-right: 199px;
     padding-top: 0px;
   }
@@ -147,6 +150,8 @@
     justify-content: space-between;
     line-height: 1;
     gap: 16px;
+    background: var(--default-white, #FFF);
+
   }
 
   .nameText {
@@ -227,4 +232,30 @@
   .svgButton:hover {
     background: none;
     border: none; 
+  }
+
+
+
+  .pageHeader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: start;
+    color: var(--default-body, #222);
+  
+    /* H1/Semibold120 */
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%; /* 24px */ 
+    gap: 16px;
+    margin-top: 40px;
+    margin-bottom: 32px;
+    background-color: transparent;
+  }
+  
+  .pageHeader h4{
+   margin: 0px;
+
   }

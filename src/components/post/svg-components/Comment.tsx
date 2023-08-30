@@ -1,5 +1,5 @@
 
-export const Comment = () => {
+export const CommentIcon = () => {
 
 	return (
 		<svg

@@ -9,10 +9,6 @@ interface AuthState {
     logout: () => void;
 }
 
-// interface SelectedLinkState {
-//     selected?: number | null;
-// }
-
 export const useAuthStore = create<AuthState>((set) => {
     // Check if a user is already logged in based on session storage
     const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
@@ -43,8 +39,3 @@ export const useAuthStore = create<AuthState>((set) => {
         },
     };
 });
-
-// export const useSelectedStore = create<SelectedLinkState>((set) => ({
-//     selected: 0,
-//     setSelected: (selected: any) => set(() => ({ selected })),
-// }));

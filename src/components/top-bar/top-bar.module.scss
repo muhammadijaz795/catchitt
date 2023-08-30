@@ -1,27 +1,42 @@
 .root {
   display: grid;
-  padding: 20px 40px;
+  padding: 20px 30px;
   align-items: center;
-  gap: 0%;
+  // justify-content: space-between;
   width: 100%;
   background-color: #fff;
   grid-auto-flow: column;
+  width: 100%;
+  height: 100%;
+  gap: 0px 440px;
+    // padding-right: 300px;
 }
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+
 .logo {
   width: 90px;
   height: 32px;
   flex-shrink: 0;
 }
-.searchBar-Div {
+.searchBarDiv {
   width: 100%;
-  margin-right: 200px;
+  max-width: 700px;
+  // margin-right: 200px;
   margin-left: 0px;
+  // padding: 0px 433px 0px 16px;
 }
+
 .searchPlusProfileDiv {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
+  gap: 80px;
+  margin-left: -27%;
 }
 .plusIconStyle {
   width: 58px;
@@ -30,6 +45,10 @@
   display: flex;
   justify-content: space-between;
   gap: 16px;
+  align-items: center;
+}
+.plusProfileDiv h4{
+  margin: 0;
 }
 .loggedName {
   /* Base/Medium */
@@ -41,20 +60,26 @@
   // align-items: center;color:#fff;
   color: #000;
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   align-items: start;
   align-content: center;
   justify-content: center;
   width: 100%;
   justify-items: start;
   align-self: center;
+  align-items: center;
   min-width: auto;
+
+  height: 40px;
+  padding: 0px 10px;
 }
 .logoDiv {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-items: start;
+  // padding-right: 270px;
+  gap: 0px 340px
 }
 .nameDiv {
   display: flex;
@@ -66,4 +91,62 @@
   width: 100%;
   height: 100%;
   font-weight: 500;
+}
+
+.logoutBtn {
+  display: flex;
+  // flex-direction: column;
+  align-items: start;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  justify-items: start;
+  align-self: center;
+  min-width: auto;
+
+  height: 40px;
+  padding: 0px 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  border-color: var(--foundation-primary-primary-500, #5448B2);
+  background: var(--foundation-primary-primary-500, #fff);
+  flex-wrap: nowrap ;
+
+  color: var(--default-white, #000);
+
+  /* Small/Semibold */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 16.8px */
+}
+
+.loginBtn {
+  display: flex;
+  // flex-direction: column;
+  align-items: start;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  justify-items: start;
+  align-self: center;
+  min-width: auto;
+
+  height: 40px;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  background: var(--foundation-primary-primary-500, #5448B2);
+
+  color: var(--default-white, #fff);
+
+  /* Small/Semibold */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 16.8px */
 }

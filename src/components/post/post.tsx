@@ -7,19 +7,20 @@ import MenuItem from '@mui/material/MenuItem';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
-import { Box, Modal, Typography, } from '@mui/material';
+import { Box, Modal, Typography, Tooltip } from '@mui/material';
 import confirmationIcon from '../../assets/confirmationIcon.png';
 import VideoPlayer from '../reusables/VideoPlayer';
 import profileIcon from '../../assets/profileIcon.png';
 import { useInView } from 'react-intersection-observer';
-import { BookmarkItem, PostProps } from './postTypes';
+import { PostProps } from './postTypes';
 import { PopupModal } from '../reusables/popupModal';
 import InputField from '../reusables/InputField';
+import { differenceInHours, differenceInDays, differenceInWeeks, format } from 'date-fns';
 
 import { Send } from './svg-components/Send';
 import { fetchInJSON } from '../reusables/fetchInJSON';
 import { Bookmark } from './svg-components/Bookmark';
-import { Comment } from './svg-components/Comment';
+import { CommentIcon } from './svg-components/Comment';
 import { Like } from './svg-components/Like';
 import { CommentLike } from './svg-components/CommentLike';
 import { Save } from './svg-components/Save';
@@ -30,7 +31,7 @@ import { Share } from './svg-components/Share';
 import { More } from './svg-components/More';
 import { ArrowDown } from './svg-components/ArrowDown';
 
-export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedIds, refetch }) => {
+export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedIds, refetch, refetchBookmarks, isBookmarked }) => {
     const buttonRef = useRef(null);
     const videoRef = useRef<any>(null); // Use `any` type to avoid TypeScript errors
     let avatarUrl = ''
@@ -48,15 +49,13 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
     }, [inView]);
 
     const [followLoading, setFollowLoading] = useState(false);
-    const [bookmarksData, setBookmarksData] = useState<BookmarkItem[]>([]);
+
     const token = useAuthStore((state) => state.token);
+
+    const bottomDivRef = useRef<any>({});
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-
-    useEffect(() => {
-        handleFetchUserBookmarks();
-    }, [bookmarksData]);
 
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const handleOpenConfirmation = () => {
@@ -77,7 +76,13 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
     };
 
     const handleCloseSharePopup = () => setOpenSharePopup(false);
-    const handleCloseCommentPopup = () => setOpenCommentPopup(false);
+    const handleCloseCommentPopup = () => {
+        const repliesList = showReplies.map(reply => ({ ...reply, list: false }));
+        setShowReplies(repliesList);
+        const repliesInputFields = replyInputs.map(reply => ({ ...reply, open: false, replyInputValue: '' }));
+        setReplyInputs(repliesInputFields);
+        setOpenCommentPopup(false)
+    };
 
     const handleClickMore = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
@@ -89,12 +94,6 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
     };
 
     const [showReplies, setShowReplies] = useState(post.comments.map(() => ({ list: false })));
-
-    const handleOpenListReplies = (index: any) => {
-        const updatedShowReplies = [...showReplies]; // Create a copy of the array
-        updatedShowReplies[index].list = !updatedShowReplies[index].list; // Toggle the list property
-        setShowReplies(updatedShowReplies); // Update the state with the new array
-    };
 
     const [replyMessage, setReplyMessage] = useState(post.comments.map(() => ({ reply: '' })));
     const [replyInputs, setReplyInputs] = useState(
@@ -129,7 +128,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                 updatedInputs.push({ open: false, replyInputValue: '' });
                 updatedInputs.push({ open: false, replyInputValue: '' });
                 setReplyInputs(updatedInputs);
-                refetch();
+                refetch()
             }
         );
     };
@@ -145,7 +144,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                 },
                 body: JSON.stringify({ comment: commentMessage, commentId: commentId }),
             },
-            (response) => {
+            async (response) => {
                 console.log(response);
                 // Increase the index of comments by two to add the new comment
                 const updatedInputs = [...replyInputs];
@@ -157,7 +156,20 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                 const updatedMessage = [...replyMessage];
                 updatedMessage[index].reply = ''
                 setReplyMessage(updatedMessage);
-                refetch();
+
+                // setShowAllReplies(index);
+                const updatedReply = [...showReplies];
+                updatedReply[index].list = true
+                setShowReplies(updatedReply)
+
+                refetch().then(() => {
+                    setTimeout(() => {
+                        bottomDivRef.current[commentId].scrollIntoView({
+                            behavior: 'smooth', // You can adjust the scrolling behavior
+                            block: 'nearest',       // Scroll to the bottom of the element
+                        });
+                    }, 100)
+                })
             }
         );
     };
@@ -172,7 +184,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                     Authorization: `Bearer ${token}`,
                 },
             },
-            () => refetch()
+            refetch()
         );
     };
 
@@ -186,19 +198,9 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                     Authorization: `Bearer ${token}`,
                 },
             },
-            handleFetchUserBookmarks
-        );
-    };
-
-    const handleFetchUserBookmarks = async () => {
-        await fetchInJSON(
-            `/profile/collection`,
-            {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            },
-            (res) => {
-                setBookmarksData((res as any).data.data as BookmarkItem[]);
+            async () => {
+                // Fetch bookmarks after successful bookmarking
+                await refetchBookmarks();
             }
         );
     };
@@ -235,9 +237,10 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
         );
     };
 
+    // const [followBtnStyle, setFollowBtnStyle] = useState(post.user.map((user) => ({ list: false })));
+
     const handleFollowClick = async (userId: any) => {
         setFollowLoading(true); // Set loading state before API call
-
         await fetchInJSON(
             `/profile/follow/${userId}/`,
             {
@@ -249,32 +252,32 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
             },
             () => refetch()
         );
-
         setFollowLoading(false); // Set loading state back to false after API call
     };
 
-    const handleFetchProfileInfo = async () => {
-        try {
-            const response = await fetchInJSON(`/follow`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            });
+    // const handleFetchProfileInfo = async () => {
+    //     try {
+    //         const response = await fetchInJSON(`/profile`, {
+    //             method: 'GET',
+    //             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+    //         });
 
-            if (response.ok) {
-                const responseData = await response.json();
-                const { avatar } = responseData.data; // Extract token value from data object
-                avatarUrl = avatar;
-            } else {
-                console.log(response);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    //         if (response.ok) {
+    //             const responseData = await response.json();
+    //             const { avatar } = responseData.data; // Extract token value from data object
+    //             avatarUrl = avatar;
+    //         } else {
+    //             console.log(response);
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
-    useEffect(() => {
-        handleFetchProfileInfo();
-    }, [openCommentPopup]);
+
+    // useEffect(() => {
+    //     handleFetchProfileInfo();
+    // }, [openCommentPopup]);
 
     function handleReportClick() {
         handleClose();
@@ -287,6 +290,27 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
         setShowReportPopup(false);
         setShowOverlay(false);
     }
+
+    function formatTimeAgo(date: any) {
+        const now: any = new Date();
+        const daysDifference = differenceInDays(now, date);
+        const weeksDifference = differenceInWeeks(now, date);
+        const hoursDifference = differenceInHours(now, date);
+
+        if (weeksDifference >= 4) {
+            return format(date, 'dd-MM-yyyy');
+        } else if (weeksDifference >= 1) {
+            return `${weeksDifference}w`;
+        } else if (daysDifference >= 1) {
+            return `${daysDifference}d`;
+        } else if (hoursDifference >= 1) {
+            return `${hoursDifference}h`;
+        } else {
+            const minutesDifference = Math.floor((now - date) / (1000 * 60)); // Calculate minutes
+            return `${minutesDifference}m`;
+        }
+    }
+
 
     return (
         <div className={classNames(styles.root, className)}>
@@ -421,12 +445,9 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                 <div className={styles.userCommentDiv}>
                                     <div style={{ width: '100%' }}>
                                         <div className={styles.commentsHeaderDiv}>Comments</div>
-                                        {post.comments.map((comment, index) => (
+                                        {post.comments.map((comment, cindex) => (
                                             <>
-                                                <div
-                                                    // key={comment.id}
-                                                    className={styles.userInfoCommentDiv}
-                                                >
+                                                <div className={styles.userInfoCommentDiv} key={comment.id}>
                                                     <div className={styles.userInfoCommentFrame}>
                                                         <img
                                                             src={comment.user.avatar || profileIcon}
@@ -435,15 +456,18 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                                         />
                                                         <h4 className={styles.userNameTextComment}>
                                                             {comment.user.name}
+                                                            <span className={styles.timeText}>
+                                                                {formatTimeAgo(new Date(comment.createdTime))}
+                                                            </span>
                                                         </h4>
+                                                        {/* <p>{formatTimeAgo(new Date(comment.createdTime))}</p> */}
                                                     </div>
-
                                                     <div className={styles.userCommmentLikesDiv}>
                                                         {comment.isLiked ? <CommentLike liked={true} /> : <CommentLike />}
                                                         {comment.likes}
                                                     </div>
                                                 </div>
-                                                <div key={comment.id} className={styles.commentDiv}>
+                                                <div className={styles.commentDiv}>
                                                     {comment.comment}
                                                     <Button
                                                         sx={{
@@ -454,48 +478,113 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                                             padding: '8px 0px 0px 0px',
                                                             minWidth: '0',
                                                         }}
-                                                        onClick={() => handleOpenReplyInput(index)}
+                                                        onClick={() => handleOpenReplyInput(cindex)}
                                                     >
                                                         Reply
                                                     </Button>
-                                                    {replyInputs[index]?.open && (
-                                                        <div
-                                                            style={{
-                                                                paddingTop: '10px',
-                                                                paddingBottom: '10px',
-                                                            }}
-                                                        >
-                                                            <form
-                                                                onSubmit={(e) => {
-                                                                    e.preventDefault(); // Prevent the default form submission behavior
-                                                                    handleReply(
-                                                                        replyMessage[index].reply,
-                                                                        post.mediaId,
-                                                                        comment.id,
-                                                                        index
-                                                                    );
-                                                                }}
-                                                            >
-                                                                <InputField
-                                                                    placeholder="Message..."
-                                                                    type={''}
-                                                                    value={replyMessage[index]?.reply}
-                                                                    onChange={(e: any) => {
-                                                                        const updatedReplyMessage = [
-                                                                            ...replyMessage,
-                                                                        ];
-                                                                        updatedReplyMessage[
-                                                                            index
-                                                                        ].reply = e.target.value;
-                                                                        setReplyMessage(
-                                                                            updatedReplyMessage
+                                                    <div >
+
+                                                        {replyInputs[cindex]?.open && (
+                                                            <div
+                                                                style={{ paddingTop: '10px', paddingBottom: '10px', }}>
+                                                                <form
+                                                                    onSubmit={(e) => {
+                                                                        e.preventDefault(); // Prevent the default form submission behavior
+
+                                                                        handleReply(
+                                                                            replyMessage[cindex].reply,
+                                                                            post.mediaId,
+                                                                            comment.id,
+                                                                            cindex,
                                                                         );
                                                                     }}
-                                                                />
-                                                            </form>
-                                                        </div>
-                                                    )}
-                                                    {comment.replies.length !== 0 ? (
+                                                                >
+                                                                    <InputField
+                                                                        placeholder="Message..."
+                                                                        type={''}
+                                                                        value={replyMessage[cindex]?.reply}
+                                                                        onChange={(e: any) => {
+                                                                            const updatedReplyMessage = [...replyMessage,];
+                                                                            updatedReplyMessage[cindex].reply = e.target.value;
+                                                                            setReplyMessage(updatedReplyMessage);
+                                                                        }}
+                                                                    />
+                                                                </form>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {
+                                                        comment.replies.slice(0, 5).map((reply) => (
+                                                            <div className={styles.commentRepliesDiv} key={reply.id}>
+                                                                <div
+                                                                    className={styles.repliesDropdown}
+                                                                >
+                                                                    <div className={styles.userInfoCommentDiv}>
+                                                                        <div className={styles.userInfoCommentFrame}>
+                                                                            <img
+                                                                                src={reply.user.avatar || profileIcon}
+                                                                                alt={reply.user.name}
+                                                                                className={styles.avatarImgCircleComment}
+                                                                            />
+                                                                            <h4 className={styles.userNameTextComment}>
+                                                                                {reply.user.name}
+                                                                                <span className={styles.timeText}>
+                                                                                    {formatTimeAgo(new Date(reply.createdTime))}
+                                                                                </span>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div className={styles.userCommmentLikesDiv}>
+                                                                            <CommentLike />
+                                                                            {reply.likes}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        className={styles.commentDiv}>
+                                                                        {reply.reply}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                    {
+                                                        showReplies[cindex].list &&
+                                                        (
+                                                            comment.replies.slice(5).map((reply, index) => (
+                                                                <div className={styles.commentRepliesDiv} key={reply.id}>
+                                                                    <div
+                                                                        className={styles.repliesDropdown}
+                                                                    >
+                                                                        <div className={styles.userInfoCommentDiv}>
+                                                                            <div className={styles.userInfoCommentFrame}>
+                                                                                <img
+                                                                                    src={reply.user.avatar || profileIcon}
+                                                                                    alt={reply.user.name}
+                                                                                    className={styles.avatarImgCircleComment}
+                                                                                />
+                                                                                <h4 className={styles.userNameTextComment}>
+                                                                                    {reply.user.name}
+                                                                                    <span className={styles.timeText}>
+                                                                                        {formatTimeAgo(new Date(reply.createdTime))}
+                                                                                    </span>
+                                                                                </h4>
+                                                                            </div>
+                                                                            <div className={styles.userCommmentLikesDiv}>
+                                                                                <CommentLike />
+                                                                                {reply.likes}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div
+                                                                            ref={(ref) => (bottomDivRef ? bottomDivRef.current[comment.id] = ref : null)}
+                                                                            className={styles.commentDiv}>
+                                                                            {reply.reply}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        )
+                                                    }
+                                                    {comment.replies.length > 5 && (
                                                         <div className={styles.commentRepliesDiv}>
                                                             <div>
                                                                 <Button
@@ -508,59 +597,21 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                                                         margin: '0px 0px 15px 0px',
                                                                         minWidth: '0',
                                                                     }}
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault;
-                                                                        handleOpenListReplies(index);
-                                                                    }}
-                                                                >
+                                                                    onClick={() => {
+                                                                        let updatedReplies = [...showReplies];
+                                                                        updatedReplies[cindex].list = !showReplies[cindex].list
+                                                                        setShowReplies(updatedReplies)
+                                                                    }}>
                                                                     <div style={{ marginRight: '5px' }}>
-                                                                        {`View replies (${comment.replies.length})`}
+                                                                        {`View ${showReplies[cindex].list ? 'less' : 'more'} (${comment.replies.length - 5})`}
                                                                     </div>
                                                                     <ArrowDown />
                                                                 </Button>
                                                             </div>
-                                                            {showReplies[index]?.list &&
-                                                                comment.replies.map((reply, index) => (
-                                                                    <div
-                                                                        className={styles.repliesDropdown}
-                                                                    >
-                                                                        <div
-                                                                            key={reply.id}
-                                                                            className={styles.userInfoCommentDiv}
-                                                                        >
-                                                                            <div
-                                                                                className={styles.userInfoCommentFrame}
-                                                                            >
-                                                                                <img
-                                                                                    src={reply.user.avatar || profileIcon}
-                                                                                    alt={reply.user.name}
-                                                                                    className={styles.avatarImgCircleComment}
-                                                                                />
-                                                                                <h4
-                                                                                    className={styles.userNameTextComment}
-                                                                                >
-                                                                                    {reply.user.name}
-                                                                                </h4>
-                                                                            </div>
-
-                                                                            <div
-                                                                                className={styles.userCommmentLikesDiv}
-                                                                            >
-                                                                                <CommentLike />
-                                                                                {reply.likes}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            key={comment.id}
-                                                                            className={styles.commentDiv}
-                                                                        >
-                                                                            {reply.reply}
-                                                                        </div>
-                                                                    </div>))}
-                                                        </div>) : ('')}
+                                                        </div>)}
                                                 </div>
                                             </>))}
-                                    </div>
+                                    </div >
                                     <div
                                         style={{
                                             width: '100%',
@@ -601,7 +652,6 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                 )}
                 <div className={styles.container}>
                     <div className={styles.postContainer}>
-                        {/* <h4>{post.mediaId}</h4> */}
                         <div className={styles.postCaptionContainer}>
                             <div className={styles.postCreator}>
                                 <div className={styles['profilePic-UserNameDiv']}>
@@ -651,10 +701,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                 }}
                                 onClick={handleLikePost}
                             >
-                                {post.isLiked
-                                    ? <Like liked={true} /> : <Like />
-                                }
-
+                                {post.isLiked ? <Like liked={true} /> : <Like />}
                                 <h4 className={styles.interactionText}>{post.likes}</h4>
                             </Button>
                         </div>
@@ -668,7 +715,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                 }}
                                 onClick={() => handleOpenCommentPopup()}
                             >
-                                <Comment />
+                                <CommentIcon />
                                 <h4 className={styles.interactionText}>{post.comments.length}</h4>
                             </Button>
                         </div>
@@ -686,17 +733,10 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                 aria-expanded={open ? 'true' : undefined}
                                 onClick={handleBookmarking}
                             >
-                                {bookmarksData.find((item) => item.mediaId === post.mediaId) ? (
-                                    <>
-                                        <Bookmark bookmarked={true} />
-                                        <h4 className={styles.interactionText}></h4>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Bookmark />
-                                        <h4 className={styles.interactionText}></h4>
-                                    </>
-                                )}
+                                <>
+                                    <Bookmark bookmarked={isBookmarked} />
+                                    <h4 className={styles.interactionText}></h4>
+                                </>
                             </Button>
                         </div>
                         <div className={styles.interactionDiv}>
@@ -781,7 +821,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
