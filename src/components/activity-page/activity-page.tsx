@@ -132,48 +132,56 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                         <h4>Activity</h4>
                     </div>
                     <div className={styles.suggestedContent}>
-                        {activityData.slice(firstIndex, lastIndex).map((activity, index) => (
-                            <div key={activity._id} className={styles.suggestedItem}>
-                                <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                        <img
-                                            src={
-                                                activity.user.avatar || 'https://via.placeholder.com/128'
-                                            }
-                                            alt=""
-                                            className={styles.plusIconStyle}
-                                        />
-                                        <div className={styles.accountName}>
-                                            <h6 className={styles.messageText}>
-                                                {activity.message}
-                                                <span className={styles.timeText}>
-                                                    {elapsedTimeStrings[index]}
-                                                </span>
-                                            </h6>
+                        {activityData.length === 0 ? (
+                            <h4 style={{ alignSelf: 'center' }}>No Notifications yet!</h4>
+                        ) : (
+                            <>
+                                {activityData.slice(firstIndex, lastIndex).map((activity, index) => (
+                                    <div key={activity._id} className={styles.suggestedItem}>
+                                        <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                <img
+                                                    src={
+                                                        activity.user.avatar || 'https://via.placeholder.com/128'
+                                                    }
+                                                    alt=""
+                                                    className={styles.plusIconStyle}
+                                                />
+                                                <div className={styles.accountName}>
+                                                    <h6 className={styles.messageText}>
+                                                        {activity.message}
+                                                        <span className={styles.timeText}>
+                                                            {elapsedTimeStrings[index]}
+                                                        </span>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                {activity.type === 'Follow' ? (
+                                                    <button
+                                                        className={styles.svgButton}
+                                                    // onClick={(event) =>
+                                                    //     handleFollowBtnClicked(event, activity.triggeredUser._id)
+                                                    // }
+                                                    >
+                                                        <Follow />
+                                                    </button>
+                                                ) : (
+                                                    <img
+                                                        className={styles.squareIconStyle}
+                                                        src={activity.triggeredUser.avatar || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
+                                                        alt=""
+                                                    />
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        {activity.type === 'Follow' ? (
-                                            <button
-                                                className={styles.svgButton}
-                                            // onClick={(event) =>
-                                            //     handleFollowBtnClicked(event, activity.triggeredUser._id)
-                                            // }
-                                            >
-                                                <Follow />
-                                            </button>
-                                        ) : (
-                                            <img
-                                                className={styles.squareIconStyle}
-                                                src={activity.triggeredUser.avatar || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
-                                                alt=""
-                                            />
-                                        )}
-                                    </div>
-                                </div>
 
-                            </div>
-                        ))}
+                                    </div>
+                                ))
+                                }
+                            </>
+                        )}
+
                     </div>
                 </div>
             </div>

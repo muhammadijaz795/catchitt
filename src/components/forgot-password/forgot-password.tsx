@@ -47,7 +47,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
     const [, setLanguageSelector] = useState(currentLanguage.name);
 
     const API_KEY = process.env.VITE_API_URL;
-    const forgotPwdEndPoint = '/auth/password/forgot';
+    const forgotPwdEndPoint = '/auth';
     const [errorMessage, setErrorMessage] = useState('');
     // const [form, setForm] = useState('forgotPwd');
     const [user, setUser] = useState(defaultUser);
@@ -66,10 +66,10 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
     /** Handling Forgot Password Scenario */
     const handleForgotPassword = async (email: string) => {
         try {
-            const response = await fetch(`${API_KEY}${forgotPwdEndPoint}`, {
+            const response = await fetch(`${API_KEY}${forgotPwdEndPoint}/password/forgot`, {
                 method: 'POST',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email: email }),
             });
 
             if (response.ok) {

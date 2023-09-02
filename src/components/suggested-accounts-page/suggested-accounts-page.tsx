@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
 import classNames from 'classnames';
 import styles from './suggested-accounts-page.module.scss';
 import { TopBar } from '../top-bar/top-bar';
@@ -6,155 +6,198 @@ import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { useAuthStore } from '../../store/authStore';
 import { Navigate } from 'react-router-dom';
+import useDebounce from '../reusables/useDebounce';
 
 export interface SuggestedAccountsPageProps {
-    className?: string;
+	className?: string;
 }
 
 interface Account {
-    _id: string;
-    avatar: string;
-    name: string;
+	_id: string;
+	avatar: string;
+	name: string;
 }
 
 export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps) => {
-    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-    const token = useAuthStore((state) => state.token);
-    const [currentPage] = useState(1);
-    const itemsPerPage = 20; // 5 rows * 4 cards per row
+	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+	const token = useAuthStore((state) => state.token);
 
-    const [errorMessage, setErrorMessage] = useState('');
-    const [accountsData, setAccountsData] = useState<Account[]>([]);
-    const [followLoading, setFollowLoading] = useState(false);
-    const [currentPostUser, setCurrentPostUser] = useState('');
+	const [errorMessage, setErrorMessage] = useState('');
+	const [accountsData, setAccountsData] = useState<Account[]>([]);
+	const page = useRef(1)
+	const done = useRef(false)
 
-    const API_KEY = process.env.VITE_API_URL;
-    const suggestedEndPoint = '/profile/suggested-users';
+	const API_KEY = process.env.VITE_API_URL;
+	const suggestedEndPoint = '/profile/suggested-users';
 
-    const handleFetchSuggestedAccounts = async () => {
-        try {
-            const response = await fetch(`${API_KEY}${suggestedEndPoint}`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            });
 
-            if (response.ok) {
-                const responseData = await response.json();
-                setAccountsData(responseData.data.data);
-            } else {
-                const errorResponseData = await response.json();
-                const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
-                setErrorMessage(errorMessageFromServer);
-            }
-        } catch (error) {
-            // console.error(error);
-            console.log(errorMessage);
-        }
-    };
+	const removeDuplicates = (arr: any[]) => {
+		let all = [...accountsData, ...arr]
+		let onlyids = all.map(e => e._id)
+		let unique = Array.from(new Set(onlyids))
+		let sanitized = unique.map(e => all.find(c => e == c._id))
+		console.log("only got those: ", sanitized.length)
+	}
 
-    useEffect(() => {
-        handleFetchSuggestedAccounts();
-    }, [token]);
+	const handleFetchSuggestedAccounts = async () => {
+		if (done.current) {
+			return
+		}
 
-    // const handleNextPage = () => {
-    //     setCurrentPage((prevPage) => prevPage + 1);
-    // };
+		try {
+			const response = await fetch(`${API_KEY}${suggestedEndPoint}?page=${page.current}`, {
+				method: 'GET',
+				headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+			});
 
-    // const handlePreviousPage = () => {
-    //     setCurrentPage((prevPage) => prevPage - 1);
-    // };
+			if (response.ok) {
+				const responseData = await response.json();
+				// if (responseData.data.data.length == 0) {
+				// 	done.current = true
+				// 	return
+				// }
+				page.current++
 
-    const handleFollowClick = async (account: Account) => {
-        try {
-            setFollowLoading(true); // Set loading state before API call
+				removeDuplicates([...responseData.data.data])
+				setAccountsData(prev => {
+					let all = [...prev, ...responseData.data.data]
+					let onlyids = all.map(e => e._id)
+					let unique = Array.from(new Set(onlyids))
+					let sanitized = unique.map(e => all.find(c => e == c._id))
+					return [...sanitized]
+				});
+			} else {
+				const errorResponseData = await response.json();
+				const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
+				setErrorMessage(errorMessageFromServer);
+			}
+		} catch (error) {
+			// console.error(error);
+			console.log(errorMessage);
+		}
+	};
+	const dHandleFetchSuggestedAccounts = useDebounce(handleFetchSuggestedAccounts)
 
-            const response = await fetch(`${API_KEY}/profile/follow/${account._id}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+	if (accountsData.length <= 10) {
+		dHandleFetchSuggestedAccounts([])
+	}
 
-            if (response.ok) {
-                // Handle success as needed
-            } else {
-                // Handle error as needed
-            }
-        } catch (error) {
-            // Handle error as needed
-        } finally {
-            await handleFetchSuggestedAccounts();
-            setFollowLoading(false); // Set loading state back to false after API call
-        }
-    };
+	const handleBottomPage = (e: any) => {
+		const windowHeight = window.innerHeight;
+		const documentHeight = document.querySelector('#root > div')?.scrollHeight as number;
+		const scrollPosition = e.target.scrollTop;
+		const threshold = 10;
 
-    const handleFollowBtnClicked = async (
-        event: React.MouseEvent<HTMLElement>,
-        account: Account
-    ) => {
-        console.log(account._id);
-        // setFollowLoading(true);
-        setCurrentPostUser(account._id);
-        await handleFollowClick(account);
-        // setFollowLoading(false);
-    };
+		if ((windowHeight + scrollPosition >= documentHeight - threshold)) {
+			dHandleFetchSuggestedAccounts([])
+		}
+	}
 
-    if (!isLoggedIn) {
-        return <Navigate to="/auth" />;
-    }
+	useEffect(() => {
+		document.body.children[0].children[0].addEventListener('scroll', handleBottomPage)
+		return () => { document.body.children[0].children[0].removeEventListener('scroll', handleBottomPage) }
+	}, [])
 
-    // Calculate the pagination boundaries
-    const lastIndex = currentPage * itemsPerPage;
-    const firstIndex = lastIndex - itemsPerPage;
-    const displayedAccounts = accountsData.slice(firstIndex, lastIndex);
+	useEffect(() => {
+		page.current = 1
+		done.current = false
+		dHandleFetchSuggestedAccounts([]);
+	}, []);
 
-    return (
-        <div className={classNames(styles.root, className)}>
-            <div className={styles.topBarDiv}>
-                <TopBar />
-            </div>
-            <div className={styles.container}>
-                <div className={styles.leftSide}>
-                    <div className={styles.sideNavDiv}>
-                        <SideNavBar selectedIndex={null} />
-                    </div>
-                    <div className={styles.suggestedActivityDiv}>
-                        <SuggestedActivity showActivity={true} />
-                    </div>
-                </div>
-                <div className={styles.middleSectionDiv}>
-                    <div className={styles.gridContainer}>
-                        {displayedAccounts.map((account) => (
-                            <div key={account._id} className={styles.accountCardDiv}>
-                                <div className={styles.userInfoFrame}>
-                                    <img
-                                        src={account.avatar || 'https://via.placeholder.com/128'}
-                                        alt={account.name}
-                                        className={styles.avatarImgCircle}
-                                    />
-                                    <h4 className={styles.userNameText}>{account.name}</h4>
-                                </div>
-                                <div className={styles.followBtnDiv}>
-                                    <button
-                                        // ref={buttonRef}
-                                        className={
-                                            account._id ? styles.followBtn : styles.followingBtn
-                                        }
-                                        onClick={(event) => handleFollowBtnClicked(event, account)}
-                                    >
-                                        {followLoading
-                                            ? '...'
-                                            : account._id
-                                            ? 'Follow'
-                                            : 'Following'}
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+	if (!isLoggedIn) {
+		return <Navigate to="/auth" />;
+	}
+
+	console.log("accounts", accountsData.length)
+
+	const SuggestedAccount = memo(({ account }: { account: Account }) => {
+
+		const [isFollowed, setIsFollowed] = useState(false)
+		const [followLoading, setFollowLoading] = useState(false)
+
+		const handleFollowClick = async (account: Account) => {
+			try {
+				setFollowLoading(true); // Set loading state before API call
+				const res = await fetch(`${API_KEY}/profile/follow/${account._id}/`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				if (res.ok) {
+					setIsFollowed(!isFollowed)
+				}
+			} catch (error) {
+				// Handle error as needed
+			} finally {
+				// await handleFetchSuggestedAccounts();
+				setFollowLoading(false); // Set loading state back to false after API call
+			}
+		};
+
+		const handleFollowBtnClicked = async (
+			event: React.MouseEvent<HTMLElement>,
+			account: Account
+		) => {
+			console.log("followed", account._id)
+			await handleFollowClick(account);
+		};
+
+		return (
+			<div key={account._id} className={styles.accountCardDiv}>
+				<div className={styles.userInfoFrame}>
+					<img
+						src={account.avatar || 'https://via.placeholder.com/128'}
+						alt={account.name}
+						className={styles.avatarImgCircle}
+					/>
+					<h4 className={styles.userNameText}>{account.name}</h4>
+				</div>
+				<div className={styles.followBtnDiv}>
+					<button
+						className={
+							isFollowed ? styles.followBtn : styles.followingBtn
+						}
+						onClick={(event) => handleFollowBtnClicked(event, account)}
+					>
+						{
+							followLoading
+								? '...'
+								:
+								isFollowed
+									? 'Followed'
+									: 'Follow'
+						}
+					</button>
+				</div>
+			</div>
+		)
+	}, (prev, next) => prev.account._id == next.account._id)
+
+	return (
+		<div className={classNames(styles.root, className)}>
+			<div className={styles.topBarDiv}>
+				<TopBar />
+			</div>
+			<div className={styles.container}>
+				<div className={styles.leftSide}>
+					<div className={styles.sideNavDiv}>
+						<SideNavBar selectedIndex={null} />
+					</div>
+					<div className={styles.suggestedActivityDiv}>
+						<SuggestedActivity showActivity={true} />
+					</div>
+				</div>
+				<div className={styles.middleSectionDiv}>
+					<div className={styles.gridContainer}>
+						{accountsData.map((account, i) => (
+							<SuggestedAccount key={i} account={account} />
+						))}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };

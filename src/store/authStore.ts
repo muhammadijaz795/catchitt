@@ -5,6 +5,7 @@ interface AuthState {
     name?: string | null; // Make the name property optional
     token: string | null;
     email: string | null;
+    cache: any | null;
     login: (email: string, token: string, name?: string) => void; // Update the login function signature
     logout: () => void;
 }
@@ -15,13 +16,15 @@ export const useAuthStore = create<AuthState>((set) => {
     const email = sessionStorage.getItem('email');
     const token = sessionStorage.getItem('token');
     const name = sessionStorage.getItem('name');
+    const cache = sessionStorage.getItem('cache');
 
     return {
         isLoggedIn,
         name: isLoggedIn ? name : '',
         email: isLoggedIn ? email : '',
         token: isLoggedIn ? token : '',
-        login: (email: string, token: string, name?: string) => {
+        cache: isLoggedIn ? cache : '',
+        login: (email: string, token: string, name?: string, cache?: []) => {
             sessionStorage.setItem('token', token);
             sessionStorage.setItem('isLoggedIn', 'true');
             if (name) {
@@ -32,10 +35,11 @@ export const useAuthStore = create<AuthState>((set) => {
             }
         },
         logout: () => {
+            set({ isLoggedIn: false, name: '', email: '', token: '', cache: [] });
             sessionStorage.removeItem('token');
             sessionStorage.removeItem('isLoggedIn');
             sessionStorage.removeItem('name');
-            set({ isLoggedIn: false, name: '', email: '', token: '' });
+            sessionStorage.removeItem('cache');
         },
     };
 });

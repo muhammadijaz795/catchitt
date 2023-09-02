@@ -51,6 +51,7 @@
 .postCaptionContainer {
   display: flex;
   flex-direction: column;
+  width: 602px;
 }
 .postCreator {
   display: flex;
@@ -576,7 +577,7 @@ margin-right: 12px;
 
 .mediaContainer {
   display: flex;
-  width: 100%;
+  width: 602px;
   height: 100%;
   // min-height: 815px;
   // margin-bottom: 100px;  

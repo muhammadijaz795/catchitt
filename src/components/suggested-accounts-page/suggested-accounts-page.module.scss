@@ -107,6 +107,25 @@
     align-items: center;
   }
 
+  .followingBtn {
+	border-radius: 6px;
+	background-color: #5448b2;
+	width: 108px;
+	display: flex;
+	height: 32px;
+	padding: 0px 12px;
+	justify-content: center;
+	align-items: center;
+	border-color: #5448b2;
+	color: #ffffff;
+	/* Small/Semibold */
+	font-family: Poppins;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 120%; /* 16.8px */
+  }
+
   .followBtn {
     width: 157px;
     border-radius: 4px;

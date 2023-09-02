@@ -1,115 +1,132 @@
 import classNames from 'classnames';
 import styles from './post.module.scss';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, memo, useCallback } from 'react';
 import { ReasonReportPopup } from '../reason-report-popup/reason-report-popup';
 import { useAuthStore } from '../../store/authStore';
 import MenuItem from '@mui/material/MenuItem';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
-import { Box, Modal, Typography, Tooltip } from '@mui/material';
+import { Box, Modal, Typography } from '@mui/material';
 import confirmationIcon from '../../assets/confirmationIcon.png';
 import VideoPlayer from '../reusables/VideoPlayer';
 import profileIcon from '../../assets/profileIcon.png';
 import { useInView } from 'react-intersection-observer';
-import { PostProps } from './postTypes';
-import { PopupModal } from '../reusables/popupModal';
+import { PostProps, Post as PostType } from './postTypes';
+// import { PopupModal } from '../reusables/popupModal';
 import InputField from '../reusables/InputField';
-import { differenceInHours, differenceInDays, differenceInWeeks, format } from 'date-fns';
+// import { differenceInHours, differenceInDays, differenceInWeeks, format } from 'date-fns';
+import { Comment } from './comment';
+import useDebounce from '../reusables/useDebounce'
 
 import { Send } from './svg-components/Send';
 import { fetchInJSON } from '../reusables/fetchInJSON';
 import { Bookmark } from './svg-components/Bookmark';
 import { CommentIcon } from './svg-components/Comment';
 import { Like } from './svg-components/Like';
-import { CommentLike } from './svg-components/CommentLike';
 import { Save } from './svg-components/Save';
 import { Copy } from './svg-components/Copy';
 import { NotInterested } from './svg-components/NotInterested';
 import { Report } from './svg-components/Report';
 import { Share } from './svg-components/Share';
 import { More } from './svg-components/More';
-import { ArrowDown } from './svg-components/ArrowDown';
+// import { getCache, replaceCache } from '../../store/cachedBookmarks';
+import { useNavigate } from 'react-router-dom';
 
-export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedIds, refetch, refetchBookmarks, isBookmarked }) => {
-    const buttonRef = useRef(null);
-    const videoRef = useRef<any>(null); // Use `any` type to avoid TypeScript errors
-    let avatarUrl = ''
+export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, endedIds, avatar, isBookmarked, refetchbookmarks }) => {
+    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const navigate = useNavigate()
     const [videoElement, inView] = useInView({
         triggerOnce: true,
         threshold: 0.1, // Adjust the threshold as needed
     });
 
+    // const [toggleBookmark, setToggleBookmark] = useState(Array.from(getCache()).find((item) => item === post.mediaId
+    // ) ? true : false)
+    const token = useAuthStore((state) => state.token);
+
+    const [postData, setPostData] = useState(post)
+    const [followLoading, setFollowLoading] = useState(false);
+
+    const [openConfirmation, setOpenConfirmation] = useState(false);
+    // const [openSharePopup, setOpenSharePopup] = useState(false);
+    const [showReportPopup, setShowReportPopup] = useState(false);
+    const [, setShowOverlay] = useState(false);
+    const [openCommentPopup, setOpenCommentPopup] = useState(false);
+    const [message, setMessage] = useState('');
+    const handleOpenCommentPopup = () => {
+        setOpenCommentPopup(true);
+    };
+	
+
+    const [anchors, setAnchors] = useState<{ more: null, share: null }>({ more: null, share: null });
+    const buttonRef = useRef(null);
+    const videoRef = useRef<any>(null); // Use `any` type to avoid TypeScript errors
+    const openMore = Boolean(anchors.more);
+    const openShare = Boolean(anchors.share);
+
     useEffect(() => {
-        if (inView) {
-            videoRef.current?.play();
-        } else {
-            videoRef.current?.pause();
+        try {
+            if (inView) {
+                videoRef.current?.play();
+            } else {
+                videoRef.current?.pause();
+            }
+        } catch (error) {
+            // This will always error out at first as part of Chrome's security
+            // the user has to interact with the page for a while first before
+            // video autoplay can work	
         }
     }, [inView]);
 
-    const [followLoading, setFollowLoading] = useState(false);
-
-    const token = useAuthStore((state) => state.token);
-
-    const bottomDivRef = useRef<any>({});
-
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-
-    const [openConfirmation, setOpenConfirmation] = useState(false);
     const handleOpenConfirmation = () => {
         setOpenConfirmation(true);
         setShowReportPopup(false);
     };
-    const handleCloseConfirmation = () => setOpenConfirmation(false);
 
-    const [openSharePopup, setOpenSharePopup] = useState(false);
-    const handleOpenSharePopup = () => {
-        setOpenSharePopup(true);
-    };
-    const [showReportPopup, setShowReportPopup] = useState(false);
-    const [, setShowOverlay] = useState(false);
-    const [openCommentPopup, setOpenCommentPopup] = useState(false);
-    const handleOpenCommentPopup = () => {
-        setOpenCommentPopup(true);
-    };
-
-    const handleCloseSharePopup = () => setOpenSharePopup(false);
-    const handleCloseCommentPopup = () => {
-        const repliesList = showReplies.map(reply => ({ ...reply, list: false }));
-        setShowReplies(repliesList);
-        const repliesInputFields = replyInputs.map(reply => ({ ...reply, open: false, replyInputValue: '' }));
-        setReplyInputs(repliesInputFields);
-        setOpenCommentPopup(false)
-    };
-
-    const handleClickMore = (event: React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
-        setAnchorEl(event.currentTarget);
+    const handleShareClose = () => {
+        setAnchors(prev => ({ ...prev, share: null }));
     };
 
     const handleClose = () => {
-        setAnchorEl(null);
+        setAnchors(prev => ({ ...prev, more: null }));
     };
 
-    const [showReplies, setShowReplies] = useState(post.comments.map(() => ({ list: false })));
+    const handleCloseConfirmation = () => setOpenConfirmation(false);
+    const handleOpenSharePopup = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        setAnchors(prev => ({ ...prev, share: event.currentTarget as unknown as null }));
+        navigator.clipboard.writeText(`${location.host}/view/video/${post.mediaId}`)
+        setTimeout(() => {
+            handleShareClose()
+        }, 2000)
+    };
+    // const handleCloseSharePopup = () => setOpenSharePopup(false);
+    const handleCloseCommentPopup = () => { setOpenCommentPopup(false) };
 
-    const [replyMessage, setReplyMessage] = useState(post.comments.map(() => ({ reply: '' })));
-    const [replyInputs, setReplyInputs] = useState(
-        post.comments.map(() => ({ open: false, replyInputValue: '' }))
-    );
-
-    const handleOpenReplyInput = (index: any) => {
-        const updatedInputs = replyInputs.map((input, i) => ({
-            ...input,
-            open: i === index ? !input.open : false,
-        }));
-        setReplyInputs(updatedInputs);
+    const handleClickMore = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        setAnchors(prev => ({ ...prev, more: event.currentTarget as unknown as null }));
     };
 
-    const [message, setMessage] = useState('');
-    const handleCommenting = async (commentMessage: string, id: string) => {
+    const handleLikeComment = async (id: string,) => {
+        await fetchInJSON(
+            `/media-content/like/comment/${id}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+            async () => {
+                await handleFetchCurrentPost(post.mediaId)
+            }
+        );
+    };
+    const dHandleLikeComment = useDebounce(handleLikeComment, 5)
+
+    const handleCommenting = async (commentMessage: string, id: string,) => {
         await fetchInJSON(
             `/media-content/comment/${id}`,
             {
@@ -120,22 +137,34 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                 },
                 body: JSON.stringify({ comment: commentMessage }),
             },
-            (response) => {
-                console.log(response);
+            async () => {
+                await handleFetchCurrentPost(id)
                 setMessage('');
-                // Increase the index of comments by two to add the new comment
-                const updatedInputs = [...replyInputs];
-                updatedInputs.push({ open: false, replyInputValue: '' });
-                updatedInputs.push({ open: false, replyInputValue: '' });
-                setReplyInputs(updatedInputs);
-                refetch()
             }
         );
     };
+    const dHandleCommenting = useDebounce(handleCommenting, 5)
 
-    const handleReply = async (commentMessage: string, id: string, commentId: string, index: number) => {
+    const handleFetchCurrentPost = async (myMediaId: string) => {
         await fetchInJSON(
-            `/media-content/comment/${id}`,
+            `/media-content/videos/${myMediaId}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+            (res: any) => {
+                setMessage('')
+                setPostData((res.data) as PostType)
+            }
+        )
+    }
+
+    const handleReply = async (commentMessage: string, commentId: string) => {
+        await fetchInJSON(
+            `/media-content/comment/${postData.mediaId}`,
             {
                 method: 'POST',
                 headers: {
@@ -144,37 +173,12 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                 },
                 body: JSON.stringify({ comment: commentMessage, commentId: commentId }),
             },
-            async (response) => {
-                console.log(response);
-                // Increase the index of comments by two to add the new comment
-                const updatedInputs = [...replyInputs];
-                updatedInputs.push({ open: false, replyInputValue: '' });
-                updatedInputs.push({ open: false, replyInputValue: '' });
-                setReplyInputs(updatedInputs);
-
-                //clear the message field:
-                const updatedMessage = [...replyMessage];
-                updatedMessage[index].reply = ''
-                setReplyMessage(updatedMessage);
-
-                // setShowAllReplies(index);
-                const updatedReply = [...showReplies];
-                updatedReply[index].list = true
-                setShowReplies(updatedReply)
-
-                refetch().then(() => {
-                    setTimeout(() => {
-                        bottomDivRef.current[commentId].scrollIntoView({
-                            behavior: 'smooth', // You can adjust the scrolling behavior
-                            block: 'nearest',       // Scroll to the bottom of the element
-                        });
-                    }, 100)
-                })
-            }
+            async () => handleFetchCurrentPost(post.mediaId)
         );
     };
+    const dHandleReply = useDebounce(handleReply, 5)
 
-    const handleLikePost = async () => {
+    const handleLikePost = async (post: PostProps["post"]) => {
         await fetchInJSON(
             `/media-content/like/${post.mediaId}`,
             {
@@ -184,9 +188,10 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                     Authorization: `Bearer ${token}`,
                 },
             },
-            refetch()
+            () => handleFetchCurrentPost(post.mediaId)
         );
     };
+    const dHandleLikePost = useDebounce(handleLikePost, 3)
 
     const handleBookmarking = async () => {
         await fetchInJSON(
@@ -198,12 +203,23 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                     Authorization: `Bearer ${token}`,
                 },
             },
-            async () => {
-                // Fetch bookmarks after successful bookmarking
-                await refetchBookmarks();
+            () => {
+				refetchbookmarks([])
+				handleFetchCurrentPost(post.mediaId)
+                // if (isLoggedIn) {
+                //     let oldCache = getCache()
+                //     if (oldCache.has(post.mediaId)) {
+                //         oldCache.delete(post.mediaId)
+                //     } else {
+                //         oldCache.add(post.mediaId)
+                //     }
+                //     replaceCache(Array.from(oldCache))
+                //     setToggleBookmark(() => oldCache.has(post.mediaId) ? true : false)
+                // }
             }
         );
     };
+    const dHandleBookmarking = useDebounce(handleBookmarking, 3)
 
     const handleStartWatching = async (mediaId: string): Promise<void> => {
         if (startedIds.current.has(mediaId)) return;
@@ -250,29 +266,10 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                     Authorization: `Bearer ${token}`,
                 },
             },
-            () => refetch()
+            () => handleFetchCurrentPost(post.mediaId)
         );
         setFollowLoading(false); // Set loading state back to false after API call
     };
-
-    // const handleFetchProfileInfo = async () => {
-    //     try {
-    //         const response = await fetchInJSON(`/profile`, {
-    //             method: 'GET',
-    //             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-    //         });
-
-    //         if (response.ok) {
-    //             const responseData = await response.json();
-    //             const { avatar } = responseData.data; // Extract token value from data object
-    //             avatarUrl = avatar;
-    //         } else {
-    //             console.log(response);
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
 
 
     // useEffect(() => {
@@ -283,7 +280,6 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
         handleClose();
         setShowReportPopup(true); // Show the report popup
         setShowOverlay(true); // Show the overlay
-        console.log('report clicked');
     }
 
     function handleCloseReportPopup() {
@@ -291,28 +287,8 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
         setShowOverlay(false);
     }
 
-    function formatTimeAgo(date: any) {
-        const now: any = new Date();
-        const daysDifference = differenceInDays(now, date);
-        const weeksDifference = differenceInWeeks(now, date);
-        const hoursDifference = differenceInHours(now, date);
 
-        if (weeksDifference >= 4) {
-            return format(date, 'dd-MM-yyyy');
-        } else if (weeksDifference >= 1) {
-            return `${weeksDifference}w`;
-        } else if (daysDifference >= 1) {
-            return `${daysDifference}d`;
-        } else if (hoursDifference >= 1) {
-            return `${hoursDifference}h`;
-        } else {
-            const minutesDifference = Math.floor((now - date) / (1000 * 60)); // Calculate minutes
-            return `${minutesDifference}m`;
-        }
-    }
-
-
-    return (
+    return postData && (
         <div className={classNames(styles.root, className)}>
             <div style={{ marginBottom: '32px' }}>
                 {showReportPopup && (
@@ -320,7 +296,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                         <div className={styles.reportPopup}>
                             {/* /** //useState to track the clicked post's media ID */}
                             <ReasonReportPopup
-                                mediaId={post.mediaId}
+                                mediaId={postData.mediaId}
                                 onSubmit={() => setShowReportPopup(false)} // Pass the onClose function
                                 handleOpen={handleOpenConfirmation}
                                 handleClose={handleCloseConfirmation}
@@ -417,9 +393,10 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                     </div>
                 )}
                 {/** Share Modal */}
-                {openSharePopup && (
-                    <PopupModal open={openSharePopup} onClose={handleCloseSharePopup} />
-                )}
+                {/* {openSharePopup && (
+                    // <PopupModal open={openSharePopup} onClose={handleCloseSharePopup} />
+                )} */}
+
                 {openCommentPopup && (
                     <div>
                         <Modal
@@ -432,185 +409,22 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                 <div
                                     // className={styles.mediaContainer}
                                     className={styles.postMediaContainer}
-                                    key={post.mediaId}
+                                    key={postData.mediaId}
                                 >
                                     <VideoPlayer
-                                        // key={post.mediaId}
-                                        src={post.reducedVideoHlsUrl}
-                                        onStart={() => handleStartWatching(post.mediaId)}
-                                        onEnd={() => handleEndWatching(post.mediaId)}
+                                        // key={postData.mediaId}
+                                        src={postData.reducedVideoHlsUrl}
+                                        onStart={() => handleStartWatching(postData.mediaId)}
+                                        onEnd={() => handleEndWatching(postData.mediaId)}
                                     />
                                 </div>
 
                                 <div className={styles.userCommentDiv}>
                                     <div style={{ width: '100%' }}>
                                         <div className={styles.commentsHeaderDiv}>Comments</div>
-                                        {post.comments.map((comment, cindex) => (
-                                            <>
-                                                <div className={styles.userInfoCommentDiv} key={comment.id}>
-                                                    <div className={styles.userInfoCommentFrame}>
-                                                        <img
-                                                            src={comment.user.avatar || profileIcon}
-                                                            alt={comment.user.name}
-                                                            className={styles.avatarImgCircleComment}
-                                                        />
-                                                        <h4 className={styles.userNameTextComment}>
-                                                            {comment.user.name}
-                                                            <span className={styles.timeText}>
-                                                                {formatTimeAgo(new Date(comment.createdTime))}
-                                                            </span>
-                                                        </h4>
-                                                        {/* <p>{formatTimeAgo(new Date(comment.createdTime))}</p> */}
-                                                    </div>
-                                                    <div className={styles.userCommmentLikesDiv}>
-                                                        {comment.isLiked ? <CommentLike liked={true} /> : <CommentLike />}
-                                                        {comment.likes}
-                                                    </div>
-                                                </div>
-                                                <div className={styles.commentDiv}>
-                                                    {comment.comment}
-                                                    <Button
-                                                        sx={{
-                                                            textDecoration: 'none',
-                                                            textTransform: 'none',
-                                                            color: '#848484',
-                                                            alignSelf: 'start',
-                                                            padding: '8px 0px 0px 0px',
-                                                            minWidth: '0',
-                                                        }}
-                                                        onClick={() => handleOpenReplyInput(cindex)}
-                                                    >
-                                                        Reply
-                                                    </Button>
-                                                    <div >
-
-                                                        {replyInputs[cindex]?.open && (
-                                                            <div
-                                                                style={{ paddingTop: '10px', paddingBottom: '10px', }}>
-                                                                <form
-                                                                    onSubmit={(e) => {
-                                                                        e.preventDefault(); // Prevent the default form submission behavior
-
-                                                                        handleReply(
-                                                                            replyMessage[cindex].reply,
-                                                                            post.mediaId,
-                                                                            comment.id,
-                                                                            cindex,
-                                                                        );
-                                                                    }}
-                                                                >
-                                                                    <InputField
-                                                                        placeholder="Message..."
-                                                                        type={''}
-                                                                        value={replyMessage[cindex]?.reply}
-                                                                        onChange={(e: any) => {
-                                                                            const updatedReplyMessage = [...replyMessage,];
-                                                                            updatedReplyMessage[cindex].reply = e.target.value;
-                                                                            setReplyMessage(updatedReplyMessage);
-                                                                        }}
-                                                                    />
-                                                                </form>
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    {
-                                                        comment.replies.slice(0, 5).map((reply) => (
-                                                            <div className={styles.commentRepliesDiv} key={reply.id}>
-                                                                <div
-                                                                    className={styles.repliesDropdown}
-                                                                >
-                                                                    <div className={styles.userInfoCommentDiv}>
-                                                                        <div className={styles.userInfoCommentFrame}>
-                                                                            <img
-                                                                                src={reply.user.avatar || profileIcon}
-                                                                                alt={reply.user.name}
-                                                                                className={styles.avatarImgCircleComment}
-                                                                            />
-                                                                            <h4 className={styles.userNameTextComment}>
-                                                                                {reply.user.name}
-                                                                                <span className={styles.timeText}>
-                                                                                    {formatTimeAgo(new Date(reply.createdTime))}
-                                                                                </span>
-                                                                            </h4>
-                                                                        </div>
-                                                                        <div className={styles.userCommmentLikesDiv}>
-                                                                            <CommentLike />
-                                                                            {reply.likes}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        className={styles.commentDiv}>
-                                                                        {reply.reply}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))
-                                                    }
-                                                    {
-                                                        showReplies[cindex].list &&
-                                                        (
-                                                            comment.replies.slice(5).map((reply, index) => (
-                                                                <div className={styles.commentRepliesDiv} key={reply.id}>
-                                                                    <div
-                                                                        className={styles.repliesDropdown}
-                                                                    >
-                                                                        <div className={styles.userInfoCommentDiv}>
-                                                                            <div className={styles.userInfoCommentFrame}>
-                                                                                <img
-                                                                                    src={reply.user.avatar || profileIcon}
-                                                                                    alt={reply.user.name}
-                                                                                    className={styles.avatarImgCircleComment}
-                                                                                />
-                                                                                <h4 className={styles.userNameTextComment}>
-                                                                                    {reply.user.name}
-                                                                                    <span className={styles.timeText}>
-                                                                                        {formatTimeAgo(new Date(reply.createdTime))}
-                                                                                    </span>
-                                                                                </h4>
-                                                                            </div>
-                                                                            <div className={styles.userCommmentLikesDiv}>
-                                                                                <CommentLike />
-                                                                                {reply.likes}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            ref={(ref) => (bottomDivRef ? bottomDivRef.current[comment.id] = ref : null)}
-                                                                            className={styles.commentDiv}>
-                                                                            {reply.reply}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            ))
-                                                        )
-                                                    }
-                                                    {comment.replies.length > 5 && (
-                                                        <div className={styles.commentRepliesDiv}>
-                                                            <div>
-                                                                <Button
-                                                                    sx={{
-                                                                        textDecoration: 'none',
-                                                                        textTransform: 'none',
-                                                                        color: '#848484',
-                                                                        alignSelf: 'start',
-                                                                        padding: '8px 0px 0px 0px',
-                                                                        margin: '0px 0px 15px 0px',
-                                                                        minWidth: '0',
-                                                                    }}
-                                                                    onClick={() => {
-                                                                        let updatedReplies = [...showReplies];
-                                                                        updatedReplies[cindex].list = !showReplies[cindex].list
-                                                                        setShowReplies(updatedReplies)
-                                                                    }}>
-                                                                    <div style={{ marginRight: '5px' }}>
-                                                                        {`View ${showReplies[cindex].list ? 'less' : 'more'} (${comment.replies.length - 5})`}
-                                                                    </div>
-                                                                    <ArrowDown />
-                                                                </Button>
-                                                            </div>
-                                                        </div>)}
-                                                </div>
-                                            </>))}
+                                        {postData.comments.map((comment, i) => (
+                                            <Comment key={i} comment={comment} handleReply={dHandleReply} handleLikeComment={dHandleLikeComment} />
+                                        ))}
                                     </div >
                                     <div
                                         style={{
@@ -622,12 +436,12 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                         <form
                                             onSubmit={(e) => {
                                                 e.preventDefault(); // Prevent the default form submission behavior
-                                                handleCommenting(message, post.mediaId);
+                                                dHandleCommenting([message, postData.mediaId]);
                                             }}
                                         >
                                             <div style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
                                                 <img
-                                                    src={avatarUrl || profileIcon}
+                                                    src={avatar || profileIcon}
                                                     alt={''}
                                                     className={styles.avatarImgCircleComment}
                                                 />
@@ -639,7 +453,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                                     showcommentsIcons={true}
                                                     iconClick={(e: any) => {
                                                         e.preventDefault(); // Prevent the default form submission behavior
-                                                        handleCommenting(message, post.mediaId);
+                                                        dHandleCommenting([message, postData.mediaId]);
                                                     }}
                                                 />
                                             </div>
@@ -657,36 +471,41 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                 <div className={styles['profilePic-UserNameDiv']}>
                                     <div>
                                         <img
-                                            src={post.user.avatar || 'https://via.placeholder.com/128'}
+                                            src={avatar || 'https://via.placeholder.com/128'}
                                             alt=""
                                             className={styles.profilePicImg}
                                         />
                                     </div>
                                     <div className={styles.userDetailsDiv}>
-                                        <h4 className={styles.userNameText}>{post.user.name}</h4>
-                                        <h4 className={styles.userSubText}>{post.user.username}</h4>
+                                        <h4 className={styles.userNameText}>{postData.user.name}</h4>
+                                        <h4 className={styles.userSubText}>{postData.user.username}</h4>
                                     </div>
                                 </div>
                                 <div>
                                     <button
                                         ref={buttonRef}
-                                        className={post.user.isFollowed ? styles.followingBtn : styles.followBtn}
-                                        onClick={() => handleFollowClick(post.user._id)}
+                                        className={postData.user.isFollowed ? styles.followingBtn : styles.followBtn}
+                                        onClick={() => {
+                                            if (isLoggedIn) { handleFollowClick(postData.user._id) }
+                                            else {
+                                                navigate('/auth')
+                                            }
+                                        }}
                                     >
-                                        {followLoading ? '...' : post.user.isFollowed ? 'Following' : 'Follow'}
+                                        {followLoading ? '...' : postData.user.isFollowed ? 'Following' : 'Follow'}
                                     </button>
                                 </div>
                             </div>
                             <div className={styles.postText}>
-                                <h4 className={styles.captionText}>{post.description}</h4>
+                                <h4 className={styles.captionText}>{postData.description}</h4>
                             </div>
                         </div>
                         <div className={styles.postMediaContainer} ref={videoElement}>
                             <VideoPlayer
-                                key={post.mediaId}
-                                src={post.reducedVideoHlsUrl}
-                                onStart={() => handleStartWatching(post.mediaId)}
-                                onEnd={() => handleEndWatching(post.mediaId)}
+                                key={postData.mediaId}
+                                src={postData.reducedVideoHlsUrl}
+                                onStart={() => handleStartWatching(postData.mediaId)}
+                                onEnd={() => handleEndWatching(postData.mediaId)}
                             />
                         </div>
                     </div>
@@ -699,10 +518,13 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                     padding: 0,
                                     minWidth: 0,
                                 }}
-                                onClick={handleLikePost}
+                                onClick={() => {
+                                    if (isLoggedIn) { dHandleLikePost([post]) }
+                                    else { navigate('/auth') }
+                                }}
                             >
-                                {post.isLiked ? <Like liked={true} /> : <Like />}
-                                <h4 className={styles.interactionText}>{post.likes}</h4>
+                                {postData.isLiked ? <Like liked={true} /> : <Like />}
+                                <h4 className={styles.interactionText}>{postData.likes}</h4>
                             </Button>
                         </div>
                         <div className={styles.interactionDiv}>
@@ -713,10 +535,13 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                     padding: 0,
                                     minWidth: 0,
                                 }}
-                                onClick={() => handleOpenCommentPopup()}
+                                onClick={() => {
+                                    if (isLoggedIn) { handleOpenCommentPopup() }
+                                    else { navigate('/auth') }
+                                }}
                             >
                                 <CommentIcon />
-                                <h4 className={styles.interactionText}>{post.comments.length}</h4>
+                                <h4 className={styles.interactionText}>{postData.comments.length}</h4>
                             </Button>
                         </div>
                         <div className={styles.interactionDiv}>
@@ -728,10 +553,14 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                     minWidth: 0,
                                 }}
                                 id="demo-positioned-button"
-                                aria-controls={open ? 'demo-positioned-menu' : undefined}
+                                aria-controls={openMore ? 'demo-positioned-menu' : undefined}
                                 aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleBookmarking}
+                                aria-expanded={openMore ? 'true' : undefined}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    if (isLoggedIn) { dHandleBookmarking([]) }
+                                    else { navigate('/auth') }
+                                }}
                             >
                                 <>
                                     <Bookmark bookmarked={isBookmarked} />
@@ -748,14 +577,27 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                     minWidth: 0,
                                 }}
                                 id="demo-positioned-button"
-                                aria-controls={open ? 'demo-positioned-menu' : undefined}
+                                aria-controls={openShare ? 'demo-positioned-menu' : undefined}
                                 aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={() => handleOpenSharePopup()}
+                                aria-expanded={openShare ? 'true' : undefined}
+                                onClick={(e) => handleOpenSharePopup(e)}
                             >
                                 <Share />
-                                <h4 className={styles.interactionText}>{post.shares}</h4>
+                                {/* <h4 className={styles.interactionText}>{postData.shares}</h4> */}
                             </Button>
+                            <StyledMenu
+                                id="demo-customized-menu"
+                                MenuListProps={{
+                                    'aria-labelledby': 'demo-customized-button',
+                                }}
+                                anchorEl={anchors.share}
+                                open={openShare}
+                                onClose={handleShareClose}
+                            >
+                                <MenuItem onClick={handleShareClose} className={styles.menuItems}>
+                                    Link Copied!
+                                </MenuItem>
+                            </StyledMenu>
                         </div>
                         <div className={styles.interactionDiv}>
                             <Button
@@ -766,9 +608,9 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                     minWidth: 0,
                                 }}
                                 id="demo-positioned-button"
-                                aria-controls={open ? 'demo-positioned-menu' : undefined}
+                                aria-controls={openMore ? 'demo-positioned-menu' : undefined}
                                 aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
+                                aria-expanded={openMore ? 'true' : undefined}
                                 onClick={(event) => handleClickMore(event)}
                             >
                                 <More />
@@ -779,8 +621,8 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
                                 MenuListProps={{
                                     'aria-labelledby': 'demo-customized-button',
                                 }}
-                                anchorEl={anchorEl}
-                                open={open}
+                                anchorEl={anchors.more}
+                                open={openMore}
                                 onClose={handleClose}
                             >
                                 <MenuItem onClick={handleClose} className={styles.menuItems}>
@@ -823,7 +665,7 @@ export const Post: React.FC<PostProps> = ({ className, post, startedIds, endedId
             </div>
         </div >
     );
-};
+}, (prev, next) => prev.post.mediaId === next.post.mediaId);
 
 var StyledMenu = styled((props: MenuProps) => (
     <Menu

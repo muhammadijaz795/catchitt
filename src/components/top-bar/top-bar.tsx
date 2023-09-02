@@ -5,7 +5,9 @@ import plusIcon from '../../assets/plusIcon.png';
 import SearchBar from '../reusables/searchBar';
 import { useAuthStore } from '../../store/authStore';
 import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+// import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 
 export interface TopBarProps {
     className?: string;
@@ -19,11 +21,16 @@ export const TopBar = ({ className }: TopBarProps) => {
     const endPoint = '/profile';
     let avatarUrl: string = '';
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const navigate = useNavigate();
     const logout = useAuthStore(state => state.logout);
 
     const handleLogout = () => {
         logout(); // Call the logout function
     };
+
+    const handleLogin = () => {
+        navigate('/auth')
+    }
 
     const handleFetchProfileInfo = async () => {
         try {
@@ -74,16 +81,19 @@ export const TopBar = ({ className }: TopBarProps) => {
                             border: '1px solid #000',
                         }}
                     />
-                    <div className={styles.nameDiv}>
-                        <h4 className={styles.loggedName}>{userName}</h4>
-                    </div>
                     {isLoggedIn ? (
-                        <button className={styles.logoutBtn}
-                            onClick={handleLogout}>
-                            Log Out
-                        </button>
+                        <>
+                            <div className={styles.nameDiv}>
+                                <h4 className={styles.loggedName}>{userName}</h4>
+                            </div>
+                            <button className={styles.logoutBtn}
+                                onClick={handleLogout}>
+                                Log Out
+                            </button>
+                        </>
                     ) : (
-                        <button className={styles.loginBtn}>
+                        <button className={styles.loginBtn}
+                            onClick={handleLogin}>
                             Log In
                         </button>
                     )

@@ -1,10 +1,11 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState, useMemo } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import styles from './suggested-activity.module.scss';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 
 import { Follow } from './svg-components/Follow';
+import useDebounce from '../reusables/useDebounce';
 
 export interface SuggestedActivityProps {
     className?: string;
@@ -40,21 +41,21 @@ interface Notification {
     isRead: boolean,
 }
 
-export const SuggestedActivity = ({
+export const SuggestedActivity = memo(({
     className,
     showSuggestedContent,
     showActivity,
 }: SuggestedActivityProps) => {
     const [errorMessage] = useState('');
-    const [accountsData, setAccountsData] = useState<Account[]>([]);
     const [activityData, setActivityData] = useState<Notification[]>([]);
+    const [randomAccs, setRandomAccs] = useState([])
     const API_KEY = process.env.VITE_API_URL;
     const suggestedEndPoint = '/profile/suggested-users';
     const activityEndPoint = '/notification';
     const token = useAuthStore((state) => state.token);
-    const [, setFollowLoading] = useState(false);
-    const [, setCurrentPostUser] = useState('');
     const [activityUserFollowed, setActivityUserFollowed] = useState(false);
+    const [suggestedUserFollowed, setSuggestedUserFollowed] = useState(randomAccs.map((user) => ({ isFollowed: false })));
+
 
     const handleFetchSuggestedAccounts = async () => {
         try {
@@ -65,7 +66,7 @@ export const SuggestedActivity = ({
 
             if (response.ok) {
                 const responseData = await response.json();
-                setAccountsData(responseData.data.data);
+                setRandomAccs(getRandomAccounts(responseData.data.data, 4))
             }
         } catch (error) {
             console.error(error);
@@ -74,13 +75,14 @@ export const SuggestedActivity = ({
     };
 
     useEffect(() => {
-        handleFetchSuggestedAccounts();
+        if (randomAccs.length == 0) {
+            handleFetchSuggestedAccounts();
+        }
+        handleFetchActivity();
     }, []);
 
     const handleFollowClick = async (accountId: string) => {
         try {
-            setFollowLoading(true); // Set loading state before API call
-
             const response = await fetch(
                 `${API_KEY}/profile/follow/${accountId}/`,
                 {
@@ -96,14 +98,9 @@ export const SuggestedActivity = ({
                 // Handle success as needed
                 console.log(`user: ${accountId} is followed`);
                 // setActivityUserFollowed(true)
-            } else {
-                // Handle error as needed
             }
         } catch (error) {
             // Handle error as needed
-        } finally {
-            await handleFetchSuggestedAccounts();
-            setFollowLoading(false); // Set loading state back to false after API call
         }
     };
 
@@ -112,11 +109,10 @@ export const SuggestedActivity = ({
         accountId: string
     ) => {
         console.log(accountId);
-        // setFollowLoading(true);
-        setCurrentPostUser(accountId);
         await handleFollowClick(accountId);
-        // setFollowLoading(false);
     };
+    const dHandleFollowBtnClicked = useDebounce(handleFollowBtnClicked, 3)
+
 
     const handleFetchActivity = async () => {
         try {
@@ -138,10 +134,6 @@ export const SuggestedActivity = ({
             console.log(errorMessage);
         }
     };
-
-    useEffect(() => {
-        handleFetchActivity();
-    }, [token]);
 
     const getRandomAccounts = (arr: any, count: number) => {
         const shuffled = arr.slice(); // Create a copy of the array to avoid modifying the original one
@@ -191,7 +183,7 @@ export const SuggestedActivity = ({
                     </div>
 
                     <div className={styles.suggestedContent}>
-                        {getRandomAccounts(accountsData, 4).map((account: Account) => (
+                        {randomAccs.map((account: Account) => (
                             <div key={account._id} className={styles.suggestedItem}>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                     <img
@@ -211,7 +203,7 @@ export const SuggestedActivity = ({
                                     <button
                                         className={styles.svgButton}
                                         onClick={(event) =>
-                                            handleFollowBtnClicked(event, account._id)
+                                            dHandleFollowBtnClicked([event, account._id])
                                         }
                                     >
                                         <Follow />
@@ -242,9 +234,6 @@ export const SuggestedActivity = ({
                             .slice(0, 4) // Take the latest 4 notifications
                             .map((activity, index) => (
                                 <>
-                                    {/* {activity.isRead ? (
-                                        <div></div>
-                                    ) : ( */}
                                     <div key={activity._id} className={styles.suggestedItem}>
                                         <div className={styles.notificationFrame}>
                                             <div className={styles.notificationUser}>
@@ -270,7 +259,7 @@ export const SuggestedActivity = ({
                                                         <button
                                                             className={styles.svgButton}
                                                             onClick={(event) =>
-                                                                handleFollowBtnClicked(event, activity.triggeredUser._id)
+                                                                dHandleFollowBtnClicked([event, activity.triggeredUser._id])
                                                             }
                                                         >
                                                             <Follow />
@@ -296,4 +285,4 @@ export const SuggestedActivity = ({
             }
         </div >
     );
-};
+});
