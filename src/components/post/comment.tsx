@@ -105,8 +105,8 @@ const Comment: React.FC<{ comment: CommentType, handleReply: Function, handleLik
 				<div className={styles.userCommmentLikesDiv}>
 					<Button onClick={() => handleLikeComment([comment.id])}>
 						{comment.isLiked ? <CommentLike liked={true} /> : <CommentLike />}
-						{comment.likes}
 					</Button>
+					{comment.likes}
 				</div>
 			</div>
 			<div ref={bottomDivRef} className={styles.commentDiv}>
