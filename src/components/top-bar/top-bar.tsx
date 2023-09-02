@@ -41,7 +41,7 @@ export const TopBar = ({ className }: TopBarProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { avatar } = responseData.data; // Extract token value from data object
+                const { avatar } = responseData.data;
                 avatarUrl = avatar;
             } else {
                 setErrorMessage('Invalid email');
@@ -56,7 +56,7 @@ export const TopBar = ({ className }: TopBarProps) => {
 
     useEffect(() => {
         handleFetchProfileInfo();
-    }, [token]);
+    }, []);
 
     return (
         <div className={classNames(styles.root, className)}>
@@ -74,8 +74,6 @@ export const TopBar = ({ className }: TopBarProps) => {
                         alt=""
                         className={styles.plusIconStyle}
                         style={{
-                            // height: '64px',
-                            // width: '64px',
                             cursor: 'pointer',
                             borderRadius: '50%',
                             border: '1px solid #000',

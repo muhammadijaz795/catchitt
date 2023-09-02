@@ -12,7 +12,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, onStart, onEnd }) => {
     const videoRef = useRef<HTMLDivElement>(null);
 
     const intersectionOptions = {
-        threshold: 0.1,
+        threshold: 1,
     };
 
     useEffect(() => {

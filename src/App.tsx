@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import { useNavigate } from 'react-router-dom';
 import ComingSoon from './components/coming-soon/coming-soon';
+import { VideoProvider } from './components/reusables/VideoContext';
+
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -36,20 +38,23 @@ function App() {
 
     return (
         <div className={styles.App}>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<InitialRouteHandler />} />
-                    <Route path="/auth" element={<Authentication />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/set-newpassword" element={<SetNewPassword />} />
-                    <Route path="/view/video/:onePost" element={<Home />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
-                    <Route path="/notifications" element={<ActivityPage />} />
-                    <Route path="/comingsoon" element={<ComingSoon />}
-                    />
-                </Routes>
-            </Router>
+            <VideoProvider>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<InitialRouteHandler />} />
+                        <Route path="/auth" element={<Authentication />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/set-newpassword" element={<SetNewPassword />} />
+                        <Route path="/view/video/:onePost" element={<Home />} />
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
+                        <Route path="/notifications" element={<ActivityPage />} />
+                        <Route path="/comingsoon" element={<ComingSoon />}
+                        />
+                    </Routes>
+                </Router>
+            </VideoProvider>
+
         </div>
     );
 }

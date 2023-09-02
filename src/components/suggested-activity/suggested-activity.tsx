@@ -239,7 +239,7 @@ export const SuggestedActivity = memo(({
                                             <div className={styles.notificationUser}>
                                                 <img
                                                     src={
-                                                        activity.user.avatar ||
+                                                        activity.triggeredUser.avatar ||
                                                         'https://via.placeholder.com/128'
                                                     }
                                                     alt=""
@@ -265,11 +265,12 @@ export const SuggestedActivity = memo(({
                                                             <Follow />
                                                         </button>
                                                     ) : (
-                                                        <img
-                                                            className={styles.squareIconStyle}
-                                                            src={activity.triggeredUser.avatar || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
-                                                            alt=""
-                                                        />
+                                                        ''
+                                                        // <img
+                                                        //     className={styles.squareIconStyle}
+                                                        //     src={activity. || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
+                                                        //     alt=""
+                                                        // />
                                                     )}
                                                 </div>
                                             </div>
