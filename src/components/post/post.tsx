@@ -33,7 +33,7 @@ import { More } from './svg-components/More';
 // import { getCache, replaceCache } from '../../store/cachedBookmarks';
 import { useNavigate } from 'react-router-dom';
 
-export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, endedIds, avatar, isBookmarked, refetchbookmarks }) => {
+export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, endedIds, avatar, isBookmarked, refetchBookmarks }) => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const navigate = useNavigate()
     const [videoElement, inView] = useInView({
@@ -57,7 +57,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     const handleOpenCommentPopup = () => {
         setOpenCommentPopup(true);
     };
-	
+
 
     const [anchors, setAnchors] = useState<{ more: null, share: null }>({ more: null, share: null });
     const buttonRef = useRef(null);
@@ -204,8 +204,8 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                 },
             },
             () => {
-				refetchbookmarks([])
-				handleFetchCurrentPost(post.mediaId)
+                refetchBookmarks([])
+                handleFetchCurrentPost(post.mediaId)
                 // if (isLoggedIn) {
                 //     let oldCache = getCache()
                 //     if (oldCache.has(post.mediaId)) {
