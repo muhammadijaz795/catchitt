@@ -449,7 +449,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                                 <img
                                                     src={avatar || profileIcon}
                                                     alt={''}
-                                                    className={styles.avatarImgCircleComment}
+                                                    className={styles.avatarImgCircleCommentInputField}
                                                 />
                                                 <InputField
                                                     placeholder="Add comment..."
