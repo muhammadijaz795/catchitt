@@ -7,7 +7,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useEffect, useState } from 'react';
 // import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
+import { DefaultAvatar } from './svg-components/DefaultAvatar';
 
 export interface TopBarProps {
     className?: string;
@@ -33,6 +33,7 @@ export const TopBar = ({ className }: TopBarProps) => {
     }
 
     const handleFetchProfileInfo = async () => {
+        if (!isLoggedIn) { return }
         try {
             const response = await fetch(`${API_KEY}${endPoint}`, {
                 method: 'GET',
@@ -70,7 +71,7 @@ export const TopBar = ({ className }: TopBarProps) => {
                 <div className={styles.plusProfileDiv}>
                     <img src={plusIcon} alt="" className={styles.plusIconStyle} />
                     <img
-                        src={avatarUrl === '' ? 'https://via.placeholder.com/128' : avatarUrl}
+                        src={avatarUrl === '' ? '' : avatarUrl}
                         alt=""
                         className={styles.plusIconStyle}
                         style={{

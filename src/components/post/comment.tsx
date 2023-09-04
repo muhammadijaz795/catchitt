@@ -103,7 +103,7 @@ const Comment: React.FC<{ comment: CommentType, handleReply: Function, handleLik
 					{/* <p>{formatTimeAgo(new Date(comment.createdTime))}</p> */}
 				</div>
 				<div className={styles.userCommmentLikesDiv}>
-					<Button onClick={() => handleLikeComment([comment.id])}>
+					<Button onClick={() => handleLikeComment([comment.id])} sx={{ padding: '0px', margin: '0px', minWidth: '36px' }}>
 						{comment.isLiked ? <CommentLike liked={true} /> : <CommentLike />}
 					</Button>
 					{comment.likes}

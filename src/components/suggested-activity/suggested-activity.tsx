@@ -46,6 +46,7 @@ export const SuggestedActivity = memo(({
     showSuggestedContent,
     showActivity,
 }: SuggestedActivityProps) => {
+    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const [errorMessage] = useState('');
     const [activityData, setActivityData] = useState<Notification[]>([]);
     const [randomAccs, setRandomAccs] = useState([])
@@ -58,6 +59,7 @@ export const SuggestedActivity = memo(({
 
 
     const handleFetchSuggestedAccounts = async () => {
+        // if (!isLoggedIn) { return }
         try {
             const response = await fetch(`${API_KEY}${suggestedEndPoint}`, {
                 method: 'GET',
@@ -115,6 +117,7 @@ export const SuggestedActivity = memo(({
 
 
     const handleFetchActivity = async () => {
+        if (!isLoggedIn) { return }
         try {
             const response = await fetch(`${API_KEY}${activityEndPoint}`, {
                 method: 'GET',
@@ -219,7 +222,7 @@ export const SuggestedActivity = memo(({
                 </div>
             )}
 
-            {showActivity && (
+            {showActivity && isLoggedIn && (
                 <div className={styles.activityDiv}>
                     <div className={styles.suggestedHeader}>
                         <h4 className={styles.headerTitle}>Activity</h4>

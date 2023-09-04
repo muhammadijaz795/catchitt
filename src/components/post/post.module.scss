@@ -91,7 +91,7 @@
   align-items: start;
   flex-direction: column;
   gap: 8px;
-  margin-top: 17px;
+  margin-top: 5px;
   color: var(--foundation-neutral-neutral-700, #848484);
 
   /* Small/Medium */
@@ -128,8 +128,8 @@
   row-gap: 8px;
 }
 .profilePicImg {
-  width: 43px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   flex-shrink: 0;
   border-radius: 64px;
 }
@@ -466,22 +466,25 @@ line-height: 150%; /* 24px */
 
 .userCommmentLikesDiv {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 5px;
+  gap: 0px;
   // margin: 16px;
+  margin: 0;
+  padding: 0;
 }
   
 .avatarImgCircleComment {
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
   flex-shrink: 0;
   border-radius: 64px;
   margin-right: 16px;
 }
 
 .userNameTextComment {
+  align-self: center;
   color: #000000;
   /* Base/Medium */
   font-family: Poppins;
@@ -489,23 +492,26 @@ line-height: 150%; /* 24px */
   font-style: normal;
   font-weight: 500;
   line-height: 120%; /* 19.2px */
+  margin: 0;
 }
 
 .commentDiv {
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 480px;
   text-align: justify;
   color: var(--default-body, #222);
-  padding-left: 88px;
+  padding-left: 77px;
   padding-right: 32px;
-
+  margin-top: 0px;
   /* Small/Regular */
   font-family: Poppins;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 21px */
+  // border-bottom: ;
 }
 .commentDiv Button{
   margin-top: 10px;

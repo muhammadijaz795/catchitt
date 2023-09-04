@@ -34,6 +34,7 @@ import { More } from './svg-components/More';
 import { useNavigate } from 'react-router-dom';
 
 export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, endedIds, avatar, isBookmarked }) => {
+    // console.log('is bookmarked?', isBookmarked);
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const navigate = useNavigate()
     const [videoElement, inView] = useInView({
@@ -64,7 +65,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     const [bookMarkStatus, setBookMarkStatus] = useState(isBookmarked);
     const openMore = Boolean(anchors.more);
     const openShare = Boolean(anchors.share);
-	
+
     useEffect(() => {
         try {
             if (inView) {
@@ -203,25 +204,26 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                     Authorization: `Bearer ${token}`,
                 },
             },
-			() => {
-				setBookMarkStatus(prev => !prev)
-			}
-			// if (isLoggedIn) {
-			//     let oldCache = getCache()
-			//     if (oldCache.has(post.mediaId)) {
-			//         oldCache.delete(post.mediaId)
-			//     } else {
-			//         oldCache.add(post.mediaId)
-			//     }
-			//     replaceCache(Array.from(oldCache))
-			//     setToggleBookmark(() => oldCache.has(post.mediaId) ? true : false)
-			// }  
+            () => {
+                setBookMarkStatus(prev => !prev)
+            }
+            // if (isLoggedIn) {
+            //     let oldCache = getCache()
+            //     if (oldCache.has(post.mediaId)) {
+            //         oldCache.delete(post.mediaId)
+            //     } else {
+            //         oldCache.add(post.mediaId)
+            //     }
+            //     replaceCache(Array.from(oldCache))
+            //     setToggleBookmark(() => oldCache.has(post.mediaId) ? true : false)
+            // }  
         );
         console.log(response);
     };
     const dHandleBookmarking = useDebounce(handleBookmarking, 3)
 
     const handleStartWatching = async (mediaId: string): Promise<void> => {
+        if (!isLoggedIn) { return }
         if (startedIds.current.has(mediaId)) return;
 
         await fetchInJSON(
@@ -238,6 +240,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     };
 
     const handleEndWatching = async (mediaId: string) => {
+        if (!isLoggedIn) { return }
         if (endedIds.current.has(mediaId)) return;
 
         await fetchInJSON(
@@ -284,30 +287,32 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
 
     function handleCloseReportPopup() {
         setShowReportPopup(false);
-        setShowOverlay(false);
+        // setShowOverlay(false);
     }
 
-		console.log("isBookmarked", isBookmarked)
+    // console.log("isBookmarked", isBookmarked)
 
     return postData && (
         <div className={classNames(styles.root, className)}>
             <div style={{ marginBottom: '32px' }}>
                 {showReportPopup && (
                     <div className={styles.overlay}>
-                        <div className={styles.reportPopup}>
-                            {/* /** //useState to track the clicked post's media ID */}
-                            <ReasonReportPopup
-                                mediaId={postData.mediaId}
-                                onSubmit={() => setShowReportPopup(false)} // Pass the onClose function
-                                handleOpen={handleOpenConfirmation}
-                                handleClose={handleCloseConfirmation}
-                            />
-                        </div>
-                        <button
-                            onClick={() => handleCloseReportPopup()}
-                            style={{ position: 'relative', }}>
-                            Close
-                        </button>
+                        <Modal
+                            open={showReportPopup}
+                            onClose={handleCloseReportPopup}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <div className={styles.reportPopup}>
+                                {/* /** //useState to track the clicked post's media ID */}
+                                <ReasonReportPopup
+                                    mediaId={postData.mediaId}
+                                    onSubmit={() => setShowReportPopup(false)} // Pass the onClose function
+                                    handleOpen={handleOpenConfirmation}
+                                    handleClose={handleCloseConfirmation}
+                                />
+                            </div>
+                        </Modal>
                     </div>
                 )}
                 {openConfirmation && (
@@ -421,7 +426,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 </div>
 
                                 <div className={styles.userCommentDiv}>
-                                    <div style={{ width: '100%' }}>
+                                    <div style={{ width: '100%', overflow: 'auto' }}>
                                         <div className={styles.commentsHeaderDiv}>Comments</div>
                                         {postData.comments.map((comment, i) => (
                                             <Comment key={i} comment={comment} handleReply={dHandleReply} handleLikeComment={dHandleLikeComment} />

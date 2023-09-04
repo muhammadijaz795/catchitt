@@ -40,7 +40,7 @@ export const Home = ({ className }: HomeProps) => {
 			handleFetchOnePost(onePost as string)
 		else
 			dHandleFetchPosts([]);
-		handleFetchUserBookmarks();
+		dHandleFetchUserBookmarks([]);
 		handleFetchProfileInfo();
 	}, []);
 
@@ -50,28 +50,27 @@ export const Home = ({ className }: HomeProps) => {
 		}
 
 		let link = isLoggedIn ?
-		 `/media-content/public/videos/feed/?page=${page ? page : 1}` 
-		 : `${endPoint}/?page=${page ? page : 1}`
-		
-		if (isLoggedIn) {
-			const res = await fetchInJSON(
-				link,
-				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
-			if (page != 1)
-				setPostData((prev: []) => [...prev, ...res.data]);
-			else
-				setPostData([...res.data]);
-		}
+			`/media-content/videos/feed?page=${page ? page : 1}`
+			: `/media-content/public/videos/feed?page=${page ? page : 1}`
+
+		const res = await fetchInJSON(
+			link,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
+		console.log(res);
+		if (page != 1)
+			setPostData((prev: []) => [...prev, ...res.data]);
+		else
+			setPostData([...res.data]);
+
 	}, []);
 	const dHandleFetchPosts = useDebounce(handleFetchPosts)
-
 
 	const handleFetchOnePost = async (myMediaId: string) => {
 		await fetchInJSON(
@@ -88,6 +87,7 @@ export const Home = ({ className }: HomeProps) => {
 	}
 
 	const handleFetchUserBookmarks = useCallback(async () => {
+		if (!isLoggedIn) { return }
 		await fetchInJSON(
 			`/profile/collection`,
 			{
@@ -96,7 +96,7 @@ export const Home = ({ className }: HomeProps) => {
 			},
 			(res: any) => {
 				setBookmarksData(res.data.data as BookmarkItem[]);
-
+				console.log('bookmarks ftch', res);
 				// if (res.data.data.length > 0 && Array.from(getCache()).length === 0) {
 				// 	replaceCache(res.data.data.map((e: any) => e.mediaId))
 				// }
@@ -133,6 +133,7 @@ export const Home = ({ className }: HomeProps) => {
 	const dHandleFetchFollowingPosts = useDebounce(handleFetchFollowingPosts)
 
 	const handleFetchProfileInfo = useCallback(async () => {
+		if (!isLoggedIn) { return }
 		try {
 			const response = await fetchInJSON(`/profile`, {
 				method: 'GET',
@@ -181,7 +182,11 @@ export const Home = ({ className }: HomeProps) => {
 	}, [])
 
 	const isBookmarked = useCallback((mediaId: string) => {
-		return bookmarksData.find(e => e.mediaId == mediaId) ? true : false
+		console.log('my bookamrks data', bookmarksData);
+		if (bookmarksData.length > 0)
+			return bookmarksData?.find(e => e.mediaId === mediaId) ? true : false
+		else
+			return false;
 	}, [])
 
 	return (
