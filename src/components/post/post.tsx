@@ -294,7 +294,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
 
     return postData && (
         <div className={classNames(styles.root, className)}>
-            <div style={{ marginBottom: '32px' }}>
+            <div>
                 {showReportPopup && (
                     <div className={styles.overlay}>
                         <Modal
