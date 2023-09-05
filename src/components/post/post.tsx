@@ -10,7 +10,7 @@ import Menu, { MenuProps } from '@mui/material/Menu';
 import { Box, Modal, Typography } from '@mui/material';
 import confirmationIcon from '../../assets/confirmationIcon.png';
 import VideoPlayer from '../reusables/VideoPlayer';
-import profileIcon from '../../assets/profileIcon.png';
+import profileIcon from '../../assets/defaultProfileIcon.png';
 import { useInView } from 'react-intersection-observer';
 import { PostProps, Post as PostType } from './postTypes';
 // import { PopupModal } from '../reusables/popupModal';
@@ -33,7 +33,7 @@ import { More } from './svg-components/More';
 // import { getCache, replaceCache } from '../../store/cachedBookmarks';
 import { useNavigate } from 'react-router-dom';
 
-export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, endedIds, avatar, isBookmarked }) => {
+export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, endedIds, isBookmarked, profileAvatar }) => {
     // console.log('is bookmarked?', isBookmarked);
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const navigate = useNavigate()
@@ -55,9 +55,11 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     const [, setShowOverlay] = useState(false);
     const [openCommentPopup, setOpenCommentPopup] = useState(false);
     const [message, setMessage] = useState('');
+    // const [profileData, setProfileData] = useState<any>([])
     const handleOpenCommentPopup = () => {
         setOpenCommentPopup(true);
     };
+    let myprofileAvatar = ''
 
     const [anchors, setAnchors] = useState<{ more: null, share: null }>({ more: null, share: null });
     const buttonRef = useRef(null);
@@ -275,8 +277,33 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     };
 
 
+    // const handleFetchProfileInfo = useCallback(async () => {
+    //     if (!isLoggedIn) { return }
+    //     try {
+    //         const response = await fetchInJSON(`/profile`, {
+    //             method: 'GET',
+    //             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+    //         });
+
+    //         if (response.ok) {
+    //             const responseData = await response.json();
+    //             myprofileAvatar = responseData.avatar;
+    //             setProfileData(responseData.data)
+    //         } else {
+    //             console.log('fetched profile data: ');
+    //             console.log(response);
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }, [])
+
+    useEffect(() => {
+        console.log(profileAvatar);
+    }, []);
+
     // useEffect(() => {
-    //     handleFetchProfileInfo();
+    //     console.log(profileAvatar);
     // }, [openCommentPopup]);
 
     function handleReportClick() {
@@ -447,9 +474,11 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                         >
                                             <div style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
                                                 <img
-                                                    src={avatar || profileIcon}
+                                                    src={profileAvatar}
                                                     alt={''}
                                                     className={styles.avatarImgCircleCommentInputField}
+
+
                                                 />
                                                 <InputField
                                                     placeholder="Add comment..."
@@ -477,7 +506,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 <div className={styles['profilePic-UserNameDiv']}>
                                     <div>
                                         <img
-                                            src={avatar || 'https://via.placeholder.com/128'}
+                                            src={postData.user.avatar || profileIcon}
                                             alt=""
                                             className={styles.profilePicImg}
                                         />

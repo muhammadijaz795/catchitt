@@ -7,7 +7,8 @@ import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { useAuthStore } from '../../store/authStore';
 import { Navigate } from 'react-router-dom';
 import useDebounce from '../reusables/useDebounce';
-import { DefaultAvatar } from './svg-components/DefaultAvatar';
+// import { DefaultAvatar } from './svg-components/DefaultAvatar';
+import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 
 export interface SuggestedAccountsPageProps {
 	className?: string;
@@ -150,7 +151,11 @@ export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps)
 			<div key={account._id} className={styles.accountCardDiv}>
 				<div className={styles.userInfoFrame}>
 					{account.avatar === '' ? (
-						<DefaultAvatar />
+						<img
+							src={defaultProfileIcon}
+							alt={account.name}
+							className={styles.avatarImgCircle}
+						/>
 					) : (
 						<img
 							src={account.avatar}

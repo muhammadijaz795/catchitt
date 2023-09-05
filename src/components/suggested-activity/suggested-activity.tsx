@@ -5,6 +5,7 @@ import styles from './suggested-activity.module.scss';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 
 import { Follow } from './svg-components/Follow';
+import defaultProfileIcon from '../../assets/defaultProfileIcon.png'
 import useDebounce from '../reusables/useDebounce';
 
 export interface SuggestedActivityProps {
@@ -59,20 +60,38 @@ export const SuggestedActivity = memo(({
 
 
     const handleFetchSuggestedAccounts = async () => {
-        // if (!isLoggedIn) { return }
-        try {
-            const response = await fetch(`${API_KEY}${suggestedEndPoint}`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            });
+        if (!isLoggedIn) {
+            try {
+                const response = await fetch(`${API_KEY}/profile/public/suggested-users`, {
+                    method: 'GET',
+                    headers: { 'Content-type': 'application/json', },
+                });
 
-            if (response.ok) {
-                const responseData = await response.json();
-                setRandomAccs(getRandomAccounts(responseData.data.data, 4))
+                if (response.ok) {
+                    const responseData = await response.json();
+                    setRandomAccs(getRandomAccounts(responseData.data.data, 4))
+                    console.log('fetched public suggested acccounts: ');
+                    console.log(response);
+                }
+            } catch (error) {
+                // console.error(error);
+                console.log(errorMessage);
             }
-        } catch (error) {
-            console.error(error);
-            console.log(errorMessage);
+        } else {
+            try {
+                const response = await fetch(`${API_KEY}${suggestedEndPoint}`, {
+                    method: 'GET',
+                    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    setRandomAccs(getRandomAccounts(responseData.data.data, 4))
+                }
+            } catch (error) {
+                // console.error(error);
+                console.log(errorMessage);
+            }
         }
     };
 
@@ -80,6 +99,7 @@ export const SuggestedActivity = memo(({
         if (randomAccs.length == 0) {
             handleFetchSuggestedAccounts();
         }
+        // handleFetchSuggestedAccounts();
         handleFetchActivity();
     }, []);
 
@@ -191,7 +211,7 @@ export const SuggestedActivity = memo(({
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                     <img
                                         src={
-                                            account.avatar || 'https://via.placeholder.com/128'
+                                            account.avatar || defaultProfileIcon
                                         }
                                         alt=""
                                         className={styles.plusIconStyle}
@@ -216,75 +236,77 @@ export const SuggestedActivity = memo(({
                         ))}
 
                     </div>
-                    <div className={styles.seperatorDiv}>
-                        <hr className={styles.speratorLine} />
-                    </div>
+
                 </div>
             )}
 
             {showActivity && isLoggedIn && (
-                <div className={styles.activityDiv}>
-                    <div className={styles.suggestedHeader}>
-                        <h4 className={styles.headerTitle}>Activity</h4>
-                        <a href="/notifications" className={styles.linkText}>
-                            See All
-                        </a>
+                <>
+                    <div className={styles.seperatorDiv}>
+                        <hr className={styles.speratorLine} />
                     </div>
-                    <div className={styles.suggestedContentActivity}>
+                    <div className={styles.activityDiv}>
+                        <div className={styles.suggestedHeader}>
+                            <h4 className={styles.headerTitle}>Activity</h4>
+                            <a href="/notifications" className={styles.linkText}>
+                                See All
+                            </a>
+                        </div>
+                        <div className={styles.suggestedContentActivity}>
 
-                        {/* Sort the accountsData in descending order based on timestamp */}
-                        {activityData
-                            .slice(0, 4) // Take the latest 4 notifications
-                            .map((activity, index) => (
-                                <>
-                                    <div key={activity._id} className={styles.suggestedItem}>
-                                        <div className={styles.notificationFrame}>
-                                            <div className={styles.notificationUser}>
-                                                <img
-                                                    src={
-                                                        activity.triggeredUser.avatar ||
-                                                        'https://via.placeholder.com/128'
-                                                    }
-                                                    alt=""
-                                                    className={styles.plusIconStyle}
-                                                />
-                                                <div className={styles.accountName}>
-                                                    <h6 className={styles.notificationMessage}>
-                                                        {activity?.message}
-                                                        <span className={styles.timeText}>
-                                                            {elapsedTimeStrings[index]}
-                                                        </span>
-                                                    </h6>
-                                                </div>
-                                                <div>
-                                                    {activity.type === 'Follow' ? (
+                            {/* Sort the accountsData in descending order based on timestamp */}
+                            {activityData
+                                .slice(0, 4) // Take the latest 4 notifications
+                                .map((activity, index) => (
+                                    <>
+                                        <div key={activity._id} className={styles.suggestedItem}>
+                                            <div className={styles.notificationFrame}>
+                                                <div className={styles.notificationUser}>
+                                                    <img
+                                                        src={
+                                                            activity.triggeredUser.avatar ||
+                                                            defaultProfileIcon
+                                                        }
+                                                        alt=""
+                                                        className={styles.plusIconStyle}
+                                                    />
+                                                    <div className={styles.accountName}>
+                                                        <h6 className={styles.notificationMessage}>
+                                                            {activity?.message}
+                                                            <span className={styles.timeText}>
+                                                                {elapsedTimeStrings[index]}
+                                                            </span>
+                                                        </h6>
+                                                    </div>
+                                                    <div>
+                                                        {activity.type === 'Follow' ? (
 
-                                                        <button
-                                                            className={styles.svgButton}
-                                                            onClick={(event) =>
-                                                                dHandleFollowBtnClicked([event, activity.triggeredUser._id])
-                                                            }
-                                                        >
-                                                            <Follow />
-                                                        </button>
-                                                    ) : (
-                                                        ''
-                                                        // <img
-                                                        //     className={styles.squareIconStyle}
-                                                        //     src={activity. || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
-                                                        //     alt=""
-                                                        // />
-                                                    )}
+                                                            <button
+                                                                className={styles.svgButton}
+                                                                onClick={(event) =>
+                                                                    dHandleFollowBtnClicked([event, activity.triggeredUser._id])
+                                                                }
+                                                            >
+                                                                <Follow />
+                                                            </button>
+                                                        ) : (
+                                                            ''
+                                                            // <img
+                                                            //     className={styles.squareIconStyle}
+                                                            //     src={activity. || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
+                                                            //     alt=""
+                                                            // />
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div >
-                                    {/* )} */}
-                                </>
-                            ))}
+                                        </div >
+                                        {/* )} */}
+                                    </>
+                                ))}
+                        </div>
                     </div>
-                </div>
-
+                </>
             )
             }
         </div >

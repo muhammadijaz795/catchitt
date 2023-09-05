@@ -69,6 +69,6 @@ export interface PostProps {
     startedIds: MutableRefObject<Set<string>>;
     endedIds: MutableRefObject<Set<string>>;
     post: Post;
-    avatar: string;
+    profileAvatar: string;
     isBookmarked: boolean;
 }

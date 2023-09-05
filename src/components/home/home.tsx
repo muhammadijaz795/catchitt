@@ -22,11 +22,13 @@ export const Home = ({ className }: HomeProps) => {
 	let avatarUrl = '';
 	const { onePost } = useParams()
 	const navigator = useNavigate()
+	const API_KEY = process.env.VITE_API_URL;
 
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 	const [paginating, setPaginating] = useState(false)
 	const [postData, setPostData] = useState<any>([]);
 	const [bookmarksData, setBookmarksData] = useState<BookmarkItem[]>([]);
+	const [profileData, setProfileData] = useState<any>([])
 	const endPoint = '/media-content/videos/feed';
 	const token = useAuthStore((state) => state.token);
 	const startedIds = useRef(new Set(''));
@@ -132,25 +134,25 @@ export const Home = ({ className }: HomeProps) => {
 	};
 	const dHandleFetchFollowingPosts = useDebounce(handleFetchFollowingPosts)
 
-	const handleFetchProfileInfo = useCallback(async () => {
+	const handleFetchProfileInfo = async () => {
 		if (!isLoggedIn) { return }
 		try {
-			const response = await fetchInJSON(`/profile`, {
+			const response = await fetch(`${API_KEY}/profile`, {
 				method: 'GET',
 				headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
 			});
 
 			if (response.ok) {
 				const responseData = await response.json();
-				const { avatar } = responseData.data; // Extract token value from data object
-				avatarUrl = avatar;
+				setProfileData(responseData.data)
 			} else {
+				console.log('fetched profile data: ');
 				console.log(response);
 			}
 		} catch (error) {
 			console.error(error);
 		}
-	}, [])
+	};
 
 	function handleScroll(e: any) {
 		e.preventDefault()
@@ -235,7 +237,7 @@ export const Home = ({ className }: HomeProps) => {
 											post={p}
 											startedIds={startedIds}
 											endedIds={endedIds}
-											avatar={avatarUrl}
+											profileAvatar={profileData.avatar}
 											isBookmarked={isBookmarked(p.mediaId)}
 										/>
 									))
@@ -251,7 +253,7 @@ export const Home = ({ className }: HomeProps) => {
 											post={p}
 											startedIds={startedIds}
 											endedIds={endedIds}
-											avatar={avatarUrl}
+											profileAvatar={profileData.avatar}
 											isBookmarked={false}
 										/>
 									))

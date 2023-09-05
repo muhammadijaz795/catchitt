@@ -15,16 +15,17 @@ export interface TopBarProps {
     className?: string;
 }
 
-export const TopBar = ({ className }: TopBarProps) => {
+export const TopBar = ({ className }: TopBarProps,) => {
     const userName = useAuthStore((state) => state.name);
     const token = useAuthStore((state) => state.token);
     const [errorMessage, setErrorMessage] = useState('');
     const API_KEY = process.env.VITE_API_URL;
     const endPoint = '/profile';
-    let avatarUrl: string = '';
+    // let avatarUrl: string = '';
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const navigate = useNavigate();
     const logout = useAuthStore(state => state.logout);
+    const [profileData, setProfileData] = useState<any>([])
 
     const handleLogout = () => {
         logout(); // Call the logout function
@@ -44,15 +45,12 @@ export const TopBar = ({ className }: TopBarProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { avatar } = responseData.data;
-                avatarUrl = avatar;
+                setProfileData(responseData.data)
             } else {
-                setErrorMessage('Invalid email');
                 console.log(response);
             }
         } catch (error) {
             console.error(error);
-            setErrorMessage('Invalid email');
             console.log(errorMessage);
         }
     };
@@ -84,7 +82,7 @@ export const TopBar = ({ className }: TopBarProps) => {
 
                     {isLoggedIn ? (
                         <>
-                            {avatarUrl.length === 0 ?
+                            {profileData.avatar === '' ?
 
                                 (<>
                                     <img src={plusIcon} alt="" className={styles.plusIconStyle} />
@@ -94,13 +92,16 @@ export const TopBar = ({ className }: TopBarProps) => {
                                     <>
                                         <img src={plusIcon} alt="" className={styles.plusIconStyle} />
                                         <img
-                                            src={avatarUrl}
+                                            src={profileData.avatar}
                                             alt=""
                                             className={styles.plusIconStyle}
                                             style={{
                                                 cursor: 'pointer',
                                                 borderRadius: '50%',
                                                 border: '1px solid #000',
+                                                width: '36px',
+                                                height: '36px',
+                                                objectFit: 'cover'
                                             }}
                                             onClick={handleMenuClick} // Open dropdown menu on avatar click
                                         />
