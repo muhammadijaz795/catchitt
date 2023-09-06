@@ -1,18 +1,74 @@
 .root {
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  width: 100%;
 }
 
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+
+.topBarDiv {
+  width: 100%;
+}
+.sideNavDiv {
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-bottom: 0px;
+  padding: 0px;
+}
+.leftSide {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  height: 100%;
+  justify-content: center;
+}
+.suggestedActivityDiv {
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-bottom: 0px;
+  padding: 0px 0px 32px;
+}
+
+.middleSectionDiv {    
+  display: inline-flex;
+  gap: 15%;
+  height: 100%;
+  width: 100%;
+  max-width: 655px;
+  background-color: transparent;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-radius: 8px;
+margin-top: 45px;
+}
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    // margin-top: ;
-  }
-  
-  h1 {
-    font-size: 36px;
-    text-align: center;
-  }
-  
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0px 245px;
+  padding-right: 199px;
+  padding-top: 0px;
+  // margin-top: 25px;
+}
+
+.suggestedContent {
+  width: 100%;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-items: center;
+  justify-content: start;
+  align-content: center;
+  justify-content: space-between;
+  line-height: 1;
+  gap: 16px;
+  background: var(--default-white, #FFF);
+
+}
