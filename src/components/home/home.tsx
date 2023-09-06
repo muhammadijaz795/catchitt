@@ -25,6 +25,7 @@ export const Home = ({ className }: HomeProps) => {
 	const API_KEY = process.env.VITE_API_URL;
 
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
 	const [paginating, setPaginating] = useState(false)
 	const [postData, setPostData] = useState<any>([]);
 	const [bookmarksData, setBookmarksData] = useState<BookmarkItem[]>([]);

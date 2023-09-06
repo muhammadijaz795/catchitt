@@ -73,10 +73,12 @@ export const SuggestedActivity = memo(({
                     setRandomAccs(getRandomAccounts(responseData.data.data, 4))
                     console.log('fetched public suggested acccounts: ');
                     console.log(response);
+                } else {
+                    console.log(response);
                 }
             } catch (error) {
                 // console.error(error);
-                console.log(errorMessage);
+                console.error()
             }
         } else {
             try {

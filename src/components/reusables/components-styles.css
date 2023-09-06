@@ -23,7 +23,7 @@
       url(../../assets/search.png) #f8f8f8;
     background-size: 3%;
   
-    width: 100%;
+    width: 602px;
     &:focus {
       border: 0 solid black;
       outline: 0;

@@ -3,6 +3,7 @@ import styles from './post.module.scss';
 import { useRef, useState, useEffect, memo, useCallback } from 'react';
 import { ReasonReportPopup } from '../reason-report-popup/reason-report-popup';
 import { useAuthStore } from '../../store/authStore';
+import axios from 'axios';
 import MenuItem from '@mui/material/MenuItem';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -11,6 +12,7 @@ import { Box, Modal, Typography } from '@mui/material';
 import confirmationIcon from '../../assets/confirmationIcon.png';
 import VideoPlayer from '../reusables/VideoPlayer';
 import profileIcon from '../../assets/defaultProfileIcon.png';
+import FileSaver from "file-saver";
 import { useInView } from 'react-intersection-observer';
 import { PostProps, Post as PostType } from './postTypes';
 // import { PopupModal } from '../reusables/popupModal';
@@ -36,6 +38,7 @@ import { useNavigate } from 'react-router-dom';
 export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, endedIds, isBookmarked, profileAvatar }) => {
     // console.log('is bookmarked?', isBookmarked);
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const API_KEY = process.env.VITE_API_URL;
     const navigate = useNavigate()
     const [videoElement, inView] = useInView({
         triggerOnce: true,
@@ -55,11 +58,10 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     const [, setShowOverlay] = useState(false);
     const [openCommentPopup, setOpenCommentPopup] = useState(false);
     const [message, setMessage] = useState('');
-    // const [profileData, setProfileData] = useState<any>([])
     const handleOpenCommentPopup = () => {
         setOpenCommentPopup(true);
     };
-    let myprofileAvatar = ''
+    const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
 
     const [anchors, setAnchors] = useState<{ more: null, share: null }>({ more: null, share: null });
     const buttonRef = useRef(null);
@@ -102,7 +104,8 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
         navigator.clipboard.writeText(`${location.host}/view/video/${post.mediaId}`)
         setTimeout(() => {
             handleShareClose()
-        }, 2000)
+        }, 500)
+        setAnchors(prev => ({ ...prev, more: null }))
     };
     // const handleCloseSharePopup = () => setOpenSharePopup(false);
     const handleCloseCommentPopup = () => { setOpenCommentPopup(false) };
@@ -209,16 +212,6 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
             () => {
                 setBookMarkStatus(prev => !prev)
             }
-            // if (isLoggedIn) {
-            //     let oldCache = getCache()
-            //     if (oldCache.has(post.mediaId)) {
-            //         oldCache.delete(post.mediaId)
-            //     } else {
-            //         oldCache.add(post.mediaId)
-            //     }
-            //     replaceCache(Array.from(oldCache))
-            //     setToggleBookmark(() => oldCache.has(post.mediaId) ? true : false)
-            // }  
         );
         console.log(response);
     };
@@ -262,8 +255,8 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
 
     const handleFollowClick = async (userId: any) => {
         setFollowLoading(true); // Set loading state before API call
-        await fetchInJSON(
-            `/profile/follow/${userId}/`,
+        const response = await fetch(
+            `${API_KEY}/profile/follow/${userId}/`,
             {
                 method: 'POST',
                 headers: {
@@ -271,36 +264,19 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                     Authorization: `Bearer ${token}`,
                 },
             },
-            () => handleFetchCurrentPost(post.mediaId)
         );
+        if (response.ok) {
+            // Handle success as needed
+            console.log(`user: ${userId} is followed`);
+            // Update the followedAccounts state
+            setFollowedAccounts((prevFollowedAccounts: any) => ({
+                ...prevFollowedAccounts,
+                [userId]: !prevFollowedAccounts[userId], // Mark the account as followed
+            }));
+            handleFetchCurrentPost(post.mediaId)
+        }
         setFollowLoading(false); // Set loading state back to false after API call
     };
-
-
-    // const handleFetchProfileInfo = useCallback(async () => {
-    //     if (!isLoggedIn) { return }
-    //     try {
-    //         const response = await fetchInJSON(`/profile`, {
-    //             method: 'GET',
-    //             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-    //         });
-
-    //         if (response.ok) {
-    //             const responseData = await response.json();
-    //             myprofileAvatar = responseData.avatar;
-    //             setProfileData(responseData.data)
-    //         } else {
-    //             console.log('fetched profile data: ');
-    //             console.log(response);
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }, [])
-
-    // useEffect(() => {
-    //     console.log(profileAvatar);
-    // }, [openCommentPopup]);
 
     function handleReportClick() {
         handleClose();
@@ -314,6 +290,22 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     }
 
     // console.log("isBookmarked", isBookmarked)
+
+    const handleSaveVideo = async (videoUrl: string) => {
+        console.log('save video clicked');
+        const response = await axios.get(videoUrl, { responseType: 'blob' });
+
+        // Extract the video content
+        const videoBlob = response.data;
+
+        // Create a filename based on the URL
+        const urlParts = videoUrl.split('/');
+        const filename = urlParts[urlParts.length - 1];
+
+        // Save the video blob as a .mp4 file
+        FileSaver.saveAs(videoBlob, filename);
+        setAnchors(prev => ({ ...prev, more: null }));
+    };
 
     return postData && (
         <div className={classNames(styles.root, className)}>
@@ -406,7 +398,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 >
                                     Done
                                 </Button>
-                                <Button
+                                {/* <Button
                                     variant="outlined"
                                     sx={{
                                         border: '1px solid var(--foundation-primary-primary-500, #5448B2)',
@@ -416,7 +408,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                     }}
                                 >
                                     View your reports
-                                </Button>
+                                </Button> */}
                             </Box>
                         </Modal>
                     </div>
@@ -597,36 +589,36 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                                             open={openMore}
                                                             onClose={handleClose}
                                                         >
-                                                            <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                                            <MenuItem onClick={() => handleSaveVideo(postData.reducedVideoUrl)} className={styles.menuItems}>
                                                                 <div className={styles.menuItemsSvgs}>
                                                                     <Save />
                                                                 </div>
                                                                 Save Video
                                                             </MenuItem>
-                                                            <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                                            <MenuItem onClick={(e) => handleOpenSharePopup(e)} className={styles.menuItems}>
                                                                 <div className={styles.menuItemsSvgs}>
                                                                     <Copy />
                                                                 </div>
                                                                 Copy Link
                                                             </MenuItem>
-                                                            <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                                            {/* <MenuItem onClick={handleClose} className={styles.menuItems}>
                                                                 <div className={styles.menuItemsSvgs}>
                                                                     <NotInterested />
                                                                 </div>
                                                                 Not Interested
-                                                            </MenuItem>
+                                                            </MenuItem> */}
                                                             <MenuItem onClick={handleReportClick} className={styles.menuItems}>
                                                                 <div className={styles.menuItemsSvgs}>
                                                                     <Report />
                                                                 </div>
                                                                 Report
                                                             </MenuItem>
-                                                            <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                                            {/* <MenuItem onClick={handleClose} className={styles.menuItems}>
                                                                 <div className={styles.menuItemsSvgs}>
                                                                     <Send />
                                                                 </div>
                                                                 Send
-                                                            </MenuItem>
+                                                            </MenuItem> */}
                                                         </StyledMenu>
 
                                                         {/* ----------------------------------------- More Menue ----------------------------------------------------------------*/}
@@ -697,8 +689,12 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 </div>
                                 <div>
                                     <button
-                                        ref={buttonRef}
-                                        className={postData.user.isFollowed ? styles.followingBtn : styles.followBtn}
+                                        // ref={buttonRef}
+                                        className={
+                                            postData.user.isFollowed ?
+                                                styles.followingBtn : styles.followBtn
+
+                                        }
                                         onClick={() => {
                                             if (isLoggedIn) { handleFollowClick(postData.user._id) }
                                             else {
@@ -839,36 +835,36 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 open={openMore}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                <MenuItem onClick={() => handleSaveVideo(postData.reducedVideoUrl)} className={styles.menuItems}>
                                     <div className={styles.menuItemsSvgs}>
                                         <Save />
                                     </div>
                                     Save Video
                                 </MenuItem>
-                                <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                <MenuItem onClick={(e) => handleOpenSharePopup(e)} className={styles.menuItems}>
                                     <div className={styles.menuItemsSvgs}>
                                         <Copy />
                                     </div>
                                     Copy Link
                                 </MenuItem>
-                                <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                {/* <MenuItem onClick={handleClose} className={styles.menuItems}>
                                     <div className={styles.menuItemsSvgs}>
                                         <NotInterested />
                                     </div>
                                     Not Interested
-                                </MenuItem>
+                                </MenuItem> */}
                                 <MenuItem onClick={handleReportClick} className={styles.menuItems}>
                                     <div className={styles.menuItemsSvgs}>
                                         <Report />
                                     </div>
                                     Report
                                 </MenuItem>
-                                <MenuItem onClick={handleClose} className={styles.menuItems}>
+                                {/* <MenuItem onClick={handleClose} className={styles.menuItems}>
                                     <div className={styles.menuItemsSvgs}>
                                         <Send />
                                     </div>
                                     Send
-                                </MenuItem>
+                                </MenuItem> */}
                             </StyledMenu>
 
                             {/* ----------------------------------------- More Menue ----------------------------------------------------------------*/}

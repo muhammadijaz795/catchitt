@@ -10,13 +10,13 @@ interface InputFieldProps {
 const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }) => {
     return (
         <>
-            {/* <div className={'searchBar'}> */}
-            <input
-                className={'searchInput'}
-                placeholder="Search accounts and videos"
-                onChange={onChange}
-            />
-            {/* </div> */}
+            <div className={'searchBar'}>
+                <input
+                    className={'searchInput'}
+                    placeholder="Search accounts and videos"
+                    onChange={onChange}
+                />
+            </div>
         </>
     );
 };

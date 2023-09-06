@@ -1,5 +1,8 @@
 import classNames from 'classnames';
 import styles from './reason-report-popup.module.scss';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 
 import { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
@@ -44,10 +47,11 @@ export const ReasonReportPopup = ({
     // const handleClose = () => setOpen(false);
 
     const [firstFormVisible, setFirstFormVisible] = useState(true);
-
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
+    const API_KEY = process.env.VITE_API_URL;
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
         const { name, value, checked } = event.target;
         setFormData((prevData) => ({ ...prevData, [name]: checked }));
         // Update the selectedChoices prop with the latest data
@@ -67,7 +71,7 @@ export const ReasonReportPopup = ({
         // Perform the fetch POST request here with the reportReasons array
         try {
             const response = await fetch(
-                `https://dev.seezitt.com/api/media-content/reports/:${mediaId}`,
+                `${API_KEY}/media-content/reports/:${mediaId}`,
                 {
                     method: 'POST',
                     headers: {
@@ -110,72 +114,107 @@ export const ReasonReportPopup = ({
                                 onSubmit={(event) => handleReportSubmit(event, mediaId)}
                                 className={styles.formStyle}
                             >
-                                <label className={styles.label}>
-                                    <input
-                                        type="checkbox"
-                                        name="option1"
-                                        value="MISLEADING_INFO"
-                                        checked={formData.option1}
-                                        // checked={formData.option1}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                    Misleading information
-                                </label>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2',
+                                                },
+                                            }}// Change the color of the checkbox icon
+                                            size="medium"
+                                            checked={formData.option1}
+                                            onChange={handleCheckboxChange}
+                                            name="option1"
+                                        />
+                                    }
+                                    label="Misleading information"
+                                />
 
-                                <label className={styles.label}>
-                                    <input
-                                        type="checkbox"
-                                        name="option2"
-                                        value={'FRAUDS_SCAM'}
-                                        checked={formData.option2}
-                                        // checked={formData.option2}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                    Frauds and scams
-                                </label>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2',
+                                                },
+                                            }}// Change the color of the checkbox icon
+                                            size="medium"
+                                            checked={formData.option2}
+                                            onChange={handleCheckboxChange}
+                                            name="option2"
+                                        />
+                                    }
+                                    label="Frauds and scams"
+                                />
 
-                                <label className={styles.label}>
-                                    <input
-                                        type="checkbox"
-                                        name="option3"
-                                        value={'HATE_SPEECH'}
-                                        checked={formData.option3}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                    Hate speech
-                                </label>
-                                <label className={styles.label}>
-                                    <input
-                                        type="checkbox"
-                                        name="option4"
-                                        value={'HARASSMENT_BULLYING'}
-                                        checked={formData.option4}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                    Harassment or Bullying
-                                </label>
-                                <label className={styles.label}>
-                                    <input
-                                        type="checkbox"
-                                        name="option5"
-                                        value={'VIOLENCE'}
-                                        checked={formData.option5}
-                                        onChange={handleCheckboxChange}
-                                        className={styles.checkmark}
-                                    />
-                                    Violence
-                                </label>
-                                <label className={styles.label}>
-                                    <input
-                                        type="checkbox"
-                                        name="option6"
-                                        value={'ANIMAL_CRUELTY'}
-                                        checked={formData.option6}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                    Animal Cruelty
-                                </label>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2',
+                                                },
+                                            }}// Change the color of the checkbox icon
+                                            size="medium"
+                                            checked={formData.option3}
+                                            onChange={handleCheckboxChange}
+                                            name="option3"
+                                        />
+                                    }
+                                    label="Hate speech"
+                                />
 
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2',
+                                                },
+                                            }}// Change the color of the checkbox icon
+                                            size="medium"
+                                            checked={formData.option4}
+                                            onChange={handleCheckboxChange}
+                                            name="option4"
+                                        />
+                                    }
+                                    label="Harassment or Bullying"
+                                />
+
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2',
+                                                },
+                                            }}// Change the color of the checkbox icon
+                                            size="medium"
+                                            checked={formData.option5}
+                                            onChange={handleCheckboxChange}
+                                            name="option5"
+                                        />
+                                    }
+                                    label="Violence"
+                                />
+
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2',
+                                                },
+                                            }}// Change the color of the checkbox icon
+                                            size="medium"
+                                            checked={formData.option6}
+                                            onChange={handleCheckboxChange}
+                                            name="option6"
+                                        />
+                                    }
+                                    label="Animal Cruelty"
+                                />
                                 <button
                                     type="submit"
                                     className={styles.submitBtn}

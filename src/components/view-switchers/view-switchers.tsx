@@ -17,24 +17,26 @@ export const ViewSwitchers = ({ className, onTabChange }: ViewSwitchersProps) =>
 
     return (
         <div className={classNames(styles.root, className)}>
-            <button
-                className={classNames(`${selectedLink === 0 ? styles.selected : styles.myBtn}`)}
-                onClick={() => handleLinkClick(0)}
-            >
-                Following
-            </button>
-            <button
-                className={classNames(`${selectedLink === 1 ? styles.selected : styles.myBtn}`)}
-                onClick={() => handleLinkClick(1)}
-            >
-                For You
-            </button>
-            <button
+            <div className={styles.tabs}>
+                <button
+                    className={classNames(`${selectedLink === 0 ? styles.selected : styles.myBtn}`)}
+                    onClick={() => handleLinkClick(0)}
+                >
+                    Following
+                </button>
+                <button
+                    className={classNames(`${selectedLink === 1 ? styles.selected : styles.myBtn}`)}
+                    onClick={() => handleLinkClick(1)}
+                >
+                    For You
+                </button>
+            </div>
+            {/* <button
                 className={classNames(`${selectedLink === 2 ? styles.selected : styles.myBtn}`)}
                 onClick={() => handleLinkClick(2)}
             >
                 Live
-            </button>
+            </button> */}
         </div>
     );
 };

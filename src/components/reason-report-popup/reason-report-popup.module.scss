@@ -42,7 +42,7 @@
 }
 .label {
   color: var(--default-body, #222);
-
+  
   /* Base/Medium */
   font-family: Poppins;
   font-size: 16px;
@@ -58,7 +58,7 @@
 .formStyle {
   display: flex;
   flex-direction: column;
-  row-gap: 48px;
+  row-gap: 30px;
   width: 100%;
 }
 .submitBtn {
@@ -77,22 +77,4 @@ padding: 0px 16px;
   line-height: 120%; /* 19.2px */
 }
 
-
-
-
-input[type="checkbox"] {
-  background: red;
-  width: 24px;
-  height: 24px;
-  border-radius: 4.8px;
-  border: 1.2px solid #D1D1D1;
-}
-
-input[type="checkbox"]:checked {
-  // background-color: red;
-  width: 24px;
-  height: 24px;
-  border-radius: 4.8px;
-  border: 1.2px solid #D1D1D1;
-}
 
