@@ -4,8 +4,6 @@ import App from './App';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-
-
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpApi from 'i18next-http-backend';
@@ -42,5 +40,5 @@ root.render(
         <React.StrictMode>
             <App />
         </React.StrictMode>
-    </Suspense>,
+    </Suspense>
 );
