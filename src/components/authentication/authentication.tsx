@@ -11,8 +11,9 @@ import IconButton from '@mui/material/IconButton';
 import { useAuthStore } from '../../store/authStore';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { useTranslation } from 'react-i18next';
 import cookies from 'js-cookie';
+import { useTranslation } from "react-i18next";
+import i18next from 'i18next';
 
 export interface AuthenticationProps {
     className?: string;
@@ -51,9 +52,10 @@ const languages: Languages[] = [
     },
 ];
 
-export const Authentication = ({ className }: AuthenticationProps) => {
+export const Authentication = (props: any) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
-    const currentLanguage = languages.find((l) => l.code === currentLanguageCode) || languages[0];
+    const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+    const { t } = useTranslation();
 
     // const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const API_KEY = process.env.VITE_API_URL;
@@ -88,15 +90,16 @@ export const Authentication = ({ className }: AuthenticationProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 const { token } = responseData.data; // Extract token from data object
-                const name = responseData.name; // Assuming the 'name' field is present in the response data
+                // const name = responseData.name; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
                     name: name,
                     token: token,
                 });
-                // login(email, token, name); // Call the login function from the Zustand store
-                console.log(responseData);
+                login(email, token, name); // Call the login function from the Zustand store
+                // console.log(responseData);
                 navigate('/home');
+                // handleSignIn(email, password)
             } else {
                 // Handle the error response from the server
                 const errorResponseData = await response.json();
@@ -165,7 +168,7 @@ export const Authentication = ({ className }: AuthenticationProps) => {
     };
 
     return (
-        <div className={classNames(styles.container, className)}>
+        <div className={styles.container}>
             <div className={styles.AuthSplashImg}>
                 <div className={styles.logoDiv}>
                     <img alt={''} src={Logo} />
@@ -212,7 +215,8 @@ export const Authentication = ({ className }: AuthenticationProps) => {
                                 />
                                 <InputField
                                     type="email"
-                                    placeholder="Email"
+                                    placeholder={t('email.input')}
+
                                     className="formInputFields"
                                     value={user.email}
                                     onChange={(e: { target: { value: string } }) => {
@@ -221,7 +225,7 @@ export const Authentication = ({ className }: AuthenticationProps) => {
                                 />
                                 <InputField
                                     type="password"
-                                    placeholder="Password"
+                                    placeholder={t('password.input')}
                                     className="formInputFields"
                                     value={user.password}
                                     onChange={(e: { target: { value: string } }) => {
@@ -258,78 +262,78 @@ export const Authentication = ({ className }: AuthenticationProps) => {
                             </div>
                         </form>
                     ) : /** Sign in Flow */
-                    form === 'signin' ? (
-                        <form className={styles.authInputFields}>
-                            <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                                Login to your account
-                            </h3>
-                            <div style={{ marginTop: '20px' }}>
-                                {errorMessage ? (
-                                    <h4
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: '16px',
-                                            color: 'red',
-                                            marginBottom: '20px',
+                        form === 'signin' ? (
+                            <form className={styles.authInputFields}>
+                                <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
+                                    {t('login.title')}
+                                </h3>
+                                <div style={{ marginTop: '20px' }}>
+                                    {errorMessage ? (
+                                        <h4
+                                            style={{
+                                                fontWeight: '700',
+                                                fontSize: '16px',
+                                                color: 'red',
+                                                marginBottom: '20px',
+                                            }}
+                                        >
+                                            {errorMessage}
+                                        </h4>
+                                    ) : null}
+                                </div>
+                                <div className={styles.inputsDiv}>
+                                    <InputField
+                                        type="email"
+                                        placeholder={t('email.input')}
+                                        className="formInputFields"
+                                        value={user.email}
+                                        onChange={(e: { target: { value: string } }) => {
+                                            onUserChange('email', e.target.value);
                                         }}
-                                    >
-                                        {errorMessage}
-                                    </h4>
-                                ) : null}
-                            </div>
-                            <div className={styles.inputsDiv}>
-                                <InputField
-                                    type="email"
-                                    placeholder="Email"
-                                    className="formInputFields"
-                                    value={user.email}
-                                    onChange={(e: { target: { value: string } }) => {
-                                        onUserChange('email', e.target.value);
-                                    }}
-                                />
-                                <InputField
-                                    type="password"
-                                    placeholder="Password"
-                                    className="formInputFields"
-                                    value={user.password}
-                                    onChange={(e: { target: { value: string } }) => {
-                                        onUserChange('password', e.target.value);
-                                    }}
-                                />
-                            </div>
-                            <p
-                                className={classNames(
-                                    styles.formParagraph,
-                                    styles.formForgotPassword
-                                )}
-                            >
-                                <a href="/forgot-password">Forgot Password?</a>{' '}
-                            </p>
-                            <div className={styles.signupSubmitDiv}>
-                                <button
-                                    className={styles.signupSubmitBtn}
-                                    onClick={handleSignInSubmit}
+                                    />
+                                    <InputField
+                                        type="password"
+                                        placeholder={t('password.input')}
+                                        className="formInputFields"
+                                        value={user.password}
+                                        onChange={(e: { target: { value: string } }) => {
+                                            onUserChange('password', e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <p
+                                    className={classNames(
+                                        styles.formParagraph,
+                                        styles.formForgotPassword
+                                    )}
                                 >
-                                    Login
-                                </button>
-                            </div>
-                            <div className={styles.splitLinesDiv}>
-                                <hr className={styles.splitLine} />
-                                <p className={styles.formParagraph}>OR</p>
-                                <hr className={styles.splitLine} />
-                            </div>
-                        </form>
-                    ) : null}
+                                    <a href="/forgot-password">{t("forgotpassword.link")}</a>{' '}
+                                </p>
+                                <div className={styles.signupSubmitDiv}>
+                                    <button
+                                        className={styles.signupSubmitBtn}
+                                        onClick={handleSignInSubmit}
+                                    >
+                                        {t('login.text')}
+                                    </button>
+                                </div>
+                                <div className={styles.splitLinesDiv}>
+                                    <hr className={styles.splitLine} />
+                                    <p className={styles.formParagraph}>{t("or.text")}</p>
+                                    <hr className={styles.splitLine} />
+                                </div>
+                            </form>
+                        ) : null}
                 </div>
                 <div className={styles.afterTheFormDiv}>
-                    <div className={styles.socialLoginsDiv}>
+                    {/* <div className={styles.socialLoginsDiv}>
                         <IconButton className={styles.socialLoginIconBtn}>
                             <img src={googleIcon} alt="" className={styles.socialLoginIcon} />
                         </IconButton>
                         <IconButton className={styles.socialLoginIconBtn}>
                             <img src={facebookIcon} alt="" className={styles.socialLoginIcon} />
                         </IconButton>
-                    </div>
+                    </div> */}
                     {form === 'signup' ? (
                         <p className={styles.formParagraph}>
                             Already have an account?{' '}
@@ -343,13 +347,13 @@ export const Authentication = ({ className }: AuthenticationProps) => {
                         </p>
                     ) : form === 'signin' ? (
                         <p className={styles.formParagraph}>
-                            Not registered?{' '}
+                            {t("notregistered.text")}{' '}
                             <a
                                 href="https://www.seezitt.com"
                                 onClick={handleLinkClick}
                                 className={styles.boldLinkText}
                             >
-                                Create an account
+                                {t("createaccount.text")}
                             </a>
                         </p>
                     ) : (
@@ -380,7 +384,7 @@ export const Authentication = ({ className }: AuthenticationProps) => {
                                     // styles['footer-p-lightBg']
                                 )}
                             >
-                                {currentLanguage.name}
+                                {currentLanguage?.name}
                                 <span className="m-md-1">
                                     <svg
                                         width="7"
@@ -401,12 +405,13 @@ export const Authentication = ({ className }: AuthenticationProps) => {
                                     <li key={country_code}>
                                         <a
                                             href="#"
-                                            className={classNames('dropdown-item', {
+                                            className={classNames("dropdown-item", {
                                                 disabled: currentLanguageCode === code,
                                             })}
-                                            // onClick={() => {
-                                            //     i18next.changeLanguage(code);
-                                            // }}
+                                            onClick={() => {
+                                                console.log(`Changing language to: ${code}`);
+                                                i18next.changeLanguage(code);
+                                            }}
                                         >
                                             <span
                                                 className={`flag-icon flag-icon-${country_code} `}

@@ -56,14 +56,14 @@ export const SuggestedActivity = memo(({
     const suggestedEndPoint = '/profile/suggested-users';
     const activityEndPoint = '/notification';
     const token = useAuthStore((state) => state.token);
-    const [activityUserFollowed, setActivityUserFollowed] = useState(false);
+    // const [activityUserFollowed, setActivityUserFollowed] = useState(false);
     const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
 
 
     const handleFetchSuggestedAccounts = async () => {
         if (!isLoggedIn) {
             try {
-                const response = await fetch(`${API_KEY}/profile/public/suggested-users`, {
+                const response = await fetch(`${API_KEY}/profile/public/suggested-users?page=1`, {
                     method: 'GET',
                     headers: { 'Content-type': 'application/json', },
                 });

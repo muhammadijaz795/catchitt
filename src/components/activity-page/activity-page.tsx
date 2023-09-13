@@ -8,7 +8,7 @@ import { useAuthStore } from '../../store/authStore';
 import { Navigate } from 'react-router-dom';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
-
+import profileIcon from '../../assets/defaultProfileIcon.png';
 
 import { Follow } from './svg-components/Follow'
 import { LeftArrow } from './svg-components/LeftArrow'
@@ -142,7 +142,7 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                                 <img
                                                     src={
-                                                        activity.user.avatar || 'https://via.placeholder.com/128'
+                                                        activity.user.avatar || profileIcon
                                                     }
                                                     alt=""
                                                     className={styles.plusIconStyle}
@@ -169,7 +169,7 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                                                 ) : (
                                                     <img
                                                         className={styles.squareIconStyle}
-                                                        src={activity.triggeredUser.avatar || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
+                                                        src={activity.triggeredUser.avatar || profileIcon} // Use the appropriate property from the activity object
                                                         alt=""
                                                     />
                                                 )}

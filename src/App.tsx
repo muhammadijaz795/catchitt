@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './App.module.scss';
 import { Authentication } from './components/authentication/authentication';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
@@ -11,6 +11,9 @@ import { useAuthStore } from './store/authStore';
 import { useNavigate } from 'react-router-dom';
 import ComingSoon from './components/coming-soon/coming-soon';
 import { VideoProvider } from './components/reusables/VideoContext';
+import { IntlProvider } from 'react-intl';
+import messages from '../src/languages-intl';
+
 
 
 // Functional component to handle the initial route navigation
@@ -34,28 +37,40 @@ const InitialRouteHandler = () => {
     return null; // Render nothing, as this component is used only for the initial route handling
 };
 
+
+
 function App() {
+    const [appLanguage, setAppLanguage] = useState(
+        (window.localStorage.getItem("lang") as string) || "en"
+    );
+    const setLanguage = (language: string) => {
+        setAppLanguage(language);
+        window.localStorage.setItem("lang", language);
+    };
 
     return (
-        <div className={styles.App}>
-            <VideoProvider>
-                <Router>
-                    <Routes>
-                        <Route path="/" element={<InitialRouteHandler />} />
-                        <Route path="/auth" element={<Authentication />} />
-                        <Route path="/forgot-password" element={<ForgotPassword />} />
-                        <Route path="/set-newpassword" element={<SetNewPassword />} />
-                        <Route path="/view/video/:onePost" element={<Home />} />
-                        <Route path="/home" element={<Home />} />
-                        <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
-                        <Route path="/notifications" element={<ActivityPage />} />
-                        <Route path="/comingsoon" element={<ComingSoon />}
-                        />
-                    </Routes>
-                </Router>
-            </VideoProvider>
+        <IntlProvider locale={appLanguage} messages={messages[appLanguage]}>
 
-        </div>
+            <div className={styles.App}>
+                <VideoProvider>
+                    <Router>
+                        <Routes>
+                            <Route path="/" element={<InitialRouteHandler />} />
+                            <Route path="/auth" element={<Authentication setLanguage={setLanguage} language={appLanguage} />} />
+                            <Route path="/forgot-password" element={<ForgotPassword />} />
+                            <Route path="/set-newpassword" element={<SetNewPassword />} />
+                            <Route path="/view/video/:onePost" element={<Home />} />
+                            <Route path="/home" element={<Home />} />
+                            <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
+                            <Route path="/notifications" element={<ActivityPage />} />
+                            <Route path="/comingsoon" element={<ComingSoon />}
+                            />
+                        </Routes>
+                    </Router>
+                </VideoProvider>
+
+            </div>
+        </IntlProvider>
     );
 }
 

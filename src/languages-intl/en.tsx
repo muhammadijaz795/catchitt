@@ -1,0 +1,12 @@
+const translationsEn = {
+    "login.title": "Login to your account",
+    "email.input": "Email",
+    "password.input": "Password",
+    "forgotpassword.link": "Forgot Password?",
+    "login.text": "Login",
+    "or.text": "OR",
+    "notregistered.text": "Not registered?",
+    "createaccount.text": "Create an account"
+};
+
+export default translationsEn;

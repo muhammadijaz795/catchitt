@@ -1,16 +1,26 @@
+// .root {
+//   display: grid;
+//   padding: 20px 30px;
+//   align-items: center;
+//   // justify-content: space-between;
+//   width: 100%;
+//   background-color: #fff;
+//   grid-auto-flow: column;
+//   width: 100%;
+//   height: 100%;
+//   max-height: 80px;
+//   gap: 0px 400px;
+//     // padding-right: 300px;
+// }
+
 .root {
-  display: grid;
-  padding: 20px 30px;
+  display: flex; /* Change to flex container */
+  justify-content: space-between; /* Distribute space evenly between children */
   align-items: center;
-  // justify-content: space-between;
+  padding: 20px 30px;
   width: 100%;
   background-color: #fff;
-  grid-auto-flow: column;
-  width: 100%;
-  height: 100%;
   max-height: 80px;
-  gap: 0px 400px;
-    // padding-right: 300px;
 }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
@@ -25,9 +35,10 @@
 }
 .searchBarDiv {
   position: absolute;
-  right: 36%;
-  width: 100%;
-  max-width: 614px;
+  right: 36.9%;
+  // left: 30%;
+  // width: 100%;
+  max-width: 31%;
   margin-left: 0px;
 }
 
@@ -35,7 +46,7 @@
   display: flex;
   flex-direction: row;
   align-items: start;
-  justify-content: space-between;
+  // justify-content: space-between;
   gap: 80px;
   margin-left: -27%;
 }
@@ -151,4 +162,59 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 16.8px */
+}
+
+@media (min-width: 1500px) and (max-width: 1720px) {
+  .nameDiv {
+    display: none;
+  }
+
+  .searchBarDiv {
+    position: absolute;
+    right: 34.5%;
+    // left: 30%;
+    width: 100%;
+    max-width: 31%;
+    margin-left: 0px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .nameDiv {
+    display: none;
+  }
+
+  .searchBarDiv {
+    position: absolute;
+    right: 33%;
+    // left: 30%;
+    width: 100%;
+    max-width: 31%;
+    margin-left: 0px;
+  }
+  
+  
+}
+
+@media screen and (max-width: 1200px) {
+  .nameDiv,
+  .plusProfileDiv,
+  .loginBtn {
+    display: none;
+  }
+
+  .searchPlusProfileDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .searchBarDiv {
+    position: absolute;
+    right: 29.5%;
+    width: 100%;
+    max-width: 31%;
+    // margin-right: 10%;
+  }
 }

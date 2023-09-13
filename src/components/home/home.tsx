@@ -92,7 +92,7 @@ export const Home = ({ className }: HomeProps) => {
 	const handleFetchUserBookmarks = useCallback(async () => {
 		if (!isLoggedIn) { return }
 		await fetchInJSON(
-			`/profile/collection`,
+			`/profile/collection?page=1`,
 			{
 				method: 'GET',
 				headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
@@ -243,7 +243,7 @@ export const Home = ({ className }: HomeProps) => {
 										/>
 									))
 									:
-									<div className={styles.center}><h1>..</h1></div>
+									<div className={styles.center}><h6>Loading...</h6></div>
 							)
 							:
 							(
@@ -259,17 +259,17 @@ export const Home = ({ className }: HomeProps) => {
 										/>
 									))
 									:
-									<div className={styles.center}><h1>..</h1></div>
+									<div className={styles.center}><h6>Loading..</h6></div>
 							)
 					}
 					{
 						paginating && postData.length > 0 &&
 						(
-							<div className={styles.paginationload}><h1>..</h1></div>
+							<div className={styles.paginationload}><h6>Loading...</h6></div>
 						)
 					}
 				</div>
 			</div>
-		</div>
+		</div >
 	)
 }

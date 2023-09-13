@@ -10,6 +10,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import { DefaultAvatar } from './svg-components/DefaultAvatar';
+import { Button } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import Media from 'react-media';
 
 export interface TopBarProps {
     className?: string;
@@ -35,6 +38,7 @@ export const TopBar = ({ className }: TopBarProps,) => {
         navigate('/auth')
     }
 
+
     const handleFetchProfileInfo = async () => {
         if (!isLoggedIn) { return }
         try {
@@ -59,14 +63,23 @@ export const TopBar = ({ className }: TopBarProps,) => {
         handleFetchProfileInfo();
     }, []);
 
-    const [anchorEl, setAnchorEl] = useState(null);
-
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const [anchorBrgrEl, setAnchorBrgrEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl);
+    const openBrgr = Boolean(anchorBrgrEl);
+    const handleBrgrClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorBrgrEl(event.currentTarget);
+    };
     const handleMenuClick = (event: any) => {
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleBrgrClose = () => {
+        setAnchorBrgrEl(null);
     };
 
     return (
@@ -78,35 +91,90 @@ export const TopBar = ({ className }: TopBarProps,) => {
                 <div className={styles.searchBarDiv}>
                     <SearchBar />
                 </div>
-                <div className={styles.plusProfileDiv}>
 
+                <Media query={{ maxWidth: 1200 }}>
+                    <div>
+                        <Button
+                            sx={{ color: '#5448B2' }}
+                            id="basic-button"
+                            aria-controls={openBrgr ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={openBrgr ? 'true' : undefined}
+                            onClick={handleBrgrClick}
+                        >
+                            <MenuIcon sx={{ padding: '0px', margin: '0px', minWidth: '0px' }} />
+                        </Button>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorBrgrEl}
+                            open={openBrgr}
+                            onClose={handleBrgrClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            {isLoggedIn ? (
+                                <>
+                                    {profileData.avatar === '' ? (
+                                        <MenuItem onClick={handleBrgrClose}>New Post
+                                        </MenuItem>
+                                    ) : (
+                                        <MenuItem onClick={handleBrgrClose}> <img src={plusIcon} alt="" className={styles.plusIconStyle} />
+                                            <img
+                                                src={profileData.avatar}
+                                                alt=""
+                                                className={styles.plusIconStyle}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    borderRadius: '50%',
+                                                    border: '1px solid #000',
+                                                    width: '36px',
+                                                    height: '36px',
+                                                    objectFit: 'cover'
+                                                }}
+                                                onClick={handleMenuClick} // Open dropdown menu on avatar click
+                                            /></MenuItem>
+                                    )}
+                                    <MenuItem onClick={handleBrgrClose}>{userName}</MenuItem>
+                                    <MenuItem onClick={handleBrgrClose}>Logout</MenuItem>
+                                </>
+
+                            ) : (
+                                // Dropdown menu for login button
+                                <div className={styles.dropdownMenu}>
+                                    <MenuItem onClick={handleLogin}>Log In</MenuItem>
+                                </div>
+                            )}
+                        </Menu>
+                    </div>
+                </Media>
+                <div className={styles.plusProfileDiv}>
                     {isLoggedIn ? (
                         <>
-                            {profileData.avatar === '' ?
-
-                                (<>
+                            {profileData.avatar === '' ? (
+                                <>
                                     <img src={plusIcon} alt="" className={styles.plusIconStyle} />
-
                                     <DefaultAvatar />
-                                </>) : (
-                                    <>
-                                        <img src={plusIcon} alt="" className={styles.plusIconStyle} />
-                                        <img
-                                            src={profileData.avatar}
-                                            alt=""
-                                            className={styles.plusIconStyle}
-                                            style={{
-                                                cursor: 'pointer',
-                                                borderRadius: '50%',
-                                                border: '1px solid #000',
-                                                width: '36px',
-                                                height: '36px',
-                                                objectFit: 'cover'
-                                            }}
-                                            onClick={handleMenuClick} // Open dropdown menu on avatar click
-                                        />
-                                    </>
-                                )}
+                                </>
+                            ) : (
+                                <>
+                                    <img src={plusIcon} alt="" className={styles.plusIconStyle} />
+                                    <img
+                                        src={profileData.avatar}
+                                        alt=""
+                                        className={styles.plusIconStyle}
+                                        style={{
+                                            cursor: 'pointer',
+                                            borderRadius: '50%',
+                                            border: '1px solid #000',
+                                            width: '36px',
+                                            height: '36px',
+                                            objectFit: 'cover'
+                                        }}
+                                        onClick={handleMenuClick} // Open dropdown menu on avatar click
+                                    />
+                                </>
+                            )}
                             <div className={styles.nameDiv}>
                                 <h4 className={styles.loggedName} onClick={handleMenuClick}>
                                     {userName}
@@ -119,14 +187,15 @@ export const TopBar = ({ className }: TopBarProps,) => {
                                     <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                                 </Menu>
                             </div>
-
-
                         </>
-                    ) : <button className={styles.loginBtn} onClick={handleLogin}>
-                        Log In
-                    </button>}
+                    ) : (
+                        // Dropdown menu for login button
+                        <div className={styles.loginBtn}>
+                            <MenuItem onClick={handleLogin}>Log In</MenuItem>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
     );
-};
+}
