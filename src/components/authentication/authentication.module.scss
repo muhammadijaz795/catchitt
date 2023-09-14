@@ -46,14 +46,13 @@
 //   align-items: center;
 // }
 
-Copy code
 /* Resetting default margin and padding on the body and HTML elements */
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* Prevent scrolling */
+  // overflow: hidden; /* Prevent scrolling */
 }
 
 /* Make the .container fill the entire viewport */
@@ -103,7 +102,6 @@ body {
   align-content: center;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* Prevent scrolling */
 }
 
 .logoDiv {
