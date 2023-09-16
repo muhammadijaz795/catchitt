@@ -7,8 +7,8 @@ import atForgotPwd from '../../assets/atForgotPwd.png';
 import resend from '../../assets/resend.png';
 import { useState } from 'react';
 import cookies from 'js-cookie';
-// import i18next from 'i18next';
-// import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 export interface ForgotPasswordProps {
     className?: string;
@@ -43,21 +43,15 @@ const languages: Languages[] = [
 
 export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
-    const currentLanguage = languages.find((l) => l.code === currentLanguageCode) || languages[0];
-    const [, setLanguageSelector] = useState(currentLanguage.name);
+    const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+    const { t, i18n } = useTranslation();
 
     const API_KEY = process.env.VITE_API_URL;
     const forgotPwdEndPoint = '/auth';
     const [errorMessage, setErrorMessage] = useState('');
-    // const [form, setForm] = useState('forgotPwd');
     const [user, setUser] = useState(defaultUser);
     const [response, setResponse] = useState(false);
     const [responseResult, setResponseResult] = useState('');
-
-    const handleLanguageChange = (code: string, name: string) => {
-        // i18next.changeLanguage(code);
-        setLanguageSelector(name);
-    };
 
     const onUserChange = <P extends keyof User>(prop: P, value: User[P]) => {
         setUser({ ...user, [prop]: value });
@@ -90,7 +84,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
     };
 
     const handleForgotPasswordSubmit = (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent the default form submission behavior
+        e.preventDefault();
         const { email } = user;
         handleForgotPassword(email);
     };
@@ -144,10 +138,10 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                         <div>
                             <img src={atForgotPwd} alt="" className={styles.atForgotPwd} />
                             <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                                Check your Email
+                                {t('checkyouremail.text')}
                             </h3>
-                            <p>We sent a password reset link to your email.</p>
-                            <p>Didn’t receive an email from us yet?</p>
+                            <p>{t('wesentpassword.text')}</p>
+                            <p>{t('didntreceiveemail.text')}</p>
                             <a
                                 href="#"
                                 onClick={handleForgotPasswordSubmit}
@@ -158,15 +152,15 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                     alt=""
                                     style={{ width: '14.5px', marginRight: '8.5px' }}
                                 />
-                                Click to resend email
+                                {t('clicktoresend.text')}
                             </a>
                         </div>
                     ) : (
                         <form className={styles.authInputFields}>
                             <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                                Forgot Password?
+                                {t('forgotpassword.link')}
                             </h3>
-                            <p>Don’t worry, we’ll send you reset instructions.</p>
+                            <p>{t('dontworry.text')}</p>
                             <div style={{ marginTop: '20px' }}>
                                 {errorMessage ? (
                                     <h4
@@ -184,7 +178,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                             <div className={styles.inputsDiv}>
                                 <InputField
                                     type="email"
-                                    placeholder="Email"
+                                    placeholder={t('email.input')}
                                     className="formInputFields"
                                     value={user.email}
                                     onChange={(e: { target: { value: string } }) => {
@@ -198,7 +192,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                     className={styles.signupSubmitBtn}
                                     onClick={handleForgotPasswordSubmit}
                                 >
-                                    Email me instructions
+                                    {t('emailmeinstructions.btn')}
                                 </button>
                                 {response ? renderResponse() : ''}
                             </div>
@@ -216,9 +210,9 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                 id="dropdownDefaultButton"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                                className={classNames(styles.langSelector)}
+                                className={styles.langSelector}
                             >
-                                {currentLanguage.name}
+                                {currentLanguage?.name}
                                 <span className="m-md-1">
                                     <svg
                                         width="7"
@@ -239,11 +233,12 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                     <li key={country_code}>
                                         <a
                                             href="#"
-                                            className={classNames('dropdown-item', {
+                                            className={classNames("dropdown-item", {
                                                 disabled: currentLanguageCode === code,
                                             })}
                                             onClick={() => {
-                                                handleLanguageChange(code, name);
+                                                console.log(`Changing language to: ${code}`);
+                                                i18next.changeLanguage(code);
                                             }}
                                         >
                                             <span

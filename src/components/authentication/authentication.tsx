@@ -187,7 +187,7 @@ export const Authentication = (props: any) => {
                 <div className={styles.formContainer} style={{ marginTop: '10%' }}>
                     {form === 'signup' ? (
                         <form className={styles.authInputFields}>
-                            <h3 className={styles.creatTitle}>Create your account</h3>
+                            <h3 className={styles.creatTitle}>{t('createyouraccount.text')}</h3>
                             <div style={{ marginTop: '20px' }}>
                                 {errorMessage ? (
                                     <h4
@@ -205,7 +205,7 @@ export const Authentication = (props: any) => {
                             <div className={styles.inputsDiv}>
                                 <InputField
                                     type="text"
-                                    placeholder="Full name"
+                                    placeholder={t('fullname.text')}
                                     className="formInputFields"
                                     value={user.name}
                                     onChange={(e: { target: { value: string } }) => {
@@ -233,7 +233,7 @@ export const Authentication = (props: any) => {
                                 />
                                 <InputField
                                     type="password"
-                                    placeholder="Confirm Password"
+                                    placeholder={t('confirmpassword.text')}
                                     className="formInputFields"
                                     value={user.confirmPassword}
                                     onChange={(e: { target: { value: string } }) => {
@@ -242,21 +242,21 @@ export const Authentication = (props: any) => {
                                 />
                             </div>
                             <p className={styles.formParagraph}>
-                                By signing up, you agree to our{' '}
-                                <a href="https://www.seezitt.com">Terms & Conditions</a> and{' '}
-                                <a href="https://www.seezitt.com">Privacy Policy</a>.{' '}
+                                {t('Bysigningupyouagreetoour.text')}{' '}
+                                <a href="https://www.seezitt.com">{t('terms&conditions.text')}</a> {t('and.text')}{' '}
+                                <a href="https://www.seezitt.com">{t('Privacypolicy.text')}</a>
                             </p>
                             <div className={styles.signupSubmitDiv}>
                                 <button
                                     className={styles.signupSubmitBtn}
                                     onClick={handleSignUpSubmit}
                                 >
-                                    Sign Up
+                                    {t('signup.text')}
                                 </button>
                             </div>
                             <div className={styles.splitLinesDiv}>
                                 <hr className={styles.splitLine} />
-                                <p className={styles.formParagraph}>OR</p>
+                                <p className={styles.formParagraph}>{t('or.text')}</p>
                                 <hr className={styles.splitLine} />
                             </div>
                         </form>
@@ -335,13 +335,13 @@ export const Authentication = (props: any) => {
                     </div>
                     {form === 'signup' ? (
                         <p className={styles.formParagraph}>
-                            Already have an account?{' '}
+                            {t('alreadyhaveanaccount.text')}{' '}
                             <a
                                 href="https://www.seezitt.com"
                                 onClick={handleLinkClick}
                                 className={styles.boldLinkText}
                             >
-                                Login
+                                {t('login.text')}
                             </a>
                         </p>
                     ) : form === 'signin' ? (
@@ -359,7 +359,7 @@ export const Authentication = (props: any) => {
                         'null'
                     )}
                     <h3 className={classNames(styles.creatTitle, styles.getTheAppText)}>
-                        Get the app{' '}
+                        {t('gettheapp.text')}{' '}
                     </h3>
                     <div className={styles.appStoresDiv}>
                         <img src={appStoreBtn} alt="" className={styles.appStoreBtn} />

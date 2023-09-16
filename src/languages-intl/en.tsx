@@ -6,7 +6,24 @@ const translationsEn = {
     "login.text": "Login",
     "or.text": "OR",
     "notregistered.text": "Not registered?",
-    "createaccount.text": "Create an account"
+    "createaccount.text": "Create an account",
+    "fullname.text": "Full name",
+    "confirmpassword.text": "Confirm Password",
+    "Bysigningupyouagreetoour.text": "By signing up, you agree to our",
+    "terms&conditions.text": "Terms & Conditions",
+    "and.text": "and",
+    "Privacypolicy.text": "Privacy Policy",
+    "signup.text": "Sign Up",
+    "createyouraccount.text": "Create your account",
+    "alreadyhaveanaccount.text": "Already have an account?",
+    "gettheapp.text": "Get the app",
+    "dontworry.text": "Don’t worry, we’ll send you reset instructions.",
+    "emailmeinstructions.btn": "Email me instructions",
+    "checkyouremail.text": "Check your Email",
+    "wesentpassword.text": "We sent a password reset link to your email.",
+    "didntreceiveemail.text": "Didn’t receive an email from us yet?",
+    "clicktoresend.text": "Click to resend email"
+
 };
 
 export default translationsEn;

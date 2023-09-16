@@ -6,5 +6,25 @@
   "login.text": "تسجيل الدخول",
   "or.text": "أو",
   "notregistered.text": "غير مسجل؟",
-  "createaccount.text": "سجل حساب جديد"
+  "createaccount.text": "سجل حساب جديد",
+  "fullname.text": "الاسم الكامل",
+  "confirmpassword.text": "تأكيد كلمة المرور",
+  "Bysigningupyouagreetoour.text": "من خلال التسجيل، فإنك توافق على",
+  "terms&conditions.text": "الشروط والأحكام",
+  "and.text": "و",
+  "Privacypolicy.text": "سياسة الخصوصية",
+  "signup.text": "التسجيل",
+  "createyouraccount.text": "أنشيء حسابك",
+  "alreadyhaveanaccount.text": "هل لديك حساب؟",
+  "gettheapp.text": "احصل على التطبيق",
+  "dontworry.text": ".لا تقلق، سوف نرسل لك تعليمات إعادة تعيين كلمة السر",
+  "emailmeinstructions.btn": "أرسل لي التعليمات عبر البريد الإلكتروني",
+  "checkyouremail.text": "تحقق من بريدك الالكتروني",
+  "wesentpassword.text": ".لقد أرسلنا رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+  "didntreceiveemail.text": "لم تتلق بريدًا إلكترونيًا منا بعد؟",
+  "clicktoresend.text": "اضغط لإعادة إرسال البريد الإلكتروني"
+
+
+
+
 }
