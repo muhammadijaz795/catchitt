@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
 import ReactHlsPlayer from '@gumlet/react-hls-player';
+import React, { useEffect, useRef } from 'react';
 
 interface VideoPlayerProps {
     src: string;
@@ -57,16 +57,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, onStart, onEnd }) => {
     };
 
     return (
-        <div ref={videoRef} style={{ margin: 0, padding: 0 }}>
+        <div ref={videoRef} style={{
+            margin: 0, padding: 0, width: "602px",
+            height: "598px", borderRadius: '8px'
+        }}>
             <ReactHlsPlayer
                 src={src}
                 autoPlay={false} // Set to false, as we will manually handle play/pause
                 controls={false}
-                width="100%"
-                height="100%"
                 // loop
                 playerRef={playerRef}
                 onEnded={handleEnded}
+            // style={{ objectFit: width > height ? 'cover' : 'contain' }}
             />
         </div>
     );

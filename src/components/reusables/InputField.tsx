@@ -1,10 +1,10 @@
-import React, { useState, ChangeEvent } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Gift } from '../post/svg-components/Gift'
-import { SendComment } from '../post/svg-components/SendComment'
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import { Button } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import React, { ChangeEvent, useState } from 'react';
+import { Gift } from '../post/svg-components/Gift';
+import { SendComment } from '../post/svg-components/SendComment';
 
 interface InputFieldProps {
     e?: any;
@@ -42,6 +42,8 @@ const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, pla
             InputProps={{
                 style: {
                     borderRadius: '8px',
+                    textAlign: 'right',
+                    height: '48px'
                 },
                 endAdornment:
                     type === 'password' ? (

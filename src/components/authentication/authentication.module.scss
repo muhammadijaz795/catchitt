@@ -54,6 +54,11 @@ body {
   height: 100%;
 }
 
+a {
+  color: #5448B2;
+  text-decoration: none;
+}
+
 /* Make the .container fill the entire viewport */
 .container {
   display: grid;
@@ -61,7 +66,8 @@ body {
   grid-template-columns: 1fr 1fr;
   width: 100%;
   height: 100%;
-  overflow: auto; /* Prevent scrolling */
+  overflow: hidden; /* Prevent scrolling */
+  height: 100vh;
 }
 
 /* Set a background color for AuthSplashImg */
@@ -99,10 +105,11 @@ body {
   width: 100%;
   height: 100%;
   justify-items: center;
-  align-content: center;
+  align-content: flex-start;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   // overflow: auto; /* Prevent scrolling */
+  position: relative;
 }
 
 .logoDiv {
@@ -125,7 +132,8 @@ body {
   align-items: center;
   justify-content: space-around;
   margin: 0px;
-  position: relative;
+  position: absolute;
+  bottom: 45px;
   width: 80%;
   padding: 0px;
   column-gap: 45px;
@@ -225,6 +233,7 @@ body {
   justify-content: center;
   margin-left: 0px;
   margin-right: 0px;
+
 }
 
 .socialLoginsDiv {
@@ -241,10 +250,11 @@ body {
   grid-auto-flow: column;
   align-content: center;
   // margin-bottom: 20px;
+  height: 40px;
 }
 
 .socialLoginIcon {
-  width: 60px;
+  width: 40px;
 
   &:focus {
     opacity: 0.9;
@@ -254,23 +264,35 @@ body {
 .boldLinkText {
   font-weight: 700;
   font-size: 16px;
+  color: #5448B2;
+  text-decoration: none;
+}
+.linkText {
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 21px */
+  color: #5448B2;
+  text-decoration: none;
 }
 
 .getTheAppText {
   font-size: 20px;
-  margin-top: 40px;
+  margin-top: 24px;
   margin-bottom: 24px;
 }
 
 .appStoresDiv {
   display: grid;
   flex-direction: row;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   align-items: center;
   justify-items: center;
   grid-auto-flow: column;
   column-gap: 10px;
   margin-bottom: 60px;
+  
 }
 
 .appStoreBtn {
@@ -287,13 +309,15 @@ body {
   display: flex;
   grid-auto-flow: column;
   gap: 0px 45px;
-  margin-bottom: 30px;
+  // margin-bottom: 30px;
   flex-direction: row;
   // align-items: center;
   justify-items: center;
   justify-content: center;
   font-size: 16px;
   font-family: 'Poppins';
+  position: absolute;
+  bottom: 45px;
 }
 
 .splashImgDiv {
@@ -434,6 +458,7 @@ body {
     grid-template-columns: 1fr;
     /* One Column */
     max-height: 100vh;
+    overflow: auto;
   }
 
   .LoginImg {
@@ -457,6 +482,11 @@ body {
 
   .langSelector {
     font-size: 14px;
+  }
+  .footerLightBg{
+    margin-bottom: 20px;
+    bottom: auto;
+    position: relative;
   }
 }
 

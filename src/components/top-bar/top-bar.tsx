@@ -1,18 +1,17 @@
 import classNames from 'classnames';
-import styles from './top-bar.module.scss';
+import { useEffect, useState } from 'react';
 import coloredLogo from '../../assets/coloredLogo.png';
 import plusIcon from '../../assets/plusIcon.png';
-import SearchBar from '../reusables/searchBar';
 import { useAuthStore } from '../../store/authStore';
-import { useEffect, useState } from 'react';
+import styles from './top-bar.module.scss';
 // import { Button } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Button } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Media from 'react-media';
 import { useNavigate } from 'react-router-dom';
 import { DefaultAvatar } from './svg-components/DefaultAvatar';
-import { Button } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import Media from 'react-media';
 
 export interface TopBarProps {
     className?: string;
@@ -89,7 +88,7 @@ export const TopBar = ({ className }: TopBarProps,) => {
             </div>
             <div className={styles.searchPlusProfileDiv}>
                 <div className={styles.searchBarDiv}>
-                    <SearchBar />
+                    {/* <SearchBar /> */}
                 </div>
 
                 <Media query={{ maxWidth: 1200 }}>
@@ -153,12 +152,12 @@ export const TopBar = ({ className }: TopBarProps,) => {
                         <>
                             {profileData.avatar === '' ? (
                                 <>
-                                    <img src={plusIcon} alt="" className={styles.plusIconStyle} />
-                                    <DefaultAvatar />
+                                    {/* <img src={plusIcon} alt="" className={styles.plusIconStyle} /> */}
+                                    <DefaultAvatar onClick={handleMenuClick} />
                                 </>
                             ) : (
                                 <>
-                                    <img src={plusIcon} alt="" className={styles.plusIconStyle} />
+                                    {/* <img src={plusIcon} alt="" className={styles.plusIconStyle} /> */}
                                     <img
                                         src={profileData.avatar}
                                         alt=""
@@ -176,7 +175,7 @@ export const TopBar = ({ className }: TopBarProps,) => {
                                 </>
                             )}
                             <div className={styles.nameDiv}>
-                                <h4 className={styles.loggedName} onClick={handleMenuClick}>
+                                <h4 className={styles.loggedName}>
                                     {userName}
                                 </h4>
                                 <Menu

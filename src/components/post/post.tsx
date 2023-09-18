@@ -1,37 +1,35 @@
-import classNames from 'classnames';
-import styles from './post.module.scss';
-import { useRef, useState, useEffect, memo, useCallback } from 'react';
-import { ReasonReportPopup } from '../reason-report-popup/reason-report-popup';
-import { useAuthStore } from '../../store/authStore';
-import axios from 'axios';
-import MenuItem from '@mui/material/MenuItem';
-import { styled, alpha } from '@mui/material/styles';
+import { Box, Modal, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
-import { Box, Modal, Typography } from '@mui/material';
-import confirmationIcon from '../../assets/confirmationIcon.png';
-import VideoPlayer from '../reusables/VideoPlayer';
-import profileIcon from '../../assets/defaultProfileIcon.png';
+import MenuItem from '@mui/material/MenuItem';
+import { alpha, styled } from '@mui/material/styles';
+import axios from 'axios';
+import classNames from 'classnames';
 import FileSaver from "file-saver";
+import { memo, useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import confirmationIcon from '../../assets/confirmationIcon.png';
+import profileIcon from '../../assets/defaultProfileIcon.png';
+import { useAuthStore } from '../../store/authStore';
+import { ReasonReportPopup } from '../reason-report-popup/reason-report-popup';
+import VideoPlayer from '../reusables/VideoPlayer';
+import styles from './post.module.scss';
 import { PostProps, Post as PostType } from './postTypes';
 // import { PopupModal } from '../reusables/popupModal';
 import InputField from '../reusables/InputField';
 // import { differenceInHours, differenceInDays, differenceInWeeks, format } from 'date-fns';
+import useDebounce from '../reusables/useDebounce';
 import { Comment } from './comment';
-import useDebounce from '../reusables/useDebounce'
 
-import { Send } from './svg-components/Send';
 import { fetchInJSON } from '../reusables/fetchInJSON';
 import { Bookmark } from './svg-components/Bookmark';
 import { CommentIcon } from './svg-components/Comment';
-import { Like } from './svg-components/Like';
-import { Save } from './svg-components/Save';
 import { Copy } from './svg-components/Copy';
-import { NotInterested } from './svg-components/NotInterested';
-import { Report } from './svg-components/Report';
-import { Share } from './svg-components/Share';
+import { Like } from './svg-components/Like';
 import { More } from './svg-components/More';
+import { Report } from './svg-components/Report';
+import { Save } from './svg-components/Save';
+import { Share } from './svg-components/Share';
 // import { getCache, replaceCache } from '../../store/cachedBookmarks';
 import { useNavigate } from 'react-router-dom';
 
@@ -710,8 +708,9 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 <h4 className={styles.captionText}>{postData.description}</h4>
                             </div>
                         </div>
-                        <div className={styles.postMediaContainer} ref={videoElement}>
+                        <div className={styles.postMediaContainer} ref={videoElement} >
                             <VideoPlayer
+
                                 key={postData.mediaId}
                                 src={postData.reducedVideoHlsUrl}
                                 onStart={() => handleStartWatching(postData.mediaId)}

@@ -1,18 +1,18 @@
-import classNames from 'classnames';
-import styles from './authentication.module.scss';
-import authSplashImg from '../../assets/authSplashImg.png';
-import Logo from '../../assets/Logo.png';
-import facebookIcon from '../../assets/facebookIcon.png';
-import appStoreBtn from '../../assets/appStoreBtn.png';
-import playStoreBtn from '../../assets/playStoreBtn.png';
-import InputField from '../reusables/InputField';
 import IconButton from '@mui/material/IconButton';
-import { useAuthStore } from '../../store/authStore';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import cookies from 'js-cookie';
-import { useTranslation } from "react-i18next";
+import classNames from 'classnames';
 import i18next from 'i18next';
+import cookies from 'js-cookie';
+import { useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { useNavigate } from 'react-router-dom';
+import Logo from '../../assets/Logo.png';
+import appStoreBtn from '../../assets/appStoreBtn.png';
+import authSplashImg from '../../assets/authSplashImg.png';
+import facebookIcon from '../../assets/facebookIcon.png';
+import playStoreBtn from '../../assets/playStoreBtn.png';
+import { useAuthStore } from '../../store/authStore';
+import InputField from '../reusables/InputField';
+import styles from './authentication.module.scss';
 
 export interface AuthenticationProps {
     className?: string;
@@ -179,7 +179,9 @@ export const Authentication = (props: any) => {
                     <p className={styles['footer-paragraph']}>
                         © 2023 SeezItt from PoshEnterpriseInc
                     </p>
-                    <p className={styles['footer-paragraph']}>Terms and conditions </p>
+                    {/* <p className={styles['footer-paragraph']}>Terms and conditions </p> */}
+                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-paragraph']} href="https://seezitt.com/terms-conditions" style={{ textDecoration: 'none' }}>{t('terms&conditions.text')}</a></p>
+
                 </div>
             </div>
             <div className={styles.AuthForm}>
@@ -202,7 +204,10 @@ export const Authentication = (props: any) => {
                                     </h4>
                                 ) : null}
                             </div>
-                            <div className={styles.inputsDiv}>
+                            <div className={styles.inputsDiv} style={{
+                                textAlign: currentLanguage?.code === 'ar' ? 'right' : 'left',
+                                direction: currentLanguage?.code === 'ar' ? 'rtl' : 'ltr'
+                            }}>
                                 <InputField
                                     type="text"
                                     placeholder={t('fullname.text')}
@@ -211,6 +216,7 @@ export const Authentication = (props: any) => {
                                     onChange={(e: { target: { value: string } }) => {
                                         onUserChange('name', e.target.value);
                                     }}
+
                                 />
                                 <InputField
                                     type="email"
@@ -243,8 +249,8 @@ export const Authentication = (props: any) => {
                             </div>
                             <p className={styles.formParagraph}>
                                 {t('Bysigningupyouagreetoour.text')}{' '}
-                                <a href="https://www.seezitt.com">{t('terms&conditions.text')}</a> {t('and.text')}{' '}
-                                <a href="https://www.seezitt.com">{t('Privacypolicy.text')}</a>
+                                <a className={styles.linkText} href="https://seezitt.com/terms-conditions">{t('terms&conditions.text')}</a> {t('and.text')}{' '}
+                                <a className={styles.linkText} href="https://seezitt.com/privacy-policy">{t('Privacypolicy.text')}</a>
                             </p>
                             <div className={styles.signupSubmitDiv}>
                                 <button
@@ -280,7 +286,10 @@ export const Authentication = (props: any) => {
                                         </h4>
                                     ) : null}
                                 </div>
-                                <div className={styles.inputsDiv}>
+                                <div className={styles.inputsDiv} style={{
+                                    textAlign: currentLanguage?.code === 'ar' ? 'right' : 'left',
+                                    direction: currentLanguage?.code === 'ar' ? 'rtl' : 'ltr'
+                                }}>
                                     <InputField
                                         type="email"
                                         placeholder={t('email.input')}
@@ -306,7 +315,7 @@ export const Authentication = (props: any) => {
                                         styles.formForgotPassword
                                     )}
                                 >
-                                    <a href="/forgot-password">{t("forgotpassword.link")}</a>{' '}
+                                    <a className={styles.linkText} href="/forgot-password">{t("forgotpassword.link")}</a>{' '}
                                 </p>
                                 <div className={styles.signupSubmitDiv}>
                                     <button
@@ -358,72 +367,73 @@ export const Authentication = (props: any) => {
                     ) : (
                         'null'
                     )}
-                    <h3 className={classNames(styles.creatTitle, styles.getTheAppText)}>
+                    <h3 className={styles.getTheAppText}>
                         {t('gettheapp.text')}{' '}
                     </h3>
                     <div className={styles.appStoresDiv}>
                         <img src={appStoreBtn} alt="" className={styles.appStoreBtn} />
                         <img src={playStoreBtn} alt="" className={styles.appStoreBtn} />
                     </div>
-                    <div className={classNames(styles.footerLightBg)}>
-                        <p className={styles['footer-p-lightBg']}>Privacy Policy</p>
-                        <p className={styles['footer-p-lightBg']}>About</p>
-                        <p className={styles['footer-p-lightBg']}>Help center</p>
-                        {/* <p className={styles['footer-p-lightBg']}>English</p> */}
-                        <div className="language-select">
-                            {/* <div className="d-flex justify-content-end align-items-center language-select-root"> */}
-                            {/* <div className="dropdown"> */}
-                            <button
-                                type="button"
-                                id="dropdownDefaultButton"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                className={classNames(
-                                    styles.langSelector
-                                    // styles['footer-p-lightBg']
-                                )}
-                            >
-                                {currentLanguage?.name}
-                                <span className="m-md-1">
-                                    <svg
-                                        width="7"
-                                        height="6"
-                                        viewBox="0 0 7 6"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
+
+                </div>
+                <div className={styles.footerLightBg}> {/**style={{ bottom: form === 'signup' ? '45px' : '45px' }}*/}
+                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-p-lightBg']} href="https://seezitt.com/privacy-policy" style={{ textDecoration: 'none' }}>{t('Privacypolicy.text')}</a></p>
+                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-p-lightBg']} href="https://seezitt.com/#About" style={{ textDecoration: 'none' }}>{t('About.text')}</a></p>
+                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-p-lightBg']} href="https://seezitt.com/faqs" style={{ textDecoration: 'none' }}>{t('Helpcenter.text')}</a></p>
+                    {/* <p className={styles['footer-p-lightBg']}>English</p> */}
+                    <div className="language-select">
+                        {/* <div className="d-flex justify-content-end align-items-center language-select-root"> */}
+                        {/* <div className="dropdown"> */}
+                        <button
+                            type="button"
+                            id="dropdownDefaultButton"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            className={classNames(
+                                styles.langSelector
+                                // styles['footer-p-lightBg']
+                            )}
+                        >
+                            {currentLanguage?.name}
+                            <span className="m-md-1">
+                                <svg
+                                    width="7"
+                                    height="6"
+                                    viewBox="0 0 7 6"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M3.5 6L6.53109 0.75H0.468911L3.5 6Z"
+                                        fill="#D9D9D9"
+                                    />
+                                </svg>
+                            </span>
+                        </button>
+                        <ul className="dropdown-menu" aria-labelledby="dropdownDefaultButton">
+                            {languages.map(({ code, name, country_code }) => (
+                                <li key={country_code}>
+                                    <a
+                                        href="#"
+                                        className={classNames("dropdown-item", {
+                                            disabled: currentLanguageCode === code,
+                                        })}
+                                        onClick={() => {
+                                            console.log(`Changing language to: ${code}`);
+                                            i18next.changeLanguage(code);
+                                        }}
                                     >
-                                        <path
-                                            d="M3.5 6L6.53109 0.75H0.468911L3.5 6Z"
-                                            fill="#D9D9D9"
-                                        />
-                                    </svg>
-                                </span>
-                            </button>
-                            <ul className="dropdown-menu" aria-labelledby="dropdownDefaultButton">
-                                {languages.map(({ code, name, country_code }) => (
-                                    <li key={country_code}>
-                                        <a
-                                            href="#"
-                                            className={classNames("dropdown-item", {
-                                                disabled: currentLanguageCode === code,
-                                            })}
-                                            onClick={() => {
-                                                console.log(`Changing language to: ${code}`);
-                                                i18next.changeLanguage(code);
+                                        <span
+                                            className={`flag-icon flag-icon-${country_code} `}
+                                            style={{
+                                                opacity: currentLanguageCode === code ? 0.5 : 1,
                                             }}
-                                        >
-                                            <span
-                                                className={`flag-icon flag-icon-${country_code} `}
-                                                style={{
-                                                    opacity: currentLanguageCode === code ? 0.5 : 1,
-                                                }}
-                                            ></span>
-                                            {name}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                                        ></span>
+                                        {name}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </div>
