@@ -13,6 +13,7 @@ export interface SuggestedActivityProps {
     className?: string;
     showSuggestedContent?: boolean;
     showActivity?: boolean;
+
 }
 
 interface Account {
@@ -43,11 +44,23 @@ interface Notification {
     isRead: boolean,
 }
 
+interface FollowedUser {
+    _id: string;
+    followed_userID: {
+        _id: string;
+        avatar: string;
+        username: string;
+        name: string;
+        isVerified: boolean;
+    };
+}
+
 export const SuggestedActivity = memo(({
     className,
     showSuggestedContent,
     showActivity,
 }: SuggestedActivityProps) => {
+    let globalUserId: string = '';
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const [errorMessage] = useState('');
     const [activityData, setActivityData] = useState<Notification[]>([]);
@@ -58,6 +71,29 @@ export const SuggestedActivity = memo(({
     const token = useAuthStore((state) => state.token);
     // const [activityUserFollowed, setActivityUserFollowed] = useState(false);
     const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
+    const [followedUsersData, setFollowedUsersData] = useState<FollowedUser[]>([]);
+
+    const handleFetchFollowedUsers = async (userId: string) => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/${userId}/followers`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setFollowedUsersData(responseData.data.data);
+                console.log(`the users I'm following: `);
+                console.log(responseData.data);
+                // handleFetchActivity;
+            }
+
+        } catch (error) {
+            // Handle any errors here.
+            console.log(error)
+        }
+    }
+
 
 
     const handleFetchSuggestedAccounts = async () => {
@@ -156,6 +192,9 @@ export const SuggestedActivity = memo(({
                 // const { avatar, name } = responseData.data; // Extract token value from data object
                 // avatarUrl = avatar;
                 setActivityData(responseData.data.data);
+                globalUserId = responseData.data.data[0].user._id;
+                // console.log(`the global user id: ${globalUserId}`);
+                handleFetchFollowedUsers(globalUserId)
                 console.log(responseData);
                 console.log(activityData);
             }
@@ -290,7 +329,7 @@ export const SuggestedActivity = memo(({
                                                                     dHandleFollowBtnClicked([event, activity.triggeredUser._id])
                                                                 }
                                                             >
-                                                                {followedAccounts[activity.triggeredUser._id] ? (<Following />) : (<Follow />)}
+                                                                {followedAccounts[activity.triggeredUser._id] || followedUsersData.length > 0 && followedUsersData.some(user => user.followed_userID._id === activity.triggeredUser._id) ? (<Following />) : (<Follow />)}
                                                             </button>
                                                         ) : (
                                                             ''

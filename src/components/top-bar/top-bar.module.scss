@@ -14,8 +14,10 @@
 // }
 
 .root {
-  display: flex; /* Change to flex container */
-  justify-content: space-between; /* Distribute space evenly between children */
+  display: flex;
+  /* Change to flex container */
+  justify-content: space-between;
+  /* Distribute space evenly between children */
   align-items: center;
   padding: 20px 30px;
   width: 100%;
@@ -23,7 +25,18 @@
   max-height: 80px;
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
 }
 
@@ -32,14 +45,6 @@
   width: 90px;
   height: 32px;
   flex-shrink: 0;
-}
-.searchBarDiv {
-  position: absolute;
-  right: 36.9%;
-  // left: 30%;
-  // width: 100%;
-  max-width: 31%;
-  margin-left: 0px;
 }
 
 .searchPlusProfileDiv {
@@ -50,9 +55,11 @@
   gap: 80px;
   margin-left: -27%;
 }
+
 .plusIconStyle {
   width: 36px;
 }
+
 .plusProfileDiv {
   display: flex;
   justify-content: end;
@@ -60,16 +67,19 @@
   align-items: center;
   width: -webkit-fill-available;
 }
-.plusProfileDiv h4{
+
+.plusProfileDiv h4 {
   margin: 0;
 }
+
 .loggedName {
   /* Base/Medium */
   font-family: Poppins;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 120%; /* 19.2px */
+  line-height: 120%;
+  /* 19.2px */
   // align-items: center;color:#fff;
   color: #000;
   display: flex;
@@ -86,6 +96,7 @@
   height: 40px;
   padding: 0px 10px;
 }
+
 .logoDiv {
   display: flex;
   flex-direction: row;
@@ -94,6 +105,7 @@
   // padding-right: 270px;
   gap: 0px 340px
 }
+
 .nameDiv {
   display: flex;
   align-items: center;
@@ -124,7 +136,7 @@
   border-radius: 6px;
   border-color: var(--foundation-primary-primary-500, #5448B2);
   background: var(--foundation-primary-primary-500, #fff);
-  flex-wrap: nowrap ;
+  flex-wrap: nowrap;
 
   color: var(--default-white, #000);
 
@@ -133,7 +145,8 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 120%; /* 16.8px */
+  line-height: 120%;
+  /* 16.8px */
 }
 
 .loginBtn {
@@ -161,7 +174,20 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 120%; /* 16.8px */
+  line-height: 120%;
+  /* 16.8px */
+}
+
+@media (min-width: 1721px) {
+  .searchBarDiv {
+    position: absolute;
+    right: 52.2%;
+    // left: 30%;
+    // width: 100%;
+    max-width: 31%;
+    margin-left: 0px;
+  }
+
 }
 
 @media (min-width: 1500px) and (max-width: 1720px) {
@@ -192,11 +218,12 @@
     max-width: 31%;
     margin-left: 0px;
   }
-  
-  
+
+
 }
 
 @media screen and (max-width: 1200px) {
+
   .nameDiv,
   .plusProfileDiv,
   .loginBtn {

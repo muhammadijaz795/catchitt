@@ -24,6 +24,7 @@ export const Home = ({ className }: HomeProps) => {
 	const API_KEY = process.env.VITE_API_URL;
 
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+	const { selectedTab, setTab } = useAuthStore();
 
 	const [paginating, setPaginating] = useState(false)
 	const [postData, setPostData] = useState<any>([]);
@@ -45,12 +46,6 @@ export const Home = ({ className }: HomeProps) => {
 		dHandleFetchUserBookmarks([]);
 		handleFetchProfileInfo();
 	}, []);
-
-	// useEffect(() => {
-	// 	dHandleFetchPosts([]);
-	// 	dHandleFetchUserBookmarks([]);
-	// 	handleFetchProfileInfo();
-	// }, [isLoggedIn])
 
 	const handleFetchPosts = useCallback(async (page?: number) => {
 		if (onePost) {
@@ -237,15 +232,17 @@ export const Home = ({ className }: HomeProps) => {
 				</div>
 				<div className={styles.middleSectionDiv}>
 					<ViewSwitchers
+						selectedIndex={selectedTab}
 						className={styles.viewSwitchersDiv}
-						onTabChange={async (i) => {
+						onTabChange={async (selectedTab) => {
 							setPostData([])
 							page.current = 1
-							tab.current = i
+							setTab(selectedTab)
+							tab.current = selectedTab
 							if (onePost) {
 								navigator({ pathname: '/home' }, { replace: true })
 							}
-							if (i === 0) {
+							if (selectedTab === 0) {
 								if (!isLoggedIn) {
 									// navigator('/auth')
 									navigator({ pathname: '/suggested-accounts' }, { replace: true })

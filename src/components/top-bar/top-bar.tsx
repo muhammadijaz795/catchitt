@@ -89,7 +89,7 @@ export const TopBar = ({ className }: TopBarProps,) => {
             </div>
             <div className={styles.searchPlusProfileDiv}>
                 <div className={styles.searchBarDiv}>
-                    <SearchBar />
+                    <SearchBar placeholder='Search accounts and videos' />
                 </div>
 
                 <Media query={{ maxWidth: 1200 }}>

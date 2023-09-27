@@ -2,31 +2,131 @@
    ====== Search Box ====== 
    =========================== */
 
-   .searchInput {
-    border-radius: 3px;
-    position: static;
-    margin: 0;
-    padding: 0px 2rem 0px 52px;    
-    margin-bottom: 0;
-    height: 40px;
-    max-height: 40px;
-    top: -120px;
+.searchInput {
+  border-radius: 3px;
+  position: static;
+  margin: 0;
+  padding: 0px 2rem 0px 52px;
+  margin-bottom: 0;
+  height: 40px;
+  max-height: 40px;
+  top: -120px;
+  border: 0 solid black;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0);
+  font-size: 16px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+  color: #acacac;
+  background: no-repeat padding-box border-box 20px center / auto scroll url(../../assets/Search.svg) #f8f8f8;
+  background-size: 3%;
+
+  width: 602px;
+
+  &:focus {
     border: 0 solid black;
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0);
-    font-size: 16px;
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 21px;
-    color: #acacac;
-    background: no-repeat padding-box border-box 20px center / auto scroll
-      url(../../assets/Search.svg) #f8f8f8;
-    background-size: 3%;
-  
-    width: 602px;
-    &:focus {
-      border: 0 solid black;
-      outline: 0;
-      color: #000000;
-    }
+    outline: 0;
+    color: #000000;
   }
+}
+
+/* Add this CSS to your component's CSS or use makeStyles for styling */
+.modal-container {
+  position: absolute;
+  width: 360px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 16px;
+  border-radius: 4px;
+  outline: none;
+
+  display: inline-flex;
+  padding: 24px;
+  flex-direction: column;
+  align-items: center;
+  gap: 21px;
+
+  border-radius: 8px;
+  background: #FFF;
+}
+
+.modal-container h6 {
+  color: var(--default-body, #222);
+
+  /* H2/Medium */
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  /* 27px */
+  /* 27px */
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.modal-container p {
+  color: var(--default-body, #222);
+  text-align: center;
+
+  /* Small/Regular */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  /* 21px */
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.clear-btn {
+  display: flex;
+  width: 311px;
+  height: 40px;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+  background: var(--foundation-primary-primary-500, #5448B2);
+
+  color: var(--default-white, #FFF);
+
+  /* Small/Semibold */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  /* 16.8px */
+}
+
+.cancel-btn {
+  display: flex;
+  width: 311px;
+  height: 40px;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  border-radius: 6px;
+  border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+  background: var(--default-white, #FFF);
+
+  color: var(--foundation-primary-primary-500, #5448B2);
+
+  /* Small/Semibold */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  /* 16.8px */
+
+}

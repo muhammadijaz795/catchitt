@@ -1,14 +1,15 @@
 import classNames from 'classnames';
-import styles from './view-switchers.module.scss';
 import { useState } from 'react';
+import styles from './view-switchers.module.scss';
 
 export interface ViewSwitchersProps {
     className?: string;
     onTabChange: (index: number) => void;
+    selectedIndex: number;
 }
 
-export const ViewSwitchers = ({ className, onTabChange }: ViewSwitchersProps) => {
-    const [selectedLink, setSelectedLink] = useState<number | null>(1);
+export const ViewSwitchers = ({ className, onTabChange, selectedIndex }: ViewSwitchersProps) => {
+    const [selectedLink, setSelectedLink] = useState<number>(selectedIndex);
 
     const handleLinkClick = (index: number) => {
         setSelectedLink(index);

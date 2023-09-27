@@ -10,6 +10,7 @@ import styles from './suggested-accounts-page.module.scss';
 import { IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
+import { ViewSwitchers } from '../view-switchers/view-switchers';
 import { LeftArrow } from './svg-components/LeftArrow';
 
 export interface SuggestedAccountsPageProps {
@@ -26,12 +27,13 @@ export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps)
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 	const token = useAuthStore((state) => state.token);
 	const navigator = useNavigate()
+	const { selectedTab, setTab } = useAuthStore();
 
 	const [errorMessage, setErrorMessage] = useState('');
 	const [accountsData, setAccountsData] = useState<Account[]>([]);
 	const page = useRef(1)
 	const done = useRef(false)
-
+	const tab = useRef(1);
 	const API_KEY = process.env.VITE_API_URL;
 	const suggestedEndPoint = '/profile/suggested-users';
 	const publicSuggestedEndPoint = '/profile/public/suggested-users';
@@ -213,14 +215,26 @@ export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps)
 					</div>
 				</div>
 				<div className={styles.middleSectionDiv}>
-					<div className={styles.pageHeader}>
-						<IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
-							onClick={handleGoBack}
-						>
-							<LeftArrow />
-						</IconButton>
-						<h4>Suggested accounts</h4>
-					</div>
+					{!isLoggedIn ? <div className={styles.viewSwitchersDiv}>
+						<ViewSwitchers selectedIndex={selectedTab} onTabChange={async (selectedTab) => {
+							page.current = 1
+							tab.current = selectedTab
+							setTab(selectedTab)
+							if (selectedTab === 1) {
+								navigator({ pathname: '/home' }, { replace: true })
+							}
+						}} />
+					</div> :
+						<div className={styles.pageHeader}>
+							<IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
+								onClick={handleGoBack}
+							>
+								<LeftArrow />
+							</IconButton>
+							<h4>Suggested accounts</h4>
+						</div>
+					}
+
 					<div className={styles.gridContainer}>
 						{accountsData.map((account, i) => (
 							<SuggestedAccount key={i} account={account} />
