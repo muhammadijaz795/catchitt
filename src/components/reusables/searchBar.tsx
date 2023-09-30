@@ -1,11 +1,17 @@
 // import { IconButton, Box, useTheme } from '@mui/material';
 // import { tokens } from '../theme';
+import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputAdornment, Modal, styled } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import mySearchIconBlack from '../../assets/SearchBlack.svg';
+import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
+import { useAuthStore } from '../../store/authStore';
+
 import './components-styles.css';
 
 interface InputFieldProps {
@@ -19,6 +25,27 @@ export interface SimpleDialogProps {
     onClose: (value: string) => void;
 }
 
+interface User {
+    _id: string;
+    name: string;
+    avatar: string;
+}
+
+interface Video {
+    mediaId: string;
+    description: string;
+}
+
+interface Hashtag {
+    _id: string;
+    name: string;
+}
+
+interface Sound {
+    _id: string;
+    name: string;
+}
+
 const GroupItems = styled('ul')({
     background: 'url(../../assets/Search.svg)',
     margin: 0,
@@ -29,12 +56,24 @@ const GroupItems = styled('ul')({
 });
 
 const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: SimpleDialogProps) => {
+    const navigate = useNavigate()
 
     const [searchText, setSearchText] = useState('');
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
     const { onClose, selectedValue, open } = props;
     const [openDialog, setOpenDialog] = useState(false);
-
+    const API_KEY = process.env.VITE_API_URL;
+    const token = useAuthStore((state) => state.token);
+    const [page, setPage] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchResultsData, setSearchResultsData] = useState({
+        first3Users: [],
+        first3Videos: [],
+        first3Sounds: [],
+        first3Hashtags: [],
+    });
+    const [fetchComplete, setFetchComplete] = useState(false)
 
     useEffect(() => {
         // Load recent searches from local storage
@@ -58,13 +97,9 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
 
         // Clear the search input
         setSearchText('');
+        handleFetchSearch()
     };
 
-    // const handleClearAll = () => {
-    //     // Clear all recent searches
-    //     setRecentSearches([]);
-    //     localStorage.removeItem('recentSearches');
-    // };
     const handleClose = () => {
         onClose(selectedValue);
     };
@@ -90,123 +125,181 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
         setOpenDialog(false);
     };
 
+    const handeNavigation = () => {
+        navigate(`/searchPage/${searchText}`)
+    }
+
+    const handleFetchSearch = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/discover/search?page=${page}&pageSize=${pageSize}&searchQuery=${searchQuery}`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const { users, videos, hashtags, sounds } = responseData.data;
+                const first3Users = users.data.slice(0, 1);
+                const first3Videos = videos.data.slice(0, 3);
+                const first3Hashtags = hashtags.data.slice(0, 3);
+                const first3Sounds = sounds.data.slice(0, 3);
+                // Update the state with the extracted data
+                setSearchResultsData({ first3Users, first3Videos, first3Sounds, first3Hashtags });
+                console.log(`the search results: `);
+                console.log(responseData.data);
+                setFetchComplete(true)
+                // handleFetchActivity;
+            }
+
+        } catch (error) {
+            // Handle any errors here.
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+
+        handleFetchSearch()
+    }, [searchQuery])
+
     return (
         <>
             <Stack spacing={2} sx={{ width: 300 }}>
-                <Autocomplete
-                    freeSolo
-                    id="free-solo-2-demo"
-                    disableClearable
-                    options={recentSearches}
-                    groupBy={() => 'Recent Searches'}
-                    value={searchText}
-                    onInputChange={(e, newInputValue) => setSearchText(newInputValue)}
-                    sx={{
-                        width: { xs: 100, sm: 130, md: 150, lg: 170 },
-                        // 👇 Select the hover item here
-                        '& + .MuiAutocomplete-popper .MuiAutocomplete-option:hover': {
-                            // 👇 Customize the hover bg color here
-                            backgroundColor: 'hotpink',
-                        },
-                        // 👇 Optional: keep this one to customize the selected item when hovered
-                        "& + .MuiAutocomplete-popper .MuiAutocomplete-option[aria-selected='true']:hover":
-                        {
-                            backgroundColor: 'hotpink',
-                        },
-                    }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            placeholder={placeholder}
-                            onSubmit={handleSearch}
-                            InputProps={{
-                                ...params.InputProps,
-                                type: 'search',
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <IconButton size="small" onClick={handleSearch}>
+                {fetchComplete && (
+                    <Autocomplete
+                        // freeSolo
+                        id="free-solo-2-demo"
+                        disableClearable
 
-                                            <SearchIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton size="small">
-                                            {/* <ClearIcon /> */}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleSearch();
-                                }
-                            }}
-                            sx={{
-                                '& .MuiInputBase-root': {
-                                    borderRadius: '4px',
-                                    position: 'static',
-                                    margin: '0',
-                                    padding: '0px 5px 0px 16px',
-                                    marginBottom: '0',
-                                    height: '40px',
-                                    maxHeight: '40px',
-                                    top: '-120px',
-                                    border: '0 solid black',
-                                    boxShadow: '0 3px 4px rgba(0, 0, 0, 0)',
-                                    fontSize: '16px',
-                                    fontFamily: 'Poppins',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: '21px',
-                                    color: '#acacac',
-                                    background:
-                                        'no-repeat padding-box border-box 20px center / auto scroll url(../../assets/Search.svg) #f8f8f8',
-                                    backgroundSize: '3%',
-                                    width: '602px',
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                    width: '602px',
-                                },
-                            }}
-                        />
-                    )} renderGroup={(params) => (
-                        <li key={params.key}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 10px', }}>
-                                <div style={{
-                                    color: 'var(--default-body, #222)',
-                                    fontFamily: 'Poppins',
-                                    fontSize: '18px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '500',
-                                    lineHeight: '150%', // This is equivalent to 'line-height: 27px;'
-                                }}>Recent Searches</div>
-                                <IconButton size="small">
-                                    <div
-                                        onClick={handleClearAll}
-                                        style={{
-                                            color: 'var(--foundation-body-body-300, #6B6B6B)',
-                                            fontFamily: 'Poppins',
-                                            fontSize: '16px',
-                                            fontStyle: 'normal',
-                                            fontWeight: '400',
-                                            lineHeight: '150%',
-                                        }}>Clear All</div>
-                                </IconButton>
-                            </div>
-                            <GroupItems>
-                                {React.Children.toArray(params.children).map((child, index) => (
-                                    <div key={index} style={{
-                                        width: '100%',
-                                    }}>
-                                        {child}
+                        filterOptions={(x) => x}
+                        options={recentSearches}
+                        groupBy={() => 'Recent Searches'}
+                        value={searchText}
+                        onInputChange={(e, newInputValue) => setSearchText(newInputValue)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                placeholder={placeholder}
+                                onSubmit={handleSearch}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    type: 'search',
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <IconButton size="small" onClick={handleSearch}>
+                                                <SearchIcon />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton size="small" onClick={() => setSearchQuery('')}>
+                                                {searchQuery === '' ? '' :
+                                                    <ClearIcon />
+                                                }
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearch();
+                                    }
+                                }}
+                                sx={{
+                                    '& .MuiInputBase-root': {
+                                        borderRadius: '4px',
+                                        position: 'static',
+                                        margin: '0',
+                                        padding: '0px 5px 0px 16px',
+                                        marginBottom: '0',
+                                        height: '40px',
+                                        maxHeight: '40px',
+                                        top: '-120px',
+                                        border: '0 solid black',
+                                        boxShadow: '0 3px 4px rgba(0, 0, 0, 0)',
+                                        fontSize: '16px',
+                                        fontFamily: 'Poppins',
+                                        fontStyle: 'normal',
+                                        fontWeight: '400',
+                                        lineHeight: '21px',
+                                        color: '#acacac',
+                                        background:
+                                            'no-repeat padding-box border-box 20px center / auto scroll url(../../assets/Search.svg) #f8f8f8',
+                                        backgroundSize: '3%',
+                                        width: '602px',
+                                    },
+                                    '& .MuiOutlinedInput-notchedOutline': {
+                                        width: '602px',
+                                    },
+                                }}
+                            />
+                        )} renderGroup={(params) => (
+                            <li key={params.key}>
+                                {searchText === '' && (
+                                    <>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 10px', }}>
+                                            <div className={'header-searchDropDown'}>Recent Searches</div>
+                                            <IconButton size="small">
+                                                <div className={'header-secondary'} onClick={handleClearAll}>Clear All</div>
+                                            </IconButton>
+                                        </div>
+                                        <GroupItems>
+                                            {searchText === '' && (
+                                                React.Children.toArray(params.children).map((child, index) => (
+                                                    <div key={index} style={{
+                                                        width: '100%',
+                                                    }}>
+                                                        {child}
+                                                    </div>
+                                                ))
+                                            )}
+                                        </GroupItems>
+                                    </>
+                                )}
+                                {searchText !== '' && (
+                                    <div className={'searchResultsDiv'}>
+                                        <div className={'searchSuggestionsTextDiv'}>
+                                            <img src={mySearchIconBlack} /> {searchText} results
+                                        </div>
+                                        <div className={'searchSuggestionsTextDiv'}>
+                                            <img src={mySearchIconBlack} /> {searchText} sounds
+                                        </div>
+                                        <div className={'searchSuggestionsTextDiv'}>
+                                            <img src={mySearchIconBlack} /> {searchText} videos
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', }}>
+                                            <div className={'header-searchDropDown'} style={{ marginBottom: '24px' }}>Accounts</div>
+                                        </div>
+                                        <div>
+                                            <div className={'suggestedItemDiv'}>
+                                                {searchResultsData.first3Users.map((user: User, index) => (
+                                                    <div key={index} className={'suggestedItem'}>
+                                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                            <img
+                                                                src={user.avatar || defaultProfileIcon}
+                                                                alt=""
+                                                                className={'plusIconStyle'}
+                                                            />
+                                                            <div className={'accountName'}>
+                                                                <h4 className={'nameText'}>{`@${user.name}`}</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div >
+                                            <div className={'seeMoreTextDiv'} onClick={handeNavigation}>View all results for {searchText}</div>
+                                        </div>
                                     </div>
-                                ))}
-                            </GroupItems>
-                        </li>
-                    )}
-                />
+                                )}
+                            </li>
+                        )}
+                    />
+                )}
+
             </Stack >
             {/* Confirmation Dialog */}
             <Modal open={openDialog} onClose={handleCloseDialog}>
@@ -226,12 +319,5 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
         </>
     );
 };
-
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-]
 
 export default SearchBar;

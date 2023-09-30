@@ -1,16 +1,15 @@
+import { IconButton } from '@mui/material';
 import classNames from 'classnames';
 import { memo, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import { useAuthStore } from '../../store/authStore';
 import useDebounce from '../reusables/useDebounce';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
-import styles from './suggested-accounts-page.module.scss';
-// import { DefaultAvatar } from './svg-components/DefaultAvatar';
-import { IconButton } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import { ViewSwitchers } from '../view-switchers/view-switchers';
+import styles from './suggested-accounts-page.module.scss';
 import { LeftArrow } from './svg-components/LeftArrow';
 
 export interface SuggestedAccountsPageProps {

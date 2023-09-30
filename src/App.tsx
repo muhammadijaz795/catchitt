@@ -9,6 +9,7 @@ import ComingSoon from './components/coming-soon/coming-soon';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { Home } from './components/home/home';
 import { VideoProvider } from './components/reusables/VideoContext';
+import { SearchPage } from './components/search-page/search-page';
 import { SetNewPassword } from './components/set-newPassword/set-newPassword';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
@@ -61,7 +62,8 @@ function App() {
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
                             <Route path="/comingsoon" element={<ComingSoon />} />
-                            <Route path="/sounds/:soundId" element={<SoundPage />}
+                            <Route path="/sounds/:soundId" element={<SoundPage />} />
+                            <Route path="/SearchPage/:query" element={<SearchPage />}
                             />
                         </Routes>
                     </Router>

@@ -21,6 +21,7 @@ interface User {
     password: string;
     confirmPassword: string;
     email: string;
+    _id: string;
 }
 
 const defaultUser: User = {
@@ -28,6 +29,7 @@ const defaultUser: User = {
     password: '',
     confirmPassword: '',
     email: '',
+    _id: '',
 };
 
 interface Languages {
@@ -134,14 +136,15 @@ export const Authentication = (props: any) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { token, name } = responseData.data; // Extract token value from data object
+                const { token, name, _id } = responseData.data; // Extract token value from data object
                 // const name = responseData.data; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
                     name: name,
                     token: token,
+                    _id: _id
                 });
-                login(email, token, name); // Call the login function from the Zustand store
+                login(email, token, _id, name); // Call the login function from the Zustand store
                 console.log(responseData);
                 navigate('/home');
             } else {

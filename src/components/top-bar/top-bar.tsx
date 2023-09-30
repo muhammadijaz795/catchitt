@@ -16,9 +16,11 @@ import { DefaultAvatar } from './svg-components/DefaultAvatar';
 
 export interface TopBarProps {
     className?: string;
+    searchBar?: boolean;
 }
 
-export const TopBar = ({ className }: TopBarProps,) => {
+export const TopBar = ({ className, searchBar }: TopBarProps,) => {
+    const showSearchBar = useState(true)
     const userName = useAuthStore((state) => state.name);
     const token = useAuthStore((state) => state.token);
     const [errorMessage, setErrorMessage] = useState('');
@@ -89,7 +91,9 @@ export const TopBar = ({ className }: TopBarProps,) => {
             </div>
             <div className={styles.searchPlusProfileDiv}>
                 <div className={styles.searchBarDiv}>
-                    <SearchBar placeholder='Search accounts and videos' />
+                    {showSearchBar && searchBar !== false ? (
+                        <SearchBar placeholder='Search accounts and videos' />
+                    ) : ''}
                 </div>
 
                 <Media query={{ maxWidth: 1200 }}>
