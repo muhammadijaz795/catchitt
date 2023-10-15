@@ -88,14 +88,15 @@ export const Authentication = (props: any) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { token } = responseData.data; // Extract token from data object
+                const { token, balance } = responseData.data; // Extract token from data object
                 // const name = responseData.name; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
                     name: name,
                     token: token,
+                    balance: balance
                 });
-                login(email, token, name); // Call the login function from the Zustand store
+                login(email, token, name, balance); // Call the login function from the Zustand store
                 // console.log(responseData);
                 navigate('/home');
                 // handleSignIn(email, password)

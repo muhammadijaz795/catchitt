@@ -5,13 +5,12 @@ import { useAuthStore } from '../../store/authStore';
 import { Post } from '../post/post';
 import { BookmarkItem, Post as PostType } from '../post/postTypes';
 import { fetchInJSON } from '../reusables/fetchInJSON';
+import useDebounce from '../reusables/useDebounce';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 import { ViewSwitchers } from '../view-switchers/view-switchers';
 import styles from './home.module.scss';
-// import { getCache, replaceCache } from '../../store/cachedBookmarks';
-import useDebounce from '../reusables/useDebounce';
 
 export interface HomeProps {
 	className?: string;
@@ -100,9 +99,6 @@ export const Home = ({ className }: HomeProps) => {
 			(res: any) => {
 				setBookmarksData(res.data.data as BookmarkItem[]);
 				console.log('bookmarks ftch', res);
-				// if (res.data.data.length > 0 && Array.from(getCache()).length === 0) {
-				// 	replaceCache(res.data.data.map((e: any) => e.mediaId))
-				// }
 			}
 		);
 	}, []);
@@ -178,7 +174,7 @@ export const Home = ({ className }: HomeProps) => {
 			console.error(error);
 		}
 	};
-
+	//infinite scroll
 	function handleScroll(e: any) {
 		e.preventDefault()
 		const windowHeight = window.innerHeight;
@@ -207,14 +203,13 @@ export const Home = ({ className }: HomeProps) => {
 		document.querySelector('#root > div')?.addEventListener('scroll', handleScroll)
 		return () => { document.querySelector('#root > div')?.removeEventListener('scroll', handleScroll) }
 	}, [])
-
+	////////////////////////////////////////// end of infinite scroll 
 	const isBookmarked = useCallback((mediaId: string) => {
 		if (bookmarksData.length > 0)
 			return bookmarksData?.find(e => e.mediaId === mediaId) ? true : false
 		else
 			return false;
 	}, [])
-
 
 	return (
 		<div className={classNames(styles.root, className)}>

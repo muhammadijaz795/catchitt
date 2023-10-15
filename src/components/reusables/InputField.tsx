@@ -15,12 +15,12 @@ interface InputFieldProps {
     onChange?: any;
     showcommentsIcons?: boolean;
     iconClick?: any;
+    giftClick?: any;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, placeholder, showcommentsIcons, ...restProps }) => {
+const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, giftClick, placeholder, showcommentsIcons, ...restProps }) => {
     const [value, setValue] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    // const [showCommentIcons, setShowCommentIcons] = useState(showcommentsIcons);
     let showCommentIcons = showcommentsIcons;
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +30,7 @@ const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, pla
     const handleTogglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+
 
     return (
         <TextField
@@ -48,9 +49,6 @@ const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, pla
                 endAdornment:
                     type === 'password' ? (
                         <InputAdornment position="end">
-                            {showCommentIcons && (
-                                <Gift />
-                            )}
                             {showPassword ? (
                                 <VisibilityOff onClick={handleTogglePasswordVisibility} />
                             ) : (
@@ -61,7 +59,8 @@ const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, pla
                         <InputAdornment position="start">
                             {showCommentIcons && (
                                 <div style={{ display: "flex", gap: '16px' }}>
-                                    <Button sx={{ margin: '0px', padding: '0px', minWidth: '0px' }}>
+                                    <Button sx={{ margin: '0px', padding: '0px', minWidth: '0px' }}
+                                        onClick={giftClick}>
                                         <Gift />
                                     </Button>
                                     <Button sx={{ margin: '0px', padding: '0px', minWidth: '0px' }}

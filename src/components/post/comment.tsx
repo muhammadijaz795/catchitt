@@ -190,3 +190,4 @@ const Comment: React.FC<{ comment: CommentType, handleReply: Function, handleLik
 })
 
 export { Comment };
+
