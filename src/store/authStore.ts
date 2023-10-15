@@ -46,9 +46,9 @@ export const useAuthStore = create<AuthState>((set) => {
           sessionStorage.setItem('isLoggedIn', 'true');
           if (name) {
               sessionStorage.setItem('name', name);
-              set({ isLoggedIn: true, name, email, token, _id, balance, selectedIndex: 0 });
+              set({ isLoggedIn: true, name, balance, email, token, _id, selectedIndex: 0 });
           } else {
-              set({ isLoggedIn: true, email, token, _id, balance, selectedIndex: 0 });
+              set({ isLoggedIn: true, email, token, _id, selectedIndex: 0 });
           }
       },
       logout: () => {
