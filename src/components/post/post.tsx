@@ -23,9 +23,13 @@ import { useNavigate } from 'react-router-dom';
 import coinChestPNG from '../../assets/CoinChestPNG.png';
 import arrowRightIcon from '../../assets/arrowRightIcon.png';
 import arrowRightIcon2 from '../../assets/arrowRightIcon2.png';
+import closeIcon from '../../assets/closeIcon.png';
 import coinIcon from '../../assets/coinPng.png';
 import dangerIcon from '../../assets/dangerIcon.png';
+import questionBlackIcon from '../../assets/questionBlackIcon.png';
 import questionIcon from '../../assets/questionIcon.png';
+import reportEmailIcon from '../../assets/reportEmailIcon.png';
+import Calculator from '../reusables/calculator/Calculator';
 import { fetchInJSON } from '../reusables/fetchInJSON';
 import { Bookmark } from './svg-components/Bookmark';
 import { CommentIcon } from './svg-components/Comment';
@@ -77,6 +81,23 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
     const handleOpenGiftsModal = () => setOpenGiftsModal(true);
     const handleCloseGiftsModal = () => setOpenGiftsModal(false);
 
+    const [openCalculatorModal, setOpenCalculatorModal] = useState(false)
+    const handleCloseCalculatorModal = () => {
+        setOpenCalculatorModal(false)
+    }
+    const handleOpenCalculatorModal = () => {
+        setOpenRechargeBalanceModal(false)
+        setOpenCalculatorModal(true)
+    }
+
+    const [openFaqsModal, setOpenFaqsModal] = useState(false)
+    const handleOpenFaqsModal = () => {
+        setOpenCalculatorModal(false)
+        setOpenFaqsModal(true)
+    }
+    const handleCloseFaqsModal = () => {
+        setOpenFaqsModal(false)
+    }
 
     const [postData, setPostData] = useState(post)
     const [followLoading, setFollowLoading] = useState(false);
@@ -399,6 +420,12 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
         }
     }
 
+    const handleEmailClick = () => {
+        const email = 'info@ogoul.com';
+        window.location.href = `mailto:${email}`;
+        setOpenFaqsModal(false)
+    }
+
     return postData && (
         <div className={classNames(styles.root, className)}>
             <div>
@@ -490,17 +517,6 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 >
                                     Done
                                 </Button>
-                                {/* <Button
-                                    variant="outlined"
-                                    sx={{
-                                        border: '1px solid var(--foundation-primary-primary-500, #5448B2)',
-                                        width: '369px',
-                                        height: ' 58px',
-                                        padding: '16px 16px',
-                                    }}
-                                >
-                                    View your reports
-                                </Button> */}
                             </Box>
                         </Modal>
                     </div>
@@ -859,7 +875,9 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 <div className={styles.rechargeModalHeader}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '60%' }}>
                                         <p>Recharge</p>
-                                        <img src={questionIcon} alt='' style={{ width: '20px', height: '20px' }} />
+                                        <IconButton>
+                                            <img src={questionIcon} alt='' style={{ width: '20px', height: '20px' }} />
+                                        </IconButton>
                                     </div>
 
                                 </div>
@@ -923,8 +941,8 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                             1321</div>
                                         <div className={styles.coinsPrice}>QAR 74.29</div>
                                     </div>
-                                    <div className={styles.price}>
-                                        <div className={styles.coinsAmount}>
+                                    <div className={styles.price} onClick={handleOpenCalculatorModal}>
+                                        <div className={styles.coinsAmount} >
                                             Custom</div>
                                         <div className={styles.coinsPriceCustom}>Larger amounts supported</div>
                                     </div>
@@ -944,6 +962,116 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                 <button className={styles.rechargeBtn}>
                                     <p>Recharge</p>
                                 </button>
+                                {/* <Calculator /> */}
+                            </Box>
+                        </Modal>
+                    </div>
+                )}
+                {openCalculatorModal && (
+                    <div>
+                        <Modal
+                            open={openCalculatorModal}
+                            onClose={handleCloseCalculatorModal}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={defModalStyle}>
+                                <div className={styles.rechargeModalHeader}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '60%' }}>
+                                        <p>Custom</p>
+                                        <IconButton onClick={handleCloseCalculatorModal}>
+                                            <img src={closeIcon} alt='' style={{ width: '20px', height: '20px' }} />
+                                        </IconButton>
+                                    </div>
+                                </div>
+                                <Box sx={{ marginBottom: '32px' }}>
+                                    <Calculator />
+                                </Box>
+                                <div className={styles.giftsBottomDiv2} style={{ marginBottom: '32px' }}>
+                                    <div className={styles.giftsBottomLeftDiv2}>
+                                        <p className={styles.giftCoinsText}>Total</p>
+                                    </div>
+                                    <div className={styles.giftsBottomRightDiv}>
+                                        <p className={styles.giftCoinsAmountText}>QAR 0</p>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '16px' }}>
+                                    <IconButton onClick={handleOpenFaqsModal}>
+                                        <img src={questionBlackIcon} alt='' />
+                                    </IconButton>
+                                    <button className={styles.rechargeBtn}>
+                                        <p>Recharge</p>
+                                    </button>
+                                </div>
+                            </Box>
+                        </Modal>
+                    </div>
+                )}
+                {openFaqsModal && (
+                    <div>
+                        <Modal
+                            open={openFaqsModal}
+                            onClose={handleCloseFaqsModal}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={faqsModal}>
+                                <div className={styles.rechargeModalHeader}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '70%' }}>
+                                        <p>Payment FAQS</p>
+                                        <IconButton onClick={handleCloseFaqsModal}>
+                                            <img src={closeIcon} alt='' style={{ width: '20px', height: '20px' }} />
+                                        </IconButton>
+                                    </div>
+                                </div>
+                                <div className={styles.faqsContainer}>
+                                    <details>
+                                        <summary>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                                <p>Question</p>
+                                            </div>
+                                        </summary>
+                                        <div>
+                                            <p>Answer here</p>
+                                        </div>
+                                    </details>
+                                    <details>
+                                        <summary>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                                <p>Question</p>
+                                            </div>
+                                        </summary>
+                                        <div>
+                                            <p>Answer here</p>
+                                        </div>
+                                    </details>
+                                    <details>
+                                        <summary>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                                <p>Question</p>
+                                            </div>
+                                        </summary>
+                                        <div>
+                                            <p>Answer here</p>
+                                        </div>
+                                    </details>
+                                    <details>
+                                        <summary>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                                <p>Question</p>
+                                            </div>
+                                        </summary>
+                                        <div>
+                                            <p>Answer here</p>
+                                        </div>
+                                    </details>
+                                </div>
+                                <div >
+                                    <button onClick={handleEmailClick} className={styles.rechargeBtn} style={{ gap: '12px' }}>
+                                        <img src={reportEmailIcon} alt='' />
+                                        <p>Report a different issue</p>
+                                    </button>
+                                </div>
                             </Box>
                         </Modal>
                     </div>
@@ -1280,7 +1408,21 @@ const defModalStyle = {
     border: 'none', // Remove the border
     borderRadius: '8px',
     minWidth: 420,
-    minHeight: 540,
+    minHeight: 410,
+    // maxHeight: '549px',
+    padding: '24px',
+}
+const faqsModal = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    border: 'none', // Remove the border
+    borderRadius: '8px',
+    minWidth: 420,
+    minHeight: 410,
+    maxHeight: '549px',
     padding: '24px',
 }
 
