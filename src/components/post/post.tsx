@@ -29,6 +29,7 @@ import dangerIcon from '../../assets/dangerIcon.png';
 import questionBlackIcon from '../../assets/questionBlackIcon.png';
 import questionIcon from '../../assets/questionIcon.png';
 import reportEmailIcon from '../../assets/reportEmailIcon.png';
+import FaqContainer from '../reusables/FaqContainer/FaqContainer';
 import Calculator from '../reusables/calculator/Calculator';
 import { fetchInJSON } from '../reusables/fetchInJSON';
 import { Bookmark } from './svg-components/Bookmark';
@@ -1025,46 +1026,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                     </div>
                                 </div>
                                 <div className={styles.faqsContainer}>
-                                    <details>
-                                        <summary>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                                <p>Question</p>
-                                            </div>
-                                        </summary>
-                                        <div>
-                                            <p>Answer here</p>
-                                        </div>
-                                    </details>
-                                    <details>
-                                        <summary>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                                <p>Question</p>
-                                            </div>
-                                        </summary>
-                                        <div>
-                                            <p>Answer here</p>
-                                        </div>
-                                    </details>
-                                    <details>
-                                        <summary>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                                <p>Question</p>
-                                            </div>
-                                        </summary>
-                                        <div>
-                                            <p>Answer here</p>
-                                        </div>
-                                    </details>
-                                    <details>
-                                        <summary>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                                <p>Question</p>
-                                            </div>
-                                        </summary>
-                                        <div>
-                                            <p>Answer here</p>
-                                        </div>
-                                    </details>
+                                    <FaqContainer />
                                 </div>
                                 <div >
                                     <button onClick={handleEmailClick} className={styles.rechargeBtn} style={{ gap: '12px' }}>
@@ -1422,7 +1384,6 @@ const faqsModal = {
     borderRadius: '8px',
     minWidth: 420,
     minHeight: 410,
-    maxHeight: '549px',
     padding: '24px',
 }
 
