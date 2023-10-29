@@ -13,8 +13,20 @@ const Comment: React.FC<{ comment: CommentType, handleReply: Function, handleLik
 
 	const [isReplyOpen, setIsReplyOpen] = useState(false)
 	const [isRepliesShown, setIsRepliesShown] = useState(false)
-	const [replyMessage, setReplyMessage] = useState('')
+	const [replying, setReplying] = useState(false);
+	const [replyMessage, setReplyMessage] = useState('');
+	const [replyingTo, setReplyingTo] = useState(''); // Track the user being replied to
 	const bottomDivRef = useRef<HTMLDivElement | null>(null)
+
+	const handleReplyClick = (userName: string) => {
+		setReplying(true);
+		// setReplyingTo(userName); // Set the user being replied to
+		handleReply(comment.id, replyMessage, comment.user.name); // Pass the comment id and reply message to the parent component
+
+		console.log(comment.id);
+		console.log(replyMessage);
+		console.log(comment.user.name);
+	};
 
 	function formatTimeAgo(date: any) {
 		const now = new Date();
@@ -129,7 +141,7 @@ const Comment: React.FC<{ comment: CommentType, handleReply: Function, handleLik
 						padding: '8px 0px 0px 0px',
 						minWidth: '0',
 					}}
-					onClick={() => setIsReplyOpen(prev => !prev)}
+					onClick={() => handleReplyClick(comment.user.name)}
 				>
 					Reply
 				</Button>

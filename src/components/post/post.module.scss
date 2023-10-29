@@ -1222,3 +1222,64 @@ details>div {
   line-height: 150%;
   /* 21px */
 }
+
+.commentInputDiv {
+  display: flex;
+  flex-direction: column;
+  margin-right: 5px;
+  padding-top: 16px;
+  /* Default value */
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.replyingToDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 5px;
+  width: 100%;
+}
+
+.replyingToTextDiv {
+  display: flex;
+  flex-direction: row;
+
+  color: var(--default-body, #222);
+
+  /* Small/Medium */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  /* 21px */
+
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.replyingToMessage {
+  display: flex;
+  flex-direction: row;
+  min-height: 29px;
+  background: #EEEDF7;
+  padding: 0px 8px;
+  align-items: center;
+  gap: 8px;
+
+  border-radius: 4px;
+  background: var(--foundation-primary-primary-50, #EEEDF7);
+
+  color: var(--foundation-primary-primary-500, #5448B2);
+
+  /* Small/Regular */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  /* 21px */
+}

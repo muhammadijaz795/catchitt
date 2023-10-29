@@ -42,6 +42,7 @@ const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, gif
             className={className}
             InputProps={{
                 style: {
+                    background: '#F8F8F8',
                     borderRadius: '8px',
                     textAlign: 'right',
                     height: '48px'

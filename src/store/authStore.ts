@@ -44,11 +44,12 @@ export const useAuthStore = create<AuthState>((set) => {
           sessionStorage.setItem('token', token);
           sessionStorage.setItem('_id', _id);
           sessionStorage.setItem('isLoggedIn', 'true');
+          sessionStorage.setItem('balance', balance.toString())
           if (name) {
-              sessionStorage.setItem('name', name);
+              sessionStorage.setItem('name', name !== '' ? name : '');
               set({ isLoggedIn: true, name, balance, email, token, _id, selectedIndex: 0 });
           } else {
-              set({ isLoggedIn: true, email, token, _id, selectedIndex: 0 });
+              set({ isLoggedIn: true, name: '', balance, email, token, _id, selectedIndex: 0,  });
           }
       },
       logout: () => {

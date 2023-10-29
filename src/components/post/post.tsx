@@ -109,13 +109,16 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
 
     const [openCommentPopup, setOpenCommentPopup] = useState(false);
     const handleOpenCommentPopup = () => {
+        setIsReplying(false)
         setOpenCommentPopup(true);
         fetchGifts()
     };
 
     const [message, setMessage] = useState('');
     const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
-
+    const [isReplying, setIsReplying] = useState(false);
+    const [replyingMessage, setReplyingMessage] = useState('');
+    const [currentCommentId, setCurrentCommentId] = useState('')
     const [anchors, setAnchors] = useState<{ more: null, share: null }>({ more: null, share: null });
     const buttonRef = useRef(null);
     const videoRef = useRef<any>(null); // Use `any` type to avoid TypeScript errors
@@ -200,6 +203,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                 body: JSON.stringify({ comment: commentMessage }),
             },
             async () => {
+                setIsReplying(false)
                 await handleFetchCurrentPost(id)
                 setMessage('');
             }
@@ -225,7 +229,14 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
         )
     }
 
-    const handleReply = async (commentMessage: string, commentId: string) => {
+    const handleReply = async (commentId: string, commentMessage: string, userName?: string) => {
+        console.log(`commentId: ${commentId}`);
+        console.log(`commentMessage: ${commentMessage}`);
+        console.log(`userName: ${userName}`);
+        setIsReplying(!isReplying);
+        setReplyingMessage(`${userName}`);
+        setCurrentCommentId(commentId)
+        setMessage('');
         await fetchInJSON(
             `/media-content/comment/${postData.mediaId}`,
             {
@@ -236,8 +247,12 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                 },
                 body: JSON.stringify({ comment: commentMessage, commentId: commentId }),
             },
-            async () => handleFetchCurrentPost(post.mediaId)
+            async () => {
+                setIsReplying(false);
+                handleFetchCurrentPost(post.mediaId)
+            }
         );
+
     };
     const dHandleReply = useDebounce(handleReply, 5)
 
@@ -767,7 +782,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                                 ))}
                                             </div>
                                             {postData.comments.map((comment, i) => (
-                                                <Comment key={i} comment={comment} handleReply={dHandleReply} handleLikeComment={dHandleLikeComment} />
+                                                <Comment key={i} comment={comment} handleReply={handleReply} handleLikeComment={dHandleLikeComment} />
                                             ))}
                                         </div >
                                         <div
@@ -780,30 +795,55 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                                             <form
                                                 onSubmit={(e) => {
                                                     e.preventDefault(); // Prevent the default form submission behavior
-                                                    dHandleCommenting([message, postData.mediaId]);
+                                                    if (isReplying) {
+                                                        handleReply(currentCommentId, message);
+                                                    } else {
+                                                        dHandleCommenting([message, postData.mediaId]);
+                                                    }
                                                 }}
                                             >
-                                                <div style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
-                                                    <img
-                                                        src={profileAvatar === '' ? profileIcon : profileAvatar}
-                                                        alt={''}
-                                                        className={styles.avatarImgCircleCommentInputField}
-                                                    />
-                                                    <InputField
-                                                        placeholder="Add comment..."
-                                                        type={''}
-                                                        value={message}
-                                                        onChange={(e: any) => setMessage(e.target.value)}
-                                                        showcommentsIcons={true}
-                                                        iconClick={(e: any) => {
-                                                            e.preventDefault(); // Prevent the default form submission behavior
-                                                            dHandleCommenting([message, postData.mediaId]);
-                                                        }}
-                                                        giftClick={(e: any) => {
-                                                            e.preventDefault();
-                                                            handleOpenGiftsModal();
-                                                        }}
-                                                    />
+                                                <div className={styles.commentInputDiv}>
+                                                    {isReplying && (
+                                                        <div className={styles.replyingToTextDiv}>replying to {' '}
+                                                            <div className={styles.replyingToMessage}>
+                                                                {replyingMessage}
+                                                                <IconButton sx={{ margin: 0, padding: 0 }}
+                                                                    onClick={() => setIsReplying(false)}
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18.5C14.4183 18.5 18 14.9183 18 10.5C18 6.08172 14.4183 2.5 10 2.5C5.58172 2.5 2 6.08172 2 10.5C2 14.9183 5.58172 18.5 10 18.5ZM8.28033 7.71967C7.98744 7.42678 7.51256 7.42678 7.21967 7.71967C6.92678 8.01256 6.92678 8.48744 7.21967 8.78033L8.93934 10.5L7.21967 12.2197C6.92678 12.5126 6.92678 12.9874 7.21967 13.2803C7.51256 13.5732 7.98744 13.5732 8.28033 13.2803L10 11.5607L11.7197 13.2803C12.0126 13.5732 12.4874 13.5732 12.7803 13.2803C13.0732 12.9874 13.0732 12.5126 12.7803 12.2197L11.0607 10.5L12.7803 8.78033C13.0732 8.48744 13.0732 8.01256 12.7803 7.71967C12.4874 7.42678 12.0126 7.42678 11.7197 7.71967L10 9.43934L8.28033 7.71967Z" fill="#5448B2" />
+                                                                    </svg>
+                                                                </IconButton>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    <div className={styles.replyingToDiv}>
+                                                        <img
+                                                            src={profileAvatar === '' ? profileIcon : profileAvatar}
+                                                            alt={''}
+                                                            className={styles.avatarImgCircleCommentInputField}
+                                                        />
+                                                        <InputField
+                                                            placeholder="Add comment..."
+                                                            type={''}
+                                                            value={message}
+                                                            onChange={(e: any) => setMessage(e.target.value)}
+                                                            showcommentsIcons={true}
+                                                            iconClick={(e: any) => {
+                                                                e.preventDefault(); // Prevent the default form submission behavior
+                                                                if (isReplying) {
+                                                                    handleReply(currentCommentId, message);
+                                                                } else {
+                                                                    dHandleCommenting([message, postData.mediaId]);
+                                                                }
+                                                            }}
+                                                            giftClick={(e: any) => {
+                                                                e.preventDefault();
+                                                                handleOpenGiftsModal();
+                                                            }}
+                                                        />
+                                                    </div>
+
                                                 </div>
                                             </form>
                                         </div>
