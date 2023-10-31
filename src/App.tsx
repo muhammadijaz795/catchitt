@@ -11,6 +11,7 @@ import { Home } from './components/home/home';
 import { VideoProvider } from './components/reusables/VideoContext';
 import { SearchPage } from './components/search-page/search-page';
 import { SetNewPassword } from './components/set-newPassword/set-newPassword';
+import Account from './components/settings-page/account';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
@@ -29,7 +30,6 @@ const InitialRouteHandler = () => {
                 token: storedToken,
             });
         }
-
         // Allow navigation to /home regardless of login status
         navigate('/home');
     }, [navigate, storedToken]);
@@ -62,7 +62,7 @@ function App() {
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
                             <Route path="/comingsoon" element={<ComingSoon />} />
-                            {/* <Route path="/settings" element={<Settings />} /> */}
+                            <Route path="/settings/account" element={<Account />} />
                             <Route path="/sounds/:soundId" element={<SoundPage />} />
                             {/* <Route path="/hashtags/hashtag=:hashtagId" element={<HashtagsPage />} /> */}
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />}

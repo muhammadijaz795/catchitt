@@ -15,7 +15,24 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%;
-  justify-content: center;
+  text-decoration: none;
+}
+
+.cardDivOpened {
+  height: 400px; //increase when more settings tabs added
+  display: flex;
+  flex-direction: column;
+  width: 325px;
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  justify-content: flex-start;
   text-decoration: none;
 }
 
@@ -51,6 +68,7 @@
 .selectedStroke path {
   stroke: #ffffff !important;
 }
+
 .selectedStroke circle {
   stroke: #ffffff !important;
 }
@@ -68,6 +86,22 @@
   display: flex;
   justify-items: start;
   text-decoration: none;
-  
+
 }
 
+.rotate {
+  transform: rotate(180deg);
+  /* Rotate and translate to the right */
+  transform-origin: center center;
+  padding: 0;
+  margin: 0;
+  width: 16px;
+  height: 9px;
+}
+
+.notRotated {
+  padding: 0;
+  margin: 0;
+  width: 16px;
+  height: 9px;
+}

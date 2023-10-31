@@ -12,6 +12,8 @@ interface AuthState {
     setIndex: (index: number) => void;
     selectedTab: number; // Define selectedIndex in your store
     setTab: (index: number) => void;
+    settingsDropdown: boolean | null;
+    setSettingsDropdown: (isOpen: boolean) => void;
     login: (email: string, token: string, _id: string, balance: number, name?: string) => void; // Update the login function signature
     logout: () => void;
 }
@@ -36,10 +38,15 @@ export const useAuthStore = create<AuthState>((set) => {
       _id: isLoggedIn ? _id : '',
       cache: isLoggedIn ? cache : '',
       balance, // Set balance as a number
+
+
       selectedIndex: 0,
       setIndex: (index: number) => set({ selectedIndex: index }),
       selectedTab: 1,
       setTab: (index: number) => set({ selectedTab: index }),
+    settingsDropdown: false,
+    setSettingsDropdown: (isOpen: boolean) => set({settingsDropdown: isOpen}),
+
       login: (email: string, token: string, _id: string, balance: number, name?: string) => {
           sessionStorage.setItem('token', token);
           sessionStorage.setItem('_id', _id);
