@@ -11,7 +11,8 @@ import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 import { ViewSwitchers } from '../view-switchers/view-switchers';
 import styles from './home.module.scss';
-
+import searchIcon from '../../assets/Search.svg'
+import muteIcon from '../../assets/muteIcon.svg'
 export interface HomeProps {
 	className?: string;
 }
@@ -210,88 +211,168 @@ export const Home = ({ className }: HomeProps) => {
 		else
 			return false;
 	}, [])
+	const containerRef = useRef(null);
+	const mobileTabs:string[] = [
+        'Following',
+        'Suggested',
+        'Live',
+    ]
+    const [activeMobileTab, setActiveMobileTab] = useState<string>(mobileTabs[0])
 
 	return (
 		<div className={classNames(styles.root, className)}>
-			<div className={styles.topBarDiv}>
-				<TopBar />
-			</div>
-			<div className={styles.container}>
-				<div className={styles.leftSide}>
-					<div className={styles.sideNavDiv}>
-						<SideNavBar selectedIndex={0} />
-					</div>
-					<div className={styles.suggestedActivityDiv}>
-						<SuggestedActivity showActivity={true} showSuggestedContent={true} />
-					</div>
+			<div className={styles.webView}>
+				<div className={styles.topBarDiv}>
+					<TopBar />
 				</div>
-				<div className={styles.middleSectionDiv}>
-					<ViewSwitchers
-						selectedIndex={selectedTab}
-						className={styles.viewSwitchersDiv}
-						onTabChange={async (selectedTab) => {
-							setPostData([])
-							page.current = 1
-							setTab(selectedTab)
-							tab.current = selectedTab
-							if (onePost) {
-								navigator({ pathname: '/home' }, { replace: true })
-							}
-							if (selectedTab === 0) {
-								if (!isLoggedIn) {
-									// navigator('/auth')
-									navigator({ pathname: '/suggested-accounts' }, { replace: true })
-								} else {
-									await handleFetchFollowingPosts(); // Fetch following posts when "Following" tab is selected
+				<div className={styles.container}>
+					<div className={styles.leftSide}>
+						<div className={styles.sideNavDiv}>
+							<SideNavBar selectedIndex={0} />
+						</div>
+						<div className={styles.suggestedActivityDiv}>
+							<SuggestedActivity showActivity={true} showSuggestedContent={true} />
+						</div>
+					</div>
+					<div className={styles.middleSectionDiv}>
+						<ViewSwitchers
+							selectedIndex={selectedTab}
+							className={styles.viewSwitchersDiv}
+							onTabChange={async (selectedTab) => {
+								setPostData([])
+								page.current = 1
+								setTab(selectedTab)
+								tab.current = selectedTab
+								if (onePost) {
+									navigator({ pathname: '/home' }, { replace: true })
 								}
-							} else {
-								await handleFetchPosts();
-							}
-							// Handle other tab conditions here if needed
-						}}
-					/>
-					{
-						isLoggedIn
-							?
+								if (selectedTab === 0) {
+									if (!isLoggedIn) {
+										// navigator('/auth')
+										navigator({ pathname: '/suggested-accounts' }, { replace: true })
+									} else {
+										await handleFetchFollowingPosts(); // Fetch following posts when "Following" tab is selected
+									}
+								} else {
+									await handleFetchPosts();
+								}
+								// Handle other tab conditions here if needed
+							}}
+						/>
+						{
+							isLoggedIn
+								?
+								(
+									postData.length > 0 && bookmarksData.length > 0 ?
+										postData.map((p: PostType, i: number) => (
+											<Post
+												key={i}
+												post={p}
+												startedIds={startedIds}
+												endedIds={endedIds}
+												profileAvatar={profileData.avatar}
+												isBookmarked={isBookmarked(p.mediaId)}
+											/>
+										))
+										:
+										<div className={styles.center}><h6>Loading...</h6></div>
+								)
+								:
+								(
+									postData.length > 0 ?
+										postData.map((p: PostType, i: number) => (
+											<Post
+												key={i}
+												post={p}
+												startedIds={startedIds}
+												endedIds={endedIds}
+												profileAvatar={profileData.avatar}
+												isBookmarked={false}
+											/>
+										))
+										:
+										<div className={styles.center}><h6>Loading..</h6></div>
+								)
+						}
+						{
+							paginating && postData.length > 0 &&
 							(
-								postData.length > 0 && bookmarksData.length > 0 ?
-									postData.map((p: PostType, i: number) => (
-										<Post
-											key={i}
-											post={p}
-											startedIds={startedIds}
-											endedIds={endedIds}
-											profileAvatar={profileData.avatar}
-											isBookmarked={isBookmarked(p.mediaId)}
-										/>
-									))
-									:
-									<div className={styles.center}><h6>Loading...</h6></div>
+								<div className={styles.paginationload}><h6>Loading...</h6></div>
 							)
-							:
-							(
-								postData.length > 0 ?
-									postData.map((p: PostType, i: number) => (
-										<Post
-											key={i}
-											post={p}
-											startedIds={startedIds}
-											endedIds={endedIds}
-											profileAvatar={profileData.avatar}
-											isBookmarked={false}
-										/>
-									))
-									:
-									<div className={styles.center}><h6>Loading..</h6></div>
-							)
-					}
-					{
-						paginating && postData.length > 0 &&
-						(
-							<div className={styles.paginationload}><h6>Loading...</h6></div>
-						)
-					}
+						}
+					</div>
 				</div>
+			</div>
+			<div className={styles.mobileView}>
+				<div className={styles.postHeader}>
+					<div className={styles.tabs}>
+						{
+							mobileTabs.map((item: string) => (
+								<p
+									style={{ color: activeMobileTab === item ? '#FFFFFF' : '#C1C6D0' }}
+									key={item} onClick={() => setActiveMobileTab(item)} className={styles.tab}>{item}</p>
+							))
+						}
+					</div>
+					<div className={styles.tabIcons}>
+						<img src={searchIcon} alt='Search' />
+						<img src={muteIcon} alt='Search' />
+					</div>
+				</div>
+				{
+					isLoggedIn
+						?
+						(
+							postData.length > 0 && bookmarksData.length > 0 ?
+								<div className={styles.containerA}>
+									{
+										postData.map((p: PostType, i: number) => (
+											<div className={styles.section}>
+												<Post
+													key={i}
+													post={p}
+													startedIds={startedIds}
+													endedIds={endedIds}
+													profileAvatar={profileData.avatar}
+													isBookmarked={isBookmarked(p.mediaId)}
+												/>
+											</div>
+										))
+									}
+								</div>
+								:
+								<div className={styles.center}><h6>Loading...</h6></div>
+						)
+						:
+						(
+							postData.length > 0 ?
+								<div className={styles.containerA}>
+									{
+										postData.map((p: PostType, i: number) => (
+											<div className={styles.section}>
+												<Post
+													key={i}
+													post={p}
+													startedIds={startedIds}
+													endedIds={endedIds}
+													profileAvatar={profileData.avatar}
+													isBookmarked={isBookmarked(p.mediaId)}
+												/>
+											</div>
+
+										))
+									}
+								</div>
+								:
+								<div className={styles.center}><h6>Loading..</h6></div>
+						)
+				}
+				{
+							paginating && postData.length > 0 &&
+							(
+								<div className={styles.paginationload}><h6>Loading...</h6></div>
+							)
+						}
 			</div>
 		</div >
 	)

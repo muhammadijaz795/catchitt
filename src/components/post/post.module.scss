@@ -126,7 +126,91 @@
   // max-height: 815px;
   background-color: #000000;
 }
+@media only screen and (min-width: 600px) {
+  .mobileOnly {
+    display: none;
+  }
+  .postCaptionContainersMobile{
+    display: none;
+  }
 
+}
+@media only screen and (max-width: 600px) {
+  .webOnly {
+    display: none;
+  }
+  .container{
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+  }
+  .postMediaContainer {
+    border-radius: 0px;
+    height: 100vh;
+    width: 100%;
+    background-color: #000000;
+ 
+  }
+  .postInteractionMain{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 30px 24px;
+  }
+  .postCaptionContainer {
+    display: none;
+  }
+  .interactionText{
+    color: white !important;
+  }
+  .postInteractionMain{
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .userContainer {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .profilePicImgMobile{
+    width: 50px;
+    height: 50px;
+  }
+  .userNameTextMobile{
+    color: white;
+    font-size: 12px;
+  }
+  .userDetailsDivMobile{
+    padding-top: 12px;
+  }
+  .userSubTextMobile{
+    color: #4280D8;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+  }
+  .captionTextMobile{
+    color: white;
+    font-size: 13px;
+    text-align: left;
+    margin-top: 5px;
+  }
+  .postCreatorMobile {
+    margin-bottom: 10px;
+  }
+  .soundDivMobile{
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    & p {
+      margin-bottom: 0px;
+      color: white;
+      font-size: 13px;
+    }
+  }
+}
 .postMediaContainer video {
   // object-fit: cover;
   max-height: 605px;
