@@ -62,6 +62,7 @@ function App() {
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
                             <Route path="/comingsoon" element={<ComingSoon />} />
+                            {/* <Route path="/settings" element={<Settings />} /> */}
                             <Route path="/sounds/:soundId" element={<SoundPage />} />
                             {/* <Route path="/hashtags/hashtag=:hashtagId" element={<HashtagsPage />} /> */}
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />}

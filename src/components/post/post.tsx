@@ -32,20 +32,20 @@ import FaqContainer from '../reusables/FaqContainer/FaqContainer';
 import Calculator from '../reusables/calculator/Calculator';
 import { fetchInJSON } from '../reusables/fetchInJSON';
 import { Bookmark } from './svg-components/Bookmark';
+import { BookmarkMobile } from './svg-components/BookmarkMobile';
 import { CommentIcon } from './svg-components/Comment';
+import { CommentMobile } from './svg-components/CommentMobile';
 import { Copy } from './svg-components/Copy';
 import { Like } from './svg-components/Like';
+import { LikeMobile } from './svg-components/LikeMobile';
 import { More } from './svg-components/More';
+import { MoreMobile } from './svg-components/MoreMobile';
 import { Report } from './svg-components/Report';
 import { Save } from './svg-components/Save';
 import { Share } from './svg-components/Share';
+import { ShareMobile } from './svg-components/ShareMobile';
 import soundIcon from './svg-components/soundIcon.svg';
 import soundIconMobile from './svg-components/soundIconMobile.svg';
-import { LikeMobile } from './svg-components/LikeMobile';
-import { CommentMobile } from './svg-components/CommentMobile';
-import { BookmarkMobile } from './svg-components/BookmarkMobile';
-import { ShareMobile } from './svg-components/ShareMobile';
-import { MoreMobile } from './svg-components/MoreMobile';
 interface Gift {
     _id: string;
     name: string;
@@ -1102,11 +1102,56 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
 
                 <div className={styles.container}>
                     <div className={styles.postContainer}>
-                   
-                        <div className={styles.postMediaContainer} ref={videoElement} >
-                         
-                            <VideoPlayer
+                        <div className={styles.postCaptionContainer}>
+                            <div className={styles.postCreator}>
+                                <div className={styles['profilePic-UserNameDiv']}>
+                                    <div>
+                                        <img
+                                            src={postData.user.avatar === '' ? profileIcon : postData.user.avatar}
+                                            alt=""
+                                            className={styles.profilePicImg}
+                                        />
+                                    </div>
+                                    <div className={styles.userDetailsDiv}>
+                                        <h4 className={styles.userNameText}>{postData.user.name}</h4>
+                                        <h4 className={styles.userSubText}>{postData.user.username}</h4>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button
+                                        // ref={buttonRef}
+                                        className={
+                                            postData.user.isFollowed ?
+                                                styles.followingBtn : styles.followBtn
 
+                                        }
+                                        onClick={() => {
+                                            if (isLoggedIn) { handleFollowClick(postData.user._id) }
+                                            else {
+                                                navigate('/auth')
+                                            }
+                                        }}
+                                    >
+                                        {followLoading ? '...' : postData.user.isFollowed ? 'Following' : 'Follow'}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className={styles.postText}>
+                                <h4 className={styles.captionText}>{postData.description}</h4>
+                                <Box className={styles.soundDiv} onClick={() => {
+                                    setIndex(-1)
+                                    console.log("soundId:", postData.sound?._id);
+                                    navigate(`/sounds/soundId=${postData.sound?._id === undefined || null || "" ? "650afbc1b5a4b181b0353886" : postData.sound?._id}`);
+
+                                }}>
+                                    <img src={soundIcon} alt='' />
+                                    <p>{postData.sound?.title} - {postData.sound?.owner?.name}</p>
+                                    {/* <p>{postData.sound?._id}</p> */}
+                                </Box>
+                            </div>
+                        </div>
+                        <div className={styles.postMediaContainer} ref={videoElement} >
+                            <VideoPlayer
                                 key={postData.mediaId}
                                 src={postData.reducedVideoHlsUrl}
                                 onStart={() => handleStartWatching(postData.mediaId)}
