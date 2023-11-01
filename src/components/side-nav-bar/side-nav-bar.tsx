@@ -32,7 +32,6 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
     };
 
     useEffect(() => {
-        setSettingsDropdown(isDropdownOpen)
         if (settingsDropdown) {
             setDropdownOpen(true);
         }
@@ -40,7 +39,7 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
 
     return (
         <div className={classNames(styles.root, className)}>
-            <div className={isDropdownOpen ? styles.cardDivOpened : styles.cardDiv}>
+            <div className={isDropdownOpen === true ? styles.cardDivOpened : styles.cardDiv}>
                 <Link to="/home" reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <div
                         className={classNames(

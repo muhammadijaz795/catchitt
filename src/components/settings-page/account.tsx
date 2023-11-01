@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
@@ -14,7 +13,7 @@ const Account: React.FC = (className: AccountProps) => {
 
     const { selectedIndex, setIndex } = useAuthStore();
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     // const handleGoBack = () => {
     //     navigate('/home'); // Navigate back to the previous page
