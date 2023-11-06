@@ -7,6 +7,7 @@ import styles from './set-newPassword..module.scss';
 // import resend from '../../assets/resend.png';
 import cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // import i18next from 'i18next';
 // import { useTranslation } from 'react-i18next';
 
@@ -60,18 +61,17 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     const [response, setResponse] = useState(false);
     const [responseResult, setResponseResult] = useState('');
 
-    let email = '';
-    let token = '';
+    const navigate = useNavigate();
 
     useEffect(() => {
         const { pathname } = location;
         const pathSegments = pathname.split('/');
 
-        email = pathSegments[2];
-        token = pathSegments.slice(3).join('/');
+        user.email = pathSegments[2];
+        user.token = pathSegments.slice(3).join('/');
 
-        console.log('Email:', email);
-        console.log('Token:', token);
+        console.log('Email:', user.email);
+        console.log('Token:', user.token);
     }, [])
 
 
@@ -85,7 +85,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     };
 
     /** Handling Forgot Password Scenario */
-    const handleSetNewPassword = async (password: string) => {
+    const handleSetNewPassword = async (password: string, email: string, token: string) => {
         try {
             const response = await fetch(`${API_KEY}/auth/password/set-new`, {
                 method: 'PATCH',
@@ -98,10 +98,10 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                 console.log(responseData);
                 setResponseResult(responseData.message);
                 setResponse(true);
-                // navigate('/dashboard');
+                navigate('/auth');
             } else {
                 setErrorMessage('Invalid password');
-                console.log(response);
+                console.log(response.statusText);
             }
         } catch (error) {
             console.error(error);
@@ -112,7 +112,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     const handleSetNewPasswordSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
         const { password, email, token } = user;
-        handleSetNewPassword(password);
+        handleSetNewPassword(password, email, token);
     };
 
     const renderResponse = () => {
