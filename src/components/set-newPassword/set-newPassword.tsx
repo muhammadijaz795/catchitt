@@ -1,12 +1,12 @@
 import classNames from 'classnames';
-import styles from './set-newPassword..module.scss';
-import authSplashImg from '../../assets/authSplashImg.png';
 import Logo from '../../assets/Logo.png';
+import authSplashImg from '../../assets/authSplashImg.png';
 import InputField from '../reusables/InputField';
+import styles from './set-newPassword..module.scss';
 // import atForgotPwd from '../../assets/atForgotPwd.png';
 // import resend from '../../assets/resend.png';
-import { useState } from 'react';
 import cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
 // import i18next from 'i18next';
 // import { useTranslation } from 'react-i18next';
 
@@ -53,12 +53,27 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     const [, setLanguageSelector] = useState(currentLanguage.name);
 
     const API_KEY = process.env.VITE_API_URL;
-    const forgotPwdEndPoint = '/auth//password/set-new';
+    const forgotPwdEndPoint = '/auth/password/set-new';
     const [errorMessage, setErrorMessage] = useState('');
     // const [form] = useState('forgotPwd');
     const [user, setUser] = useState(defaultUser);
     const [response, setResponse] = useState(false);
     const [responseResult, setResponseResult] = useState('');
+
+    let email = '';
+    let token = '';
+
+    useEffect(() => {
+        const { pathname } = location;
+        const pathSegments = pathname.split('/');
+
+        email = pathSegments[2];
+        token = pathSegments.slice(3).join('/');
+
+        console.log('Email:', email);
+        console.log('Token:', token);
+    }, [])
+
 
     const handleLanguageChange = (code: string, name: string) => {
         // i18next.changeLanguage(code);
@@ -70,14 +85,13 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     };
 
     /** Handling Forgot Password Scenario */
-    const handleSetNewPassword = async (password: string, email: string, token: string) => {
+    const handleSetNewPassword = async (password: string) => {
         try {
-            const response = await fetch(`${API_KEY}${forgotPwdEndPoint}`, {
+            const response = await fetch(`${API_KEY}/auth/password/set-new`, {
                 method: 'PATCH',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ password }),
+                body: JSON.stringify({ password, email, token }),
             });
-
             if (response.ok) {
                 const responseData = await response.json();
                 // const { token } = responseData.data; // Extract token value from data object
@@ -98,7 +112,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     const handleSetNewPasswordSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
         const { password, email, token } = user;
-        handleSetNewPassword(password, email, token);
+        handleSetNewPassword(password);
     };
 
     const renderResponse = () => {
@@ -134,7 +148,6 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
             </div>
 
             <div className={styles.AuthForm}>
-                {/** Sign Up Flow */}
                 <div
                     className={styles.formContainer}
                     style={{
@@ -146,28 +159,6 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                         alignSelf: 'center',
                     }}
                 >
-                    {/* {response ? (
-                        <div>
-                            <img src={atForgotPwd} alt="" className={styles.atForgotPwd} />
-                            <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                                Check your Email
-                            </h3>
-                            <p>We sent a password reset link to your email.</p>
-                            <p>Didn’t receive an email from us yet?</p>
-                            <a
-                                href="#"
-                                onClick={handleSetNewPasswordSubmit}
-                                className={styles.boldLinkText}
-                            >
-                                <img
-                                    src={resend}
-                                    alt=""
-                                    style={{ width: '14.5px', marginRight: '8.5px' }}
-                                />
-                                Click to resend email
-                            </a>
-                        </div>
-                    ) : ( */}
                     <form className={styles.authInputFields}>
                         <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
                             Create your password

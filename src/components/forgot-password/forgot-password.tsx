@@ -1,14 +1,14 @@
 import classNames from 'classnames';
-import styles from './forgot-password.module.scss';
-import authSplashImg from '../../assets/authSplashImg.png';
-import Logo from '../../assets/Logo.png';
-import InputField from '../reusables/InputField';
-import atForgotPwd from '../../assets/atForgotPwd.png';
-import resend from '../../assets/resend.png';
-import { useState } from 'react';
-import cookies from 'js-cookie';
 import i18next from 'i18next';
+import cookies from 'js-cookie';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Logo from '../../assets/Logo.png';
+import atForgotPwd from '../../assets/atForgotPwd.png';
+import authSplashImg from '../../assets/authSplashImg.png';
+import resend from '../../assets/resend.png';
+import InputField from '../reusables/InputField';
+import styles from './forgot-password.module.scss';
 
 export interface ForgotPasswordProps {
     className?: string;
@@ -123,21 +123,23 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
 
             <div className={styles.AuthForm}>
                 {/** Sign Up Flow */}
+                <div></div>
                 <div
                     className={styles.formContainer}
                     style={{
-                        marginTop: '25%',
+                        // marginTop: '25%',
                         marginBottom: '0%',
                         marginLeft: '80px',
                         width: '80%',
                         alignContent: 'center',
                         alignSelf: 'center',
+                        justifyContent: 'space-between'
                     }}
                 >
                     {response ? (
-                        <div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'center', alignItems: 'center', gap: '24px' }}>
                             <img src={atForgotPwd} alt="" className={styles.atForgotPwd} />
-                            <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
+                            <h3 className={styles.creatTitle} style={{ marginTop: '5%' }}>
                                 {t('checkyouremail.text')}
                             </h3>
                             <p>{t('wesentpassword.text')}</p>

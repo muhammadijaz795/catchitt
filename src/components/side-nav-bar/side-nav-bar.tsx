@@ -14,13 +14,21 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
 
     const navigate = useNavigate();
 
+    const [isRotated, setRotated] = useState(false);
+    const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdown);
+
     const handleLinkClick = (index: number) => {
         setIndex(index); // Update the selectedIndex in the store
-        setSettingsDropdown(isDropdownOpen)
-    };
 
-    const [isRotated, setRotated] = useState(false);
-    const [isDropdownOpen, setDropdownOpen] = useState(false);
+    }
+
+    useEffect(() => {
+        if (selectedIndex === 4) {
+            setSettingsDropdown(true)
+        } else {
+            setSettingsDropdown(false)
+        }
+    }, [selectedIndex])
 
     const toggleRotation = () => {
         setRotated(!isRotated);
@@ -32,10 +40,12 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
     };
 
     useEffect(() => {
-        if (settingsDropdown) {
-            setDropdownOpen(true);
+        if (settingsDropdown === true) {
+            console.log('settings dropdown open');
+            setDropdownOpen(true)
         }
     }, [])
+
 
     return (
         <div className={classNames(styles.root, className)}>
@@ -45,7 +55,10 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                         className={classNames(
                             `${selectedIndex === 0 ? styles.selected : styles.navLink}`
                         )}
-                        onClick={() => handleLinkClick(0)}
+                        onClick={() => {
+                            handleLinkClick(0)
+                            setSettingsDropdown(false)
+                        }}
                     >
                         <svg
                             id="svg-section"
@@ -76,7 +89,10 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                             `${selectedIndex === 1 ? styles.selected : styles.navLink}`
 
                         )}
-                        onClick={() => handleLinkClick(1)}
+                        onClick={() => {
+                            handleLinkClick(1)
+                            setSettingsDropdown(false)
+                        }}
                     >
                         <svg
                             id="svg-section"
@@ -129,7 +145,10 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                         className={classNames(
                             `${selectedIndex === 2 ? styles.selected : styles.navLink}`
                         )}
-                        onClick={() => handleLinkClick(2)}
+                        onClick={() => {
+                            handleLinkClick(2)
+                            setSettingsDropdown(false)
+                        }}
                     >
                         <svg
                             id="svg-section"
@@ -169,7 +188,10 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                         className={classNames(
                             `${selectedIndex === 3 ? styles.selected : styles.navLink}`
                         )}
-                        onClick={() => handleLinkClick(3)}
+                        onClick={() => {
+                            handleLinkClick(3)
+                            setSettingsDropdown(false)
+                        }}
                     >
                         <svg
                             id="svg-section"
@@ -257,11 +279,30 @@ export const SideNavBar = ({ className }: SideNavBarProps) => {
                                 className={classNames(
                                     `${selectedIndex === 4 ? styles.selected : styles.navLink}`
                                 )}
-                                onClick={() => handleLinkClick(4)}
+                                onClick={() => {
+                                    handleLinkClick(4)
+                                    setSettingsDropdown(true)
+                                }}
                             >
                                 <p className={classNames(styles.linkWord, styles.notificationsP)}
                                     style={{ paddingLeft: '30px' }}>
                                     Account
+                                </p>
+                            </div>
+                        </Link>
+                        <Link to="/settings/activity" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                            <div
+                                className={classNames(
+                                    `${selectedIndex === 5 ? styles.selected : styles.navLink}`
+                                )}
+                                onClick={() => {
+                                    handleLinkClick(5)
+                                    setSettingsDropdown(true)
+                                }}
+                            >
+                                <p className={classNames(styles.linkWord, styles.notificationsP)}
+                                    style={{ paddingLeft: '30px' }}>
+                                    Content & Activity
                                 </p>
                             </div>
                         </Link>

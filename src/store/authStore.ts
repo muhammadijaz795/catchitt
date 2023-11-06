@@ -28,6 +28,7 @@ export const useAuthStore = create<AuthState>((set) => {
   const cache = sessionStorage.getItem('cache');
   const balanceItem = sessionStorage.getItem('balance');
   const balance = balanceItem !== null ? parseFloat(balanceItem) : 0;
+  const settingsDropdown = sessionStorage.getItem('settingsDropdown') === 'true';
 
 
   return {
@@ -38,14 +39,16 @@ export const useAuthStore = create<AuthState>((set) => {
       _id: isLoggedIn ? _id : '',
       cache: isLoggedIn ? cache : '',
       balance, // Set balance as a number
+      settingsDropdown,
+
 
 
       selectedIndex: 0,
       setIndex: (index: number) => set({ selectedIndex: index }),
       selectedTab: 1,
       setTab: (index: number) => set({ selectedTab: index }),
-    settingsDropdown: false,
-    setSettingsDropdown: (isOpen: boolean) => set({settingsDropdown: isOpen}),
+    // settingsDropdown: false,
+    // setSettingsDropdown: (isOpen: boolean) => set({settingsDropdown: isOpen}),
 
       login: (email: string, token: string, _id: string, balance: number, name?: string) => {
           sessionStorage.setItem('token', token);
@@ -67,6 +70,10 @@ export const useAuthStore = create<AuthState>((set) => {
           sessionStorage.removeItem('name');
           sessionStorage.removeItem('cache');
           sessionStorage.removeItem('balance');
+      },
+      setSettingsDropdown: (isOpen: boolean) => {
+        set({ settingsDropdown: isOpen });
+        sessionStorage.setItem('settingsDropdown', isOpen ? 'true' : 'false');
       },
   };
 });

@@ -56,7 +56,7 @@ function App() {
                             <Route path="/" element={<InitialRouteHandler />} />
                             <Route path="/auth" element={<Authentication setLanguage={setLanguage} language={appLanguage} />} />
                             <Route path="/forgot-password" element={<ForgotPassword />} />
-                            <Route path="/set-newpassword" element={<SetNewPassword />} />
+                            <Route path="/retrieve/*" element={<SetNewPassword />} />
                             <Route path="/view/video/:onePost" element={<Home />} />
                             <Route path="/home" element={<Home />} />
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />

@@ -45,7 +45,8 @@ const InputField: React.FC<InputFieldProps> = ({ type, className, iconClick, gif
                     background: '#F8F8F8',
                     borderRadius: '8px',
                     textAlign: 'right',
-                    height: '48px'
+                    height: '48px',
+                    color: '#6B6B6B'
                 },
                 endAdornment:
                     type === 'password' ? (
