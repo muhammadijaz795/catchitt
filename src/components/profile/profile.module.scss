@@ -1,0 +1,109 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  width: 100%;
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+
+.topBarDiv {
+  width: 100%;
+}
+
+.sideNavDiv {
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-bottom: 0px;
+  padding: 0px;
+}
+
+.leftSide {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  height: 100%;
+  // justify-content: center;
+}
+
+.suggestedActivityDiv {
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-bottom: 0px;
+  padding: 0px 0px 32px;
+}
+
+.middleSectionDiv {
+  width: 70%;
+  margin-top: 45px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 0fr 1fr;
+  flex-direction: row;
+  gap: 0px 30px;
+  padding-right: 40px;
+  padding-top: 0px;
+  // margin-top: 25px;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tab {
+  flex: 1;
+  height: 40px;
+  border-bottom: 3.5px solid #DFDFDF;
+  cursor: pointer;
+}
+
+.contentContainer {
+  margin-top: 32px;
+}
+
+.title {
+  text-align: left;
+  color: #222;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+}
+
+.posts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.post {
+  width: 190px;
+  height: 246px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: lightgray;
+}

@@ -15,6 +15,7 @@ import Account from './components/settings-page/account';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
+import { Profile } from './components/profile/profile';
 
 
 // Functional component to handle the initial route navigation
@@ -62,6 +63,7 @@ function App() {
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
                             <Route path="/comingsoon" element={<ComingSoon />} />
+                            <Route path="/profile" element={<Profile />} />
                             <Route path="/settings/account" element={<Account />} />
                             <Route path="/sounds/:soundId" element={<SoundPage />} />
                             {/* <Route path="/hashtags/hashtag=:hashtagId" element={<HashtagsPage />} /> */}
