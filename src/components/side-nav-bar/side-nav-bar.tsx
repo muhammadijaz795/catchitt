@@ -7,15 +7,17 @@ import styles from './side-nav-bar.module.scss';
 export interface SideNavBarProps {
     className?: string;
     selectedIndex: number | null;
+    settingsDropdownState?: boolean;
 }
 
-export const SideNavBar = ({ className }: SideNavBarProps) => {
+export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps) => {
     const { settingsDropdown, setSettingsDropdown, selectedIndex, setIndex } = useAuthStore(); // Get selectedIndex and setIndex from the store
 
     const navigate = useNavigate();
 
     const [isRotated, setRotated] = useState(false);
-    const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdown);
+    const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdownState);
+
 
     const handleLinkClick = (index: number) => {
         setIndex(index); // Update the selectedIndex in the store

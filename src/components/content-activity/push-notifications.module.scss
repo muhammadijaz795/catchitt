@@ -1,0 +1,447 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    background-color: #fafafa;
+    width: 100%;
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+
+.topBarDiv {
+    width: 100%;
+}
+
+.sideNavDiv {
+    margin-top: 40px;
+    margin-left: 40px;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+.leftSide {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    height: 100%;
+    justify-content: center;
+}
+
+.suggestedActivityDiv {
+    margin-top: 40px;
+    margin-left: 40px;
+    margin-bottom: 0px;
+    padding: 0px 0px 32px;
+}
+
+.middleSectionDiv {
+    display: inline-flex;
+    gap: 15%;
+    height: 100%;
+    width: 100%;
+    max-width: 655px;
+    background-color: transparent;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-radius: 8px;
+
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 0px 245px;
+    padding-right: 199px;
+    padding-top: 0px;
+}
+
+.accountCardDiv {
+    display: inline-flex;
+    padding: 16px 0px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 8px;
+    background: var(--default-white, #FFF);
+}
+
+.avatarImgCircle {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border-radius: 64px;
+}
+
+.userInfoFrame {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    // gap: 10px;
+    padding: 16px;
+    justify-content: space-between;
+}
+
+.userNameText {
+    padding: 10px;
+    color: var(--default-body, #222);
+    text-align: center;
+
+    /* Small/Semibold */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 16.8px */
+}
+
+.followBtnDiv {
+    display: flex;
+    width: 157px;
+    height: 32px;
+    // padding: 0px 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+.followBtn {
+    width: 117px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+    background: var(--default-white, #5448B2);
+    color: var(--default-white, #FFF);
+    /* Small/Semibold */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 16.8px */
+}
+
+.followingBtn {
+    border-radius: 6px;
+    background-color: #EEEDF7;
+    width: 117px;
+    display: flex;
+    height: 40px;
+    padding: 0px 12px;
+    justify-content: center;
+    align-items: center;
+    border-color: #EEEDF7;
+    color: #5448b2;
+    /* Small/Semibold */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 16.8px */
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    // gap: 20px; /* Adjust the gap as needed */
+    // padding: 16px;
+    gap: 0;
+}
+
+.suggestedItem {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    // justify-items: flex-start;
+    justify-content: space-between;
+    // align-content: flex-start;
+}
+
+.suggestedContent {
+    width: 100%;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-items: center;
+    justify-content: start;
+    align-content: center;
+    justify-content: space-between;
+    line-height: 1;
+    // gap: 16px;
+    // row-gap: 32px;
+    background: var(--default-white, #FFF);
+}
+
+
+.suggestedContent h4 {
+    color: var(--default-body, #222);
+
+    /* H2/Medium */
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    /* 27px */
+
+    margin-bottom: 16px;
+}
+
+.nameText {
+    color: var(--default-body, #222);
+
+    /* Base/Semibold */
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 19.2px */
+}
+
+.messageText {
+    display: inline;
+    flex-direction: column;
+    color: var(--default-body, #222);
+
+    /* Base/Regular */
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.timeText {
+    margin-left: 5px;
+    display: inline;
+    color: var(--foundation-body-body-200, #999);
+
+    /* Small/Regular */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.plusIconStyle {
+    width: 50px;
+    margin-right: 16px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.squareIconStyle {
+    display: flex;
+    width: 46px;
+    height: 46px;
+    justify-content: center;
+    align-items: center;
+}
+
+.accountName {
+    margin-right: 37px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px 8px;
+    justify-items: start;
+    align-items: start;
+    align-content: start;
+    justify-content: start;
+    line-height: 1;
+    // flex-wrap: wrap;
+    align-self: center;
+    text-align: start;
+}
+
+.svgButton {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    background: none;
+}
+
+.svgButton:hover {
+    background: none;
+    border: none;
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    color: var(--default-body, #222);
+
+    /* H1/Semibold120 */
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 24px */
+    gap: 16px;
+    margin-top: 40px;
+    margin-bottom: 32px;
+    background-color: transparent;
+}
+
+.pageHeader h4 {
+    margin: 0px;
+    color: var(--default-body, #222);
+
+    /* H1/Semibold120 */
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 24px */
+}
+
+.accountCards {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.accountCards p {
+    margin-bottom: 0;
+    color: var(--default-body, #222);
+
+    /* Base/Regular */
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    /* 24px */
+}
+
+.settingName {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.atForgotPwd {
+    width: 118px;
+    height: 118px;
+    margin-bottom: 38px;
+}
+
+.instructionsModalTitleText {
+    color: var(--login-title, #574D68);
+
+    /* Title/Title */
+    font-family: Poppins;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+
+    margin-bottom: 24px;
+}
+
+.instructionsModalText {
+    text-align: center;
+    color: var(--default-body, #222);
+
+    /* Base/Regular */
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    /* 24px */
+
+    margin-bottom: 24px;
+}
+
+.infoText {
+    color: var(--default-body, #222);
+    text-align: center;
+
+    /* Small/Regular */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    // line-height: 150%;
+    /* 21px */
+
+
+}
+
+.infoTextLink {
+    color: var(--foundation-secondary-secondary-500, #437ED7);
+
+    /* Small/Regular */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.settingsWrapper {
+    width: 100%;
+
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 18px;
+}
+
+.cards p {
+    color: var(--default-body, #222);
+
+    /* Base/Regular */
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    /* 24px */
+}
+
+.card {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 18px;
+    padding-top: 18px;
+    border-bottom: 1px solid #DFDFDF;
+}

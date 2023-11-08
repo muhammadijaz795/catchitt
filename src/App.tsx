@@ -6,8 +6,10 @@ import styles from './App.module.scss';
 import { ActivityPage } from './components/activity-page/activity-page';
 import { Authentication } from './components/authentication/authentication';
 import ComingSoon from './components/coming-soon/coming-soon';
+import { PushNotificationsPage } from './components/content-activity/push-notifications';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { Home } from './components/home/home';
+import { Profile } from './components/profile/profile';
 import { VideoProvider } from './components/reusables/VideoContext';
 import { SearchPage } from './components/search-page/search-page';
 import { SetNewPassword } from './components/set-newPassword/set-newPassword';
@@ -15,7 +17,6 @@ import Account from './components/settings-page/account';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
-import { Profile } from './components/profile/profile';
 
 
 // Functional component to handle the initial route navigation
@@ -65,6 +66,7 @@ function App() {
                             <Route path="/comingsoon" element={<ComingSoon />} />
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/settings/account" element={<Account />} />
+                            <Route path="/settings/activity" element={<PushNotificationsPage />} />
                             <Route path="/sounds/:soundId" element={<SoundPage />} />
                             {/* <Route path="/hashtags/hashtag=:hashtagId" element={<HashtagsPage />} /> */}
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />}

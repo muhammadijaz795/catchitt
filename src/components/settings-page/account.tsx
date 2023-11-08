@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import atForgotPwd from '../../assets/atForgotPwd.png';
 import contentIcon from '../../assets/contentIcon.svg';
 import notificationBell from '../../assets/notificationBellIcon.svg';
@@ -24,6 +24,8 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
 
     const [openChangePassMainModal, setOpenChangePassMainModal] = useState(setOpenChangePassword || false)
     const [openInstructionsPassModal, setOpenInstructionsPassModal] = useState(false)
+
+    const navigate = useNavigate();
 
     { /*  Email Modal Start  */ }
 
@@ -81,7 +83,7 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                 <div className={styles.container}>
                     <div className={styles.leftSide}>
                         <div className={styles.sideNavDiv}>
-                            <SideNavBar selectedIndex={selectedIndex} />
+                            <SideNavBar selectedIndex={selectedIndex} settingsDropdownState={true} />
                         </div>
                         <div className={styles.suggestedActivityDiv}>
                             <SuggestedActivity showActivity={true} showSuggestedContent={true} />
@@ -137,7 +139,7 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                                 <div className={styles.accountCards}
                                 // onClick={handleOpenChangeEmailMainModal}
                                 >
-                                    <div className={styles.settingName}>
+                                    <div className={styles.settingName} onClick={() => navigate('/settings/activity')}>
                                         <img src={notificationBell} alt='' />
                                         <p>
                                             Push notifications
