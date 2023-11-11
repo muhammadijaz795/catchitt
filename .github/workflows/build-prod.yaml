@@ -22,6 +22,11 @@ jobs:
         run: |
           ls /home/runner/work/SeezItt-web-app/SeezItt-web-app/
           
+      - name: set env vars
+        run: |
+          cp -r .env.example .env
+          sed -i 's/VITE_API_URL=/VITE_API_URL=${{ secrets.PROD_VITE_API_URL }}/' .env
+          
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
