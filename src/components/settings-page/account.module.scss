@@ -20,7 +20,6 @@ h6 {
   margin: 0;
 }
 
-
 .topBarDiv {
   width: 100%;
 }
@@ -159,8 +158,6 @@ h6 {
 .gridContainer {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  // gap: 20px; /* Adjust the gap as needed */
-  // padding: 16px;
   gap: 0;
 }
 
@@ -295,7 +292,6 @@ h6 {
 
 .pageHeader h4 {
   margin: 0px;
-
 }
 
 .accountCards {
@@ -335,8 +331,7 @@ h6 {
 
 .instructionsModalTitleText {
   color: var(--login-title, #574D68);
-
-  /* Title/Title */
+  /* Title */
   font-family: Poppins;
   font-size: 35px;
   font-style: normal;
@@ -349,7 +344,6 @@ h6 {
 .instructionsModalText {
   text-align: center;
   color: var(--default-body, #222);
-
   /* Base/Regular */
   font-family: Poppins;
   font-size: 16px;
@@ -357,14 +351,12 @@ h6 {
   font-weight: 400;
   line-height: 150%;
   /* 24px */
-
   margin-bottom: 24px;
 }
 
 .infoText {
   color: var(--default-body, #222);
   text-align: center;
-
   /* Small/Regular */
   font-family: Poppins;
   font-size: 14px;
@@ -372,13 +364,10 @@ h6 {
   font-weight: 400;
   // line-height: 150%;
   /* 21px */
-
-
 }
 
 .infoTextLink {
   color: var(--foundation-secondary-secondary-500, #437ED7);
-
   /* Small/Regular */
   font-family: Poppins;
   font-size: 14px;
@@ -389,5 +378,74 @@ h6 {
 
 .settingsWrapper {
   width: 100%;
+}
 
+.contentPrefHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--default-body, #222);
+  text-align: center;
+  /* H1/Medium */
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  /* 30px */
+}
+
+.blueText {
+  color: var(--foundation-primary-primary-500, #5448B2);
+  text-align: center;
+  /* Base/Regular */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  /* 24px */
+}
+
+.greyText {
+  color: var(--foundation-body-body-300, #6B6B6B);
+  text-align: center;
+  /* Small/Regular */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  /* 21px */
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 18px;
+}
+
+.cards p {
+  color: var(--default-body, #222);
+  /* Base/Regular */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  /* 24px */
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-bottom: 18px;
+  padding-top: 18px;
+  border-bottom: 1px solid #DFDFDF;
 }

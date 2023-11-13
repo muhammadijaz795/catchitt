@@ -29,6 +29,8 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
         feedback: true,
         reminders: true,
         news: true,
+        followers: true,
+        messages: true
     });
     const API_KEY = process.env.VITE_API_URL;
     const navigate = useNavigate();
@@ -60,7 +62,6 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                 console.log(`my notifications settings: `);
                 console.log(responseData.data);
             }
-
         } catch (error) {
             console.log(error)
         }
@@ -72,18 +73,19 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                 feedback: notificationsSettingsData.feedback,
                 reminders: notificationsSettingsData.reminders,
                 news: notificationsSettingsData.news,
+                followers: notificationsSettingsData.followers,
+                messages: notificationsSettingsData.messages
             });
         }
     }, [notificationsSettingsData]);
 
-    const handleSwitchChange = (name: string) => (event: any) => {
+    const handleSwitchChange = (event: any, name: string) => {
         const updatedSettings = {
             ...settings,
             [name]: event.target.checked,
         };
-
         setSettings(updatedSettings);
-
+        console.log(JSON.stringify(updatedSettings));
         // Make a PATCH request to update the settings
         fetch(`${API_KEY}/profile/notifications-settings`, {
             method: 'PATCH',
@@ -96,10 +98,10 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                 if (response.ok) {
                     // Handle a successful response here
                     console.log('Settings updated successfully');
-                    // handleFetchNotificationsSettings()
                 } else {
                     // Handle errors here
                     console.error(response);
+                    console.log(response);
                 }
             })
             .catch((error) => {
@@ -112,7 +114,6 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
             <div className={styles.topBarDiv}>
                 <TopBar />
             </div>
-
             <div className={styles.container}>
                 <div className={styles.leftSide}>
                     <div className={styles.sideNavDiv}>
@@ -125,8 +126,7 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                 <div className={styles.middleSectionDiv}>
                     <div className={styles.pageHeader}>
                         <IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
-                            onClick={handleGoBack}
-                        >
+                            onClick={handleGoBack}>
                             <LeftArrow />
                         </IconButton>
                         <h4>Push notifications</h4>
@@ -135,7 +135,6 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                         <h4>Email notifications</h4>
                         <div className={styles.cards}>
                             <FormGroup
-                                // onChange={handleSettingsChange}
                                 sx={{
                                     width: '100%', display: 'flex',
                                     flexDirection: 'row', justifyContent: 'space-between',
@@ -147,7 +146,7 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                                         label={undefined}
                                         labelPlacement="start"
                                         control={<IOSSwitch sx={{ m: 1 }} checked={settings?.feedback || false}
-                                            onChange={handleSwitchChange('feedback')}
+                                            onChange={(e: any) => handleSwitchChange(e, 'feedback')}
                                         />}
                                     />
                                 </div>
@@ -157,7 +156,7 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                                         label={undefined}
                                         labelPlacement="start"
                                         control={<IOSSwitch sx={{ m: 1 }} checked={settings?.reminders || false}
-                                            onChange={handleSwitchChange('reminders')}
+                                            onChange={(e: any) => handleSwitchChange(e, 'reminders')}
                                         />}
                                     />
                                 </div>
@@ -167,11 +166,56 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                                         label={undefined}
                                         labelPlacement="start"
                                         control={<IOSSwitch sx={{ m: 1 }} checked={settings?.news || false}
-                                            onChange={handleSwitchChange('news')}
+                                            onChange={(e: any) => handleSwitchChange(e, 'news')}
                                         />}
                                     />
                                 </div>
-
+                            </FormGroup>
+                        </div>
+                    </div>
+                    <div className={styles.suggestedContent} style={{ paddingTop: 0 }}>
+                        <h4>Following and Followers</h4>
+                        <div className={styles.cards}>
+                            <FormGroup
+                                // onChange={handleSettingsChange}
+                                sx={{
+                                    width: '100%', display: 'flex',
+                                    flexDirection: 'row', justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                <div className={styles.card}>
+                                    <p>New Followers</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={settings?.followers || false}
+                                            onChange={(e: any) => handleSwitchChange(e, 'followers')}
+                                        />}
+                                    />
+                                </div>
+                            </FormGroup>
+                        </div>
+                    </div>
+                    <div className={styles.suggestedContent} style={{ paddingTop: 0 }}>
+                        <h4>Messages and Calls</h4>
+                        <div className={styles.cards}>
+                            <FormGroup
+                                // onChange={handleSettingsChange}
+                                sx={{
+                                    width: '100%', display: 'flex',
+                                    flexDirection: 'row', justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                <div className={styles.card}>
+                                    <p>Messages</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={settings?.messages || false}
+                                            onChange={(e: any) => handleSwitchChange(e, 'messages')}
+                                        />}
+                                    />
+                                </div>
                             </FormGroup>
                         </div>
                     </div>

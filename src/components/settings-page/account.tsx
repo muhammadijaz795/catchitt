@@ -1,9 +1,10 @@
-import { Box, Button, Modal, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import atForgotPwd from '../../assets/atForgotPwd.png';
 import contentIcon from '../../assets/contentIcon.svg';
 import notificationBell from '../../assets/notificationBellIcon.svg';
+import reportProblem from '../../assets/reportProblemIcon.svg';
 import { useAuthStore } from '../../store/authStore';
 import InputField from '../reusables/InputField';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
@@ -17,13 +18,65 @@ export interface AccountProps {
     setOpenChangePassword?: boolean;
 }
 
+export interface Profile {
+    status: number;
+    message: string;
+    data: {
+        businessCategory: string | null;
+        _id: string;
+        avatar: string;
+        cover: string;
+        bio: string;
+        contactEmail: string;
+        website: string;
+        country: string;
+        mediaCategories: string[];
+        balance: number;
+        accountType: string;
+        username: string;
+        name: string;
+        email: string;
+        dateOfBirth: string;
+        isVerified: boolean;
+        followersNumber: number;
+        followingNumber: number;
+        likesNum: number;
+    };
+}
+
+interface Category {
+    _id: string;
+    createdTime: number;
+    lastModifiedTime: number;
+    isDeleted: boolean;
+    name: string;
+    isActive: boolean;
+    __v: number;
+    icon: string;
+}
+
 const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePassword }: AccountProps) => {
+    const API_KEY = process.env.VITE_API_URL;
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
+    const token = useAuthStore((state) => state.token);
+
     const [openChangeEmailMainModal, setOpenChangeEmailMainModal] = useState(setOpenChangeEmail || false)
     const [openInstructionsModal, setOpenInstructionsModal] = useState(false)
 
     const [openChangePassMainModal, setOpenChangePassMainModal] = useState(setOpenChangePassword || false)
     const [openInstructionsPassModal, setOpenInstructionsPassModal] = useState(false)
+
+    const [openContentPrefModal, setOpenContentPrefModal] = useState(false)
+
+    const [profileData, setProfileData] = useState<any>([])
+    const [profileDataCopy, setProfileDataCopy] = useState<any>([])
+
+    const [categoriesData, setCategoriesData] = useState<any>([])
+
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+    const MAX_CHOICES = 5; // Set your maximum choices limit
+    const [notAcceptable, setNotAcceptable] = useState(false)
 
     const navigate = useNavigate();
 
@@ -44,7 +97,6 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
         handleCloseChangeEmailMainModal();
         setOpenInstructionsModal(true)
     }
-
     const handleCloseInstructionsModal = () => {
         setOpenInstructionsModal(false)
     }
@@ -62,21 +114,131 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
         handleCloseChangePassMainModal();
         setOpenInstructionsPassModal(true)
     }
-
     const handleCloseInstructionsPassModal = () => {
         setOpenInstructionsPassModal(false)
     }
 
-
-
-    if (!isLoggedIn) {
-        return <Navigate to="/auth" />;
+    const handleOpenContentPrefModal = () => {
+        setOpenContentPrefModal(true)
+        // setProfileDataCopy(profileData)
+    }
+    const handleCloseContentPrefModal = () => {
+        setOpenContentPrefModal(false)
+        setSelectedCategories([])
+        handleProfileFetch()
     }
 
     useEffect(() => {
-        setIndex(4)
+        // setIndex(4)
         setSettingsDropdown(true)
+        handleFetchCategoriesNames()
+        handleProfileFetch()
     }, [])
+
+    const handleProfileFetch = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data: Profile = await response.json();
+            // Extract the mediaCategories array
+            setProfileData(data.data.mediaCategories);
+            setProfileDataCopy(data.data.mediaCategories);
+            console.log(`fetched categories::::: ${data.data.mediaCategories}`);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    };
+
+    const handleFetchCategoriesNames = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/media-content/categories`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const myData = await response.json();
+            setCategoriesData([...myData.data]);
+        } catch (error) {
+            console.error('Error fetching category data:', error);
+        }
+    };
+
+
+    const handleCheckboxChange = async (category: Category) => {
+        // Check if the category is already selected
+        if (selectedCategories.includes(category._id)) {
+            // If it is selected, remove it
+            setSelectedCategories(selectedCategories.filter((item) => item !== category._id));
+        } else {
+            // If it is not selected, check if the maximum limit is reached
+            if (selectedCategories.length > MAX_CHOICES + 1) {
+                // setNotAcceptable(true)
+            } else {
+                // setNotAcceptable(false)
+                setSelectedCategories([...selectedCategories, category._id])
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (selectedCategories.length > 5 || selectedCategories.length < 1) {
+            setNotAcceptable(true)
+            console.log(selectedCategories);
+        }
+        else {
+            setNotAcceptable(false)
+            console.log(selectedCategories);
+        }
+    }, [selectedCategories])
+
+    const handleSubmitPrefContent = async () => {
+        try {
+            const categoryIds = selectedCategories.map(category => category).join(',');
+            const payload = categoryIds
+
+            console.log(`my patch: ${payload}`);
+
+            const response = await fetch(`${API_KEY}/auth/media-categories`, {
+                method: 'PATCH',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ categories: payload }),
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+                console.log(response);
+            }
+            if (response.ok) {
+                console.log(response);
+                handleCloseContentPrefModal()
+            }
+        } catch (error) {
+            console.error('Error fetching category data:', error);
+        }
+    };
+
+    const isChecked = (category: any) => {
+        if (profileDataCopy.includes(category.name)) {
+            // Set selected categories only if not already set
+            setSelectedCategories([...selectedCategories, category._id]);
+            setProfileDataCopy(profileDataCopy.filter((e: any) => e !== category.name))
+        }
+        // Check if the category is initially checked or currently checked
+        return selectedCategories.includes(category._id);
+    };
+
+    const handleEmailClick = () => {
+        const email = 'info@ogoul.com';
+        window.location.href = `mailto:${email}`;
+        // setOpenFaqsModal(false)
+        setIndex(6)
+    }
 
     return (
         <>
@@ -99,21 +261,6 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                                 <h4>Account</h4>
                             </div>
                             <div className={styles.suggestedContent}>
-                                {/* <div className={styles.accountCards}
-                                    onClick={handleOpenChangeEmailMainModal}>
-                                    <div className={styles.settingName}>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M17.9014 8.85156L13.4581 12.4646C12.6186 13.1306 11.4375 13.1306 10.598 12.4646L6.11719 8.85156" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9089 21C19.9502 21.0084 22 18.5095 22 15.4384V8.57001C22 5.49883 19.9502 3 16.9089 3H7.09114C4.04979 3 2 5.49883 2 8.57001V15.4384C2 18.5095 4.04979 21.0084 7.09114 21H16.9089Z" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                        <p>
-                                            Change Email address
-                                        </p>
-                                    </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </div> */}
                                 <div className={styles.accountCards}
                                     onClick={handleOpenChangePassMainModal}>
                                     <div className={styles.settingName}>
@@ -132,22 +279,16 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                                     </svg>
                                 </div>
                             </div>
-
-
                         </div>
                         <div className={styles.settingsWrapper}>
                             <div className={styles.pageHeader}>
                                 <h4>Content & Activity</h4>
                             </div>
                             <div className={styles.suggestedContent}>
-                                <div className={styles.accountCards}
-                                // onClick={handleOpenChangeEmailMainModal}
-                                >
+                                <div className={styles.accountCards}>
                                     <div className={styles.settingName} onClick={() => navigate('/settings/activity')}>
                                         <img src={notificationBell} alt='' />
-                                        <p>
-                                            Push notifications
-                                        </p>
+                                        <p>Push notifications</p>
                                     </div>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -156,22 +297,33 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                                 <div className={styles.accountCards}
                                 // onClick={handleOpenChangePassMainModal}
                                 >
-                                    <div className={styles.settingName}>
+                                    <div className={styles.settingName}
+                                        onClick={handleOpenContentPrefModal}>
                                         <img src={contentIcon} alt='' />
-                                        <p>
-                                            Content preference
-                                        </p>
+                                        <p>Content preference</p>
                                     </div>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </div>
                             </div>
-
-
                         </div>
-
-
+                        <div className={styles.settingsWrapper}>
+                            <div className={styles.pageHeader}>
+                                <h4>Support</h4>
+                            </div>
+                            <div className={styles.suggestedContent}>
+                                <div className={styles.accountCards}>
+                                    <div className={styles.settingName} onClick={handleEmailClick}>
+                                        <img src={reportProblem} alt='' />
+                                        <p>Report a problem</p>
+                                    </div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -243,7 +395,6 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-
                         <Box sx={instructionsModalStyle}>
                             <div>
                                 <img src={atForgotPwd} alt="" className={styles.atForgotPwd} />
@@ -396,6 +547,70 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                     </Modal>
                 </>
             )}
+            {openContentPrefModal && (
+                <>
+                    <Modal
+                        open={openContentPrefModal}
+                        onClose={handleCloseContentPrefModal}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={contentPrefModalStyle}>
+                            <div className={styles.contentPrefHeader}>
+                                <h4 className={styles.contentPrefModalHeader}>
+                                    Content Preference
+                                </h4>
+                                <p className={styles.blueText}>
+                                    Choose the topics that interest you most.</p>
+                                <p className={styles.greyText}>
+                                    You can choose from 1 to 5 topics</p>
+                            </div>
+                            <div className={styles.cards}>
+                                <FormGroup
+                                    sx={{
+                                        width: '100%', display: 'flex',
+                                        flexDirection: 'row', justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                    {categoriesData.map((category: any) => {
+                                        return (
+                                            <div className={styles.card}>
+                                                <FormControlLabel
+                                                    sx={{
+                                                        marginRight: 0,
+                                                        marginLeft: 0
+                                                    }}
+                                                    label={undefined}
+                                                    labelPlacement="start"
+                                                    onChange={() => handleCheckboxChange(category)}
+                                                    control={<Checkbox
+                                                        checked={isChecked(category)}
+                                                        sx={{
+                                                            '&.Mui-checked': {
+                                                                color: '#5448B2',
+                                                            },
+                                                        }}
+                                                    />}
+                                                />
+                                                <img src={category.icon} alt=''
+                                                    style={{ marginRight: '12px' }} />
+                                                <p>{category.name}</p>
+                                            </div>
+                                        )
+                                    })}
+                                    <Button
+                                        variant="contained"
+                                        sx={mainModalBtnstyle}
+                                        onClick={handleSubmitPrefContent}
+                                        disabled={notAcceptable}>
+                                        Done
+                                    </Button>
+                                </FormGroup>
+                            </div>
+                        </Box>
+                    </Modal>
+                </>
+            )}
         </>
     );
 };
@@ -492,3 +707,22 @@ var instructionsModalOutlinedBtnstyle = {
 
     marginBottom: '24px',
 }
+
+var contentPrefModalStyle = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 526,
+    height: 'auto',
+    maxHeight: 700,
+    bgcolor: 'background.paper',
+    borderRadius: '8px',
+    boxShadow: 0,
+    display: 'inline-flex',
+    padding: '24px',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '0px',
+    overflowY: 'auto',
+};

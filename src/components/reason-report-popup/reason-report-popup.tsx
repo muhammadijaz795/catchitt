@@ -1,19 +1,21 @@
-import classNames from 'classnames';
-import styles from './reason-report-popup.module.scss';
-import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import classNames from 'classnames';
+import styles from './reason-report-popup.module.scss';
 
+import FormControl from '@mui/material/FormControl';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 
 export interface FormData {
-    option1: boolean;
-    option2: boolean;
-    option3: boolean;
-    option4: boolean;
-    option5: boolean;
-    option6: boolean;
+    MISLEADING_INFO: boolean;
+    FRAUDS_SCAM: boolean;
+    HATE_SPEECH: boolean;
+    HARASSMENT_BULLYING: boolean;
+    VIOLENCE: boolean;
+    ANIMAL_CRUELTY: boolean;
 }
 
 export interface ReasonReportPopupProps {
@@ -35,40 +37,53 @@ export const ReasonReportPopup = ({
     const token = useAuthStore((state) => state.token);
 
     const [formData, setFormData] = useState<FormData>({
-        option1: false,
-        option2: false,
-        option3: false,
-        option4: false,
-        option5: false,
-        option6: false,
+        MISLEADING_INFO: false,
+        FRAUDS_SCAM: false,
+        HATE_SPEECH: false,
+        HARASSMENT_BULLYING: false,
+        VIOLENCE: false,
+        ANIMAL_CRUELTY: false,
     });
 
     // const [open, setOpen] = useState(false);
     // const handleClose = () => setOpen(false);
 
     const [firstFormVisible, setFirstFormVisible] = useState(true);
-    const [selectedValues, setSelectedValues] = useState<string[]>([]);
+    const [selectedValue, setSelectedValue] = useState<string>('');
     const API_KEY = process.env.VITE_API_URL;
 
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const { name, checked } = event.target;
 
-        const { name, value, checked } = event.target;
-        setFormData((prevData) => ({ ...prevData, [name]: checked }));
-        // Update the selectedChoices prop with the latest data
-        if (checked) {
-            setSelectedValues((prevValues) => [...prevValues, value]);
-        } else {
-            setSelectedValues((prevValues) => prevValues.filter((val) => val !== value));
-        }
+    //     // Update the selectedChoices prop with the latest data
+    //     setSelectedValues((prevValues) => {
+    //         if (checked) {
+    //             // If checked, add to the array if not already present
+    //             if (!prevValues.includes(name)) {
+    //                 return [...prevValues, name];
+    //             }
+    //         } else {
+    //             // If unchecked, remove from the array if present
+    //             return prevValues.filter((nam) => nam !== name);
+    //         }
+    //         // If no change, return the previous values
+    //         return prevValues;
+    //     });
+
+    //     // Update the form data
+    //     setFormData((prevData) => ({ ...prevData, [name]: checked }));
+    // };
+
+    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedValue(event.target.value);
     };
+
+
 
     const handleReportSubmit = async (event: React.FormEvent, mediaId: string) => {
         event.preventDefault();
-        // const reportReasons = selectedValues.map((value) => ({ reason: value }));
-        console.log(mediaId);
 
-        console.log(selectedValues); // You can perform any action with the formData here, like sending it to the server
-        // Perform the fetch POST request here with the reportReasons array
+        // Use the selectedValue directly
         try {
             const response = await fetch(
                 `${API_KEY}/media-content/reports/:${mediaId}`,
@@ -78,15 +93,12 @@ export const ReasonReportPopup = ({
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ reason: selectedValues }),
+                    body: JSON.stringify({ reason: selectedValue }),
                 }
             );
 
             if (response.ok) {
-                // Close the popup when the response is successful
-                // onClose();
-                onSubmit(setFirstFormVisible(false));
-                // Optionally, you can show a success message or perform other actions
+                // Handle success
                 const responseData = await response.json();
                 console.log(responseData);
                 handleOpen(); // Assuming this function opens another modal or dialog
@@ -98,9 +110,10 @@ export const ReasonReportPopup = ({
             }
         } catch (error) {
             // Handle any errors
-            console.log(error);
+            console.error(error);
         }
     };
+
     return (
         <div className={classNames(styles.root, className)}>
             <div>
@@ -110,111 +123,64 @@ export const ReasonReportPopup = ({
                             <h2 className={styles.titleText}>Reason for report</h2>
                         </div>
                         <div className={styles.frame}>
-                            <form
-                                onSubmit={(event) => handleReportSubmit(event, mediaId)}
-                                className={styles.formStyle}
-                            >
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            sx={{
-                                                '&.Mui-checked': {
-                                                    color: '#5448B2',
-                                                },
-                                            }}// Change the color of the checkbox icon
-                                            size="medium"
-                                            checked={formData.option1}
-                                            onChange={handleCheckboxChange}
-                                            name="option1"
-                                        />
-                                    }
-                                    label="Misleading information"
-                                />
 
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
+                            <form onSubmit={(event) => handleReportSubmit(event, mediaId)} className={styles.formStyle}>
+                                <FormControl>
+                                    <RadioGroup
+                                        sx={{
+                                            display: 'flex', flexDirection: 'column', rowGap: '30px', width: '100%'
+                                        }}
+                                        value={selectedValue}
+                                        onChange={handleRadioChange}
+                                        aria-labelledby="demo-radio-buttons-group-label"
+                                        defaultValue="female"
+                                        name="radio-buttons-group"
+                                    >
+                                        <FormControlLabel value="MISLEADING_INFO" control={<Radio
                                             sx={{
                                                 '&.Mui-checked': {
-                                                    color: '#5448B2',
-                                                },
-                                            }}// Change the color of the checkbox icon
-                                            size="medium"
-                                            checked={formData.option2}
-                                            onChange={handleCheckboxChange}
-                                            name="option2"
-                                        />
-                                    }
-                                    label="Frauds and scams"
-                                />
+                                                    color: '#5448B2'
+                                                }
+                                            }}
+                                        />} label="Misleading Information" />
+                                        <FormControlLabel value="FRAUDS_SCAM" control={<Radio
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2'
+                                                }
+                                            }}
+                                        />} label="Frauds and scams" />
+                                        <FormControlLabel value="HATE_SPEECH" control={<Radio
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2'
+                                                }
+                                            }}
+                                        />} label="Hate Speech" />
+                                        <FormControlLabel value="HARASSMENT_BULLYING" control={<Radio
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2'
+                                                }
+                                            }}
+                                        />} label="Harassment or bullying" />
+                                        <FormControlLabel value="VIOLENCE" control={<Radio
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2'
+                                                }
+                                            }}
+                                        />} label="Violence" />
+                                        <FormControlLabel value="ANIMAL_CRUELTY" control={<Radio
+                                            sx={{
+                                                '&.Mui-checked': {
+                                                    color: '#5448B2'
+                                                }
+                                            }}
+                                        />} label="Animal cruelty" />
+                                    </RadioGroup>
+                                </FormControl>
 
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            sx={{
-                                                '&.Mui-checked': {
-                                                    color: '#5448B2',
-                                                },
-                                            }}// Change the color of the checkbox icon
-                                            size="medium"
-                                            checked={formData.option3}
-                                            onChange={handleCheckboxChange}
-                                            name="option3"
-                                        />
-                                    }
-                                    label="Hate speech"
-                                />
-
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            sx={{
-                                                '&.Mui-checked': {
-                                                    color: '#5448B2',
-                                                },
-                                            }}// Change the color of the checkbox icon
-                                            size="medium"
-                                            checked={formData.option4}
-                                            onChange={handleCheckboxChange}
-                                            name="option4"
-                                        />
-                                    }
-                                    label="Harassment or Bullying"
-                                />
-
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            sx={{
-                                                '&.Mui-checked': {
-                                                    color: '#5448B2',
-                                                },
-                                            }}// Change the color of the checkbox icon
-                                            size="medium"
-                                            checked={formData.option5}
-                                            onChange={handleCheckboxChange}
-                                            name="option5"
-                                        />
-                                    }
-                                    label="Violence"
-                                />
-
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            sx={{
-                                                '&.Mui-checked': {
-                                                    color: '#5448B2',
-                                                },
-                                            }}// Change the color of the checkbox icon
-                                            size="medium"
-                                            checked={formData.option6}
-                                            onChange={handleCheckboxChange}
-                                            name="option6"
-                                        />
-                                    }
-                                    label="Animal Cruelty"
-                                />
                                 <button
                                     type="submit"
                                     className={styles.submitBtn}

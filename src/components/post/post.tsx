@@ -46,6 +46,7 @@ import { Share } from './svg-components/Share';
 import { ShareMobile } from './svg-components/ShareMobile';
 import soundIcon from './svg-components/soundIcon.svg';
 import soundIconMobile from './svg-components/soundIconMobile.svg';
+
 interface Gift {
     _id: string;
     name: string;

@@ -308,6 +308,22 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 </p>
                             </div>
                         </Link>
+                        <Link to="/settings/account" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                            <div
+                                className={classNames(
+                                    `${selectedIndex === 6 ? styles.selected : styles.navLink}`
+                                )}
+                                onClick={() => {
+                                    handleLinkClick(6)
+                                    setSettingsDropdown(true)
+                                }}
+                            >
+                                <p className={classNames(styles.linkWord, styles.notificationsP)}
+                                    style={{ paddingLeft: '30px' }}>
+                                    Support
+                                </p>
+                            </div>
+                        </Link>
                     </>
                 )}
             </div>
