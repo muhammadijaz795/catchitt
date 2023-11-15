@@ -364,7 +364,7 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                     </div>
                 </div>
             </div>
-            {openChangeEmailMainModal && (
+            {/* {openChangeEmailMainModal && (
                 <>
                     <div>
                         <Modal
@@ -423,8 +423,8 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                         </Modal>
                     </div>
                 </>
-            )}
-            {openInstructionsModal && (
+            )} */}
+            {/* {openInstructionsModal && (
                 <>
                     <Modal
                         open={openInstructionsModal}
@@ -472,7 +472,7 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                         </Box>
                     </Modal>
                 </>
-            )}
+            )} */}
             {/* Email Steps End */}
             {openChangePassMainModal && (
                 <>
@@ -584,6 +584,7 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                     </Modal>
                 </>
             )}
+
             {openContentPrefModal && (
                 <>
                     <Modal

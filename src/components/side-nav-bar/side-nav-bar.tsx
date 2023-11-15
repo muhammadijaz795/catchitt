@@ -331,7 +331,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 </p>
                             </div>
                         </Link>
-                        <Link to="/settings/about/community-guidelines" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                        <Link to="/about/community-guidelines" reloadDocument={false} style={{ textDecoration: 'none' }}>
                             <div
                                 className={classNames(
                                     `${selectedIndex === 7 ? styles.selected : styles.navLink}`
