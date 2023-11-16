@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import i18next from 'i18next';
 // import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../store/authStore';
+import Account from '../settings-page/account';
 
 export interface SetNewPasswordProps {
     className?: string;
@@ -52,6 +54,8 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode) || languages[0];
     const [, setLanguageSelector] = useState(currentLanguage.name);
+
+    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
     const API_KEY = process.env.VITE_API_URL;
     const forgotPwdEndPoint = '/auth/password/set-new';
@@ -129,6 +133,14 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
             </div>
         );
     };
+
+    if (isLoggedIn) {
+        return (
+            <div>
+                <Account openModal={true} />
+            </div>
+        );
+    }
 
     return (
         <div className={classNames(styles.container, className)}>

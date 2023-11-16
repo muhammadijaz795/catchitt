@@ -17,8 +17,7 @@ import styles from './account.module.scss';
 
 export interface AccountProps {
     className?: string;
-    setOpenChangeEmail?: boolean;
-    setOpenChangePassword?: boolean;
+    openModal?: boolean;
 }
 
 export interface Profile {
@@ -58,18 +57,44 @@ interface Category {
     icon: string;
 }
 
-const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePassword }: AccountProps) => {
+interface User {
+    resetPassEmail: string;
+    password: string;
+    confirmPassword: string;
+    resetPassToken: string;
+}
+
+const defaultUser: User = {
+    password: '',
+    confirmPassword: '',
+    resetPassEmail: '',
+    resetPassToken: ''
+};
+const Account = ({ className, openModal }: AccountProps) => {
     const API_KEY = process.env.VITE_API_URL;
+    const forgotPwdEndPoint = '/auth';
+    const signInEndPoint = '/auth/sign-in';
+    const { login } = useAuthStore();
+
+    const [response, setResponse] = useState(false);
+    const [responseResult, setResponseResult] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [loadingAnimation, setLoadingAnimation] = useState(false);
+    const [user, setUser] = useState(defaultUser);
+
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
     const token = useAuthStore((state) => state.token);
+    const email = useAuthStore((state) => state.email);
 
-    const [openChangeEmailMainModal, setOpenChangeEmailMainModal] = useState(setOpenChangeEmail || false)
+    const [openChangeEmailMainModal, setOpenChangeEmailMainModal] = useState(false)
     const [openInstructionsModal, setOpenInstructionsModal] = useState(false)
 
-    const [openChangePassMainModal, setOpenChangePassMainModal] = useState(setOpenChangePassword || false)
+    const [openChangePassMainModal, setOpenChangePassMainModal] = useState(false)
     const [openInstructionsPassModal, setOpenInstructionsPassModal] = useState(false)
 
     const [openContentPrefModal, setOpenContentPrefModal] = useState(false)
+
+    const [openSetNewPassModal, setOpenNewPassModal] = useState(openModal || false)
 
     const [profileData, setProfileData] = useState<any>([])
     const [profileDataCopy, setProfileDataCopy] = useState<any>([])
@@ -89,20 +114,20 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
 
     { /*  Email Modal Start  */ }
 
-    const handleOpenChangeEmailMainModal = () => {
-        setOpenChangeEmailMainModal(true)
-    }
-    const handleCloseChangeEmailMainModal = () => {
-        setOpenChangeEmailMainModal(false)
-    }
+    // const handleOpenChangeEmailMainModal = () => {
+    //     setOpenChangeEmailMainModal(true)
+    // }
+    // const handleCloseChangeEmailMainModal = () => {
+    //     setOpenChangeEmailMainModal(false)
+    // }
 
-    const handleOpenInstructionsModal = () => {
-        handleCloseChangeEmailMainModal();
-        setOpenInstructionsModal(true)
-    }
-    const handleCloseInstructionsModal = () => {
-        setOpenInstructionsModal(false)
-    }
+    // const handleOpenInstructionsModal = () => {
+    //     handleCloseChangeEmailMainModal();
+    //     setOpenInstructionsModal(true)
+    // }
+    // const handleCloseInstructionsModal = () => {
+    //     setOpenInstructionsModal(false)
+    // }
 
     { /*  Email Modal End  */ }
 
@@ -111,14 +136,24 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
     }
     const handleCloseChangePassMainModal = () => {
         setOpenChangePassMainModal(false)
+        setLoadingAnimation(false)
+        setErrorMessage('')
     }
 
-    const handleOpenInstructionsPassModal = () => {
-        handleCloseChangePassMainModal();
-        setOpenInstructionsPassModal(true)
+    const handleOpenInstructionsPassModal = (e: React.FormEvent) => {
+        setLoadingAnimation(true)
+        handleSignInSubmit(e)
+        onUserChange('password', '');
+        setErrorMessage('');
     }
     const handleCloseInstructionsPassModal = () => {
         setOpenInstructionsPassModal(false)
+    }
+
+    const handleCloseNewPassModal = () => {
+        setOpenNewPassModal(false)
+        onUserChange('password', '');
+        setErrorMessage('');
     }
 
     const handleOpenContentPrefModal = () => {
@@ -130,6 +165,51 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
         setSelectedCategories([])
         handleProfileFetch()
     }
+
+    const handleSignInSubmit = (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent the default form submission behavior
+        const { password } = user;
+        handleSignIn(password, email);
+    };
+
+    const handleSignIn = async (password: string, email: string | null) => {
+        try {
+            const response = await fetch(`${API_KEY}${signInEndPoint}`, {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ password, email }),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const { email, token, _id, balance, name } = responseData.data; // Extract token value from data object
+                // const name = responseData.data; // Assuming the 'name' field is present in the response data
+                useAuthStore.setState({
+                    isLoggedIn: true,
+                    name: name !== '' ? name : '',
+                    token: token,
+                    _id: _id,
+                    balance: balance,
+                });
+                login(email, token, _id, balance, name); // Call the login function from the Zustand store
+                console.log(responseData);
+                handleForgotPasswordSubmit()
+                setLoadingAnimation(false)
+                handleCloseChangePassMainModal();
+                setOpenInstructionsPassModal(true)
+            } else {
+                // Handle the error response from the server
+                setLoadingAnimation(false)
+                const errorResponseData = await response.json();
+                const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
+                setErrorMessage(errorMessageFromServer);
+                console.log(response);
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Invalid email or password');
+        }
+    };
 
     useEffect(() => {
         // setIndex(4)
@@ -237,11 +317,110 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
     };
 
     const handleEmailClick = () => {
-        const email = 'info@ogoul.com';
-        window.location.href = `mailto:${email}`;
+        const infoEmail = 'info@ogoul.com';
+        window.location.href = `mailto:${infoEmail}`;
         // setOpenFaqsModal(false)
         setIndex(6)
     }
+
+    /** Handling Forgot Password Scenario */
+    const handleForgotPassword = async (email: string | null) => {
+        try {
+            const response = await fetch(`${API_KEY}${forgotPwdEndPoint}/password/forgot`, {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ email: email }),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                // const { token } = responseData.data; // Extract token value from data object
+                console.log(responseData);
+                setResponseResult(responseData.message);
+                setResponse(true);
+                // navigate('/dashboard');
+            } else {
+                setErrorMessage('Invalid email');
+                console.log(response);
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Invalid email');
+        }
+    };
+
+    const handleForgotPasswordSubmit = () => {
+        // e.preventDefault();
+        // const { email } = user;
+        handleForgotPassword(email);
+    };
+
+    const onUserChange = <P extends keyof User>(prop: P, value: User[P]) => {
+        setUser({ ...user, [prop]: value });
+    };
+
+    const handleSetNewPassword = async (password: string, email: string | null, token: string | null) => {
+        try {
+            const response = await fetch(`${API_KEY}/auth/password/set-new`, {
+                method: 'PATCH',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ password, email, token }),
+            });
+            if (response.ok) {
+                const responseData = await response.json();
+                // const { token } = responseData.data; // Extract token value from data object
+                console.log(responseData);
+                setResponseResult(responseData.message);
+                setResponse(true);
+                setLoadingAnimation(false)
+                setTimeout(() => {
+                    handleCloseNewPassModal();
+                }, 2000);
+            } else {
+                setLoadingAnimation(false)
+                setErrorMessage('invalid password');
+                console.log(response);
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Invalid password');
+        }
+    };
+
+    const handleSetNewPasswordSubmit = () => {
+        setErrorMessage('')
+        setLoadingAnimation(true);
+        const { password, resetPassEmail, resetPassToken } = user;
+        handleSetNewPassword(password, resetPassEmail, resetPassToken);
+    };
+
+    const renderResponse = () => {
+        return (
+            <div
+                style={{
+                    fontWeight: '700',
+                    fontSize: '16px',
+                    color: 'green',
+                    marginBottom: '20px',
+                    textAlign: 'center'
+                }}
+            >
+                {responseResult}
+            </div>
+        );
+    };
+
+    useEffect(() => {
+        const { pathname } = location;
+        const pathSegments = pathname.split('/');
+
+        user.resetPassEmail = pathSegments[2];
+        user.resetPassToken = pathSegments.slice(3).join('/');
+
+        console.log('Email:', user.resetPassEmail);
+        console.log('Token:', user.resetPassToken);
+    }, [openSetNewPassModal])
+
 
     return (
         <>
@@ -281,6 +460,21 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                                         <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </div>
+                                <div className={styles.accountCards}
+                                    onClick={() => navigate('/settings/account/privacy-settings')}>
+                                    <div className={styles.settingName}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9846 21.606C11.9846 21.606 19.6566 19.283 19.6566 12.879C19.6566 6.474 19.9346 5.974 19.3196 5.358C18.7036 4.742 12.9906 2.75 11.9846 2.75C10.9786 2.75 5.26557 4.742 4.65057 5.358C4.03457 5.974 4.31257 6.474 4.31257 12.879C4.31257 19.283 11.9846 21.606 11.9846 21.606Z" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M9.38281 11.8741L11.2748 13.7691L15.1728 9.86914" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <p>
+                                            Privacy and Security
+                                        </p>
+                                    </div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                         <div className={styles.settingsWrapper}>
@@ -289,7 +483,7 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                             </div>
                             <div className={styles.suggestedContent}>
                                 <div className={styles.accountCards}>
-                                    <div className={styles.settingName} onClick={() => navigate('/settings/activity')}>
+                                    <div className={styles.settingName} onClick={() => navigate('/settings/account/activity')}>
                                         <img src={notificationBell} alt='' />
                                         <p>Push notifications</p>
                                     </div>
@@ -364,116 +558,6 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                     </div>
                 </div>
             </div>
-            {/* {openChangeEmailMainModal && (
-                <>
-                    <div>
-                        <Modal
-                            open={openChangeEmailMainModal}
-                            onClose={handleCloseChangeEmailMainModal}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={mainModalstyle}>
-                                <div style={{ marginBottom: '24px' }}>
-                                    <Typography
-                                        id="modal-modal-title"
-                                        variant="h6"
-                                        component="h2"
-                                        sx={{
-                                            fontFamily: 'Poppins',
-                                            fontSize: '20px',
-                                            fontStyle: 'normal',
-                                            fontWeight: 500,
-                                            lineHeight: '30px',
-                                            paddingBottom: '16.5px',
-                                            textAlign: 'center'
-                                        }}
-                                    >
-                                        Change Email address
-                                    </Typography>
-                                    <div>
-                                        <Typography
-                                            id="modal-modal-title"
-                                            variant="h6"
-                                            component="h2"
-                                            sx={{
-                                                color: 'var(--foundation-body-body-300, #6B6B6B)',
-                                                textAlign: 'center',
-                                                fontFamily: 'Poppins',
-                                                fontSize: '14px',
-                                                fontStyle: 'normal',
-                                                fontWeight: 400,
-                                                lineHeight: '150%',
-                                            }}
-                                        >
-                                            Please enter your old email address
-                                        </Typography>
-                                    </div>
-                                </div>
-                                <div style={{ marginBottom: '24px', width: '100%' }}>
-                                    <InputField placeholder='Enter Old Email address' type='email' />
-                                </div>
-                                <Button
-                                    onClick={handleOpenInstructionsModal}
-                                    variant="contained"
-                                    sx={mainModalBtnstyle}>
-                                    Continue
-                                </Button>
-                            </Box>
-                        </Modal>
-                    </div>
-                </>
-            )} */}
-            {/* {openInstructionsModal && (
-                <>
-                    <Modal
-                        open={openInstructionsModal}
-                        onClose={handleCloseInstructionsModal}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={instructionsModalStyle}>
-                            <div>
-                                <img src={atForgotPwd} alt="" className={styles.atForgotPwd} />
-                            </div>
-                            <h3 className={styles.instructionsModalTitleText}>
-                                Check your Email
-                            </h3>
-                            <p className={styles.instructionsModalText}>We have sent instructions to the change your email.</p>
-                            <div>
-                                <Button
-                                    // onClick={handleOpenInstructionsModal}
-                                    variant="contained"
-                                    sx={instructionsModalBtnstyle}
-                                >
-                                    Open Email App
-                                </Button>
-                                <Button
-                                    // onClick={handleOpenInstructionsModal}
-                                    variant="outlined"
-                                    sx={instructionsModalOutlinedBtnstyle}
-                                >
-                                    Resend
-                                </Button>
-                            </div>
-                            <div style={{ display: 'flex' }}>
-                                <p style={{ textAlign: 'center', width: '360px' }}>
-                                    <span className={styles.infoText}>
-                                        Did not receive the email? Check your spam filter,{' '}
-                                    </span>
-                                    <span className={styles.infoText}>
-                                        or{' '}
-                                    </span>
-                                    <span className={styles.infoTextLink}>
-                                        try another email address
-                                    </span>
-                                </p>
-                            </div>
-                        </Box>
-                    </Modal>
-                </>
-            )} */}
-            {/* Email Steps End */}
             {openChangePassMainModal && (
                 <>
                     <div>
@@ -518,10 +602,34 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                                         >
                                             Please enter your old password
                                         </Typography>
+                                        <div style={{ marginTop: '20px' }}>
+                                            {errorMessage ? (
+                                                <h4
+                                                    style={{
+                                                        fontWeight: '700',
+                                                        fontSize: '16px',
+                                                        color: 'red',
+                                                        marginBottom: '20px',
+                                                    }}
+                                                >
+                                                    {errorMessage}
+                                                </h4>
+                                            ) : null}
+                                            {loadingAnimation ? (
+                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <span className={styles.loader}></span>
+                                                </div>
+                                            ) : null}
+                                        </div>
                                     </div>
                                 </div>
                                 <div style={{ marginBottom: '24px', width: '100%' }}>
-                                    <InputField placeholder='Enter old password' type='email' />
+                                    <InputField placeholder='Enter old password' type='password'
+                                        value={user.password}
+                                        onChange={(e: { target: { value: string } }) => {
+                                            onUserChange('password', e.target.value);
+                                        }}
+                                    />
                                 </div>
                                 <Button
                                     onClick={handleOpenInstructionsPassModal}
@@ -584,7 +692,120 @@ const Account: React.FC = ({ className, setOpenChangeEmail, setOpenChangePasswor
                     </Modal>
                 </>
             )}
-
+            {openSetNewPassModal && (
+                <>
+                    <div>
+                        <Modal
+                            open={openSetNewPassModal}
+                            onClose={handleCloseNewPassModal}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={mainModalstyle}>
+                                <div style={{ marginBottom: '24px' }}>
+                                    <Typography
+                                        id="modal-modal-title"
+                                        variant="h6"
+                                        component="h2"
+                                        sx={{
+                                            fontFamily: 'Poppins',
+                                            fontSize: '20px',
+                                            fontStyle: 'normal',
+                                            fontWeight: 500,
+                                            lineHeight: '30px',
+                                            paddingBottom: '16px',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        Change password
+                                    </Typography>
+                                    <div>
+                                        <Typography
+                                            id="modal-modal-title"
+                                            variant="h6"
+                                            component="h2"
+                                            sx={{
+                                                // Create new password
+                                                color: '#5448B2',
+                                                fontSize: '18px',
+                                                fontFamily: 'Poppins',
+                                                fontWeight: '500',
+                                                lineHeight: '150%',
+                                                wordWrap: 'break-word',
+                                                textAlign: 'center',
+                                                paddingBottom: '16px',
+                                            }}
+                                        >
+                                            Create new password
+                                        </Typography>
+                                        <Typography
+                                            id="modal-modal-title"
+                                            variant="h6"
+                                            component="h2"
+                                            sx={{
+                                                color: 'var(--foundation-body-body-300, #6B6B6B)',
+                                                textAlign: 'center',
+                                                fontFamily: 'Poppins',
+                                                fontSize: '14px',
+                                                fontStyle: 'normal',
+                                                fontWeight: 400,
+                                                lineHeight: '150%',
+                                            }}
+                                        >
+                                            <span>Your new password must have:{' '}<br></br></span>
+                                            <li>8 to 64 characters{' '}<br></br></li>
+                                            <li>Letters, numbers, and special characters</li>
+                                        </Typography>
+                                        <div style={{ marginTop: '20px' }}>
+                                            {errorMessage ? (
+                                                <h4
+                                                    style={{
+                                                        fontWeight: '700',
+                                                        fontSize: '16px',
+                                                        color: 'red',
+                                                        marginBottom: '10px',
+                                                        textAlign: 'center'
+                                                    }}
+                                                >
+                                                    {errorMessage}
+                                                </h4>
+                                            ) : null}
+                                            {loadingAnimation ? (
+                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <span className={styles.loader}></span>
+                                                </div>
+                                            ) : null}
+                                            {response ? renderResponse() : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ marginBottom: '24px', width: '100%' }}>
+                                    <InputField placeholder='Enter new password' type='password'
+                                        value={user.password}
+                                        onChange={(e: { target: { value: string } }) => {
+                                            onUserChange('password', e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div style={{ marginBottom: '24px', width: '100%' }}>
+                                    <InputField placeholder='Confirm new password' type='password'
+                                        value={user.confirmPassword}
+                                        onChange={(e: { target: { value: string } }) => {
+                                            onUserChange('confirmPassword', e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <Button
+                                    onClick={handleSetNewPasswordSubmit}
+                                    variant="contained"
+                                    sx={mainModalBtnstyle}>
+                                    Submit
+                                </Button>
+                            </Box>
+                        </Modal>
+                    </div>
+                </>
+            )}
             {openContentPrefModal && (
                 <>
                     <Modal
@@ -674,6 +895,7 @@ var mainModalstyle = {
 };
 
 var mainModalBtnstyle = {
+    fontFamily: 'Poppins',
     display: 'flex',
     width: '478px',
     height: '48px',

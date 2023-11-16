@@ -264,11 +264,6 @@ export const Authentication = (props: any) => {
                                     {t('signup.text')}
                                 </button>
                             </div>
-                            {/* <div className={styles.splitLinesDiv}>
-                                <hr className={styles.splitLine} />
-                                <p className={styles.formParagraph}>{t('or.text')}</p>
-                                <hr className={styles.splitLine} />
-                            </div> */}
                         </form>
                     ) : /** Sign in Flow */
                         form === 'signin' ? (

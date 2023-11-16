@@ -56,6 +56,7 @@ export const useAuthStore = create<AuthState>((set) => {
       localStorage.setItem('_id', _id);
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('balance', balance.toString());
+      localStorage.setItem('email', email)
       if (name) {
         localStorage.setItem('name', name !== '' ? name : '');
         set({ isLoggedIn: true, name, balance, email, token, _id, selectedIndex: 0 });
@@ -71,6 +72,7 @@ export const useAuthStore = create<AuthState>((set) => {
       localStorage.removeItem('name');
       localStorage.removeItem('cache');
       localStorage.removeItem('balance');
+      localStorage.removeItem('email');
     },
     setSettingsDropdown: (isOpen: boolean) => {
       set({ settingsDropdown: isOpen });

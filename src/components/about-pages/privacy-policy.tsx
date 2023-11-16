@@ -8,7 +8,7 @@ import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 
 import IconButton from '@mui/material/IconButton/IconButton';
-import { LeftArrow } from '../content-activity/svg-components/LeftArrow';
+import { LeftArrow } from '../push-notifications-page/svg-components/LeftArrow';
 import styles from './styles.module.scss';
 
 

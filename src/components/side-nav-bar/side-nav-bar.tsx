@@ -298,7 +298,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 </p>
                             </div>
                         </Link>
-                        <Link to="/settings/activity" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                        <Link to="/settings/account/activity" reloadDocument={false} style={{ textDecoration: 'none' }}>
                             <div
                                 className={classNames(
                                     `${selectedIndex === 5 ? styles.selected : styles.navLink}`

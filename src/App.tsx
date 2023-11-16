@@ -9,10 +9,11 @@ import { TermsPage } from './components/about-pages/terms-conditions';
 import { ActivityPage } from './components/activity-page/activity-page';
 import { Authentication } from './components/authentication/authentication';
 import ComingSoon from './components/coming-soon/coming-soon';
-import { PushNotificationsPage } from './components/content-activity/push-notifications';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { Home } from './components/home/home';
+import { PrivacySecurityPage } from './components/privacy-security-page/privacy-security-page';
 import { Profile } from './components/profile/profile';
+import { PushNotificationsPage } from './components/push-notifications-page/push-notifications';
 import { VideoProvider } from './components/reusables/VideoContext';
 import { SearchPage } from './components/search-page/search-page';
 import { SetNewPassword } from './components/set-newPassword/set-newPassword';
@@ -20,7 +21,6 @@ import Account from './components/settings-page/account';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
-
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -69,7 +69,8 @@ function App() {
                             <Route path="/comingsoon" element={<ComingSoon />} />
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/settings/account" element={<Account />} />
-                            <Route path="/settings/activity" element={<PushNotificationsPage />} />
+                            <Route path="/settings/account/activity" element={<PushNotificationsPage />} />
+                            <Route path="/settings/account/privacy-settings" element={<PrivacySecurityPage />} />
                             <Route path="/sounds/:soundId" element={<SoundPage />} />
                             {/* <Route path="/hashtags/hashtag=:hashtagId" element={<HashtagsPage />} /> */}
                             <Route path="/about/terms-conditions" element={<TermsPage />} />
