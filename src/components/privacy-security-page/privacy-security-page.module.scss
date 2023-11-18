@@ -446,6 +446,12 @@ h6 {
     border-bottom: 1px solid #DFDFDF;
 }
 
+.card p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .cardNoBorder {
     width: 100%;
     display: flex;
@@ -454,4 +460,66 @@ h6 {
     align-items: center;
     padding-bottom: 8px;
     padding-top: 18px;
+}
+
+.accountCards {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+    cursor: pointer;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.accountCards p {
+    margin-bottom: 0;
+    color: var(--default-body, #222);
+
+    /* H2/Medium */
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    /* 27px */
+}
+
+.contentPrefHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    color: var(--default-body, #222);
+
+    /* H2/Medium */
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    /* 27px */
+
+    margin-bottom: 24px;
+}
+
+.contentPrefHeader h4 {
+    font-size: 18px;
+}
+
+.profileImg {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.unblockBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #5448B2;
+    border-radius: 6px;
+    border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+    background: var(--default-white, #FFF);
 }
