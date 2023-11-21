@@ -39,6 +39,9 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
     const handleLogin = () => {
         navigate('/auth')
     }
+    const handleProfile = () => {
+        navigate('/profile')
+    }
 
 
     const handleFetchProfileInfo = async () => {
@@ -188,6 +191,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
+                                    <MenuItem onClick={handleProfile}>Profile</MenuItem>
                                     <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                                 </Menu>
                             </div>

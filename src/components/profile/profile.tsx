@@ -10,42 +10,59 @@ import { Bookmark } from './svg-components/Bookmark';
 import { Liked } from './svg-components/Liked';
 import { Tagged } from './svg-components/Tagged';
 import { Badge } from './svg-components/Badge';
+import ProfileHeader from './components/profileHeader';
+import EditProfile from './components/editProfile';
+import { ClickAwayListener, Modal } from '@mui/material';
+import FollowModal from './components/FollowModal';
+import LikesModal from './components/LikesModal';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
-    const [activeTab, setActiveTab] = useState("Videos")
+    const [activeTab, setActiveTab] = useState('Videos');
+    const [profileModal, setProfileModal] = useState(false);
+    const [followModal, setFollowModal] = useState(null);
+    const [likesModal, setLikesModal] = useState(false);
     const tabs = [
         {
-            title: "Videos",
-            icon: <VideoIcon active={activeTab === "Videos"} />,
+            title: 'Videos',
+            icon: <VideoIcon active={activeTab === 'Videos'} />,
             key: 1,
         },
         {
-            title: "Private",
-            icon: <Private active={activeTab === "Private"} />,
+            title: 'Private',
+            icon: <Private active={activeTab === 'Private'} />,
             key: 2,
         },
         {
-            title: "Bookmarks",
-            icon: <Bookmark active={activeTab === "Bookmarks"} />,
+            title: 'Bookmarks',
+            icon: <Bookmark active={activeTab === 'Bookmarks'} />,
             key: 3,
         },
         {
-            title: "Liked Videos",
-            icon: <Liked active={activeTab === "Liked Videos"} />,
+            title: 'Liked Videos',
+            icon: <Liked active={activeTab === 'Liked Videos'} />,
             key: 4,
         },
         {
-            title: "Badges",
-            icon: <Badge active={activeTab === "Badges"} />,
+            title: 'Badges',
+            icon: <Badge active={activeTab === 'Badges'} />,
             key: 5,
         },
         {
-            title: "Tagged Posts",
-            icon: <Tagged active={activeTab === "Tagged Posts"} />,
+            title: 'Tagged Posts',
+            icon: <Tagged active={activeTab === 'Tagged Posts'} />,
             key: 6,
         },
-    ]
+    ];
+    const onCancel = () => {
+        setProfileModal(false);
+    };
+    const onSave = () => {
+        setProfileModal(false);
+    };
+    const onFollowModalActive = (tab?: string) => {
+        setFollowModal(tab);
+    };
     return (
         <div className={styles.root}>
             <div className={styles.topBarDiv}>
@@ -60,28 +77,53 @@ export const Profile = (props: any) => {
                         <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                     </div>
                 </div>
+                <Modal open={likesModal} className={styles.likesModal}>
+                    <ClickAwayListener onClickAway={() => setLikesModal(false)}>
+                        <div className={styles.likesModalContainer}>
+                            <LikesModal openModal={()=> setLikesModal(true)} />
+                        </div>
+                    </ClickAwayListener>
+                </Modal>
+                <Modal open={!!followModal} className={styles.likesModal}>
+                    <ClickAwayListener onClickAway={() => setFollowModal(null)}>
+                        <div className={styles.likesModalContainer}>
+                            <FollowModal />
+                        </div>
+                    </ClickAwayListener>
+                </Modal>
+                <Modal open={profileModal} className={styles.modal}>
+                    <ClickAwayListener onClickAway={onCancel}>
+                        <div className={styles.modalContainer}>
+                            <EditProfile onCancel={onCancel} onSave={onSave} />
+                        </div>
+                    </ClickAwayListener>
+                </Modal>
                 <div className={styles.middleSectionDiv}>
+                    <ProfileHeader
+                        onFollowModalActive={onFollowModalActive}
+                        setProfileModal={setProfileModal}
+                        setLikesModal={setLikesModal}
+                    />
                     <div className={styles.tabs}>
-                        {
-                            tabs.map((item) => (
-                                <div
-                                    onClick={() => setActiveTab(item.title)}
-                                    style={{ borderColor: activeTab === item.title ? "#5448B2" : "#DFDFDF" }} className={styles.tab} key={item.key}>
-                                    {item.icon}
-                                </div>
-                            ))
-                        }
+                        {tabs.map((item) => (
+                            <div
+                                onClick={() => setActiveTab(item.title)}
+                                style={{
+                                    borderColor: activeTab === item.title ? '#5448B2' : '#DFDFDF',
+                                }}
+                                className={styles.tab}
+                                key={item.key}
+                            >
+                                {item.icon}
+                            </div>
+                        ))}
                     </div>
                     <div className={styles.contentContainer}>
                         <p className={styles.title}>{activeTab}</p>
                         <div className={styles.posts}>
-                            {
-                                [...new Array(7)].map((item) => (
-                                    <div key={item} className={styles.post}>
-
-                                    </div>
-                                ))
-                            }
+                            {[...new Array(7)].map((item) => (
+                                <div key={item} className={styles.post}></div>
+                            ))}
                         </div>
                     </div>
                 </div>
