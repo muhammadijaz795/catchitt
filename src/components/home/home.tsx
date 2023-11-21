@@ -36,7 +36,7 @@ export const Home = ({ className }: HomeProps) => {
 	const endedIds = useRef(new Set(''));
 	const tab = useRef(1);
 	const page = useRef(1)
-	console.log("page", page.current)
+	console.log("page", token)
 
 	useEffect(() => {
 		if (onePost || location.pathname !== '/home')
@@ -48,29 +48,33 @@ export const Home = ({ className }: HomeProps) => {
 	}, []);
 
 	const handleFetchPosts = useCallback(async (page?: number) => {
-		if (onePost) {
-			setPostData([])
-		}
-
-		let link = isLoggedIn ?
-			`/media-content/videos/feed?page=${page ? page : 1}`
-			: `/media-content/public/videos/feed?page=${page ? page : 1}`
-
-		const res = await fetchInJSON(
-			link,
-			{
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
+		try {
+			if (onePost) {
+				setPostData([])
 			}
-		)
-		console.log(res);
-		if (page != 1)
-			setPostData((prev: []) => [...prev, ...res.data]);
-		else
-			setPostData([...res.data]);
+	
+			let link = isLoggedIn ?
+				`/media-content/videos/feed?page=${page ? page : 1}`
+				: `/media-content/public/videos/feed?page=${page ? page : 1}`
+	
+			const res = await fetchInJSON(
+				link,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+			console.log(res, "res1212");
+			if (page != 1)
+				setPostData((prev: []) => [...prev, ...res.data]);
+			else
+				setPostData([...res.data]);
+		} catch (error) {
+			console.log(error);
+		}
 
 	}, []);
 	const dHandleFetchPosts = useDebounce(handleFetchPosts)

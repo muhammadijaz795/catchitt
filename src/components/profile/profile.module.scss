@@ -20,7 +20,6 @@ h6 {
   margin: 0;
 }
 
-
 .topBarDiv {
   width: 100%;
 }
@@ -65,17 +64,67 @@ h6 {
   padding-top: 0px;
   // margin-top: 25px;
 }
-
+.modal {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  height: 100%;
+  @media (max-width: 968px) {
+    padding: 0;
+  }
+}
+.followModal {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: auto;
+  padding-top: 30px;
+  height: 100%;
+  @media (max-width: 968px) {
+    padding: 0;
+  }
+}
+.modalContainer {
+  max-width: 50%;
+  @media (max-width: 968px) {
+    max-width: 100%;
+  }
+}
+.followModalContainer {
+  width: 50%;
+  @media (max-width: 968px) {
+    max-width: 100%;
+  }
+}
+.likesModal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  height: 100%;
+  @media (max-width: 968px) {
+    padding: 0;
+  }
+}
+.likesModalContainer {
+  @media (max-width: 968px) {
+    max-width: 100%;
+  }
+}
 .tabs {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 30px;
 }
 
 .tab {
   flex: 1;
   height: 40px;
-  border-bottom: 3.5px solid #DFDFDF;
+  border-bottom: 3.5px solid #dfdfdf;
   cursor: pointer;
 }
 

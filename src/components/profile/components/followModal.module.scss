@@ -1,0 +1,129 @@
+.div {
+  align-items: center;
+  border-radius: 8px;
+  background-color: var(--default-white, #fff);
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px;
+}
+@media (max-width: 991px) {
+  .div {
+    padding: 0 20px;
+  }
+}
+
+.div-2 {
+  color: var(--default-body, #222);
+  align-self: center;
+  margin-top: 32px;
+  white-space: nowrap;
+  font: 600 20px/24px Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+}
+@media (max-width: 991px) {
+  .div-2 {
+    white-space: initial;
+  }
+}
+.div-3 {
+  align-self: stretch;
+  display: flex;
+  margin-top: 53px;
+  justify-content: space-between;
+  gap: 1px;
+}
+@media (max-width: 991px) {
+  .div-3 {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 40px;
+  }
+}
+.div-4 {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 0%;
+  flex-direction: column;
+  cursor: pointer;
+  .div-5 {
+    color: var(--foundation-primary-primary-500, #848484);
+    transition: ease-in-out 0.2s;
+    white-space: nowrap;
+    font: 500 16px/19px Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+  }
+  .div-6 {
+    align-self: stretch;
+    background-color: var(--foundation-primary-primary-500, #848484);
+    display: flex;
+    margin-top: 7px;
+    height: 2px;
+    flex-direction: column;
+    transition: ease-in-out 0.2s;
+  }
+  @media (max-width: 991px) {
+    .div-5 {
+      white-space: initial;
+    }
+  }
+}
+.activeTab {
+  .div-6 {
+    align-self: stretch;
+    transition: ease-in-out 0.2s;
+    background-color: var(--foundation-primary-primary-500, #5448b2);
+    display: flex;
+    margin-top: 7px;
+    height: 2px;
+    flex-direction: column;
+  }
+  .div-5 {
+    color: var(--foundation-primary-primary-500, #5448b2);
+    transition: ease-in-out 0.2s;
+    white-space: nowrap;
+    font: 500 16px/19px Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+  }
+}
+
+.div-52 {
+  background-color: #dfdfdf;
+  align-self: stretch;
+  height: 1px;
+  margin: 15px 0 40px;
+}
+@media (max-width: 991px) {
+  .div-52 {
+    max-width: 100%;
+  }
+}
+
+.inputContainer {
+  margin-top: 37px;
+  width: 100%;
+  position: relative;
+  img {
+    position: absolute;
+    left: 18px;
+    top: 17px;
+  }
+}
+.input {
+  align-items: start;
+  border-radius: 6px;
+  border: 1px solid var(--foundation-neutral-neutral-300, #d1d1d1);
+  background-color: white;
+  color: #222;
+  align-self: stretch;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 14px 16px;
+  padding-left: 50px;
+}
+
+@media (max-width: 991px) {
+  .input {
+    max-width: 100%;
+  }
+}
