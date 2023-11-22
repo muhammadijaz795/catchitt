@@ -20,7 +20,7 @@ export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
     const [activeTab, setActiveTab] = useState('Videos');
     const [profileModal, setProfileModal] = useState(false);
-    const [followModal, setFollowModal] = useState(null);
+    const [followModal, setFollowModal] = useState<null | string>(null);
     const [likesModal, setLikesModal] = useState(false);
     const tabs = [
         {
@@ -60,7 +60,7 @@ export const Profile = (props: any) => {
     const onSave = () => {
         setProfileModal(false);
     };
-    const onFollowModalActive = (tab?: string) => {
+    const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
     return (
@@ -80,7 +80,7 @@ export const Profile = (props: any) => {
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
-                            <LikesModal openModal={()=> setLikesModal(true)} />
+                            <LikesModal />
                         </div>
                     </ClickAwayListener>
                 </Modal>
