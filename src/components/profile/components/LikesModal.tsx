@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './likesModal.module.scss';
-function LikesModal(props) {
+
+interface LikesModalProps {}
+function LikesModal(props:LikesModalProps) {
     return (
         <>
             <div className={styles['main-container']}>
