@@ -14,6 +14,10 @@ import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 import styles from './account.module.scss';
+import { DeleteReasonPopup } from './components/delete-reason-popup';
+import changePassIcon from './svg-components/changePassIcon.svg';
+import redRightArrow from './svg-components/redRightArrow.svg';
+import whiteRightArrow from './svg-components/whiteRightArrow.svg';
 
 export interface AccountProps {
     className?: string;
@@ -86,13 +90,12 @@ const Account = ({ className, openModal }: AccountProps) => {
     const token = useAuthStore((state) => state.token);
     const email = useAuthStore((state) => state.email);
 
-    const [openChangeEmailMainModal, setOpenChangeEmailMainModal] = useState(false)
-    const [openInstructionsModal, setOpenInstructionsModal] = useState(false)
-
     const [openChangePassMainModal, setOpenChangePassMainModal] = useState(false)
     const [openInstructionsPassModal, setOpenInstructionsPassModal] = useState(false)
 
     const [openContentPrefModal, setOpenContentPrefModal] = useState(false)
+
+    const [openDeleteAccountMainModal, setOpenDeleteAccountMainModal] = useState(false)
 
     const [openSetNewPassModal, setOpenNewPassModal] = useState(openModal || false)
 
@@ -111,25 +114,6 @@ const Account = ({ className, openModal }: AccountProps) => {
     if (!isLoggedIn) {
         return <Navigate to="/auth" />;
     }
-
-    { /*  Email Modal Start  */ }
-
-    // const handleOpenChangeEmailMainModal = () => {
-    //     setOpenChangeEmailMainModal(true)
-    // }
-    // const handleCloseChangeEmailMainModal = () => {
-    //     setOpenChangeEmailMainModal(false)
-    // }
-
-    // const handleOpenInstructionsModal = () => {
-    //     handleCloseChangeEmailMainModal();
-    //     setOpenInstructionsModal(true)
-    // }
-    // const handleCloseInstructionsModal = () => {
-    //     setOpenInstructionsModal(false)
-    // }
-
-    { /*  Email Modal End  */ }
 
     const handleOpenChangePassMainModal = () => {
         setOpenChangePassMainModal(true)
@@ -166,6 +150,13 @@ const Account = ({ className, openModal }: AccountProps) => {
         handleProfileFetch()
     }
 
+    const handleOpenDeleteAccountMainModal = () => {
+        setOpenDeleteAccountMainModal(true)
+    }
+    const handleCloseDeleteAccountMainModal = () => {
+        setOpenDeleteAccountMainModal(false)
+    }
+
     const handleSignInSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
         const { password } = user;
@@ -182,7 +173,7 @@ const Account = ({ className, openModal }: AccountProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { email, token, _id, balance, name } = responseData.data; // Extract token value from data object
+                const { email, token, _id, balance, username, name } = responseData.data; // Extract token value from data object
                 // const name = responseData.data; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
@@ -191,7 +182,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                     _id: _id,
                     balance: balance,
                 });
-                login(email, token, _id, balance, name); // Call the login function from the Zustand store
+                login(email, token, _id, balance, username, name); // Call the login function from the Zustand store
                 console.log(responseData);
                 handleForgotPasswordSubmit()
                 setLoadingAnimation(false)
@@ -446,19 +437,12 @@ const Account = ({ className, openModal }: AccountProps) => {
                                 <div className={styles.accountCards}
                                     onClick={handleOpenChangePassMainModal}>
                                     <div className={styles.settingName}>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16.334 2.75H7.665C4.644 2.75 2.75 4.889 2.75 7.916V16.084C2.75 19.111 4.635 21.25 7.665 21.25H16.333C19.364 21.25 21.25 19.111 21.25 16.084V7.916C21.25 4.889 19.364 2.75 16.334 2.75Z" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.6884 12.0004C10.6884 13.0234 9.85938 13.8524 8.83637 13.8524C7.81337 13.8524 6.98438 13.0234 6.98438 12.0004C6.98438 10.9774 7.81337 10.1484 8.83637 10.1484H8.83938C9.86038 10.1494 10.6884 10.9784 10.6884 12.0004Z" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M10.6914 12H17.0094V13.852" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M14.1836 13.852V12" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
+                                        <img src={changePassIcon} alt='' />
                                         <p>
                                             Change Password
                                         </p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
                                 </div>
                                 <div className={styles.accountCards}
                                     onClick={() => navigate('/settings/account/privacy-settings')}>
@@ -471,9 +455,22 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             Privacy and Security
                                         </p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
+                                </div>
+                                <div className={styles.accountCards}
+                                    onClick={handleOpenDeleteAccountMainModal}
+                                >
+                                    <div className={styles.settingName}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19.3238 9.46875C19.3238 9.46875 18.7808 16.2037 18.4658 19.0407C18.3158 20.3957 17.4788 21.1898 16.1078 21.2148C13.4988 21.2618 10.8868 21.2648 8.27881 21.2098C6.95981 21.1828 6.13681 20.3788 5.98981 19.0478C5.67281 16.1858 5.13281 9.46875 5.13281 9.46875" stroke="#DE0C0C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M20.708 6.24023H3.75" stroke="#DE0C0C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M17.4386 6.23998C16.6536 6.23998 15.9776 5.68498 15.8236 4.91598L15.5806 3.69998C15.4306 3.13898 14.9226 2.75098 14.3436 2.75098H10.1106C9.53163 2.75098 9.02363 3.13898 8.87363 3.69998L8.63063 4.91598C8.47663 5.68498 7.80063 6.23998 7.01562 6.23998" stroke="#DE0C0C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <p style={{ color: '#DE0C0C' }}>
+                                            Delete account
+                                        </p>
+                                    </div>
+                                    <img src={redRightArrow} alt='' />
                                 </div>
                             </div>
                         </div>
@@ -487,9 +484,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={notificationBell} alt='' />
                                         <p>Push notifications</p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
                                 </div>
                                 <div className={styles.accountCards}
                                 // onClick={handleOpenChangePassMainModal}
@@ -499,9 +494,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={contentIcon} alt='' />
                                         <p>Content preference</p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
                                 </div>
                             </div>
                         </div>
@@ -515,9 +508,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={reportProblem} alt='' />
                                         <p>Report a problem</p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
                                 </div>
                             </div>
                         </div>
@@ -531,27 +522,21 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={seezittLogoIcon} alt='' />
                                         <p>Community guidelines</p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
                                 </div>
                                 <div className={styles.accountCards}>
                                     <div className={styles.settingName} onClick={() => navigate('/about/terms-conditions')}>
                                         <img src={termsConfitionsIcon} alt='' />
                                         <p>Terms and conditions</p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
                                 </div>
                                 <div className={styles.accountCards}>
                                     <div className={styles.settingName} onClick={() => navigate('/about/privacy-policy')}>
                                         <img src={privacyPolicyIcon} alt='' />
                                         <p>Privacy Policy</p>
                                     </div>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 5L15.5 12L8.5 19" stroke="#222222" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
+                                    <img src={whiteRightArrow} alt='' />
                                 </div>
                             </div>
                         </div>
@@ -870,6 +855,23 @@ const Account = ({ className, openModal }: AccountProps) => {
                     </Modal>
                 </>
             )}
+            {openDeleteAccountMainModal && (
+                <>
+                    <Modal
+                        open={openDeleteAccountMainModal}
+                        onClose={handleCloseDeleteAccountMainModal}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={contentPrefModalStyle}>
+                            <DeleteReasonPopup
+                                onSubmit={() => setOpenDeleteAccountMainModal(false)} // Pass the onClose function
+                                // handleOpen={handleOpenConfirmation}
+                                handleClose={handleCloseDeleteAccountMainModal} />
+                        </Box>
+                    </Modal>
+                </>
+            )}
         </>
     );
 };
@@ -881,7 +883,7 @@ var mainModalstyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 524,
+    maxWidth: 524,
     height: 'auto',
     minHeight: 259,
     bgcolor: 'background.paper',
@@ -973,9 +975,9 @@ var contentPrefModalStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 526,
+    maxWidth: 526,
     height: 'auto',
-    maxHeight: 700,
+    maxHeight: 815,
     bgcolor: 'background.paper',
     borderRadius: '8px',
     boxShadow: 0,
@@ -985,4 +987,6 @@ var contentPrefModalStyle = {
     alignItems: 'center',
     gap: '0px',
     overflowY: 'auto',
+    overflowX: 'hidden',
 };
+

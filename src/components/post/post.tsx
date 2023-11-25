@@ -11,11 +11,11 @@ import { useInView } from 'react-intersection-observer';
 import confirmationIcon from '../../assets/confirmationIcon.png';
 import profileIcon from '../../assets/defaultProfileIcon.png';
 import { useAuthStore } from '../../store/authStore';
-import { ReasonReportPopup } from '../reason-report-popup/reason-report-popup';
 import InputField from '../reusables/InputField';
 import VideoPlayer from '../reusables/VideoPlayer';
 import useDebounce from '../reusables/useDebounce';
 import { Comment } from './comment';
+import { ReasonReportPopup } from './components/reason-report-popup/reason-report-popup';
 import styles from './post.module.scss';
 import { PostProps, Post as PostType } from './postTypes';
 
