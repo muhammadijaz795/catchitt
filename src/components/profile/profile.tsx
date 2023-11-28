@@ -15,9 +15,11 @@ import EditProfile from './components/editProfile';
 import { ClickAwayListener, Modal } from '@mui/material';
 import FollowModal from './components/FollowModal';
 import LikesModal from './components/LikesModal';
+import VideoModel from './components/videoModel';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
+    const data2 = useAuthStore();
     const [activeTab, setActiveTab] = useState('Videos');
     const [profileModal, setProfileModal] = useState(false);
     const [followModal, setFollowModal] = useState<null | string>(null);
@@ -26,9 +28,10 @@ export const Profile = (props: any) => {
     const [loading, setLoading] = useState(false)
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
+    const [videoModal, setVideoModal] = useState(false);
 
     useEffect(() => {
-      fetch(`${API_KEY}/profile`, {
+        fetch(`${API_KEY}/profile`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         }).then((res) => res.json()).then((data) => {
@@ -38,8 +41,50 @@ export const Profile = (props: any) => {
             console.log(err);
             setLoading(false)
         })
+
+        fetch(`${API_KEY}/profile/collection`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        }).then((res) => res.json()).then((data) => {
+            console.log("collectons", data);
+        }).catch((err) => {
+            console.log('collectons error', err);
+        })
+
+        fetch(`${API_KEY}/filter/bookmarkedFilters`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        }).then((res) => res.json()).then((data) => {
+            console.log("bookmarkedFilters", data);
+        }).catch((err) => {
+            console.log('bookmarkedFilters error', err);
+        })
     }, [])
     console.log("ProfileData", profileData);
+
+    useEffect(() => {
+        fetch(`${API_KEY}/profile/tagged-videos`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        }).then((res) => res.json()).then((data) => {
+            console.log("tagged-videos", data);
+        }).catch((err) => {
+            console.log('tagged-videos error', err);
+        })
+    }, [])
+
+    useEffect(() => {
+        fetch(`${API_KEY}/profile/:${"6555c50cc3b547e239fbd119"}/liked-videos`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        }).then((res) => res.json()).then((data) => {
+            console.log("liked-videos", data);
+        }).catch((err) => {
+            console.log('liked-videos error', err);
+        })
+    }, [])
+    console.log('find out the id', data2);
+    "6555c50cc3b547e239fbd119"
 
 
     const tabs = [
@@ -63,11 +108,11 @@ export const Profile = (props: any) => {
             icon: <Liked active={activeTab === 'Liked Videos'} />,
             key: 4,
         },
-        {
-            title: 'Badges',
-            icon: <Badge active={activeTab === 'Badges'} />,
-            key: 5,
-        },
+        // {
+        //     title: 'Badges',
+        //     icon: <Badge active={activeTab === 'Badges'} />,
+        //     key: 5,
+        // },
         {
             title: 'Tagged Posts',
             icon: <Tagged active={activeTab === 'Tagged Posts'} />,
@@ -83,6 +128,9 @@ export const Profile = (props: any) => {
     const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
+    const onVideoModal = () => {
+        setVideoModal(!videoModal)
+    }
     return (
         <div className={styles.root}>
             <div className={styles.topBarDiv}>
@@ -118,6 +166,13 @@ export const Profile = (props: any) => {
                         </div>
                     </ClickAwayListener>
                 </Modal>
+                <Modal open={videoModal}>
+                    <ClickAwayListener onClickAway={() => setVideoModal(false)}>
+                        <div className={styles.videoModalContainer}>
+                            <VideoModel onModalClose={() => setVideoModal(false)} />
+                        </div>
+                    </ClickAwayListener>
+                </Modal>
                 <div className={styles.middleSectionDiv}>
                     <ProfileHeader
                         profileData={profileData}
@@ -143,7 +198,13 @@ export const Profile = (props: any) => {
                         <p className={styles.title}>{activeTab}</p>
                         <div className={styles.posts}>
                             {[...new Array(7)].map((item) => (
-                                <div key={item} className={styles.post}></div>
+                                <div key={item} onClick={onVideoModal} className={styles.post}>
+                                    <img src="../../../public/images/Rectangle 28250 (1).png" alt="" />
+                                    <div className={styles.views}>
+                                        <img src="../../../public/images/icons/views.svg" alt="" />
+                                        <p className={styles.viewsText}>14.9k</p>
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     </div>
