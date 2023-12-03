@@ -8,32 +8,39 @@ import EditProfileIcon from '../svg-components/EditProfileIcon';
 import ProfileViewIcon from '../svg-components/ProfileViewIcon';
 import EditButtonIcon from '../svg-components/EditButtonIcon';
 import LikesModal from './LikesModal';
+import { Avatar } from '@mui/material';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
     setLikesModal: (value: boolean) => void;
     onFollowModalActive: (value: string) => void;
+    profileData: any;
 }
 
-const ProfileHeader: FunctionComponent<Props> = ({ setProfileModal, onFollowModalActive, setLikesModal }) => {
+const ProfileHeader: FunctionComponent<Props> = ({
+    setProfileModal,
+    onFollowModalActive,
+    setLikesModal,
+    profileData,
+}) => {
+    console.log('profileData',profileData);
+    
     return (
         <div className={styles.profileHeader}>
             <div className={styles.banner}>
                 <div className={styles.banerIcon}>
                     <EditIcon />
                 </div>
-                <img
-                    className={styles.bannerImg}
-                    src="https://thumbs.dreamstime.com/b/pink-dahlia-flower-details-macro-photo-border-frame-wide-banner-background-message-wedding-background-pink-dahlia-flower-117406512.jpg"
-                    alt="Banner Img"
-                />
+                {profileData?.cover && (
+                    <img className={styles.bannerImg} src={profileData?.cover} alt="Banner Img" />
+                )}
             </div>
             <div className={styles.bottomContainer}>
                 <div className={styles.avatarBox}>
-                    <img
-                        className={styles.avatarImg}
-                        src="https://i.pravatar.cc/300"
-                        alt="Avatar"
+                    <Avatar
+                        style={{ width: '100%', height: '100%' }}
+                        src={profileData?.avatar}
+                        alt={profileData?.name}
                     />
                 </div>
                 <button className={styles.button}>
@@ -43,8 +50,8 @@ const ProfileHeader: FunctionComponent<Props> = ({ setProfileModal, onFollowModa
             </div>
             <div className={styles.pfContent}>
                 <div className={styles.userInfo}>
-                    <p className={styles.boldText}>radwaaly79</p>
-                    <p className={styles.text}>Radwa Aly</p>
+                    <p className={styles.boldText}>{profileData?.username}</p>
+                    <p className={styles.text}>{profileData?.name}</p>
                 </div>
                 <div className={styles.userStats}>
                     <div
@@ -54,7 +61,7 @@ const ProfileHeader: FunctionComponent<Props> = ({ setProfileModal, onFollowModa
                         <p className={styles.boldText}>55</p>
                         <p className={styles.text}>Followers</p>
                     </div>
-                    <div onClick={()=> setLikesModal(true)} className={styles.statContainer}>
+                    <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
                         <p className={styles.boldText}> 32</p>
                         <p className={styles.text}>Likes</p>
                     </div>
@@ -67,17 +74,21 @@ const ProfileHeader: FunctionComponent<Props> = ({ setProfileModal, onFollowModa
                     </div>
                 </div>
                 <div className={styles.links}>
-                    <div className={styles.linkContainer}>
-                        <LinkIcon />
-                        <p className={styles.link}>www.my-website.com</p>
-                    </div>
-                    /
+                    {profileData?.website && (
+                        <>
+                            <div className={styles.linkContainer}>
+                                <LinkIcon />
+                                <p className={styles.link}>{profileData?.website}</p>
+                            </div>
+                            /
+                        </>
+                    )}
                     <div className={styles.linkContainer}>
                         <MailIcon />
-                        <p className={styles.link}>radwaaly@gmail.com</p>
+                        <p className={styles.link}>{profileData?.email}</p>
                     </div>
                 </div>
-                <p className={styles.about}>Passionate about art, life and nature.</p>
+                <p className={styles.about}>{profileData?.bio}</p>
                 <div className={styles.actions}>
                     <button onClick={() => setProfileModal(true)} className={styles.button}>
                         <EditButtonIcon />
