@@ -21,6 +21,7 @@ import Account from './components/settings-page/account';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
+import { PublicProfile } from './components/profile/publicProfile';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -68,6 +69,7 @@ function App() {
                             <Route path="/notifications" element={<ActivityPage />} />
                             <Route path="/comingsoon" element={<ComingSoon />} />
                             <Route path="/profile" element={<Profile />} />
+                            <Route path="/public-profile/:id" element={<PublicProfile />} />
                             <Route path="/settings/account" element={<Account />} />
                             <Route path="/settings/account/activity" element={<PushNotificationsPage />} />
                             <Route path="/settings/account/privacy-settings" element={<PrivacySecurityPage />} />

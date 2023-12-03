@@ -8,6 +8,7 @@ import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import useDebounce from '../reusables/useDebounce';
 import { Follow } from './svg-components/Follow';
 import { Following } from './svg-components/Following';
+import { Link } from 'react-router-dom';
 
 export interface SuggestedActivityProps {
     className?: string;
@@ -254,6 +255,7 @@ export const SuggestedActivity = memo(({
                     <div className={styles.suggestedContent}>
                         {randomAccs.map((account: Account) => (
                             <div key={account._id} className={styles.suggestedItem}>
+                                <Link to={`/public-profile/${account._id}`}>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                     <img
                                         src={account.avatar || defaultProfileIcon}
@@ -264,6 +266,7 @@ export const SuggestedActivity = memo(({
                                         <h4 className={styles.nameText}>{`@${account.name}`}</h4>
                                     </div>
                                 </div>
+                                </Link>
                                 <div className="svgStyle">
                                     <button
                                         className={styles.svgButton}

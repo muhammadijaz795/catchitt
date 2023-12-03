@@ -7,9 +7,12 @@
         height: 285px;
         border-radius: 8px;
         overflow: hidden;
+        background-color: rgb(200, 199, 199);
 
         .bannerImg {
             object-fit: cover;
+            width: 100%;
+            height: 100%;
         }
 
         .banerIcon {
@@ -24,6 +27,7 @@
             cursor: pointer;
         }
     }
+    
 
     .bottomContainer {
         position: relative;
@@ -46,6 +50,7 @@
 
             .avatarImg {
                 width: 100%;
+                height: 100%;
                 object-fit: cover;
 
             }
@@ -63,6 +68,9 @@
             border-radius: 6px;
             background: #5448B2;
             gap: 10px;
+            color: #FFF;
+            font-size: 14px;
+            font-weight: 600;
         }
     }
 
@@ -114,6 +122,7 @@
             display: flex;
             gap: 16px;
             margin-top: 24px;
+
             .button {
                 display: inline-flex;
                 height: 40px;
@@ -124,10 +133,17 @@
                 border-radius: 6px;
                 background: #5448B2;
                 gap: 10px;
+                color: #FFF;
+                font-size: 14px;
+                font-weight: 600;
+
             }
+
             .button2 {
                 display: inline-flex;
                 height: 40px;
+                font-size: 14px;
+                font-weight: 600;
                 padding: 0px 12px;
                 justify-content: center;
                 align-items: center;
@@ -136,9 +152,25 @@
                 background: white;
                 gap: 10px;
                 color: #5448B2;
-                border: 1.5px solid  #5448B2
+                border: 1.5px solid #5448B2
             }
         }
+    }
+
+    .button3 {
+        display: inline-flex;
+        height: 40px;
+        padding: 0px 12px;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        gap: 10px;
+        color: #5448B2;
+        border: 0;
+        border-radius: 6px;
+        background: var(--foundation-primary-primary-50, #EEEDF7);
+        position: relative !important;
+        // display: block;
     }
 
     .boldText {
@@ -170,6 +202,7 @@
     }
 
 }
+
 .followModal {
     display: flex;
     align-items: flex-start;
@@ -177,13 +210,55 @@
     overflow: auto;
     padding-top: 30px;
     height: 100%;
+
     @media (max-width: 968px) {
-      padding: 0;
+        padding: 0;
     }
-  }
-  .modalContainer {
+}
+
+.modalContainer {
     max-width: 50%;
+
     @media (max-width: 968px) {
-      max-width: 100%;
+        max-width: 100%;
     }
-  }
+}
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0%;
+    display: flex;
+    width: 206px;
+    height: 128px;
+    padding: 8px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 8px;
+    background: var(--default-white, #FFF);
+    box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.08);
+    margin-top: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--default-body, #222);
+}
+
+.dropdown>div {
+    height: 56px;
+    width: 174px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+}
+
+.dropdown>div:hover,
+.dropdown2>div:hover {
+    background-color: lightgray;
+}
+
+.dropdown img {
+    height: 24px;
+    width: 24px;
+}
