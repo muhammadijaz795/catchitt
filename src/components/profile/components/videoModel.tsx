@@ -4,9 +4,11 @@ import VideoPlayer from '../../reusables/VideoPlayer'
 import ReactHlsPlayer from 'react-hls-player'
 interface Props {
     onModalClose: any,
-    info: any
+    info: any,
+    report: any
+    block: any
 }
-function VideoModel({ onModalClose, info }: Props) {
+function VideoModel({ onModalClose, info, report, block }: Props) {
     //For Images Ref.
     const [like, setLike] = useState(false)
     const [fvrt, setFvrt] = useState(false)
@@ -25,7 +27,7 @@ function VideoModel({ onModalClose, info }: Props) {
     //     playerRef.current.controls = !playerRef.current.controls;
     // }
 
-    const timeConverter = (time:any)  => {
+    const timeConverter = (time: any) => {
         const timestamp = time;
         const date = new Date(timestamp);
         const year = date.getFullYear();
@@ -34,6 +36,7 @@ function VideoModel({ onModalClose, info }: Props) {
         let createdTime = `${day}-${month}-${year}`
         return createdTime
     }
+
     return (
         <div className={style.div}>
             <div className={style['video-sec']}>
@@ -158,11 +161,11 @@ function VideoModel({ onModalClose, info }: Props) {
                         {
                             more ?
                                 <div className={style['dropdown']}>
-                                    <div >
+                                    <div onClick={() => report(info)} >
                                         <img src="../../../../public/images/icons/Group (3).svg" alt="" />
                                         <p className={style['text5']}>Report</p>
                                     </div>
-                                    <div>
+                                    <div onClick={() => block(info)}>
                                         <img src="../../../../public/images/icons/Group (4).svg" alt="" />
                                         <p className={style['text5']}>Block</p>
                                     </div>
