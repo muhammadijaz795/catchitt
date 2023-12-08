@@ -1,23 +1,21 @@
+import { ClickAwayListener, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
+import PopupModalForVideoPlayer from '../reusables/PopupModalForVideoPlayer';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
-import styles from './profile.module.scss';
-import { VideoIcon } from './svg-components/VideoIcon';
-import { Liked } from './svg-components/Liked';
-import { Tagged } from './svg-components/Tagged';
-import EditProfile from './components/editProfile';
-import { ClickAwayListener, Modal } from '@mui/material';
 import FollowModal from './components/FollowModal';
 import LikesModal from './components/LikesModal';
-import PublicProfileHeader from './components/publicProfileHeader';
-import { useParams } from 'react-router-dom';
-import VideoModel from './components/videoModel';
-import ReasonOfReport from './components/reasonOfReport';
-import BlockUser from './components/blockUser';
+import EditProfile from './components/editProfile';
 import { PrivatePosts } from './components/privatePosts';
+import PublicProfileHeader from './components/publicProfileHeader';
 import VideoesMaping from './components/videoesMaping';
+import styles from './profile.module.scss';
+import { Liked } from './svg-components/Liked';
+import { Tagged } from './svg-components/Tagged';
+import { VideoIcon } from './svg-components/VideoIcon';
 
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -135,36 +133,6 @@ export const PublicProfile = (props: any) => {
                         </div>
                     </ClickAwayListener>
                 </Modal>
-                <Modal open={videoModal}>
-                    <ClickAwayListener onClickAway={() => setVideoModal(false)}>
-                        <div className={styles.videoModalContainer}>
-                            <VideoModel
-                                block={(video: any) => {
-                                    setBlockPopup(true)
-                                    setActiveVideo(video)
-                                }}
-                                report={(video: any) => {
-                                    setReportPopup(true)
-                                    setActiveVideo(video)
-                                }}
-                                info={videoModalInfo} onModalClose={() => setVideoModal(false)} />
-                        </div>
-                    </ClickAwayListener>
-                </Modal>
-                <Modal open={reportPopup} className={styles.reportPopupParent}>
-                    <ClickAwayListener onClickAway={() => setReportPopup(false)}>
-                        <div >
-                            <ReasonOfReport video={activeVideo} onclose={() => setReportPopup(false)} />
-                        </div>
-                    </ClickAwayListener>
-                </Modal>
-                <Modal open={blockPopup} className={styles.blockPopupParent}>
-                    <ClickAwayListener onClickAway={() => setBlockPopup(false)}>
-                        <div >
-                            <BlockUser onclose2={() => setBlockPopup(false)} />
-                        </div>
-                    </ClickAwayListener>
-                </Modal>
                 <div className={styles.middleSectionDiv}>
                     <PublicProfileHeader
                         profileData={profileData}
@@ -200,6 +168,7 @@ export const PublicProfile = (props: any) => {
                     </div>
                 </div>
             </div>
+            <PopupModalForVideoPlayer onReportClose={() => setReportPopup(false)} onBlockClose={() => setBlockPopup(false)} openBlock={blockPopup} openReport={reportPopup} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
         </div>
     );
 };

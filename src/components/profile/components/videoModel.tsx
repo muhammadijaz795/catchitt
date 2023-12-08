@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import style from './videoModel.module.scss'
-import VideoPlayer from '../../reusables/VideoPlayer'
-import ReactHlsPlayer from 'react-hls-player'
+import defaultProfileIcon from '../../../assets/defaultProfileIcon.png'
 interface Props {
     onModalClose: any,
     info: any,
@@ -14,19 +13,6 @@ function VideoModel({ onModalClose, info, report, block }: Props) {
     const [fvrt, setFvrt] = useState(false)
     const [share, setShare] = useState(false)
     const [more, setMore] = useState(false)
-    const playerRef = useRef<any>();
-    function playVideo() {
-        playerRef.current.play();
-    }
-
-    function pauseVideo() {
-        playerRef.current.pause();
-    }
-
-    // function toggleControls() {
-    //     playerRef.current.controls = !playerRef.current.controls;
-    // }
-
     const timeConverter = (time: any) => {
         const timestamp = time;
         const date = new Date(timestamp);
@@ -40,24 +26,12 @@ function VideoModel({ onModalClose, info, report, block }: Props) {
     return (
         <div className={style.div}>
             <div className={style['video-sec']}>
-                {/* <ReactHlsPlayer
-                        src={'../../../../public/SampleVideo_1280x720_2mb.mp4'}
-                        src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-                        src={'https://media.istockphoto.com/id/482031426/video/melting-ice.mp4?s=mp4-640x640-is&k=20&c=57j7D8zFEa1o5IzLsNaOkXqBzFVWnKkgAs_19BW2Bn8='}
-                        src={'https://youtu.be/LekqDjknArc?si=4wRA3lIxsCXLJfyw'}
-                        controls={true}
-                        width="100%"
-                        playerRef={playerRef}
-                        height={500}
-                        loop
-                        autoPlay
-                        /> */}
                 <video loop={true} controls={false} autoPlay={true} width='300px' src={info.reducedVideoUrl} />
             </div>
             <div className={style['cotent-sec']}>
                 <img onClick={onModalClose} className={style['close-btn-img']} src="../../../../public/images/icons/Close Square.svg" alt="" />
                 <div className={style['info-sec']}>
-                    <img style={{ borderRadius: '50%' }} src={info.user.avatar} alt="" />
+                    <img style={{ borderRadius: '50%' }} src={info.user.avatar || defaultProfileIcon} alt="" />
                     <div style={{ marginLeft: '16px' }}>
                         <p className={style['name']}>{info.user.name}</p>
                         <div className='d-flex' >

@@ -1,0 +1,32 @@
+.story {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.story>img {
+    width: 67px;
+    height: 67px;
+    border-radius: 50%;
+    border: 1px solid #641A92;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.nextArrow {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    right: 7%;
+    cursor: pointer;
+}
+.prevArrow {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    left: 3%;
+    cursor: pointer;
+    transform: rotate(180deg);
+}
