@@ -22,6 +22,8 @@ import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
 import { PublicProfile } from './components/profile/publicProfile';
+import Discover from './components/discover/discover';
+import { AllVideos } from './components/discover/components/allVideosPage';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -78,8 +80,9 @@ function App() {
                             <Route path="/about/terms-conditions" element={<TermsPage />} />
                             <Route path="/about/community-guidelines" element={<CommunityPage />} />
                             <Route path="/about/privacy-policy" element={<PrivacyPage />} />
-                            <Route path="/SearchPage/:query/:tab" element={<SearchPage />}
-                            />
+                            <Route path="/SearchPage/:query/:tab" element={<SearchPage />}    />
+                            <Route path="/discover" element={<Discover />} />
+                            <Route path="/videos/:id" element={<AllVideos />} />
                         </Routes>
                     </Router>
                 </VideoProvider>
