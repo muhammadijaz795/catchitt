@@ -11,6 +11,8 @@ interface Props {
     onFollowModalActive: (value: string) => void;
     profileData: any;
     public: boolean;
+    openReport:any,
+    openBlock:any
 }
 
 const PublicProfileHeader: FunctionComponent<Props> = ({
@@ -18,6 +20,8 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     onFollowModalActive,
     setLikesModal,
     profileData,
+    openReport,
+    openBlock
 }) => {
     const [dropdown, setDropdown] = useState(false);
     return (
@@ -97,11 +101,11 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                         />
                         {dropdown ? (
                             <div className={styles['dropdown']}>
-                                <div>
+                                <div onClick={openReport}>
                                     <img src="../../../../public/images/icons/report.svg" alt="" />
                                     <p className={styles['text5']}>Report</p>
                                 </div>
-                                <div>
+                                <div onClick={openBlock}>
                                     <img src="../../../../public/images/icons/block.svg" alt="" />
                                     <p className={styles['text5']}>Block</p>
                                 </div>

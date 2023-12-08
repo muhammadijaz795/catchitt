@@ -1,22 +1,21 @@
+import { ClickAwayListener, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
+import PopupModalForVideoPlayer from '../reusables/PopupModalForVideoPlayer';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
-import styles from './profile.module.scss';
-import { VideoIcon } from './svg-components/VideoIcon';
-import { Private } from './svg-components/Private';
-import { Bookmark } from './svg-components/Bookmark';
-import { Liked } from './svg-components/Liked';
-import { Tagged } from './svg-components/Tagged';
-import { Badge } from './svg-components/Badge';
-import ProfileHeader from './components/profileHeader';
-import EditProfile from './components/editProfile';
-import { ClickAwayListener, Modal } from '@mui/material';
 import FollowModal from './components/FollowModal';
 import LikesModal from './components/LikesModal';
+import EditProfile from './components/editProfile';
+import { PrivatePosts } from './components/privatePosts';
 import PublicProfileHeader from './components/publicProfileHeader';
-import { useParams } from 'react-router-dom';
+import VideoesMaping from './components/videoesMaping';
+import styles from './profile.module.scss';
+import { Liked } from './svg-components/Liked';
+import { Tagged } from './svg-components/Tagged';
+import { VideoIcon } from './svg-components/VideoIcon';
 
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -29,12 +28,17 @@ export const PublicProfile = (props: any) => {
     const [profileData, setProfileData] = useState<any>(null);
     const [videosData, setVideosData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
+    const [videoModalInfo, setVideoModalInfo] = useState({})
+    const [reportPopup, setReportPopup] = useState(false)
+    const [blockPopup, setBlockPopup] = useState(false)
+    const [activeVideo, setActiveVideo] = useState()
+
+
+
+
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
     const [videoModal, setVideoModal] = useState(false);
-    console.log('====================================');
-    console.log('params', params);
-    console.log('====================================');
     useEffect(() => {
         fetch(`${API_KEY}/profile/${params.id}`, {
             method: 'GET',
@@ -90,9 +94,10 @@ export const PublicProfile = (props: any) => {
     const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
-    const onVideoModal = () => {
-        setVideoModal(!videoModal);
-    };
+    const onVideoModal = (video: any) => {
+        setVideoModal(!videoModal)
+        setVideoModalInfo(video)
+    }
     return (
         <div className={styles.root}>
             <div className={styles.topBarDiv}>
@@ -135,6 +140,8 @@ export const PublicProfile = (props: any) => {
                         setProfileModal={setProfileModal}
                         setLikesModal={setLikesModal}
                         public
+                        openReport={() => setReportPopup(true)}
+                        openBlock={() => setBlockPopup(true)}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -152,53 +159,16 @@ export const PublicProfile = (props: any) => {
                     </div>
                     <div className={styles.contentContainer}>
                         <p className={styles.title}>{activeTab}</p>
-                        {activeTab === 'Videos' ? (
-                            <div className={styles.posts}>
-                                {videosData &&
-                                    videosData.map((item: any) => (
-                                        <div
-                                            key={item}
-                                            onClick={onVideoModal}
-                                            className={styles.post}
-                                        >
-                                            <img
-                                                className={styles.thumbnail}
-                                                src={item?.thumbnailUrl}
-                                                alt=""
-                                            />
-                                            <div className={styles.views}>
-                                                <img
-                                                    src="../../../public/images/icons/views.svg"
-                                                    alt=""
-                                                />
-                                                <p className={styles.viewsText}>14.9k</p>
-                                            </div>
-                                        </div>
-                                    ))}
-
-                            </div>
-                        ) : null}
+                        {activeTab === 'Videos' ?
+                            <VideoesMaping videos={videosData} openVideoModal={onVideoModal} />
+                            : null}
                         {activeTab !== 'Videos' ? (
-                            <div className={styles.privatepost}>
-                                <img
-                                    style={{ marginTop: 48 }}
-                                    src="../../../public/images/icons/lock.svg"
-                                    alt=""
-                                />
-                                <p style={{ marginTop: 15 }} className={styles.privatevideostext}>
-                                    This user's tagged posts are private
-                                </p>
-                                <p
-                                    style={{ marginBottom: 78 }}
-                                    className={styles.privatevideostext}
-                                >
-                                    Tagged posts of sarasaid171 are currently hidden
-                                </p>
-                            </div>
+                            < PrivatePosts />
                         ) : null}
                     </div>
                 </div>
             </div>
+            <PopupModalForVideoPlayer onReportClose={() => setReportPopup(false)} onBlockClose={() => setBlockPopup(false)} openBlock={blockPopup} openReport={reportPopup} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
         </div>
     );
 };

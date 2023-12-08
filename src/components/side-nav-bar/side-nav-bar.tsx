@@ -147,7 +147,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={styles.linkWord}>Chat (Coming Soon)</p>
                     </div>
                 </Link>
-                <Link to="/comingsoon" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
                     <div
                         className={classNames(

@@ -9,6 +9,8 @@ import { TermsPage } from './components/about-pages/terms-conditions';
 import { ActivityPage } from './components/activity-page/activity-page';
 import { Authentication } from './components/authentication/authentication';
 import ComingSoon from './components/coming-soon/coming-soon';
+import { AllVideos } from './components/discover/components/allVideosPage';
+import Discover from './components/discover/discover';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { Home } from './components/home/home';
 import { PrivacySecurityPage } from './components/privacy-security-page/privacy-security-page';
@@ -81,8 +83,9 @@ function App() {
                             <Route path="/about/terms-conditions" element={<TermsPage />} />
                             <Route path="/about/community-guidelines" element={<CommunityPage />} />
                             <Route path="/about/privacy-policy" element={<PrivacyPage />} />
-                            <Route path="/SearchPage/:query/:tab" element={<SearchPage />}
-                            />
+                            <Route path="/SearchPage/:query/:tab" element={<SearchPage />} />
+                            <Route path="/discover" element={<Discover />} />
+                            <Route path="/videos/:id" element={<AllVideos />} />
                         </Routes>
                     </Router>
                 </VideoProvider>

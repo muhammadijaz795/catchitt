@@ -16,6 +16,9 @@ import { ClickAwayListener, Modal } from '@mui/material';
 import FollowModal from './components/FollowModal';
 import LikesModal from './components/LikesModal';
 import VideoModel from './components/videoModel';
+import ReasonOfReport from './components/reasonOfReport';
+import BlockUser from './components/blockUser';
+import VideoesMaping from './components/videoesMaping';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -34,6 +37,9 @@ export const Profile = (props: any) => {
     const [usertaggedVideos, setUsertaggedVideos] = useState([])
     const [bookmarkVideos, setbookmarkVideos] = useState([])
     const [videoModalInfo, setVideoModalInfo] = useState({})
+    const [reportPopup, setReportPopup] = useState(false)
+    const [blockPopup, setBlockPopup] = useState(false)
+    const [activeVideo, setActiveVideo] = useState()
 
     useEffect(() => {
         fetch(`${API_KEY}/profile`, {
@@ -161,7 +167,7 @@ export const Profile = (props: any) => {
     const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
-    const onVideoModal = (video:any) => {
+    const onVideoModal = (video: any) => {
         setVideoModal(!videoModal)
         setVideoModalInfo(video)
     }
@@ -203,7 +209,30 @@ export const Profile = (props: any) => {
                 <Modal open={videoModal}>
                     <ClickAwayListener onClickAway={() => setVideoModal(false)}>
                         <div className={styles.videoModalContainer}>
-                            <VideoModel info={videoModalInfo} onModalClose={() => setVideoModal(false)} />
+                            <VideoModel
+                                block={(video: any) => {
+                                    setBlockPopup(true)
+                                    setActiveVideo(video)
+                                    console.log('activevideo', activeVideo);
+
+                                }}
+                                report={() => setReportPopup(true)}
+                                info={videoModalInfo}
+                                onModalClose={() => setVideoModal(false)} />
+                        </div>
+                    </ClickAwayListener>
+                </Modal>
+                <Modal open={reportPopup} className={styles.reportPopupParent}>
+                    <ClickAwayListener onClickAway={() => setReportPopup(false)}>
+                        <div >
+                            <ReasonOfReport video={activeVideo} onclose={() => setReportPopup(false)} />
+                        </div>
+                    </ClickAwayListener>
+                </Modal>
+                <Modal open={blockPopup} className={styles.blockPopupParent}>
+                    <ClickAwayListener onClickAway={() => setBlockPopup(false)}>
+                        <div >
+                            <BlockUser onclose2={() => setBlockPopup(false)} />
                         </div>
                     </ClickAwayListener>
                 </Modal>
@@ -228,112 +257,23 @@ export const Profile = (props: any) => {
                             </div>
                         ))}
                     </div>
+
+                    {/* Videoes Maping */}
                     <div className={styles.contentContainer}>
                         <p className={styles.title}>{activeTab}</p>
                         <div className={styles.posts}>
                             {activeTab === 'Videos' ?
-                                <div className={styles.posts}>
-                                    {userVideos &&
-                                        userVideos.map((item: any) => (
-                                            <div
-                                                key={item}
-                                                onClick={()=>onVideoModal(item)}
-                                                className={styles.post}
-                                            >
-                                                <img
-                                                    className={styles.thumbnail}
-                                                    src={item?.thumbnailUrl}
-                                                    alt=""
-                                                />
-                                                <div className={styles.views}>
-                                                    <img
-                                                        src="../../../public/images/icons/views.svg"
-                                                        alt=""
-                                                    />
-                                                    <p className={styles.viewsText}>{item.views}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-
-                                </div>
+                                <VideoesMaping videos={userVideos} openVideoModal={onVideoModal} />
                                 : null}
                             {activeTab === 'Liked Videos' ?
-                                <div className={styles.posts}>
-                                    {userlikedVideos &&
-                                        userlikedVideos.map((item: any) => (
-                                            <div
-                                                key={item}
-                                                onClick={()=>onVideoModal(item)}
-                                                className={styles.post}
-                                            >
-                                                <img
-                                                    className={styles.thumbnail}
-                                                    src={item?.thumbnailUrl}
-                                                    alt=""
-                                                />
-                                                <div className={styles.views}>
-                                                    <img
-                                                        src="../../../public/images/icons/views.svg"
-                                                        alt=""
-                                                    />
-                                                    <p className={styles.viewsText}>{item.views}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-
-                                </div>
+                                <VideoesMaping videos={userlikedVideos} openVideoModal={onVideoModal} />
                                 : null}
                             {activeTab === 'Bookmarks' ?
-                                <div className={styles.posts}>
-                                    {bookmarkVideos &&
-                                        bookmarkVideos.map((item: any) => (
-                                            <div
-                                                key={item}
-                                                onClick={()=>onVideoModal(item)}
-                                                className={styles.post}
-                                            >
-                                                <img
-                                                    className={styles.thumbnail}
-                                                    src={item?.thumbnailUrl}
-                                                    alt=""
-                                                />
-                                                <div className={styles.views}>
-                                                    <img
-                                                        src="../../../public/images/icons/views.svg"
-                                                        alt=""
-                                                    />
-                                                    <p className={styles.viewsText}>{item.views}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-
-                                </div>
+                                <VideoesMaping videos={bookmarkVideos} openVideoModal={onVideoModal} />
                                 : null}
                             {activeTab === 'Tagged Posts' ?
-                                <div className={styles.posts}>
-                                    {usertaggedVideos &&
-                                        usertaggedVideos.map((item: any) => (
-                                            <div
-                                                key={item}
-                                                onClick={()=>onVideoModal(item)}
-                                                className={styles.post}
-                                            >
-                                                <img
-                                                    className={styles.thumbnail}
-                                                    src={item?.thumbnailUrl}
-                                                    alt=""
-                                                />
-                                                <div className={styles.views}>
-                                                    <img
-                                                        src="../../../public/images/icons/views.svg"
-                                                        alt=""
-                                                    />
-                                                    <p className={styles.viewsText}>{item.views}</p>
-                                                </div>
-                                            </div>
-                                        ))}
+                                <VideoesMaping videos={usertaggedVideos} openVideoModal={onVideoModal} />
 
-                                </div>
                                 : null}
                         </div>
                     </div>

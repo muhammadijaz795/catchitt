@@ -1,0 +1,129 @@
+.parent {
+    width: 359px;
+    border-radius: 8px;
+    background: #FFF;
+    padding: 24px;
+}
+
+.title {
+    color: var(--default-body, #222);
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 21.6px */
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.desc {
+    color: var(--default-body, #222);
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    /* 21px */
+    margin-bottom: 24px;
+    padding: 0px 6px;
+}
+
+.block {
+    width: 100%;
+    height: 48px;
+    padding: 0% 12px;
+    border-radius: 6px;
+    background: var(--Warning, #DE0C0C);
+    color: var(--default-white, #FFF);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    margin-bottom: 16px;
+}
+
+.cancel {
+    width: 100%;
+    height: 48px;
+    padding: 0% 12px;
+    border-radius: 6px;
+    border: 1px solid var(--foundation-body-body-200, #999);
+    color: var(--foundation-body-body-200, #999);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.parent2 {
+    width: 433px;
+    height: 222px;
+    padding: 32px;
+    background-color: #FFF;
+    border-radius: 8px;
+}
+
+.parent2>p:nth-child(1),
+.parent3>p:nth-child(1) {
+    color: var(--default-body, #222);
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    text-align: center;
+}
+
+.parent2>p:nth-child(2),
+.parent3>p:nth-child(3) {
+    color: var(--default-body, #222);
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    margin: 32px 0px;
+}
+
+.parent2 button,
+.parent3 button {
+    width: 100%;
+    height: 48px;
+    border-radius: 6px;
+    background: var(--foundation-primary-primary-500, #5448B2);
+    color: var(--default-white, #FFF);
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.parent3 {
+    width: 433px;
+    height: 419px;
+    padding: 32px;
+    border-radius: 8px;
+    background-color: #FFF;
+}
+
+.parent3 img {
+    width: 165px;
+    height: 165px;
+    margin: auto;
+    display: block;
+    margin-top: 32px;
+}
+
+.modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
