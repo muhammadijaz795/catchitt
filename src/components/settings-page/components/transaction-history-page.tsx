@@ -1,27 +1,18 @@
-import { Box, IconButton, Modal } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import closeIcon from '../../../assets/closeIcon.png';
-import dangerIcon from '../../../assets/dangerIcon.png';
-import questionBlackIcon from '../../../assets/questionBlackIcon.png';
-import reportEmailIcon from '../../../assets/reportEmailIcon.png';
 import { useAuthStore } from "../../../store/authStore";
 import { LeftArrow } from '../../push-notifications-page/svg-components/LeftArrow';
-import FaqContainer from "../../reusables/FaqContainer/FaqContainer";
-import Calculator from "../../reusables/calculator/Calculator";
 import { SideNavBar } from "../../side-nav-bar/side-nav-bar";
 import { SuggestedActivity } from "../../suggested-activity/suggested-activity";
 import { TopBar } from "../../top-bar/top-bar";
-import coin from '../svg-components/coin.svg';
-import whiteRightArrow from '../svg-components/whiteRightArrow.svg';
-import styles from './balance-page.module.scss';
+import styles from './transaction-history-page.module.scss';
 
 export interface TransactionHistoryPageProps {
     className?: string;
 }
 
 const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
-
     const API_KEY = process.env.VITE_API_URL;
     const { login, balance } = useAuthStore();
 
@@ -29,6 +20,8 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
     const [responseResult, setResponseResult] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [loadingAnimation, setLoadingAnimation] = useState(false);
+
+    const [revenueData, setRevenueData] = useState<any>([])
 
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
     const token = useAuthStore((state) => state.token);
@@ -63,8 +56,36 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
         setSettingsDropdown(true)
     };
 
+
+    const handleFetchRevenueData = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/revenue/`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            // Format the currentMonth value
+            const currentMonthDate = new Date(data.data.currentMonth);
+            const formattedCurrentMonth = `${currentMonthDate.getMonth() + 1}/${currentMonthDate.getFullYear()}`;
+
+            setRevenueData({
+                ...data.data,
+                currentMonth: formattedCurrentMonth,
+            });
+            // setRevenueData(data.data);
+            console.log('Fetched revenue:', JSON.stringify(data.data));
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    };
+
+
     useEffect(() => {
         setIndex(4)
+        handleFetchRevenueData()
     }, [])
 
     return (
@@ -91,184 +112,25 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
                                 </IconButton>
                                 <h4>Transactions History</h4>
                             </div>
-                            <div className={styles.suggestedContent}>
-                                <div
-                                    style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                                    <h4 className={styles.sectionTitle}>Coin Balance</h4>
-                                    <div
-                                        style={{ marginTop: '30px', textAlign: 'left', display: 'flex' }}>
-                                        <img src={coin} alt='' style={{ width: '39px' }} />
-                                        <h4 className={styles.userCoinsAmount}>{balance}</h4>
-                                        <div className={styles.btnDiv}>
-                                            <button className={styles.viewTransactionsBtn}
-                                            >
-                                                View transaction History
-                                            </button>
+                            <div className={styles.tableHeader}>
+                                <h4 className={styles.sectionTitle}>Time & Date</h4>
+                                <h4 className={styles.sectionTitle}>Type</h4>
+                                <h4 className={styles.sectionTitle}>Amount</h4>
+                            </div>
+                            {revenueData.userGiftsTransactions?.map((transaction: any, index: number) => {
+                                const formattedDate = new Date(transaction.createdTime).toLocaleDateString('en-GB');
+                                const formattedTime = new Date(transaction.createdTime).toLocaleTimeString('en-GB');
+
+                                return (
+                                    <div>
+                                        <div key={index} className={styles.tableField}>
+                                            <h4 className={styles.sectionTitle} style={{ textAlign: 'start' }}>{`${formattedDate} ${formattedTime}`}</h4>
+                                            <h4 className={styles.sectionTitle}>{transaction.type}</h4>
+                                            <h4 className={styles.sectionTitle} style={{ textAlign: 'end' }}>QAR {transaction.amount}</h4>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={styles.settingsWrapper}>
-                            <div className={styles.suggestedContent}>
-                                <h4 className={styles.sectionTitle}>Recharge</h4>
-                                <div style={{ width: '100%' }}>
-                                    <>
-                                        <Box sx={defModalStyle}>
-                                            <div className={styles.warningMsg}>
-                                                <p>Pricing will change depending on payment method.</p>
-                                                <img src={dangerIcon} alt='' />
-                                            </div>
-                                            <Box sx={pricesBox}>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        65</div>
-                                                    <div className={styles.coinsPrice}>QAR 3.69</div>
-                                                </div>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        130</div>
-                                                    <div className={styles.coinsPrice}>QAR 7.29</div>
-                                                </div>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        330</div>
-                                                    <div className={styles.coinsPrice}>QAR 17.99</div>
-                                                </div>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        400</div>
-                                                    <div className={styles.coinsPrice}>QAR 20.99</div>
-                                                </div>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        525</div>
-                                                    <div className={styles.coinsPrice}>QAR 29.29</div>
-                                                </div>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        660</div>
-                                                    <div className={styles.coinsPrice}>QAR 36.99</div>
-                                                </div>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        800</div>
-                                                    <div className={styles.coinsPrice}>QAR 44.99</div>
-                                                </div>
-                                                <div className={styles.price}>
-                                                    <div className={styles.coinsAmount}>
-                                                        <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px' }} />
-                                                        1321</div>
-                                                    <div className={styles.coinsPrice}>QAR 74.29</div>
-                                                </div>
-                                                <div className={styles.price} onClick={handleOpenCalculatorModal}>
-                                                    <div className={styles.coinsAmount} >
-                                                        Custom</div>
-                                                    <div className={styles.coinsPriceCustom}>Larger amounts<br></br> supported</div>
-                                                </div>
-                                            </Box>
-                                            <div className={styles.giftsBottomDiv} style={{ marginBottom: '32px' }}>
-                                                <button className={styles.rechargeBtn}>
-                                                    <p>Recharge</p>
-                                                </button>
-                                            </div>
-                                            {openCalculatorModal && (
-                                                <div>
-                                                    <Modal
-                                                        open={openCalculatorModal}
-                                                        onClose={handleCloseCalculatorModal}
-                                                        aria-labelledby="modal-modal-title"
-                                                        aria-describedby="modal-modal-description"
-                                                    >
-                                                        <Box sx={CustomCoinsModalStyle}>
-                                                            <div className={styles.rechargeModalHeader}>
-                                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '60%' }}>
-                                                                    <p>Custom</p>
-                                                                    <IconButton onClick={handleCloseCalculatorModal}>
-                                                                        <img src={closeIcon} alt='' style={{ width: '20px', height: '20px' }} />
-                                                                    </IconButton>
-                                                                </div>
-                                                            </div>
-                                                            <Box sx={{ marginBottom: '32px' }}>
-                                                                <Calculator />
-                                                            </Box>
-                                                            <div className={styles.giftsBottomDiv2} style={{ marginBottom: '32px' }}>
-                                                                <div className={styles.giftsBottomLeftDiv2}>
-                                                                    <p className={styles.giftCoinsText}>Total</p>
-                                                                </div>
-                                                                <div className={styles.giftsBottomRightDiv}>
-                                                                    <p className={styles.giftCoinsAmountText}>QAR 0</p>
-                                                                </div>
-                                                            </div>
-                                                            <div style={{ display: 'flex', gap: '16px' }}>
-                                                                <IconButton onClick={handleOpenFaqsModal}>
-                                                                    <img src={questionBlackIcon} alt='' />
-                                                                </IconButton>
-                                                                <button className={styles.rechargeBtn}>
-                                                                    <p>Recharge</p>
-                                                                </button>
-                                                            </div>
-                                                        </Box>
-                                                    </Modal>
-                                                </div>
-                                            )}
-                                            {openFaqsModal && (
-                                                <div>
-                                                    <Modal
-                                                        open={openFaqsModal}
-                                                        onClose={handleCloseFaqsModal}
-                                                        aria-labelledby="modal-modal-title"
-                                                        aria-describedby="modal-modal-description"
-                                                    >
-                                                        <Box sx={faqsModal}>
-                                                            <div className={styles.rechargeModalHeader}>
-                                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '70%' }}>
-                                                                    <p>Payment FAQS</p>
-                                                                    <IconButton onClick={handleCloseFaqsModal}>
-                                                                        <img src={closeIcon} alt='' style={{ width: '20px', height: '20px' }} />
-                                                                    </IconButton>
-                                                                </div>
-                                                            </div>
-                                                            <div className={styles.faqsContainer}>
-                                                                <FaqContainer />
-                                                            </div>
-                                                            <div >
-                                                                <button onClick={handleEmailClick} className={styles.rechargeBtnFullWidth} style={{ gap: '12px' }}>
-                                                                    <img src={reportEmailIcon} alt='' />
-                                                                    <p>Report a different issue</p>
-                                                                </button>
-                                                            </div>
-                                                        </Box>
-                                                    </Modal>
-                                                </div>
-                                            )}
-                                        </Box>
-                                    </>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={styles.accountCards}>
-                            <div className={styles.settingName}>
-                                <img src={coin} alt='' className={styles.coinImgCard} />
-                                <p>Gift revenue</p>
-                            </div>
-                            <div style={{ display: 'flex', minWidth: '100px', justifyContent: 'flex-end' }}>
-                                <p>QAR 0</p>
-                                <img src={whiteRightArrow} alt='' style={{ marginLeft: '6px' }} />
-                            </div>
-                        </div>
-                        <div style={{ marginTop: '60px' }}>
-                            <h4 className={styles.sectionTitle}>Frequently asked questions</h4>
-                        </div>
-                        <div className={styles.faqsContainerInPage}>
-                            <FaqContainer />
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

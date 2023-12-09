@@ -22,6 +22,7 @@ import { SearchPage } from './components/search-page/search-page';
 import { SetNewPassword } from './components/set-newPassword/set-newPassword';
 import Account from './components/settings-page/account';
 import BalancePage from './components/settings-page/components/balance-page';
+import GiftRevenuePage from './components/settings-page/components/gift-revenue-page';
 import TransactionHistoryPage from './components/settings-page/components/transaction-history-page';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
@@ -79,6 +80,7 @@ function App() {
                             <Route path="/settings/account/privacy-settings" element={<PrivacySecurityPage />} />
                             <Route path="/settings/account/balance" element={<BalancePage />} />
                             <Route path="/settings/account/transaction-history" element={<TransactionHistoryPage />} />
+                            <Route path="/settings/account/gift-revenue" element={<GiftRevenuePage />} />
                             <Route path="/sounds/:soundId" element={<SoundPage />} />
                             <Route path="/about/terms-conditions" element={<TermsPage />} />
                             <Route path="/about/community-guidelines" element={<CommunityPage />} />

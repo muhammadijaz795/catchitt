@@ -30,6 +30,9 @@ const BalancePage = ({ className }: BalancePageProps) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [loadingAnimation, setLoadingAnimation] = useState(false);
 
+    const [revenueData, setRevenueData] = useState<any>()
+    const [diamondsData, setDiamondsData] = useState<any>()
+
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
     const token = useAuthStore((state) => state.token);
     const email = useAuthStore((state) => state.email);
@@ -63,8 +66,28 @@ const BalancePage = ({ className }: BalancePageProps) => {
         setSettingsDropdown(true)
     };
 
+    const handleFetchRevenueData = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/revenue/`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            setRevenueData(data.data.totalGiftRevenue);
+            console.log(`fetched revenue::::: ${data.data.totalGiftRevenue}`);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    };
+
+
+
     useEffect(() => {
         setIndex(4)
+        handleFetchRevenueData()
     }, [])
 
     return (
@@ -254,13 +277,13 @@ const BalancePage = ({ className }: BalancePageProps) => {
                                 </div>
                             </div>
                         </div>
-                        <div className={styles.accountCards}>
+                        <div className={styles.accountCards} onClick={() => navigate('/settings/account/gift-revenue')}>
                             <div className={styles.settingName}>
                                 <img src={coin} alt='' className={styles.coinImgCard} />
                                 <p>Gift revenue</p>
                             </div>
                             <div style={{ display: 'flex', minWidth: '100px', justifyContent: 'flex-end' }}>
-                                <p>QAR 0</p>
+                                <p>QAR {revenueData}</p>
                                 <img src={whiteRightArrow} alt='' style={{ marginLeft: '6px' }} />
                             </div>
                         </div>

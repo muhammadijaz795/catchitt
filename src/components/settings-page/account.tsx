@@ -76,6 +76,7 @@ const defaultUser: User = {
     resetPassEmail: '',
     resetPassToken: ''
 };
+
 const Account = ({ className, openModal }: AccountProps) => {
     const API_KEY = process.env.VITE_API_URL;
     const forgotPwdEndPoint = '/auth';
