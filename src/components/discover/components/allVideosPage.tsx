@@ -3,12 +3,14 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
-import PopupModalForVideoPlayer from '../../reusables/PopupModalForVideoPlayer';
+// import PopupModalForVideoPlayer from '../../reusables/PopupModalForVideoPlayer';
+import PopupForReport from '../../profile/popups/PopupForReport';
+import PopupForBlock from '../../profile/popups/popupForBlock';
+import PopupForVideoPlayer from '../../profile/popups/popupForVideoPlayer';
 import { SideNavBar } from '../../side-nav-bar/side-nav-bar';
 import { LeftArrow } from '../../suggested-accounts-page/svg-components/LeftArrow';
 import { SuggestedActivity } from '../../suggested-activity/suggested-activity';
 import { TopBar } from '../../top-bar/top-bar';
-import { ViewSwitchers } from '../../view-switchers/view-switchers';
 import styles from './allVideos.module.scss';
 import VideoPanel from './videoPanel';
 
@@ -32,6 +34,8 @@ export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
 	const { selectedTab, setTab } = useAuthStore();
 	const [trendingvideos, setTrendingvideos] = useState([]);
 	const [hashtagVideos, setHashtagVideos] = useState([]);
+	const [reportPopup, setReportPopup] = useState(false)
+	const [blockPopup, setBlockPopup] = useState(false)
 	const page = useRef(1)
 	const done = useRef(false)
 	const tab = useRef(1);
@@ -139,7 +143,9 @@ export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
 					}
 				</div>
 			</div>
-			<PopupModalForVideoPlayer onclose={() => setVideoModal(false)} info={videoModalInfo} videoModal={videoModal} />
+			<PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+			<PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+			<PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
 		</div>
 	);
 };

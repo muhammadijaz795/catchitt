@@ -1,9 +1,13 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import styles from './profileHeader.module.scss';
 import ShareIcon from '../svg-components/ShareIcon';
 import LinkIcon from '../svg-components/LinkIcon';
 import MailIcon from '../svg-components/MailIcon';
 import { Avatar } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { useAuthStore } from '../../../store/authStore';
+const API_KEY = process.env.VITE_API_URL;
+
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -20,8 +24,66 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     onFollowModalActive,
     setLikesModal,
     profileData,
+    openReport,
+    openBlock
 }) => {
+    const auth = useAuthStore()
+    const token = useAuthStore((state) => state.token);
+    const params: any = useParams()
     const [dropdown, setDropdown] = useState(false);
+    const [followedUsersData, setFollowedUsersData] = useState<any>([]);
+    const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
+
+    const fetchFollowers = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/${auth._id}/followers`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setFollowedUsersData(responseData.data.data);
+            }
+        } catch (error) {
+            alert('Somthing went wrong')
+            console.log(error)
+        }
+    }
+
+
+    const manageFollowBtn = async () => {
+        try {
+            const response = await fetch(
+                `${API_KEY}/profile/follow/${params?.id}/`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.ok) {
+                // Update the followedAccounts state
+                setFollowedAccounts((prevFollowedAccounts: any) => ({
+                    ...prevFollowedAccounts,
+                    [params?.id]: !prevFollowedAccounts[params?.id], // Mark the account as followed
+                }));
+                fetchFollowers()
+            }
+        } catch (error) {
+            alert('Somthing went wrong')
+            console.log(error)
+        }
+    };
+
+
+    useEffect(() => {
+        fetchFollowers()
+    }, [])
+
     return (
         <div className={styles.profileHeader}>
             <div className={styles.banner}>
@@ -83,9 +145,18 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                     <button style={{ width: 112 }} className={styles.button}>
                         Messages
                     </button>
-                    <button style={{ width: 116 }} className={styles.button2}>
-                        Follow
-                    </button>
+
+                    {followedUsersData.length > 0 && followedUsersData.some((user: any) => user.followed_userID._id === params?.id) ? <button
+                        style={{ width: 116 }}
+                        className={styles.button2}
+                        onClick={manageFollowBtn}
+                    >Unfollow
+                    </button> : <button
+                        className={styles.button2}
+                        style={{ background: '#5448b2', color: '#FFF', width: 116 }}
+                        onClick={manageFollowBtn}
+                    >Follow
+                    </button>}
                     <button
                         onClick={() => {
                             setDropdown(!dropdown);
@@ -99,11 +170,11 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                         />
                         {dropdown ? (
                             <div className={styles['dropdown']}>
-                                <div onClick={() => alert('coming soon')}>
+                                <div onClick={openReport}>
                                     <img src="../../../../public/images/icons/report.svg" alt="" />
                                     <p className={styles['text5']}>Report</p>
                                 </div>
-                                <div onClick={() => alert('coming soon')}>
+                                <div onClick={openBlock}>
                                     <img src="../../../../public/images/icons/block.svg" alt="" />
                                     <p className={styles['text5']}>Block</p>
                                 </div>

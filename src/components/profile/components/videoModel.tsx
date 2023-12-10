@@ -11,7 +11,7 @@ interface Props {
     report: any
     block: any
 }
-function VideoModel({ onModalClose, info, report, block }: Props) {
+function VideoModel({ onModalClose, info, report, block  }: Props) {
     //For Images Ref.
     const [like, setLike] = useState(false)
     const [fvrt, setFvrt] = useState(false)
@@ -146,11 +146,11 @@ function VideoModel({ onModalClose, info, report, block }: Props) {
                         {
                             more ?
                                 <div className={style['dropdown']}>
-                                    <div onClick={() => report(info)} >
+                                    <div onClick={report} >
                                         <img src="../../../../public/images/icons/Group (3).svg" alt="" />
                                         <p className={style['text5']}>Report</p>
                                     </div>
-                                    <div onClick={() => block(info)}>
+                                    <div onClick={block}>
                                         <img src="../../../../public/images/icons/Group (4).svg" alt="" />
                                         <p className={style['text5']}>Block</p>
                                     </div>

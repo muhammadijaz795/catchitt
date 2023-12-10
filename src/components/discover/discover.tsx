@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { useAuthStore } from '../../store/authStore';
-import PopupModalForVideoPlayer from '../reusables/PopupModalForVideoPlayer';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
@@ -12,6 +11,9 @@ import Stories from './components/stories';
 import SuggestedFollower from './components/suggestedFollower';
 import VideoPanel from './components/videoPanel';
 import styles from './discover.module.scss';
+import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
+import PopupForReport from '../profile/popups/PopupForReport';
+import PopupForBlock from '../profile/popups/popupForBlock';
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
     const { selectedIndex, setIndex } = useAuthStore();
@@ -21,6 +23,8 @@ export default function Discover() {
     const [videoModal, setVideoModal] = useState(false)
     const [videoModalInfo, setVideoModalInfo] = useState({})
     const token = useAuthStore((state) => state.token);
+    const [reportPopup, setReportPopup] = useState(false)
+	const [blockPopup, setBlockPopup] = useState(false)
     const [randomAccs, setRandomAccs] = useState([])
     const Navigate = useNavigate()
 
@@ -222,7 +226,9 @@ export default function Discover() {
                     }
                 </div>
             </div>
-            <PopupModalForVideoPlayer videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+            <PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+			<PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+			<PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
         </div>
     )
 }

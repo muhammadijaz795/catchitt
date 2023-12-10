@@ -19,6 +19,9 @@ import VideoModel from './components/videoModel';
 import ReasonOfReport from './components/reasonOfReport';
 import BlockUser from './components/blockUser';
 import VideoesMaping from './components/videoesMaping';
+import PopupForVideoPlayer from './popups/popupForVideoPlayer';
+import PopupForReport from './popups/PopupForReport';
+import PopupForBlock from './popups/popupForBlock';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -206,36 +209,6 @@ export const Profile = (props: any) => {
                         </div>
                     </ClickAwayListener>
                 </Modal>
-                <Modal open={videoModal}>
-                    <ClickAwayListener onClickAway={() => setVideoModal(false)}>
-                        <div className={styles.videoModalContainer}>
-                            <VideoModel
-                                block={(video: any) => {
-                                    setBlockPopup(true)
-                                    setActiveVideo(video)
-                                    console.log('activevideo', activeVideo);
-
-                                }}
-                                report={() => setReportPopup(true)}
-                                info={videoModalInfo}
-                                onModalClose={() => setVideoModal(false)} />
-                        </div>
-                    </ClickAwayListener>
-                </Modal>
-                <Modal open={reportPopup} className={styles.reportPopupParent}>
-                    <ClickAwayListener onClickAway={() => setReportPopup(false)}>
-                        <div >
-                            <ReasonOfReport video={activeVideo} onclose={() => setReportPopup(false)} />
-                        </div>
-                    </ClickAwayListener>
-                </Modal>
-                <Modal open={blockPopup} className={styles.blockPopupParent}>
-                    <ClickAwayListener onClickAway={() => setBlockPopup(false)}>
-                        <div >
-                            <BlockUser onclose2={() => setBlockPopup(false)} />
-                        </div>
-                    </ClickAwayListener>
-                </Modal>
                 <div className={styles.middleSectionDiv}>
                     <ProfileHeader
                         profileData={profileData}
@@ -278,6 +251,9 @@ export const Profile = (props: any) => {
                         </div>
                     </div>
                 </div>
+                <PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+                <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+                <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
             </div>
         </div>
     );

@@ -1,20 +1,21 @@
 .div {
     display: flex;
-    // border: 2px solid red;
-    max-width: 1141px;
+    width: auto;
+    height: 100%;
+    background: #FFF;
 }
 
 .video-sec {
-    // background: #FFF;
-    width: 540px;
-    height: 815px;
+    width: auto;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.video-sec > video {
-    width: 540px;
-    height: 815px;
+
+.video-sec>video {
+    width: auto;
+    height: 100%;
 }
 
 .cotent-sec {
@@ -135,9 +136,11 @@
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    
+
 }
-.dropdown>div:hover , .dropdown2>div:hover  {
+
+.dropdown>div:hover,
+.dropdown2>div:hover {
     background-color: lightgray;
 }
 

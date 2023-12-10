@@ -5,7 +5,7 @@ import { ClickAwayListener, Modal } from '@mui/material'
 interface TYpes {
     onclose: any
 }
-function BlockMsgOnError({  onclose }: TYpes) {
+function BlockMsgOnError({ onclose }: TYpes) {
     return (
         <div className={style.parent3}>
             <p>An error Occurred</p>
