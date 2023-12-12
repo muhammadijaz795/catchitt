@@ -1,0 +1,115 @@
+.parent {
+    width: 444px;
+    background: #FFF;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.parent>div:nth-child(1) {
+    color: var(--default-body, #222);
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    position: relative;
+    width: 100%;
+    line-height: 120%;
+}
+
+.parent>div:nth-child(1)>img {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    cursor: pointer;
+}
+
+.parent>div:nth-child(2)>div:nth-child(1) {
+    padding: 0px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--foundation-neutral-neutral-300, #D1D1D1);
+    height: 48px;
+}
+
+.parent>div:nth-child(2) input {
+    outline: 0;
+    border: 0;
+    color: var(--foundation-body-body-300, #6B6B6B);
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%;
+}
+
+.btn {
+    display: flex;
+    width: 322px;
+    height: 48px;
+    padding: 0px 16px;
+    justify-content: center;
+    align-items: center;
+    color: var(--default-white, #FFF);
+    border-radius: 6px;
+    background: var(--foundation-primary-primary-500, #5448B2);
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    gap: 12px;
+}
+
+.text1 {
+    color: var(--foundation-body-body-300, #6B6B6B);
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%;
+    margin-top: 15px;
+}
+
+.div4 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.div5{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.div5>button:nth-child(1) {
+    border-radius: 6px;
+    border: 1px solid var(--foundation-primary-primary-50, #EEEDF7);
+    display: flex;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    background: #FFF;
+}
+
+.div3 {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+.div3 > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.div3 button {
+    width: 100%;
+
+}
