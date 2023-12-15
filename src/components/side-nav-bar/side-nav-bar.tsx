@@ -274,7 +274,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={styles.linkWord}>Settings</p>
                     </div>
                     <div onClick={() => toggleDropdown()}>
-                        <svg className={isRotated ? styles.rotate : styles.notRotated}
+                        <svg className={isRotated ? styles.notRotated : styles.rotate}
                             width="16" height="9" viewBox="0 0 16 9" fill="#5448B2" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0.825865 0.212584C1.08354 -0.0450935 1.48677 -0.0685187 1.77091 0.142308L1.85231 0.212584L8.11328 6.47323L14.3743 0.212584C14.6319 -0.0450929 15.0352 -0.0685181 15.3193 0.142309L15.4007 0.212584C15.6584 0.470262 15.6818 0.873485 15.471 1.15762L15.4007 1.23903L8.6265 8.01322C8.36883 8.2709 7.9656 8.29433 7.68146 8.0835L7.60006 8.01322L0.825865 1.23903C0.54242 0.955584 0.54242 0.496029 0.825865 0.212584Z" fill="#5448B2" />
                         </svg>

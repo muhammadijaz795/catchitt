@@ -22,6 +22,7 @@ export interface TopBarProps {
 export const TopBar = ({ className, searchBar }: TopBarProps,) => {
     const showSearchBar = useState(true)
     const userName = useAuthStore((state) => state.name);
+    const user = useAuthStore();
     const token = useAuthStore((state) => state.token);
     const [errorMessage, setErrorMessage] = useState('');
     const API_KEY = process.env.VITE_API_URL;
@@ -40,7 +41,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
         navigate('/auth')
     }
     const handleProfile = () => {
-        navigate('/profile')
+        navigate(`/profile/${user?._id}`)
     }
 
 
