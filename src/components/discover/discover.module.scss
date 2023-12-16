@@ -71,8 +71,11 @@
 
 
 .slider {
-    width:100%;
+    min-width:30%;
+    max-width:100%;
     position: absolute;
+    left: 0%;
+    top: 0%;
 }
 
 .story {

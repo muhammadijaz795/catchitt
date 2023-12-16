@@ -8,6 +8,7 @@
         border-radius: 8px;
         overflow: hidden;
         background-color: rgb(179, 178, 178);
+
         .bannerImg {
             object-fit: cover;
             width: 100%;
@@ -26,7 +27,7 @@
             cursor: pointer;
         }
     }
-    
+
 
     .bottomContainer {
         position: relative;
@@ -42,10 +43,8 @@
             width: 130px;
             height: 130px;
             border-radius: 130px;
-            border: 2px solid #FFE9B0;
             overflow: hidden;
-
-
+            cursor: pointer;
 
             .avatarImg {
                 width: 100%;
@@ -53,7 +52,23 @@
                 object-fit: cover;
 
             }
+        }
 
+        .avatarBox2 {
+            width: 130px;
+            height: 130px;
+            border-radius: 130px;
+            overflow: hidden;
+            border: 2px solid #641A92;
+            padding: 3px;
+            cursor: pointer;
+
+            .avatarImg {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+
+            }
         }
 
         .button {
@@ -197,7 +212,7 @@
         font-style: normal;
         font-weight: 400;
         line-height: 150%;
-        
+
         /* 21px */
     }
 
@@ -223,6 +238,7 @@
         max-width: 100%;
     }
 }
+
 .dropdown {
     position: absolute;
     top: 100%;

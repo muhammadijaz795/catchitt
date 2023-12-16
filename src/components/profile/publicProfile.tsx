@@ -19,6 +19,10 @@ import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 
+import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
+import Gifts from '../discover/popups/gifts';
+
+
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
     const params = useParams();
@@ -31,10 +35,14 @@ export const PublicProfile = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [videoModalInfo, setVideoModalInfo] = useState({})
     const [reportPopup, setReportPopup] = useState(false)
+    const [giftsPopup, setGiftsPopup] = useState(false)
     const [blockPopup, setBlockPopup] = useState(false)
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
     const [videoModal, setVideoModal] = useState(false);
+
+    const [storis, setStories] = useState(false);
+
 
     // Use Function For Get the User Followers
     useEffect(() => {
@@ -139,6 +147,10 @@ export const PublicProfile = (props: any) => {
                         public
                         openReport={() => setReportPopup(true)}
                         openBlock={() => setBlockPopup(true)}
+                        showStories={() => setStories(true)}
+                        storyVideos={(stories: any) => {
+                            setVideoModalInfo(stories)
+                        }}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -164,9 +176,17 @@ export const PublicProfile = (props: any) => {
                         ) : null}
                     </div>
                 </div>
-                <PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+
+                <PopupForVideoPlayer
+                    gifts={() => {
+                        setGiftsPopup(true)
+                    }}
+                    onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
                 <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
                 <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+                <StoriesOnPublicProfile openReport={() => setReportPopup(true)} story={storis} onclose={() => setStories(false)} info={videoModalInfo} />
+                <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
+
             </div>
         </div>
     );

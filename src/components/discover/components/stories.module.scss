@@ -3,8 +3,8 @@
     position: relative;
     width: 80px;
     height: 80px;
-    width: 100%;
 
+    width: 100%;
 }
 
 .story>img {
@@ -38,4 +38,8 @@
     left: 3%;
     cursor: pointer;
     transform: rotate(180deg);
+}
+
+.slider {
+    width: 100%;
 }

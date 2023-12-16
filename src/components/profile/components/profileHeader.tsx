@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import styles from './profileHeader.module.scss';
 import ShareIcon from '../svg-components/ShareIcon';
 import EditIcon from '../svg-components/EditIcon';
@@ -9,12 +9,14 @@ import ProfileViewIcon from '../svg-components/ProfileViewIcon';
 import EditButtonIcon from '../svg-components/EditButtonIcon';
 import LikesModal from './LikesModal';
 import { Avatar } from '@mui/material';
+import { useAuthStore } from '../../../store/authStore';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
     setLikesModal: (value: boolean) => void;
     onFollowModalActive: (value: string) => void;
     profileData: any;
+    showStory: any
 }
 
 const ProfileHeader: FunctionComponent<Props> = ({
@@ -22,9 +24,28 @@ const ProfileHeader: FunctionComponent<Props> = ({
     onFollowModalActive,
     setLikesModal,
     profileData,
+    showStory
 }) => {
-    console.log('profileData',profileData);
-    
+    const API_KEY = process.env.VITE_API_URL;
+    const [stories, setStories] = useState([])
+    const token = useAuthStore((state) => state.token);
+    const auth = useAuthStore((state) => state._id);
+
+
+
+    useEffect(() => {
+        fetch(`${API_KEY}/stories/active-stories/${auth}`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        }).then((res) => res.json()).then((data) => {
+            setStories(data.data)
+            console.log("stories", stories);
+        }).catch((err) => {
+            console.log('collectons error', err);
+        })
+    }, [])
+    console.log('profileData', profileData);
+
     return (
         <div className={styles.profileHeader}>
             <div className={styles.banner}>
@@ -36,7 +57,12 @@ const ProfileHeader: FunctionComponent<Props> = ({
                 )}
             </div>
             <div className={styles.bottomContainer}>
-                <div className={styles.avatarBox}>
+                <div onClick={() => {
+                    if (stories?.length > 0) {
+                        showStory()
+                    }
+                }
+                } className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}>
                     <Avatar
                         style={{ width: '100%', height: '100%' }}
                         src={profileData?.avatar}

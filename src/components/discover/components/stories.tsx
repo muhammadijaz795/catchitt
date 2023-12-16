@@ -5,7 +5,8 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { useAuthStore } from '../../../store/authStore';
 
-export default function Stories({videomodal}:any) {
+
+export default function Stories({showStories}:any) {
     const [stories, setStories] = useState([])
     const sliderRef: any = useRef(null);
     const API_KEY = process.env.VITE_API_URL;
@@ -17,7 +18,9 @@ export default function Stories({videomodal}:any) {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         }).then((res) => res.json()).then((data) => {
-            setStories(data?.data[0]?.stories)
+
+            setStories(data?.data)
+
             console.log("stories", data);
         }).catch((err) => {
             console.log('collectons error', err);
@@ -66,12 +69,12 @@ export default function Stories({videomodal}:any) {
                     : null
             }
 
-            <Slider ref={sliderRef}  {...settings}>
+            <Slider className={styles.slider} ref={sliderRef}  {...settings}>
                 {
-                    stories.map((story: any) => {
+                    stories.map((story: any , i:any) => {
                         return (
-                            <div onClick={()=>videomodal(story)} className={styles.story}>
-                                <img src={story?.thumbnailUrl} alt="" />
+                            <div onClick={showStories} className={styles.story}>
+                                <img src={story?.stories[0].thumbnailUrl} alt="" />
                             </div>
                         )
                     })
