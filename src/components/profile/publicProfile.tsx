@@ -19,9 +19,6 @@ import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 
-import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
-import Gifts from '../discover/popups/gifts';
-
 
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -40,8 +37,6 @@ export const PublicProfile = (props: any) => {
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
     const [videoModal, setVideoModal] = useState(false);
-
-    const [storis, setStories] = useState(false);
 
 
     // Use Function For Get the User Followers
@@ -177,15 +172,9 @@ export const PublicProfile = (props: any) => {
                     </div>
                 </div>
 
-                <PopupForVideoPlayer
-                    gifts={() => {
-                        setGiftsPopup(true)
-                    }}
-                    onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+                <PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
                 <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
                 <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
-                <StoriesOnPublicProfile openReport={() => setReportPopup(true)} story={storis} onclose={() => setStories(false)} info={videoModalInfo} />
-                <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
 
             </div>
         </div>

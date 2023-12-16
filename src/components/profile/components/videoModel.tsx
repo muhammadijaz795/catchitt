@@ -1,9 +1,10 @@
-import { useState } from 'react';
+
+import { useRef, useState } from 'react'
+import style from './videoModel.module.scss'
+import defaultProfileIcon from '../../../assets/defaultProfileIcon.png'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import defaultProfileIcon from '../../../assets/defaultProfileIcon.png';
-import style from './videoModel.module.scss';
-import Comment from './comment';
+
 
 
 interface Props {
@@ -13,7 +14,9 @@ interface Props {
     block: any,
     gifts: any
 }
-function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
+
+function VideoModel({ onModalClose, info, report, block  }: Props) {
+
     //For Images Ref.
     const [like, setLike] = useState(false)
     const [fvrt, setFvrt] = useState(false)
@@ -219,6 +222,9 @@ function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
                         }
                     </div>
                 </div>
+            </div>
+            <div>
+                <ToastContainer />
             </div>
             <div>
                 <ToastContainer />

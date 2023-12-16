@@ -18,9 +18,6 @@ interface Props {
     openReport?: any,
     openBlock?: any,
 
-    showStories?: any,
-    storyVideos?: any,
-
 }
 
 const PublicProfileHeader: FunctionComponent<Props> = ({
@@ -37,23 +34,12 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     const token = useAuthStore((state) => state.token);
     const params: any = useParams()
 
-    const [stories, setStories] = useState([])
     const [dropdown, setDropdown] = useState(false);
-
 
     const [followedUsersData, setFollowedUsersData] = useState<any>([]);
     const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
 
     const fetchFollowers = async () => {
-
-        fetch(`${API_KEY}/media-content/stories/active-stories/${params.id}`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        }).then((res) => res.json()).then((data) => {
-            setStories(data?.data)
-        }).catch((err) => {
-            console.log('collectons error', err);
-        })
 
         try {
             const response = await fetch(`${API_KEY}/profile/${auth._id}/followers`, {
@@ -103,7 +89,6 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     useEffect(() => {
         fetchFollowers()
 
-        storyVideos(stories)
     }, [])
 
     return (

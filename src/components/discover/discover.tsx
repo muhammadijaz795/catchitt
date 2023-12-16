@@ -13,9 +13,9 @@ import styles from './discover.module.scss';
 import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import PopupForReport from '../profile/popups/PopupForReport';
 import PopupForBlock from '../profile/popups/popupForBlock';
+
 import Gifts from './popups/gifts';
 
-import StoriesOnDiscover from '../profile/popups/storiesOnDiscover';
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
     const { selectedIndex, setIndex } = useAuthStore();
@@ -27,9 +27,6 @@ export default function Discover() {
     const token = useAuthStore((state) => state.token);
     const [reportPopup, setReportPopup] = useState(false)
     const [blockPopup, setBlockPopup] = useState(false)
-    const [giftsPopup, setGiftsPopup] = useState(false)
-
-    const [storis, setStoris] = useState(false);
 
     const [randomAccs, setRandomAccs] = useState([])
     const Navigate = useNavigate()
@@ -260,23 +257,10 @@ export default function Discover() {
                     }
                 </div>
             </div>
-            <PopupForVideoPlayer
-                onBlockPopup={() => setBlockPopup(true)}
-                onReportPopup={() => setReportPopup(true)}
-                videoModal={videoModal}
-                onclose={() => setVideoModal(false)}
-                info={videoModalInfo}
-                gifts={() => {
 
-
-                    setGiftsPopup(true)
-                }}
-            />
+            <PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
             <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
             <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
-
-            <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
-            <StoriesOnDiscover openReport={() => setReportPopup(true)} story={storis} onclose={() => setStoris(false)} info={videoModalInfo} />
 
         </div>
     )
