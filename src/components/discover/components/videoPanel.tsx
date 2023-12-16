@@ -2,7 +2,9 @@ import styles from './VideoPanel.module.scss'
 import defaultProfileIcon from '../../../assets/defaultProfileIcon.png'
 export default function VideoPanel({ video, videomodal, index }: any) {
     return (
+
         <div className={styles.post} >
+
             <div>
                 <img style={{ cursor: 'pointer' }} onClick={videomodal}
                     className={styles.img} src={video.thumbnailUrl} alt="" />

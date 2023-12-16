@@ -23,6 +23,7 @@ import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 
+
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
     const authstore = useAuthStore();
@@ -41,6 +42,7 @@ export const Profile = (props: any) => {
     const [bookmarkVideos, setbookmarkVideos] = useState([])
     const [videoModalInfo, setVideoModalInfo] = useState({})
     const [reportPopup, setReportPopup] = useState(false)
+    const [giftsPopup, setGiftsPopup] = useState(false)
     const [blockPopup, setBlockPopup] = useState(false)
     const [activeVideo, setActiveVideo] = useState()
 
@@ -128,6 +130,8 @@ export const Profile = (props: any) => {
             console.log('collectons error', err);
         })
     }, []);
+    const [storis, setStories] = useState(false);
+
 
     const tabs = [
         {
@@ -215,6 +219,7 @@ export const Profile = (props: any) => {
                         onFollowModalActive={onFollowModalActive}
                         setProfileModal={setProfileModal}
                         setLikesModal={setLikesModal}
+                        showStory={() => setStories(true)}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -251,9 +256,11 @@ export const Profile = (props: any) => {
                         </div>
                     </div>
                 </div>
+
                 <PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
                 <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
                 <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+
             </div>
         </div>
     );

@@ -17,6 +17,7 @@ interface Props {
     public: boolean;
     openReport?: any,
     openBlock?: any,
+
 }
 
 const PublicProfileHeader: FunctionComponent<Props> = ({
@@ -25,16 +26,21 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     setLikesModal,
     profileData,
     openReport,
-    openBlock
+    openBlock,
+    showStories,
+    storyVideos
 }) => {
     const auth = useAuthStore()
     const token = useAuthStore((state) => state.token);
     const params: any = useParams()
+
     const [dropdown, setDropdown] = useState(false);
+
     const [followedUsersData, setFollowedUsersData] = useState<any>([]);
     const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
 
     const fetchFollowers = async () => {
+
         try {
             const response = await fetch(`${API_KEY}/profile/${auth._id}/followers`, {
                 method: 'GET',
@@ -82,6 +88,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
 
     useEffect(() => {
         fetchFollowers()
+
     }, [])
 
     return (
@@ -90,7 +97,12 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                 {profileData?.cover && <img className={styles.bannerImg} src={profileData?.cover} alt="Banner Img" />}
             </div>
             <div className={styles.bottomContainer}>
-                <div className={styles.avatarBox}>
+                <div onClick={() => {
+                    if (stories?.length > 0) {
+                        showStories()
+                    }
+                }
+                } className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}>
                     <Avatar
                         className={styles.avatarImg}
                         src={profileData?.avatar}

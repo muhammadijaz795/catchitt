@@ -258,7 +258,7 @@ export const SuggestedActivity = memo(({
                                 <Link to={`/profile/${account._id}`}>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                     <img
-                                        src={account.avatar || defaultProfileIcon}
+                                        src={account?.avatar || defaultProfileIcon}
                                         alt=""
                                         className={styles.plusIconStyle}
                                     />
@@ -309,7 +309,7 @@ export const SuggestedActivity = memo(({
                                                 <div className={styles.notificationUser}>
                                                     <img
                                                         src={
-                                                            activity.triggeredUser.avatar ||
+                                                            activity.triggeredUser?.avatar ||
                                                             defaultProfileIcon
                                                         }
                                                         alt=""

@@ -2,6 +2,7 @@
     display: flex;
     width: auto;
     height: 100%;
+
     background: #FFF;
 }
 
@@ -14,8 +15,10 @@
 }
 
 .video-sec>video {
+
     width: auto;
     height: 100%;
+
 }
 
 .cotent-sec {
@@ -23,7 +26,8 @@
     height: 287px;
     position: relative;
     padding: 0px 32px;
-    // background: #FFF;
+    height: 100%;
+    overflow: hidden;
 }
 
 
@@ -183,6 +187,226 @@
 .text5 {
     color: var(--default-body, #222);
     font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.gifts {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0px;
+    flex-wrap: wrap;
+}
+
+.receivedGifftsText {
+    color: var(--foundation-primary-primary-200, #B0ABDC);
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    display: inline;
+}
+
+.addComment {
+    width: 100%;
+    position: absolute;
+    display: flex;
+    bottom: 0%;
+    left: 0%;
+    padding: 16px;
+    background-color: #FFF;
+    gap: 16px;
+}
+
+.mkshadow {
+    border-radius: 8px 8px 0px 0px;
+    box-shadow: 0px -4px 20px 0px rgba(0, 0, 0, 0.05);
+}
+
+.addComment>div {
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+    background: var(--foundation-neutral-neutral-50, #F8F8F8);
+    border-radius: 4px;
+    padding: 0% 16px;
+
+}
+
+.addComment img {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+
+.addComment>img:nth-child(1) {
+    background-color: #FFF;
+    width: 48px;
+    height: 48px;
+}
+
+.addComment input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    color: var(--foundation-neutral-neutral-700, #848484);
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    background: var(--foundation-neutral-neutral-50, #F8F8F8);
+}
+
+
+.commentText1 {
+    color: var(--foundation-neutral-neutral-700, #848484);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+}
+
+.commemtHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.commemtHeader div:nth-child(1) {
+    display: flex;
+    gap: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.commemtHeader div:nth-child(2) {
+    display: flex;
+    gap: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cheaderText {
+    color: var(--foundation-neutral-neutral-700, #848484);
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+.userName {
+    color: var(--default-body, #222);
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%;
+}
+
+.comments {
+    overflow-y: scroll;
+    height: 35%;
+}
+
+.comment {
+    color: var(--default-body, #222);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.commentH {
+    margin-left: 54px;
+    margin-right: 5px;
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+
+.replyBtn {
+    color: var(--foundation-neutral-neutral-700, #848484);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    cursor: pointer;
+    border: 0;
+    background: #FFF;
+    align-self: flex-start;
+}
+
+.commentH>div {
+    display: flex;
+    gap: 8px;
+}
+
+.comment hr {
+    background: #C8C8C8;
+    height: 1px;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    height: 12px;
+}
+
+.replySomeoOne {
+    position: absolute;
+    bottom: 12%;
+    background: #FFF;
+    width: 100%;
+    left: 0%;
+    padding: 16px 16px 0px 16px;
+    border-radius: 8px 8px 0px 0px;
+    box-shadow: 0px -4px 20px 0px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+}
+
+.replySomeoOne>p:nth-child(1) {
+    color: var(--default-body, #222);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    cursor: pointer;
+    user-select: none;
+}
+
+.replySomeoOne>div:nth-child(2) {
+    border-radius: 4px;
+    background: var(--foundation-primary-primary-50, #EEEDF7);
+    display: flex;
+    padding: 0px 8px;
+    align-items: center;
+    align-items: center;
+    gap: 8px;
+    height: 29px;
+}
+
+.replySomeoOne>div:nth-child(2)>p {
+    color: var(--foundation-primary-primary-500, #5448B2);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
     font-weight: 400;
     line-height: 150%;
 }
