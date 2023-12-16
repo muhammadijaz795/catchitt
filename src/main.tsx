@@ -10,6 +10,7 @@ import App from './App';
 import './index.css';
 
 
+
 i18next
     .use(HttpApi)
     .use(LanguageDetector)
@@ -40,6 +41,7 @@ root.render(
     <Suspense fallback={loadingMarkup}>
         {/* <React.StrictMode> */}
         <App />
+
         {/* </React.StrictMode> */}
     </Suspense>
 );

@@ -8,9 +8,9 @@ export default function VideoesMaping({ videos, openVideoModal }: Type) {
     return (
         <div className={styles.posts}>
             {videos &&
-                videos.map((item: any) => (
+                videos.map((item: any, i: number) => (
                     <div
-                        key={item}
+                        key={i}
                         onClick={() => openVideoModal(item)}
                         className={styles.post}
                     >

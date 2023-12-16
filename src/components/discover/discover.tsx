@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { useAuthStore } from '../../store/authStore';
-import PopupModalForVideoPlayer from '../reusables/PopupModalForVideoPlayer';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
@@ -11,15 +10,22 @@ import Stories from './components/stories';
 import SuggestedFollower from './components/suggestedFollower';
 import VideoPanel from './components/videoPanel';
 import styles from './discover.module.scss';
-
+import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
+import PopupForReport from '../profile/popups/PopupForReport';
+import PopupForBlock from '../profile/popups/popupForBlock';
+import Gifts from './popups/gifts';
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
     const { selectedIndex, setIndex } = useAuthStore();
     const [trendingvideos, setTrendingvideos] = useState([])
     const [hashtagVideos, setHashtagVideos] = useState([])
+    const [stories, setStories] = useState([])
     const [videoModal, setVideoModal] = useState(false)
     const [videoModalInfo, setVideoModalInfo] = useState({})
     const token = useAuthStore((state) => state.token);
+    const [reportPopup, setReportPopup] = useState(false)
+    const [blockPopup, setBlockPopup] = useState(false)
+    const [giftsPopup, setGiftsPopup] = useState(false)
     const [randomAccs, setRandomAccs] = useState([])
     const Navigate = useNavigate()
 
@@ -67,7 +73,6 @@ export default function Discover() {
             } catch (error) {
                 console.log('error trendinghashtags', error);
             }
-
             try {
                 const response = await fetch(`${API_KEY}/profile/public/suggested-users?page=1`, {
                     method: 'GET',
@@ -77,7 +82,6 @@ export default function Discover() {
                 if (response.ok) {
                     const responseData = await response.json();
                     setRandomAccs(getRandomAccounts(responseData.data.data, 10))
-                    console.log('fetched public suggested acccounts: ', randomAccs);
                 } else {
                     console.log(response);
                 }
@@ -125,6 +129,28 @@ export default function Discover() {
         apisIntegration()
     }, [])
 
+    const [videosToShow, setVideosToShow] = useState(10);
+
+    const handleScroll = () => {
+        const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
+        const totalHeight = document.documentElement.offsetHeight;
+
+        // Adjust the threshold as needed
+        if (scrollPosition === totalHeight) {
+            // When the user reaches the bottom, load more videos
+            setVideosToShow((prev) => prev + 10);
+        }
+    };
+
+    useEffect(() => {
+        // Add a scroll event listener when the component mounts
+        window.addEventListener('scroll', handleScroll);
+
+        // Remove the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const openvideomodal = (video: any) => {
         setVideoModalInfo(video)
@@ -132,6 +158,10 @@ export default function Discover() {
         console.log(video)
     }
 
+    const sendDataByQ = (argument: any) => {
+        const url = `/videos/data?hashtag=${encodeURIComponent(argument)}`;
+        window.location.href = url;
+    }
     return (
         <div className={styles.root}>
             <div className={styles.topBarDiv}>
@@ -150,7 +180,10 @@ export default function Discover() {
                     {/* Slider Configration for Stories */}
                     <div className={styles.sliderp}>
                         <div className={styles.slider}>
-                            <Stories />
+                            <Stories videomodal={(video: any) => {
+                                setVideoModal(true)
+                                setVideoModalInfo(video)
+                            }} />
                         </div>
                     </div>
                     <div style={{ marginTop: 48 }} className={styles.postsp}>
@@ -181,7 +214,7 @@ export default function Discover() {
                         </div>
                         <div className={styles.followers}>
                             {
-                                randomAccs.map((randonUser: any) => {
+                                randomAccs.slice(0, videosToShow).map((randonUser: any) => {
                                     return <SuggestedFollower randonUser={randonUser} />
                                 })
                             }
@@ -206,14 +239,14 @@ export default function Discover() {
                                 <div style={{ marginTop: 41 }} key={i} className={styles.postsp}>
                                     <div className='d-flex justify-content-between'>
                                         <p className={styles.trendingText}>{obj?.name}</p>
-                                        <p className={styles.seeAll} onClick={() => {
-                                            Navigate(`/videos/All=${obj.name}`)
-                                        }}>See All</p>
+                                        <p className={styles.seeAll} onClick={
+                                            () => sendDataByQ(obj.name)
+                                        }>See All</p>
                                     </div>
                                     <div className={styles.posts}>
                                         {
-                                            obj?.relatedVideos.map((video: any, i: any) => {
-                                                return <VideoPanel index={i} videomodal={() => openvideomodal(video)} video={video} />
+                                            obj?.relatedVideos.slice(0, videosToShow).map((video: any, i: any) => {
+                                                return <VideoPanel videomodal={() => openvideomodal(video)} video={video} />
                                             })
                                         }
                                     </div>
@@ -223,7 +256,20 @@ export default function Discover() {
                     }
                 </div>
             </div>
-            <PopupModalForVideoPlayer videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+            <PopupForVideoPlayer
+                onBlockPopup={() => setBlockPopup(true)}
+                onReportPopup={() => setReportPopup(true)}
+                videoModal={videoModal}
+                onclose={() => setVideoModal(false)}
+                info={videoModalInfo}
+                gifts={() => {
+                    console.log(giftsPopup);
+                    setGiftsPopup(true)
+                }}
+            />
+            <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+            <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+            <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)}  />
         </div>
     )
 }

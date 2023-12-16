@@ -1,9 +1,10 @@
-.story {
+.story , .story1 {
     margin-top: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
+    width: 80px;
+    height: 80px;
+    width: 100%;
+
 }
 
 .story>img {
@@ -11,6 +12,14 @@
     height: 67px;
     border-radius: 50%;
     border: 1px solid #641A92;
+    padding: 2px;
+    cursor: pointer;
+}
+.story1>img {
+    width: 67px;
+    height: 67px;
+    border-radius: 50%;
+    border: 1px solid #BABABA;
     padding: 2px;
     cursor: pointer;
 }

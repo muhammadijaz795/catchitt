@@ -1,0 +1,100 @@
+.parent {
+    width: 416px;
+    background: #FFF;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.parent>div:nth-child(1) {
+    color: var(--default-body, #222);
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    position: relative;
+    width: 100%;
+    line-height: 120%;
+}
+
+.parent>div:nth-child(1)>img {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    cursor: pointer;
+}
+
+.btn {
+    display: flex;
+    width: 100%;
+    height: 48px;
+    padding: 0px 16px;
+    justify-content: center;
+    align-items: center;
+    color: var(--default-white, #FFF);
+    border-radius: 6px;
+    background: var(--foundation-primary-primary-500, #5448B2);
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    gap: 12px;
+}
+
+.Q {
+    margin: 32px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.UIISSE2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: var(--foundation-primary-primary-50, #EEEDF7);
+
+}
+.uiIsues  {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-radius:5px 5px 0px 0px;
+    cursor: pointer;
+    color: #FFF;
+    background: var(--foundation-primary-primary-500, #5448B2);
+
+}
+
+.Qdiv>div:nth-child(2) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-radius: 0px 0px 5px 5px;
+    background: var(--foundation-primary-primary-50, #EEEDF7);
+}
+.Qdiv>div>p {
+    color: var(--default-body, #222);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+}
+
+.Qdiv>div:nth-child(1):hover,
+.Qdiv>div:nth-child(1):hover>p {
+    color: #FFF;
+    border-radius: 5px ;
+    background: var(--foundation-primary-primary-500, #5448B2);
+}
+
+.whiteColor {
+    color: #FFF !important;
+}

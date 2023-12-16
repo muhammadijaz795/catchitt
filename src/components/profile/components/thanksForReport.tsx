@@ -1,9 +1,9 @@
 import React from 'react'
 import style from './reasonOfReport.module.scss'
 interface Props {
-    done: any,
+    onclose: any,
 }
-function ThanksForReport({ done }: Props) {
+function ThanksForReport({ onclose }: Props) {
     return (
         <div className={style.thanksDiv}>
             <p className={style.report}>Report submitted</p>
@@ -12,7 +12,7 @@ function ThanksForReport({ done }: Props) {
             </div>
             <p className={style.thankyou}>Thank you</p>
             <p className={style.desc}>Your report helps us provide a safe and supportive environment. </p>
-            <button className={style.done} onClick={done}>Done</button>
+            <button className={style.done} onClick={onclose}>Done</button>
             <button className={style.view}>View your reports</button>
         </div>
     )
