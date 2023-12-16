@@ -18,8 +18,10 @@ import { VideoIcon } from './svg-components/VideoIcon';
 import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
+
 import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
 import Gifts from '../discover/popups/gifts';
+
 
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -38,7 +40,9 @@ export const PublicProfile = (props: any) => {
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
     const [videoModal, setVideoModal] = useState(false);
+
     const [storis, setStories] = useState(false);
+
 
     // Use Function For Get the User Followers
     useEffect(() => {
@@ -172,6 +176,7 @@ export const PublicProfile = (props: any) => {
                         ) : null}
                     </div>
                 </div>
+
                 <PopupForVideoPlayer
                     gifts={() => {
                         setGiftsPopup(true)
@@ -181,6 +186,7 @@ export const PublicProfile = (props: any) => {
                 <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
                 <StoriesOnPublicProfile openReport={() => setReportPopup(true)} story={storis} onclose={() => setStories(false)} info={videoModalInfo} />
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
+
             </div>
         </div>
     );

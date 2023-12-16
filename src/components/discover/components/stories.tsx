@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { useAuthStore } from '../../../store/authStore';
 
+
 export default function Stories({showStories}:any) {
     const [stories, setStories] = useState([])
     const sliderRef: any = useRef(null);
@@ -17,7 +18,9 @@ export default function Stories({showStories}:any) {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         }).then((res) => res.json()).then((data) => {
+
             setStories(data?.data)
+
             console.log("stories", data);
         }).catch((err) => {
             console.log('collectons error', err);
