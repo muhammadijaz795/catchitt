@@ -131,7 +131,7 @@ const GiftRevenuePage = ({ className }: GiftRevenuePageProps) => {
                                 <p>
                                     How to increase withdrawal limit?
                                 </p>
-                                <Button sx={smallBtn} >
+                                <Button sx={smallBtn} onClick={() => navigate('/settings/account/withdrawal-limit')}>
                                     How to ?
                                 </Button>
                             </div>

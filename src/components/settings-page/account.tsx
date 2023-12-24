@@ -15,6 +15,7 @@ import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 import styles from './account.module.scss';
 import { DeleteReasonPopup } from './components/delete-reason-popup';
+import { ShareProfilePopup } from './components/shareProfilePopup';
 import { SwitchToBusinessPopup } from './components/switchToBusinessPopup';
 import { SwitchToPersonalPopup } from './components/switchToPersonalPopup';
 import changePassIcon from './svg-components/changePassIcon.svg';
@@ -114,6 +115,8 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [openSwitchToPersonal, setOpenSwitchToPersonal] = useState(false)
     const [openSwitchToBusiness, setOpenSwitchToBusiness] = useState(false)
 
+    const [openShareProfileModal, setOpenShareProfileModal] = useState(false)
+
     const MAX_CHOICES = 5; // Set your maximum choices limit
     const [notAcceptable, setNotAcceptable] = useState(false)
 
@@ -173,6 +176,14 @@ const Account = ({ className, openModal }: AccountProps) => {
     const handleCloseSwitchToBusinessModal = () => {
         setOpenSwitchToBusiness(false)
         handleProfileFetch();
+    }
+
+    const handleOpenShareProfileModal = () => {
+        setOpenShareProfileModal(true)
+    }
+
+    const handleCloseShareProfileModal = () => {
+        setOpenShareProfileModal(false)
     }
 
     const handleSignInSubmit = (e: React.FormEvent) => {
@@ -470,7 +481,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             </div>
                             <div className={styles.suggestedContent}>
                                 <div className={styles.accountCards}
-                                // onClick={() => navigate('/settings/account/privacy-settings')}
+                                    onClick={handleOpenShareProfileModal}
                                 >
                                     <div className={styles.settingName}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -981,6 +992,21 @@ const Account = ({ className, openModal }: AccountProps) => {
                             <SwitchToBusinessPopup
                                 // onSubmit={() => setOpenDeleteAccountMainModal(false)} // Pass the onClose function
                                 // handleOpen={handleOpenConfirmation}
+                                handleClose={handleCloseSwitchToBusinessModal} />
+                        </Box>
+                    </Modal>
+                </>
+            )}
+            {openShareProfileModal && (
+                <>
+                    <Modal
+                        open={openShareProfileModal}
+                        onClose={handleCloseShareProfileModal}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={contentPrefModalStyle}>
+                            <ShareProfilePopup
                                 handleClose={handleCloseSwitchToBusinessModal} />
                         </Box>
                     </Modal>

@@ -24,6 +24,7 @@ import Account from './components/settings-page/account';
 import BalancePage from './components/settings-page/components/balance-page';
 import GiftRevenuePage from './components/settings-page/components/gift-revenue-page';
 import TransactionHistoryPage from './components/settings-page/components/transaction-history-page';
+import WithdrawalLimitPage from './components/settings-page/components/withdrawal-limit-page';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
@@ -81,6 +82,7 @@ function App() {
                             <Route path="/settings/account/balance" element={<BalancePage />} />
                             <Route path="/settings/account/transaction-history" element={<TransactionHistoryPage />} />
                             <Route path="/settings/account/gift-revenue" element={<GiftRevenuePage />} />
+                            <Route path="/settings/account/withdrawal-limit" element={<WithdrawalLimitPage />} />
                             <Route path="/sounds/:soundId" element={<SoundPage />} />
                             <Route path="/about/terms-conditions" element={<TermsPage />} />
                             <Route path="/about/community-guidelines" element={<CommunityPage />} />
