@@ -34,11 +34,11 @@ const ProfileHeader: FunctionComponent<Props> = ({
 
 
     useEffect(() => {
-        fetch(`${API_KEY}/stories/active-stories/${auth}`, {
+        fetch(`${API_KEY}/media-content/stories`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         }).then((res) => res.json()).then((data) => {
-            setStories(data.data)
+            setStories(data.data[0].stories)
             console.log("stories", stories);
         }).catch((err) => {
             console.log('collectons error', err);

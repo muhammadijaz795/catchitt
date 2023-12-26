@@ -25,8 +25,7 @@ export default function StoriesOnDiscover({ story, onclose, openReport }: any) {
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         }).then((res) => res.json()).then((data) => {
             setFetchStories(data.data)
-            setStories(data?.data[storiesIndex]?.stories)
-            console.log("stories", data?.data);
+            setStories(data.data[0].stories)
         }).catch((err) => {
             console.log('collectons error', err);
         })

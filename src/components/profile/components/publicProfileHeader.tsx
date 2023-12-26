@@ -17,6 +17,8 @@ interface Props {
     public: boolean;
     openReport?: any,
     openBlock?: any,
+    showStories:any,
+    storyVideos:any
 
 }
 
@@ -27,14 +29,14 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     profileData,
     openReport,
     openBlock,
-    showStories,
-    storyVideos
+    showStories
 }) => {
     const auth = useAuthStore()
     const token = useAuthStore((state) => state.token);
     const params: any = useParams()
 
     const [dropdown, setDropdown] = useState(false);
+    const [stories, setStories] = useState([])
 
     const [followedUsersData, setFollowedUsersData] = useState<any>([]);
     const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
@@ -56,6 +58,18 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
             console.log(error)
         }
     }
+    useEffect(() => {
+        fetch(`${API_KEY}/media-content/stories`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        }).then((res) => res.json()).then((data) => {
+            setStories(data.data[0].stories)
+        }).catch((err) => {
+            console.log('collectons error', err);
+        })
+        fetchFollowers()
+
+    }, [])
 
 
     const manageFollowBtn = async () => {
@@ -85,11 +99,6 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
         }
     };
 
-
-    useEffect(() => {
-        fetchFollowers()
-
-    }, [])
 
     return (
         <div className={styles.profileHeader}>

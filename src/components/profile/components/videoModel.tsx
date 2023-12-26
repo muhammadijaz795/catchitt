@@ -4,7 +4,7 @@ import style from './videoModel.module.scss'
 import defaultProfileIcon from '../../../assets/defaultProfileIcon.png'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Comment from './comment';
 
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
     gifts: any
 }
 
-function VideoModel({ onModalClose, info, report, block  }: Props) {
+function VideoModel({ onModalClose, info, report, block , gifts }: Props) {
 
     //For Images Ref.
     const [like, setLike] = useState(false)

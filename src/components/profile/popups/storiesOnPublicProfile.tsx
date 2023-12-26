@@ -16,31 +16,32 @@ export default function StoriesOnPublicProfile({ story, onclose, openReport }: a
     const [progress, setProgress] = useState(0);
     const [isplaying, setIsplaying] = useState(true);
     const [ismute, setMute] = useState(true);
-
     const [dropdown, setDropdown] = useState(false);
     const [stories, setStories] = useState<any>([])
     useEffect(() => {
         if (params.id) {
-            fetch(`${API_KEY}/media-content/stories/active-stories/${params.id}`, {
+            fetch(`${API_KEY}/media-content/stories`, {
                 method: 'GET',
                 headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             }).then((res) => res.json()).then((data) => {
-                setStories(stories)
+                setStories(data.data[0].stories)
             }).catch((err) => {
                 console.log('collectons error', err);
             })
         } else {
 
-            fetch(`${API_KEY}/media-content/stories/active-stories/${auth}`, {
+            fetch(`${API_KEY}/media-content/stories`, {
                 method: 'GET',
                 headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             }).then((res) => res.json()).then((data) => {
-                setStories(stories)
+                setStories(data.data[0].stories)
             }).catch((err) => {
                 console.log('collectons error', err);
             })
         }
     }, [])
+    console.log('stooooriesss',stories);
+    
 
     const settings = {
         dots: true,

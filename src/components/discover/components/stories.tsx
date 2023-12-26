@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import { useAuthStore } from '../../../store/authStore';
 
 
-export default function Stories({showStories}:any) {
+export default function Stories({ showStories }: any) {
     const [stories, setStories] = useState([])
     const sliderRef: any = useRef(null);
     const API_KEY = process.env.VITE_API_URL;
@@ -19,9 +19,7 @@ export default function Stories({showStories}:any) {
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         }).then((res) => res.json()).then((data) => {
 
-            setStories(data?.data)
-
-            console.log("stories", data);
+            setStories(data.data)
         }).catch((err) => {
             console.log('collectons error', err);
         })
@@ -71,7 +69,7 @@ export default function Stories({showStories}:any) {
 
             <Slider className={styles.slider} ref={sliderRef}  {...settings}>
                 {
-                    stories.map((story: any , i:any) => {
+                    stories.map((story: any, i: any) => {
                         return (
                             <div onClick={showStories} className={styles.story}>
                                 <img src={story?.stories[0].thumbnailUrl} alt="" />

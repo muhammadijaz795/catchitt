@@ -22,6 +22,8 @@ import VideoesMaping from './components/videoesMaping';
 import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
+import Gifts from '../discover/popups/gifts';
+import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
 
 
 export const Profile = (props: any) => {
@@ -29,6 +31,7 @@ export const Profile = (props: any) => {
     const authstore = useAuthStore();
     const [activeTab, setActiveTab] = useState('Videos');
     const [profileModal, setProfileModal] = useState(false);
+    const [storyPopup, setStoryPopup] = useState(false)
     const [followModal, setFollowModal] = useState<null | string>(null);
     const [likesModal, setLikesModal] = useState(false);
     const [profileData, setProfileData] = useState(null)
@@ -61,13 +64,12 @@ export const Profile = (props: any) => {
         fetch(`${API_KEY}/profile/${authstore._id}/videos`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
+        }).then((res) => res.json()).then((data) => {
 
-                setUserVideos(data.data.data);
-                setLoading(false);
-            })
+            setUserVideos(data.data.data);
+            console.log('dataaa', data.data.data);
+            setLoading(false);
+        })
             .catch((err) => {
                 console.log(err);
                 setLoading(false);
@@ -130,7 +132,6 @@ export const Profile = (props: any) => {
             console.log('collectons error', err);
         })
     }, []);
-    const [storis, setStories] = useState(false);
 
 
     const tabs = [
@@ -219,7 +220,7 @@ export const Profile = (props: any) => {
                         onFollowModalActive={onFollowModalActive}
                         setProfileModal={setProfileModal}
                         setLikesModal={setLikesModal}
-                        showStory={() => setStories(true)}
+                        showStory={() => setStoryPopup(true)}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -257,9 +258,11 @@ export const Profile = (props: any) => {
                     </div>
                 </div>
 
-                <PopupForVideoPlayer onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
+                <PopupForVideoPlayer gifts={() => setGiftsPopup(true)} onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
                 <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
                 <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+                <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
+                <StoriesOnPublicProfile story={storyPopup} onclose={() => setStoryPopup(false)} openReport={() => setReportPopup(true)} />
 
             </div>
         </div>
