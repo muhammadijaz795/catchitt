@@ -31,6 +31,7 @@ import reportEmailIcon from '../../assets/reportEmailIcon.png';
 import FaqContainer from '../reusables/FaqContainer/FaqContainer';
 import Calculator from '../reusables/calculator/Calculator';
 import { fetchInJSON } from '../reusables/fetchInJSON';
+import PayPalRedirect from './PaypalRedirect';
 import { Bookmark } from './svg-components/Bookmark';
 import { BookmarkMobile } from './svg-components/BookmarkMobile';
 import { CommentIcon } from './svg-components/Comment';
@@ -48,6 +49,7 @@ import bigCoin from './svg-components/bigCoin.svg';
 import cancelIcon from './svg-components/cancelIcon.svg';
 import soundIcon from './svg-components/soundIcon.svg';
 import soundIconMobile from './svg-components/soundIconMobile.svg';
+
 
 interface Gift {
     _id: string;
@@ -482,7 +484,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
         setOpenFaqsModal(false)
     }
 
-    const [paypalResponse, setPaypalResponse] = useState('');
+    const [paypalResponse, setPaypalResponse] = useState('')
     const [openPaypalPage, setOpenPaypalPage] = useState(false)
     const handleOpenPaypalPage = () => {
         setOpenPaypalPage(true)
@@ -491,32 +493,36 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
         setOpenPaypalPage(false)
     }
     const handlePaypalRequest = async () => {
-        navigate('/payment/coins/100');
-        // try {
-        //     const response = await fetch(
-        //         `https://seezitt.com/payment/coins/100`,
-        //         {
-        //             method: 'GET',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 Authorization: `Bearer ${token}`,
-        //             },
-        //         },
-        //     );
-        //     if (response.ok) {
-        //         const htmlContent = await response.text();
-        //         setPaypalResponse(htmlContent);
-        //         console.log('it worked!!!!!');
-        //         handleOpenPaypalPage();
-        //     } else {
-        //         // Handle error response
-        //         console.log(response);
-        //     }
-        // } catch (error) {
-        //     // Handle fetch error
-        //     console.error(error);
-        // }
+        console.log(selectedAmount);
+        try {
+            const response = await fetch(
+                `${API_KEY}/payment/web/coins/${selectedAmount}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Accept': '*/*',
+                        // 'Content-type': 'text/html',
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
+            if (response.ok) {
+                const htmlContent = await response.text();  // Extract the HTML content
+                console.log(htmlContent);
+                console.log('it worked!!!!!');
+                setPaypalResponse(htmlContent);
+                handleOpenPaypalPage();
+            } else {
+                // Handle error response
+                console.log('Request failed with status:', response.status);
+            }
+        } catch (error) {
+            // Handle fetch error
+            console.error('Error during fetch:', error);
+        }
     };
+
 
     return postData && (
         <div className={classNames(styles.root, className)}>
@@ -1112,7 +1118,6 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                     </div>
                 )}
                 {openPaypalPage && (
-                    // ... rest of your code
                     <Modal
                         open={openPaypalPage}
                         onClose={handleClosePaypalPage}
@@ -1120,8 +1125,7 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={paypalModal}>
-                            <iframe dangerouslySetInnerHTML={{ __html: paypalResponse }} />
-
+                            <PayPalRedirect htmlContent={paypalResponse} />
                         </Box>
                     </Modal>
                 )}
@@ -1585,8 +1589,8 @@ const paypalModal = {
     bgcolor: 'background.paper',
     border: 'none', // Remove the border
     borderRadius: '8px',
-    width: 'auto',
-    height: 'auto',
+    width: '80%',
+    height: '80%',
     // maxHeight: '549px',
     padding: '24px',
 }

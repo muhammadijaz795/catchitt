@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import searchIcon from '../../assets/Search.svg';
+import muteIcon from '../../assets/muteIcon.svg';
 import { useAuthStore } from '../../store/authStore';
 import { Post } from '../post/post';
 import { BookmarkItem, Post as PostType } from '../post/postTypes';
@@ -11,8 +13,6 @@ import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 import { ViewSwitchers } from '../view-switchers/view-switchers';
 import styles from './home.module.scss';
-import searchIcon from '../../assets/Search.svg'
-import muteIcon from '../../assets/muteIcon.svg'
 export interface HomeProps {
 	className?: string;
 }
@@ -52,11 +52,11 @@ export const Home = ({ className }: HomeProps) => {
 			if (onePost) {
 				setPostData([])
 			}
-	
+
 			let link = isLoggedIn ?
 				`/media-content/videos/feed?page=${page ? page : 1}`
 				: `/media-content/public/videos/feed?page=${page ? page : 1}`
-	
+
 			const res = await fetchInJSON(
 				link,
 				{
@@ -69,7 +69,7 @@ export const Home = ({ className }: HomeProps) => {
 			)
 			console.log(res, "res1212");
 			if (page != 1)
-				setPostData((prev: []) => [...prev, ...res.data]);
+				setPostData((prev: []) => [...prev, ...res?.data]);
 			else
 				setPostData([...res.data]);
 		} catch (error) {
@@ -216,12 +216,12 @@ export const Home = ({ className }: HomeProps) => {
 			return false;
 	}, [])
 	const containerRef = useRef(null);
-	const mobileTabs:string[] = [
-        'Following',
-        'Suggested',
-        'Live',
-    ]
-    const [activeMobileTab, setActiveMobileTab] = useState<string>(mobileTabs[0])
+	const mobileTabs: string[] = [
+		'Following',
+		'Suggested',
+		'Live',
+	]
+	const [activeMobileTab, setActiveMobileTab] = useState<string>(mobileTabs[0])
 
 	return (
 		<div className={classNames(styles.root, className)}>
@@ -372,11 +372,11 @@ export const Home = ({ className }: HomeProps) => {
 						)
 				}
 				{
-							paginating && postData.length > 0 &&
-							(
-								<div className={styles.paginationload}><h6>Loading...</h6></div>
-							)
-						}
+					paginating && postData.length > 0 &&
+					(
+						<div className={styles.paginationload}><h6>Loading...</h6></div>
+					)
+				}
 			</div>
 		</div >
 	)

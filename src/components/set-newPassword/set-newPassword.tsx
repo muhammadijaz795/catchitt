@@ -98,25 +98,30 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
             });
             if (response.ok) {
                 const responseData = await response.json();
-                // const { token } = responseData.data; // Extract token value from data object
                 console.log(responseData);
                 setResponseResult(responseData.message);
                 setResponse(true);
                 navigate('/auth');
             } else {
-                setErrorMessage('Invalid password');
+                setErrorMessage('Please make sure the password aligns with the requirements')
                 console.log(response.statusText);
             }
         } catch (error) {
-            console.error(error);
-            setErrorMessage('Invalid password');
+            setErrorMessage('Please make sure the password aligns with the requirements')
+            console.log(error);
         }
     };
 
     const handleSetNewPasswordSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
-        const { password, email, token } = user;
-        handleSetNewPassword(password, email, token);
+        setErrorMessage('')
+        if (user.password !== user.confirmPassword) {
+            setErrorMessage('Passwords are not matching');
+            return;
+        } else {
+            const { password, email, token } = user;
+            handleSetNewPassword(password, email, token);
+        }
     };
 
     const renderResponse = () => {
@@ -180,7 +185,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                             special characters
                         </p>
                         <div style={{ marginTop: '20px' }}>
-                            {errorMessage ? (
+                            {errorMessage !== "" ? (
                                 <h4
                                     style={{
                                         fontWeight: '700',

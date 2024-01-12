@@ -32,6 +32,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
     const navigate = useNavigate();
     const logout = useAuthStore(state => state.logout);
     const [profileData, setProfileData] = useState<any>([])
+    const arStudioUrl = 'https://localhost:8081/AR-Studio/';
 
     const handleLogout = () => {
         logout(); // Call the logout function
@@ -44,6 +45,14 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
         navigate(`/profile/${user?._id}`)
     }
 
+    const handleNavigateToARStudio = () => {
+        // Use the navigate function to change the URL without reloading the page
+        if (isLoggedIn) {
+            window.location.href = arStudioUrl;
+        } else {
+            handleLogin();
+        }
+    }
 
     const handleFetchProfileInfo = async () => {
         if (!isLoggedIn) { return }
@@ -192,6 +201,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
+                                    <MenuItem onClick={handleNavigateToARStudio}>AR Studio</MenuItem>
                                     <MenuItem onClick={handleProfile}>Profile</MenuItem>
                                     <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                                 </Menu>
