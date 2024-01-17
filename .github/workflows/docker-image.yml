@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -12,16 +12,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
-      - name: pwd
-        run: |
-          ls /home/runner/work/SeezItt-web-app/SeezItt-web-app/
-          
+
       - name: set env vars
         run: |
           cp -r .env.example .env
           sed -i 's/VITE_API_URL=/VITE_API_URL=${{ secrets.DEV_VITE_API_URL }}/' .env
-          cat .env  # Print the content of the .env file for debugging
+          echo "VITE_API_URL=${{ secrets.DEV_VITE_API_URL }}"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -39,13 +35,12 @@ jobs:
 
       - name: Deploy static site to S3 bucket
         run: |
-          # aws s3 sync /home/runner/work/SeezItt-web-app/SeezItt-web-app/ s3://${{ secrets.DEV_S3_BUCKET }} --delete
           aws s3 sync ./dist/ s3://${{ secrets.DEV_S3_BUCKET }} --delete
-          
+
       - name: Run invalidation
         uses: lbertenasco/s3-deploy@v1
         with:
-            folder: /home/runner/work/SeezItt-web-app/SeezItt-web-app/dist
-            bucket: ${{ secrets.DEV_S3_BUCKET }}
-            dist-id: ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }}
-            invalidation: / *
+          folder: /home/runner/work/SeezItt-web-app/SeezItt-web-app/dist
+          bucket: ${{ secrets.DEV_S3_BUCKET }}
+          dist-id: ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }}
+          invalidation: /*
