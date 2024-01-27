@@ -247,6 +247,10 @@ h6 {
   font-weight: 400;
   line-height: 150%;
 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
 }
 
 .squareIconStyle {

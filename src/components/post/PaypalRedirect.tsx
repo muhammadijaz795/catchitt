@@ -20,9 +20,11 @@ const PayPalRedirect: React.FC<PayPalRedirectProps> = ({ htmlContent }) => {
     }, [htmlContent]);
 
     return (
-        <div>
-            {/* You can render additional components or a loading message here */}
-            Loading PayPal Redirect...
+        <div style={{ width: '100%', height: '100%' }}>
+            <iframe src={htmlContent} style={{
+                width: "100%",
+                height: "100%"
+            }} />
         </div>
     );
 };
