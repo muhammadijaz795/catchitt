@@ -48,7 +48,7 @@ h6 {
 
 .middleSectionDiv {
   display: inline-flex;
-  gap: 15%;
+  // gap: 15%;
   height: 100%;
   width: 100%;
   max-width: 655px;
@@ -57,7 +57,8 @@ h6 {
   align-items: flex-start;
   justify-content: space-between;
   border-radius: 8px;
-
+  margin: auto;
+  padding-bottom: 1rem;
 }
 
 .container {
@@ -66,8 +67,9 @@ h6 {
   display: flex;
   flex-direction: row;
   gap: 0px 245px;
-  padding-right: 199px;
+  // padding-right: 199px;
   padding-top: 0px;
+  padding-bottom: 1rem;
 }
 
 .accountCardDiv {
@@ -76,7 +78,7 @@ h6 {
   flex-direction: column;
   align-items: flex-start;
   border-radius: 8px;
-  background: var(--default-white, #FFF);
+  background: var(--default-white, #fff);
 }
 
 .avatarImgCircle {
@@ -123,9 +125,9 @@ h6 {
   width: 117px;
   height: 40px;
   border-radius: 6px;
-  border: 1px solid var(--foundation-primary-primary-500, #5448B2);
-  background: var(--default-white, #5448B2);
-  color: var(--default-white, #FFF);
+  border: 1px solid var(--foundation-primary-primary-500, #5448b2);
+  background: var(--default-white, #5448b2);
+  color: var(--default-white, #fff);
   /* Small/Semibold */
   font-family: Poppins;
   font-size: 14px;
@@ -137,14 +139,14 @@ h6 {
 
 .followingBtn {
   border-radius: 6px;
-  background-color: #EEEDF7;
+  background-color: #eeedf7;
   width: 117px;
   display: flex;
   height: 40px;
   padding: 0px 12px;
   justify-content: center;
   align-items: center;
-  border-color: #EEEDF7;
+  border-color: #eeedf7;
   color: #5448b2;
   /* Small/Semibold */
   font-family: Poppins;
@@ -183,9 +185,9 @@ h6 {
   justify-content: space-between;
   line-height: 1;
   gap: 16px;
+  border-radius: 8px;
   row-gap: 32px;
-  background: var(--default-white, #FFF);
-
+  background: var(--default-white, #fff);
 }
 
 .nameText {
@@ -330,7 +332,7 @@ h6 {
 }
 
 .instructionsModalTitleText {
-  color: var(--login-title, #574D68);
+  color: var(--login-title, #574d68);
   /* Title */
   font-family: Poppins;
   font-size: 35px;
@@ -367,7 +369,7 @@ h6 {
 }
 
 .infoTextLink {
-  color: var(--foundation-secondary-secondary-500, #437ED7);
+  color: var(--foundation-secondary-secondary-500, #437ed7);
   /* Small/Regular */
   font-family: Poppins;
   font-size: 14px;
@@ -397,7 +399,7 @@ h6 {
 }
 
 .blueText {
-  color: var(--foundation-primary-primary-500, #5448B2);
+  color: var(--foundation-primary-primary-500, #5448b2);
   text-align: center;
   /* Base/Regular */
   font-family: Poppins;
@@ -409,7 +411,7 @@ h6 {
 }
 
 .greyText {
-  color: var(--foundation-body-body-300, #6B6B6B);
+  color: var(--foundation-body-body-300, #6b6b6b);
   text-align: center;
   /* Small/Regular */
   font-family: Poppins;
@@ -448,14 +450,14 @@ h6 {
   align-items: center;
   padding-bottom: 18px;
   padding-top: 18px;
-  border-bottom: 1px solid #DFDFDF;
+  border-bottom: 1px solid #dfdfdf;
 }
 
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid #5448B2;
-  border-bottom-color: #FF3D00;
+  border: 5px solid #5448b2;
+  border-bottom-color: #ff3d00;
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;

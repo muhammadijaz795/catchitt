@@ -5,12 +5,22 @@ import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { TopBar } from '../top-bar/top-bar';
 import styles from './push-notifications.module.scss';
 
-import { FormControlLabel, FormGroup, IconButton, Switch, SwitchProps, styled } from '@mui/material';
+import {
+    FormControlLabel,
+    FormGroup,
+    IconButton,
+    Switch,
+    SwitchProps,
+    styled,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { LeftArrow } from './svg-components/LeftArrow';
+import Layout from '../../shared/layout';
 
-export interface PushNotificationsPageProps { className?: string }
+export interface PushNotificationsPageProps {
+    className?: string;
+}
 
 interface NotificationsSettings {
     feedback: boolean;
@@ -24,20 +34,21 @@ interface NotificationsSettings {
 export const PushNotificationsPage = ({ className }: PushNotificationsPageProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
     const token = useAuthStore((state) => state.token);
-    const [notificationsSettingsData, setNotificationsSettingsData] = useState<NotificationsSettings>();
+    const [notificationsSettingsData, setNotificationsSettingsData] =
+        useState<NotificationsSettings>();
     const [settings, setSettings] = useState({
         feedback: true,
         reminders: true,
         news: true,
         followers: true,
-        messages: true
+        messages: true,
     });
     const API_KEY = process.env.VITE_API_URL;
     const navigate = useNavigate();
 
     const handleGoBack = () => {
         navigate('/settings/account'); // Navigate back to the previous page
-        setSettingsDropdown(true)
+        setSettingsDropdown(true);
     };
 
     if (!isLoggedIn) {
@@ -45,10 +56,10 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
     }
 
     useEffect(() => {
-        setIndex(5)
-        setSettingsDropdown(true)
-        handleFetchNotificationsSettings()
-    }, [])
+        setIndex(5);
+        setSettingsDropdown(true);
+        handleFetchNotificationsSettings();
+    }, []);
 
     const handleFetchNotificationsSettings = async () => {
         try {
@@ -63,9 +74,9 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                 console.log(responseData.data);
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     useEffect(() => {
         if (notificationsSettingsData) {
@@ -74,7 +85,7 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                 reminders: notificationsSettingsData.reminders,
                 news: notificationsSettingsData.news,
                 followers: notificationsSettingsData.followers,
-                messages: notificationsSettingsData.messages
+                messages: notificationsSettingsData.messages,
             });
         }
     }, [notificationsSettingsData]);
@@ -90,7 +101,8 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
         fetch(`${API_KEY}/profile/notifications-settings`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json', Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(updatedSettings),
         })
@@ -110,23 +122,26 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
     };
 
     return (
-        <div className={classNames(styles.root, className)}>
-            <div className={styles.topBarDiv}>
+        // <div className={classNames(styles.root, className)}>
+        <Layout>
+            {/* <div className={styles.topBarDiv}>
                 <TopBar />
-            </div>
+            </div> */}
             <div className={styles.container}>
-                <div className={styles.leftSide}>
+                {/* <div className={styles.leftSide}>
                     <div className={styles.sideNavDiv}>
                         <SideNavBar selectedIndex={selectedIndex} settingsDropdownState={true} />
                     </div>
                     <div className={styles.suggestedActivityDiv}>
                         <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                     </div>
-                </div>
+                </div> */}
                 <div className={styles.middleSectionDiv}>
                     <div className={styles.pageHeader}>
-                        <IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
-                            onClick={handleGoBack}>
+                        <IconButton
+                            sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
+                            onClick={handleGoBack}
+                        >
                             <LeftArrow />
                         </IconButton>
                         <h4>Push notifications</h4>
@@ -136,18 +151,27 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                         <div className={styles.cards}>
                             <FormGroup
                                 sx={{
-                                    width: '100%', display: 'flex',
-                                    flexDirection: 'row', justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
                                 <div className={styles.card}>
                                     <p>Feedback Emails</p>
                                     <FormControlLabel
                                         label={undefined}
                                         labelPlacement="start"
-                                        control={<IOSSwitch sx={{ m: 1 }} checked={settings?.feedback || false}
-                                            onChange={(e: any) => handleSwitchChange(e, 'feedback')}
-                                        />}
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={settings?.feedback || false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'feedback')
+                                                }
+                                            />
+                                        }
                                     />
                                 </div>
                                 <div className={styles.card}>
@@ -155,9 +179,15 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                                     <FormControlLabel
                                         label={undefined}
                                         labelPlacement="start"
-                                        control={<IOSSwitch sx={{ m: 1 }} checked={settings?.reminders || false}
-                                            onChange={(e: any) => handleSwitchChange(e, 'reminders')}
-                                        />}
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={settings?.reminders || false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'reminders')
+                                                }
+                                            />
+                                        }
                                     />
                                 </div>
                                 <div className={styles.card}>
@@ -165,9 +195,13 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                                     <FormControlLabel
                                         label={undefined}
                                         labelPlacement="start"
-                                        control={<IOSSwitch sx={{ m: 1 }} checked={settings?.news || false}
-                                            onChange={(e: any) => handleSwitchChange(e, 'news')}
-                                        />}
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={settings?.news || false}
+                                                onChange={(e: any) => handleSwitchChange(e, 'news')}
+                                            />
+                                        }
                                     />
                                 </div>
                             </FormGroup>
@@ -179,18 +213,27 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                             <FormGroup
                                 // onChange={handleSettingsChange}
                                 sx={{
-                                    width: '100%', display: 'flex',
-                                    flexDirection: 'row', justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
                                 <div className={styles.card}>
                                     <p>New Followers</p>
                                     <FormControlLabel
                                         label={undefined}
                                         labelPlacement="start"
-                                        control={<IOSSwitch sx={{ m: 1 }} checked={settings?.followers || false}
-                                            onChange={(e: any) => handleSwitchChange(e, 'followers')}
-                                        />}
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={settings?.followers || false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'followers')
+                                                }
+                                            />
+                                        }
                                     />
                                 </div>
                             </FormGroup>
@@ -202,18 +245,27 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                             <FormGroup
                                 // onChange={handleSettingsChange}
                                 sx={{
-                                    width: '100%', display: 'flex',
-                                    flexDirection: 'row', justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
                                 <div className={styles.card}>
                                     <p>Messages</p>
                                     <FormControlLabel
                                         label={undefined}
                                         labelPlacement="start"
-                                        control={<IOSSwitch sx={{ m: 1 }} checked={settings?.messages || false}
-                                            onChange={(e: any) => handleSwitchChange(e, 'messages')}
-                                        />}
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={settings?.messages || false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'messages')
+                                                }
+                                            />
+                                        }
                                     />
                                 </div>
                             </FormGroup>
@@ -221,11 +273,9 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                     </div>
                 </div>
             </div>
-        </div>
+        </Layout>
     );
 };
-
-
 
 const IOSSwitch = styled((props: SwitchProps) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -255,9 +305,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
         },
         '&.Mui-disabled .MuiSwitch-thumb': {
             color:
-                theme.palette.mode === 'light'
-                    ? theme.palette.grey[100]
-                    : theme.palette.grey[600],
+                theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
         },
         '&.Mui-disabled + .MuiSwitch-track': {
             opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,

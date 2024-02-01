@@ -24,52 +24,56 @@ import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 import Gifts from '../discover/popups/gifts';
 import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
-
+import Layout from '../../shared/layout';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
     const authstore = useAuthStore();
     const [activeTab, setActiveTab] = useState('Videos');
     const [profileModal, setProfileModal] = useState(false);
-    const [storyPopup, setStoryPopup] = useState(false)
+    const [storyPopup, setStoryPopup] = useState(false);
     const [followModal, setFollowModal] = useState<null | string>(null);
     const [likesModal, setLikesModal] = useState(false);
-    const [profileData, setProfileData] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(false);
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
     const [videoModal, setVideoModal] = useState(false);
-    const [userVideos, setUserVideos] = useState([])
-    const [userlikedVideos, setUserlikedVideos] = useState([])
-    const [usertaggedVideos, setUsertaggedVideos] = useState([])
-    const [bookmarkVideos, setbookmarkVideos] = useState([])
-    const [videoModalInfo, setVideoModalInfo] = useState({})
-    const [reportPopup, setReportPopup] = useState(false)
-    const [giftsPopup, setGiftsPopup] = useState(false)
-    const [blockPopup, setBlockPopup] = useState(false)
-    const [activeVideo, setActiveVideo] = useState()
+    const [userVideos, setUserVideos] = useState([]);
+    const [userlikedVideos, setUserlikedVideos] = useState([]);
+    const [usertaggedVideos, setUsertaggedVideos] = useState([]);
+    const [bookmarkVideos, setbookmarkVideos] = useState([]);
+    const [videoModalInfo, setVideoModalInfo] = useState({});
+    const [reportPopup, setReportPopup] = useState(false);
+    const [giftsPopup, setGiftsPopup] = useState(false);
+    const [blockPopup, setBlockPopup] = useState(false);
+    const [activeVideo, setActiveVideo] = useState();
 
     useEffect(() => {
         fetch(`${API_KEY}/profile`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        }).then((res) => res.json()).then((data) => {
-            setProfileData(data.data)
-            setLoading(false)
-        }).catch((err) => {
-            console.log(err);
-            setLoading(false)
         })
+            .then((res) => res.json())
+            .then((data) => {
+                setProfileData(data.data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            });
         // 63a04301a00ed2af91f17e1d user id contain videos
         fetch(`${API_KEY}/profile/${authstore._id}/videos`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        }).then((res) => res.json()).then((data) => {
-
-            setUserVideos(data.data.data);
-            console.log('dataaa', data.data.data);
-            setLoading(false);
         })
+            .then((res) => res.json())
+            .then((data) => {
+                setUserVideos(data.data.data);
+                console.log('dataaa', data.data.data);
+                setLoading(false);
+            })
             .catch((err) => {
                 console.log(err);
                 setLoading(false);
@@ -81,8 +85,7 @@ export const Profile = (props: any) => {
         })
             .then((res) => res.json())
             .then((data) => {
-
-                setUserlikedVideos(data.data.data)
+                setUserlikedVideos(data.data.data);
                 console.log(data.data.data);
 
                 setLoading(false);
@@ -98,8 +101,7 @@ export const Profile = (props: any) => {
         })
             .then((res) => res.json())
             .then((data) => {
-
-                setUsertaggedVideos(data.data.data)
+                setUsertaggedVideos(data.data.data);
                 console.log(data.data.data);
 
                 setLoading(false);
@@ -115,7 +117,7 @@ export const Profile = (props: any) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                setbookmarkVideos(data.data.data)
+                setbookmarkVideos(data.data.data);
                 setLoading(false);
             })
             .catch((err) => {
@@ -126,13 +128,15 @@ export const Profile = (props: any) => {
         fetch(`${API_KEY}/profile/collection`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        }).then((res) => res.json()).then((data) => {
-            console.log("collectons", data);
-        }).catch((err) => {
-            console.log('collectons error', err);
         })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('collectons', data);
+            })
+            .catch((err) => {
+                console.log('collectons error', err);
+            });
     }, []);
-
 
     const tabs = [
         {
@@ -176,23 +180,24 @@ export const Profile = (props: any) => {
         setFollowModal(tab);
     };
     const onVideoModal = (video: any) => {
-        setVideoModal(!videoModal)
-        setVideoModalInfo(video)
-    }
+        setVideoModal(!videoModal);
+        setVideoModalInfo(video);
+    };
     return (
-        <div className={styles.root}>
-            <div className={styles.topBarDiv}>
+        <Layout>
+            {/* // <div className={styles.root}> */}
+            {/* <div className={styles.topBarDiv}>
                 <TopBar />
-            </div>
+            </div> */}
             <div className={styles.container}>
-                <div className={styles.leftSide}>
+                {/* <div className={styles.leftSide}>
                     <div className={styles.sideNavDiv}>
                         <SideNavBar selectedIndex={selectedIndex} />
                     </div>
                     <div className={styles.suggestedActivityDiv}>
                         <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                     </div>
-                </div>
+                </div> */}
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
@@ -241,30 +246,58 @@ export const Profile = (props: any) => {
                     <div className={styles.contentContainer}>
                         <p className={styles.title}>{activeTab}</p>
                         <div className={styles.posts}>
-                            {activeTab === 'Videos' ?
+                            {activeTab === 'Videos' ? (
                                 <VideoesMaping videos={userVideos} openVideoModal={onVideoModal} />
-                                : null}
-                            {activeTab === 'Liked Videos' ?
-                                <VideoesMaping videos={userlikedVideos} openVideoModal={onVideoModal} />
-                                : null}
-                            {activeTab === 'Bookmarks' ?
-                                <VideoesMaping videos={bookmarkVideos} openVideoModal={onVideoModal} />
-                                : null}
-                            {activeTab === 'Tagged Posts' ?
-                                <VideoesMaping videos={usertaggedVideos} openVideoModal={onVideoModal} />
-
-                                : null}
+                            ) : null}
+                            {activeTab === 'Liked Videos' ? (
+                                <VideoesMaping
+                                    videos={userlikedVideos}
+                                    openVideoModal={onVideoModal}
+                                />
+                            ) : null}
+                            {activeTab === 'Bookmarks' ? (
+                                <VideoesMaping
+                                    videos={bookmarkVideos}
+                                    openVideoModal={onVideoModal}
+                                />
+                            ) : null}
+                            {activeTab === 'Tagged Posts' ? (
+                                <VideoesMaping
+                                    videos={usertaggedVideos}
+                                    openVideoModal={onVideoModal}
+                                />
+                            ) : null}
                         </div>
                     </div>
                 </div>
 
-                <PopupForVideoPlayer gifts={() => setGiftsPopup(true)} onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
-                <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
-                <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+                <PopupForVideoPlayer
+                    gifts={() => setGiftsPopup(true)}
+                    onBlockPopup={() => setBlockPopup(true)}
+                    onReportPopup={() => setReportPopup(true)}
+                    videoModal={videoModal}
+                    onclose={() => setVideoModal(false)}
+                    info={videoModalInfo}
+                />
+                <PopupForReport
+                    openReport={reportPopup}
+                    onReportClose={() => setReportPopup(false)}
+                    info={videoModalInfo}
+                />
+                <PopupForBlock
+                    openBlock={blockPopup}
+                    onBlockClose={() => setBlockPopup(false)}
+                    onReportClose={() => setReportPopup(false)}
+                    info={videoModalInfo}
+                />
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
-                <StoriesOnPublicProfile story={storyPopup} onclose={() => setStoryPopup(false)} openReport={() => setReportPopup(true)} />
-
+                <StoriesOnPublicProfile
+                    story={storyPopup}
+                    onclose={() => setStoryPopup(false)}
+                    openReport={() => setReportPopup(true)}
+                />
             </div>
-        </div>
+            {/* </div> */}
+        </Layout>
     );
 };

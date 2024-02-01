@@ -71,15 +71,24 @@
 
 
 .slider {
-    min-width:30%;
-    max-width:100%;
+    // border:2px solid red;
+    width: 100%;
+    // min-width:30%;
+    // max-width:100%;
     position: absolute;
     left: 0%;
     top: 0%;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .story {
     margin-top: 40px;
+}
+.slider * {
+    margin-left: 0% !important;
+    margin-right: 0% !important;
+
 }
 
 .story>img {

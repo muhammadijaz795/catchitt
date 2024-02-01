@@ -21,6 +21,7 @@ import { SwitchToPersonalPopup } from './components/switchToPersonalPopup';
 import changePassIcon from './svg-components/changePassIcon.svg';
 import redRightArrow from './svg-components/redRightArrow.svg';
 import whiteRightArrow from './svg-components/whiteRightArrow.svg';
+import Layout from '../../shared/layout';
 
 export interface AccountProps {
     className?: string;
@@ -461,19 +462,20 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     return (
         <>
-            <div className={styles.root}>
-                <div className={styles.topBarDiv}>
+            {/* <div className={styles.root}> */}
+            <Layout>
+                {/* <div className={styles.topBarDiv}>
                     <TopBar />
-                </div>
+                </div> */}
                 <div className={styles.container}>
-                    <div className={styles.leftSide}>
+                    {/* <div className={styles.leftSide}>
                         <div className={styles.sideNavDiv}>
                             <SideNavBar selectedIndex={selectedIndex} settingsDropdownState={true} />
                         </div>
                         <div className={styles.suggestedActivityDiv}>
                             <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                         </div>
-                    </div>
+                    </div> */}
                     <div className={styles.middleSectionDiv}>
                         <div className={styles.settingsWrapper}>
                             <div className={styles.pageHeader}>
@@ -633,7 +635,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Layout>
             {openChangePassMainModal && (
                 <>
                     <div>

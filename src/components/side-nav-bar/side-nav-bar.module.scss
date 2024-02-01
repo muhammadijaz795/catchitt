@@ -16,6 +16,9 @@
   font-weight: 600;
   line-height: 120%;
   text-decoration: none;
+  border-radius: 16px;
+  background: var(--Default-white, #fff);
+  box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.03);
 }
 
 .cardDivOpened {
@@ -86,7 +89,6 @@
   display: flex;
   justify-items: start;
   text-decoration: none;
-
 }
 
 .rotate {

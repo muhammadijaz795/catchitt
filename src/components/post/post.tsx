@@ -500,17 +500,18 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                 {
                     method: 'GET',
                     headers: {
-                        'Content-type': 'application/json',
+                        'Accept': '*/*',
+                        // 'Content-type': 'text/html',
                         Authorization: `Bearer ${token}`,
                     },
                 },
             );
 
             if (response.ok) {
-                const htmlContent = await response.json();  // Extract the HTML content
+                const htmlContent = await response.text();  // Extract the HTML content
                 console.log(htmlContent);
                 console.log('it worked!!!!!');
-                setPaypalResponse(htmlContent.data.url);
+                setPaypalResponse(htmlContent);
                 handleOpenPaypalPage();
             } else {
                 // Handle error response

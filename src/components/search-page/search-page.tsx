@@ -19,6 +19,7 @@ import playIcon from '../sounds-page/svg-components/playIcon.png';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 import styles from './search-page.module.scss';
+import Layout from '../../shared/layout';
 
 
 interface User {
@@ -905,29 +906,29 @@ export const SearchPage = () => {
     }, [open]);
 
     return (
-        <div>
-            <div className={styles.topBarDiv}>
+        <Layout>
+            {/* <div className={styles.topBarDiv}>
                 {showHashtagPage ?
                     <TopBar searchBar={true} /> :
                     <TopBar searchBar={false} />
                 }
-            </div>
+            </div> */}
             <div className={styles.container}>
-                <div className={styles.leftSide}>
+                {/* <div className={styles.leftSide}>
                     <div className={styles.sideNavDiv} >
                         <SideNavBar selectedIndex={selectedIndex} />
                     </div>
                     <div className={styles.suggestedActivityDiv}>
                         <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                     </div>
-                </div>
+                </div> */}
                 <div className={styles.middleSectionDiv}>
                     {showHashtagPage ? (
                         <div className={styles.container}>
                             {renderSearchResults}
                         </div>
                     ) : (
-                        <>
+                        <div>
                             <div className={styles.searchBar}>
                                 <TextField
                                     type="text"
@@ -999,7 +1000,7 @@ export const SearchPage = () => {
                             <div className={styles.container}>
                                 {renderSearchResults}
                             </div>
-                        </>
+                        </div>
                     )}
 
                     {/* Render the modal based on the selected tab */}
@@ -1014,6 +1015,6 @@ export const SearchPage = () => {
                     )}
                 </div>
             </div>
-        </div >
+        </ Layout >
     );
 };

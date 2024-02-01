@@ -1,19 +1,21 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import the necessary hooks
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import the necessary hooks
 import { useAuthStore } from '../../store/authStore';
 import styles from './side-nav-bar.module.scss';
 
 export interface SideNavBarProps {
     className?: string;
-    selectedIndex: number | null;
+    selectedIndex?: number | null;
     settingsDropdownState?: boolean;
 }
 
-export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps) => {
+export const SideNavBar = ({ className,  settingsDropdownState }: SideNavBarProps) => {
     const { settingsDropdown, setSettingsDropdown, selectedIndex, setIndex } = useAuthStore(); // Get selectedIndex and setIndex from the store
 
     const navigate = useNavigate();
+
+    const {pathname} = useLocation()
 
     const [isRotated, setRotated] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdownState);
@@ -61,7 +63,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                 <Link to="/home" reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <div
                         className={classNames(
-                            `${selectedIndex === 0 ? styles.selected : styles.navLink}`
+                            `${pathname.includes('/home') ? styles.selected : styles.navLink}`
                         )}
                         onClick={() => {
                             handleLinkClick(0)
@@ -76,7 +78,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             viewBox="0 0 24 24"
                             fill="none"
                             className={classNames(
-                                `${selectedIndex === 0 ? styles.selectedStroke : ''}`
+                                `${pathname.includes('/home') ? styles.selectedStroke : ''}`
                             )}
                         >
                             <path
@@ -94,7 +96,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     <div
                         className={classNames(
                             // `${selectedIndex === 1 ? styles.selected : styles.navLink}`
-                            `${selectedIndex === 1 ? styles.selected : styles.navLink}`
+                            `${pathname.includes('/comingsoon') ? styles.selected : styles.navLink}`
 
                         )}
                         onClick={() => {
@@ -110,7 +112,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             viewBox="0 0 24 24"
                             fill="none"
                             className={classNames(
-                                `${selectedIndex === 1 ? styles.selectedStroke : ''}`
+                                `${pathname.includes('/comingsoon') ? styles.selectedStroke : ''}`
                             )}
                         >
                             <path
@@ -151,7 +153,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
                     <div
                         className={classNames(
-                            `${selectedIndex === 2 ? styles.selected : styles.navLink}`
+                            `${pathname.includes('/discover') ? styles.selected : styles.navLink}`
                         )}
                         onClick={() => {
                             handleLinkClick(2)
@@ -166,7 +168,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             viewBox="0 0 24 24"
                             fill="none"
                             className={classNames(
-                                `${selectedIndex === 2 ? styles.selectedStroke : ''}`
+                                `${pathname.includes('/discover') ? styles.selectedStroke : ''}`
                             )}
                         >
                             <path
@@ -188,13 +190,13 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 strokeLinejoin="round"
                             />
                         </svg>
-                        <p className={styles.linkWord}>Discover (Coming Soon)</p>
+                        <p className={styles.linkWord}>Discover</p>
                     </div>
                 </Link>
                 <Link to="/notifications" reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <div
                         className={classNames(
-                            `${selectedIndex === 3 ? styles.selected : styles.navLink}`
+                            `${pathname.includes('/notifications') ? styles.selected : styles.navLink}`
                         )}
                         onClick={() => {
                             handleLinkClick(3)
@@ -209,7 +211,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             viewBox="0 0 24 24"
                             fill="none"
                             className={classNames(
-                                `${selectedIndex === 3 ? styles.selectedStroke : ''}`
+                                `${pathname.includes('/notifications') ? styles.selectedStroke : ''}`
                             )}
                         >
                             <path
@@ -274,7 +276,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={styles.linkWord}>Settings</p>
                     </div>
                     <div onClick={() => toggleDropdown()}>
-                        <svg className={isRotated ? styles.notRotated : styles.rotate}
+                        <svg className={!isRotated ? styles.notRotated : styles.rotate}
                             width="16" height="9" viewBox="0 0 16 9" fill="#5448B2" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0.825865 0.212584C1.08354 -0.0450935 1.48677 -0.0685187 1.77091 0.142308L1.85231 0.212584L8.11328 6.47323L14.3743 0.212584C14.6319 -0.0450929 15.0352 -0.0685181 15.3193 0.142309L15.4007 0.212584C15.6584 0.470262 15.6818 0.873485 15.471 1.15762L15.4007 1.23903L8.6265 8.01322C8.36883 8.2709 7.9656 8.29433 7.68146 8.0835L7.60006 8.01322L0.825865 1.23903C0.54242 0.955584 0.54242 0.496029 0.825865 0.212584Z" fill="#5448B2" />
                         </svg>

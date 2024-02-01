@@ -9,6 +9,8 @@ import authSplashImg from '../../assets/authSplashImg.png';
 import resend from '../../assets/resend.png';
 import InputField from '../reusables/InputField';
 import styles from './forgot-password.module.scss';
+import ForgotPasswordPage from '../authentication/components/ForgotPassword';
+import { arrow } from '../../icons';
 
 export interface ForgotPasswordProps {
     className?: string;
@@ -129,15 +131,23 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                     style={{
                         // marginTop: '25%',
                         marginBottom: '0%',
-                        marginLeft: '80px',
-                        width: '80%',
                         alignContent: 'center',
                         alignSelf: 'center',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        width:'100%',
+                        padding:'0px 80px'
                     }}
                 >
                     {response ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'center', alignItems: 'center', gap: '24px' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                                gap: '24px',
+                            }}
+                        >
                             <img src={atForgotPwd} alt="" className={styles.atForgotPwd} />
                             <h3 className={styles.creatTitle} style={{ marginTop: '5%' }}>
                                 {t('checkyouremail.text')}
@@ -158,47 +168,55 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                             </a>
                         </div>
                     ) : (
-                        <form className={styles.authInputFields}>
-                            <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                                {t('forgotpassword.link')}
-                            </h3>
-                            <p>{t('dontworry.text')}</p>
-                            <div style={{ marginTop: '20px' }}>
-                                {errorMessage ? (
-                                    <h4
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: '16px',
-                                            color: 'red',
-                                            marginBottom: '20px',
-                                        }}
-                                    >
-                                        {errorMessage}
-                                    </h4>
-                                ) : null}
-                            </div>
-                            <div className={styles.inputsDiv}>
-                                <InputField
-                                    type="email"
-                                    placeholder={t('email.input')}
-                                    className="formInputFields"
-                                    value={user.email}
-                                    onChange={(e: { target: { value: string } }) => {
-                                        onUserChange('email', e.target.value);
-                                    }}
-                                />
-                            </div>
+                        // <form className={styles.authInputFields}>
+                        //     <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
+                        //         {t('forgotpassword.link')}
+                        //     </h3>
+                        //     <p>{t('dontworry.text')}</p>
+                        //     <div style={{ marginTop: '20px' }}>
+                        //         {errorMessage ? (
+                        //             <h4
+                        //                 style={{
+                        //                     fontWeight: '700',
+                        //                     fontSize: '16px',
+                        //                     color: 'red',
+                        //                     marginBottom: '20px',
+                        //                 }}
+                        //             >
+                        //                 {errorMessage}
+                        //             </h4>
+                        //         ) : null}
+                        //     </div>
+                        //     <div className={styles.inputsDiv}>
+                        //         <InputField
+                        //             type="email"
+                        //             placeholder={t('email.input')}
+                        //             className="formInputFields"
+                        //             value={user.email}
+                        //             onChange={(e: { target: { value: string } }) => {
+                        //                 onUserChange('email', e.target.value);
+                        //             }}
+                        //         />
+                        //     </div>
 
-                            <div className={styles.signupSubmitDiv}>
-                                <button
-                                    className={styles.signupSubmitBtn}
-                                    onClick={handleForgotPasswordSubmit}
-                                >
-                                    {t('emailmeinstructions.btn')}
-                                </button>
-                                {response ? renderResponse() : ''}
-                            </div>
-                        </form>
+                        //     <div className={styles.signupSubmitDiv}>
+                        //         <button
+                        //             className={styles.signupSubmitBtn}
+                        //             onClick={handleForgotPasswordSubmit}
+                        //         >
+                        //             {t('emailmeinstructions.btn')}
+                        //         </button>
+                        //         {response ? renderResponse() : ''}
+                        //     </div>
+                        // </form>
+                        <ForgotPasswordPage
+                            value={user.email}
+                            onChange={(e: { target: { value: string } }) => {
+                                onUserChange('email', e.target.value);
+                            }}
+                            errorMessage={errorMessage}
+                            onsubmit={handleForgotPasswordSubmit}
+                        />
                     )}
                 </div>
                 <div className={styles.afterTheFormDiv}>
@@ -216,18 +234,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                             >
                                 {currentLanguage?.name}
                                 <span className="m-md-1">
-                                    <svg
-                                        width="7"
-                                        height="6"
-                                        viewBox="0 0 7 6"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M3.5 6L6.53109 0.75H0.468911L3.5 6Z"
-                                            fill="#D9D9D9"
-                                        />
-                                    </svg>
+                                    <img style={{marginLeft:8}} src={arrow} alt="" />
                                 </span>
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownDefaultButton">
@@ -235,7 +242,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                     <li key={country_code}>
                                         <a
                                             href="#"
-                                            className={classNames("dropdown-item", {
+                                            className={classNames('dropdown-item', {
                                                 disabled: currentLanguageCode === code,
                                             })}
                                             onClick={() => {

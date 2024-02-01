@@ -20,12 +20,11 @@ import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 import Gifts from '../discover/popups/gifts';
 import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
-
-
+import Layout from '../../shared/layout';
 
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
-    const [storyPopup, setStoryPopup] = useState(false)
+    const [storyPopup, setStoryPopup] = useState(false);
     const params = useParams();
     const [activeTab, setActiveTab] = useState('Videos');
     const [profileModal, setProfileModal] = useState(false);
@@ -34,14 +33,13 @@ export const PublicProfile = (props: any) => {
     const [profileData, setProfileData] = useState<any>(null);
     const [videosData, setVideosData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
-    const [videoModalInfo, setVideoModalInfo] = useState({})
-    const [reportPopup, setReportPopup] = useState(false)
-    const [giftsPopup, setGiftsPopup] = useState(false)
-    const [blockPopup, setBlockPopup] = useState(false)
+    const [videoModalInfo, setVideoModalInfo] = useState({});
+    const [reportPopup, setReportPopup] = useState(false);
+    const [giftsPopup, setGiftsPopup] = useState(false);
+    const [blockPopup, setBlockPopup] = useState(false);
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
     const [videoModal, setVideoModal] = useState(false);
-
 
     // Use Function For Get the User Followers
     useEffect(() => {
@@ -71,7 +69,7 @@ export const PublicProfile = (props: any) => {
                 console.log(err);
                 setLoading(false);
             });
-    }, [params?.id])
+    }, [params?.id]);
     const tabs = [
         {
             title: 'Videos',
@@ -99,23 +97,25 @@ export const PublicProfile = (props: any) => {
         setFollowModal(tab);
     };
     const onVideoModal = (video: any) => {
-        setVideoModal(!videoModal)
-        setVideoModalInfo(video)
-    }
+        setVideoModal(!videoModal);
+        setVideoModalInfo(video);
+    };
     return (
-        <div className={styles.root}>
-            <div className={styles.topBarDiv}>
+        <Layout>
+            {/* //{' '} */}
+            {/* <div className={styles.root}> */}
+            {/* <div className={styles.topBarDiv}>
                 <TopBar />
-            </div>
+            </div> */}
             <div className={styles.container}>
-                <div className={styles.leftSide}>
+                {/* <div className={styles.leftSide}>
                     <div className={styles.sideNavDiv}>
                         <SideNavBar selectedIndex={selectedIndex} />
                     </div>
                     <div className={styles.suggestedActivityDiv}>
                         <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                     </div>
-                </div>
+                </div> */}
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
@@ -148,7 +148,7 @@ export const PublicProfile = (props: any) => {
                         openBlock={() => setBlockPopup(true)}
                         showStories={() => setStoryPopup(true)}
                         storyVideos={(stories: any) => {
-                            setVideoModalInfo(stories)
+                            setVideoModalInfo(stories);
                         }}
                     />
                     <div className={styles.tabs}>
@@ -167,20 +167,39 @@ export const PublicProfile = (props: any) => {
                     </div>
                     <div className={styles.contentContainer}>
                         <p className={styles.title}>{activeTab}</p>
-                        {activeTab === 'Videos' ?
+                        {activeTab === 'Videos' ? (
                             <VideoesMaping videos={videosData} openVideoModal={onVideoModal} />
-                            : null}
-                        {activeTab !== 'Videos' ? (
-                            < PrivatePosts />
                         ) : null}
+                        {activeTab !== 'Videos' ? <PrivatePosts /> : null}
                     </div>
                 </div>
-                <StoriesOnPublicProfile story={storyPopup} onclose={() => setStoryPopup(false)} openReport={() => setReportPopup(true)} />
-                <PopupForVideoPlayer gifts={() => setGiftsPopup(true)} onBlockPopup={() => setBlockPopup(true)} onReportPopup={() => setReportPopup(true)} videoModal={videoModal} onclose={() => setVideoModal(false)} info={videoModalInfo} />
-                <PopupForReport openReport={reportPopup} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
-                <PopupForBlock openBlock={blockPopup} onBlockClose={() => setBlockPopup(false)} onReportClose={() => setReportPopup(false)} info={videoModalInfo} />
+                <StoriesOnPublicProfile
+                    story={storyPopup}
+                    onclose={() => setStoryPopup(false)}
+                    openReport={() => setReportPopup(true)}
+                />
+                <PopupForVideoPlayer
+                    gifts={() => setGiftsPopup(true)}
+                    onBlockPopup={() => setBlockPopup(true)}
+                    onReportPopup={() => setReportPopup(true)}
+                    videoModal={videoModal}
+                    onclose={() => setVideoModal(false)}
+                    info={videoModalInfo}
+                />
+                <PopupForReport
+                    openReport={reportPopup}
+                    onReportClose={() => setReportPopup(false)}
+                    info={videoModalInfo}
+                />
+                <PopupForBlock
+                    openBlock={blockPopup}
+                    onBlockClose={() => setBlockPopup(false)}
+                    onReportClose={() => setReportPopup(false)}
+                    info={videoModalInfo}
+                />
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
             </div>
-        </div>
+            {/* </div> */}
+        </Layout>
     );
 };

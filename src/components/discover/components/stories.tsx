@@ -47,11 +47,10 @@ export default function Stories({ showStories }: any) {
         speed: 500,
         slidesToShow: 7,
         slidesToScroll: 1,
-        afterChange: (currentSlide: any) => {
-            setSliderIndex(currentSlide)
-            console.log(currentSlide);
-
-        }
+        // afterChange: (currentSlide: any) => {
+        //     setSliderIndex(currentSlide)
+        //     console.log(currentSlide);
+        // }
     };
     return (
         <>
