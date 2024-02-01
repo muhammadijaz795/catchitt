@@ -13,6 +13,7 @@ import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import { useAuthStore } from '../../store/authStore';
 
 import './components-styles.css';
+import { search } from '../../icons';
 
 interface InputFieldProps {
     onChange?: any;
@@ -189,13 +190,15 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
                                 onChange={(e) => {
                                     setSearchQuery(e.target.value);
                                 }}
+                                style={{outline:0}}
                                 InputProps={{
                                     ...params.InputProps,
                                     type: 'search',
                                     startAdornment: (
                                         <InputAdornment position="start">
                                             <IconButton size="small" onClick={handleSearch}>
-                                                <SearchIcon />
+                                                {/* <SearchIcon /> */}
+                                                <img src={search} alt="" />
                                             </IconButton>
                                         </InputAdornment>
                                     ),
@@ -231,6 +234,7 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
                                         fontStyle: 'normal',
                                         fontWeight: '400',
                                         lineHeight: '21px',
+                                        outline:0,
                                         color: '#acacac',
                                         background:
                                             'no-repeat padding-box border-box 20px center / auto scroll url(../../assets/Search.svg) #f8f8f8',

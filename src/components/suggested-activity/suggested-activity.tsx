@@ -8,13 +8,12 @@ import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import useDebounce from '../reusables/useDebounce';
 import { Follow } from './svg-components/Follow';
 import { Following } from './svg-components/Following';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export interface SuggestedActivityProps {
     className?: string;
     showSuggestedContent?: boolean;
     showActivity?: boolean;
-
 }
 
 interface Account {
@@ -27,22 +26,22 @@ interface Notification {
     _id: string;
     createdTime: number;
     user: {
-        id: string,
-        avatar: string,
-        username: string,
-        name: string
-        isVerified: boolean,
-    },
+        id: string;
+        avatar: string;
+        username: string;
+        name: string;
+        isVerified: boolean;
+    };
     triggeredUser: {
-        _id: string,
-        avatar: string,
-        isVerified: boolean,
-        username: string,
-        name: string
+        _id: string;
+        avatar: string;
+        isVerified: boolean;
+        username: string;
+        name: string;
     };
     message: string;
     type: string;
-    isRead: boolean,
+    isRead: boolean;
 }
 
 interface FollowedUser {
@@ -56,304 +55,413 @@ interface FollowedUser {
     };
 }
 
-export const SuggestedActivity = memo(({
-    className,
-    showSuggestedContent,
-    showActivity,
-}: SuggestedActivityProps) => {
-    let globalUserId: string = '';
-    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-    const [errorMessage] = useState('');
-    const [activityData, setActivityData] = useState<Notification[]>([]);
-    const [randomAccs, setRandomAccs] = useState([])
-    const API_KEY = process.env.VITE_API_URL;
-    const suggestedEndPoint = '/profile/suggested-users';
-    const activityEndPoint = '/notification';
-    const token = useAuthStore((state) => state.token);
-    // const [activityUserFollowed, setActivityUserFollowed] = useState(false);
-    const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
-    const [followedUsersData, setFollowedUsersData] = useState<FollowedUser[]>([]);
+export const SuggestedActivity = memo(
+    ({ className, showSuggestedContent, showActivity }: SuggestedActivityProps) => {
+        let globalUserId: string = '';
+        const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+        const [errorMessage] = useState('');
+        const [activityData, setActivityData] = useState<Notification[]>([]);
+        const [randomAccs, setRandomAccs] = useState([]);
+        const navigate = useNavigate();
+        const { pathname } = useLocation();
+        const API_KEY = process.env.VITE_API_URL;
+        const suggestedEndPoint = '/profile/suggested-users';
+        const activityEndPoint = '/notification';
+        const token = useAuthStore((state) => state.token);
+        // const [activityUserFollowed, setActivityUserFollowed] = useState(false);
+        const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
+        const [followedUsersData, setFollowedUsersData] = useState<FollowedUser[]>([]);
 
-    const handleFetchFollowedUsers = async (userId: string) => {
-        try {
-            const response = await fetch(`${API_KEY}/profile/${userId}/followers`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                setFollowedUsersData(responseData.data.data);
-                console.log(`the users I'm following: `);
-                console.log(responseData.data);
-                // handleFetchActivity;
-            }
-
-        } catch (error) {
-            // Handle any errors here.
-            console.log(error)
-        }
-    }
-
-
-
-    const handleFetchSuggestedAccounts = async () => {
-        if (!isLoggedIn) {
+        const handleFetchFollowedUsers = async (userId: string) => {
             try {
-                const response = await fetch(`${API_KEY}/profile/public/suggested-users?page=1`, {
+                const response = await fetch(`${API_KEY}/profile/${userId}/followers`, {
                     method: 'GET',
-                    headers: { 'Content-type': 'application/json', },
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
 
                 if (response.ok) {
                     const responseData = await response.json();
-                    setRandomAccs(getRandomAccounts(responseData.data.data, 4))
-                    console.log('fetched public suggested acccounts: ');
-                    console.log(response);
-                } else {
-                    console.log(response);
+                    setFollowedUsersData(responseData.data.data);
+                    console.log(`the users I'm following: `);
+                    console.log(responseData.data);
+                    // handleFetchActivity;
                 }
             } catch (error) {
-                // console.error(error);
-                console.error()
+                // Handle any errors here.
+                console.log(error);
             }
-        } else {
+        };
+
+        const handleFetchSuggestedAccounts = async () => {
+            if (!isLoggedIn) {
+                try {
+                    const response = await fetch(
+                        `${API_KEY}/profile/public/suggested-users?page=1`,
+                        {
+                            method: 'GET',
+                            headers: { 'Content-type': 'application/json' },
+                        }
+                    );
+
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        setRandomAccs(getRandomAccounts(responseData.data.data, 4));
+                        console.log('fetched public suggested acccounts: ');
+                        console.log(response);
+                    } else {
+                        console.log(response);
+                    }
+                } catch (error) {
+                    // console.error(error);
+                    console.error();
+                }
+            } else {
+                try {
+                    const response = await fetch(`${API_KEY}${suggestedEndPoint}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        setRandomAccs(getRandomAccounts(responseData.data.data, 4));
+                    }
+                } catch (error) {
+                    // console.error(error);
+                    console.log(errorMessage);
+                }
+            }
+        };
+
+        useEffect(() => {
+            if (randomAccs.length == 0) {
+                handleFetchSuggestedAccounts();
+            }
+            // handleFetchSuggestedAccounts();
+            handleFetchActivity();
+        }, []);
+
+        const handleFollowClick = async (accountId: string) => {
             try {
-                const response = await fetch(`${API_KEY}${suggestedEndPoint}`, {
-                    method: 'GET',
-                    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-                });
-
-                if (response.ok) {
-                    const responseData = await response.json();
-                    setRandomAccs(getRandomAccounts(responseData.data.data, 4))
-                }
-            } catch (error) {
-                // console.error(error);
-                console.log(errorMessage);
-            }
-        }
-    };
-
-    useEffect(() => {
-        if (randomAccs.length == 0) {
-            handleFetchSuggestedAccounts();
-        }
-        // handleFetchSuggestedAccounts();
-        handleFetchActivity();
-    }, []);
-
-    const handleFollowClick = async (accountId: string) => {
-        try {
-            const response = await fetch(
-                `${API_KEY}/profile/follow/${accountId}/`,
-                {
+                const response = await fetch(`${API_KEY}/profile/follow/${accountId}/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     },
+                });
+
+                if (response.ok) {
+                    // Handle success as needed
+                    console.log(`user: ${accountId} is followed`);
+                    // Update the followedAccounts state
+                    setFollowedAccounts((prevFollowedAccounts: any) => ({
+                        ...prevFollowedAccounts,
+                        [accountId]: !prevFollowedAccounts[accountId], // Mark the account as followed
+                    }));
                 }
-            );
-
-            if (response.ok) {
-                // Handle success as needed
-                console.log(`user: ${accountId} is followed`);
-                // Update the followedAccounts state
-                setFollowedAccounts((prevFollowedAccounts: any) => ({
-                    ...prevFollowedAccounts,
-                    [accountId]: !prevFollowedAccounts[accountId], // Mark the account as followed
-                }));
+            } catch (error) {
+                // Handle error as needed
             }
-        } catch (error) {
-            // Handle error as needed
-        }
-    };
+        };
 
-    const handleFollowBtnClicked = async (
-        event: React.MouseEvent<HTMLElement>,
-        accountId: string
-    ) => {
-        console.log(accountId);
-        await handleFollowClick(accountId);
-    };
-    const dHandleFollowBtnClicked = useDebounce(handleFollowBtnClicked, 3)
+        const handleFollowBtnClicked = async (
+            event: React.MouseEvent<HTMLElement>,
+            accountId: string
+        ) => {
+            console.log(accountId);
+            await handleFollowClick(accountId);
+        };
+        const dHandleFollowBtnClicked = useDebounce(handleFollowBtnClicked, 3);
 
-
-    const handleFetchActivity = async () => {
-        if (!isLoggedIn) { return }
-        try {
-            const response = await fetch(`${API_KEY}${activityEndPoint}`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                // const { avatar, name } = responseData.data; // Extract token value from data object
-                // avatarUrl = avatar;
-                setActivityData(responseData.data.data);
-                globalUserId = responseData.data.data[0].user._id;
-                // console.log(`the global user id: ${globalUserId}`);
-                handleFetchFollowedUsers(globalUserId)
-                console.log(responseData);
-                console.log(activityData);
+        const handleFetchActivity = async () => {
+            if (!isLoggedIn) {
+                return;
             }
-        } catch (error) {
-            console.error(error);
-            console.log(errorMessage);
-        }
-    };
+            try {
+                const response = await fetch(`${API_KEY}${activityEndPoint}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-    const getRandomAccounts = (arr: any, count: number) => {
-        const shuffled = arr.slice(); // Create a copy of the array to avoid modifying the original one
-        let i = arr.length;
-        let temp;
-        let index;
+                if (response.ok) {
+                    const responseData = await response.json();
+                    // const { avatar, name } = responseData.data; // Extract token value from data object
+                    // avatarUrl = avatar;
+                    setActivityData(responseData.data.data);
+                    globalUserId = responseData.data.data[0].user._id;
+                    // console.log(`the global user id: ${globalUserId}`);
+                    handleFetchFollowedUsers(globalUserId);
+                    console.log(responseData);
+                    console.log(activityData);
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(errorMessage);
+            }
+        };
 
-        while (i > 0) {
-            index = Math.floor(Math.random() * i);
-            i--;
+        const getRandomAccounts = (arr: any, count: number) => {
+            const shuffled = arr.slice(); // Create a copy of the array to avoid modifying the original one
+            let i = arr.length;
+            let temp;
+            let index;
 
-            // Swap elements between the current index and the randomly selected index
-            temp = shuffled[i];
-            shuffled[i] = shuffled[index];
-            shuffled[index] = temp;
-        }
+            while (i > 0) {
+                index = Math.floor(Math.random() * i);
+                i--;
 
-        return shuffled.slice(0, count); // Return the first 'count' elements
-    };
+                // Swap elements between the current index and the randomly selected index
+                temp = shuffled[i];
+                shuffled[i] = shuffled[index];
+                shuffled[index] = temp;
+            }
 
-    const elapsedTimeStrings = activityData.map(activity => {
-        const activityDate = new Date(activity.createdTime);
-        const now = new Date();
+            return shuffled.slice(0, count); // Return the first 'count' elements
+        };
 
-        const daysDifference = differenceInDays(now, activityDate);
-        const hoursDifference = differenceInHours(now, activityDate);
-        const minutesDifference = differenceInMinutes(now, activityDate);
+        const elapsedTimeStrings = activityData.map((activity) => {
+            const activityDate = new Date(activity.createdTime);
+            const now = new Date();
 
-        if (daysDifference > 0) {
-            return `${daysDifference}d`;
-        } else if (hoursDifference > 0) {
-            return `${hoursDifference}h`;
-        } else {
-            return `${minutesDifference}m`;
-        }
-    });
+            const daysDifference = differenceInDays(now, activityDate);
+            const hoursDifference = differenceInHours(now, activityDate);
+            const minutesDifference = differenceInMinutes(now, activityDate);
 
-    return (
-        <div className={classNames(styles.root, className)}>
-            {showSuggestedContent && (
-                <div className={styles.suggestedAccountsDiv}>
-                    <div className={styles.suggestedHeader}>
-                        <h4 className={styles.headerTitle}>Suggested Accounts</h4>
-                        <a href="/suggested-accounts" className={styles.linkText}>
-                            See All
-                        </a>
-                    </div>
+            if (daysDifference > 0) {
+                return `${daysDifference}d`;
+            } else if (hoursDifference > 0) {
+                return `${hoursDifference}h`;
+            } else {
+                return `${minutesDifference}m`;
+            }
+        });
 
-                    <div className={styles.suggestedContent}>
-                        {randomAccs.map((account: Account) => (
-                            <div key={account._id} className={styles.suggestedItem}>
-                                <Link to={`/profile/${account._id}`}>
-                                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <img
-                                        src={account?.avatar || defaultProfileIcon}
-                                        alt=""
-                                        className={styles.plusIconStyle}
-                                    />
-                                    <div className={styles.accountName}>
-                                        <h4 className={styles.nameText}>{`@${account.name}`}</h4>
-                                    </div>
-                                </div>
-                                </Link>
-                                <div className="svgStyle">
-                                    <button
-                                        className={styles.svgButton}
-                                        onClick={(event) =>
-                                            dHandleFollowBtnClicked([event, account._id])
-                                        }
-                                    >
-                                        {followedAccounts[account._id] ? (<Following />) : (<Follow />)}
-                                    </button>
-                                </div>
+        return (
+            <div className={classNames(styles.root, className)}>
+                {pathname !== '/suggested-accounts'
+                    ? showSuggestedContent && (
+                          <div className={styles.suggestedAccountsDiv}>
+                              <div className={styles.suggestedHeader}>
+                                  <h4 className={styles.headerTitle}>Suggested Accounts</h4>
+                                  <p
+                                      onClick={() => navigate('/suggested-accounts')}
+                                      className={styles.linkText}
+                                      style={{ cursor: 'pointer' }}
+                                  >
+                                      See All
+                                  </p>
+                              </div>
+
+                              <div className={styles.suggestedContent}>
+                                  {randomAccs.map((account: Account) => (
+                                      <div key={account._id} className={styles.suggestedItem}>
+                                          <Link to={`/profile/${account._id}`}>
+                                              <div
+                                                  style={{ display: 'flex', flexDirection: 'row' }}
+                                              >
+                                                  <img
+                                                      src={account?.avatar || defaultProfileIcon}
+                                                      alt=""
+                                                      className={styles.plusIconStyle}
+                                                  />
+                                                  {/* <div className={styles.accountName}> */}
+                                                  <div
+                                                      style={{
+                                                          display: 'flex',
+                                                          flexDirection: 'column',
+                                                          justifyContent: 'center',
+                                                          gap: 8,
+                                                      }}
+                                                  >
+                                                      <p
+                                                          style={{
+                                                              color: '#222',
+                                                              fontFamily: ' Poppins',
+                                                              fontSize: '14px',
+                                                              fontStyle: 'normal',
+                                                              fontWeight: 600,
+                                                              lineHeight: '120%',
+                                                              textAlign: 'left',
+                                                              whiteSpace: 'nowrap',
+                                                              textOverflow: 'ellipsis',
+                                                              overflow: 'hidden',
+                                                              maxWidth: '170px',
+                                                          }}
+                                                          // className={styles.nameText}
+                                                      >{`@${account.name}`}</p>
+                                                      <h4
+                                                          style={{
+                                                              color: '#A9A9A9',
+                                                              textAlign: 'left',
+                                                              fontFamily: ' Poppins',
+                                                              fontSize: '12px',
+                                                              fontStyle: 'normal',
+                                                              fontWeight: 400,
+                                                              lineHeight: '120%',
+                                                          }}
+                                                          // className={styles.nameText}
+                                                      >{`${account.name}`}</h4>
+                                                  </div>
+                                              </div>
+                                          </Link>
+                                          <div className="svgStyle">
+                                              <button
+                                                  className={styles.svgButton}
+                                                  onClick={(event) =>
+                                                      dHandleFollowBtnClicked([event, account._id])
+                                                  }
+                                              >
+                                                  {followedAccounts[account._id] ? (
+                                                      <Following />
+                                                  ) : (
+                                                      <Follow />
+                                                  )}
+                                              </button>
+                                          </div>
+                                      </div>
+                                  ))}
+                              </div>
+                          </div>
+                      )
+                    : null}
+
+                {showActivity && isLoggedIn && (
+                    <>
+                        {pathname !== '/suggested-accounts' && pathname !== '/notifications' ? (
+                            <div className={styles.seperatorDiv}>
+                                <hr className={styles.speratorLine} />
                             </div>
-                        ))}
-
-                    </div>
-
-                </div>
-            )}
-
-            {showActivity && isLoggedIn && (
-                <>
-                    <div className={styles.seperatorDiv}>
-                        <hr className={styles.speratorLine} />
-                    </div>
-                    <div className={styles.activityDiv}>
-                        <div className={styles.suggestedHeader}>
-                            <h4 className={styles.headerTitle}>Activity</h4>
-                            <a href="/notifications" className={styles.linkText}>
-                                See All
-                            </a>
-                        </div>
-                        <div className={styles.suggestedContentActivity}>
-
-                            {/* Sort the accountsData in descending order based on timestamp */}
-                            {activityData
-                                .slice(0, 4) // Take the latest 4 notifications
-                                .map((activity, index) => (
-                                    <>
-                                        <div key={activity._id} className={styles.suggestedItem}>
-                                            <div className={styles.notificationFrame}>
-                                                <div className={styles.notificationUser}>
-                                                    <img
-                                                        src={
-                                                            activity.triggeredUser?.avatar ||
-                                                            defaultProfileIcon
-                                                        }
-                                                        alt=""
-                                                        className={styles.plusIconStyle}
-                                                    />
-                                                    <div className={styles.accountName}>
-                                                        <h6 className={styles.notificationMessage}>
-                                                            {activity?.message}
-                                                            <span className={styles.timeText}>
-                                                                {elapsedTimeStrings[index]}
-                                                            </span>
-                                                        </h6>
-                                                    </div>
-                                                    <div>
-                                                        {activity.type === 'Follow' ? (
-
-                                                            <button
-                                                                className={styles.svgButton}
-                                                                onClick={(event) =>
-                                                                    dHandleFollowBtnClicked([event, activity.triggeredUser._id])
+                        ) : null}
+                        {pathname !== '/notifications' ? (
+                            <div className={styles.activityDiv}>
+                                <div className={styles.suggestedHeader}>
+                                    <h4 className={styles.headerTitle}>Activity</h4>
+                                    <p
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => navigate('/notifications')}
+                                        className={styles.linkText}
+                                    >
+                                        See All
+                                    </p>
+                                </div>
+                                <div className={styles.suggestedContentActivity}>
+                                    {/* Sort the accountsData in descending order based on timestamp */}
+                                    {activityData
+                                        .slice(0, 4) // Take the latest 4 notifications
+                                        .map((activity, index) => (
+                                            <>
+                                                <div
+                                                    key={activity._id}
+                                                    className={styles.suggestedItem}
+                                                >
+                                                    <div className={styles.notificationFrame}>
+                                                        <div className={styles.notificationUser}>
+                                                            <img
+                                                                src={
+                                                                    activity.triggeredUser
+                                                                        ?.avatar ||
+                                                                    defaultProfileIcon
                                                                 }
+                                                                alt=""
+                                                                className={styles.plusIconStyle}
+                                                            />
+                                                            {/* <div className={styles.accountName}> */}
+                                                            <div
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    justifyContent: 'flex-start',
+                                                                    alignContent: 'center',
+                                                                }}
                                                             >
-                                                                {followedAccounts[activity.triggeredUser._id] || followedUsersData.length > 0 && followedUsersData.some(user => user.followed_userID._id === activity.triggeredUser._id) ? (<Following />) : (<Follow />)}
-                                                            </button>
-                                                        ) : (
-                                                            ''
-                                                            // <img
-                                                            //     className={styles.squareIconStyle}
-                                                            //     src={activity. || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
-                                                            //     alt=""
-                                                            // />
-                                                        )}
+                                                                <h6
+                                                                    // className={
+                                                                    //     styles.notificationMessage
+                                                                    // }
+                                                                    style={{
+                                                                        color: '#222',
+                                                                        textAlign: 'left',
+                                                                        fontFamily: ' Poppins',
+                                                                        fontSize: '14px',
+                                                                        fontStyle: 'normal',
+                                                                        fontWeight: 400,
+                                                                        lineHeight: '120%',
+                                                                        width: 160,
+                                                                    }}
+                                                                >
+                                                                    {activity?.message}
+                                                                    <span
+                                                                        className={styles.timeText}
+                                                                    >
+                                                                        {elapsedTimeStrings[index]}
+                                                                    </span>
+                                                                </h6>
+                                                            </div>
+                                                            <div>
+                                                                {activity.type === 'Follow' ? (
+                                                                    <button
+                                                                        className={styles.svgButton}
+                                                                        onClick={(event) =>
+                                                                            dHandleFollowBtnClicked(
+                                                                                [
+                                                                                    event,
+                                                                                    activity
+                                                                                        .triggeredUser
+                                                                                        ._id,
+                                                                                ]
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        {followedAccounts[
+                                                                            activity.triggeredUser
+                                                                                ._id
+                                                                        ] ||
+                                                                        (followedUsersData.length >
+                                                                            0 &&
+                                                                            followedUsersData.some(
+                                                                                (user) =>
+                                                                                    user
+                                                                                        .followed_userID
+                                                                                        ._id ===
+                                                                                    activity
+                                                                                        .triggeredUser
+                                                                                        ._id
+                                                                            )) ? (
+                                                                            <Following />
+                                                                        ) : (
+                                                                            <Follow />
+                                                                        )}
+                                                                    </button>
+                                                                ) : (
+                                                                    ''
+                                                                    // <img
+                                                                    //     className={styles.squareIconStyle}
+                                                                    //     src={activity. || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
+                                                                    //     alt=""
+                                                                    // />
+                                                                )}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div >
-                                        {/* )} */}
-                                    </>
-                                ))}
-                        </div>
-                    </div>
-                </>
-            )
-            }
-        </div >
-    );
-});
+                                                {/* )} */}
+                                            </>
+                                        ))}
+                                </div>
+                            </div>
+                        ) : null}
+                    </>
+                )}
+            </div>
+        );
+    }
+);

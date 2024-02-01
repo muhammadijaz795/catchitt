@@ -19,8 +19,8 @@ export interface TopBarProps {
     searchBar?: boolean;
 }
 
-export const TopBar = ({ className, searchBar }: TopBarProps,) => {
-    const showSearchBar = useState(true)
+export const TopBar = ({ className, searchBar }: TopBarProps) => {
+    const showSearchBar = useState(true);
     const userName = useAuthStore((state) => state.name);
     const user = useAuthStore();
     const token = useAuthStore((state) => state.token);
@@ -30,8 +30,8 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
     // let avatarUrl: string = '';
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const navigate = useNavigate();
-    const logout = useAuthStore(state => state.logout);
-    const [profileData, setProfileData] = useState<any>([])
+    const logout = useAuthStore((state) => state.logout);
+    const [profileData, setProfileData] = useState<any>([]);
     const arStudioUrl = 'https://localhost:8081/AR-Studio/';
 
     const handleLogout = () => {
@@ -39,11 +39,11 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
     };
 
     const handleLogin = () => {
-        navigate('/auth')
-    }
+        navigate('/auth');
+    };
     const handleProfile = () => {
-        navigate(`/profile/${user?._id}`)
-    }
+        navigate(`/profile`);
+    };
 
     const handleNavigateToARStudio = () => {
         // Use the navigate function to change the URL without reloading the page
@@ -52,10 +52,12 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
         } else {
             handleLogin();
         }
-    }
+    };
 
     const handleFetchProfileInfo = async () => {
-        if (!isLoggedIn) { return }
+        if (!isLoggedIn) {
+            return;
+        }
         try {
             const response = await fetch(`${API_KEY}${endPoint}`, {
                 method: 'GET',
@@ -64,7 +66,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                setProfileData(responseData.data)
+                setProfileData(responseData.data);
             } else {
                 console.log(response);
             }
@@ -78,8 +80,8 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
         handleFetchProfileInfo();
     }, []);
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const [anchorBrgrEl, setAnchorBrgrEl] = useState<null | HTMLElement>(null)
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [anchorBrgrEl, setAnchorBrgrEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const openBrgr = Boolean(anchorBrgrEl);
     const handleBrgrClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -103,10 +105,12 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
                 <img className={classNames('Logo', styles.logo)} src={coloredLogo} alt="" />
             </div>
             <div className={styles.searchPlusProfileDiv}>
-                <div className={styles.searchBarDiv}>
+                <div className={styles.searchBarDiv} style={{ maxWidth: '500px' }}>
                     {showSearchBar && searchBar !== false ? (
-                        <SearchBar placeholder='Search accounts and videos' />
-                    ) : ''}
+                        <SearchBar placeholder="Search accounts and videos" />
+                    ) : (
+                        ''
+                    )}
                 </div>
 
                 <Media query={{ maxWidth: 1200 }}>
@@ -133,10 +137,15 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
                             {isLoggedIn ? (
                                 <>
                                     {profileData.avatar === '' ? (
-                                        <MenuItem onClick={handleBrgrClose}>New Post
-                                        </MenuItem>
+                                        <MenuItem onClick={handleBrgrClose}>New Post</MenuItem>
                                     ) : (
-                                        <MenuItem onClick={handleBrgrClose}> <img src={plusIcon} alt="" className={styles.plusIconStyle} />
+                                        <MenuItem onClick={handleBrgrClose}>
+                                            {' '}
+                                            <img
+                                                src={plusIcon}
+                                                alt=""
+                                                className={styles.plusIconStyle}
+                                            />
                                             <img
                                                 src={profileData.avatar}
                                                 alt=""
@@ -147,15 +156,15 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
                                                     border: '1px solid #000',
                                                     width: '36px',
                                                     height: '36px',
-                                                    objectFit: 'cover'
+                                                    objectFit: 'cover',
                                                 }}
                                                 onClick={handleMenuClick} // Open dropdown menu on avatar click
-                                            /></MenuItem>
+                                            />
+                                        </MenuItem>
                                     )}
                                     <MenuItem onClick={handleBrgrClose}>{userName}</MenuItem>
                                     <MenuItem onClick={handleBrgrClose}>Logout</MenuItem>
                                 </>
-
                             ) : (
                                 // Dropdown menu for login button
                                 <div className={styles.dropdownMenu}>
@@ -176,32 +185,52 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
                             ) : (
                                 <>
                                     {/* <img src={plusIcon} alt="" className={styles.plusIconStyle} /> */}
-                                    <img
-                                        src={profileData.avatar}
-                                        alt=""
-                                        className={styles.plusIconStyle}
+                                    <div
                                         style={{
-                                            cursor: 'pointer',
-                                            borderRadius: '50%',
-                                            border: '1px solid #000',
-                                            width: '36px',
-                                            height: '36px',
-                                            objectFit: 'cover'
+                                            display: 'flex',
+                                            gap: 8,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
                                         }}
-                                        onClick={handleMenuClick} // Open dropdown menu on avatar click
-                                    />
+                                    >
+                                        <img
+                                            src={plusIcon}
+                                            style={{
+                                                width: 36,
+                                                height: 36,
+                                                marginRight: 8,
+                                                cursor: 'pointer',
+                                            }}
+                                            alt=""
+                                        />
+                                        <img
+                                            src={profileData.avatar}
+                                            alt=""
+                                            className={styles.plusIconStyle}
+                                            style={{
+                                                cursor: 'pointer',
+                                                borderRadius: '50%',
+                                                border: '1px solid #000',
+                                                width: '36px',
+                                                height: '36px',
+                                                objectFit: 'cover',
+                                            }}
+                                            onClick={handleMenuClick} // Open dropdown menu on avatar click
+                                        />
+                                        <p>{user.name}</p>
+                                    </div>
                                 </>
                             )}
                             <div className={styles.nameDiv}>
-                                <h4 className={styles.loggedName}>
-                                    {userName}
-                                </h4>
+                                <h4 className={styles.loggedName}>{userName}</h4>
                                 <Menu
                                     anchorEl={anchorEl}
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={handleNavigateToARStudio}>AR Studio</MenuItem>
+                                    <MenuItem onClick={handleNavigateToARStudio}>
+                                        AR Studio
+                                    </MenuItem>
                                     <MenuItem onClick={handleProfile}>Profile</MenuItem>
                                     <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                                 </Menu>
@@ -217,4 +246,4 @@ export const TopBar = ({ className, searchBar }: TopBarProps,) => {
             </div>
         </div>
     );
-}
+};

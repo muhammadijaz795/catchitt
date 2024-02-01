@@ -1,0 +1,63 @@
+.parent {
+  padding: 20px 40px;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  width: 100%;
+  position: fixed;
+  width: 100%;
+  top: 0%;
+  left: 0%;
+}
+
+.sec1 {
+  width: 42%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.sec1 img {
+  width: 90px;
+  height: 36px;
+  margin: auto 0px;
+}
+
+.sec2 {
+  display: flex;
+  gap: 50px;
+  width: 58%;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .sec1 {
+    width: 20%;
+  }
+  .sec2 {
+    width: 80%;
+  }
+}
+
+.user {
+  width: fit-content;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.name {
+  color: var(--Default-body, #222);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  gap: 16px;
+}
