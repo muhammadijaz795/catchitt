@@ -237,7 +237,7 @@ export const Home = ({ className }: HomeProps) => {
                                 />
                             </div>
                         </div> */}
-            <div style={{width:'100%' , justifyContent:'center'}}>
+            <div style={{width:'100%' , justifyContent:'start'}}>
                 <div className={styles.middleSectionDiv}>
                     <ViewSwitchers
                         selectedIndex={selectedTab}

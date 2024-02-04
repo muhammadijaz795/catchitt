@@ -140,12 +140,12 @@ export const TopBar = ({ className, searchBar }: TopBarProps) => {
                                         <MenuItem onClick={handleBrgrClose}>New Post</MenuItem>
                                     ) : (
                                         <MenuItem onClick={handleBrgrClose}>
-                                            {' '}
+                                            {/* {' '}
                                             <img
                                                 src={plusIcon}
                                                 alt=""
                                                 className={styles.plusIconStyle}
-                                            />
+                                            /> */}
                                             <img
                                                 src={profileData.avatar}
                                                 alt=""
@@ -193,7 +193,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps) => {
                                             alignItems: 'center',
                                         }}
                                     >
-                                        <img
+                                        {/* <img
                                             src={plusIcon}
                                             style={{
                                                 width: 36,
@@ -202,7 +202,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps) => {
                                                 cursor: 'pointer',
                                             }}
                                             alt=""
-                                        />
+                                        /> */}
                                         <img
                                             src={profileData.avatar}
                                             alt=""

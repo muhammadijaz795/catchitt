@@ -8,5 +8,6 @@ import search from './assets/inputSearchIcon.svg';
 import logo from '../assets/assets/icons/logo.svg';
 import createIcon from './assets/plusIcon.png';
 import avatar from '../assets/icons/avatar.svg';
+import defaultAvatar from './assets/defaultProfileIcon.png';
 
-export { googleIcon, fb, wn, apple, werfie, arrow, search, logo, createIcon, avatar };
+export { googleIcon, fb, wn, apple, werfie, arrow, search, logo, createIcon, avatar , defaultAvatar };

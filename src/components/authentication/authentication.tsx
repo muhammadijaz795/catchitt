@@ -210,7 +210,7 @@ export const Authentication = (props: any) => {
             </div>
             <div className={styles.AuthForm}>
                 {/** Sign Up Flow */}
-                <div className={styles.formContainer} style={{ marginTop: '10%' }}>
+                <div className={styles.formContainer} style={{ marginTop: '5%' }}>
                     {form === 'signup' ? (
                         <form className={styles.authInputFields}>
                             <h3 className={styles.creatTitle}>{t('createyouraccount.text')}</h3>
@@ -366,7 +366,7 @@ export const Authentication = (props: any) => {
                                     {t('login.text')}
                                 </button>
                             </div>
-                            <div
+                            {/* <div
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'space-between',
@@ -378,8 +378,8 @@ export const Authentication = (props: any) => {
                                 <hr style={{ width: '100%' }} />
                                 <p className={styles.or}>OR</p>
                                 <hr style={{ width: '100%' }} />
-                            </div>
-                            <div
+                            </div> */}
+                            {/* <div
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -403,7 +403,7 @@ export const Authentication = (props: any) => {
                                 <div className={styles.plateforms}>
                                     <img src={wn} alt="" />
                                 </div>
-                            </div>
+                            </div> */}
                             {/* <div className={styles.splitLinesDiv}>
                                     <hr className={styles.splitLine} />
                                     <p className={styles.formParagraph}>{t("or.text")}</p>

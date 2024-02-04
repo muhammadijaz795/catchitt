@@ -1,6 +1,5 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import style from './Input.module.scss';
-import visible from '../../../assets/visible.svg';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 function Input(props: any) {
     const { placeholder, value, name, onChange, type, passwordToggler, showPasswordH } =
         props || {};
@@ -11,17 +10,14 @@ function Input(props: any) {
                 name={name}
                 value={value}
                 onChange={onChange}
-                className={style.input}
+                style={{backgroundColor:'white'}}
+                className={`bg-transparent ${style.input}`}
                 type={type}
             />
             {!passwordToggler ? null : type === 'password' ? (
-                <img className={style.icon} src={visible} alt="" onClick={showPasswordH} />
+                <Visibility style={{cursor:'pointer'}} onClick={showPasswordH} />
             ) : (
-                <VisibilityOffOutlinedIcon
-                    color="primary"
-                    className={style.icon}
-                    onClick={showPasswordH}
-                />
+                <VisibilityOff style={{cursor:'pointer'}} onClick={showPasswordH} />
             )}
         </div>
     );

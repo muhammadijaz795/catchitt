@@ -55,7 +55,7 @@ body {
 }
 
 a {
-  color: #5448b2;
+  color: #5448B2;
   text-decoration: none;
 }
 
@@ -66,7 +66,7 @@ a {
   grid-template-columns: 1fr 1fr;
   width: 100%;
   height: 100%;
-  // overflow: scroll; /* Prevent scrolling */
+  overflow: hidden; /* Prevent scrolling */
   height: 100vh;
 }
 
@@ -93,7 +93,6 @@ a {
   grid-auto-flow: row;
   gap: 0px 0px;
   position: relative;
-  overflow: hidden;
 }
 
 /* Ensure .AuthForm fills the entire viewport */
@@ -111,7 +110,6 @@ a {
   align-items: start;
   // overflow: auto; /* Prevent scrolling */
   position: relative;
-  overflow-y: scroll;
 }
 
 .logoDiv {
@@ -150,6 +148,7 @@ a {
 }
 
 .formContainer {
+
   margin-right: 80px;
   margin-left: 80px;
   margin-bottom: 0px;
@@ -191,45 +190,24 @@ a {
 .inputsDiv {
   display: grid;
   gap: 25px;
-  // margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .formParagraph {
-  // margin-top: 14px;
-  color: var(--login-title, #574d68);
+  margin-top: 14px;
+  margin-bottom: 0;
+  color: #000000;
   text-align: center;
-
-  /* Base/Regular */
-  font-family: Poppins;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%; /* 24px */
-}
-
-.p2 {
-  color: var(--Foundation-Body-body-200, #999);
-text-align: left;
-  /* Small/Regular */
-  font-family: Poppins;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%; /* 21px */
 }
 
 .signupSubmitBtn {
   text-align: center;
-  margin: 32px 0px;
+  margin-top: 24px;
+  margin-bottom: 24px;
   width: 100%;
   background-color: #5448b2;
+  color: #FFF;
   border-radius: 6px;
-  color: var(--Default-white, #fff);
-  font-family: 'Poppins';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 120%; /* 19.2px */
 }
 
 .splitLine {
@@ -256,22 +234,25 @@ text-align: left;
   justify-content: center;
   margin-left: 0px;
   margin-right: 0px;
+
 }
 
-// .socialLoginsDiv {
-//   display: grid;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-items: center;
-//   justify-content: center;
-//   flex-wrap: wrap;
-//   margin-right: 0px;
-//   margin-left: 0px;
-//   width: 60%;
-//   gap: 1px 16px;
-//   grid-auto-flow: column;
-//   align-content: center;
-// }
+.socialLoginsDiv {
+  display: grid;
+  flex-direction: row;
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-right: 0px;
+  margin-left: 0px;
+  width: 60%;
+  gap: 1px 16px;
+  grid-auto-flow: column;
+  align-content: center;
+  // margin-bottom: 20px;
+  height: 40px;
+}
 
 .socialLoginIcon {
   width: 40px;
@@ -284,29 +265,22 @@ text-align: left;
 .boldLinkText {
   font-weight: 700;
   font-size: 16px;
-  color: #5448b2;
+  color: #5448B2;
   text-decoration: none;
 }
 .linkText {
-  font-family: 'Poppins';
+  font-family: Poppins;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 21px */
-  color: #5448b2;
+  color: #5448B2;
   text-decoration: none;
-  cursor: pointer;
 }
 
 .getTheAppText {
-  color: var(--login-title, #574d68);
-  text-align: center;
-  font-family: 'Poppins';
   font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 120%; /* 24px */
-  margin-top: 40px;
+  margin-top: 24px;
   margin-bottom: 24px;
 }
 
@@ -318,7 +292,8 @@ text-align: left;
   justify-items: center;
   grid-auto-flow: column;
   column-gap: 10px;
-  margin-bottom: 123px;
+  margin-bottom: 60px;
+  
 }
 
 .appStoreBtn {
@@ -334,18 +309,16 @@ text-align: left;
 .footerLightBg {
   display: flex;
   grid-auto-flow: column;
-  gap: 10px 45px;
-  margin-bottom: 45px;
+  gap: 0px 45px;
   // margin-bottom: 30px;
   flex-direction: row;
   // align-items: center;
-  flex-wrap: wrap;
   justify-items: center;
   justify-content: center;
   font-size: 16px;
   font-family: 'Poppins';
-  // position: absolute;
-  // bottom: 45px;
+  position: absolute;
+  bottom: 45px;
 }
 
 .splashImgDiv {
@@ -469,27 +442,24 @@ text-align: left;
   }
 
   .footer-p-lightBg {
-    // font-size: 14px;
+    font-size: 14px;
   }
 
   .langSelector {
     font-size: 14px;
   }
+
 }
 
 @media screen and (max-width: 986px) {
   .container {
-    display: flex;
-    // grid-template-rows: 0fr 1fr;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
     /* Two rows */
-    // grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
     /* One Column */
     max-height: 100vh;
     overflow: auto;
-  }
-
-  .AuthSplashImg {
-    display: none;
   }
 
   .LoginImg {
@@ -508,13 +478,13 @@ text-align: left;
   }
 
   .footer-p-lightBg {
-    // font-size: 14px;
+    font-size: 14px;
   }
 
   .langSelector {
     font-size: 14px;
   }
-  .footerLightBg {
+  .footerLightBg{
     margin-bottom: 20px;
     bottom: auto;
     position: relative;
@@ -523,10 +493,10 @@ text-align: left;
 
 @media screen and (max-width: 768px) {
   .container {
-    // display: grid;
-    // grid-template-rows: 1fr 1fr;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
     /* Two rows */
-    // grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
     /* One Column */
     max-height: 100vh;
   }
@@ -545,7 +515,7 @@ text-align: left;
   }
 
   .footer-p-lightBg {
-    // font-size: 14px;
+    font-size: 14px;
   }
 
   .langSelector {
@@ -555,13 +525,14 @@ text-align: left;
 
 @media screen and (max-width: 550px) {
   .container {
-    // display: grid;
-    // grid-template-rows: 1fr 1fr;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
     /* Two rows */
-    // grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
     /* One Column */
     max-height: 100vh;
   }
+
 
   .AuthSplashImg {
     height: 100vh;
@@ -569,6 +540,7 @@ text-align: left;
 
   .AuthForm {
     height: 100vh;
+
   }
 }
 
@@ -598,29 +570,7 @@ text-align: left;
 }
 
 .formForgotPassword {
-  margin-top: 16px;
+  margin-top: 6px;
   display: flex;
   justify-content: end;
-}
-
-.or {
-  color: var(--Foundation-Neutral-neutral-600, #a9a9a9);
-  font-family: 'Poppins';
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%; /* 21px */
-}
-
-.plateforms {
-  width: 39.924px;
-  height: 39.924px;
-  flex-shrink: 0;
-  border-radius: 500px;
-  border: 3px solid rgba(98, 131, 202, 0.05);
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 }
