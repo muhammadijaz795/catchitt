@@ -1,16 +1,12 @@
 import { useEffect } from 'react';
 
-import classNames from 'classnames';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { TopBar } from '../top-bar/top-bar';
 
 import IconButton from '@mui/material/IconButton/IconButton';
+import Layout from '../../shared/layout';
 import { LeftArrow } from '../push-notifications-page/svg-components/LeftArrow';
 import styles from './styles.module.scss';
-import Layout from '../../shared/layout';
 
 export interface CommunityPageProps {
     className?: string;

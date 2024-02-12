@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styles from './stories.module.scss'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { useEffect, useRef, useState } from 'react';
 import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import { useAuthStore } from '../../../store/authStore';
+import styles from './stories.module.scss';
 
 
 export default function Stories({ showStories }: any) {

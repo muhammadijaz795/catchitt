@@ -1,8 +1,5 @@
-import classNames from 'classnames';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
-import { TopBar } from '../top-bar/top-bar';
 import styles from './push-notifications.module.scss';
 
 import {
@@ -14,9 +11,8 @@ import {
     styled,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { LeftArrow } from './svg-components/LeftArrow';
 import Layout from '../../shared/layout';
+import { LeftArrow } from './svg-components/LeftArrow';
 
 export interface PushNotificationsPageProps {
     className?: string;

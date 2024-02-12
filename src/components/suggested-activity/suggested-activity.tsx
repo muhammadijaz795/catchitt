@@ -4,11 +4,11 @@ import { memo, useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import styles from './suggested-activity.module.scss';
 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import useDebounce from '../reusables/useDebounce';
 import { Follow } from './svg-components/Follow';
 import { Following } from './svg-components/Following';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export interface SuggestedActivityProps {
     className?: string;
@@ -250,89 +250,89 @@ export const SuggestedActivity = memo(
             <div className={classNames(styles.root, className)}>
                 {pathname !== '/suggested-accounts'
                     ? showSuggestedContent && (
-                          <div className={styles.suggestedAccountsDiv}>
-                              <div className={styles.suggestedHeader}>
-                                  <h4 className={styles.headerTitle}>Suggested Accounts</h4>
-                                  <p
-                                      onClick={() => navigate('/suggested-accounts')}
-                                      className={styles.linkText}
-                                      style={{ cursor: 'pointer' }}
-                                  >
-                                      See All
-                                  </p>
-                              </div>
+                        <div className={styles.suggestedAccountsDiv}>
+                            <div className={styles.suggestedHeader}>
+                                <h4 className={styles.headerTitle}>Suggested Accounts</h4>
+                                <p
+                                    onClick={() => navigate('/suggested-accounts')}
+                                    className={styles.linkText}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    See All
+                                </p>
+                            </div>
 
-                              <div className={styles.suggestedContent}>
-                                  {randomAccs.map((account: Account) => (
-                                      <div key={account._id} className={styles.suggestedItem}>
-                                          <Link to={`/profile/${account._id}`}>
-                                              <div
-                                                  style={{ display: 'flex', flexDirection: 'row' }}
-                                              >
-                                                  <img
-                                                      src={account?.avatar || defaultProfileIcon}
-                                                      alt=""
-                                                      className={styles.plusIconStyle}
-                                                  />
-                                                  {/* <div className={styles.accountName}> */}
-                                                  <div
-                                                      style={{
-                                                          display: 'flex',
-                                                          flexDirection: 'column',
-                                                          justifyContent: 'center',
-                                                          gap: 8,
-                                                      }}
-                                                  >
-                                                      <p
-                                                          style={{
-                                                              color: '#222',
-                                                              fontFamily: ' Poppins',
-                                                              fontSize: '14px',
-                                                              fontStyle: 'normal',
-                                                              fontWeight: 600,
-                                                              lineHeight: '120%',
-                                                              textAlign: 'left',
-                                                              whiteSpace: 'nowrap',
-                                                              textOverflow: 'ellipsis',
-                                                              overflow: 'hidden',
-                                                              maxWidth: '170px',
-                                                          }}
-                                                          // className={styles.nameText}
-                                                      >{`@${account.name}`}</p>
-                                                      <h4
-                                                          style={{
-                                                              color: '#A9A9A9',
-                                                              textAlign: 'left',
-                                                              fontFamily: ' Poppins',
-                                                              fontSize: '12px',
-                                                              fontStyle: 'normal',
-                                                              fontWeight: 400,
-                                                              lineHeight: '120%',
-                                                          }}
-                                                          // className={styles.nameText}
-                                                      >{`${account.name}`}</h4>
-                                                  </div>
-                                              </div>
-                                          </Link>
-                                          <div className="svgStyle">
-                                              <button
-                                                  className={styles.svgButton}
-                                                  onClick={(event) =>
-                                                      dHandleFollowBtnClicked([event, account._id])
-                                                  }
-                                              >
-                                                  {followedAccounts[account._id] ? (
-                                                      <Following />
-                                                  ) : (
-                                                      <Follow />
-                                                  )}
-                                              </button>
-                                          </div>
-                                      </div>
-                                  ))}
-                              </div>
-                          </div>
-                      )
+                            <div className={styles.suggestedContent}>
+                                {randomAccs.map((account: Account) => (
+                                    <div key={account._id} className={styles.suggestedItem}>
+                                        <Link to={`/profile/${account._id}`}>
+                                            <div
+                                                style={{ display: 'flex', flexDirection: 'row' }}
+                                            >
+                                                <img
+                                                    src={account?.avatar || defaultProfileIcon}
+                                                    alt=""
+                                                    className={styles.plusIconStyle}
+                                                />
+                                                {/* <div className={styles.accountName}> */}
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'center',
+                                                        gap: 8,
+                                                    }}
+                                                >
+                                                    <p
+                                                        style={{
+                                                            color: '#222',
+                                                            fontFamily: ' Poppins',
+                                                            fontSize: '14px',
+                                                            fontStyle: 'normal',
+                                                            fontWeight: 600,
+                                                            lineHeight: '120%',
+                                                            textAlign: 'left',
+                                                            whiteSpace: 'nowrap',
+                                                            textOverflow: 'ellipsis',
+                                                            overflow: 'hidden',
+                                                            maxWidth: '170px',
+                                                        }}
+                                                    // className={styles.nameText}
+                                                    >{`@${account.name}`}</p>
+                                                    <h4
+                                                        style={{
+                                                            color: '#A9A9A9',
+                                                            textAlign: 'left',
+                                                            fontFamily: ' Poppins',
+                                                            fontSize: '12px',
+                                                            fontStyle: 'normal',
+                                                            fontWeight: 400,
+                                                            lineHeight: '120%',
+                                                        }}
+                                                    // className={styles.nameText}
+                                                    >{`${account.name}`}</h4>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <div className="svgStyle">
+                                            <button
+                                                className={styles.svgButton}
+                                                onClick={(event) =>
+                                                    dHandleFollowBtnClicked([event, account._id])
+                                                }
+                                            >
+                                                {followedAccounts[account._id] ? (
+                                                    <Following />
+                                                ) : (
+                                                    <Follow />
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )
                     : null}
 
                 {showActivity && isLoggedIn && (
@@ -425,17 +425,17 @@ export const SuggestedActivity = memo(
                                                                             activity.triggeredUser
                                                                                 ._id
                                                                         ] ||
-                                                                        (followedUsersData.length >
-                                                                            0 &&
-                                                                            followedUsersData.some(
-                                                                                (user) =>
-                                                                                    user
-                                                                                        .followed_userID
-                                                                                        ._id ===
-                                                                                    activity
-                                                                                        .triggeredUser
-                                                                                        ._id
-                                                                            )) ? (
+                                                                            (followedUsersData.length >
+                                                                                0 &&
+                                                                                followedUsersData.some(
+                                                                                    (user) =>
+                                                                                        user
+                                                                                            .followed_userID
+                                                                                            ._id ===
+                                                                                        activity
+                                                                                            .triggeredUser
+                                                                                            ._id
+                                                                                )) ? (
                                                                             <Following />
                                                                         ) : (
                                                                             <Follow />

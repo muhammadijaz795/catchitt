@@ -1,17 +1,13 @@
-import classNames from 'classnames';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import profileIcon from '../../assets/defaultProfileIcon.png';
 import { useAuthStore } from '../../store/authStore';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { TopBar } from '../top-bar/top-bar';
 import styles from './activity-page.module.scss';
 
 import { IconButton } from '@mui/material';
-import { LeftArrow } from './svg-components/LeftArrow';
 import Layout from '../../shared/layout';
+import { LeftArrow } from './svg-components/LeftArrow';
 
 export interface ActivityPageProps {
     className?: string;
@@ -223,11 +219,11 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                                                 <button
                                                     className={
                                                         followedUsersData.length > 0 &&
-                                                        followedUsersData.some(
-                                                            (user) =>
-                                                                user.followed_userID._id ===
-                                                                activity.triggeredUser._id
-                                                        )
+                                                            followedUsersData.some(
+                                                                (user) =>
+                                                                    user.followed_userID._id ===
+                                                                    activity.triggeredUser._id
+                                                            )
                                                             ? styles.followingBtn
                                                             : styles.followBtn
                                                     }
@@ -238,11 +234,11 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                                                     }
                                                 >
                                                     {followedUsersData.length > 0 &&
-                                                    followedUsersData.some(
-                                                        (user) =>
-                                                            user.followed_userID._id ===
-                                                            activity.triggeredUser._id
-                                                    )
+                                                        followedUsersData.some(
+                                                            (user) =>
+                                                                user.followed_userID._id ===
+                                                                activity.triggeredUser._id
+                                                        )
                                                         ? 'Following'
                                                         : 'Follow'}
                                                 </button>

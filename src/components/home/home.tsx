@@ -1,19 +1,15 @@
-import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import searchIcon from '../../assets/Search.svg';
 import muteIcon from '../../assets/muteIcon.svg';
+import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
 import { Post } from '../post/post';
 import { BookmarkItem, Post as PostType } from '../post/postTypes';
 import { fetchInJSON } from '../reusables/fetchInJSON';
 import useDebounce from '../reusables/useDebounce';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { TopBar } from '../top-bar/top-bar';
 import { ViewSwitchers } from '../view-switchers/view-switchers';
 import styles from './home.module.scss';
-import Layout from '../../shared/layout';
 export interface HomeProps {
     className?: string;
 }
@@ -64,10 +60,10 @@ export const Home = ({ className }: HomeProps) => {
                 },
             });
             console.log(res, 'res1212');
-           if(res?.data){
-            if (page != 1) setPostData((prev: []) => [...prev, ...res?.data]);
-            else {setPostData([...res?.data])};
-           }
+            if (res?.data) {
+                if (page != 1) setPostData((prev: []) => [...prev, ...res?.data]);
+                else { setPostData([...res?.data]) };
+            }
         } catch (error) {
             console.log(error);
         }
@@ -237,7 +233,7 @@ export const Home = ({ className }: HomeProps) => {
                                 />
                             </div>
                         </div> */}
-            <div style={{width:'100%' , justifyContent:'start'}}>
+            <div style={{ width: '100%', justifyContent: 'start' }}>
                 <div className={styles.middleSectionDiv}>
                     <ViewSwitchers
                         selectedIndex={selectedTab}

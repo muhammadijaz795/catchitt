@@ -2,20 +2,17 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { TopBar } from '../top-bar/top-bar';
+import PopupForReport from '../profile/popups/PopupForReport';
+import PopupForBlock from '../profile/popups/popupForBlock';
+import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
+import StoriesOnPublicProfile from '../profile/popups/storiesOnPublicProfile';
 import Stories from './components/stories';
 import SuggestedFollower from './components/suggestedFollower';
 import VideoPanel from './components/videoPanel';
 import styles from './discover.module.scss';
-import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
-import PopupForReport from '../profile/popups/PopupForReport';
-import PopupForBlock from '../profile/popups/popupForBlock';
 import Gifts from './popups/gifts';
-import StoriesOnPublicProfile from '../profile/popups/storiesOnPublicProfile';
-import Layout from '../../shared/layout';
 
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
@@ -195,14 +192,14 @@ export default function Discover() {
                         <div className={styles.posts}>
                             {trendingvideos.length >= 0
                                 ? trendingvideos.map((video: any, i) => {
-                                      return (
-                                          <VideoPanel
-                                              index={i}
-                                              video={video}
-                                              videomodal={() => openvideomodal(video)}
-                                          />
-                                      );
-                                  })
+                                    return (
+                                        <VideoPanel
+                                            index={i}
+                                            video={video}
+                                            videomodal={() => openvideomodal(video)}
+                                        />
+                                    );
+                                })
                                 : null}
                         </div>
                     </div>

@@ -23,12 +23,14 @@ h6 {
 .topBarDiv {
   width: 100%;
 }
+
 .sideNavDiv {
   margin-top: 40px;
   margin-left: 40px;
   margin-bottom: 0px;
   padding: 0px;
 }
+
 .leftSide {
   display: flex;
   flex-direction: column;
@@ -36,6 +38,7 @@ h6 {
   height: 100%;
   // justify-content: center;
 }
+
 .suggestedActivityDiv {
   margin-top: 40px;
   margin-left: 40px;
@@ -58,6 +61,7 @@ h6 {
   position: relative;
   width: 100%;
 }
+
 .container {
   width: 100%;
   height: 100%;
@@ -89,6 +93,7 @@ h6 {
       font-weight: 600;
       font-size: 1.1rem;
     }
+
     .blockButton {
       background-color: #de0c0c;
       border-radius: 0.375rem;
@@ -96,6 +101,7 @@ h6 {
       width: 100%;
       margin-top: 1.5rem;
     }
+
     .cancelButton {
       background-color: #ffffff;
       border-radius: 0.375rem;
@@ -130,7 +136,7 @@ h6 {
       justify-content: space-between;
       align-items: center;
 
-      > p {
+      >p {
         font-weight: 600;
         font-size: 1.2rem;
       }
@@ -143,7 +149,7 @@ h6 {
       border-radius: 0.25rem;
       padding: 0.5rem 1rem;
 
-      > input {
+      >input {
         width: 100%;
         outline: none;
         font-size: 1rem;
@@ -153,7 +159,7 @@ h6 {
         color: black;
       }
 
-      > input::placeholder {
+      >input::placeholder {
         color: #a9a9a9;
       }
     }
@@ -164,8 +170,9 @@ h6 {
     }
 
     .allChats:hover {
-      background-color: #dfdfdf !important  ;
+      background-color: #dfdfdf !important;
     }
+
     .allChats {
       display: flex;
       flex-direction: row;
@@ -178,6 +185,7 @@ h6 {
       .userAvatar {
         flex: 1;
       }
+
       .userNameNChat {
         display: flex;
         flex-direction: column;
@@ -199,6 +207,7 @@ h6 {
           text-overflow: ellipsis;
         }
       }
+
       .timeNCount {
         display: flex;
         flex-direction: column;
@@ -207,7 +216,7 @@ h6 {
         justify-content: space-between;
         flex: 2;
 
-        > p {
+        >p {
           font-size: 0.7rem;
           font-weight: 400;
           color: #6b6b6b;
@@ -223,7 +232,7 @@ h6 {
           border-radius: 100%;
           padding: 0.25rem;
 
-          > p {
+          >p {
             color: white;
             font-size: 0.8rem;
             font-weight: 400;
@@ -232,9 +241,11 @@ h6 {
       }
     }
   }
+
   .chatmessage {
     position: relative;
     overflow-y: hidden;
+
     .messageHeader {
       padding: 0.8rem;
       display: flex;
@@ -248,7 +259,7 @@ h6 {
         align-items: center;
         gap: 0.8rem;
 
-        > p {
+        >p {
           font-weight: 600;
           font-size: 1rem;
         }
@@ -261,6 +272,7 @@ h6 {
           flex: 1;
           padding: 1rem;
         }
+
         .dropdownMenu {
           z-index: 999;
           background-color: #ffffff;
@@ -269,6 +281,7 @@ h6 {
           padding: 0.4rem;
           border-radius: 0.5rem;
           box-shadow: 0px 0px 16px 1px #88888827;
+
           .dropdownRow {
             display: flex;
             flex-direction: row;
@@ -277,7 +290,8 @@ h6 {
             padding: 0.8rem;
             border-radius: 0.2rem;
             cursor: pointer;
-            > p {
+
+            >p {
               font-weight: 400;
               font-size: 0.8rem;
               color: #222222;
@@ -294,13 +308,15 @@ h6 {
               flex-direction: row;
               justify-content: center;
               align-items: center;
-              > p {
+
+              >p {
                 font-weight: 400;
                 font-size: 0.7rem;
                 color: #999999;
                 text-wrap: nowrap;
                 padding-right: 0.5rem;
               }
+
               .arrowRight {
                 height: 1.25rem;
                 width: 1.25rem;
@@ -314,6 +330,7 @@ h6 {
         }
       }
     }
+
     .messageBody {
       display: flex;
       flex: 1;
@@ -329,7 +346,8 @@ h6 {
         font-weight: 500;
         font-size: 1rem;
         color: #254576;
-        > span {
+
+        >span {
           font-size: 0.9rem;
         }
       }
@@ -351,13 +369,13 @@ h6 {
         .markSafeMessageTextContainer {
           text-align: left;
 
-          > p:first-child {
+          >p:first-child {
             color: #222222;
             font-weight: 500;
             font-size: 1rem;
           }
 
-          > p:nth-child(2) {
+          >p:nth-child(2) {
             color: #999999;
             font-weight: 400;
             font-size: 0.625rem;
@@ -380,7 +398,7 @@ h6 {
             border-radius: 0.3rem;
             padding: 0.5rem 1.5rem;
 
-            > p {
+            >p {
               color: #5448b2;
               font-weight: 600;
               font-size: 0.625rem;
@@ -390,7 +408,7 @@ h6 {
           .reportButton:hover {
             background-color: #5448b2;
 
-            > p {
+            >p {
               color: #ffffff;
             }
           }
@@ -403,7 +421,8 @@ h6 {
             border-radius: 0.3rem;
             padding: 0.5rem 1.5rem;
             text-wrap: nowrap;
-            > p {
+
+            >p {
               color: #ffffff;
               font-weight: 600;
               font-size: 0.625rem;
@@ -413,7 +432,7 @@ h6 {
           .markSafeButton:hover {
             background-color: #ffffff;
 
-            > p {
+            >p {
               color: #5448b2;
             }
           }
@@ -422,7 +441,7 @@ h6 {
     }
 
     .userChatMessages {
-      padding:2rem 1rem 4rem 1rem !important;
+      padding: 2rem 1rem 4rem 1rem !important;
       height: 400px;
       overflow-y: scroll;
 
@@ -439,6 +458,7 @@ h6 {
 
         .sentMessageContainer {
           display: block;
+
           .sentMessage {
             display: flex;
             padding: 0.6rem 0.9rem;
@@ -475,6 +495,7 @@ h6 {
           }
         }
       }
+
       .sentMessageRowContainer2 {
         width: 90%;
         margin-left: 10%;
@@ -490,6 +511,7 @@ h6 {
 
         .sentMessageContainer {
           display: block;
+
           .sentMessage {
             display: flex;
             padding: 0.6rem 0.9rem;
@@ -536,6 +558,7 @@ h6 {
 
         .sentMessageContainer {
           display: block;
+
           .sentMessage {
             display: flex;
             padding: 0.6rem 0.9rem;
@@ -566,6 +589,7 @@ h6 {
 
         .receiveMessage {
           display: block;
+
           .receiveMessage {
             display: flex;
             padding: 0.6rem 0.9rem;
@@ -599,6 +623,7 @@ h6 {
               object-fit: contain;
             }
           }
+
           .receiveMessageNoTimeStampContainer {
             margin-top: 0.6rem;
           }
@@ -626,7 +651,7 @@ h6 {
         background-color: #f8f8f8;
         padding: 0.5rem 0.8rem;
 
-        > input {
+        >input {
           width: 100%;
           outline: none;
           font-size: 1rem;
@@ -636,7 +661,7 @@ h6 {
           color: black;
         }
 
-        > p {
+        >p {
           color: #a9a9a9;
           cursor: pointer;
         }
@@ -645,6 +670,7 @@ h6 {
           background-color: #888888;
         }
       }
+
       .controlsMessageBox {
         display: flex;
         gap: 0.5rem;
@@ -669,7 +695,8 @@ h6 {
 
 @media (max-width: 1200px) {
   .suggestedContent {
-    grid-template-columns: 1fr; /* Two columns for medium-sized screens */
+    grid-template-columns: 1fr;
+    /* Two columns for medium-sized screens */
     max-width: fit-content;
 
     .comingSoonLeft {
@@ -705,7 +732,8 @@ h6 {
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 40px; /* 250% */
+  line-height: 40px;
+  /* 250% */
   letter-spacing: 2.4px;
 
   max-width: 380px;
@@ -731,8 +759,10 @@ h6 {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 21px */
+  line-height: 150%;
+  /* 21px */
 }
+
 .blackText_16 {
   color: var(--Default-body, #222);
 
@@ -741,8 +771,10 @@ h6 {
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 120%; /* 19.2px */
+  line-height: 120%;
+  /* 19.2px */
 }
+
 .dengetText {
   color: var(--Default-body, #DE0C0C);
   text-align: left;
@@ -752,7 +784,8 @@ h6 {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 21px */
+  line-height: 150%;
+  /* 21px */
 }
 
 .black_300 {
@@ -764,7 +797,8 @@ h6 {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 21px */
+  line-height: 150%;
+  /* 21px */
 }
 
 .dropdm:hover {

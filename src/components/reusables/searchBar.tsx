@@ -1,7 +1,6 @@
 // import { IconButton, Box, useTheme } from '@mui/material';
 // import { tokens } from '../theme';
 import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputAdornment, Modal, styled } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Stack from '@mui/material/Stack';
@@ -12,8 +11,8 @@ import mySearchIconBlack from '../../assets/SearchBlack.svg';
 import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import { useAuthStore } from '../../store/authStore';
 
-import './components-styles.css';
 import { search } from '../../icons';
+import './components-styles.css';
 
 interface InputFieldProps {
     onChange?: any;
@@ -190,7 +189,7 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
                                 onChange={(e) => {
                                     setSearchQuery(e.target.value);
                                 }}
-                                style={{outline:0}}
+                                style={{ outline: 0 }}
                                 InputProps={{
                                     ...params.InputProps,
                                     type: 'search',
@@ -234,7 +233,7 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
                                         fontStyle: 'normal',
                                         fontWeight: '400',
                                         lineHeight: '21px',
-                                        outline:0,
+                                        outline: 0,
                                         color: '#acacac',
                                         background:
                                             'no-repeat padding-box border-box 20px center / auto scroll url(../../assets/Search.svg) #f8f8f8',

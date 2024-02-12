@@ -3,14 +3,12 @@ import i18next from 'i18next';
 import cookies from 'js-cookie';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import OtpInput from 'react-otp-input';
 import Logo from '../../assets/Logo.png';
-import atForgotPwd from '../../assets/atForgotPwd.png';
 import authSplashImg from '../../assets/authSplashImg.png';
-import resend from '../../assets/resend.png';
 import InputField from '../reusables/InputField';
+import { SetNewPassword } from '../set-newPassword/set-newPassword';
 import styles from './forgot-password.module.scss';
-import ForgotPasswordPage from '../authentication/components/ForgotPassword';
-import { arrow } from '../../icons';
 
 export interface ForgotPasswordProps {
     className?: string;
@@ -18,10 +16,12 @@ export interface ForgotPasswordProps {
 
 interface User {
     email: string;
+    otp: any;
 }
 
 const defaultUser: User = {
     email: '',
+    otp: null
 };
 
 interface Languages {
@@ -54,7 +54,9 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
     const [user, setUser] = useState(defaultUser);
     const [response, setResponse] = useState(false);
     const [responseResult, setResponseResult] = useState('');
-
+    const [form, setForm] = useState('');
+    const [otp, setOtp] = useState<any>(null);
+    let myOtp = +otp;
     const onUserChange = <P extends keyof User>(prop: P, value: User[P]) => {
         setUser({ ...user, [prop]: value });
     };
@@ -70,11 +72,9 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                // const { token } = responseData.data; // Extract token value from data object
                 console.log(responseData);
                 setResponseResult(responseData.message);
-                setResponse(true);
-                // navigate('/dashboard');
+                setForm('verifyOTP')
             } else {
                 setErrorMessage('Invalid email');
                 console.log(response);
@@ -106,6 +106,50 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
         );
     };
 
+
+
+    const handleVerifySubmit = (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent the default form submission behavior
+        const { email } = user;
+        handleVerify(email, otp);
+    }
+
+    const handleVerify = async (email: string, otp: number) => {
+
+        try {
+            const response = await fetch(`${API_KEY}/auth/verifyOtp`, {
+                method: 'PATCH',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ email: email, otp: myOtp }),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log(responseData);
+                setResponse(true);
+            } else {
+                // Handle the error response from the server
+                const errorResponseData = await response.json();
+                const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
+                setErrorMessage(errorMessageFromServer);
+
+                console.log(response);
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Invalid email or password');
+        }
+    }
+
+    if (response) {
+        let theOtp = otp;
+        user.otp = theOtp
+        return (
+            <SetNewPassword email={user.email} otp={user.otp} />
+        )
+    }
+
+
     return (
         <div className={classNames(styles.container, className)}>
             <div className={styles.AuthSplashImg}>
@@ -131,93 +175,87 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                     style={{
                         // marginTop: '25%',
                         marginBottom: '0%',
+                        // marginLeft: '80px',
+                        width: '80%',
                         alignContent: 'center',
                         alignSelf: 'center',
-                        justifyContent: 'space-between',
-                        width:'100%',
-                        padding:'0px 80px'
+                        justifyContent: 'space-between'
                     }}
                 >
-                    {response ? (
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignContent: 'center',
-                                alignItems: 'center',
-                                gap: '24px',
-                            }}
-                        >
-                            <img src={atForgotPwd} alt="" className={styles.atForgotPwd} />
-                            <h3 className={styles.creatTitle} style={{ marginTop: '5%' }}>
-                                {t('checkyouremail.text')}
-                            </h3>
-                            <p>{t('wesentpassword.text')}</p>
-                            <p>{t('didntreceiveemail.text')}</p>
-                            <a
-                                href="#"
-                                onClick={handleForgotPasswordSubmit}
-                                className={styles.boldLinkText}
-                            >
-                                <img
-                                    src={resend}
-                                    alt=""
-                                    style={{ width: '14.5px', marginRight: '8.5px' }}
-                                />
-                                {t('clicktoresend.text')}
-                            </a>
+                    {form === 'verifyOTP' ? (
+
+                        <div className={styles.otpForm}>
+                            <h4>
+                                Verify your email
+                            </h4>
+                            <p>
+                                We sent an OTP to your email.
+                            </p>
+                            <OtpInput
+                                value={otp}
+                                onChange={setOtp}
+                                numInputs={6}
+                                renderSeparator={<span></span>}
+                                inputStyle={otp === '' ? styles.otpInput : styles.otpInputNotEmpty}
+                                containerStyle={styles.otpContainer}
+                                renderInput={(props) => <input {...props} />}
+                                inputType={"tel"}
+                                skipDefaultStyles={true}
+                            />
+                            <div className={styles.signupSubmitDiv}>
+                                <button
+                                    className={styles.signupSubmitBtn}
+                                    onClick={handleVerifySubmit}
+                                >
+                                    Verify code
+                                </button>
+                            </div>
+                            <div> Resend code </div>
                         </div>
                     ) : (
-                        // <form className={styles.authInputFields}>
-                        //     <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                        //         {t('forgotpassword.link')}
-                        //     </h3>
-                        //     <p>{t('dontworry.text')}</p>
-                        //     <div style={{ marginTop: '20px' }}>
-                        //         {errorMessage ? (
-                        //             <h4
-                        //                 style={{
-                        //                     fontWeight: '700',
-                        //                     fontSize: '16px',
-                        //                     color: 'red',
-                        //                     marginBottom: '20px',
-                        //                 }}
-                        //             >
-                        //                 {errorMessage}
-                        //             </h4>
-                        //         ) : null}
-                        //     </div>
-                        //     <div className={styles.inputsDiv}>
-                        //         <InputField
-                        //             type="email"
-                        //             placeholder={t('email.input')}
-                        //             className="formInputFields"
-                        //             value={user.email}
-                        //             onChange={(e: { target: { value: string } }) => {
-                        //                 onUserChange('email', e.target.value);
-                        //             }}
-                        //         />
-                        //     </div>
+                        <form className={styles.authInputFields}>
+                            <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
+                                {t('forgotpassword.link')}
+                            </h3>
+                            <p>{t('dontworry.text')}</p>
+                            <div style={{ marginTop: '20px' }}>
+                                {errorMessage ? (
+                                    <h4
+                                        style={{
+                                            fontWeight: '700',
+                                            fontSize: '16px',
+                                            color: 'red',
+                                            marginBottom: '20px',
+                                        }}
+                                    >
+                                        {errorMessage}
+                                    </h4>
+                                ) : null}
+                            </div>
+                            <div className={styles.inputsDiv}>
+                                <InputField
+                                    type="email"
+                                    placeholder={t('email.input')}
+                                    className="formInputFields"
+                                    value={user.email}
+                                    onChange={(e: { target: { value: string } }) => {
+                                        onUserChange('email', e.target.value);
+                                    }}
+                                />
+                            </div>
 
-                        //     <div className={styles.signupSubmitDiv}>
-                        //         <button
-                        //             className={styles.signupSubmitBtn}
-                        //             onClick={handleForgotPasswordSubmit}
-                        //         >
-                        //             {t('emailmeinstructions.btn')}
-                        //         </button>
-                        //         {response ? renderResponse() : ''}
-                        //     </div>
-                        // </form>
-                        <ForgotPasswordPage
-                            value={user.email}
-                            onChange={(e: { target: { value: string } }) => {
-                                onUserChange('email', e.target.value);
-                            }}
-                            errorMessage={errorMessage}
-                            onsubmit={handleForgotPasswordSubmit}
-                        />
+                            <div className={styles.signupSubmitDiv}>
+                                <button
+                                    className={styles.signupSubmitBtn}
+                                    onClick={handleForgotPasswordSubmit}
+                                >
+                                    {t('emailmeinstructions.btn')}
+                                </button>
+                                {response ? renderResponse() : ''}
+                            </div>
+                        </form>
                     )}
+
                 </div>
                 <div className={styles.afterTheFormDiv}>
                     <div className={classNames(styles.footerLightBg)}>
@@ -234,7 +272,18 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                             >
                                 {currentLanguage?.name}
                                 <span className="m-md-1">
-                                    <img style={{marginLeft:8}} src={arrow} alt="" />
+                                    <svg
+                                        width="7"
+                                        height="6"
+                                        viewBox="0 0 7 6"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M3.5 6L6.53109 0.75H0.468911L3.5 6Z"
+                                            fill="#D9D9D9"
+                                        />
+                                    </svg>
                                 </span>
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownDefaultButton">
@@ -242,7 +291,7 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                     <li key={country_code}>
                                         <a
                                             href="#"
-                                            className={classNames('dropdown-item', {
+                                            className={classNames("dropdown-item", {
                                                 disabled: currentLanguageCode === code,
                                             })}
                                             onClick={() => {

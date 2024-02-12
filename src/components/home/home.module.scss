@@ -4,15 +4,18 @@
   background-color: #fafafa;
   width: 100%;
 }
+
 .topBarDiv {
   width: 100%;
 }
+
 .sideNavDiv {
   margin-top: 40px;
   margin-left: 40px;
   margin-bottom: 0px;
   padding: 0px;
 }
+
 .leftSide {
   display: flex;
   flex-direction: column;
@@ -20,6 +23,7 @@
   height: 100%;
   justify-content: center;
 }
+
 .suggestedActivityDiv {
   margin-top: 40px;
   margin-left: 40px;
@@ -43,6 +47,7 @@
   // padding-left: 70px;
   column-gap: 0px;
 }
+
 .container {
   width: 100%;
   height: 100%;
@@ -52,11 +57,13 @@
   padding-right: 199px;
   padding-top: 0px;
 }
+
 .center {
   display: flex;
   width: 100%;
   align-self: center;
 }
+
 .paginationload {
   padding: 50px 0px;
 }
@@ -80,20 +87,24 @@
     padding-left: 26px;
     padding-right: 26px;
   }
+
   .tabs {
     display: flex;
     align-items: center;
     gap: 12px;
   }
+
   .tab:last-child {
     padding-right: 0px;
     border: none;
   }
+
   .tab {
     padding-right: 12px;
     font-size: 15px;
     border-right: 2px solid #c1c6d0;
   }
+
   .tabIcons {
     display: flex;
     align-items: center;
@@ -110,16 +121,19 @@
   overflow: auto;
   scroll-snap-type: y mandatory;
 }
+
 .section {
   height: 100vh;
   background-size: cover;
   scroll-snap-align: start;
   margin-bottom: 10px;
 }
+
 @media only screen and (min-width: 600px) {
   .postHeader {
     display: none;
   }
+
   .mobileView {
     display: none;
   }
