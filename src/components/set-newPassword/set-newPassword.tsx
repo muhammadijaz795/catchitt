@@ -6,14 +6,12 @@ import styles from './set-newPassword..module.scss';
 // import atForgotPwd from '../../assets/atForgotPwd.png';
 // import resend from '../../assets/resend.png';
 import cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import i18next from 'i18next';
 // import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import Account from '../settings-page/account';
-import Input from '../authentication/components/Input';
-import { arrow } from '../../icons';
 
 export interface SetNewPasswordProps {
     className?: string;
@@ -23,14 +21,14 @@ interface User {
     email: string;
     password: string;
     confirmPassword: string;
-    token: string;
+    otp: any;
 }
 
 const defaultUser: User = {
     email: '',
     password: '',
     confirmPassword: '',
-    token: '',
+    otp: null,
 };
 
 interface Languages {
@@ -52,11 +50,10 @@ const languages: Languages[] = [
     },
 ];
 
-export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
+export const SetNewPassword = (props: any, className: SetNewPasswordProps) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode) || languages[0];
     const [, setLanguageSelector] = useState(currentLanguage.name);
-    const [pwisvisible, setpwisvisible] = useState(false);
 
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
@@ -69,17 +66,20 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     const [responseResult, setResponseResult] = useState('');
 
     const navigate = useNavigate();
+    user.email = props.email;
+    user.otp = props.otp;
+    let myOtp = +user.otp;
+    // useEffect(() => {
+    //     const { pathname } = location;
+    //     const pathSegments = pathname.split('/');
 
-    useEffect(() => {
-        const { pathname } = location;
-        const pathSegments = pathname.split('/');
+    //     user.email = pathSegments[2];
+    //     user.token = pathSegments.slice(3).join('/');
 
-        user.email = pathSegments[2];
-        user.token = pathSegments.slice(3).join('/');
+    //     console.log('Email:', user.email);
+    //     console.log('Token:', user.token);
+    // }, [])
 
-        console.log('Email:', user.email);
-        console.log('Token:', user.token);
-    }, []);
 
     const handleLanguageChange = (code: string, name: string) => {
         // i18next.changeLanguage(code);
@@ -91,12 +91,13 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
     };
 
     /** Handling Forgot Password Scenario */
-    const handleSetNewPassword = async (password: string, email: string, token: string) => {
+    const handleSetNewPassword = async (password: string, email: string, otp: number) => {
+        console.log(email, password, otp);
         try {
             const response = await fetch(`${API_KEY}/auth/password/set-new`, {
                 method: 'PATCH',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ password, email, token }),
+                body: JSON.stringify({ password: password, email: email, otp: myOtp }),
             });
             if (response.ok) {
                 const responseData = await response.json();
@@ -105,24 +106,24 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                 setResponse(true);
                 navigate('/auth');
             } else {
-                setErrorMessage('Please make sure the password aligns with the requirements');
+                setErrorMessage('Please make sure the password aligns with the requirements')
                 console.log(response.statusText);
             }
         } catch (error) {
-            setErrorMessage('Please make sure the password aligns with the requirements');
+            setErrorMessage('Please make sure the password aligns with the requirements')
             console.log(error);
         }
     };
 
     const handleSetNewPasswordSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
-        setErrorMessage('');
+        setErrorMessage('')
         if (user.password !== user.confirmPassword) {
             setErrorMessage('Passwords are not matching');
             return;
         } else {
-            const { password, email, token } = user;
-            handleSetNewPassword(password, email, token);
+            const { password, email, otp } = user;
+            handleSetNewPassword(password, email, otp);
         }
     };
 
@@ -166,43 +167,28 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                 </div>
             </div>
 
-            {/* <div className={styles.AuthForm}> */}
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    width: '100%',
-                    flexDirection: 'column',
-                    padding: '0px 80px',
-                    alignItems: 'center',
-                    marginBottom: 45,
-                    position: 'relative',
-                    height: '100vh',
-                }}
-            >
+            <div className={styles.AuthForm}>
                 <div
-                    // className={styles.formContainer}
+                    className={styles.formContainer}
                     style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        maxWidth: '560px',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        marginTop: '25%',
+                        marginBottom: '0%',
+                        marginLeft: '80px',
+                        width: '80%',
+                        alignContent: 'center',
+                        alignSelf: 'center',
                     }}
                 >
-                    {/* <form className={styles.authInputFields}> */}
-                    <form style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                        <h3 className={styles.creatTitle}>Create your password</h3>
-                        <p
-                            className={styles.formParagraph}
-                            style={{ margin: '32px 0px', padding: '0px 20px' }}
-                        >
+                    <form className={styles.authInputFields}>
+                        <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
+                            Create your password
+                        </h3>
+                        <p>
                             Your new password must have: 8 to 64 characters, Letters, numbers and
                             special characters
                         </p>
-                        <div>
-                            {errorMessage !== '' ? (
+                        <div style={{ marginTop: '20px' }}>
+                            {errorMessage !== "" ? (
                                 <h4
                                     style={{
                                         fontWeight: '700',
@@ -216,29 +202,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                             ) : null}
                         </div>
                         <div className={styles.inputsDiv}>
-                            <Input
-                                type={pwisvisible ? 'text' : 'password'}
-                                placeholder="Password"
-                                className="formInputFields"
-                                value={user.password}
-                                onChange={(e: { target: { value: string } }) => {
-                                    onUserChange('password', e.target.value);
-                                }}
-                                passwordToggler={true}
-                                showPasswordH={() => setpwisvisible(!pwisvisible)}
-                            />
-                            <Input
-                                type={pwisvisible ? 'text' : 'password'}
-                                placeholder="Confirm Password"
-                                className="formInputFields"
-                                value={user.confirmPassword}
-                                onChange={(e: { target: { value: string } }) => {
-                                    onUserChange('confirmPassword', e.target.value);
-                                }}
-                                passwordToggler={true}
-                                showPasswordH={() => setpwisvisible(!pwisvisible)}
-                            />
-                            {/* <InputField
+                            <InputField
                                 type="password"
                                 placeholder="Password"
                                 className="formInputFields"
@@ -255,7 +219,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                                 onChange={(e: { target: { value: string } }) => {
                                     onUserChange('confirmPassword', e.target.value);
                                 }}
-                            /> */}
+                            />
                         </div>
 
                         <div className={styles.signupSubmitDiv}>
@@ -270,8 +234,7 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                     </form>
                     {/* )} */}
                 </div>
-                {/* <div className={styles.afterTheFormDiv}> */}
-                <div style={{ width: '100%' }}>
+                <div className={styles.afterTheFormDiv}>
                     <div className={classNames(styles.footerLightBg)}>
                         <p className={styles['footer-p-lightBg']}>Privacy Policy</p>
                         <p className={styles['footer-p-lightBg']}>About</p>
@@ -285,8 +248,19 @@ export const SetNewPassword = ({ className }: SetNewPasswordProps) => {
                                 className={classNames(styles.langSelector)}
                             >
                                 {currentLanguage.name}
-                                <span className="m-md-1" style={{marginLeft:8}}>
-                                    <img src={arrow} alt="" />
+                                <span className="m-md-1">
+                                    <svg
+                                        width="7"
+                                        height="6"
+                                        viewBox="0 0 7 6"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M3.5 6L6.53109 0.75H0.468911L3.5 6Z"
+                                            fill="#D9D9D9"
+                                        />
+                                    </svg>
                                 </span>
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownDefaultButton">

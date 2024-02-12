@@ -66,7 +66,8 @@ a {
   grid-template-columns: 1fr 1fr;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Prevent scrolling */
+  overflow: hidden;
+  /* Prevent scrolling */
   height: 100vh;
 }
 
@@ -145,19 +146,18 @@ a {
   color: #574d68;
   margin-bottom: 40px;
   text-align: center;
-  @media screen and (max-width: 600px) {
-  font-size: 24px;
-  }
 }
 
 .formContainer {
 
   margin-right: 80px;
   margin-left: 80px;
+
   @media screen and (max-width: 600px) {
     margin-right: 0;
     margin-left: 0;
-    }
+  }
+
   margin-bottom: 0px;
   display: flex;
   flex-direction: column;
@@ -213,7 +213,6 @@ a {
   margin-bottom: 24px;
   width: 100%;
   background-color: #5448b2;
-  color: #FFF;
   border-radius: 6px;
 }
 
@@ -275,12 +274,14 @@ a {
   color: #5448B2;
   text-decoration: none;
 }
+
 .linkText {
   font-family: Poppins;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 21px */
+  line-height: 150%;
+  /* 21px */
   color: #5448B2;
   text-decoration: none;
 }
@@ -300,7 +301,6 @@ a {
   grid-auto-flow: column;
   column-gap: 10px;
   margin-bottom: 60px;
-  
 }
 
 .appStoreBtn {
@@ -324,8 +324,8 @@ a {
   justify-content: center;
   font-size: 16px;
   font-family: 'Poppins';
-  position: fixed;
-  bottom: 35px;
+  position: absolute;
+  bottom: 45px;
 }
 
 .splashImgDiv {
@@ -491,7 +491,8 @@ a {
   .langSelector {
     font-size: 14px;
   }
-  .footerLightBg{
+
+  .footerLightBg {
     margin-bottom: 20px;
     bottom: auto;
     position: relative;
@@ -544,11 +545,6 @@ a {
   .AuthSplashImg {
     height: 100vh;
   }
-
-  .AuthForm {
-    height: 100vh;
-
-  }
 }
 
 .loader {
@@ -580,4 +576,135 @@ a {
   margin-top: 6px;
   display: flex;
   justify-content: end;
+}
+
+.otpInputNotEmpty {
+  width: 5.5rem;
+  height: 5.75rem;
+  flex-shrink: 0;
+
+  display: flex;
+  text-align: center;
+
+  border-radius: 4px;
+  border: 3px solid var(--Foundation-Primary-primary-500, #5448B2);
+
+  background: var(--Default-white, #FFF);
+
+  color: var(--Foundation-Primary-primary-500, #5448B2);
+
+  /* Title/Text */
+  font-family: Poppins;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.otpInput {
+  width: 5.5rem;
+  height: 5.75rem;
+  flex-shrink: 0;
+
+  display: flex;
+  text-align: center;
+
+  border-radius: 4px;
+  border: 3px solid var(--Foundation-Neutral-neutral-400, #C8C8C8);
+
+  background: var(--Default-white, #FFF);
+
+  color: var(--Foundation-Primary-primary-500, #5448B2);
+
+  /* Title/Text */
+  font-family: Poppins;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.otpContainer {
+  margin-top: 5%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.otpForm {
+  height: 100%;
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  column-gap: 1rem;
+}
+
+.otpForm h4 {
+  margin-top: 30%;
+
+  font-family: Poppins;
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 53px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.otpForm p {
+  margin-top: 3%;
+  //styleName: Base/Regular;
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: rgba(107, 107, 107, 1);
+}
+
+
+@media screen and (max-width: 768px) {
+  .otpInput {
+    width: 5rem;
+    height: 4.75rem;
+    flex-shrink: 0;
+
+    border-radius: 4px;
+    border: 2px solid var(--Foundation-Primary-primary-500, #5448B2);
+    background: var(--Default-white, #FFF);
+  }
+
+  .otpContainer {
+    margin-top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  .otpForm {
+    height: 100%;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .otpInput {
+    width: 2.5rem;
+    height: 3.75rem;
+    flex-shrink: 0;
+
+    border-radius: 4px;
+    border: 2px solid var(--Foundation-Primary-primary-500, #5448B2);
+    background: var(--Default-white, #FFF);
+  }
+
+  .otpContainer {
+    margin-top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+  }
 }

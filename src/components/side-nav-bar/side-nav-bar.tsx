@@ -10,12 +10,12 @@ export interface SideNavBarProps {
     settingsDropdownState?: boolean;
 }
 
-export const SideNavBar = ({ className,  settingsDropdownState }: SideNavBarProps) => {
+export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps) => {
     const { settingsDropdown, setSettingsDropdown, selectedIndex, setIndex } = useAuthStore(); // Get selectedIndex and setIndex from the store
 
     const navigate = useNavigate();
 
-    const {pathname} = useLocation()
+    const { pathname } = useLocation()
 
     const [isRotated, setRotated] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdownState);

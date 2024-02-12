@@ -11,15 +11,12 @@ import { Tab } from 'react-tabs';
 import profileIcon from '../../assets/defaultProfileIcon.png';
 import filterIcon from '../../assets/filterIcon.png';
 import hashtagIcon from '../../assets/hashtagIcon.png';
+import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
 import { HashtagsPage } from '../hashtags-page/hashtags-page';
 import useDebounce from '../reusables/useDebounce';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import playIcon from '../sounds-page/svg-components/playIcon.png';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { TopBar } from '../top-bar/top-bar';
 import styles from './search-page.module.scss';
-import Layout from '../../shared/layout';
 
 
 interface User {

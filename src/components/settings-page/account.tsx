@@ -8,11 +8,9 @@ import privacyPolicyIcon from '../../assets/privacyPolicyIcon.svg';
 import reportProblem from '../../assets/reportProblemIcon.svg';
 import seezittLogoIcon from '../../assets/seezittLogoIcon.svg';
 import termsConfitionsIcon from '../../assets/termsConditionsIcon.svg';
+import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
 import InputField from '../reusables/InputField';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { TopBar } from '../top-bar/top-bar';
 import styles from './account.module.scss';
 import { DeleteReasonPopup } from './components/delete-reason-popup';
 import { ShareProfilePopup } from './components/shareProfilePopup';
@@ -21,7 +19,6 @@ import { SwitchToPersonalPopup } from './components/switchToPersonalPopup';
 import changePassIcon from './svg-components/changePassIcon.svg';
 import redRightArrow from './svg-components/redRightArrow.svg';
 import whiteRightArrow from './svg-components/whiteRightArrow.svg';
-import Layout from '../../shared/layout';
 
 export interface AccountProps {
     className?: string;

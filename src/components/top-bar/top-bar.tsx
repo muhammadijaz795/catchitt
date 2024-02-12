@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import coloredLogo from '../../assets/coloredLogo.png';
-import plusIcon from '../../assets/plusIcon.png';
 import { useAuthStore } from '../../store/authStore';
 import styles from './top-bar.module.scss';
 // import { Button } from '@mui/material';

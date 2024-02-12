@@ -1,31 +1,29 @@
+import { Switch } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
+import useLongPress from '../../utils/useLongPress';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import { TopBar } from '../top-bar/top-bar';
 import styles from './coming-soon.module.scss';
-import { Switch } from 'antd';
-import useLongPress from '../../utils/useLongPress';
 
 // Assets
+import { ToastContainer } from 'react-toastify';
+import { closeSvg, copyMsg, deleteMsg, starMsg, unStarMsg } from '../../icons';
+import PopupForReport from '../profile/popups/PopupForReport';
+import LongPressButton from './components/LongPressEvent';
 import arrowRight from './svg-components/arrow-right.svg';
 import attachment from './svg-components/attachment.svg';
 import userAvatar from './svg-components/avatar.svg';
+import emojie from './svg-components/emojie.svg';
 import menuBox from './svg-components/menuBox.svg';
 import microphone from './svg-components/microphone.svg';
+import moreoptions from './svg-components/more-options.svg';
 import newChat from './svg-components/newChat.svg';
 import pinnedChat from './svg-components/pinnedChat.svg';
+import share from './svg-components/reply.svg';
 import searchChat from './svg-components/search.svg';
 import seen from './svg-components/seen.svg';
-import emojie from './svg-components/emojie.svg';
-import share from './svg-components/reply.svg';
-import moreoptions from './svg-components/more-options.svg';
-import PopupForReport from '../profile/popups/PopupForReport';
-import { closeSvg, copyMsg, deleteMsg, starMsg, unStarMsg } from '../../icons';
-import { ToastContainer, toast } from 'react-toastify';
-import LongPressButton from './components/LongPressEvent';
-import { ClickAwayListener, Modal } from '@mui/material';
-import { e } from 'mathjs';
 
 export interface ComingSoonProps {
     className?: string;
@@ -242,7 +240,7 @@ const ComingSoon: React.FC = (className: ComingSoonProps) => {
         setShowMenuBox(false);
     };
 
-    const blockUserFinallyHandler = () => {};
+    const blockUserFinallyHandler = () => { };
     const scrollToBottom = () => {
         if (div.current) {
             div.current.scrollTop = div.current.scrollHeight;
@@ -799,11 +797,10 @@ const ComingSoon: React.FC = (className: ComingSoonProps) => {
                                             <div
                                                 onClick={(e) => e.stopPropagation()}
                                                 style={{
-                                                    marginRight: `${
-                                                        item.message.length < 70
+                                                    marginRight: `${item.message.length < 70
                                                             ? 70 - item.message.length
                                                             : 0
-                                                    }%`,
+                                                        }%`,
                                                     display: 'flex',
                                                     justifyContent: 'flex-end',
                                                     alignItems: 'flex-end',
@@ -829,7 +826,7 @@ const ComingSoon: React.FC = (className: ComingSoonProps) => {
                                                                 styles.sentMessageRowContainer
                                                             }
                                                             {...longPressEvent}
-                                                            // style={{ width: '90%' }}
+                                                        // style={{ width: '90%' }}
                                                         >
                                                             <img
                                                                 className={
@@ -850,7 +847,7 @@ const ComingSoon: React.FC = (className: ComingSoonProps) => {
                                                                 className={
                                                                     styles.sentMessageContainer
                                                                 }
-                                                                // style={{ width: '100%' }}
+                                                            // style={{ width: '100%' }}
                                                             >
                                                                 <p
                                                                     style={{
@@ -1136,11 +1133,10 @@ const ComingSoon: React.FC = (className: ComingSoonProps) => {
                                         <div>
                                             <div
                                                 style={{
-                                                    marginLeft: `${
-                                                        item.message.length < 70
+                                                    marginLeft: `${item.message.length < 70
                                                             ? 70 - item.message.length
                                                             : 0
-                                                    }%`,
+                                                        }%`,
                                                 }}
                                             >
                                                 {item.emoji && <Emoji id={item?.id} />}

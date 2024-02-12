@@ -1,26 +1,23 @@
 import { ClickAwayListener, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
-import { SideNavBar } from '../side-nav-bar/side-nav-bar';
-import { SuggestedActivity } from '../suggested-activity/suggested-activity';
-import { TopBar } from '../top-bar/top-bar';
+import Gifts from '../discover/popups/gifts';
 import FollowModal from './components/FollowModal';
 import LikesModal from './components/LikesModal';
 import EditProfile from './components/editProfile';
 import { PrivatePosts } from './components/privatePosts';
 import PublicProfileHeader from './components/publicProfileHeader';
 import VideoesMaping from './components/videoesMaping';
+import PopupForReport from './popups/PopupForReport';
+import PopupForBlock from './popups/popupForBlock';
+import PopupForVideoPlayer from './popups/popupForVideoPlayer';
+import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
 import styles from './profile.module.scss';
 import { Liked } from './svg-components/Liked';
 import { Tagged } from './svg-components/Tagged';
 import { VideoIcon } from './svg-components/VideoIcon';
-import PopupForVideoPlayer from './popups/popupForVideoPlayer';
-import PopupForReport from './popups/PopupForReport';
-import PopupForBlock from './popups/popupForBlock';
-import Gifts from '../discover/popups/gifts';
-import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
-import Layout from '../../shared/layout';
 
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
