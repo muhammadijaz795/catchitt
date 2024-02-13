@@ -1,0 +1,24 @@
+.shortSideBar {
+  border-radius: 16px;
+  background: var(--Default-white, #fff);
+  box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.03);
+  display: flex;
+  width: 87px;
+  padding: 16px;
+  margin: 40px;
+  height: fit-content;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.shortSideBar > div {
+  padding: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.shortSideBar > div:nth-child(2) {
+  background: #5448b2;
+}
+// .shortSideBar > div:hover {
+//   background: #5448b2;
+// }

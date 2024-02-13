@@ -1,18 +1,31 @@
 import { useMediaQuery } from '@mui/material';
+import PopupForReport from '../../components/profile/popups/PopupForReport';
 import { SideNavBar } from '../../components/side-nav-bar/side-nav-bar';
 import { SuggestedActivity } from '../../components/suggested-activity/suggested-activity';
-import Navbar from '../navbar';
 import { TopBar } from '../../components/top-bar/top-bar';
+import BlockPopup from '../popups/BlockPopup';
+import style from './style.module.scss';
+import { commentTab, forthTab, homeTab, settingsTab, thirdTab } from '../../icons';
 
-function Layout({ children  }: any) {
+function Layout(props: any) {
+    const {
+        globalClicker,
+        children,
+        showReportPopup,
+        closeReportPopup,
+        reportInfo,
+        showBlockPopup,
+        closeBlockPopup,
+        showShortSidebar,
+    } = props || {};
     const showSidebar = useMediaQuery('(max-width:1000px)');
 
     return (
-        <div style={{ width: '100%', height: '100vh', overflow: 'hidden' }}>
+        <div style={{ width: '100%', height: '100vh', overflow: 'hidden' }} onClick={globalClicker}>
             {/* <Navbar /> */}
             <TopBar />
             <div style={{ display: 'flex', height: '100%' }}>
-                {!showSidebar ? (
+                {!showSidebar && !showShortSidebar ? (
                     <div
                         style={{
                             display: 'flex',
@@ -23,17 +36,57 @@ function Layout({ children  }: any) {
                             padding: '40px 40px 40px 40px',
                         }}
                     >
-                        <SideNavBar  />
+                        <SideNavBar />
                         <div style={{ background: '#FFF', borderRadius: 16 }}>
                             <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                         </div>
                     </div>
-                ) : null}
+                ) : (
+                    !showShortSidebar && (
+                        <div className={style.shortSideBar}>
+                            <div>
+                                <img src={homeTab} alt="" />
+                            </div>
+                            <div>
+                                <img src={commentTab} alt="" />
+                            </div>
+                            <div>
+                                <img src={thirdTab} alt="" />
+                            </div>
+                            <div>
+                                <img src={forthTab} alt="" />
+                            </div>
+                            <div>
+                                <img src={settingsTab} alt="" />
+                            </div>
+                        </div>
+                    )
+                )}
+                {!showSidebar && showShortSidebar && (
+                    <div className={style.shortSideBar}>
+                        <div>
+                            <img src={homeTab} alt="" />
+                        </div>
+                        <div>
+                            <img src={commentTab} alt="" />
+                        </div>
+                        <div>
+                            <img src={thirdTab} alt="" />
+                        </div>
+                        <div>
+                            <img src={forthTab} alt="" />
+                        </div>
+                        <div>
+                            <img src={settingsTab} alt="" />
+                        </div>
+                    </div>
+                )}
+
                 <div
                     style={{
                         overflow: 'scroll',
-                        height: '102%',
-                        // paddingBottom: 40,
+                        height: 'auto',
+                        paddingBottom: 40,
                         display: 'block',
                         flex: 1,
                     }}
@@ -41,6 +94,12 @@ function Layout({ children  }: any) {
                     {children}
                 </div>
             </div>
+            <PopupForReport
+                openReport={showReportPopup}
+                onReportClose={closeReportPopup}
+                info={reportInfo}
+            />
+            <BlockPopup openBlock={showBlockPopup} onBlockClose={closeBlockPopup} />
         </div>
     );
 }

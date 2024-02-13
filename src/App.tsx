@@ -28,6 +28,7 @@ import WithdrawalLimitPage from './components/settings-page/components/withdrawa
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
+import ChatsSec from './components/chats';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -73,7 +74,7 @@ function App() {
                             <Route path="/home" element={<Home />} />
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
-                            <Route path="/comingsoon" element={<ComingSoon />} />
+                            <Route path="/comingsoon" element={<ChatsSec />} />
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/profile/:id" element={<PublicProfile />} />
                             <Route path="/settings/account" element={<Account />} />

@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { search } from '../../../icons';
 import { useState } from 'react';
 
-function Search() {
+function Search({ placeholder }: any) {
     const { pathname } = useLocation();
 
     const [Search, setSearch] = useState<any>('');
@@ -43,7 +43,7 @@ function Search() {
                         fontWeight: 400,
                     }}
                     type="search"
-                    placeholder="Search accounts and videos"
+                    placeholder={placeholder}
                     onChange={(e) => setSearch(e.target.value)}
                     value={Search}
                 />
