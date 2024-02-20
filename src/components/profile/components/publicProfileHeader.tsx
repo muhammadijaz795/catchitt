@@ -6,8 +6,8 @@ import MailIcon from '../svg-components/MailIcon';
 import { Avatar } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
+import COPY_AND_SEND_MENU from '../../../shared/Menu/copyAndSend';
 const API_KEY = process.env.VITE_API_URL;
-
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -15,11 +15,11 @@ interface Props {
     onFollowModalActive: (value: string) => void;
     profileData: any;
     public: boolean;
-    openReport?: any,
-    openBlock?: any,
-    showStories:any,
-    storyVideos:any
-
+    openReport?: any;
+    openBlock?: any;
+    showStories: any;
+    storyVideos: any;
+    copyHandler: any;
 }
 
 const PublicProfileHeader: FunctionComponent<Props> = ({
@@ -29,20 +29,20 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     profileData,
     openReport,
     openBlock,
-    showStories
+    showStories,
+    copyHandler,
 }) => {
-    const auth = useAuthStore()
+    const auth = useAuthStore();
     const token = useAuthStore((state) => state.token);
-    const params: any = useParams()
+    const params: any = useParams();
 
     const [dropdown, setDropdown] = useState(false);
-    const [stories, setStories] = useState([])
+    const [stories, setStories] = useState([]);
 
     const [followedUsersData, setFollowedUsersData] = useState<any>([]);
     const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
 
     const fetchFollowers = async () => {
-
         try {
             const response = await fetch(`${API_KEY}/profile/${auth._id}/followers`, {
                 method: 'GET',
@@ -54,36 +54,34 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                 setFollowedUsersData(responseData.data.data);
             }
         } catch (error) {
-            alert('Somthing went wrong')
-            console.log(error)
+            alert('Somthing went wrong');
+            console.log(error);
         }
-    }
+    };
     useEffect(() => {
         fetch(`${API_KEY}/media-content/stories`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        }).then((res) => res.json()).then((data) => {
-            setStories(data.data[0].stories)
-        }).catch((err) => {
-            console.log('collectons error', err);
         })
-        fetchFollowers()
-
-    }, [])
-
+            .then((res) => res.json())
+            .then((data) => {
+                setStories(data.data[0].stories);
+            })
+            .catch((err) => {
+                console.log('collectons error', err);
+            });
+        fetchFollowers();
+    }, []);
 
     const manageFollowBtn = async () => {
         try {
-            const response = await fetch(
-                `${API_KEY}/profile/follow/${params?.id}/`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const response = await fetch(`${API_KEY}/profile/follow/${params?.id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (response.ok) {
                 // Update the followedAccounts state
@@ -91,36 +89,40 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                     ...prevFollowedAccounts,
                     [params?.id]: !prevFollowedAccounts[params?.id], // Mark the account as followed
                 }));
-                fetchFollowers()
+                fetchFollowers();
             }
         } catch (error) {
-            alert('Somthing went wrong')
-            console.log(error)
+            alert('Somthing went wrong');
+            console.log(error);
         }
     };
-
 
     return (
         <div className={styles.profileHeader}>
             <div className={styles.banner}>
-                {profileData?.cover && <img className={styles.bannerImg} src={profileData?.cover} alt="Banner Img" />}
+                {profileData?.cover && (
+                    <img className={styles.bannerImg} src={profileData?.cover} alt="Banner Img" />
+                )}
             </div>
             <div className={styles.bottomContainer}>
-                <div onClick={() => {
-                    if (stories?.length > 0) {
-                        showStories()
-                    }
-                }
-                } className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}>
+                <div
+                    onClick={() => {
+                        if (stories?.length > 0) {
+                            showStories();
+                        }
+                    }}
+                    className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}
+                >
                     <Avatar
                         className={styles.avatarImg}
                         src={profileData?.avatar}
                         alt={profileData?.name}
                     />
                 </div>
-                <button style={{ width: 98 }} className={styles.button}>
+                <button style={{ width: 98, position: 'relative' }} className={styles.button}>
                     <ShareIcon />
                     Share
+                    <COPY_AND_SEND_MENU copyHandler={copyHandler} />
                 </button>
             </div>
             <div className={styles.pfContent}>
@@ -167,17 +169,26 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                         Messages
                     </button>
 
-                    {followedUsersData.length > 0 && followedUsersData.some((user: any) => user.followed_userID._id === params?.id) ? <button
-                        style={{ width: 116 }}
-                        className={styles.button2}
-                        onClick={manageFollowBtn}
-                    >Unfollow
-                    </button> : <button
-                        className={styles.button2}
-                        style={{ background: '#5448b2', color: '#FFF', width: 116 }}
-                        onClick={manageFollowBtn}
-                    >Follow
-                    </button>}
+                    {followedUsersData.length > 0 &&
+                    followedUsersData.some(
+                        (user: any) => user.followed_userID._id === params?.id
+                    ) ? (
+                        <button
+                            style={{ width: 116 }}
+                            className={styles.button2}
+                            onClick={manageFollowBtn}
+                        >
+                            Unfollow
+                        </button>
+                    ) : (
+                        <button
+                            className={styles.button2}
+                            style={{ background: '#5448b2', color: '#FFF', width: 116 }}
+                            onClick={manageFollowBtn}
+                        >
+                            Follow
+                        </button>
+                    )}
                     <button
                         onClick={() => {
                             setDropdown(!dropdown);

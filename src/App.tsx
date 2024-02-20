@@ -29,6 +29,7 @@ import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import { useAuthStore } from './store/authStore';
 import ChatsSec from './components/chats';
+import UploadSec from './components/uploadSec/uploadSec';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -91,6 +92,7 @@ function App() {
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />} />
                             <Route path="/discover" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
+                            <Route path="/upload" element={<UploadSec />} />
                         </Routes>
                     </Router>
                 </VideoProvider>

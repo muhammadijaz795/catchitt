@@ -18,6 +18,7 @@ import { Liked } from './svg-components/Liked';
 import { Private } from './svg-components/Private';
 import { Tagged } from './svg-components/Tagged';
 import { VideoIcon } from './svg-components/VideoIcon';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -40,8 +41,47 @@ export const Profile = (props: any) => {
     const [reportPopup, setReportPopup] = useState(false);
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
-    const [activeVideo, setActiveVideo] = useState();
+    const [copyPopup, setcopyPopup] = useState(false);
 
+    const navigate = useNavigate();
+    const tabs = [
+        {
+            title: 'Videos',
+            icon: <VideoIcon active={activeTab === 'Videos'} />,
+            key: 1,
+        },
+        {
+            title: 'Private',
+            icon: <Private active={activeTab === 'Private'} />,
+            key: 2,
+        },
+        {
+            title: 'Bookmarks',
+            icon: <Bookmark active={activeTab === 'Bookmarks'} />,
+            key: 3,
+        },
+        {
+            title: 'Liked Videos',
+            icon: <Liked active={activeTab === 'Liked Videos'} />,
+            key: 4,
+        },
+        // {
+        //     title: 'Badges',
+        //     icon: <Badge active={activeTab === 'Badges'} />,
+        //     key: 5,
+        // },
+        {
+            title: 'Tagged Posts',
+            icon: <Tagged active={activeTab === 'Tagged Posts'} />,
+            key: 6,
+        },
+    ];
+    const onCancel = () => {
+        setProfileModal(false);
+    };
+    const onSave = () => {
+        setProfileModal(false);
+    };
     useEffect(() => {
         fetch(`${API_KEY}/profile`, {
             method: 'GET',
@@ -129,46 +169,7 @@ export const Profile = (props: any) => {
             .catch((err) => {
                 console.log('collectons error', err);
             });
-    }, []);
-
-    const tabs = [
-        {
-            title: 'Videos',
-            icon: <VideoIcon active={activeTab === 'Videos'} />,
-            key: 1,
-        },
-        {
-            title: 'Private',
-            icon: <Private active={activeTab === 'Private'} />,
-            key: 2,
-        },
-        {
-            title: 'Bookmarks',
-            icon: <Bookmark active={activeTab === 'Bookmarks'} />,
-            key: 3,
-        },
-        {
-            title: 'Liked Videos',
-            icon: <Liked active={activeTab === 'Liked Videos'} />,
-            key: 4,
-        },
-        // {
-        //     title: 'Badges',
-        //     icon: <Badge active={activeTab === 'Badges'} />,
-        //     key: 5,
-        // },
-        {
-            title: 'Tagged Posts',
-            icon: <Tagged active={activeTab === 'Tagged Posts'} />,
-            key: 6,
-        },
-    ];
-    const onCancel = () => {
-        setProfileModal(false);
-    };
-    const onSave = () => {
-        setProfileModal(false);
-    };
+    }, [profileModal]);
     const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
@@ -176,21 +177,24 @@ export const Profile = (props: any) => {
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
     };
+
+    useEffect(() => {
+        if (copyPopup) {
+            setTimeout(() => {
+                setcopyPopup(false);
+            }, 1000);
+        }
+    }, [copyPopup]);
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/auth');
+        }
+    });
+
     return (
-        <Layout>
-            {/* // <div className={styles.root}> */}
-            {/* <div className={styles.topBarDiv}>
-                <TopBar />
-            </div> */}
+        <Layout showCopyPopup={copyPopup}>
             <div className={styles.container}>
-                {/* <div className={styles.leftSide}>
-                    <div className={styles.sideNavDiv}>
-                        <SideNavBar selectedIndex={selectedIndex} />
-                    </div>
-                    <div className={styles.suggestedActivityDiv}>
-                        <SuggestedActivity showActivity={true} showSuggestedContent={true} />
-                    </div>
-                </div> */}
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
@@ -219,6 +223,7 @@ export const Profile = (props: any) => {
                         setProfileModal={setProfileModal}
                         setLikesModal={setLikesModal}
                         showStory={() => setStoryPopup(true)}
+                        copyHandler={() => setcopyPopup(true)}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -236,7 +241,7 @@ export const Profile = (props: any) => {
                     </div>
 
                     {/* Videoes Maping */}
-                    <div className={styles.contentContainer}>
+                    <div className={styles.contentContainer} style={{ minHeight: '300px' }}>
                         <p className={styles.title}>{activeTab}</p>
                         <div className={styles.posts}>
                             {activeTab === 'Videos' ? (
@@ -289,6 +294,13 @@ export const Profile = (props: any) => {
                     onclose={() => setStoryPopup(false)}
                     openReport={() => setReportPopup(true)}
                 />
+                {/* <div
+                    style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                ></div> */}
             </div>
             {/* </div> */}
         </Layout>

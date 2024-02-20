@@ -54,7 +54,7 @@ export default function Stories({ showStories }: any) {
     };
     return (
         <>
-            {
+            {/* {
                 sliderIndex > 0 ?
                     <img className={styles.prevArrow} onClick={prevSlide} src="../../../public/images/icons/nextArrow.svg" alt="" />
                     : null
@@ -64,7 +64,7 @@ export default function Stories({ showStories }: any) {
                 sliderIndex < 2 ?
                     <img className={styles.nextArrow} onClick={nextSlide} src="../../../public/images/icons/nextArrow.svg" alt="" />
                     : null
-            }
+            } */}
 
             <Slider className={styles.slider} ref={sliderRef}  {...settings}>
                 {

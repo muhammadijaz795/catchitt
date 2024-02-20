@@ -396,6 +396,9 @@ export const SuggestedActivity = memo(
                                                                         fontWeight: 400,
                                                                         lineHeight: '120%',
                                                                         width: 160,
+                                                                        whiteSpace:'nowrap',
+                                                                        textOverflow:'ellipsis',
+                                                                        overflow:'hidden'
                                                                     }}
                                                                 >
                                                                     {activity?.message}

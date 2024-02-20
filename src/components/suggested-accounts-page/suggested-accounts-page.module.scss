@@ -173,8 +173,8 @@ h6 {
 
 .pageHeader {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   align-self: start;
   color: var(--default-body, #222);
 

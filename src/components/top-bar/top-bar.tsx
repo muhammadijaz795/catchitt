@@ -12,6 +12,7 @@ import Media from 'react-media';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../reusables/searchBar';
 import { DefaultAvatar } from './svg-components/DefaultAvatar';
+import { createIcon } from '../../icons';
 
 export interface TopBarProps {
     className?: string;
@@ -35,6 +36,8 @@ export const TopBar = ({ className, searchBar }: TopBarProps) => {
 
     const handleLogout = () => {
         logout(); // Call the logout function
+        localStorage.clear();
+        navigate('/home')
     };
 
     const handleLogin = () => {
@@ -95,7 +98,7 @@ export const TopBar = ({ className, searchBar }: TopBarProps) => {
     };
 
     const handleBrgrClose = () => {
-        setAnchorBrgrEl(null);
+        // setAnchorBrgrEl(null);
     };
 
     return (
@@ -174,6 +177,12 @@ export const TopBar = ({ className, searchBar }: TopBarProps) => {
                     </div>
                 </Media>
                 <div className={styles.plusProfileDiv}>
+                    <img
+                        style={{ width: 36, height: 36, cursor: 'pointer' }}
+                        src={createIcon}
+                        alt=""
+                        onClick={()=>navigate('/upload')}
+                    />
                     {isLoggedIn ? (
                         <>
                             {profileData.avatar === '' ? (

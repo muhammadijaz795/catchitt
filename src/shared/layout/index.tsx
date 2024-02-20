@@ -19,7 +19,8 @@ function Layout(props: any) {
         showShortSidebar,
         DangerText,
         dangetBtnText,
-        onBlock
+        onBlock,
+        showCopyPopup
     } = props || {};
     const showSidebar = useMediaQuery('(max-width:1000px)');
 
@@ -35,7 +36,7 @@ function Layout(props: any) {
                             flexDirection: 'column',
                             gap: 32,
                             overflow: 'scroll',
-                            height: '102%',
+                            height: '92%',
                             padding: '40px 40px 40px 40px',
                         }}
                     >
@@ -84,6 +85,44 @@ function Layout(props: any) {
                         </div>
                     </div>
                 )}
+                {showCopyPopup && (
+                    <div
+                        style={{
+                            position: 'fixed',
+                            width: '100vw',
+                            height: '100vh',
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: 'flex',
+                                width: '18.5rem',
+                                height: '3.75rem',
+                                background: '#FFFAE6',
+                                borderRadius: '0.625rem',
+                                position: 'absolute',
+                                bottom: '6.65rem',
+                                right: '2.5rem',
+                            }}
+                        >
+                            <p
+                                style={{
+                                    color: '#222',
+                                    fontFamily: 'Poppins',
+                                    fontSize: ' 1rem',
+                                    fontStyle: ' normal',
+                                    fontWeight: '500',
+                                    lineHeight: '120%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    paddingLeft: '1.5rem',
+                                }}
+                            >
+                                🎉 Copied successfully
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <div
                     style={{
@@ -102,7 +141,13 @@ function Layout(props: any) {
                 onReportClose={closeReportPopup}
                 info={reportInfo}
             />
-            <BlockPopup onBlock={onBlock} dangetBtnText={dangetBtnText} DangerText={DangerText} openBlock={showBlockPopup} onBlockClose={closeBlockPopup} />
+            <BlockPopup
+                onBlock={onBlock}
+                dangetBtnText={dangetBtnText}
+                DangerText={DangerText}
+                openBlock={showBlockPopup}
+                onBlockClose={closeBlockPopup}
+            />
         </div>
     );
 }

@@ -1,15 +1,12 @@
-import { IconButton } from '@mui/material';
-import classNames from 'classnames';
+import { CircularProgress, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Layout from '../../../shared/layout';
 import { useAuthStore } from '../../../store/authStore';
 import PopupForReport from '../../profile/popups/PopupForReport';
 import PopupForBlock from '../../profile/popups/popupForBlock';
 import PopupForVideoPlayer from '../../profile/popups/popupForVideoPlayer';
-import { SideNavBar } from '../../side-nav-bar/side-nav-bar';
 import { LeftArrow } from '../../suggested-accounts-page/svg-components/LeftArrow';
-import { SuggestedActivity } from '../../suggested-activity/suggested-activity';
-import { TopBar } from '../../top-bar/top-bar';
 import styles from './allVideos.module.scss';
 import VideoPanel from './videoPanel';
 
@@ -32,6 +29,7 @@ export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
     const [hashtagVideos, setHashtagVideos] = useState([]);
     const [reportPopup, setReportPopup] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [queryData, setQueryData] = useState<any>('');
     const API_KEY = process.env.VITE_API_URL;
 
@@ -42,6 +40,7 @@ export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
         const data = queryParams.get('hashtag');
         setQueryData(data);
         const apisIntigrations = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(`${API_KEY}/discover/trending/videos`, {
                     method: 'GET',
@@ -68,6 +67,8 @@ export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
                 setHashtagVideos(res.data.data);
             } catch (error) {
                 console.log('error trendinghashtags', error);
+            } finally {
+                setLoading(false);
             }
         };
         apisIntigrations();
@@ -83,85 +84,100 @@ export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
     };
 
     return (
-        <div className={classNames(styles.root, className)}>
-            <div className={styles.topBarDiv}>
-                <TopBar />
-            </div>
-            <div className={styles.container}>
-                <div className={styles.leftSide}>
-                    <div className={styles.sideNavDiv}>
-                        <SideNavBar selectedIndex={null} />
-                    </div>
-                    <div className={styles.suggestedActivityDiv}>
-                        <SuggestedActivity showActivity={true} />
-                    </div>
-                </div>
-
+        <Layout>
+            {loading && (
                 <div
-                    className={styles.middleSectionDiv}
                     style={{
-                        paddingTop: 0,
-                        gap: 0,
+                        height: '90%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                     }}
                 >
-                    {params.id !== 'trending-videos' ? (
-                        hashtagVideos.map((obj: any, i) => {
-                            return (
-                                <div>
-                                    {obj?.name === queryData ? (
-                                        <div
-                                            style={{ marginTop: 41 }}
-                                            key={i}
-                                            className={styles.postsp}
-                                        >
-                                            <div className="d-flex justify-content-between">
-                                                <p className={styles.trendingText}>{obj?.name}</p>
-                                            </div>
-                                            <div className={styles.posts}>
-                                                {obj?.relatedVideos.map((video: any, i: any) => {
-                                                    return (
-                                                        <VideoPanel
-                                                            index={2}
-                                                            videomodal={() => openvideomodal(video)}
-                                                            video={video}
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    ) : null}
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <div style={{ marginTop: 41 }} className={styles.postsp}>
-                            <div className={styles.pageHeader}>
-                                <IconButton
-                                    sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
-                                    onClick={handleGoBack}
-                                >
-                                    <LeftArrow />
-                                </IconButton>
-                                <h4>Trending Videos</h4>
-                            </div>
-                            <div className="d-flex justify-content-between">
-                                <p className={styles.trendingText}></p>
-                            </div>
-                            <div className={styles.posts}>
-                                {trendingvideos.map((video: any, i: any) => {
-                                    return (
-                                        <VideoPanel
-                                            index={2}
-                                            videomodal={() => openvideomodal(video)}
-                                            video={video}
-                                        />
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )}
+                    <CircularProgress />
                 </div>
-            </div>
+            )}
+            {!loading && (
+                <div className={styles.container}>
+                    <div
+                        className={styles.middleSectionDiv}
+                        style={{
+                            paddingTop: 0,
+                            gap: 0,
+                        }}
+                    >
+                        {params.id !== 'trending-videos' ? (
+                            hashtagVideos.map((obj: any, i) => {
+                                return (
+                                    <div>
+                                        {obj?.name === queryData ? (
+                                            <div
+                                                style={{ marginTop: 41 }}
+                                                key={i}
+                                                className={styles.postsp}
+                                            >
+                                                <div className="d-flex justify-content-between">
+                                                    <p className={styles.trendingText}>
+                                                        {obj?.name}
+                                                    </p>
+                                                </div>
+                                                <div className={styles.posts}>
+                                                    {obj?.relatedVideos.map(
+                                                        (video: any, i: any) => {
+                                                            return (
+                                                                <VideoPanel
+                                                                    index={2}
+                                                                    videomodal={() =>
+                                                                        openvideomodal(video)
+                                                                    }
+                                                                    video={video}
+                                                                />
+                                                            );
+                                                        }
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div style={{ marginTop: 41 }} className={styles.postsp}>
+                                <div className={styles.pageHeader}>
+                                    <IconButton
+                                        sx={{
+                                            margin: '0px',
+                                            padding: '0px',
+                                            alignSelf: 'center',
+                                            display: 'flex',
+                                            justifyContent: 'flex-start',
+                                            gap: '1rem',
+                                        }}
+                                        onClick={handleGoBack}
+                                    >
+                                        <LeftArrow />
+                                        <h4>Trending Videos</h4>
+                                    </IconButton>
+                                </div>
+                                <div className="d-flex justify-content-between">
+                                    <p className={styles.trendingText}></p>
+                                </div>
+                                <div className={styles.posts}>
+                                    {trendingvideos.map((video: any, i: any) => {
+                                        return (
+                                            <VideoPanel
+                                                index={2}
+                                                videomodal={() => openvideomodal(video)}
+                                                video={video}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
             <PopupForVideoPlayer
                 onBlockPopup={() => setBlockPopup(true)}
                 onReportPopup={() => setReportPopup(true)}
@@ -180,6 +196,6 @@ export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
                 onReportClose={() => setReportPopup(false)}
                 info={videoModalInfo}
             />
-        </div>
+        </Layout>
     );
 };

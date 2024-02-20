@@ -11,7 +11,7 @@ function SuggestedTab() {
                     />
                     <div className={styles['div-20']}>Mohamed Farag</div>
                 </div>
-                <div className={styles['div-21']}>Follow</div>
+                <div className={styles['div-21']} style={{display:'flex' , justifyContent:'center' , alignItems:'center'}}>Follow</div>
             </div>
                 <div className={styles['div-border']} />
         </div>

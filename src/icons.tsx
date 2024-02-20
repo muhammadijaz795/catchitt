@@ -41,7 +41,11 @@ import threeDotsInChatModalPopup from './assets/threeDotsForPopup.svg';
 import addimage from './assets/addimage.svg';
 import editInStaredMsg from './assets/editInStaredMsg.svg';
 import forwardMsg from './assets/forwardMsg.svg';
+import send from './assets/send.svg';
+import copyLink from './assets/copyLink.svg';
 export {
+    copyLink,
+    send,
     googleIcon,
     fb,
     wn,
@@ -84,5 +88,5 @@ export {
     threeDotsInChatModalPopup,
     addimage,
     editInStaredMsg,
-    forwardMsg
+    forwardMsg,
 };

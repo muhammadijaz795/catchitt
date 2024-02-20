@@ -135,12 +135,12 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
                 <div className={styles.middleSectionDiv}>
                     <div className={styles.pageHeader}>
                         <IconButton
-                            sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
+                            sx={{ margin: '0px', padding: '0px', alignSelf: 'center' , display:'flex' , gap:'1rem' }}
                             onClick={handleGoBack}
                         >
                             <LeftArrow />
+                            <h4>Push notifications</h4>
                         </IconButton>
-                        <h4>Push notifications</h4>
                     </div>
                     <div className={styles.suggestedContent}>
                         <h4>Email notifications</h4>

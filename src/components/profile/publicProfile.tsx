@@ -1,6 +1,6 @@
 import { ClickAwayListener, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
 import Gifts from '../discover/popups/gifts';
@@ -37,6 +37,9 @@ export const PublicProfile = (props: any) => {
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
     const [videoModal, setVideoModal] = useState(false);
+    const [copyPopup, setcopyPopup] = useState(false);
+
+    const navigate = useNavigate();
 
     // Use Function For Get the User Followers
     useEffect(() => {
@@ -97,22 +100,23 @@ export const PublicProfile = (props: any) => {
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
     };
+
+    useEffect(() => {
+        if (copyPopup) {
+            setTimeout(() => {
+                setcopyPopup(false);
+            }, 1000);
+        }
+    }, [copyPopup]);
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/auth');
+        }
+    });
     return (
-        <Layout>
-            {/* //{' '} */}
-            {/* <div className={styles.root}> */}
-            {/* <div className={styles.topBarDiv}>
-                <TopBar />
-            </div> */}
+        <Layout showCopyPopup={copyPopup}>
             <div className={styles.container}>
-                {/* <div className={styles.leftSide}>
-                    <div className={styles.sideNavDiv}>
-                        <SideNavBar selectedIndex={selectedIndex} />
-                    </div>
-                    <div className={styles.suggestedActivityDiv}>
-                        <SuggestedActivity showActivity={true} showSuggestedContent={true} />
-                    </div>
-                </div> */}
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
@@ -147,6 +151,7 @@ export const PublicProfile = (props: any) => {
                         storyVideos={(stories: any) => {
                             setVideoModalInfo(stories);
                         }}
+                        copyHandler={() => setcopyPopup(true)}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -162,7 +167,7 @@ export const PublicProfile = (props: any) => {
                             </div>
                         ))}
                     </div>
-                    <div className={styles.contentContainer}>
+                    <div className={styles.contentContainer} style={{minHeight:'300px'}}>
                         <p className={styles.title}>{activeTab}</p>
                         {activeTab === 'Videos' ? (
                             <VideoesMaping videos={videosData} openVideoModal={onVideoModal} />
