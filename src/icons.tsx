@@ -37,6 +37,9 @@ import werfie from './assets/werfie.svg';
 import wn from './assets/wn.svg';
 import search from './assets/inputSearchIcon.svg';
 import createIcon from './assets/plusIcon.png';
+import threeDotsInChatModalPopup from './assets/threeDotsForPopup.svg';
+import addimage from './assets/addimage.svg';
+import editInStaredMsg from './assets/editInStaredMsg.svg';
 export {
     googleIcon,
     fb,
@@ -77,4 +80,7 @@ export {
     commentTab,
     thirdTab,
     forthTab,
+    threeDotsInChatModalPopup,
+    addimage,
+    editInStaredMsg
 };

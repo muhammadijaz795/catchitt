@@ -52,19 +52,16 @@ function Actions(props: any) {
                                             right: item?.isrecevied ? '-145px' : 'auto',
                                         }}
                                         className={style.dropd}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            valuesH2(item, 'stared', !item.stared);
-                                        }}
                                     >
                                         <div
                                             style={{
                                                 cursor: 'pointer',
+                                                width: '100%',
                                             }}
-                                            // onClick={(e) => {
-                                            //     e.stopPropagation();
-                                            //     valuesH2(item, 'stared', !item.stared);
-                                            // }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                valuesH2(item, 'stared', !item.stared);
+                                            }}
                                         >
                                             <img src={!item.stared ? starMsg : unStarMsg} alt="" />
                                             <p color="#222" className={style.dropdText}>
@@ -73,9 +70,13 @@ function Actions(props: any) {
                                         </div>
                                         <hr className={style.hr} />
                                         <div
-                                            onClick={() => copyH(item.msg)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                copyH(item.msg);
+                                            }}
                                             style={{
                                                 cursor: 'pointer',
+                                                width: '100%',
                                             }}
                                         >
                                             <img src={copyMsg} alt="" />
@@ -87,8 +88,12 @@ function Actions(props: any) {
                                         <div
                                             style={{
                                                 cursor: 'pointer',
+                                                width: '100%',
                                             }}
-                                            onClick={() => deleteH(item)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteH(item);
+                                            }}
                                         >
                                             <img src={deleteMsg} alt="" />
                                             <p

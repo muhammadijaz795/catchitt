@@ -1,0 +1,77 @@
+.parent {
+  width: 23.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+.parent > div:nth-child(1) {
+  width: 6.25rem;
+  height: 6.25rem;
+  background: #dfdfdf;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+.parent input {
+  border-radius: 0.25rem;
+  border: 1px solid var(--Foundation-Neutral-neutral-300, #d1d1d1);
+  display: flex;
+  width: 100%;
+  height: 2.5rem;
+  padding: 0rem 1rem;
+  align-items: center;
+  gap: 2.25rem;
+  color: var(--Foundation-Body-body-300, #6b6b6b);
+  font-family: Poppins;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.btns > button:nth-child(1) {
+  flex: 1;
+  display: flex;
+  width: 9.75rem;
+  height: 2.5rem;
+  padding: 0rem 0.75rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.375rem;
+  border: 1px solid var(--Foundation-Primary-primary-500, #5448b2);
+  background: var(--Foundation-Primary-primary-500, #5448b2);
+  color: var(--Default-white, #fff);
+  font-family: Poppins;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+}
+.btns > button:nth-child(2) {
+  flex: 1;
+  display: flex;
+  width: 9.75rem;
+  height: 2.5rem;
+  padding: 0rem 0.75rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.375rem;
+  border: 1px solid var(--Foundation-Primary-primary-500, #5448b2);
+  background: var(--Foundation-Primary-primary-500, #fff);
+  color: var(--Default-white, #5448b2);
+  font-family: Poppins;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+}

@@ -85,5 +85,21 @@ button:hover {
     color: #747bff;
     text-decoration: none;
   }
+}
 
+.MuiList-root {
+  background: transparent !important;
+  padding: 0% !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.MuiButtonBase-root{
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+}
+.MuiButtonBase-root span{
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
 }

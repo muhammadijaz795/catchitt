@@ -4,11 +4,14 @@ function useChat() {
     const [moreOptions, setMoreOptions] = useState<boolean>(false);
     const [reportPopup, setreportPopup] = useState<boolean>(false);
     const [blockPopup, setblockPopup] = useState<boolean>(false);
-    const [groupOptions, setGroupOptions] = useState<boolean>(false);
+    const [editGroupNameModal, setEditGroupNameModal] = useState<boolean>(false);
     const [markTheMsgSafe, setMarkTheMsgSafe] = useState<boolean>(false);
+    const [groupOptions, setGroupOptions] = useState<boolean>(false);
     const [smsRef, setSmsRef] = useState<string>('');
     const [copyModal, setCopyModal] = useState(false);
     const [replySms, setreplysms] = useState<boolean>(false);
+    const [staredmodal, setstaredmodal] = useState<boolean>(false);
+    const [addMembersPopup, setAddMembersPopup] = useState<boolean>(false);
     const [showShortSidebar, setshowShortSidebar] = useState<boolean>(false);
     const [msg, setMsg] = useState<string>('');
     const [activeUser, setActiveUser] = useState<any>({});
@@ -20,7 +23,7 @@ function useChat() {
             userName: 'Eromaisa',
             lastMsg:
                 'We really care about your safety. We will stop showing this message once you mark it safe.',
-            ispined: true,
+            ispined: false,
             lastSeen: '4:01 PM',
             unReadMsgs: '201',
         },
@@ -148,7 +151,7 @@ function useChat() {
         const tempArr: any[] = [];
         activeChat.chats.forEach((msg: any) => {
             if (msg.id === item.id) {
-                tempArr.push({ ...item, [keyName]: value  , dropdown:false});
+                tempArr.push({ ...item, [keyName]: value, dropdown: false });
             } else {
                 tempArr.push(msg);
             }
@@ -238,6 +241,7 @@ function useChat() {
                 setActiveUser(user);
             }
         });
+        setstaredMsgs([]);
     };
 
     useEffect(() => {
@@ -272,10 +276,37 @@ function useChat() {
         }
         setshowShortSidebar(false);
         setGroupOptions(false);
+        setstaredmodal(false);
         setMoreOptions(false);
+        setstaredMsgs([]);
     }, [activeUser]);
 
     const userPinH = (id?: any) => {
+        if (chats.find((chat) => chat.userId === activeUser.userId)) {
+            chats.forEach((chat) => {
+                if (chat.userId === activeUser.userId) {
+                    setactiveChat(chat);
+                }
+            });
+            setchats([...chats, activeChat]);
+        } else {
+            if (activeChat) {
+                setchats([...chats, activeChat]);
+                setactiveChat({
+                    userId: activeUser.userId,
+                    userName: activeUser.userName,
+                    chats: [],
+                });
+            } else {
+                setchats([...chats, activeChat]);
+                setactiveChat({
+                    userId: activeUser.userId,
+                    userName: activeUser.userName,
+                    chats: [],
+                });
+            }
+        }
+
         const tempArr: any[] = [];
         const filteredArr: any[] = [];
         setActiveUser({
@@ -312,6 +343,11 @@ function useChat() {
                 setCopyModal(true);
             });
         }
+        const tempArr: any[] = [];
+        activeChat.chats.forEach((item: any) => {
+            tempArr.push({ ...item, dropdown: false });
+        });
+        setactiveChat({ ...activeChat, chats: tempArr });
     };
 
     useEffect(() => {
@@ -321,6 +357,80 @@ function useChat() {
             }, 2000);
         }
     }, [copyModal]);
+    const onSaveChanges = (userName: string) => {
+        setactiveChat({
+            ...activeChat,
+            userName: userName,
+        });
+        setActiveUser({
+            ...activeUser,
+            userName: userName,
+        });
+
+        setEditGroupNameModal(false);
+    };
+
+    useEffect(() => {
+        const tempArr: any[] = [];
+        users.forEach((user) => {
+            if (user.userId === activeUser.userId) {
+                tempArr.push(activeUser);
+            } else {
+                tempArr.push(user);
+            }
+        });
+
+        setUsers(tempArr);
+    }, [editGroupNameModal]);
+
+    const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
+    useEffect(() => {
+        let tempArr: any[] = [];
+        let chats: any[] = [];
+        activeChat?.chats?.forEach((userChat: any) => {
+            if (userChat.stared) {
+                chats.push(userChat);
+            }
+        });
+        if (staredMsgs.find((chat) => chat.userId === activeChat.userId)) {
+            staredMsgs.forEach((userChat2) => {
+                if (userChat2.userId === activeChat.userId) {
+                    tempArr.push({ ...activeChat, chats: chats });
+                } else {
+                    tempArr.push(userChat2);
+                }
+            });
+            setstaredMsgs(tempArr);
+        } else {
+            setstaredMsgs([
+                ...staredMsgs,
+                {
+                    ...activeChat,
+                    chats: chats,
+                },
+            ]);
+        }
+
+        const isR: any[] = [];
+        const isNR: any[] = [];
+        tempArr?.forEach((element: any) => {
+            element.chats.forEach((chat: any) => {
+                console.log();
+                if (chat?.isrecevied) {
+                    isR.push(chat);
+                } else {
+                    isNR.push(chat);
+                }
+            });
+        });
+    }, [activeChat?.chats]);
+
+    useEffect(() => {
+        if (activeChat?.chats?.find((chat: any) => chat?.stared === true)) {
+        } else {
+            setstaredMsgs([]);
+        }
+    }, [activeChat.userId, activeUser.userId]);
     return {
         moreOptions,
         setMoreOptions,
@@ -363,6 +473,14 @@ function useChat() {
         copyH,
         copyModal,
         setCopyModal,
+        editGroupNameModal,
+        setEditGroupNameModal,
+        onSaveChanges,
+        addMembersPopup,
+        setAddMembersPopup,
+        staredMsgs,
+        staredmodal,
+        setstaredmodal,
     };
 }
 

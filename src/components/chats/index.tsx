@@ -22,6 +22,10 @@ import ForGroups from './components/welcomeScreens/ForGroups';
 import ForPeoples from './components/welcomeScreens/ForPeoples';
 import hook from './hook/useChat';
 import style from './index.module.scss';
+import SearchUser from './components/modals/SearchUser';
+import EditChatName from './components/modals/EditName';
+import StaredMesagesSec from './components/StaredMesagesSec';
+import { setgroups } from 'process';
 
 function ChatsSec() {
     const {
@@ -57,7 +61,15 @@ function ChatsSec() {
         chatSwitchH,
         userPinH,
         copyModal,
-        copyH
+        copyH,
+        editGroupNameModal,
+        setEditGroupNameModal,
+        onSaveChanges,
+        addMembersPopup,
+        setAddMembersPopup,
+        staredMsgs,
+        staredmodal,
+        setstaredmodal,
     } = hook();
 
     return (
@@ -81,9 +93,12 @@ function ChatsSec() {
                                 if (activeUser.isGroup) {
                                     setGroupOptions(!groupOptions);
                                     setshowShortSidebar(!showShortSidebar);
+                                    if (showShortSidebar) {
+                                        // setMoreOptions(!moreOptions);
+                                        setshowShortSidebar(false);
+                                    }
                                 } else {
                                     setMoreOptions(!moreOptions);
-                                    setshowShortSidebar(false);
                                 }
                             }}
                             onReportClick={() => setreportPopup(true)}
@@ -139,6 +154,11 @@ function ChatsSec() {
                             pinUserH={userPinH}
                             blockH={() => setblockPopup(true)}
                             reportH={() => setreportPopup(true)}
+                            staredModal={() => {
+                                setshowShortSidebar(true);
+                                setstaredmodal(true);
+                                setMoreOptions(false);
+                            }}
                         />
                     )}
                 </div>
@@ -151,6 +171,8 @@ function ChatsSec() {
                             }}
                             activeUser={activeUser}
                             pinUserH={userPinH}
+                            showEditPopup={() => setEditGroupNameModal(!editGroupNameModal)}
+                            addMembersHandler={() => setAddMembersPopup(true)}
                         />
                     </div>
                 )}
@@ -167,13 +189,34 @@ function ChatsSec() {
                             position: 'fixed',
                             bottom: 110,
                             right: 40,
-                            zIndex:5
+                            zIndex: 5,
                         }}
                     >
                         <p className={style.blackText_16}>🎉 Copied successfully</p>
                     </div>
                 )}
+
+                {staredmodal && (
+                    <StaredMesagesSec
+                        onBack={() => {
+                            setstaredmodal(false);
+                            setshowShortSidebar(false);
+                        }}
+                        staredMsgs={staredMsgs}
+                    />
+                )}
             </div>
+            <SearchUser
+                onOpen={addMembersPopup}
+                blockPopupHandler={() => setblockPopup(true)}
+                reportPopupHandler={() => setreportPopup(true)}
+                onClose={() => setAddMembersPopup(false)}
+            />
+            <EditChatName
+                onOpen={editGroupNameModal}
+                onClose={() => setEditGroupNameModal(false)}
+                onSaveChanges={onSaveChanges}
+            />
         </Layout>
     );
 }

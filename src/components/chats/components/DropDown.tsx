@@ -3,7 +3,7 @@ import style from './DropDown.module.scss';
 import { rightArrow as arrow } from '../../../icons';
 import { useState } from 'react';
 function DropDown(props: any) {
-    const { blockH, reportH, pinUserH, activeUser } = props || {};
+    const { blockH, reportH, pinUserH, activeUser , staredModal} = props || {};
     const [muteN, setmuteN] = useState(false);
     const [pin, setpin] = useState(false);
     return (
@@ -26,7 +26,7 @@ function DropDown(props: any) {
                     defaultChecked
                 />
             </div>
-            <div className={style.dropdownRow}>
+            <div onClick={staredModal} className={style.dropdownRow}>
                 <p>Starred Messages</p>
                 <div className={style.starredMessagesRow}>
                     <p>None</p>

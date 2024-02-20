@@ -10,7 +10,7 @@ import {
 } from '../../../icons';
 import style from './GroupSideBar.module.scss';
 function GroupSideBar(props: any) {
-    const { onBack, pinUserH, activeUser } = props || {};
+    const { onBack, pinUserH, activeUser, showEditPopup , addMembersHandler} = props || {};
     return (
         <div className={style.parent}>
             <div className={style.header}>
@@ -20,7 +20,12 @@ function GroupSideBar(props: any) {
                     <div>
                         <div>
                             <p className={style.headingText}>Add group name</p>
-                            <img style={{ cursor: 'pointer' }} src={editGroupName} alt="" />
+                            <img
+                                onClick={showEditPopup}
+                                style={{ cursor: 'pointer' }}
+                                src={editGroupName}
+                                alt=""
+                            />
                         </div>
                         <p className={style.membersText}>4 members</p>
                     </div>
@@ -45,7 +50,7 @@ function GroupSideBar(props: any) {
                             justifyContent: 'center',
                             cursor: 'pointer',
                             height: '100%',
-                            flexDirection:'row-reverse'
+                            flexDirection: 'row-reverse',
                         }}
                     >
                         <img src={rightArrow} alt="" />
@@ -56,7 +61,7 @@ function GroupSideBar(props: any) {
                     <p className={style.headingText}>Members (4)</p>
                     <img style={{ cursor: 'pointer' }} src={search} alt="" />
                 </div>
-                <div className={style.addMember}>
+                <div className={style.addMember} onClick={addMembersHandler}>
                     <p>+</p>
                     <p className={style.primaryText}>Add new member</p>
                 </div>
