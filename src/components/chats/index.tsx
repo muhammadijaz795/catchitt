@@ -1,3 +1,4 @@
+import { ToastContainer } from 'react-toastify';
 import { closeSvg } from '../../icons';
 import Layout from '../../shared/layout';
 import Actions from './components/Actions';
@@ -72,6 +73,7 @@ function ChatsSec() {
         setforwardModal,
         selectedData,
         onUsersInputChangeHandler,
+        showToast,
     } = hook();
 
     return (
@@ -140,6 +142,7 @@ function ChatsSec() {
                                 autoScrolElem={autoScrolElem}
                                 activeChat={activeChat}
                                 copyH={copyH}
+                                showToast={showToast}
                             />
                         )}
                     </div>
@@ -204,7 +207,7 @@ function ChatsSec() {
                         />
                     </div>
                 )}
-                {copyModal && (
+                {/* {copyModal && (
                     <div
                         style={{
                             width: 300,
@@ -222,7 +225,7 @@ function ChatsSec() {
                     >
                         <p className={style.blackText_16}>🎉 Copied successfully</p>
                     </div>
-                )}
+                )} */}
 
                 {staredmodal && (
                     <StaredMesagesSec
@@ -261,6 +264,9 @@ function ChatsSec() {
                 onSaveChanges={onSaveChanges}
             />
             <Forwardusers onOpen={forwardModal} onClose={() => setforwardModal(false)} />
+            <div>
+                <ToastContainer />
+            </div>
         </Layout>
     );
 }
