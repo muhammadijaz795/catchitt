@@ -26,6 +26,7 @@ function Actions(props: any) {
         autoScrolElem,
         activeChat,
         copyH,
+        showToast,
     } = props || {};
     return (
         <div ref={autoScrolElem} className={style.msgsContainer}>
@@ -73,6 +74,7 @@ function Actions(props: any) {
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 copyH(item.msg);
+                                                showToast();
                                             }}
                                             style={{
                                                 cursor: 'pointer',

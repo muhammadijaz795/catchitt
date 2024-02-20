@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DEMI_USERS } from '../data';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function useChat() {
     const [moreOptions, setMoreOptions] = useState<boolean>(false);
@@ -311,6 +313,13 @@ function useChat() {
         setactiveChat({ ...activeChat, chats: tempArr });
     };
 
+    const showToast =()=>{
+        toast.success('🎉 Copied successfully', {
+            position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
+            autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
+        });
+    }
+
     useEffect(() => {
         if (copyModal) {
             setTimeout(() => {
@@ -517,6 +526,7 @@ function useChat() {
         multipleUnstarHandlr,
         forwardModal,
         setforwardModal,
+        showToast,
     };
 }
 
