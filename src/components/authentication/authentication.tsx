@@ -2,8 +2,7 @@ import classNames from 'classnames';
 import i18next from 'i18next';
 import cookies from 'js-cookie';
 import { useState } from 'react';
-import { useTranslation } from "react-i18next";
-import OtpInput from 'react-otp-input';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/Logo.png';
 import appStoreBtn from '../../assets/appStoreBtn.png';
@@ -12,6 +11,9 @@ import playStoreBtn from '../../assets/playStoreBtn.png';
 import { useAuthStore } from '../../store/authStore';
 import InputField from '../reusables/InputField';
 import styles from './authentication.module.scss';
+import Input from './components/Input';
+import { apple, arrow, fb, googleIcon, werfie, wn } from '../../icons';
+
 export interface AuthenticationProps {
     className?: string;
 }
@@ -57,6 +59,11 @@ export const Authentication = (props: any) => {
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
+    const [inputTypeH, setInputTypeH] = useState<any>({
+        login: false,
+        signUp: false,
+    });
 
     // const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const API_KEY = process.env.VITE_API_URL;
@@ -65,8 +72,6 @@ export const Authentication = (props: any) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [form, setForm] = useState('signin');
     const [user, setUser] = useState(defaultUser);
-    const [otp, setOtp] = useState<any>(null);
-    const navigate = useNavigate();
 
     const { login } = useAuthStore();
 
@@ -91,7 +96,9 @@ export const Authentication = (props: any) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { email, accountType, token, _id, balance, username, name } = responseData.data; // Extract token from data object
+                const { email, accountType, token, _id, balance, username, name } =
+                    responseData.data; // Extract token from data object
+                // const name = responseData.name; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
                     name: name !== '' ? name : '',
@@ -100,13 +107,16 @@ export const Authentication = (props: any) => {
                     _id: _id,
                     balance: balance,
                 });
-                setForm('verifyOTP');
-                handleVerify(email, otp)
+                login(email, accountType, token, _id, balance, username, name); // Call the login function from the Zustand store
+                // console.log(responseData);
+                navigate('/home');
+                // handleSignIn(email, password)
             } else {
                 // Handle the error response from the server
                 const errorResponseData = await response.json();
                 const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
                 setErrorMessage(errorMessageFromServer);
+
                 console.log(response);
             }
         } catch (error) {
@@ -138,7 +148,9 @@ export const Authentication = (props: any) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { email, accountType, token, _id, balance, username, name } = responseData.data; // Extract token value from data object
+                const { email, accountType, token, _id, balance, username, name } =
+                    responseData.data; // Extract token value from data object
+                // const name = responseData.data; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
                     accountType: accountType,
@@ -151,8 +163,6 @@ export const Authentication = (props: any) => {
                 login(email, accountType, token, _id, balance, username, name); // Call the login function from the Zustand store
                 console.log(responseData);
                 navigate('/home');
-            } else if (response.status === 403) {
-                setForm('verifyOTP')
             } else {
                 // Handle the error response from the server
                 const errorResponseData = await response.json();
@@ -173,40 +183,6 @@ export const Authentication = (props: any) => {
         handleSignIn(password, email);
     };
 
-    const handleVerifySubmit = (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent the default form submission behavior
-        const { email } = user;
-        handleVerify(email, otp);
-    }
-
-    const handleVerify = async (email: string, otp: number) => {
-        let myOtp = +otp;
-        try {
-            const response = await fetch(`${API_KEY}/auth/verifyOtp`, {
-                method: 'PATCH',
-                headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ email: email, otp: myOtp }),
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                console.log(responseData);
-                window.location.reload()
-                // setForm('verifyOTP')
-            } else {
-                // Handle the error response from the server
-                const errorResponseData = await response.json();
-                const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
-                setErrorMessage(errorMessageFromServer);
-
-                console.log(response);
-            }
-        } catch (error) {
-            console.error(error);
-            setErrorMessage('Invalid email or password');
-        }
-    }
-
     return (
         <div className={styles.container}>
             <div className={styles.AuthSplashImg}>
@@ -221,8 +197,15 @@ export const Authentication = (props: any) => {
                         © 2023 SeezItt from PoshEnterpriseInc
                     </p>
                     {/* <p className={styles['footer-paragraph']}>Terms and conditions </p> */}
-                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-paragraph']} href="https://seezitt.com/terms-conditions" style={{ textDecoration: 'none' }}>{t('terms&conditions.text')}</a></p>
-
+                    <p className={styles['footer-p-lightBg']}>
+                        <a
+                            className={styles['footer-paragraph']}
+                            href="https://seezitt.com/terms-conditions"
+                            style={{ textDecoration: 'none' }}
+                        >
+                            {t('terms&conditions.text')}
+                        </a>
+                    </p>
                 </div>
             </div>
             <div className={styles.AuthForm}>
@@ -245,53 +228,70 @@ export const Authentication = (props: any) => {
                                     </h4>
                                 ) : null}
                             </div>
-                            <div className={styles.inputsDiv} style={{
-                                textAlign: currentLanguage?.code === 'ar' ? 'right' : 'left',
-                                direction: currentLanguage?.code === 'ar' ? 'rtl' : 'ltr'
-                            }}>
-                                <InputField
-                                    type="text"
+                            <div
+                                className={styles.inputsDiv}
+                                style={{
+                                    textAlign: currentLanguage?.code === 'ar' ? 'right' : 'left',
+                                    direction: currentLanguage?.code === 'ar' ? 'rtl' : 'ltr',
+                                    marginBottom: 24,
+                                }}
+                            >
+                                <Input
                                     placeholder={t('fullname.text')}
-                                    className="formInputFields"
+                                    type="text"
                                     value={user.name}
                                     onChange={(e: { target: { value: string } }) => {
                                         onUserChange('name', e.target.value);
                                     }}
-
                                 />
-                                <InputField
-                                    type="email"
+                                <Input
                                     placeholder={t('email.input')}
-
-                                    className="formInputFields"
+                                    type="email"
                                     value={user.email}
                                     onChange={(e: { target: { value: string } }) => {
                                         onUserChange('email', e.target.value);
                                     }}
                                 />
-                                <InputField
-                                    type="password"
+                                <Input
+                                    type={inputTypeH.signUp ? 'text ' : 'password'}
                                     placeholder={t('password.input')}
-                                    className="formInputFields"
                                     value={user.password}
                                     onChange={(e: { target: { value: string } }) => {
                                         onUserChange('password', e.target.value);
                                     }}
+                                    showPasswordH={() =>
+                                        setInputTypeH({ ...inputTypeH, signUp: !inputTypeH.signUp })
+                                    }
+                                    passwordToggler={true}
                                 />
-                                <InputField
-                                    type="password"
+                                <Input
+                                    type={inputTypeH.signUp ? 'text ' : 'password'}
                                     placeholder={t('confirmpassword.text')}
-                                    className="formInputFields"
                                     value={user.confirmPassword}
                                     onChange={(e: { target: { value: string } }) => {
                                         onUserChange('confirmPassword', e.target.value);
                                     }}
+                                    showPasswordH={() =>
+                                        setInputTypeH({ ...inputTypeH, signUp: !inputTypeH.signUp })
+                                    }
+                                    passwordToggler={true}
                                 />
                             </div>
-                            <p className={styles.formParagraph}>
+                            <p className={styles.p2}>
                                 {t('Bysigningupyouagreetoour.text')}{' '}
-                                <a className={styles.linkText} href="https://seezitt.com/terms-conditions">{t('terms&conditions.text')}</a> {t('and.text')}{' '}
-                                <a className={styles.linkText} href="https://seezitt.com/privacy-policy">{t('Privacypolicy.text')}</a>
+                                <a
+                                    className={styles.linkText}
+                                    href="https://seezitt.com/terms-conditions"
+                                >
+                                    {t('terms&conditions.text')}
+                                </a>{' '}
+                                {t('and.text')}{' '}
+                                <a
+                                    className={styles.linkText}
+                                    href="https://seezitt.com/privacy-policy"
+                                >
+                                    {t('Privacypolicy.text')}
+                                </a>
                             </p>
                             <div className={styles.signupSubmitDiv}>
                                 <button
@@ -303,98 +303,124 @@ export const Authentication = (props: any) => {
                             </div>
                         </form>
                     ) : /** Sign in Flow */
-                        form === 'signin' ? (
-                            <form className={styles.authInputFields}>
-                                <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                                    {t('login.title')}
-                                </h3>
-                                <div style={{ marginTop: '20px' }}>
-                                    {errorMessage ? (
-                                        <h4
-                                            style={{
-                                                fontWeight: '700',
-                                                fontSize: '16px',
-                                                color: 'red',
-                                                marginBottom: '20px',
-                                            }}
-                                        >
-                                            {errorMessage}
-                                        </h4>
-                                    ) : null}
-                                </div>
-                                <div className={styles.inputsDiv} style={{
-                                    textAlign: currentLanguage?.code === 'ar' ? 'right' : 'left',
-                                    direction: currentLanguage?.code === 'ar' ? 'rtl' : 'ltr'
-                                }}>
-                                    <InputField
-                                        type="email"
-                                        placeholder={t('email.input')}
-                                        className="formInputFields"
-                                        value={user.email}
-                                        onChange={(e: { target: { value: string } }) => {
-                                            onUserChange('email', e.target.value);
+                    form === 'signin' ? (
+                        <form className={styles.authInputFields}>
+                            <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
+                                {t('login.title')}
+                            </h3>
+                            <div style={{ marginTop: '20px' }}>
+                                {errorMessage ? (
+                                    <h4
+                                        style={{
+                                            fontWeight: '700',
+                                            fontSize: '16px',
+                                            color: 'red',
+                                            marginBottom: '20px',
                                         }}
-                                    />
-                                    <InputField
-                                        type="password"
-                                        placeholder={t('password.input')}
-                                        className="formInputFields"
-                                        value={user.password}
-                                        onChange={(e: { target: { value: string } }) => {
-                                            onUserChange('password', e.target.value);
-                                        }}
-                                    />
-                                </div>
-                                <p
-                                    className={classNames(
-                                        styles.formParagraph,
-                                        styles.formForgotPassword
-                                    )}
-                                >
-                                    <a className={styles.linkText} href="/forgot-password">{t("forgotpassword.link")}</a>{' '}
-                                </p>
-                                <div className={styles.signupSubmitDiv}>
-                                    <button
-                                        className={styles.signupSubmitBtn}
-                                        onClick={handleSignInSubmit}
                                     >
-                                        {t('login.text')}
-                                    </button>
-                                </div>
-                            </form>
-                        ) : form === 'verifyOTP' ? (
-
-                            <div className={styles.otpForm}>
-                                <h4>
-                                    Verify your email
-                                </h4>
-                                <p>
-                                    We sent an OTP to your email.
-                                </p>
-                                <OtpInput
-                                    value={otp}
-                                    onChange={setOtp}
-                                    numInputs={6}
-                                    renderSeparator={<span></span>}
-                                    inputStyle={otp === '' ? styles.otpInput : styles.otpInputNotEmpty}
-                                    containerStyle={styles.otpContainer}
-                                    renderInput={(props) => <input {...props} />}
-                                    inputType={"tel"}
-                                    skipDefaultStyles={true}
-                                />
-                                <div className={styles.signupSubmitDiv}>
-                                    <button
-                                        className={styles.signupSubmitBtn}
-                                        onClick={handleVerifySubmit}
-                                    >
-                                        Verify code
-                                    </button>
-                                </div>
-                                <div> Resend code </div>
+                                        {errorMessage}
+                                    </h4>
+                                ) : null}
                             </div>
-                        ) : ''}
+                            <div
+                                className={styles.inputsDiv}
+                                style={{
+                                    textAlign: currentLanguage?.code === 'ar' ? 'right' : 'left',
+                                    direction: currentLanguage?.code === 'ar' ? 'rtl' : 'ltr',
+                                }}
+                            >
+                                <Input
+                                    type="email"
+                                    placeholder={t('email.input')}
+                                    value={user.email}
+                                    onChange={(e: { target: { value: string } }) => {
+                                        onUserChange('email', e.target.value);
+                                    }}
+                                />
+                                <Input
+                                    placeholder={t('password.input')}
+                                    type={inputTypeH.login ? 'text ' : 'password'}
+                                    value={user.password}
+                                    onChange={(e: { target: { value: string } }) => {
+                                        onUserChange('password', e.target.value);
+                                    }}
+                                    showPasswordH={() =>
+                                        setInputTypeH({ ...inputTypeH, login: !inputTypeH.login })
+                                    }
+                                    passwordToggler={true}
+                                />
+                            </div>
+                            <p className={styles.formForgotPassword}>
+                                <p
+                                    className={styles.linkText}
+                                    onClick={() => navigate('/forgot-password')}
+                                >
+                                    {t('forgotpassword.link')}
+                                </p>{' '}
+                            </p>
+                            <div className={styles.signupSubmitDiv}>
+                                <button
+                                    className={styles.signupSubmitBtn}
+                                    onClick={handleSignInSubmit}
+                                >
+                                    {t('login.text')}
+                                </button>
+                            </div>
+                            {/* <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    gap: 20,
+                                    marginBottom: 32,
+                                }}
+                            >
+                                <hr style={{ width: '100%' }} />
+                                <p className={styles.or}>OR</p>
+                                <hr style={{ width: '100%' }} />
+                            </div>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: 16,
+                                    marginBottom: 32,
+                                }}
+                            >
+                                <div className={styles.plateforms}>
+                                    <img src={googleIcon} alt="" />
+                                </div>
+                                <div className={styles.plateforms}>
+                                    <img src={fb} alt="" />
+                                </div>
+                                <div className={styles.plateforms}>
+                                    <img src={apple} alt="" />
+                                </div>
+                                <div className={styles.plateforms}>
+                                    <img src={werfie} alt="" />
+                                </div>
+                                <div className={styles.plateforms}>
+                                    <img src={wn} alt="" />
+                                </div>
+                            </div> */}
+                            {/* <div className={styles.splitLinesDiv}>
+                                    <hr className={styles.splitLine} />
+                                    <p className={styles.formParagraph}>{t("or.text")}</p>
+                                    <hr className={styles.splitLine} />
+                                </div> */}
+                        </form>
+                    ) : null}
                 </div>
                 <div className={styles.afterTheFormDiv}>
+                    {/* <div className={styles.socialLoginsDiv}> */}
+                    {/* <IconButton className={styles.socialLoginIconBtn}>
+                            <img src={googleIcon} alt="" className={styles.socialLoginIcon} />
+                        </IconButton> */}
+                    {/* <IconButton className={styles.socialLoginIconBtn}>
+                            <img src={facebookIcon} alt="" className={styles.socialLoginIcon} />
+                        </IconButton> */}
+                    {/* </div> */}
                     {form === 'signup' ? (
                         <p className={styles.formParagraph}>
                             {t('alreadyhaveanaccount.text')}{' '}
@@ -408,34 +434,54 @@ export const Authentication = (props: any) => {
                         </p>
                     ) : form === 'signin' ? (
                         <p className={styles.formParagraph}>
-                            {t("notregistered.text")}{' '}
+                            {t('notregistered.text')}{' '}
                             <a
                                 href="https://www.seezitt.com"
                                 onClick={handleLinkClick}
                                 className={styles.boldLinkText}
                             >
-                                {t("createaccount.text")}
+                                {t('createaccount.text')}
                             </a>
                         </p>
                     ) : (
-                        null
+                        'null'
                     )}
-                    {form === 'verifyOTP' ? '' :
-                        <>
-                            <h3 className={styles.getTheAppText}>
-                                {t('gettheapp.text')}{' '}
-                            </h3>
-                            <div className={styles.appStoresDiv}>
-                                <img src={appStoreBtn} alt="" className={styles.appStoreBtn} />
-                                <img src={playStoreBtn} alt="" className={styles.appStoreBtn} />
-                            </div>
-                        </>
-                    }
+                    <h3 className={styles.getTheAppText}>{t('gettheapp.text')} </h3>
+                    <div className={styles.appStoresDiv}>
+                        <img src={appStoreBtn} alt="" className={styles.appStoreBtn} />
+                        <img src={playStoreBtn} alt="" className={styles.appStoreBtn} />
+                    </div>
                 </div>
-                <div className={styles.footerLightBg}> {/**style={{ bottom: form === 'signup' ? '45px' : '45px' }}*/}
-                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-p-lightBg']} href="https://seezitt.com/privacy-policy" style={{ textDecoration: 'none' }}>{t('Privacypolicy.text')}</a></p>
-                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-p-lightBg']} href="https://seezitt.com/#About" style={{ textDecoration: 'none' }}>{t('About.text')}</a></p>
-                    <p className={styles['footer-p-lightBg']}><a className={styles['footer-p-lightBg']} href="https://seezitt.com/faqs" style={{ textDecoration: 'none' }}>{t('Helpcenter.text')}</a></p>
+                <div className={styles.footerLightBg}>
+                    {' '}
+                    {/**style={{ bottom: form === 'signup' ? '45px' : '45px' }}*/}
+                    <p className={styles['footer-p-lightBg']}>
+                        <a
+                            className={styles['footer-p-lightBg']}
+                            href="https://seezitt.com/privacy-policy"
+                            style={{ textDecoration: 'none' }}
+                        >
+                            {t('Privacypolicy.text')}
+                        </a>
+                    </p>
+                    <p className={styles['footer-p-lightBg']}>
+                        <a
+                            className={styles['footer-p-lightBg']}
+                            href="https://seezitt.com/#About"
+                            style={{ textDecoration: 'none' }}
+                        >
+                            {t('About.text')}
+                        </a>
+                    </p>
+                    <p className={styles['footer-p-lightBg']}>
+                        <a
+                            className={styles['footer-p-lightBg']}
+                            href="https://seezitt.com/faqs"
+                            style={{ textDecoration: 'none' }}
+                        >
+                            {t('Helpcenter.text')}
+                        </a>
+                    </p>
                     {/* <p className={styles['footer-p-lightBg']}>English</p> */}
                     <div className="language-select">
                         {/* <div className="d-flex justify-content-end align-items-center language-select-root"> */}
@@ -451,19 +497,8 @@ export const Authentication = (props: any) => {
                             )}
                         >
                             {currentLanguage?.name}
-                            <span className="m-md-1">
-                                <svg
-                                    width="7"
-                                    height="6"
-                                    viewBox="0 0 7 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M3.5 6L6.53109 0.75H0.468911L3.5 6Z"
-                                        fill="#D9D9D9"
-                                    />
-                                </svg>
+                            <span style={{ marginLeft: 8 }}>
+                                <img src={arrow} alt="" />
                             </span>
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownDefaultButton">
@@ -471,7 +506,7 @@ export const Authentication = (props: any) => {
                                 <li key={country_code}>
                                     <a
                                         href="#"
-                                        className={classNames("dropdown-item", {
+                                        className={classNames('dropdown-item', {
                                             disabled: currentLanguageCode === code,
                                         })}
                                         onClick={() => {

@@ -214,6 +214,10 @@ export const Home = ({ className }: HomeProps) => {
     const mobileTabs: string[] = ['Following', 'Suggested', 'Live'];
     const [activeMobileTab, setActiveMobileTab] = useState<string>(mobileTabs[0]);
 
+    console.log(postData);
+    console.log(bookmarksData);
+    
+
     return (
         <Layout>
             {/* <div className={classNames(styles.root, className)}>
@@ -263,7 +267,7 @@ export const Home = ({ className }: HomeProps) => {
                         }}
                     />
                     {isLoggedIn ? (
-                        postData.length > 0 && bookmarksData.length > 0 ? (
+                        postData.length > 0 ? (
                             postData.map((p: PostType, i: number) => (
                                 <Post
                                     key={i}
@@ -292,7 +296,7 @@ export const Home = ({ className }: HomeProps) => {
                         ))
                     ) : (
                         <div className={styles.center}>
-                            <h6>Loading..</h6>
+                            <h6>Loading...</h6>
                         </div>
                     )}
                     {paginating && postData.length > 0 && (

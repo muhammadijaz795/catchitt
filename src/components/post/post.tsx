@@ -1253,8 +1253,11 @@ export const Post: React.FC<PostProps> = memo(({ className, post, startedIds, en
                         <div className={styles.postMediaContainer} ref={videoElement} >
                             <VideoPlayer
                                 key={postData.mediaId}
-                                src={postData.reducedVideoHlsUrl}
+                                src={postData.reducedVideoUrl}
                                 onStart={() => handleStartWatching(postData.mediaId)}
+                                // onStart={() => {
+                                //     alert(postData.reducedVideoUrl)
+                                // }}
                                 onEnd={() => handleEndWatching(postData.mediaId)}
                             />
                         </div>

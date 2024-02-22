@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import style from './uploadSec.module.scss'
 import { useAuthStore } from "../../store/authStore";
 import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
+import Navbar from "../../shared/navbar";
 1
 
 export default function UploadSec() {
@@ -102,7 +103,7 @@ export default function UploadSec() {
 
     return (
         <div className={style.parent}>
-            <TopBar />
+            <Navbar />
             {
                 uploadFilePage ?
                     <UploadFile
