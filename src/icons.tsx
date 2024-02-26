@@ -43,7 +43,16 @@ import editInStaredMsg from './assets/editInStaredMsg.svg';
 import forwardMsg from './assets/forwardMsg.svg';
 import send from './assets/send.svg';
 import copyLink from './assets/copyLink.svg';
+import viewProfile from './assets/viewProfile.svg';
+import goldCoin from './assets/goldCoin.svg';
+import logoutSvg from './assets/logout.svg';
+import settingsDark from './assets/settingsDark.svg';
+import switchAcount from './assets/switchAcount.svg';
+
 export {
+    settingsDark,
+    switchAcount,
+    logoutSvg,
     copyLink,
     send,
     googleIcon,
@@ -89,4 +98,6 @@ export {
     addimage,
     editInStaredMsg,
     forwardMsg,
+    viewProfile,
+    goldCoin,
 };

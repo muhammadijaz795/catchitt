@@ -5,6 +5,7 @@ import { createIcon, defaultAvatar, logo } from '../../icons';
 import { useAuthStore } from '../../store/authStore';
 import style from './Navbar.module.scss';
 import Search from './components/Search';
+import NavbarMunu from './components/Menu';
 
 function Navbar() {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -36,9 +37,10 @@ function Navbar() {
     useEffect(() => {
         handleFetchProfileInfo();
     }, []);
-    const userName = useAuthStore((state) => state.username);
+    const name = useAuthStore((state) => state.name);
 
     const navigate = useNavigate();
+    const logout = useAuthStore((state) => state.logout);
     const isMobile = useMediaQuery('(max-width:700px)');
     return (
         <div className={style.parent}>
@@ -47,26 +49,38 @@ function Navbar() {
             </div>
             {!isMobile ? (
                 <div className={style.sec2}>
-                    <Search />
+                    <Search placeholder="Search accounts and videos" />
                     {isLoggedIn ? (
                         <div className={style.profile}>
-                            {/* <img
+                            <img
                                 style={{ width: 36, height: 36, cursor: 'pointer' }}
                                 src={createIcon}
                                 alt=""
-                            /> */}
-                            <div className={style.user} onClick={() => navigate('/profile')}>
-                                <img
-                                    style={{
-                                        width: 36,
-                                        height: 36,
-                                        cursor: 'pointer',
-                                        borderRadius: '50%',
-                                    }}
-                                    src={profileData?.avatar || defaultAvatar}
-                                    alt=""
-                                />
-                                <p className={style.name}>{userName}</p>
+                                onClick={() => navigate('/upload')}
+                            />
+                            <div className={style.user}>
+                                <div
+                                    style={{ position: 'relative', width: '100%', height: '100%' }}
+                                >
+                                    <img
+                                        style={{
+                                            width: 36,
+                                            height: 36,
+                                            cursor: 'pointer',
+                                            borderRadius: '50%',
+                                        }}
+                                        src={profileData?.avatar || defaultAvatar}
+                                        alt=""
+                                    />
+                                    {/* <div  style={{ position: 'relative', width:'100%' , height:'100%' , border:'1px solid red' }}> */}
+                                    <NavbarMunu
+                                        onViewProfile={() => navigate(`/profile`)}
+                                        Onlogout={() => logout()}
+                                        onSettings={() => navigate('/settings/account')}
+                                    />
+                                    {/* </div> */}
+                                </div>
+                                <p className={style.name}>{name}</p>
                             </div>
                         </div>
                     ) : (
@@ -86,8 +100,16 @@ function Navbar() {
                         </button>
                     )}
                 </div>
-            ) : <img src={createIcon} alt="" /> }
-          
+            ) : (
+                <div style={{position:'relative'}}>
+                    <img style={{width:'40px' , height:'40px' , borderRadius:'50%'}}    src={profileData?.avatar || defaultAvatar}onClick={() => navigate('/upload')} alt="" />
+                    <NavbarMunu
+                        onViewProfile={() => navigate(`/profile`)}
+                        Onlogout={() => logout()}
+                        onSettings={() => navigate('/settings/account')}
+                    />
+                </div>
+            )}
         </div>
     );
 }

@@ -56,7 +56,7 @@ export default function UploadFile({ submitH, user, showPostModal, showlocations
                 {
                     emulator === false ?
                         <div className={style.leftSec}>
-                            <Box sx={{ position: 'relative', display: 'inline-flex', width: 65, height: 65 }}>
+                            <Box sx={{ position: 'relative', zIndex:1,display: 'inline-flex', width: 65, height: 65 }}>
                                 <CircularProgress style={{ width: 65, height: 65, color: 'rgba(84, 72, 178, 1)' }} variant="determinate" value={27} />
                                 <Box
                                     sx={{
