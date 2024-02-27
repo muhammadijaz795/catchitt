@@ -48,8 +48,36 @@ import goldCoin from './assets/goldCoin.svg';
 import logoutSvg from './assets/logout.svg';
 import settingsDark from './assets/settingsDark.svg';
 import switchAcount from './assets/switchAcount.svg';
+import music from './assets/musicSvg.svg';
+import like from './assets/like.svg';
+import commentInHome from './assets/commentInHome.svg';
+import shareInHome from './assets/shareInHome.svg';
+import fvrt from './assets/fvrt.svg';
+import moreInHome from './assets/moreInHome.svg';
+import activeLike from './assets/activeLike.svg';
+import activeFvrt from './assets/activeFvrt.svg';
+import activeShare from './assets/activeShare.svg';
+import saveVideo from './assets/saveVideo.svg';
+import notAllowed from './assets/notAllowed.svg';
+import report from './assets/report.svg';
+import duet from './assets/duet.svg';
+import sendSvgPopup from './assets/sndinpopup.svg';
 
 export {
+    duet,
+    sendSvgPopup,
+    saveVideo,
+    notAllowed,
+    report,
+    activeShare,
+    activeFvrt,
+    activeLike,
+    like,
+    commentInHome,
+    shareInHome,
+    fvrt,
+    moreInHome,
+    music,
     settingsDark,
     switchAcount,
     logoutSvg,

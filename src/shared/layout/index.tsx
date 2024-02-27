@@ -6,8 +6,6 @@ import { TopBar } from '../../components/top-bar/top-bar';
 import BlockPopup from '../popups/BlockPopup';
 import style from './style.module.scss';
 import { commentTab, forthTab, homeTab, settingsTab, thirdTab } from '../../icons';
-import Navbar from '../navbar';
-import { useAuthStore } from '../../store/authStore';
 
 function Layout(props: any) {
     const {
@@ -23,14 +21,15 @@ function Layout(props: any) {
         dangetBtnText,
         onBlock,
         showCopyPopup,
+        paddingBottomProp
     } = props || {};
     const showSidebar = useMediaQuery('(max-width:1000px)');
 
     return (
         <div style={{ width: '100%', height: '100vh', overflow: 'hidden' }} onClick={globalClicker}>
-            <Navbar />
-            {/* <TopBar /> */}
-            <div style={{ display: 'flex', height: '100%', paddingTop: 80 }}>
+            {/* <Navbar /> */}
+            <TopBar />
+            <div style={{ display: 'flex', height: '100%' }}>
                 {!showSidebar && !showShortSidebar ? (
                     <div
                         style={{
@@ -38,7 +37,7 @@ function Layout(props: any) {
                             flexDirection: 'column',
                             gap: 32,
                             overflow: 'scroll',
-                            height: '100%',
+                            height: '92%',
                             padding: '40px 40px 40px 40px',
                         }}
                     >
@@ -93,6 +92,7 @@ function Layout(props: any) {
                             position: 'fixed',
                             width: '100vw',
                             height: '100vh',
+                            zIndex:4
                         }}
                     >
                         <div
@@ -130,7 +130,7 @@ function Layout(props: any) {
                     style={{
                         overflow: 'scroll',
                         height: 'auto',
-                        paddingBottom: 40,
+                        paddingBottom:paddingBottomProp?0: 40,
                         display: 'block',
                         flex: 1,
                     }}

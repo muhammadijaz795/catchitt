@@ -30,6 +30,7 @@ import { SuggestedAccountsPage } from './components/suggested-accounts-page/sugg
 import { useAuthStore } from './store/authStore';
 import ChatsSec from './components/chats';
 import UploadSec from './components/uploadSec/uploadSec';
+import HomePage from './components/homePage';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -72,7 +73,7 @@ function App() {
                             <Route path="/forgot-password" element={<ForgotPassword />} />
                             <Route path="/retrieve/*" element={<SetNewPassword />} />
                             <Route path="/view/video/:onePost" element={<Home />} />
-                            <Route path="/home" element={<Home />} />
+                            <Route path="/home" element={<HomePage />} />
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
                             <Route path="/comingsoon" element={<ChatsSec />} />
