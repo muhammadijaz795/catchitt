@@ -8,6 +8,7 @@ import {
     fvrt,
     like,
     moreInHome,
+    music,
     shareInHome,
 } from '../../icons';
 import Action from './components/Action';
@@ -62,10 +63,12 @@ function ForMobile(props: any) {
         setCurrentIndex(visibleSlideIndex);
     };
 
-    const copyHandler = () => {
-        toast.success('🎉 Copied successfully', {
-            position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
-            autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
+    const copyHandler = (text: any) => {
+        navigator.clipboard.writeText(text).then(() => {
+            toast.success('🎉 Copied successfully', {
+                position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
+                autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
+            });
         });
     };
 
@@ -143,7 +146,49 @@ function ForMobile(props: any) {
                                                     ? post?.reducedVideoHlsUrl
                                                     : post?.originalUrl
                                             }
+                                            post={post}
                                         />
+                                        {post && (
+                                            <div
+                                                style={{
+                                                    position: 'absolute',
+                                                    zIndex: 7878787,
+                                                    left: '20px',
+                                                    bottom: '10px',
+                                                    height: 55,
+                                                }}
+                                            >
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        gap: 10,
+                                                    }}
+                                                >
+                                                    <p
+                                                        style={{
+                                                            color: '#FFF',
+                                                            fontFamily: 'Poppins',
+                                                        }}
+                                                    >
+                                                        {post?.description}
+                                                    </p>
+                                                    {post?.sound && (
+                                                        <div style={{ display: 'flex', gap: 10 }}>
+                                                            <img src={music} alt="" />
+                                                            <p
+                                                                style={{
+                                                                    color: '#FFF',
+                                                                    fontFamily: 'Poppins',
+                                                                }}
+                                                            >
+                                                                {post?.sound?.category?.name}
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })}

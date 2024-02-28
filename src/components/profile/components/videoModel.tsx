@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import defaultProfileIcon from '../../../assets/defaultProfileIcon.png';
 import Comment from './comment';
 import style from './videoModel.module.scss';
+import { useAuthStore } from '../../../store/authStore';
 
 interface Props {
     onModalClose: any;
@@ -12,15 +13,21 @@ interface Props {
     report: any;
     block: any;
     gifts: any;
+    sendPopupHandler?: any;
 }
 
-function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
+function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler }: Props) {
     const navigate = useNavigate();
     //For Images Ref.
     const [like, setLike] = useState(false);
+    const [likes, setLikes] = useState(info?.likes);
     const [fvrt, setFvrt] = useState(false);
+    const [nofvrt, setnoFvrt] = useState<number>(256);
     const [share, setShare] = useState(false);
+    const token = useAuthStore((state) => state.token);
     const [more, setMore] = useState(false);
+    const API_KEY = process.env.VITE_API_URL;
+
     const [replySomeOne, setReplySomeOne] = useState<any>({
         status: false,
         userName: '',
@@ -35,7 +42,25 @@ function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
         let createdTime = `${day}-${month}-${year}`;
         return createdTime;
     };
-    console.log('userInfo', info);
+
+    const likeHandler = async () => {
+        try {
+            if (like) {
+                setLikes(likes - 1);
+            } else {
+                setLikes(likes + 1);
+            }
+            const response = await fetch(`${API_KEY}/media-content/like/${info?.mediaId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
 
     return (
         <div className={style.div}>
@@ -100,8 +125,10 @@ function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
                                 if (share) {
                                     setShare(false);
                                 }
+                                likeHandler();
                             }}
                             className={style['curve-div']}
+                            style={{ userSelect: 'none' }}
                         >
                             {like ? (
                                 <img src="../../../../public/images/icons/Heart.svg" alt="" />
@@ -109,11 +136,16 @@ function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
                                 <img src="../../../../public/images/icons/Heart2.svg" alt="" />
                             )}
                         </div>
-                        <p className={style['text4']}>{info.likes}</p>
+                        <p className={style['text4']}>{likes}</p>
                     </div>
                     <div
                         onClick={() => {
                             setFvrt(!fvrt);
+                            if (fvrt) {
+                                setnoFvrt(nofvrt - 1);
+                            } else {
+                                setnoFvrt(nofvrt + 1);
+                            }
                             if (more) {
                                 setMore(false);
                             }
@@ -131,7 +163,7 @@ function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
                                 <img src="../../../../public/images/icons/Bookmark.svg" alt="" />
                             )}
                         </div>
-                        <p className={style['text4']}>256</p>
+                        <p className={style['text4']}>{nofvrt}</p>
                     </div>
                     <div
                         style={{ gap: 8, position: 'relative' }}
@@ -156,7 +188,11 @@ function VideoModel({ onModalClose, info, report, block, gifts }: Props) {
                         {/* DropDown for share btn */}
                         {share ? (
                             <div className={style['dropdown2']}>
-                                <div>
+                                <div
+                                    onClick={() => {
+                                        sendPopupHandler && sendPopupHandler();
+                                    }}
+                                >
                                     <img src="../../../../public/images/icons/Send.svg" alt="" />
                                     <p className={style['text5']}>Send</p>
                                 </div>

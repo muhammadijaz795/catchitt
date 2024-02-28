@@ -43,7 +43,7 @@ function Action({
                 setvideoesLikes(videoesLikes + 1);
             }
         } catch (error) {
-            console.log('error trendingvideos', error);
+            console.log('error', error);
         }
         if (obj?.actionType === 'fvrt') {
             if (!isActive) {

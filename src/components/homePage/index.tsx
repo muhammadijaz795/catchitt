@@ -1,12 +1,13 @@
 import { useMediaQuery } from '@mui/material';
+import { useState } from 'react';
+import Gifts from '../discover/popups/gifts';
+import PopupForReport from '../profile/popups/PopupForReport';
+import PopupForBlock from '../profile/popups/popupForBlock';
 import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import ForDesktop from './ForDesktop';
 import ForMobile from './ForMobile';
 import useHome from './hooks/useHome';
-import PopupForReport from '../profile/popups/PopupForReport';
-import PopupForBlock from '../profile/popups/popupForBlock';
-import Gifts from '../discover/popups/gifts';
-import { useState } from 'react';
+import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
 
 function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
@@ -16,6 +17,8 @@ function HomePage() {
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [videoModal, setVideoModal] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
+    const [sendPopup, setSendPopup] = useState(false);
+    console.log(videoes);
 
     return (
         <div>
@@ -27,7 +30,7 @@ function HomePage() {
                     loading={loading}
                     showVideoModal={(e: any) => {
                         setVideoModalInfo(e);
-                        // setVideoModal(true);
+                        setVideoModal(true);
                     }}
                     videoModal={videoModal}
                 />
@@ -39,9 +42,11 @@ function HomePage() {
                     loading={loading}
                     showVideoModal={(e: any) => {
                         setVideoModalInfo(e);
-                        // setVideoModal(true);
+                        setVideoModal(true);
                     }}
                     videoModal={videoModal}
+                    sendPopup={sendPopup}
+                    setSendPopup={setSendPopup}
                 />
             )}
             <PopupForVideoPlayer
@@ -51,6 +56,7 @@ function HomePage() {
                 videoModal={videoModal}
                 onclose={() => setVideoModal(false)}
                 info={videoModalInfo}
+                sendPopupHandler={() => setSendPopup(true)}
             />
             <PopupForReport
                 openReport={reportPopup}
@@ -64,6 +70,7 @@ function HomePage() {
                 info={videoModalInfo}
             />
             <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
+            <Forwardusers onOpen={sendPopup} onClose={() => setSendPopup(false)} />
         </div>
     );
 }

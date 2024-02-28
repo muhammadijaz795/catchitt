@@ -93,18 +93,25 @@ button:hover {
   width: 100% !important;
   height: 100% !important;
 }
-.MuiButtonBase-root{
+.MuiButtonBase-root {
   width: 100% !important;
   height: 100% !important;
   background: transparent !important;
 }
-.MuiButtonBase-root span{
+.MuiButtonBase-root span {
   width: 100% !important;
   height: 100% !important;
   background: transparent !important;
 }
-
 
 /* .slick-track {
   height: 100% !important;
 } */
+video::-webkit-media-controls-fullscreen-button {
+  display: none;
+}
+video::-webkit-media-controls-overflow-button {
+  display: none !important;
+}
+
+

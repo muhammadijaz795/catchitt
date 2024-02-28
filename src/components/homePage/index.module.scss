@@ -80,7 +80,9 @@
           line-height: 19px;
           letter-spacing: 0em;
           text-align: left;
-          width: 200px;
+          width: auto;
+          word-break: break-all;
+
         }
         .userName {
           font-family: Poppins;

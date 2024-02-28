@@ -1,36 +1,31 @@
-import React, { useEffect, useRef, useState } from 'react';
-import video from '../../../public/video/production_id_4440931 (1080p).mp4';
+import { CircularProgress } from '@mui/material';
+import { useRef, useState } from 'react';
 import {
     activeFvrt,
     activeLike,
     activeShare,
-    avatar,
     commentInHome,
     defaultAvatar,
     fvrt,
     like,
     moreInHome,
     music,
-    shareInHome,
+    shareInHome
 } from '../../icons';
 import Layout from '../../shared/layout';
-import Action from './components/Action';
-import style from './index.module.scss';
-import ReactPlayer from 'react-player';
 import { useAuthStore } from '../../store/authStore';
-import { CircularProgress } from '@mui/material';
-import useOnScreen from './components/onscreen';
+import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
-import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
+import useOnScreen from './components/onscreen';
+import style from './index.module.scss';
 
 function ForDesktop(props: any) {
-    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal } = props || {};
+    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal , sendPopup , setSendPopup} = props || {};
     const API_KEY = process.env.VITE_API_URL;
     const [selectedTab, setSelectedTab] = useState<number>(1);
     const [reportPopup, setreportPopup] = useState(false);
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
     const [showCopyPopup, setshowCopyPopup] = useState(false);
-    const [sendPopup, setSendPopup] = useState(false);
     const token = useAuthStore((state) => state.token);
     const [followedAccounts, setFollowedAccounts] = useState<any>({});
     const [followedUsersData, setFollowedUsersData] = useState<any>([]);
@@ -127,7 +122,7 @@ function ForDesktop(props: any) {
                     </div>
                 </div>
                 <div className={style.videoesParent}>
-                    {videoes.length > 0 ? (
+                    {videoes?.length > 0 ? (
                         videoes.map((post: any, number: number) => {
                             return (
                                 <div className={style.videoParent}>
@@ -194,9 +189,15 @@ function ForDesktop(props: any) {
                                         >
                                             <CustomPlayer
                                                 videoModal={videoModal}
-                                                src={post?.originalUrl}
+                                                src={
+                                                    post?.reducedVideoUrl
+                                                        ? post?.reducedVideoUrl
+                                                        : post?.reducedVideoHlsUrl
+                                                        ? post?.reducedVideoHlsUrl
+                                                        : post?.originalUrl
+                                                }
+                                                controls={true}
                                             />
-                                            {/* <video loop autoPlay style={{width:'100%' , height:'100%'}} src={video} /> */}
                                         </div>
                                         <div className={style.actions}>
                                             {userActions.map((obj: any, i: number) => {
@@ -237,7 +238,6 @@ function ForDesktop(props: any) {
                         </div>
                     )}
                 </div>
-                <Forwardusers onOpen={sendPopup} onClose={() => setSendPopup(false)} />
             </div>
         </Layout>
     );

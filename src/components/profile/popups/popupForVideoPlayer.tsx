@@ -1,12 +1,19 @@
-import { ClickAwayListener, Modal } from '@mui/material'
-import style from './popupForVideoPlayer.module.scss'
-import VideoModel from '../components/videoModel'
+import { ClickAwayListener, Modal } from '@mui/material';
+import style from './popupForVideoPlayer.module.scss';
+import VideoModel from '../components/videoModel';
 
-export default function PopupForVideoPlayer({ videoModal, onclose, info, onReportPopup, onBlockPopup, gifts }: any) {
-
+export default function PopupForVideoPlayer({
+    videoModal,
+    onclose,
+    info,
+    onReportPopup,
+    onBlockPopup,
+    gifts,
+    sendPopupHandler,
+}: any) {
     return (
         <div className={style.parent}>
-            <Modal open={videoModal} >
+            <Modal open={videoModal}>
                 <ClickAwayListener onClickAway={onclose}>
                     <div className={style.videoModalContainer}>
                         <VideoModel
@@ -14,10 +21,12 @@ export default function PopupForVideoPlayer({ videoModal, onclose, info, onRepor
                             report={onReportPopup}
                             info={info}
                             gifts={gifts}
-                            onModalClose={onclose} />
+                            onModalClose={onclose}
+                            sendPopupHandler={sendPopupHandler}
+                        />
                     </div>
                 </ClickAwayListener>
             </Modal>
         </div>
-    )
+    );
 }
