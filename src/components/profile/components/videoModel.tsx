@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,11 +26,13 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
     const [share, setShare] = useState(false);
     const token = useAuthStore((state) => state.token);
     const [more, setMore] = useState(false);
+    const [userComments, setUserComments] = useState<any[]>([]);
     const API_KEY = process.env.VITE_API_URL;
 
     const [replySomeOne, setReplySomeOne] = useState<any>({
         status: false,
         userName: '',
+        id: '',
     });
     const [comment, setComment] = useState('');
     const timeConverter = (time: any) => {
@@ -61,6 +63,61 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
             console.log('error', error);
         }
     };
+
+    useEffect(() => {
+        setUserComments(info?.comments);
+    }, []);
+
+    const commentHandler = async () => {
+        if (replySomeOne?.status) {
+            const payload = {
+                comment: comment,
+                commentId: replySomeOne.id,
+            };
+            try {
+                let response = await fetch(`${API_KEY}/media-content/comment/${info?.mediaId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const finalRes = await response.json();
+                console.log(finalRes.data);
+                const filteredCommnets:any = userComments.filter((userComment:any)=>userComment.id !== finalRes.data.id)
+                
+                if (finalRes?.data) {
+                    setUserComments([...filteredCommnets, finalRes?.data]);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            const payload = {
+                comment: comment,
+            };
+            try {
+                let response = await fetch(`${API_KEY}/media-content/comment/${info?.mediaId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const finalRes = await response.json();
+                console.log(finalRes.data);
+                if (finalRes?.data) {
+                    setUserComments([...userComments, finalRes?.data]);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        setComment('')
+    };
+
 
     return (
         <div className={style.div}>
@@ -276,11 +333,11 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                 </div>
                 <div className={style.comments}>
                     <p className={style.commentText1}>All comment ({info.comments.length})</p>
-                    {info.comments.map((comments: any, i: number) => (
+                    {userComments?.map((comments: any, i: number) => (
                         <Comment
                             key1={i}
                             data={comments}
-                            replyBtn={(userName: any) => {
+                            replyBtn={(userName: any, id: any) => {
                                 if (replySomeOne.status) {
                                     setReplySomeOne({
                                         status: false,
@@ -290,6 +347,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                                     setReplySomeOne({
                                         status: true,
                                         userName: userName,
+                                        id: id,
                                     });
                                 }
                             }}
@@ -330,6 +388,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                                 style={{ cursor: 'pointer' }}
                                 src="../../../../public/images/icons/commentSec/coloredSend.svg"
                                 alt=""
+                                onClick={commentHandler}
                             />
                         ) : (
                             <img src="../../../../public/images/icons/commentSec/Send.svg" alt="" />

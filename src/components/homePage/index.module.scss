@@ -137,9 +137,9 @@
       text-align: left;
     }
     .mediaContainer {
-      background-color: #000;
+      // background-color: #000;
       margin: auto;
-      width: 602px;
+      max-width: 602px;
       position: relative;
       display: flex;
       justify-content: center;
