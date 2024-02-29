@@ -28,7 +28,7 @@ export default function Comment({ replyBtn, data , key1 }: any) {
             </div>
             <div className={style.commentH}>
                 <p className={style.comment}>{data.comment}</p>
-                <span style={{ cursor: 'pointer' }} className={style.replyBtn} onClick={() => replyBtn(data.user.name)}>Reply</span>
+                <span style={{ cursor: 'pointer' }} className={style.replyBtn} onClick={() => replyBtn(data.user.name , data.id)}>Reply</span>
                 {
                     !viewReplys && data.replies.length > 0 ? <div onClick={() => setviewReplys(true)}>
                         <p className={style.replyBtn}>View replies ({data.replies.length})</p>

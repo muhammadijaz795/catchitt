@@ -17,8 +17,8 @@ function useHome() {
         setvideoes([])
         try {
             let link = isLoggedIn
-                ? `/media-content/videos/feed?page=1`
-                : `/media-content/public/videos/feed?page=1`;
+                ? `/media-content/videos/feed?page=1&pageSize=5`
+                : `/media-content/public/videos/feed?page=1&pageSize=5`;
 
             const res = await fetchInJSON(link, {
                 method: 'GET',
