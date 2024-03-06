@@ -8,7 +8,8 @@ import { music } from '../../../icons';
 function CustomPlayer({ src, videoModal, post, controls }: any) {
     const [duration, setDuration] = useState<number>();
     const [playingTime, setPlayingTime] = useState<number>();
-    const { ref, inView, entry } = useInView({
+    const { ref, inView, entry  } = useInView({
+        rootMargin:'-400px 0px -200px 0px'
         /* Optional options */
     });
 

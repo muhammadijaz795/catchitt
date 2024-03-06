@@ -18,9 +18,10 @@ import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
 import useOnScreen from './components/onscreen';
 import style from './index.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 function ForDesktop(props: any) {
-    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal , sendPopup , setSendPopup} = props || {};
+    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal, sendPopup, setSendPopup , comments} = props || {};
     const API_KEY = process.env.VITE_API_URL;
     const [selectedTab, setSelectedTab] = useState<number>(1);
     const [reportPopup, setreportPopup] = useState(false);
@@ -41,6 +42,7 @@ function ForDesktop(props: any) {
 
     const ref = useRef<any>(null);
     const isVisible = useOnScreen(ref);
+    const navigate: any = useNavigate()
 
     const fetchFollowers = async () => {
         try {
@@ -133,9 +135,11 @@ function ForDesktop(props: any) {
                                                     borderRadius: '50%',
                                                     width: '44px',
                                                     height: '44px',
+                                                    cursor:'pointer'
                                                 }}
                                                 src={post?.user?.avatar || defaultAvatar}
                                                 alt=""
+                                                onClick={() => navigate(`/profile/${post?.user?._id}`)}
                                             />
                                             <div>
                                                 <p className={style.name}>{post?.user?.name}</p>
@@ -160,9 +164,9 @@ function ForDesktop(props: any) {
                                                     style={{ width: 20, height: 20 }}
                                                 />
                                             ) : followedUsersData?.some(
-                                                  (user: any) =>
-                                                      user.followed_userID._id === post?.user?._id
-                                              ) ? (
+                                                (user: any) =>
+                                                    user.followed_userID._id === post?.user?._id
+                                            ) ? (
                                                 'Following'
                                             ) : (
                                                 'Follow'
@@ -193,8 +197,8 @@ function ForDesktop(props: any) {
                                                     post?.reducedVideoUrl
                                                         ? post?.reducedVideoUrl
                                                         : post?.reducedVideoHlsUrl
-                                                        ? post?.reducedVideoHlsUrl
-                                                        : post?.originalUrl
+                                                            ? post?.reducedVideoHlsUrl
+                                                            : post?.originalUrl
                                                 }
                                                 controls={true}
                                             />
@@ -216,6 +220,7 @@ function ForDesktop(props: any) {
                                                         popupHandler={() => setSendPopup(true)}
                                                         showVideoModal={showVideoModal}
                                                         post={post}
+                                                        commentsglobal={comments}
                                                     />
                                                 );
                                             })}

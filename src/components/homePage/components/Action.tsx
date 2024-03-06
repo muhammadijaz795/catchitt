@@ -15,9 +15,12 @@ function Action({
     popupHandler,
     copyHandler,
     showVideoModal,
-    post
+    post,
+    commentsglobal
 }: any) {
     const [videoesLikes, setvideoesLikes] = useState(likes);
+    const [comment, setComment] = useState(0);
+    const [videodata, setvideodata] = useState([]);
     const [fvrt, setFvrt] = useState(0);
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
@@ -62,6 +65,16 @@ function Action({
         }
     }, [isLiked]);
     const [isActive, setIsActive] = useState(false);
+    useEffect(() => {
+        setvideodata(commentsglobal)
+        videodata?.map((data: any) => {
+            if (data?.mediaId === post?.mediaId) {
+                setComment(data?.comments)
+            }
+        })
+    }, [commentsglobal])
+
+
     return (
         <div className={style.useractions}>
             <div
@@ -98,7 +111,7 @@ function Action({
             {obj?.actionType === 'like' ? (
                 <p className={style.actionC}>{videoesLikes || 0}</p>
             ) : obj?.actionType === 'comment' ? (
-                <p className={style.actionC}>{comments || 0}</p>
+                <p className={style.actionC}>{comment}</p>
             ) : obj?.actionType === 'share' ? (
                 <p className={style.actionC}>{shares || 0}</p>
             ) : obj?.actionType === 'fvrt' ? (

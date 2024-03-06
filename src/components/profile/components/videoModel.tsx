@@ -6,6 +6,7 @@ import defaultProfileIcon from '../../../assets/defaultProfileIcon.png';
 import Comment from './comment';
 import style from './videoModel.module.scss';
 import { useAuthStore } from '../../../store/authStore';
+import { CircularProgress, useMediaQuery } from '@mui/material';
 
 interface Props {
     onModalClose: any;
@@ -14,9 +15,10 @@ interface Props {
     block: any;
     gifts: any;
     sendPopupHandler?: any;
+    commentsLength?: any;
 }
 
-function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler }: Props) {
+function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler, commentsLength }: Props) {
     const navigate = useNavigate();
     //For Images Ref.
     const [like, setLike] = useState(false);
@@ -26,7 +28,13 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
     const [share, setShare] = useState(false);
     const token = useAuthStore((state) => state.token);
     const [more, setMore] = useState(false);
+    const [followedAccounts, setFollowedAccounts] = useState<any>({});
+    const [followedUsersData, setFollowedUsersData] = useState<any>([]);
     const [userComments, setUserComments] = useState<any[]>([]);
+    const auth = useAuthStore();
+
+    const [followBtnLoading, setfollowBtnLoading] = useState(false);
+
     const API_KEY = process.env.VITE_API_URL;
 
     const [replySomeOne, setReplySomeOne] = useState<any>({
@@ -44,6 +52,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
         let createdTime = `${day}-${month}-${year}`;
         return createdTime;
     };
+    const isMobile = useMediaQuery('(max-width:700px)');
 
     const likeHandler = async () => {
         try {
@@ -123,9 +132,66 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
         setComment('')
     };
 
+    useEffect(() => {
+        commentsLength(userComments.length, info.mediaId)
+    }, [userComments])
+
+    console.log(info);
+
+    const fetchFollowers = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/${auth._id}/followers`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setFollowedUsersData(responseData.data.data);
+            }
+        } catch (error) {
+            alert('Somthing went wrong');
+            console.log(error);
+        }
+    };
+
+    const follow_Unfollow_handler = async (id: any) => {
+        setfollowBtnLoading(true);
+        try {
+            const response = await fetch(`${API_KEY}/profile/follow/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                // Update the followedAccounts state
+                setFollowedAccounts((prevFollowedAccounts: any) => ({
+                    ...prevFollowedAccounts,
+                    [id]: !prevFollowedAccounts[id], // Mark the account as followed
+                }));
+                fetchFollowers();
+            }
+        } catch (error) {
+            alert('Somthing went wrong');
+            console.log(error);
+        } finally {
+            setfollowBtnLoading(false);
+        }
+    };
 
     return (
-        <div className={style.div}>
+        <div className={style.div} onClick={() => {
+            if (more) {
+                setMore(false)
+            }
+            if (share) {
+                setShare(false)
+
+            }
+        }}>
             <div className={style['video-sec']}>
                 <video
                     loop={true}
@@ -135,14 +201,14 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                     src={info.reducedVideoUrl}
                 />
             </div>
-            <div className={style['cotent-sec']}>
+            <div className={style['cotent-sec']} style={{ width: '100%' }}>
                 <img
                     onClick={onModalClose}
                     className={style['close-btn-img']}
                     src="../../../../public/images/icons/Close Square.svg"
                     alt=""
                 />
-                <div className={style['info-sec']}>
+                <div className={style['info-sec']} style={{ width: '100%' }}>
                     <img
                         onClick={() => navigate(`/profile/${info.user._id}`)}
                         style={{ borderRadius: '50%', cursor: 'pointer' }}
@@ -150,19 +216,45 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                         alt=""
                     />
                     <div style={{ marginLeft: '16px' }}>
-                        <p className={style['name']}>{info.user.name}</p>
-                        <div className="d-flex">
-                            <p className={style['text2']}>{info.user.username}</p>
-                            <img
-                                className="mx-2"
-                                src="../../../../public/images/icons/Text.svg"
-                                alt=""
-                            />
-                            <p className={style['text2']}>{timeConverter(info.createdTime)}</p>
+                        <p className={style['name']} style={{ textOverflow: 'ellipsis', maxWidth: isMobile ? '100px' : '100%', whiteSpace: 'nowrap', overflow: 'hidden' }}>{info.user.name}</p>
+                        <div className="d-flex" style={{ flex: 1, justifyContent: 'flex-start' }}>
+                            <p style={{ textOverflow: 'ellipsis', maxWidth: isMobile ? '100px' : '100%', whiteSpace: 'nowrap', overflow: 'hidden' }} className={style['text2']}>{info.user.username}</p>
+                            {
+                                !isMobile &&
+                                <img
+                                    className="mx-2"
+                                    src="../../../../public/images/icons/Text.svg"
+                                    alt=""
+                                />
+                            }
+                            {
+                                !isMobile &&
+                                <p className={style['text2']}>{timeConverter(info.createdTime)}</p>
+                            }
+
                         </div>
                     </div>
-                    <div className={style['frdsBtn']}>
-                        <button>Friends</button>
+                    <div className={style['frdsBtn']} >
+                        <button style={{ width: '60px !important' }} className={
+                            followedUsersData?.some(
+                                (user: any) =>
+                                    user.followed_userID._id === info?.user?._id
+                            )
+                                ? style.abc
+                                : style.btn
+                        }
+                            onClick={() => follow_Unfollow_handler(info?.user?._id)}>  {followBtnLoading ? (
+                                <CircularProgress
+                                    style={{ width: 20, height: 20 }}
+                                />
+                            ) : followedUsersData?.some(
+                                (user: any) =>
+                                    user.followed_userID._id === info?.user?._id
+                            ) ? (
+                                'Friends'
+                            ) : (
+                                'Follow'
+                            )}</button>
                     </div>
                 </div>
                 <p style={{ marginBottom: 24 }} className={style['text3']}>
@@ -325,19 +417,22 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                 </div>
                 <div className={style.gifts}>
                     <p className={style.receivedGifftsText}>Gifts received</p>
-                    <img src="../../../../public/images/icons/commentSec/CoinChestPNG.svg" alt="" />
-                    <img src="../../../../public/images/icons/commentSec/CrystalPNG.svg" alt="" />
-                    <img src="../../../../public/images//icons/commentSec/Gift2.svg" alt="" />
-                    <img src="../../../../public/images/icons/commentSec/Mjolnir.svg" alt="" />
-                    <img
-                        src="../../../../public/images/icons/commentSec/RamdanLantern.svg"
-                        alt=""
-                    />
-                    <img src="../../../../public/images/icons/commentSec/Roses.svg" alt="" />
-                    <img src="../../../../public/images/icons/commentSec/StarPNG.svg" alt="" />
+                    <div>
+
+                        <img src="../../../../public/images/icons/commentSec/CoinChestPNG.svg" alt="" />
+                        <img src="../../../../public/images/icons/commentSec/CrystalPNG.svg" alt="" />
+                        <img src="../../../../public/images//icons/commentSec/Gift2.svg" alt="" />
+                        <img src="../../../../public/images/icons/commentSec/Mjolnir.svg" alt="" />
+                        <img
+                            src="../../../../public/images/icons/commentSec/RamdanLantern.svg"
+                            alt=""
+                        />
+                        <img src="../../../../public/images/icons/commentSec/Roses.svg" alt="" />
+                        <img src="../../../../public/images/icons/commentSec/StarPNG.svg" alt="" />
+                    </div>
                 </div>
                 <div className={style.comments}>
-                    <p className={style.commentText1}>All comment ({info.comments.length})</p>
+                    <p className={style.commentText1}>All comment ({userComments.length})</p>
                     {userComments?.map((comments: any, i: number) => (
                         <Comment
                             key1={i}
