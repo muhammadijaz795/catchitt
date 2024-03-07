@@ -9,8 +9,6 @@ import { initReactI18next } from 'react-i18next';
 import App from './App';
 import './index.css';
 
-
-
 i18next
     .use(HttpApi)
     .use(LanguageDetector)

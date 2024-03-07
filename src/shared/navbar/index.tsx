@@ -42,6 +42,9 @@ function Navbar() {
     const navigate = useNavigate();
     const logout = useAuthStore((state) => state.logout);
     const isMobile = useMediaQuery('(max-width:700px)');
+    const submitHandler = (searchValue: any) => {
+        navigate(`/searchPage/${searchValue}/All`);
+    };
     return (
         <div className={style.parent}>
             <div className={style.sec1}>
@@ -49,7 +52,10 @@ function Navbar() {
             </div>
             {!isMobile ? (
                 <div className={style.sec2}>
-                    <Search placeholder="Search accounts and videos" />
+                    <Search
+                        submitHandler={submitHandler}
+                        placeholder="Search accounts and videos"
+                    />
                     {isLoggedIn ? (
                         <div className={style.profile}>
                             <img
@@ -101,8 +107,13 @@ function Navbar() {
                     )}
                 </div>
             ) : (
-                <div style={{position:'relative'}}>
-                    <img style={{width:'40px' , height:'40px' , borderRadius:'50%'}}    src={profileData?.avatar || defaultAvatar}onClick={() => navigate('/upload')} alt="" />
+                <div style={{ position: 'relative' }}>
+                    <img
+                        style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+                        src={profileData?.avatar || defaultAvatar}
+                        onClick={() => navigate('/upload')}
+                        alt=""
+                    />
                     <NavbarMunu
                         onViewProfile={() => navigate(`/profile`)}
                         Onlogout={() => logout()}

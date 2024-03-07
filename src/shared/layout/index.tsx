@@ -6,6 +6,7 @@ import { TopBar } from '../../components/top-bar/top-bar';
 import BlockPopup from '../popups/BlockPopup';
 import style from './style.module.scss';
 import { commentTab, forthTab, homeTab, settingsTab, thirdTab } from '../../icons';
+import Navbar from '../navbar';
 
 function Layout(props: any) {
     const {
@@ -21,15 +22,16 @@ function Layout(props: any) {
         dangetBtnText,
         onBlock,
         showCopyPopup,
-        paddingBottomProp
+        paddingBottomProp,
+        popups
     } = props || {};
     const showSidebar = useMediaQuery('(max-width:1000px)');
 
     return (
-        <div style={{ width: '100%', height: '100vh', overflow: 'hidden' }} onClick={globalClicker}>
-            {/* <Navbar /> */}
-            <TopBar />
-            <div style={{ display: 'flex', height: '100%' }}>
+        <div style={{ width: '100vw', height: '100vh', overflow: 'hidden'  }} onClick={globalClicker}>
+            <Navbar />
+            {/* <TopBar /> */}
+            <div style={{ display: 'flex', height: '100vh' , width:'100vw' , paddingTop:80 }}>
                 {!showSidebar && !showShortSidebar ? (
                     <div
                         style={{
@@ -37,8 +39,8 @@ function Layout(props: any) {
                             flexDirection: 'column',
                             gap: 32,
                             overflow: 'scroll',
-                            height: '92%',
-                            padding: '40px 40px 40px 40px',
+                            height: '100%',
+                            padding: '40px 40px 0px 40px',
                         }}
                     >
                         <SideNavBar />
@@ -150,6 +152,7 @@ function Layout(props: any) {
                 openBlock={showBlockPopup}
                 onBlockClose={closeBlockPopup}
             />
+            {popups}
         </div>
     );
 }
