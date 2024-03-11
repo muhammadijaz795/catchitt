@@ -276,6 +276,8 @@ export const Profile = (props: any) => {
                     onBlockClose={() => setBlockPopup(false)}
                     onReportClose={() => setReportPopup(false)}
                     info={videoModalInfo}
+                    // @ts-ignore
+                    userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
                 <StoriesOnPublicProfile

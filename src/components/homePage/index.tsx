@@ -31,6 +31,8 @@ function HomePage() {
         ]);
     };
 
+    console.log(videoModalInfo);
+
     return (
         <div>
             {isMobile ? (
@@ -82,6 +84,7 @@ function HomePage() {
                 onBlockClose={() => setBlockPopup(false)}
                 onReportClose={() => setReportPopup(false)}
                 info={videoModalInfo}
+                userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
             />
             <Gifts
                 mediaId={videoModalInfo?.mediaId}

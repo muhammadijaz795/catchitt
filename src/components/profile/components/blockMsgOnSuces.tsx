@@ -1,18 +1,16 @@
-import React, { useState } from 'react'
-import style from './blockUser.module.scss'
-import { ClickAwayListener, Modal } from '@mui/material'
+import style from './blockUser.module.scss';
 
 interface TYpes {
-    onclose: any
+    onclose: any;
 }
-function BlockMsgOnSuces({  onclose }: TYpes) {
+function BlockMsgOnSuces({ onclose , userName }: any) {
     return (
         <div className={style.parent2}>
             <p>Blocked Successfully</p>
-            <p>You blocked Sara Said.</p>
+            <p>{`You blocked ${userName}.`}</p>
             <button onClick={onclose}>Done</button>
         </div>
-    )
+    );
 }
 
-export default BlockMsgOnSuces
+export default BlockMsgOnSuces;

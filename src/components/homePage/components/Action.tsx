@@ -53,7 +53,7 @@ function Action({
                 setIsActive(false);
             }
         }
-    }, [post.isLiked]);
+    }, [post]);
 
     return (
         <div

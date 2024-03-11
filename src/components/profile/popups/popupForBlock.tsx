@@ -4,11 +4,13 @@ import BlockMsgOnError from '../components/blockMsgOnError'
 import BlockUser from '../components/blockUser'
 import { useState } from 'react'
 import BlockMsgOnSuces from '../components/blockMsgOnSuces'
-export default function PopupForBlock({ openBlock, onBlockClose }: any) {
+export default function PopupForBlock({ openBlock, onBlockClose , userId }: any) {
   const [inErrorCase, setInErrorCase] = useState(false)
   const [inSuceedCase, setInSuceedCase] = useState(false)
   const managePopup = (value: any) => {
     if (value) {
+      setInSuceedCase(true)
+    }else{
       setInErrorCase(true)
     }
   }
@@ -17,7 +19,7 @@ export default function PopupForBlock({ openBlock, onBlockClose }: any) {
       <Modal open={openBlock} className={style.modal}>
         <ClickAwayListener onClickAway={onBlockClose}>
           <div className={style.reportPopup}>
-            <BlockUser onclose={onBlockClose} popupH={managePopup} />
+            <BlockUser userId={userId} onclose={onBlockClose} popupH={managePopup} />
           </div>
         </ClickAwayListener>
       </Modal>
@@ -31,7 +33,7 @@ export default function PopupForBlock({ openBlock, onBlockClose }: any) {
       <Modal open={inSuceedCase} className={style.inErrorCase}>
         <ClickAwayListener onClickAway={() => { setInSuceedCase(false) }}>
           <div>
-            <BlockMsgOnSuces onclose={() => setInSuceedCase(false)} />
+            <BlockMsgOnSuces userName={userId?.name} onclose={() => setInSuceedCase(false)} />
           </div>
         </ClickAwayListener>
       </Modal>

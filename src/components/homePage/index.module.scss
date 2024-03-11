@@ -82,7 +82,6 @@
           text-align: left;
           width: auto;
           word-break: break-all;
-
         }
         .userName {
           font-family: Poppins;
@@ -175,4 +174,12 @@
   .actions {
     right: 20px !important;
   }
+}
+
+.suggestedUsersContainer {
+  max-width: 602px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }

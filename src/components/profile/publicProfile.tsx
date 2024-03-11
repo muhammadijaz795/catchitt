@@ -146,7 +146,12 @@ export const PublicProfile = (props: any) => {
                         setLikesModal={setLikesModal}
                         public
                         openReport={() => setReportPopup(true)}
-                        openBlock={() => setBlockPopup(true)}
+                        openBlock={() => {
+                            setVideoModalInfo({
+                                user: { _id: profileData._id, name: profileData.name },
+                            });
+                            setBlockPopup(true);
+                        }}
                         showStories={() => setStoryPopup(true)}
                         storyVideos={(stories: any) => {
                             setVideoModalInfo(stories);
@@ -167,7 +172,7 @@ export const PublicProfile = (props: any) => {
                             </div>
                         ))}
                     </div>
-                    <div className={styles.contentContainer} style={{minHeight:'300px'}}>
+                    <div className={styles.contentContainer} style={{ minHeight: '300px' }}>
                         <p className={styles.title}>{activeTab}</p>
                         {activeTab === 'Videos' ? (
                             <VideoesMaping videos={videosData} openVideoModal={onVideoModal} />
@@ -198,6 +203,8 @@ export const PublicProfile = (props: any) => {
                     onBlockClose={() => setBlockPopup(false)}
                     onReportClose={() => setReportPopup(false)}
                     info={videoModalInfo}
+                    // @ts-ignore
+                    userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
             </div>

@@ -22,6 +22,7 @@ export default function Discover() {
     const [hashtagVideos, setHashtagVideos] = useState([]);
     const [stories, setStories] = useState([]);
     const [videoModal, setVideoModal] = useState(false);
+    // @ts-ignore
     const [videoModalInfo, setVideoModalInfo] = useState({});
     const token = useAuthStore((state) => state.token);
     const [reportPopup, setReportPopup] = useState(false);
@@ -274,6 +275,8 @@ export default function Discover() {
                     onBlockClose={() => setBlockPopup(false)}
                     onReportClose={() => setReportPopup(false)}
                     info={videoModalInfo}
+                    // @ts-ignore
+                    userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />
                 <Gifts openGifts={giftPopup} onGiftsClose={() => setGiftPopup(false)} />
                 <div>

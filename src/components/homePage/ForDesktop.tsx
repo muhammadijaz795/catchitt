@@ -19,16 +19,27 @@ import Layout from '../../shared/layout';
 import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
 import style from './index.module.scss';
+import FollowUserCard from '../../shared/cards/followCard';
 
 function ForDesktop(props: any) {
-    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal, setSendPopup, comments , loading} =
-        props || {};
+    const {
+        videoes,
+        activeTab,
+        setActiveTab,
+        showVideoModal,
+        videoModal,
+        setSendPopup,
+        comments,
+        loading,
+    } = props || {};
     const [reportPopup, setreportPopup] = useState(false);
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
     const [followimgbtnId, setFollowimgbtnId] = useState('');
     const [showCopyPopup, setshowCopyPopup] = useState(false);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
+    // @ts-ignore
+    const suggestedUsers = useSelector((store) => store.reducers.suggestedAccounts);
     const dispatch = useDispatch();
     const userActions: any = [
         { img: moreInHome, actionType: 'more' },
@@ -41,7 +52,7 @@ function ForDesktop(props: any) {
     const navigate: any = useNavigate();
 
     const follow_Unfollow_handler = async (id: any) => {
-        setFollowimgbtnId(id)
+        setFollowimgbtnId(id);
         setfollowBtnLoading(true);
         try {
             dispatch(followingsMethod(id)).then(() => setfollowBtnLoading(false));
@@ -124,7 +135,8 @@ function ForDesktop(props: any) {
                                             }
                                             onClick={() => follow_Unfollow_handler(post?.user?._id)}
                                         >
-                                            {followBtnLoading && followimgbtnId === post?.user?._id ? (
+                                            {followBtnLoading &&
+                                            followimgbtnId === post?.user?._id ? (
                                                 <CircularProgress
                                                     style={{ width: 20, height: 20 }}
                                                 />
@@ -195,6 +207,12 @@ function ForDesktop(props: any) {
                                 </div>
                             );
                         })
+                    ) : videoes?.length === 0 && !loading && activeTab === 1 ? (
+                        <div className={style.suggestedUsersContainer}>
+                            {suggestedUsers.map((suggestedUser: any, key: number) => {
+                                return <FollowUserCard key={key} user={suggestedUser} />;
+                            })}
+                        </div>
                     ) : (
                         <div
                             style={{

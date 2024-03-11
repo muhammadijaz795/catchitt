@@ -83,7 +83,7 @@ export const getHomeVideos: any = createAsyncThunk("get/foryou/videos", async (t
     }
 });
 
-export const videoLikehandle: any = createAsyncThunk("get/like/video", async (id: string) => {
+export const videoLikehandle: any = createAsyncThunk("get/like/video", async (id: string, searchScreenTab?: any) => {
     try {
         const res = await fetch(`${API_KEY}/media-content/like/${id}`, {
             method: 'POST',
@@ -93,11 +93,12 @@ export const videoLikehandle: any = createAsyncThunk("get/like/video", async (id
             },
         });
         if (res.ok) {
-            return id
+            if (searchScreenTab) {
+                return { id, tab: searchScreenTab }
+            }
         } else {
             return false
         }
-
     } catch (error) {
         console.log(error);
     }
@@ -154,5 +155,29 @@ export const commentMethod: any = createAsyncThunk("get/comment/video", async ({
         } catch (error) {
             console.log(error);
         }
+    }
+});
+
+
+export const getRandomUsers: any = createAsyncThunk("get/random/users", async () => {
+    try {
+        const response = await fetch(
+            `${API_KEY}/profile/public/suggested-users?page=1`,
+            {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json' },
+            }
+        );
+
+        if (response.ok) {
+            const responseData = await response.json();
+            // getRandomAccounts(responseData.data.data, 4)
+            return responseData.data.data
+        } else {
+            console.log(response);
+        }
+    } catch (error) {
+        // console.error(error);
+        console.error();
     }
 });

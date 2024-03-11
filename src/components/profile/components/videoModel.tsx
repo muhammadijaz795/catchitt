@@ -76,60 +76,17 @@ function VideoModel({
         setUserComments(info?.comments);
     }, []);
 
-    const commentHandler = async () => {
-        // if (replySomeOne?.status) {
-        //     const payload = {
-        //         comment: comment,
-        //         commentId: replySomeOne.id,
-        //     };
-        //     try {
-        //         let response = await fetch(`${API_KEY}/media-content/comment/${info?.mediaId}`, {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 Authorization: `Bearer ${token}`,
-        //             },
-        //             body: JSON.stringify(payload),
-        //         });
-        //         const finalRes = await response.json();
-        //         console.log(finalRes.data);
-        //         const filteredCommnets: any = userComments.filter(
-        //             (userComment: any) => userComment.id !== finalRes.data.id
-        //         );
+    useEffect(() => {
+        if (info?.isLiked) {
+            setLike(true);
+        } else {
+            setLike(false);
+        }
+    }, []);
 
-        //         if (finalRes?.data) {
-        //             setUserComments([...filteredCommnets, finalRes?.data]);
-        //         }
-        //
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // } else {
-        //     const payload = {
-        //         comment: comment,
-        //     };
-        //     try {
-        //         let response = await fetch(`${API_KEY}/media-content/comment/${info?.mediaId}`, {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 Authorization: `Bearer ${token}`,
-        //             },
-        //             body: JSON.stringify(payload),
-        //         });
-        //         const finalRes = await response.json();
-        //         console.log(finalRes.data);
-        //         if (finalRes?.data) {
-        //             setUserComments([...userComments, finalRes?.data]);
-        //         }
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
+    const commentHandler = async () => {
         dispatch(commentMethod({ text: comment, info, replyId: replySomeOne?.id })).then(
             (payload: any) => {
-                console.log(replySomeOne?.id);
-
                 if (replySomeOne?.status) {
                     const filteredCommnets: any = userComments.filter(
                         (userComment: any) => userComment.id !== payload.payload.res.id

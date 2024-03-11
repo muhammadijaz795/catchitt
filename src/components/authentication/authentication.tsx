@@ -13,6 +13,7 @@ import InputField from '../reusables/InputField';
 import styles from './authentication.module.scss';
 import Input from './components/Input';
 import { apple, arrow, fb, googleIcon, werfie, wn } from '../../icons';
+import { CircularProgress } from '@mui/material';
 
 export interface AuthenticationProps {
     className?: string;
@@ -72,6 +73,7 @@ export const Authentication = (props: any) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [form, setForm] = useState('signin');
     const [user, setUser] = useState(defaultUser);
+    const [Loader, setLoader] = useState(false);
 
     const { login } = useAuthStore();
 
@@ -87,6 +89,7 @@ export const Authentication = (props: any) => {
     /** Handling Sign Up Scenario */
 
     const handleSignUp = async (name: string, password: string, email: string) => {
+        setLoader(true);
         try {
             const response = await fetch(`${API_KEY}${signUpEndPoint}`, {
                 method: 'POST',
@@ -96,8 +99,15 @@ export const Authentication = (props: any) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { email, accountType, token, _id, balance, username, name } =
-                    responseData.data; // Extract token from data object
+                const {
+                    email,
+                    accountType,
+                    token,
+                    _id,
+                    balance,
+                    username,
+                    name,
+                } = responseData.data; // Extract token from data object
                 // const name = responseData.name; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
@@ -122,6 +132,8 @@ export const Authentication = (props: any) => {
         } catch (error) {
             console.error(error);
             setErrorMessage('An error occurred while signing up');
+        } finally {
+            setLoader(false);
         }
     };
 
@@ -139,6 +151,7 @@ export const Authentication = (props: any) => {
 
     /** Handling Sign In Scenario */
     const handleSignIn = async (password: string, email: string) => {
+        setLoader(true);
         try {
             const response = await fetch(`${API_KEY}${signInEndPoint}`, {
                 method: 'POST',
@@ -148,8 +161,15 @@ export const Authentication = (props: any) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const { email, accountType, token, _id, balance, username, name } =
-                    responseData.data; // Extract token value from data object
+                const {
+                    email,
+                    accountType,
+                    token,
+                    _id,
+                    balance,
+                    username,
+                    name,
+                } = responseData.data; // Extract token value from data object
                 // const name = responseData.data; // Assuming the 'name' field is present in the response data
                 useAuthStore.setState({
                     isLoggedIn: true,
@@ -174,6 +194,8 @@ export const Authentication = (props: any) => {
         } catch (error) {
             console.error(error);
             setErrorMessage('Invalid email or password');
+        } finally {
+            setLoader(false);
         }
     };
 
@@ -298,7 +320,11 @@ export const Authentication = (props: any) => {
                                     className={styles.signupSubmitBtn}
                                     onClick={handleSignUpSubmit}
                                 >
-                                    {t('signup.text')}
+                                    {Loader ? (
+                                        <CircularProgress style={{ width: 18, height: 18 }} />
+                                    ) : (
+                                        t('signup.text')
+                                    )}
                                 </button>
                             </div>
                         </form>
@@ -363,7 +389,11 @@ export const Authentication = (props: any) => {
                                     className={styles.signupSubmitBtn}
                                     onClick={handleSignInSubmit}
                                 >
-                                    {t('login.text')}
+                                    {Loader ? (
+                                        <CircularProgress style={{ width: 18, height: 18 }} />
+                                    ) : (
+                                        t('login.text')
+                                    )}
                                 </button>
                             </div>
                             {/* <div

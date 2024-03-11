@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
-import { commentMethod, fetchProfile, followingsMethod, getHomeVideos, videoLikehandle } from "./AsyncFuncs";
+import { commentMethod, fetchProfile, followingsMethod, getHomeVideos, getRandomUsers, videoLikehandle } from "./AsyncFuncs";
 
 const profile: any = createSlice({
     name: "profile",
@@ -25,7 +25,11 @@ const followings: any = createSlice({
 const homeVideos: any = createSlice({
     name: "homeVideos",
     initialState: [],
-    reducers: {},
+    reducers: {
+        updateHomeVideos: (_state, action: any) => {
+            return action.payload
+        }
+    },
     extraReducers: (builder: any) => {
         builder.addCase(getHomeVideos.fulfilled, (_state: any, action: any) => {
             return action.payload
@@ -33,7 +37,9 @@ const homeVideos: any = createSlice({
         builder.addCase(videoLikehandle.fulfilled, (state: any, action: any) => {
             // @ts-ignore
             let filteredData = state.map((element: any) => {
-                if (element.mediaId === action.payload) {
+                console.log('element', action.payload.id === element.mediaId);
+
+                if (element.mediaId === action.payload.id) {
                     return { ...element, isLiked: !element.isLiked, likes: !element.isLiked ? element.likes + 1 : element.likes - 1 }
                 } else {
                     return element
@@ -41,13 +47,13 @@ const homeVideos: any = createSlice({
             });
             return filteredData
         })
+        // Comment Feature
         builder.addCase(commentMethod.fulfilled, (state: any, action: any) => {
             // @ts-ignore
             let comments = []
             // @ts-ignore
             const { info, res, replyId }: any = action.payload
             if (!replyId) {
-
                 let filteredData = state.map((element: any) => {
                     if (element.mediaId === info.mediaId) {
                         comments = [...element.comments, res]
@@ -73,14 +79,27 @@ const homeVideos: any = createSlice({
                     }
                 });
                 return filteredData
-                
             }
         })
     }
 });
 
+const suggestedAccounts: any = createSlice({
+    name: "suggestedAccounts",
+    initialState: [],
+    reducers: {},
+    extraReducers: (builder: any) => {
+        builder.addCase(getRandomUsers.fulfilled, (_state: any, action: any) => {
+            return action.payload
+        })
+    }
+});
+
+export const { updateHomeVideos } = homeVideos.actions
+
 export default combineReducers({
     profile: profile.reducer,
     followings: followings.reducer,
     homeVideos: homeVideos.reducer,
+    suggestedAccounts: suggestedAccounts.reducer
 });

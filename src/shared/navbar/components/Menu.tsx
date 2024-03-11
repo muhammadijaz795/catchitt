@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
 import { goldCoin, logoutSvg, settingsDark, switchAcount, viewProfile } from '../../../icons';
 import style from './menu.module.scss';
+import { useAuthStore } from '../../../store/authStore';
 const options = ['View profile', 'Get Coins', 'Settings', 'Switch Account', 'Logout'];
 
 export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any) {
@@ -59,6 +60,18 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         },
     }));
 
+    const API_KEY = process.env.VITE_API_URL;
+    const token = useAuthStore((state) => state.token);
+
+    const handleGetCoins = async () => {
+        const res: any = await fetch(`${API_KEY}/payment/web/coins/45`, {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        });
+        const resData: any = await res.json();
+        console.log('getCoinsApi', resData);
+    };
+
     return (
         <div
             style={{
@@ -108,7 +121,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>{options[0]}</p>
                     </div>
                 </MenuItem>
-                <MenuItem onClick={handleClose} style={{ margin: 0, padding: 0 }}>
+                <MenuItem onClick={handleGetCoins} style={{ margin: 0, padding: 0 }}>
                     <div className={style.menuItemParent}>
                         <img src={goldCoin} alt="" />
                         <p className={`${style.p} ${style.black_500}`}>{options[1]}</p>
