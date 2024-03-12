@@ -65,11 +65,11 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
 
     const handleGetCoins = async () => {
         const res: any = await fetch(`${API_KEY}/payment/web/coins/45`, {
-            method: 'POST',
+            method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         });
         const resData: any = await res.json();
-        console.log('getCoinsApi', resData);
+        window.open(resData?.data?.url)
     };
 
     return (

@@ -29,7 +29,6 @@ function ForDesktop(props: any) {
         showVideoModal,
         videoModal,
         setSendPopup,
-        comments,
         loading,
     } = props || {};
     const [reportPopup, setreportPopup] = useState(false);
@@ -162,11 +161,14 @@ function ForDesktop(props: any) {
                                     <div className={style.mediaContainer}>
                                         <div
                                             style={{
-                                                width: 'auto',
+                                                width: '100%',
                                                 height: 'auto',
-                                                // background: '#000',
                                                 margin: 'auto',
+                                                overflowX:'hidden',
+                                                display:"flex",
+                                                justifyContent:'center'
                                             }}
+                                            className={style.mainContainer}
                                         >
                                             <CustomPlayer
                                                 videoModal={videoModal}
@@ -190,15 +192,9 @@ function ForDesktop(props: any) {
                                                             setreportPopup(true)
                                                         }
                                                         obj={obj}
-                                                        likes={post?.likes}
-                                                        comments={post?.comments?.length}
-                                                        shares={post?.shares}
-                                                        mediaId={post?.mediaId}
-                                                        isLiked={post?.isLiked}
                                                         popupHandler={() => setSendPopup(true)}
                                                         showVideoModal={showVideoModal}
                                                         post={post}
-                                                        commentsglobal={comments}
                                                     />
                                                 );
                                             })}

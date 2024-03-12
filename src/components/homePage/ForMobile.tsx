@@ -1,5 +1,7 @@
-import ReactPlayer from 'react-player';
-import style from './ForMobile.module.scss';
+import { CircularProgress } from '@mui/material';
+import { useRef, useState } from 'react';
+import Slider from 'react-slick';
+import { ToastContainer, toast } from 'react-toastify';
 import {
     activeFvrt,
     activeLike,
@@ -11,13 +13,10 @@ import {
     music,
     shareInHome,
 } from '../../icons';
-import Action from './components/Action';
 import PopupForReport from '../profile/popups/PopupForReport';
-import { useRef, useState } from 'react';
-import Slider from 'react-slick';
+import style from './ForMobile.module.scss';
+import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
-import { CircularProgress } from '@mui/material';
-import { ToastContainer, toast } from 'react-toastify';
 function ForMobile(props: any) {
     const { loading, videoes, activeTab, setActiveTab, showVideoModal } = props || {};
     const [reportPopup, setreportPopup] = useState(false);

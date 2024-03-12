@@ -8,8 +8,6 @@ import style from './Action.module.scss';
 function Action({
     obj,
     visibleReportPopup,
-    likes,
-    shares,
     popupHandler,
     copyHandler,
     showVideoModal,
@@ -17,6 +15,7 @@ function Action({
 }: any) {
     const [fvrt, setFvrt] = useState(0);
     const dispatch = useDispatch();
+    const [isActive, setIsActive] = useState(false);
 
     const actionClickHandler = async () => {
         try {
@@ -42,7 +41,7 @@ function Action({
         }
     };
 
-    const [isActive, setIsActive] = useState(false);
+    
     useEffect(() => {
         if (post.isLiked) {
             if (obj.actionType === 'like') {

@@ -17,10 +17,8 @@ import { CircularProgress } from '@mui/material';
 
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
-    const { selectedIndex, setIndex } = useAuthStore();
     const [trendingvideos, setTrendingvideos] = useState([]);
     const [hashtagVideos, setHashtagVideos] = useState([]);
-    const [stories, setStories] = useState([]);
     const [videoModal, setVideoModal] = useState(false);
     // @ts-ignore
     const [videoModalInfo, setVideoModalInfo] = useState({});

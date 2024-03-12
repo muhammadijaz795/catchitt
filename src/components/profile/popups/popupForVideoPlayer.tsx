@@ -24,7 +24,6 @@ export default function PopupForVideoPlayer({
                             gifts={gifts}
                             onModalClose={onclose}
                             sendPopupHandler={sendPopupHandler}
-                            commentsLength={commentsLength}
                         />
                     </div>
                 </ClickAwayListener>

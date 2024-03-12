@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useOnScreen(ref: any) {
     const [intersectingVideo, setIntersectingVideo] = useState<any>(null);

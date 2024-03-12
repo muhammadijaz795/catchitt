@@ -18,7 +18,6 @@ interface Props {
     block: any;
     gifts: any;
     sendPopupHandler?: any;
-    commentsLength?: any;
 }
 
 function VideoModel({
@@ -28,7 +27,6 @@ function VideoModel({
     block,
     gifts,
     sendPopupHandler,
-    commentsLength,
 }: Props) {
     const navigate = useNavigate();
     //For Images Ref.
@@ -105,12 +103,6 @@ function VideoModel({
         });
         setComment('');
     };
-
-    useEffect(() => {
-        if (commentsLength) {
-            commentsLength(userComments?.length, info?.mediaId);
-        }
-    }, [userComments]);
 
     const follow_Unfollow_handler = async (id: any) => {
         setfollowBtnLoading(true);

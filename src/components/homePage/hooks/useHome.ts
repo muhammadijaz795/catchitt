@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { fetchProfile, getHomeVideos } from '../../../redux/AsyncFuncs';
-import { useAuthStore } from '../../../store/authStore';
 import { updateHomeVideos } from '../../../redux/reducers';
+import { useAuthStore } from '../../../store/authStore';
 
 function useHome() {
-    const navigate = useNavigate();
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const [loading, setLoading] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<number>(2);

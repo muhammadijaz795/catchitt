@@ -13,25 +13,11 @@ function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
     const { loading, videos, activeTab, setActiveTab } = useHome();
     const [videoModalInfo, setVideoModalInfo] = useState<any>({});
-    const [reportPopup, setReportPopup] = useState(false);
     const [giftsPopup, setGiftsPopup] = useState(false);
+    const [reportPopup, setReportPopup] = useState(false);
     const [videoModal, setVideoModal] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
     const [sendPopup, setSendPopup] = useState(false);
-    const [videoComments, setvideoComments] = useState<any[]>([]);
-
-    const realTimehandler = (comments: number, mediaId: any) => {
-        const filteredData: any[] = videoComments.filter((data: any) => data.mediaId !== mediaId);
-        setvideoComments([
-            ...filteredData,
-            {
-                mediaId,
-                comments,
-            },
-        ]);
-    };
-
-    console.log(videoModalInfo);
 
     return (
         <div>
@@ -46,7 +32,6 @@ function HomePage() {
                         setVideoModal(true);
                     }}
                     videoModal={videoModal}
-                    comments={videoComments}
                 />
             ) : (
                 <ForDesktop
@@ -61,7 +46,6 @@ function HomePage() {
                     videoModal={videoModal}
                     sendPopup={sendPopup}
                     setSendPopup={setSendPopup}
-                    comments={videoComments}
                 />
             )}
             <PopupForVideoPlayer
@@ -72,7 +56,6 @@ function HomePage() {
                 onclose={() => setVideoModal(false)}
                 info={videoModalInfo}
                 sendPopupHandler={() => setSendPopup(true)}
-                commentsLength={realTimehandler}
             />
             <PopupForReport
                 openReport={reportPopup}
