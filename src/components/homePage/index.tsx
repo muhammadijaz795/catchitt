@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Gifts from '../discover/popups/gifts';
 import PopupForReport from '../profile/popups/PopupForReport';
 import PopupForBlock from '../profile/popups/popupForBlock';
@@ -8,6 +8,7 @@ import ForDesktop from './ForDesktop';
 import ForMobile from './ForMobile';
 import useHome from './hooks/useHome';
 import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
+import { io } from 'socket.io-client';
 
 function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
@@ -18,7 +19,18 @@ function HomePage() {
     const [videoModal, setVideoModal] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
     const [sendPopup, setSendPopup] = useState(false);
+    const API_KEY = process.env.VITE_API_URL;
+    const socket = io(API_KEY || '');
 
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('Socket Connected!');
+       });
+    //    socket.on('receive-msg', (data: any) => {
+    //           console.log('Received:', data);
+    //      }
+    //      );
+},[])
     return (
         <div>
             {isMobile ? (
