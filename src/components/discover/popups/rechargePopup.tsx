@@ -12,22 +12,12 @@ export default function RechargePopup({ faqs, onCustomPopup }: any) {
     const token = useAuthStore((state) => state.token);
     const BuyCoins = async () => {
         try {
-            const response: any = await fetch(`${API_KEY}/payment/coins`, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    coinsAmount: coinsAmount
-                })
+            const res: any = await fetch(`${API_KEY}/payment/web/coins/${coinsAmount}`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             });
-            const finalRes: any = await response.json()
-            if (finalRes.status === 200) {
-                alert('Success')
-            } else {
-                alert('Failed')
-            }
+            const resData: any = await res.json();
+            window.open(resData?.data?.url)
         } catch (error) {
             console.log('error', error);
         }
@@ -35,36 +25,36 @@ export default function RechargePopup({ faqs, onCustomPopup }: any) {
 
     const demiPlan: any[] = [
         {
-            QAR: 3.69,
+            QAR: 1.69,
             coins: 65
         },
         {
-            QAR: 3.69,
-            coins: 65
+            QAR: 2.69,
+            coins: 100
         },
         {
             QAR: 3.69,
-            coins: 65
+            coins: 300
         },
         {
-            QAR: 3.69,
-            coins: 65
+            QAR: 4.69,
+            coins: 400
         },
         {
-            QAR: 3.69,
-            coins: 65
+            QAR: 5.69,
+            coins: 500
         },
         {
-            QAR: 3.69,
-            coins: 65
+            QAR: 6.69,
+            coins: 600
         },
         {
-            QAR: 3.69,
-            coins: 65
+            QAR: 7.69,
+            coins: 700
         },
         {
-            QAR: 3.69,
-            coins: 65
+            QAR: 8.69,
+            coins: 800
         },
     ]
     return (
