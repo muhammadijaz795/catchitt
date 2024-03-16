@@ -20,6 +20,8 @@ import { Liked } from './svg-components/Liked';
 import { Private } from './svg-components/Private';
 import { Tagged } from './svg-components/Tagged';
 import { VideoIcon } from './svg-components/VideoIcon';
+import { db } from '../../utils/db';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -43,7 +45,10 @@ export const Profile = (props: any) => {
     const [blockPopup, setBlockPopup] = useState(false);
     const [copyPopup, setcopyPopup] = useState(false);
     // @ts-ignore
-    const profileData = useSelector((store) => store?.reducers?.profile);
+    const profileData = useSelector((store) => store?.reducers?.profile)
+    const profile = useLiveQuery(() => db.profile.toArray())?.[0]
+    console.log('profile' , profile);
+    
 
     const navigate = useNavigate();
     const tabs = [
@@ -180,7 +185,7 @@ export const Profile = (props: any) => {
             navigate('/auth');
         }
     });
-
+    
     return (
         <Layout showCopyPopup={copyPopup}>
             <div className={styles.container}>
