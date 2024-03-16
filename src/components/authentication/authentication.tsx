@@ -14,6 +14,7 @@ import styles from './authentication.module.scss';
 import Input from './components/Input';
 import { apple, arrow, fb, googleIcon, werfie, wn } from '../../icons';
 import { CircularProgress } from '@mui/material';
+import { db } from '../../utils/db';
 
 export interface AuthenticationProps {
     className?: string;
@@ -179,9 +180,9 @@ export const Authentication = (props: any) => {
                     _id: _id,
                     balance: balance,
                     username: username,
-                });
+                });""
                 login(email, accountType, token, _id, balance, username, name); // Call the login function from the Zustand store
-                console.log(responseData);
+                db.profile.add(responseData?.data)
                 navigate('/home');
             } else {
                 // Handle the error response from the server
