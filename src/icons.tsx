@@ -62,6 +62,9 @@ import notAllowed from './assets/notAllowed.svg';
 import report from './assets/report.svg';
 import duet from './assets/duet.svg';
 import sendSvgPopup from './assets/sndinpopup.svg';
+import backArrow from './assets/back.svg';
+import eyeIcon from './assets/eye.svg';
+import rankingIcon from './assets/ranking.svg';
 
 export {
     duet,
@@ -128,4 +131,7 @@ export {
     forwardMsg,
     viewProfile,
     goldCoin,
+    backArrow,
+    eyeIcon,
+    rankingIcon
 };

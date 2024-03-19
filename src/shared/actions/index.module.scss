@@ -1,0 +1,38 @@
+.parent {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eaeaea;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.active {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #5448b2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.parent > img,
+.active > img {
+  width: 21px;
+  height: 21px;
+}
+.paragraphy {
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  text-align: left;
+  user-select: none;
+  color: #222222;
+}

@@ -6,6 +6,7 @@ import { useAuthStore } from '../../store/authStore';
 import style from './Navbar.module.scss';
 import NavbarMunu from './components/Menu';
 import Search from './components/Search';
+import { memo } from 'react';
 
 function Navbar() {
     const isLoggedIn: boolean = localStorage.getItem('token') ? true : false;
@@ -17,6 +18,8 @@ function Navbar() {
     const submitHandler = (searchValue: any) => {
         navigate(`/searchPage/${searchValue}/All`);
     };
+    console.log('navbar calling');
+    
     return (
         <div className={style.parent}>
             <div className={style.sec1}>
@@ -97,4 +100,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default memo(Navbar);

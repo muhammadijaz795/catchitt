@@ -1,14 +1,14 @@
-import { styled } from '@mui/material';
+import { alpha, styled } from '@mui/material';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
-import { copyLink, send } from '../../../icons';
-import style from './index.module.scss';
+import { copyLink, rankingIcon, report, send } from '../../../icons';
+import style from '../copyAndSend/index.module.scss';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
-export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bottonSide }: any) {
+export default function COPY_OR_RANKING({ copyHandler, popupHandler }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const open = Boolean(anchorEl);
@@ -29,8 +29,8 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
         <Menu
             elevation={0}
             anchorOrigin={{
-                vertical: bottonSide ? 'bottom' : 'top',
-                horizontal: bottonSide ? 'right' : 'left',
+                vertical: 'bottom',
+                horizontal: 'right',
             }}
             transformOrigin={{
                 vertical: 'top',
@@ -49,25 +49,6 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
             boxShadow:
                 'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
             display: 'flex',
-            // '& .MuiMenu-list': {
-            //     padding: '4px 0',
-            // },
-            // '& .MuiMenuItem-root': {
-            //     '& .MuiSvgIcon-root': {
-            //         fontSize: 5,
-            //         color: theme.palette.text.secondary,
-            //         marginRight: theme.spacing(1.5),
-            //     },
-            //     '&:active': {
-            //         backgroundColor: alpha(
-            //             theme.palette.primary.main,
-            //             theme.palette.action.selectedOpacity
-            //         ),
-            //     },
-            // },
-            // '.menuItem': {
-            //     border: '2px solid red',
-            // },
         },
     }));
 
@@ -76,13 +57,9 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
             style={{
                 position: 'absolute',
                 right: 0,
-                // top: '100%',
-                // zIndex: 200,
                 width: '100%',
                 height: '100%',
                 background: 'transparent',
-                // marginRight:20,
-                // display:'flex'
             }}
         >
             <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
@@ -90,7 +67,6 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
                     id="lock-button"
                     aria-haspopup="listbox"
                     aria-controls="lock-menu"
-                    //   aria-label="when device is locked"
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClickListItem}
                     style={{ background: 'transparent' }}
@@ -103,25 +79,23 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
                 onClose={handleClose}
                 MenuListProps={{
                     'aria-labelledby': 'lock-button',
-                    // role: 'listbox',
                 }}
                 style={{
                     top: 10,
                     right: 100,
                     marginRight: 20,
-                    // display:'flex !important'
                 }}
             >
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={popupHandler}>
-                        <img src={send} />
-                        <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
+                        <img src={report} />
+                        <p className={`${style.p} ${style.fp} ${style.black_500}`}>Report</p>
                     </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={copyHandler}>
-                        <img src={copyLink} />
-                        <p className={`${style.p} ${style.black_500}`}>Copy link</p>
+                        <img src={rankingIcon} />
+                        <p className={`${style.p} ${style.black_500}`}>Ranking Settings</p>
                     </div>
                 </MenuItem>
             </StyledMenu>

@@ -32,6 +32,7 @@ import ChatsSec from './components/chats';
 import UploadSec from './components/uploadSec/uploadSec';
 import HomePage from './components/homePage';
 import useApp from './useApp';
+import Event from './components/homePage/components/event';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -119,6 +120,7 @@ function App() {
                             <Route path="/discover" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
                             <Route path="/upload" element={<UploadSec />} />
+                            <Route path="/live" element={<Event />} />
                         </Routes>
                     </Router>
                 </VideoProvider>
