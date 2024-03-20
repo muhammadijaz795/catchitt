@@ -10,7 +10,6 @@ import { fetchInJSON } from '../reusables/fetchInJSON';
 import useDebounce from '../reusables/useDebounce';
 import { ViewSwitchers } from '../view-switchers/view-switchers';
 import styles from './home.module.scss';
-import { io } from 'socket.io-client';
 export interface HomeProps {
     className?: string;
 }
@@ -20,17 +19,17 @@ export const Home = ({ className }: HomeProps) => {
     const { onePost } = useParams();
     const navigator = useNavigate();
     const API_KEY = process.env.VITE_API_URL;
-    const socket = io(API_KEY || '');
+    // const socket = io(API_KEY || '');
 
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Socket Connected!');
-       });
-       socket.on('receive-msg', (data: any) => {
-              console.log('Received:', data);
-         }
-         );
-},[])
+//     useEffect(() => {
+//         socket.on('connect', () => {
+//             console.log('Socket Connected!');
+//        });
+//        socket.on('receive-msg', (data: any) => {
+//               console.log('Received:', data);
+//          }
+//          );
+// },[])
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const { selectedTab, setTab } = useAuthStore();
 
