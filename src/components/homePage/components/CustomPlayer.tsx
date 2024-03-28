@@ -3,13 +3,13 @@ import { useInView } from 'react-intersection-observer';
 import ReactPlayer from 'react-player';
 import CustomControls from '../../../shared/videoControls';
 import { music } from '../../../icons';
-import style from './customPlayer.module.scss'
+import style from './customPlayer.module.scss';
 
 function CustomPlayer({ src, videoModal, post, controls }: any) {
     const [duration, setDuration] = useState<number>();
     const [playingTime, setPlayingTime] = useState<number>();
-    const { ref, inView, entry  } = useInView({
-        rootMargin:'-400px 0px -200px 0px'
+    const { ref, inView, entry } = useInView({
+        rootMargin: '-400px 0px -200px 0px',
         /* Optional options */
     });
 
@@ -65,20 +65,19 @@ function CustomPlayer({ src, videoModal, post, controls }: any) {
                 }}
                 // light
             /> */}
-         <div className={style.videoContainer}>
-         <video
-                disablePictureInPicture
-                controlsList="nodownload noplaybackrate"
-                loop={true}
-                autoPlay={videoModal ? false : inView}
-                controls={controls}
-                style={{ maxWidth: '100%', height: '70vh', position: 'relative', zIndex: 1  , }}
-                src={src}
-                ref={videoRef}
-                className={style.video}
-            />
-         </div>
-
+            <div className={style.videoContainer}>
+                <video
+                    disablePictureInPicture
+                    controlsList="nodownload noplaybackrate"
+                    loop={true}
+                    autoPlay={videoModal ? false : inView}
+                    controls={controls}
+                    style={{ maxWidth: '100%', height: '70vh', position: 'relative', zIndex: 1 }}
+                    src={src}
+                    ref={videoRef}
+                    className={style.video}
+                />
+            </div>
         </div>
     );
 }

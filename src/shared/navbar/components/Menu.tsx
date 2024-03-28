@@ -7,6 +7,7 @@ import * as React from 'react';
 import { goldCoin, logoutSvg, settingsDark, switchAcount, viewProfile } from '../../../icons';
 import style from './menu.module.scss';
 import { useAuthStore } from '../../../store/authStore';
+import { useSelector } from 'react-redux';
 const options = ['View profile', 'Get Coins', 'Settings', 'Switch Account', 'Logout'];
 
 export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any) {
@@ -61,16 +62,16 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     }));
 
     const API_KEY = process.env.VITE_API_URL;
-    const token = useAuthStore((state) => state.token);
+    const token = useSelector((state: any) => state?.reducers?.profile?.token);
 
     const handleGetCoins = async () => {
         const res: any = await fetch(`${API_KEY}/payment/web/coins/45`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        method: 'GET',
+        headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         });
         const resData: any = await res.json();
         window.open(resData?.data?.url)
-    };
+            };
 
     return (
         <div
@@ -109,7 +110,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                     right: 100,
                 }}
             >
-                <MenuItem
+                                <MenuItem
                     onClick={() => {
                         onViewProfile();
                         handleClose();

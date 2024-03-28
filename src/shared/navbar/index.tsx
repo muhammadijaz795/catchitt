@@ -6,20 +6,25 @@ import { useAuthStore } from '../../store/authStore';
 import style from './Navbar.module.scss';
 import NavbarMunu from './components/Menu';
 import Search from './components/Search';
+import { useDispatch } from 'react-redux';
 import { memo } from 'react';
+import { logoutUser } from '../../redux/reducers/auth';
 
 function Navbar() {
     const isLoggedIn: boolean = localStorage.getItem('token') ? true : false;
     // @ts-ignore
     const profile = useSelector((store) => store?.reducers?.profile);
     const navigate = useNavigate();
-    const logout = useAuthStore((state) => state.logout);
     const isMobile = useMediaQuery('(max-width:700px)');
     const submitHandler = (searchValue: any) => {
         navigate(`/searchPage/${searchValue}/All`);
     };
-    console.log('navbar calling');
-    
+
+    const dispatch = useDispatch();
+    const logoutAccount = () => {
+        dispatch(logoutUser());
+    };
+
     return (
         <div className={style.parent}>
             <div className={style.sec1}>
@@ -56,12 +61,12 @@ function Navbar() {
                                     {/* <div  style={{ position: 'relative', width:'100%' , height:'100%' , border:'1px solid red' }}> */}
                                     <NavbarMunu
                                         onViewProfile={() => navigate(`/profile`)}
-                                        Onlogout={() => logout()}
+                                        Onlogout={() => logoutAccount()}
                                         onSettings={() => navigate('/settings/account')}
                                     />
                                     {/* </div> */}
                                 </div>
-                                <p className={style.name}>{profile.name}</p>
+                                <p className={style.name}>{profile?.name}</p>
                             </div>
                         </div>
                     ) : (
@@ -91,7 +96,7 @@ function Navbar() {
                     />
                     <NavbarMunu
                         onViewProfile={() => navigate(`/profile`)}
-                        Onlogout={() => logout()}
+                        Onlogout={() => logoutAccount()}
                         onSettings={() => navigate('/settings/account')}
                     />
                 </div>

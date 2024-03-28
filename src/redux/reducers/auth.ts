@@ -9,6 +9,7 @@ const loginSlice: any = createSlice({
     reducers: {
         logoutUser: () => {
             localStorage.setItem('token', '')
+            return {}
         },
         updateProfile: (_state, action) => {
             return action.payload

@@ -17,7 +17,7 @@ function Event() {
                     <EventVideoPlayer />
                     <EventGiftSec gifts={gifts} />
                 </div>
-                <div className={style.sideContainer}></div>
+                <div className={style.sideContainer}>Chat Section</div>
             </div>
         </div>
     );

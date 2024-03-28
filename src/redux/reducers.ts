@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { commentMethod, followingsMethod, getHomeVideos, getRandomUsers, videoLikehandle } from "./AsyncFuncs";
 import loginSlice from './reducers/auth';
+import isuploading from './reducers/upload';
 
 const followings: any = createSlice({
     name: "followings",
@@ -90,5 +91,6 @@ export default combineReducers({
     followings: followings.reducer,
     homeVideos: homeVideos.reducer,
     suggestedAccounts: suggestedAccounts.reducer,
-    profile:loginSlice
+    profile:loginSlice,
+    isuploading
 });

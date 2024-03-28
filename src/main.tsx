@@ -9,7 +9,8 @@ import { initReactI18next } from 'react-i18next';
 import { Provider } from 'react-redux';
 import App from './App';
 import './index.css';
-import store from './redux/store';
+import { persistor, store } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 i18next
     .use(HttpApi)
@@ -39,7 +40,9 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <Provider store={store}>
         <Suspense fallback={loadingMarkup}>
-            <App />
+            <PersistGate loading={null} persistor={persistor}>
+                <App />
+            </PersistGate>
         </Suspense>
     </Provider>
 );

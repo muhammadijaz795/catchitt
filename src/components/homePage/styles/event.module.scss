@@ -1,9 +1,18 @@
 .parent {
-  padding-top: 80px;
+  padding-top: 5rem;
   width: 100%;
-  .event {
-    margin: 50px 40px;
-    overflow: hidden;
+  .eventContainer {
+    width: 100%;
+    display: flex;
+    gap: 0rem;
+    .event {
+      margin: 3.125rem 0rem 3.125rem 2.5rem;
+      overflow: hidden;
+      min-width: 70%;
+    }
+    .sideContainer {
+      flex: 1;
+    }
   }
 }
 
@@ -14,35 +23,35 @@
   align-items: center;
   .LHS > img:nth-child(1) {
     cursor: pointer;
-    width: 21.5px;
-    height: 21.5px;
+    width: 1.35rem;
+    height: 1.35rem;
     margin: auto;
   }
   .LHS {
     display: flex;
-    gap: 20px;
+    gap: 1.25rem;
     .avatarContainer {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 1.25rem;
       .avatar {
-        width: 45px;
-        height: 45px;
+        width: 2.81rem;
+        height: 2.81rem;
         border-radius: 50%;
         cursor: pointer;
       }
       .name > span {
         font-family: Poppins;
-        font-size: 12px;
+        font-size: 0.75rem;
         font-weight: 400;
-        line-height: 14.4px;
+        line-height: 0.9rem;
         text-align: left;
       }
       .name {
         font-family: Poppins;
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 600;
-        line-height: 19.2px;
+        line-height: 1.29rem;
         text-align: left;
         color: #222222;
       }
@@ -70,73 +79,80 @@
   width: 100%;
   max-height: 80vh;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   margin-top: 1.5rem;
 }
 
 // Gifts Section
 .giftsParent {
   background: #fff;
-  padding: 1rem 0px;
+  padding: 1rem 0rem;
   .gifts {
     width: 100%;
     overflow-y: scroll;
     display: flex;
     gap: 1rem;
-    .giftContainer {
-      min-width: 75px;
-      user-select: none;
-      border-radius: 4px;
-      overflow: hidden;
+    .giftBoxParent {
+      width: 4.67rem;
       cursor: pointer;
-      .gif {
-        height: 75px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .gif > img {
-        width: 70px;
-      }
-      .giftContent > img {
-        width: 16px;
-        height: 16px;
-      }
-      .giftContent {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .prize {
-          font-family: Poppins;
-          font-size: 16px;
-          font-weight: 600;
-          line-height: 24px;
-          text-align: left;
-          color: #fed04f;
-          padding-left: 6px;
-        }
-      }
     }
-    .giftContainer:hover {
-      background: #eeedf7;
+    .gifBoxDiv1 > div:nth-child(2) {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      padding-bottom: 0.3rem;
+    }
+
+    .gifBoxDiv1 > div:nth-child(2) > p {
+      color: var(--Coins, #fed04f);
+      font-family: 'Poppins';
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 120%;
+    }
+
+    .giftBoxParent > div:nth-child(2) > p {
+      color: var(--default-white, #fff);
+      font-family: 'Poppins';
+      font-size: 0.75rem;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 150%;
+      text-align: center;
+      width: 100%;
+      padding: 0.29rem 0.1rem;
+    }
+
+    .giftBoxParent:hover > div:nth-child(1) {
+      border-radius: 4px 4px 0rem 0rem;
+      background: var(--foundation-primary-primary-50, #eeedf7);
+    }
+
+    .giftBoxParent:hover > div:nth-child(2) {
+      border-radius: 0rem 0rem 0.25rem 4px;
+      background: var(--foundation-primary-primary-500, #5448b2);
     }
 
     .sendMsg {
       background: #5448b2;
       font-family: Poppins;
-      font-size: 12px;
+      font-size: 0.75rem;
       font-weight: 500;
-      line-height: 18px;
+      line-height: 10.5rem;
       text-align: left;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 28px;
+      height: 1.75rem;
       color: #ffffff;
     }
   }
-  .rechargeUi{
+  .rechargeUi {
     display: flex;
     justify-content: space-between;
+    padding: 0rem 1rem;
   }
 }

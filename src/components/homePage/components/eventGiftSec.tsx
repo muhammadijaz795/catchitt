@@ -1,37 +1,36 @@
-import { goldCoin } from '../../../icons';
+import { goldCoin, rightArrow } from '../../../icons';
 import style from '../styles/event.module.scss';
 function EventGiftSec({ gifts }: any) {
     return (
         <div className={style.giftsParent}>
             <div className={style.gifts}>
                 {gifts?.length > 0 &&
-                    gifts?.map((gift: any) => {
+                    gifts?.map((gift: any , i:number) => {
                         return (
-                            <div className={style.giftContainer}>
-                                <div className={style.gif}>
-                                    <img
-                                        src="https://seezitt-videos-destination-bucket.s3.ap-southeast-1.amazonaws.com/gifts/668020e2-e1f6-419a-a39d-f45bd5b65468.png"
-                                        alt=""
-                                    />
-                                    {/* <img src={gift?.imageUrl} alt="" /> */}
+                            <div key={i} className={style.giftBoxParent} >
+                            <div className={style.gifBoxDiv1}>
+                                <img style={{ width: 40, height: 40, display: 'block', margin: 'auto', padding: '0.25rem 0px' }} src={gift?.imageUrl} alt="" />
+                                <div style={{ marginTop: '0.5rem' }}>
+                                    <img className='goldCoin' src={goldCoin} alt="" />
+                                    <p>{gift?.price}</p>
                                 </div>
-                                <div className={style.giftContent}>
-                                    <img src={goldCoin} alt="" />
-                                    <p className={style.prize}>{gift?.price}</p>
-                                </div>
-                                <div className={style.sendMsg}>send</div>
                             </div>
+                            <div style={{ cursor: 1000000000 >= gift?.price ? 'pointer' : 'not-allowed' }} onClick={() => null}>
+                                <p> Send</p>
+                            </div>
+                        </div>
                         );
                     })}
             </div>
             <hr />
             <div className={style.rechargeUi}>
-                <p>
-                    Balance: 2 <img src={goldCoin} alt="" />
+                <p className="baseRegular">
+                    Balance: 2 <img className="goldCoin" src={goldCoin} alt="" />
                 </p>
-                <p>
-                    <img src={goldCoin} alt="" />
-                    Recharge{' '}
+                <p className="baseMedium pointer">
+                    <img className="goldCoin" src={goldCoin} alt="" />
+                    &#160; Recharge &#160;
+                    <img  src={rightArrow} alt="" />
                 </p>
             </div>
         </div>

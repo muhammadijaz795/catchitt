@@ -20,17 +20,12 @@ import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
 import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
+import { ToastContainer } from 'react-toastify';
+// import { Toast } from 'react-toastify/dist/components';
 
 function ForDesktop(props: any) {
-    const {
-        videoes,
-        activeTab,
-        setActiveTab,
-        showVideoModal,
-        videoModal,
-        setSendPopup,
-        loading,
-    } = props || {};
+    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal, setSendPopup, loading } =
+        props || {};
     const [reportPopup, setreportPopup] = useState(false);
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
     const [followimgbtnId, setFollowimgbtnId] = useState('');
@@ -164,9 +159,9 @@ function ForDesktop(props: any) {
                                                 width: '100%',
                                                 height: 'auto',
                                                 margin: 'auto',
-                                                overflowX:'hidden',
-                                                display:"flex",
-                                                justifyContent:'center'
+                                                overflowX: 'hidden',
+                                                display: 'flex',
+                                                justifyContent: 'center',
                                             }}
                                             className={style.mainContainer}
                                         >
@@ -223,6 +218,9 @@ function ForDesktop(props: any) {
                         </div>
                     )}
                 </div>
+                {/* <ToastContainer>
+                    <Toast></Toast>
+                </ToastContainer> */}
             </div>
         </Layout>
     );

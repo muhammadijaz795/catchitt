@@ -1,11 +1,19 @@
 .parent {
     max-width: 1140px;
-    max-height: 697px;
+    height: 697px;
     flex-shrink: 0;
     border-radius: 8px;
     margin: 60px auto;
     padding: 40px;
     background: var(--Default-white, #FFF);
+}
+@media (max-width:1200px) {
+    .parent {
+        height: auto;
+        margin: 1rem;
+        padding: 20px;
+    }
+    
 }
 
 .parent>div:nth-child(1) {
@@ -38,6 +46,7 @@
     font-weight: 600;
     line-height: 120%;
     margin-top: 32px;
+    padding: 0% 1rem;
 }
 
 .text2 {
@@ -49,6 +58,7 @@
     font-weight: 500;
     line-height: 120%;
     margin-top: 16px;
+    padding: 0% 1rem;
 }
 
 .parent button {
