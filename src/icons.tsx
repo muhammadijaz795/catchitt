@@ -65,6 +65,7 @@ import sendSvgPopup from './assets/sndinpopup.svg';
 import backArrow from './assets/back.svg';
 import eyeIcon from './assets/eye.svg';
 import rankingIcon from './assets/ranking.svg';
+import uploadPrimaryIcon from './assets/upload.svg';
 
 export {
     duet,
@@ -133,5 +134,6 @@ export {
     goldCoin,
     backArrow,
     eyeIcon,
-    rankingIcon
+    rankingIcon,
+    uploadPrimaryIcon
 };

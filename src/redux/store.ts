@@ -13,7 +13,7 @@ const reducers = persistReducer(persistConfig, combineReducers)
 
 export const store = configureStore({
   reducer: {
-    isuploading,
+    // isuploading,
     reducers,
   },
   middleware: (getDefaultMiddleware) =>

@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -28,10 +28,13 @@ function ForDesktop(props: any) {
         props || {};
     const [reportPopup, setreportPopup] = useState(false);
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
+    const [toastOfUploading, settoastOfUploading] = useState(false);
     const [followimgbtnId, setFollowimgbtnId] = useState('');
     const [showCopyPopup, setshowCopyPopup] = useState(false);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
+    // @ts-ignore
+    const isuploading = useSelector((store) => store?.reducers?.isuploading);
     // @ts-ignore
     const suggestedUsers = useSelector((store) => store.reducers.suggestedAccounts);
     const dispatch = useDispatch();
@@ -63,6 +66,14 @@ function ForDesktop(props: any) {
             }, 1500);
         });
     };
+
+    useEffect(() => {
+        if (isuploading?.isUploading) {
+            settoastOfUploading(true);
+        } else {
+            settoastOfUploading(false);
+        }
+    }, [isuploading]);
     return (
         <Layout
             showCopyPopup={showCopyPopup}
@@ -70,7 +81,7 @@ function ForDesktop(props: any) {
             closeReportPopup={() => setreportPopup(false)}
             paddingBottomProp={true}
         >
-            <div className={style.parent}>
+            <div className={`relative  ${style.parent}`}>
                 <div className={style.tabs}>
                     <div
                         onClick={() => setActiveTab(1)}
@@ -218,9 +229,12 @@ function ForDesktop(props: any) {
                         </div>
                     )}
                 </div>
-                {/* <ToastContainer>
-                    <Toast></Toast>
-                </ToastContainer> */}
+                {toastOfUploading && (
+                    <div className="w-[393px] h-[62px] rounded-[8px] bg-custom-gray-100 absolute right-[2rem] bottom-[2rem] z-[2] flex justify-between items-center px-[1rem]">
+                        <p className="text-custom-dark-222 font-medium">Uploading 1 of 1</p>
+                        <p className="text-custom-primary font-medium cursor-pointer" onClick={()=>settoastOfUploading(false)}>Cancel</p>
+                    </div>
+                )}
             </div>
         </Layout>
     );

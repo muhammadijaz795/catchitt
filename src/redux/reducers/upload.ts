@@ -4,7 +4,7 @@ export const isUploading: any = createSlice({
     name: "videoUploadingStatus",
     initialState: {
         videos: 0,
-        isUploaded: false
+        isUploading: false
     },
     reducers: {
         updateUploadingStatus: (_, action) => {

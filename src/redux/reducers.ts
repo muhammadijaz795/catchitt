@@ -92,5 +92,5 @@ export default combineReducers({
     homeVideos: homeVideos.reducer,
     suggestedAccounts: suggestedAccounts.reducer,
     profile:loginSlice,
-    isuploading
+     isuploading
 });

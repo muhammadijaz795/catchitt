@@ -17,6 +17,7 @@ export default function UploadFile({
     images,
     loading,
     file,
+    btnLoading,
 }: any) {
     const [dropDownValue, setdropDownValue] = useState('');
     const [dropDown, setdropDown] = useState(false);
@@ -68,7 +69,7 @@ export default function UploadFile({
     useMemo(() => {
         let videoFile = file;
         setVideoURL(URL.createObjectURL(new Blob([videoFile], { type: 'video/mp4' })));
-        setSelectedThumb(0)
+        setSelectedThumb(0);
     }, [file]);
 
     return (
@@ -314,7 +315,11 @@ export default function UploadFile({
                             submitH(data);
                         }}
                     >
-                        Post
+                        {btnLoading ? (
+                            <CircularProgress style={{ width: '1rem', height: '1rem' }} />
+                        ) : (
+                            'Post'
+                        )}
                     </button>
                 </div>
             </div>

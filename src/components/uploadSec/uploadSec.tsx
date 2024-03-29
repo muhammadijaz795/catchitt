@@ -1,6 +1,6 @@
 import { ClickAwayListener, Modal } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import Navbar from '../../shared/navbar';
 import SelectFile from './components/selectFile';
@@ -10,6 +10,7 @@ import { VideoToFrames, VideoToFramesMethod } from '../../utils/videoToFrame';
 import { get, post } from '../../axios/axiosClient';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { updateUploadingStatus } from '../../redux/reducers/upload';
 // import video from '../../../assets/video.mp4'
 
 export default function UploadSec() {
@@ -20,6 +21,7 @@ export default function UploadSec() {
     const [replaceVideo, setreplaceVideo] = useState(false);
     const [uploadFilePage, setuploadFilePage] = useState(false);
     const [leaveSite, setleaveSite] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [selectedUser, setSelectedUser] = useState({});
     const [videoData, setVideoData] = useState<any>({});
     const [files, setfiles] = useState<any>();
@@ -91,8 +93,11 @@ export default function UploadSec() {
         setreplaceVideo(false);
     };
 
+    const dispatch = useDispatch();
+
     const navigate = useNavigate();
     const postVideoH = async (state: any) => {
+        setLoading(true);
         const { data: getVideoLinks }: any = await get('/media-content/request-video-upload');
         let videoURLindex = getVideoLinks?.data?.videoUrl?.indexOf('.mp4');
         let videoURL = getVideoLinks?.data?.videoUrl?.slice(0, videoURLindex);
@@ -128,6 +133,7 @@ export default function UploadSec() {
             .then((response) => response.text())
             .then((result) => {
                 console.log('Video Successfully Posted');
+                setLoading(false);
                 navigate('/home');
             })
             .catch((error) => console.error('Something Went Wrong'));
@@ -159,6 +165,22 @@ export default function UploadSec() {
         //     headers: headers,
         //     data: formDataForImage,
         // });
+
+        dispatch(
+            updateUploadingStatus({
+                videos: 0,
+                isUploading: true,
+            })
+        );
+
+        setTimeout(() => {
+            dispatch(
+                updateUploadingStatus({
+                    videos: 0,
+                    isUploading: false,
+                })
+            );
+        }, 5000);
     };
 
     const locationHandler = () => {
@@ -207,6 +229,7 @@ export default function UploadSec() {
                     loading={loadingStatus}
                     file={files}
                     selectFileHandler={selectFileHandler}
+                    btnLoading={loading}
                 />
             ) : (
                 <SelectFile setfile={setfiles} />

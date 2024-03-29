@@ -9,10 +9,13 @@ import { TermsPage } from './components/about-pages/terms-conditions';
 import { ActivityPage } from './components/activity-page/activity-page';
 import { Authentication } from './components/authentication/authentication';
 // import ComingSoon from './components/coming-soon/coming-soon';
+import ChatsSec from './components/chats';
 import { AllVideos } from './components/discover/components/allVideosPage';
 import Discover from './components/discover/discover';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { Home } from './components/home/home';
+import HomePage from './components/homePage';
+import Event from './components/homePage/components/event';
 import { PrivacySecurityPage } from './components/privacy-security-page/privacy-security-page';
 import { Profile } from './components/profile/profile';
 import { PublicProfile } from './components/profile/publicProfile';
@@ -27,12 +30,9 @@ import TransactionHistoryPage from './components/settings-page/components/transa
 import WithdrawalLimitPage from './components/settings-page/components/withdrawal-limit-page';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
-import { useAuthStore } from './store/authStore';
-import ChatsSec from './components/chats';
 import UploadSec from './components/uploadSec/uploadSec';
-import HomePage from './components/homePage';
+import { useAuthStore } from './store/authStore';
 import useApp from './useApp';
-import Event from './components/homePage/components/event';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
