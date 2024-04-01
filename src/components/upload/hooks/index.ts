@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from '../../../axios/axiosClient';
 import { UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
@@ -24,6 +24,7 @@ interface StateInterface {
 function useUpload() {
     const [selectedFile, setselectedFile] = useState(null);
     const [isPosing, setIsPosting] = useState(false);
+    const [selectedThumbnail, setSelectedThumbnail] = useState(null );
     const [thumbnails, setThumbnails] = useState<any>([]);
     const [state, setState] = useState<StateInterface>({
         category: '🎭 Entertainment',
@@ -72,7 +73,15 @@ function useUpload() {
         setState((prevState: any) => ({ ...prevState, [inputName]: inputValue }));
         console.log('state', state);
     };
-
+    useEffect(() => {
+        const url = state?.thumbnailUrl || '';
+        fetch(url)
+            .then((res) => res.blob())
+            .then((blob) => {
+                const file = new File([blob], 'video-thumbnail', { type: 'image/png' });
+                setSelectedThumbnail(file);
+            });
+    }, [state?.thumbnailUrl ]);
     useMemo(() => {
         if (selectedFile) {
             setSelectedVideoSrc(
@@ -132,30 +141,37 @@ function useUpload() {
         );
 
         navigate('/home');
-
-        setTimeout(() => {
-            dispatch(
-                updateUploadingStatus({
-                    videos: 0,
-                    isUploading: false,
-                })
-            );
-        }, 5000);
-
         // Do put request for upload video file
         try {
             if (selectedFile) {
-                let uploadFilePayload = new FormData();
-                uploadFilePayload.append('file', selectedFile);
-                await axios({
-                    method: 'put',
-                    url: getLinks?.data?.data?.videoUrl,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/octet-stream',
-                    },
-                    data: uploadFilePayload,
-                });
+                const myHeaders = new Headers();
+                myHeaders.append('Content-Type', 'video/mp4');
+
+                const requestOptions = {
+                    method: 'PUT',
+                    headers: myHeaders,
+                    body: selectedFile,
+                    redirect: 'follow',
+                };
+
+                fetch(getLinks?.data?.data?.videoUrl, requestOptions as any)
+                    .then(() => {
+                        dispatch(
+                            updateUploadingStatus({
+                                videos: 0,
+                                isUploading: false,
+                            })
+                        );
+                    })
+                    .catch((error) => {
+                        dispatch(
+                            updateUploadingStatus({
+                                videos: 0,
+                                isUploading: false,
+                            })
+                        );
+                        console.error(error);
+                    });
             }
         } catch (error) {
             console.error('Something Went Wrong', error);
@@ -166,17 +182,28 @@ function useUpload() {
         // Do put request for thumbnail file
         try {
             if (state?.thumbnailUrl) {
-                let uploadThumbnailFilePayload = new FormData();
-                uploadThumbnailFilePayload.append('file', state?.thumbnailUrl);
-                await axios({
-                    method: 'put',
-                    url: getLinks?.data?.data?.thumbnailUrl,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/octet-stream',
-                    },
-                    data: uploadThumbnailFilePayload,
-                });
+                const myHeaders = new Headers();
+                myHeaders.append('Content-Type', 'image/png');
+
+                const file = selectedThumbnail || new Blob();
+                const requestOptions = {
+                    method: 'PUT',
+                    headers: myHeaders,
+                    body: file,
+                    redirect: 'follow',
+                };
+
+                fetch(getLinks?.data?.data?.thumbnailUrl, requestOptions as any)
+                    .then(() => {})
+                    .catch((error) => {
+                        dispatch(
+                            updateUploadingStatus({
+                                videos: 0,
+                                isUploading: false,
+                            })
+                        );
+                        console.error(error);
+                    });
             }
         } catch (error) {
             console.error('Something Went Wrong', error);
@@ -196,7 +223,7 @@ function useUpload() {
         updateState,
         state,
         SubmitHandler,
-        isPosing
+        isPosing,
     };
 }
 
