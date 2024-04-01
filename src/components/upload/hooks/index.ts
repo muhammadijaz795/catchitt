@@ -79,7 +79,7 @@ function useUpload() {
             .then((res) => res.blob())
             .then((blob) => {
                 const file = new File([blob], 'video-thumbnail', { type: 'image/png' });
-                setSelectedThumbnail(file);
+                setSelectedThumbnail(file as any);
             });
     }, [state?.thumbnailUrl ]);
     useMemo(() => {
