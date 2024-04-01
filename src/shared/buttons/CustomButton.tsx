@@ -1,28 +1,48 @@
+import { Button, CircularProgress, styled } from '@mui/material';
+
 function CustomButton(props: any) {
     const {
         width = '100%',
-        redius = '0.375rem',
-        borderColor = 'custom-primary',
+        height = '40px !important',
+        text,
+        color,
         islight,
-        height = '2.5rem',
-        textColor = 'custom-primary',
-        fontWeight = 'semibold',
-        textSize = '0.875rem',
-        lineHeight = '1rem',
-        text
+        fontSize = 14,
+        fontWeight = 600,
+        backgroundColor,
+        loading,
+        ...restProps
     } = props;
+    const BasicButton = styled(Button)(({ theme }) => ({
+        width,
+        height,
+        color: color ? color : !islight ? '#FFF !important' : '#5448B2 !important',
+        backgroundColor: backgroundColor
+            ? backgroundColor
+            : !islight
+            ? '#5448B2 !important'
+            : '#FFF !important',
+        border: '1px solid #5448B2',
+        fontSize,
+        fontWeight,
+        [theme.breakpoints.down(600)]: {
+            width: '169px  !important',
+        },
+        [theme.breakpoints.down(500)]: {
+            width: '100%  !important',
+        },
+        textTransform: 'none',
+    }));
     return (
-        <button
-            className={`w-[${width ? width : 'auto'}] rounded-[${redius}] ${
-                islight ? `border-[1px] border-${borderColor}` : ''
-            } h-[${height}] flex justify-center items-center `}
-        >
-            <p
-                className={`w-[100%] text-${textColor} font-${fontWeight} text-[${textSize}] leading-[${lineHeight}]`}
-            >
-                {text}
-            </p>
-        </button>
+        <BasicButton {...restProps} autoCapitalize="none">
+            {loading ? (
+                <div style={{ width: 20, height: 20 }}>
+                    <CircularProgress />
+                </div>
+            ) : (
+                text
+            )}
+        </BasicButton>
     );
 }
 

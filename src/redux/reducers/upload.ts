@@ -1,19 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const isUploading: any = createSlice({
-    name: "videoUploadingStatus",
+    name: 'videoUploadingStatus',
     initialState: {
         videos: 0,
-        isUploading: false
+        isUploading: false,
     },
     reducers: {
         updateUploadingStatus: (_, action) => {
             // const { videos, isUploaded } = action.payload
-            return action.payload
-        }
-    }
+            return action.payload;
+        },
+    },
 });
 
-export const { updateUploadingStatus } = isUploading.actions
+export const { updateUploadingStatus } = isUploading.actions;
 
-export default isUploading.reducer
+export default isUploading.reducer;

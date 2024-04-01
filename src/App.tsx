@@ -13,7 +13,6 @@ import ChatsSec from './components/chats';
 import { AllVideos } from './components/discover/components/allVideosPage';
 import Discover from './components/discover/discover';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
-import { Home } from './components/home/home';
 import HomePage from './components/homePage';
 import Event from './components/homePage/components/event';
 import { PrivacySecurityPage } from './components/privacy-security-page/privacy-security-page';
@@ -30,7 +29,7 @@ import TransactionHistoryPage from './components/settings-page/components/transa
 import WithdrawalLimitPage from './components/settings-page/components/withdrawal-limit-page';
 import { SoundPage } from './components/sounds-page/sound-page';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
-import UploadSec from './components/uploadSec/uploadSec';
+import UploadPage from './components/upload';
 import { useAuthStore } from './store/authStore';
 import useApp from './useApp';
 
@@ -83,7 +82,7 @@ function App() {
                             />
                             <Route path="/forgot-password" element={<ForgotPassword />} />
                             <Route path="/retrieve/*" element={<SetNewPassword />} />
-                            <Route path="/view/video/:onePost" element={<Home />} />
+                            <Route path="/view/video/:onePost" element={<HomePage />} />
                             <Route path="/home" element={<HomePage />} />
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
@@ -119,7 +118,7 @@ function App() {
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />} />
                             <Route path="/discover" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
-                            <Route path="/upload" element={<UploadSec />} />
+                            <Route path="/upload" element={<UploadPage />} />
                             <Route path="/live" element={<Event />} />
                         </Routes>
                     </Router>
