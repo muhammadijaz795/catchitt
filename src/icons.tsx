@@ -66,6 +66,7 @@ import backArrow from './assets/back.svg';
 import eyeIcon from './assets/eye.svg';
 import rankingIcon from './assets/ranking.svg';
 import uploadPrimaryIcon from './assets/upload.svg';
+import downArrow from './assets/downArrow.svg';
 
 export {
     duet,
@@ -135,5 +136,6 @@ export {
     backArrow,
     eyeIcon,
     rankingIcon,
-    uploadPrimaryIcon
+    uploadPrimaryIcon,
+    downArrow
 };

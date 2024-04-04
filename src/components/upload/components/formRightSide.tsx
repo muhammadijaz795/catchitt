@@ -1,18 +1,16 @@
-import { Box, Chip, CircularProgress, TextField } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { avatar, downArrow, search } from '../../../icons';
 import CustomButton from '../../../shared/buttons/CustomButton';
 import BasicCheckBox from '../../../shared/checkbox/BasicCheckBox';
+import Text from '../../../shared/components/Text';
 import BasicInput from '../../../shared/input/BasicInput';
+import CustomChip from '../../../shared/input/CustomChip';
+import TagsInput from '../../../shared/input/TagsInput';
+import CustomModel from '../../../shared/popups/CustomModel';
 import CustomPopup from '../../../shared/popups/CustomPopup';
 import BasicSwitch from '../../../shared/switch/BasicSwitch';
-import { uploadCategories } from '../../../utils/constants';
-import CustomModel from '../../../shared/popups/CustomModel';
-import { avatar, search } from '../../../icons';
-import Text from '../../../shared/components/Text';
-import CustomChip from '../../../shared/input/CustomChip';
-import { divide } from 'mathjs';
-import TagsInput from '../../../shared/input/TagsInput';
-import { useSelector } from 'react-redux';
 
 function FormRightSide(props: any) {
     const { thumbnails, updateState, state, SubmitHandler, isPosing } = props;
@@ -109,15 +107,16 @@ function FormRightSide(props: any) {
                         </div>
                         <div className="relative flex flex-col">
                             <BasicInput
+                                editable={false}
+                                onClick={() => setdropDown(!dropDown)}
                                 value={state?.category?.name || ''}
                                 endAdornment={
                                     <img
-                                        src="../../../../public/images/icons/uploadSEc/Arrow - Down 2.svg"
+                                        src={downArrow}
                                         alt=""
                                         className={`cursor-pointer transition-all duration-200 transform ${
                                             dropDown ? 'rotate-180' : 'rotate-0'
                                         }`}
-                                        onClick={() => setdropDown(!dropDown)}
                                     />
                                 }
                             />
@@ -196,7 +195,7 @@ function FormRightSide(props: any) {
                             placeholder="Search location"
                             endAdornment={
                                 <img
-                                    src="../../../../public/images/icons/uploadSEc/Arrow - Down 2.svg"
+                                    src={downArrow}
                                     alt=""
                                     className={`cursor-pointer transition-all duration-200 transform -rotate-90`}
                                 />

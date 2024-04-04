@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { get } from '../../../axios/axiosClient';
+import { updateUploadingStatus } from '../../../redux/reducers/upload';
 import { UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
-import axios from 'axios';
-import { updateUploadingStatus } from '../../../redux/reducers/upload';
-import { useNavigate } from 'react-router-dom';
-import { useUpdateEffect } from 'react-use';
 
 interface StateInterface {
     category?: any;
@@ -75,6 +73,7 @@ function useUpload() {
     const updateState = (inputName: any, inputValue: any) => {
         setState((prevState: any) => ({ ...prevState, [inputName]: inputValue }));
     };
+
     useEffect(() => {
         const url = state?.thumbnailUrl || '';
         fetch(url)
@@ -84,6 +83,7 @@ function useUpload() {
                 setSelectedThumbnail(file as any);
             });
     }, [state?.thumbnailUrl]);
+
     useMemo(() => {
         if (selectedFile) {
             setSelectedVideoSrc(
@@ -92,7 +92,7 @@ function useUpload() {
             videoCoverHandler();
         }
     }, [selectedFile]);
-  
+
     const SubmitHandler = async () => {
         setIsPosting(true);
         let getLinks: any = {};
@@ -180,8 +180,6 @@ function useUpload() {
             setIsPosting(false);
             // return;
         }
-        
-
 
         // Do put request for thumbnail file
         try {
@@ -217,9 +215,15 @@ function useUpload() {
         setIsPosting(false);
     };
 
-    useUpdateEffect(() => {
-        updateState('category', categories?.[0]);
+    useEffect(() => {
+        updateState('category', categories?.[0] || {});
     }, [categories]);
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/auth');
+        }
+    }, [token]);
 
     return {
         selectedFile,
