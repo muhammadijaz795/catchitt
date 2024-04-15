@@ -32,6 +32,7 @@ import { SuggestedAccountsPage } from './components/suggested-accounts-page/sugg
 import UploadPage from './components/upload';
 import { useAuthStore } from './store/authStore';
 import useApp from './useApp';
+import { OtpVerification } from './components/forgot-password/otp-verification';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -81,6 +82,7 @@ function App() {
                                 }
                             />
                             <Route path="/forgot-password" element={<ForgotPassword />} />
+                            <Route path="/otp-verification/:email" element={<OtpVerification />} />
                             <Route path="/retrieve/*" element={<SetNewPassword />} />
                             <Route path="/view/video/:onePost" element={<HomePage />} />
                             <Route path="/home" element={<HomePage />} />

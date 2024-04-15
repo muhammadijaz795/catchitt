@@ -9,14 +9,14 @@ import authSplashImg from '../../assets/authSplashImg.png';
 import InputField from '../reusables/InputField';
 import { SetNewPassword } from '../set-newPassword/set-newPassword';
 import styles from './forgot-password.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export interface ForgotPasswordProps {
     className?: string;
 }
 
 interface User {
-    email: string;
+    email: string | undefined;
     otp: any;
 }
 
@@ -44,41 +44,57 @@ const languages: Languages[] = [
     },
 ];
 
-export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
+export const OtpVerification = ({ className }: ForgotPasswordProps) => {
+
+   
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
     const { t, i18n } = useTranslation();
-    const navigate = useNavigate();
+
     const API_KEY = process.env.VITE_API_URL;
     const forgotPwdEndPoint = '/auth';
     const [errorMessage, setErrorMessage] = useState('');
     const [user, setUser] = useState(defaultUser);
     const [response, setResponse] = useState(false);
-    const [responseResult, setResponseResult] = useState('');
-    const [form, setForm] = useState('');
+    
+    
     const [otpMessage, setOtpMessage] = useState("We sent an OTP to your email.");
     const [otp, setOtp] = useState<any>(null);
     let myOtp = +otp;
-    const onUserChange = <P extends keyof User>(prop: P, value: User[P]) => {
-        setUser({ ...user, [prop]: value });
-    };
+  
+    const [isMail, setIsMail] = useState(true);
 
-    /** Handling Forgot Password Scenario */
-    const handleForgotPassword = async (email: string) => {
-        try {
-            const response = await fetch(`${API_KEY}${forgotPwdEndPoint}/password/forgot`, {
-                method: 'POST',
+
+
+
+   const { email } = useParams();
+
+    // if(email != ""){
+    //     setUser({email, otp: ""});
+    // }
+    //**api call for resend api */
+    const handleResendOtp:any = async (email: string) => {
+
+        if(email == "") {
+            setErrorMessage('No Email');
+            return;
+        }
+         try {
+            const response = await fetch(`${API_KEY}${forgotPwdEndPoint}/generateOtp/${email}`, {
+                method: 'GET',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ email: email }),
+                // body: JSON.stringify({ email: email }),
             });
+
+             
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
-                setResponseResult(responseData.message);
-              
-                navigate(`/otp-verification/${email}`)
-                // setForm('verifyOTP')
+                console.log("resend otp response data");
+                console.log(responseData)
+                setOtpMessage(responseData.message);
+                setOtp("");
+                
             } else {
                 setErrorMessage('Invalid email');
                 console.log(response);
@@ -87,35 +103,73 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
             console.error(error);
             setErrorMessage('Invalid email');
         }
-    };
+    }
 
-  
-    const handleForgotPasswordSubmit = (e: React.FormEvent) => {
+    
+
+    
+     const handleRecendOtpSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const { email } = user;
-        handleForgotPassword(email);
+        // const { email } = user;
+        setErrorMessage("");
+        handleResendOtp(email);
     };
 
- 
 
-    const renderResponse = () => {
+   
+
+
+
+    const handleVerifySubmit = (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent the default form submission behavior
+
+        // const { email } = user;
+        handleVerify(email, otp);
+    }
+
+    const handleVerify = async (email: string | undefined, otp: number) => {
+
+        try {
+            const response = await fetch(`${API_KEY}/auth/verifyOtp`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*', // This line won't have an effect here, as it's the server that needs to set this header
+                },
+                body: JSON.stringify({ email: email, otp: myOtp }),
+            });
+
+
+           
+            if (response.ok) {
+                const responseData = await response.json();
+                
+                setResponse(true);
+            } else {
+                // Handle the error response from the server
+                const errorResponseData = await response.json();
+                 // Assuming the error message is returned in a 'message' field
+                setErrorMessage(errorResponseData.message);
+ 
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Invalid email or password');
+        }
+    }
+
+
+
+
+    if (response) {
+        let theOtp = otp;
+        user.otp = theOtp
         return (
-            <div
-                style={{
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    color: 'green',
-                    marginBottom: '20px',
-                }}
-            >
-                {responseResult}
-            </div>
-        );
-    };
+            <SetNewPassword email={email} otp={user.otp} />
+        )
+    }
 
 
- 
-  
     return (
         <div className={classNames(styles.container, className)}>
             <div className={styles.AuthSplashImg}>
@@ -148,13 +202,15 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                         justifyContent: 'space-between'
                     }}
                 >
-                     
-                        <form className={styles.authInputFields}>
-                            <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
-                                {t('forgotpassword.link')}
-                            </h3>
-                            <p>{t('dontworry.text')}</p>
-                            <div style={{ marginTop: '20px' }}>
+                    
+
+                        <div className={styles.otpForm}>
+                            <h4>
+                                Verify your email
+                            </h4>
+                            <p>
+                                {otpMessage}
+                                <div style={{ marginTop: '20px' }}>
                                 {errorMessage ? (
                                     <h4
                                         style={{
@@ -168,30 +224,29 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                     </h4>
                                 ) : null}
                             </div>
-                            <div className={styles.inputsDiv}>
-                                <InputField
-                                    type="email"
-                                    placeholder={t('email.input')}
-                                    className="formInputFields"
-                                    value={user.email}
-                                    onChange={(e: { target: { value: string } }) => {
-                                        onUserChange('email', e.target.value);
-                                    }}
-                                />
-                            </div>
-
+                            </p>
+                            <OtpInput
+                                value={otp}
+                                onChange={setOtp}
+                                numInputs={6}
+                                renderSeparator={<span></span>}
+                                inputStyle={otp === '' ? styles.otpInput : styles.otpInputNotEmpty}
+                                containerStyle={styles.otpContainer}
+                                renderInput={(props) => <input {...props} />}
+                                inputType={"tel"}
+                                skipDefaultStyles={true}
+                            />
                             <div className={styles.signupSubmitDiv}>
                                 <button
                                     className={styles.signupSubmitBtn}
-                                    onClick={handleForgotPasswordSubmit}
+                                    onClick={handleVerifySubmit}
                                 >
-                                    {t('emailmeinstructions.btn')}
+                                    Verify code
                                 </button>
-                                {response ? renderResponse() : ''}
                             </div>
-                        </form>
-                     
-
+                            <div onClick={handleRecendOtpSubmit} className={styles.resendCodeBtn}> Resend code </div>
+                        </div>
+                
                 </div>
                 <div className={styles.afterTheFormDiv}>
                     <div className={classNames(styles.footerLightBg)}>

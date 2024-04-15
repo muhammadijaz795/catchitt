@@ -106,18 +106,20 @@ export const Authentication = (props: any) => {
         setLoader(true);
         const { password, email } = user;
         dispatch(loginService({ password, email }))
-            .then((res) => {
+            .then((res:any) => {
 
                 if(res?.error){
                      setErrorMessage('Invalid email or password');
                      setLoader(false);
                 }else if(res?.payload?.status == 200){
+                    console.log("data after successfull login")
+                    console.log(res?.payload?.data)
                     setLoader(false); 
                     navigate('/home');
                 }
 
             })
-            .catch(error => {
+            .catch((error:any) => {
                 console.error(error);
                 setErrorMessage('Invalid email or password');
                 setLoader(false);
