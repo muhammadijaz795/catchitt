@@ -28,6 +28,8 @@ const homeVideos: any = createSlice({
         updateHomeVideos: (_state, action: any) => {
             return action.payload;
         },
+
+       
     },
     extraReducers: (builder: any) => {
         builder.addCase(getHomeVideos.fulfilled, (_state: any, action: any) => {

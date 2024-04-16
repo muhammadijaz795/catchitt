@@ -106,9 +106,9 @@ const BalancePage = ({ className }: BalancePageProps) => {
                         </div>
                     </div>
                     <div className={styles.middleSectionDiv}>
-                        <div className={styles.settingsWrapper}>
-                            <div className={styles.pageHeader}>
-                                <IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
+                        <div className={styles.settingsWrapper}> 
+                            <div className={styles.pageHeader} style={{display: 'flex',   justifyContent: 'sapce-between'}}>
+                                <IconButton sx={{ width: 'fit-content !important', margin: '0px', padding: '0px', alignSelf: 'center' }}
                                     onClick={handleGoBack}>
                                     <LeftArrow />
                                 </IconButton>

@@ -15,6 +15,8 @@ import firstParagraphIcon from '../svg-components/firstParagraphIcon.svg';
 import fourthParagraphIcon from '../svg-components/fourthParagraphIcon.svg';
 import secondParagraphIcon from '../svg-components/secondParagraphIcon.svg';
 import thirdParagraphIcon from '../svg-components/thirdParagraphIcon.svg';
+import { useDispatch } from 'react-redux';
+import {updateProfileType } from '../../../redux/reducers/auth';
 
 export interface SwitchToBusinessPopupProps {
     className?: string;
@@ -45,10 +47,14 @@ interface Category {
 }
 
 export const SwitchToBusinessPopup = ({ className, onSubmit, handleOpen, handleClose }: SwitchToBusinessPopupProps) => {
+    
+    const dispatch = useDispatch();
+
+
     const token = useAuthStore((state) => state.token);
     const email = useAuthStore((state) => state.email)
     const accountType = useAuthStore((state) => state.accountType)
-
+    
     const [user, setUser] = useState(defaultUser);
 
     const [firstModalVisible, setFirstModalVisible] = useState(true);
@@ -148,7 +154,7 @@ export const SwitchToBusinessPopup = ({ className, onSubmit, handleOpen, handleC
                 method: 'PATCH',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     accountType: 'Business',
@@ -159,6 +165,7 @@ export const SwitchToBusinessPopup = ({ className, onSubmit, handleOpen, handleC
             if (response.ok) {
                 const responseData = await response.json();
                 setCurrentAccountType("Business")
+                dispatch(updateProfileType({type:"Business"}));
                 useAuthStore.setState({
                     accountType: accountType
                 });
@@ -443,16 +450,16 @@ var mainModalstyle = {
 };
 
 var mainModalBtnstyle = {
-    fontFamily: 'Poppins',
-    display: 'flex',
-    width: '478px',
-    height: '48px',
-    padding: '0 16px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '6px',
-    background: 'var(--foundation-primary-primary-500, #5448B2)',
-    textTransform: 'none'
+    fontFamily: 'Poppins !important',
+    display: 'flex !important',
+    width: '478px !important',
+    height: '48px !important',
+    padding: '0 16px !important',
+    justifyContent: 'center !important',
+    alignItems: 'center !important',
+    borderRadius: '6px !important',
+    background: 'var(--foundation-primary-primary-500, #5448B2) !important',
+    textTransform: 'none !important'
 };
 
 var contentPrefModalStyle = {

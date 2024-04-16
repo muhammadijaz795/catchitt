@@ -7,6 +7,7 @@ import notificationBell from '../../assets/notificationBellIcon.svg';
 import privacyPolicyIcon from '../../assets/privacyPolicyIcon.svg';
 import reportProblem from '../../assets/reportProblemIcon.svg';
 import seezittLogoIcon from '../../assets/seezittLogoIcon.svg';
+import check from '../../assets/check.png';
 import termsConfitionsIcon from '../../assets/termsConditionsIcon.svg';
 import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
@@ -19,6 +20,7 @@ import { SwitchToPersonalPopup } from './components/switchToPersonalPopup';
 import changePassIcon from './svg-components/changePassIcon.svg';
 import redRightArrow from './svg-components/redRightArrow.svg';
 import whiteRightArrow from './svg-components/whiteRightArrow.svg';
+import { useSelector } from 'react-redux';
 
 export interface AccountProps {
     className?: string;
@@ -81,16 +83,19 @@ const Account = ({ className, openModal }: AccountProps) => {
     const forgotPwdEndPoint = '/auth';
     const signInEndPoint = '/auth/sign-in';
     const { login } = useAuthStore();
-
+    const {token,email} = useSelector((store: any) => store?.reducers?.profile);
     const [response, setResponse] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
     const [responseResult, setResponseResult] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [loadingAnimation, setLoadingAnimation] = useState(false);
     const [user, setUser] = useState(defaultUser);
 
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
-    const email = useAuthStore((state) => state.email);
+    // const token = useAuthStore((state) => state.token);
+    // lconst email = useAuthStore((state) => state.email);
+    console.log("email")
+    console.log(email)
     const accountType = useAuthStore((state) => state.accountType);
     // const [accountTypeState, setAccountTypeState] = useState(accountType)
 
@@ -102,6 +107,7 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [openDeleteAccountMainModal, setOpenDeleteAccountMainModal] = useState(false)
 
     const [openSetNewPassModal, setOpenNewPassModal] = useState(openModal || false)
+    const [passwordSuccessModal, setPasswordSuccessModal] = useState(openModal || false)
 
     const [profileData, setProfileData] = useState<any>([])
     const [profileDataCopy, setProfileDataCopy] = useState<any>([])
@@ -120,10 +126,19 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     const navigate = useNavigate();
 
-    if (!isLoggedIn) {
-        return <Navigate to="/auth" />;
-    }
+    console.log("auth on account page")
+    console.log({ selectedIndex, setIndex, "loggedd in":isLoggedIn, setSettingsDropdown })
+    // if (!isLoggedIn) {
+    //     return <Navigate to="/auth" />;
+    // }
 
+
+    
+    useEffect(() => {
+        if (!token) {
+            navigate('/auth');
+        }
+    }, [token]);
     const handleOpenChangePassMainModal = () => {
         setOpenChangePassMainModal(true)
     }
@@ -132,6 +147,14 @@ const Account = ({ className, openModal }: AccountProps) => {
         setLoadingAnimation(false)
         setErrorMessage('')
     }
+
+    const handleCloseSuccessModal = () => {
+        setPasswordSuccessModal(false)
+       
+        setErrorMessage('')
+    }
+
+
 
     const handleOpenInstructionsPassModal = (e: React.FormEvent) => {
         setLoadingAnimation(true)
@@ -187,6 +210,8 @@ const Account = ({ className, openModal }: AccountProps) => {
     const handleSignInSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
         const { password } = user;
+        console.log("user")
+        console.log(user)
         handleSignIn(password, email);
     };
 
@@ -212,10 +237,12 @@ const Account = ({ className, openModal }: AccountProps) => {
                 });
                 login(email, accountType, token, _id, balance, username, name); // Call the login function from the Zustand store
                 console.log(responseData);
-                handleForgotPasswordSubmit()
+                // handleForgotPasswordSubmit()
                 setLoadingAnimation(false)
                 handleCloseChangePassMainModal();
-                setOpenInstructionsPassModal(true)
+                // setOpenInstructionsPassModal(true)
+                 setOpenNewPassModal(true);
+                 setOldPassword(password);
             } else {
                 // Handle the error response from the server
                 setLoadingAnimation(false)
@@ -384,11 +411,16 @@ const Account = ({ className, openModal }: AccountProps) => {
     };
 
     const handleSetNewPassword = async (password: string, email: string | null, token: string | null) => {
+
+        console.log("old pass:", oldPassword);
         try {
-            const response = await fetch(`${API_KEY}/auth/password/set-new`, {
+            const response = await fetch(`${API_KEY}/auth/password/`, {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ password, email, token }),
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ oldPassword: oldPassword, newPassword:password }),
             });
             if (response.ok) {
                 const responseData = await response.json();
@@ -397,8 +429,9 @@ const Account = ({ className, openModal }: AccountProps) => {
                 setResponseResult(responseData.message);
                 setResponse(true);
                 setLoadingAnimation(false)
+                handleCloseNewPassModal();
+                setPasswordSuccessModal(true);
                 setTimeout(() => {
-                    handleCloseNewPassModal();
                 }, 2000);
             } else {
                 setLoadingAnimation(false)
@@ -415,7 +448,7 @@ const Account = ({ className, openModal }: AccountProps) => {
         setErrorMessage('')
         setLoadingAnimation(true);
         const { password, resetPassEmail, resetPassToken } = user;
-        handleSetNewPassword(password, resetPassEmail, resetPassToken);
+        handleSetNewPassword(password, resetPassEmail, token);
     };
 
     const renderResponse = () => {
@@ -633,6 +666,74 @@ const Account = ({ className, openModal }: AccountProps) => {
                     </div>
                 </div>
             </Layout>
+
+
+
+            {passwordSuccessModal && (
+                <>
+                    <div>
+                        <Modal
+                            open={passwordSuccessModal}
+                            onClose={handleCloseSuccessModal}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={mainModalstyle} style={{width:"433px"}}>
+                                <div style={{ marginBottom: '24px' }}>
+                                   
+                                    <div style={{display: 'flex', flexDirection:'column', gap: '25px', justifyContent: 'center', alignItems: 'center'}}>
+                                        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                                             <img src={check} alt='' />
+                                        </div>
+                                        <Typography
+                                            id="modal-modal-title"
+                                        variant="h6"
+                                        component="h2"
+                                        sx={{
+                                            fontFamily: 'Poppins',
+                                            fontSize: '20px',
+                                            fontStyle: 'normal',
+                                            fontWeight: 500,
+                                            lineHeight: '30px',
+                                            paddingBottom: '16.5px',
+                                            textAlign: 'center'
+                                        }}
+                                        >
+                                        Password changed Successfully                                        </Typography>
+                                        
+                                    </div>
+                                </div>
+                                
+                                <Button
+                                    className={styles.doneBtn}
+                                    onClick={handleCloseSuccessModal}
+                                    variant="contained"
+                                    sx={mainModalBtnstyle}
+                                    style={{
+                                        "minHeight": "48px !important",
+                                        "background": "#5448B2"
+                                    }}>
+                                    Done
+                                </Button>
+                            </Box>
+                        </Modal>
+                    </div>
+                </>
+            )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             {openChangePassMainModal && (
                 <>
                     <div>
@@ -707,9 +808,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     />
                                 </div>
                                 <Button
+                                    className={styles.continueBtn}
                                     onClick={handleOpenInstructionsPassModal}
                                     variant="contained"
-                                    sx={mainModalBtnstyle}>
+                                    sx={mainModalBtnstyle}
+                                    style={{
+                                        "minHeight": "48px !important",
+                                    }}>
                                     Continue
                                 </Button>
                             </Box>
@@ -719,6 +824,7 @@ const Account = ({ className, openModal }: AccountProps) => {
             )}
             {openInstructionsPassModal && (
                 <>
+                   
                     <Modal
                         open={openInstructionsPassModal}
                         onClose={handleCloseInstructionsPassModal}
@@ -871,6 +977,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     />
                                 </div>
                                 <Button
+                                    className={styles.submitBtn}
                                     onClick={handleSetNewPasswordSubmit}
                                     variant="contained"
                                     sx={mainModalBtnstyle}>
@@ -1039,12 +1146,12 @@ var mainModalBtnstyle = {
     fontFamily: 'Poppins',
     display: 'flex',
     width: '478px',
-    height: '48px',
+    minHeight: '48px',
     padding: '0 16px',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '6px',
-    background: 'var(--foundation-primary-primary-500, #5448B2)',
+    background: 'var(--foundation-primary-primary-500, #5448B2) !important',
     textTransform: 'none'
 };
 

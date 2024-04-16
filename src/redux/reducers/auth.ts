@@ -14,6 +14,19 @@ const loginSlice: any = createSlice({
         updateProfile: (_state, action) => {
             return action.payload;
         },
+
+         updateProfileType: (_state, action) => {
+            console.log("updating profile type")
+            console.log("state")
+            console.log(_state)
+              console.log("type")
+            console.log(action.type)
+            localStorage.setItem('accountType',action.payload.type);
+            // _state.accountType = action.type;
+            return _state;
+        }
+
+        
     },
     extraReducers: (builder: any) => {
         builder.addCase(loginService.fulfilled, (_state: any, action: any) => {
@@ -35,7 +48,7 @@ const loginSlice: any = createSlice({
     },
 });
 
-export const { logoutUser, updateProfile } = loginSlice.actions;
+export const { logoutUser, updateProfile, updateProfileType } = loginSlice.actions;
 
 export const loginService = createAsyncThunk(
     'auth/loginService',
