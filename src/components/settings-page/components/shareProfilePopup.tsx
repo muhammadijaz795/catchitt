@@ -72,7 +72,7 @@ export const ShareProfilePopup = ({ className, onSubmit, handleOpen, handleClose
                                 </h4>
                                 <p className={styles.blueText}>
                                     Your profile’s QR Code</p>
-                                <div>
+                                <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
                                     <QRCode
                                         size={220}
                                         logoPadding={5}
@@ -128,16 +128,16 @@ var mainModalstyle = {
 };
 
 var mainModalBtnstyle = {
-    fontFamily: 'Poppins',
-    display: 'flex',
-    width: '350px',
-    height: '48px',
-    padding: '0 16px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '6px',
-    background: 'var(--foundation-primary-primary-500, #5448B2)',
-    textTransform: 'none'
+    fontFamily: 'Poppins !important',
+    display: 'flex !important',
+    width: '350px !important',
+    height: '48px !important',
+    padding: '0 16px !important',
+    justifyContent: 'center !important',
+    alignItems: 'center !important',
+    borderRadius: '6px !important',
+    background: 'var(--foundation-primary-primary-500, #5448B2)  !important',
+    textTransform: 'none !important'
 };
 
 var lastConfirmationModalstyle = {

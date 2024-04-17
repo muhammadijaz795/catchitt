@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 
+import { useDispatch } from 'react-redux';
+import {updateProfileType } from '../../../redux/reducers/auth';
+
 export interface SwitchToPersonalPopupProps {
     className?: string;
     onSubmit?: any;
@@ -27,6 +30,8 @@ export const SwitchToPersonalPopup = ({ className, onSubmit, handleOpen, handleC
     const token = useAuthStore((state) => state.token);
     const email = useAuthStore((state) => state.email)
     const accountType = useAuthStore((state) => state.accountType)
+const dispatch = useDispatch();
+
 
     const [firstModalVisible, setFirstModalVisible] = useState(true);
 
@@ -49,7 +54,8 @@ export const SwitchToPersonalPopup = ({ className, onSubmit, handleOpen, handleC
             });
             if (response.ok) {
                 const responseData = await response.json();
-                setCurrentAccountType("Business")
+                setCurrentAccountType("Personal")
+                  dispatch(updateProfileType({type:'Personal'}));
                 useAuthStore.setState({
                     accountType: accountType
                 });

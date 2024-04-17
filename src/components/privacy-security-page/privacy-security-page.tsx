@@ -184,8 +184,8 @@ export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => 
                     </div>
                 </div>
                 <div className={styles.middleSectionDiv}>
-                    <div className={styles.pageHeader}>
-                        <IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
+                    <div className={styles.pageHeader} style={{display: 'flex',   justifyContent: 'sapce-between'}}>
+                        <IconButton sx={{ width: 'fit-content !important',margin: '0px', padding: '0px', alignSelf: 'center' }}
                             onClick={handleGoBack}>
                             <LeftArrow />
                         </IconButton>
