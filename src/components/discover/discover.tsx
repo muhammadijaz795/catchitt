@@ -231,7 +231,7 @@ export default function Discover() {
                             </div>
                         </div>
 
-                        {hashtagVideos.map((obj: any, i) => {
+                        {!hashtagVideos ? "" :hashtagVideos.map((obj: any, i) => {
                             return (
                                 <div style={{ marginTop: 41 }} key={i} className={styles.postsp}>
                                     <div className="d-flex justify-content-between">
