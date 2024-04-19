@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { videoLikehandle } from '../../../redux/AsyncFuncs';
+import { videoLikehandle, videoSavehandle } from '../../../redux/AsyncFuncs';
 import COPY_AND_SEND_MENU_HOME from '../../../shared/Menu/copyAndSendForHome';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
 import style from './Action.module.scss';
@@ -13,10 +13,12 @@ function Action({
     showVideoModal,
     post,
 }: any) {
-    const [fvrt, setFvrt] = useState(0);
+    const [fvrt, setFvrt] = useState(post.isSaved);
     const dispatch = useDispatch();
     const [isActive, setIsActive] = useState(false);
 
+
+     
     const actionClickHandler = async () => {
         try {
             // If user Click on Like Button
@@ -26,6 +28,14 @@ function Action({
             // If user Click on Comment Button
             if (obj?.actionType === 'comment') {
                 showVideoModal(post);
+            }
+            
+            
+            // If user Click on Comment Button
+            if (obj?.actionType === 'fvrt') {
+                console.log("toggle video save to fvf")
+                console.log(post.mediaId)
+                dispatch(videoSavehandle(post.mediaId));
             }
             setIsActive(!isActive);
         } catch (error) {

@@ -6,6 +6,7 @@ import {
     getHomeVideos,
     getRandomUsers,
     videoLikehandle,
+    videoSavehandle
 } from './AsyncFuncs';
 import loginSlice from './reducers/auth';
 import isuploading from './reducers/upload';
@@ -43,6 +44,21 @@ const homeVideos: any = createSlice({
                         ...element,
                         isLiked: !element.isLiked,
                         likes: !element.isLiked ? element.likes + 1 : element.likes - 1,
+                    };
+                } else {
+                    return element;
+                }
+            });
+            return filteredData;
+        });
+        builder.addCase(videoSavehandle.fulfilled, (state: any, action: any) => {
+            // @ts-ignore
+            let filteredData = state.map((element: any) => {
+                if (element.mediaId === action.payload.id) {
+                    return {
+                        ...element,
+                        isSaved: !element.isSaved,
+                        
                     };
                 } else {
                     return element;

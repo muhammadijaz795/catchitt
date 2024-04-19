@@ -106,6 +106,7 @@ function ForDesktop(props: any) {
                     {videoes?.length > 0 && !loading ? (
                         videoes.map((post: any, number: number) => {
                             return (
+                                 
                                 <div key={number} className={style.videoParent}>
                                     <div className={style.videoHeader}>
                                         <div className={style.videoHeaderSec1}>
@@ -190,6 +191,7 @@ function ForDesktop(props: any) {
                                         </div>
                                         <div className={style.actions}>
                                             {userActions.map((obj: any, i: number) => {
+                                                
                                                 return (
                                                     <Action
                                                         key={i}
@@ -201,6 +203,7 @@ function ForDesktop(props: any) {
                                                         popupHandler={() => setSendPopup(true)}
                                                         showVideoModal={showVideoModal}
                                                         post={post}
+
                                                     />
                                                 );
                                             })}

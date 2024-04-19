@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import defaultProfileIcon from '../../../assets/defaultProfileIcon.png';
-import { commentMethod, followingsMethod, videoLikehandle } from '../../../redux/AsyncFuncs';
+import { commentMethod, followingsMethod, videoLikehandle, videoSavehandle } from '../../../redux/AsyncFuncs';
 import { useAuthStore } from '../../../store/authStore';
 import Comment from './comment';
 import style from './videoModel.module.scss';
@@ -26,7 +26,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
     //For Images Ref.
     const [like, setLike] = useState(false);
     const [likes, setLikes] = useState(info?.likes);
-    const [fvrt, setFvrt] = useState(false);
+    const [fvrt, setFvrt] = useState(info?.isSaved);
     const [nofvrt, setnoFvrt] = useState<number>(256);
     const [share, setShare] = useState(false);
     const token = useAuthStore((state) => state.token);
@@ -245,8 +245,10 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                         onClick={() => {
                             setFvrt(!fvrt);
                             if (fvrt) {
+                                dispatch(videoSavehandle(info?.mediaId))
                                 setnoFvrt(nofvrt - 1);
                             } else {
+                                dispatch(videoSavehandle(info?.mediaId))
                                 setnoFvrt(nofvrt + 1);
                             }
                             if (more) {
@@ -260,7 +262,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                         className="d-flex align-items-center"
                     >
                         <div className={style['curve-div']}>
-                            {fvrt ? (
+                            {fvrt && info?.isSaved ? (
                                 <img src="../../../../public/images/icons/Bookmark2.svg" alt="" />
                             ) : (
                                 <img src="../../../../public/images/icons/Bookmark.svg" alt="" />

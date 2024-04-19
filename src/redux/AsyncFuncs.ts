@@ -72,6 +72,27 @@ export const videoLikehandle: any = createAsyncThunk(
     }
 );
 
+
+
+export const videoSavehandle: any = createAsyncThunk(
+    'get/save/video',
+    async (id: string, searchScreenTab?: any) => {
+        try {
+            const res = await post(`/media-content/collections/${id}`);
+
+            if (res?.data) {
+                if (searchScreenTab) {
+                    return { id, tab: searchScreenTab };
+                }
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
+
 export const commentMethod: any = createAsyncThunk(
     'get/comment/video',
     async ({ text, info, replyId }: any) => {

@@ -141,12 +141,14 @@ export const Profile = (props: any) => {
                 setLoading(false);
             });
 
-        fetch(`${API_KEY}/filter/bookmarkedFilters`, {
+        // fetch(`${API_KEY}/filter/bookmarkedFilters`, {
+        fetch(`${API_KEY}/media-content/collections`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log("collections")
                 setbookmarkVideos(data.data.data);
                 setLoading(false);
             })
@@ -161,7 +163,10 @@ export const Profile = (props: any) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('collectons', data);
+                console.log('collectons', data); 
+                setbookmarkVideos(data.data.data);
+                console.log("bookmarked videos")
+                console.log(data.data.data)
             })
             .catch((err) => {
                 console.log('collectons error', err);

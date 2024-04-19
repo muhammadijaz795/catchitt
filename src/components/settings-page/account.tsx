@@ -94,8 +94,7 @@ const Account = ({ className, openModal }: AccountProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
     // const token = useAuthStore((state) => state.token);
     // lconst email = useAuthStore((state) => state.email);
-    console.log("email")
-    console.log(email)
+    
     const accountType = useAuthStore((state) => state.accountType);
     // const [accountTypeState, setAccountTypeState] = useState(accountType)
 
@@ -126,19 +125,21 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     const navigate = useNavigate();
 
-    console.log("auth on account page")
-    console.log({ selectedIndex, setIndex, "loggedd in":isLoggedIn, setSettingsDropdown })
+    // console.log("auth on account page")
+    // console.log({ selectedIndex, setIndex, "loggedd in":isLoggedIn, setSettingsDropdown })
     // if (!isLoggedIn) {
     //     return <Navigate to="/auth" />;
     // }
 
-
+    
     
     useEffect(() => {
         if (!token) {
             navigate('/auth');
         }
     }, [token]);
+
+
     const handleOpenChangePassMainModal = () => {
         setOpenChangePassMainModal(true)
     }

@@ -21,6 +21,7 @@ import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import PopupForReport from '../profile/popups/PopupForReport';
 import PopupForBlock from '../profile/popups/popupForBlock';
 import Gifts from '../discover/popups/gifts';
+import { useSelector } from 'react-redux';
 
 interface User {
     _id: string;
@@ -161,7 +162,8 @@ export const SearchPage = () => {
     const mySearch = useRef('');
     const [pageSize, setPageSize] = useState(10);
     const API_KEY = process.env.VITE_API_URL;
-    const token = useAuthStore((state) => state.token);
+    // const token = useAuthStore((state) => state.token);
+    const {token,email} = useSelector((store: any) => store?.reducers?.profile);
     const selectedIndex = useAuthStore((state) => state.selectedIndex);
     const loggedUserId = useAuthStore((state) => state._id);
     const [applyFilter, setApplyFilter] = useState(false);
@@ -180,6 +182,12 @@ export const SearchPage = () => {
     const [soundsFilter, setSoundsFilter] = useState({ filter: 'title', sort: 'relevance' });
     const searches = useRef([]);
 
+
+     useEffect(() => {
+        if (!token) {
+            navigate('/auth');
+        }
+    }, [token]);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
