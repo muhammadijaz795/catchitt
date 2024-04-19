@@ -6,7 +6,9 @@ import {
     getHomeVideos,
     getRandomUsers,
     videoLikehandle,
-    videoSavehandle
+    videoSavehandle,
+    loadFollowers,
+    loadFollowing
 } from './AsyncFuncs';
 import loginSlice from './reducers/auth';
 import isuploading from './reducers/upload';
@@ -102,6 +104,35 @@ const homeVideos: any = createSlice({
         });
     },
 });
+ 
+type profileInitialState = {
+    followers: any[];
+    following: any[];
+    likes: any[];
+}
+
+const profileSlice = createSlice({
+    name: 'profileSlice',
+    initialState: {
+        followers: [],
+        following: [],
+        likes: [],
+    } as profileInitialState,
+    reducers: {},
+    extraReducers: (builder: any) => {
+        builder.addCase(loadFollowers.fulfilled, (state : profileInitialState, action:any) => {
+            console.log("followers data")
+            console.log(action.payload)
+            state.followers = action.payload;
+        });
+        builder.addCase(loadFollowing.fulfilled, (state : profileInitialState, action:any) => {
+            console.log("following data")
+            console.log(action.payload)
+            state.following = action.payload;
+        });
+    },
+});
+
 
 const suggestedAccounts: any = createSlice({
     name: 'suggestedAccounts',
@@ -119,6 +150,7 @@ export const { updateHomeVideos } = homeVideos.actions;
 export default combineReducers({
     followings: followings.reducer,
     homeVideos: homeVideos.reducer,
+    profileSlice: profileSlice.reducer,
     suggestedAccounts: suggestedAccounts.reducer,
     profile: loginSlice,
     isuploading,

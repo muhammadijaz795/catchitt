@@ -50,8 +50,8 @@ export const Profile = (props: any) => {
     // @ts-ignore
     const profileData = useSelector((store) => store?.reducers?.profile)
     const profile = useLiveQuery(() => db.profile.toArray())?.[0]
-    console.log('profile' , profile);
-    
+    console.log('profile' , profile); 
+   
 
     const navigate = useNavigate();
     const tabs = [
