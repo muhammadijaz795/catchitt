@@ -34,6 +34,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
     const token = useAuthStore((state) => state.token);
     const auth = useAuthStore((state) => state._id);
 
+     const localProfile = JSON.parse(localStorage.getItem('profile'));
     useEffect(() => {
         fetch(`${API_KEY}/media-content/stories`, {
             method: 'GET',
@@ -96,7 +97,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
                         onClick={() => onFollowModalActive('followers')}
                         className={styles.statContainer}
                     >
-                        <p className={styles.boldText}>55</p>
+                        <p className={styles.boldText}>{localProfile?.followers}</p>
                         <p className={styles.text}>Followers</p>
                     </div>
                     <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
@@ -107,7 +108,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
                         onClick={() => onFollowModalActive('following')}
                         className={styles.statContainer}
                     >
-                        <p className={styles.boldText}>44</p>
+                        <p className={styles.boldText}>{localProfile?.following}</p>
                         <p className={styles.text}>Following</p>
                     </div>
                 </div>

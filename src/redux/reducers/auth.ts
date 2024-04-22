@@ -30,11 +30,15 @@ const loginSlice: any = createSlice({
     },
     extraReducers: (builder: any) => {
         builder.addCase(loginService.fulfilled, (_state: any, action: any) => {
+             
             localStorage.setItem('userId', action?.payload?.data?._id || '');
             localStorage.setItem('token', action?.payload?.data?.token || '');
-            localStorage.setItem('profile', action?.payload?.data || '');
-            db.profile.add(action?.payload?.data);
+            localStorage.setItem('profile', JSON.stringify(action?.payload?.data) || '');
+            db.profile.add(action?.payload?.data); 
             useAuthStore.setState(action?.payload?.data);
+            console.log("actionaction")
+            console.log(action)
+            
             return action?.payload?.data;
         });
         builder.addCase(signupService.fulfilled, (_state: any, action: any) => {
