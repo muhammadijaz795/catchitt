@@ -184,7 +184,7 @@ export const Profile = (props: any) => {
     };
 
     const closeFollowModal = () => {
-        console.log("close the model")
+        console.log('close the model');
         setFollowModal(null);
     };
     const onVideoModal = (video: any) => {
@@ -224,8 +224,9 @@ export const Profile = (props: any) => {
                             </div>
                         </ClickAwayListener>
                     </Modal>
-                ): ""
-                }
+                ) : (
+                    ''
+                )}
                 <Modal open={profileModal} className={styles.modal}>
                     <ClickAwayListener onClickAway={onCancel}>
                         <div className={styles.modalContainer}>
@@ -325,4 +326,3 @@ export const Profile = (props: any) => {
         </Layout>
     );
 };
- 

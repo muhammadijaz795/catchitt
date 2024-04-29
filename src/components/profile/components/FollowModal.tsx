@@ -11,25 +11,21 @@ interface Tab {
     content: JSX.Element;
 }
 
-const FollowModal: React.FC = ({onClose}:any) => {
-
-    const name = useSelector(state=> {
- 
+const FollowModal: React.FC<any> = ({ onClose }: any) => {
+    const name = useSelector((state: any) => {
         return state?.reducers?.profile?.name;
-    })
+    });
 
-
-    const totalFollwers = useSelector(state=>  state?.reducers?.profile?.followers )
-    const totalFollwing = useSelector(state=>  state?.reducers?.followings?.total )
-    const totalFriends = useSelector(state=>  state?.reducers?.friends?.total )
-
+    const totalFollwers = useSelector((state: any) => state?.reducers?.profile?.followers);
+    const totalFollwing = useSelector((state: any) => state?.reducers?.followings?.total);
+    const totalFriends = useSelector((state: any) => state?.reducers?.friends?.total);
 
     const tabs: Tab[] = [
         {
             name: 'Following',
             content: (
                 <>
-                    <FollowingTab onClose={onClose}/>
+                    <FollowingTab onClose={onClose} />
                 </>
             ),
         },
@@ -37,7 +33,7 @@ const FollowModal: React.FC = ({onClose}:any) => {
             name: 'Followers',
             content: (
                 <>
-                    <FollowersTab onClose={onClose}/>
+                    <FollowersTab onClose={onClose} />
                 </>
             ),
         },
@@ -45,7 +41,7 @@ const FollowModal: React.FC = ({onClose}:any) => {
             name: 'Friends',
             content: (
                 <>
-                    <MessageTab/>
+                    <MessageTab />
                 </>
             ),
         },
@@ -53,7 +49,7 @@ const FollowModal: React.FC = ({onClose}:any) => {
             name: 'Suggested',
             content: (
                 <>
-                    <SuggestedTab onClose={onClose}/>
+                    <SuggestedTab onClose={onClose} />
                 </>
             ),
         },
@@ -80,7 +76,13 @@ const FollowModal: React.FC = ({onClose}:any) => {
                         >
                             <div className={styles['div-5']}>
                                 {tab.name}{' '}
-                                {index === 0 ? totalFollwing : index === 1 ? totalFollwers : index === 2 ? totalFriends: ''}
+                                {index === 0
+                                    ? totalFollwing
+                                    : index === 1
+                                    ? totalFollwers
+                                    : index === 2
+                                    ? totalFriends
+                                    : ''}
                             </div>
                             <div className={styles['div-6']} />
                         </div>

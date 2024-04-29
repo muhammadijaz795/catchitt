@@ -1,17 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import style from './select-profile-img.scss';
-import {Box, Modal,Button } from '@mui/material';
+import { Box, Modal, Button } from '@mui/material';
 import { defaultAvatar } from '../../../icons';
 import Cropbox from './cropbox';
 const SelectProfileImgPopup = ({ open, onCancel, onSelect }: any) => {
-
-    const [imgBase64, setImgBase64]= useState('');
-    const onImageCropped = (img) => {
+    const [imgBase64, setImgBase64] = useState('');
+    const onImageCropped = (img: any) => {
         // console.log("here is the image")
         // console.log(img)
-        setImgBase64(img)
-        
-    }
+        setImgBase64(img);
+    };
     return (
         <Modal
             open={open}
@@ -27,20 +25,22 @@ const SelectProfileImgPopup = ({ open, onCancel, onSelect }: any) => {
                         alignItems: 'center',
                         height: '342px',
                         padding: '10px',
-
                     }}
                 >
-
-                     
                     <Cropbox onChangeImage={onImageCropped} />
-                    <div style={{
-                        width:'300px',
-                        display:'flex',
-                        flexDirection:'column',
-                        gap:'20px'
-
-                    }}>
-                        <Button variant="contained" sx={filledButton} onClick={()=>onSelect(imgBase64)}>
+                    <div
+                        style={{
+                            width: '300px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '20px',
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            sx={filledButton}
+                            onClick={() => onSelect(imgBase64)}
+                        >
                             Save
                         </Button>
 
@@ -48,16 +48,13 @@ const SelectProfileImgPopup = ({ open, onCancel, onSelect }: any) => {
                             Cancel
                         </Button>
                     </div>
-                    
-                   
                 </div>
             </Box>
         </Modal>
     );
 };
 
-export default SelectProfileImgPopup
-
+export default SelectProfileImgPopup;
 
 const popupStyle = {
     position: 'absolute' as 'absolute',
@@ -75,8 +72,7 @@ const popupStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-}
-
+};
 
 var filledButton = {
     fontFamily: 'Poppins !important',
@@ -88,13 +84,12 @@ var filledButton = {
     alignItems: 'center !important',
     borderRadius: '6px !important',
     background: 'var(--foundation-primary-primary-500, #5448B2) !important',
-    textTransform: 'none !important'
+    textTransform: 'none !important',
 };
 
 var secondaryBtn = {
-    ...filledButton, 
+    ...filledButton,
     color: 'var(--foundation-primary-primary-500, #5448B2) !important',
     background: 'white',
-    border: '1px solid var(--foundation-primary-primary-500, #5448B2)'
-
-}
+    border: '1px solid var(--foundation-primary-primary-500, #5448B2)',
+};

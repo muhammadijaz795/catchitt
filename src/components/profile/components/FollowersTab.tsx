@@ -3,7 +3,7 @@ import styles from './followersTab.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadFollowers } from '../../../redux/AsyncFuncs';
 import User from './user';
-export default function FollowersTab({onClose}:any) {
+export default function FollowersTab({ onClose }: any) {
     const followers = useSelector((state: any) => {
         console.log('state');
         console.log(state);
@@ -15,14 +15,19 @@ export default function FollowersTab({onClose}:any) {
         dispatch(loadFollowers());
     }, [dispatch]);
 
-    console.log("followers")
-    console.log(followers)
+    console.log('followers');
+    console.log(followers);
 
     return (
         <>
             <div className={styles.div}>
                 {followers?.map((follower: any) => (
-                    <User key={follower._id} user={follower}  popupClose={onClose}/>
+                    <User
+                        key={follower._id}
+                        user={follower}
+                        popupClose={onClose}
+                        onUnfollowClick={undefined}
+                    />
                 ))}
             </div>
         </>

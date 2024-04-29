@@ -45,29 +45,24 @@ const ProfileHeader: FunctionComponent<Props> = ({
         if (profileFromStorage) {
             localProfile = JSON.parse(profileFromStorage);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error parsing JSON from localStorage:', error.message);
     }
 
-
-     const chooseNewCoverImg = () => {
+    const chooseNewCoverImg = () => {
         setSelectImagePopup(true);
-    }
+    };
 
     const onCoverImageCancel = () => {
-         setSelectImagePopup(false);
-    }
-    
-    const onCoverImageSelect = (img) => {
-         console.log("img selected edit profile");
-         console.log(img)
-         setImgBase64(img)
-         setSelectImagePopup(false);
-    }
+        setSelectImagePopup(false);
+    };
 
-
-
-
+    const onCoverImageSelect = (img: any) => {
+        console.log('img selected edit profile');
+        console.log(img);
+        setImgBase64(img);
+        setSelectImagePopup(false);
+    };
 
     useEffect(() => {
         fetch(`${API_KEY}/media-content/stories`, {
@@ -84,104 +79,110 @@ const ProfileHeader: FunctionComponent<Props> = ({
             });
     }, []);
     console.log('profileData', profileData);
- 
 
-    const totalFollwers = useSelector(state=>  state?.reducers?.profile?.followers )
-    const totalFollwing = useSelector(state=>  state?.reducers?.followings?.total )
+    const totalFollwers = useSelector((state: any) => state?.reducers?.profile?.followers);
+    const totalFollwing = useSelector((state: any) => state?.reducers?.followings?.total);
 
     return (
-
         <>
-        {selectImagePopup ? <CoverImagePopup onCancel={onCoverImageCancel} open={selectImagePopup} onSelect={onCoverImageSelect} /> : ""}
- 
-        <div className={styles.profileHeader}>
-            <div className={styles.banner}>
-                <div onClick={chooseNewCoverImg} className={styles.banerIcon}>
-                    <EditIcon />
-                </div>
-                {imgBase64 != "" && (
-                    <img className={styles.bannerImg} src={imgBase64} alt="Banner Img" />
-                )}
-            </div>
-            <div className={styles.bottomContainer}>
-                <div
-                    onClick={() => {
-                        if (stories?.length > 0) {
-                            showStory();
-                        }
-                    }}
-                    className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}
-                >
-                    <Avatar
-                        style={{ width: '100%', height: '100%' }}
-                        src={profileData?.avatar}
-                        alt={profileData?.name}
-                    />
-                </div>
-                <button
-                    style={{
-                        position: 'relative',
-                    }}
-                    className={styles.button}
-                >
-                    <ShareIcon />
-                    Share
-                    <COPY_AND_SEND_MENU copyHandler={copyHandler} />
-                </button>
-            </div>
-            <div className={styles.pfContent}>
-                <div className={styles.userInfo}>
-                    <p className={styles.boldText}>{profileData?.username}</p>
-                    <p className={styles.text}>{profileData?.name}</p>
-                </div>
-                <div className={styles.userStats}>
-                    <div
-                        onClick={() => onFollowModalActive('followers')}
-                        className={styles.statContainer}
-                    >
-                        <p className={styles.boldText}>{totalFollwers}</p>
-                        <p className={styles.text}>Followers</p>
+            {selectImagePopup ? (
+                <CoverImagePopup
+                    onCancel={onCoverImageCancel}
+                    open={selectImagePopup}
+                    onSelect={onCoverImageSelect}
+                />
+            ) : (
+                ''
+            )}
+
+            <div className={styles.profileHeader}>
+                <div className={styles.banner}>
+                    <div onClick={chooseNewCoverImg} className={styles.banerIcon}>
+                        <EditIcon />
                     </div>
-                    <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
-                        <p className={styles.boldText}> 32</p>
-                        <p className={styles.text}>Likes</p>
-                    </div>
-                    <div
-                        onClick={() => onFollowModalActive('following')}
-                        className={styles.statContainer}
-                    >
-                        <p className={styles.boldText}>{totalFollwing}</p>
-                        <p className={styles.text}>Following</p>
-                    </div>
-                </div>
-                <div className={styles.links}>
-                    {profileData?.website && (
-                        <>
-                            <div className={styles.linkContainer}>
-                                <LinkIcon />
-                                <p className={styles.link}>{profileData?.website}</p>
-                            </div>
-                            /
-                        </>
+                    {imgBase64 != '' && (
+                        <img className={styles.bannerImg} src={imgBase64} alt="Banner Img" />
                     )}
-                    <div className={styles.linkContainer}>
-                        <MailIcon />
-                        <p className={styles.link}>{profileData?.email}</p>
+                </div>
+                <div className={styles.bottomContainer}>
+                    <div
+                        onClick={() => {
+                            if (stories?.length > 0) {
+                                showStory();
+                            }
+                        }}
+                        className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}
+                    >
+                        <Avatar
+                            style={{ width: '100%', height: '100%' }}
+                            src={profileData?.avatar}
+                            alt={profileData?.name}
+                        />
+                    </div>
+                    <button
+                        style={{
+                            position: 'relative',
+                        }}
+                        className={styles.button}
+                    >
+                        <ShareIcon />
+                        Share
+                        <COPY_AND_SEND_MENU copyHandler={copyHandler} />
+                    </button>
+                </div>
+                <div className={styles.pfContent}>
+                    <div className={styles.userInfo}>
+                        <p className={styles.boldText}>{profileData?.username}</p>
+                        <p className={styles.text}>{profileData?.name}</p>
+                    </div>
+                    <div className={styles.userStats}>
+                        <div
+                            onClick={() => onFollowModalActive('followers')}
+                            className={styles.statContainer}
+                        >
+                            <p className={styles.boldText}>{totalFollwers}</p>
+                            <p className={styles.text}>Followers</p>
+                        </div>
+                        <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
+                            <p className={styles.boldText}> 32</p>
+                            <p className={styles.text}>Likes</p>
+                        </div>
+                        <div
+                            onClick={() => onFollowModalActive('following')}
+                            className={styles.statContainer}
+                        >
+                            <p className={styles.boldText}>{totalFollwing}</p>
+                            <p className={styles.text}>Following</p>
+                        </div>
+                    </div>
+                    <div className={styles.links}>
+                        {profileData?.website && (
+                            <>
+                                <div className={styles.linkContainer}>
+                                    <LinkIcon />
+                                    <p className={styles.link}>{profileData?.website}</p>
+                                </div>
+                                /
+                            </>
+                        )}
+                        <div className={styles.linkContainer}>
+                            <MailIcon />
+                            <p className={styles.link}>{profileData?.email}</p>
+                        </div>
+                    </div>
+                    <p className={styles.about}>{profileData?.bio}</p>
+                    <div className={styles.actions}>
+                        <button onClick={() => setProfileModal(true)} className={styles.button}>
+                            <EditButtonIcon />
+                            Edit Profile
+                        </button>
+                        <button className={styles.button2}>
+                            <ProfileViewIcon />
+                            Profile Views
+                        </button>
                     </div>
                 </div>
-                <p className={styles.about}>{profileData?.bio}</p>
-                <div className={styles.actions}>
-                    <button onClick={() => setProfileModal(true)} className={styles.button}>
-                        <EditButtonIcon />
-                        Edit Profile
-                    </button>
-                    <button className={styles.button2}>
-                        <ProfileViewIcon />
-                        Profile Views
-                    </button>
-                </div>
             </div>
-        </div>
         </>
     );
 };
