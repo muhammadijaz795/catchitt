@@ -16,7 +16,6 @@ import ForGroups from './components/welcomeScreens/ForGroups';
 import ForPeoples from './components/welcomeScreens/ForPeoples';
 import hook from './hook/useChat';
 import style from './index.module.scss';
-import { setgroups } from 'process';
 
 function ChatsSec() {
     const {
@@ -32,6 +31,8 @@ function ChatsSec() {
         setMarkTheMsgSafe,
         smsRef,
         setSmsRef,
+        smsId,
+        setSmsId,
         replySms,
         setreplysms,
         showShortSidebar,
@@ -74,6 +75,7 @@ function ChatsSec() {
         selectedData,
         onUsersInputChangeHandler,
         showToast,
+        sendMessageReply,
     } = hook();
 
     return (
@@ -133,6 +135,7 @@ function ChatsSec() {
                                 valuesH={valuesH}
                                 valuesH2={valuesH2}
                                 setSmsRef={setSmsRef}
+                                setSmsId={setSmsId}
                                 setreplysms={setreplysms}
                                 replySms={replySms}
                                 insertKeyH={insertKeyH}
@@ -200,7 +203,7 @@ function ChatsSec() {
                             numberOfMessages={staredMsgs[0]?.chats?.length}
                             blockPopupHandler={() => {
                                 setdangetBtnText('Block');
-                                setDengerText(`Are you sure you want to block Hania?`);
+                                setDengerText('');
                                 setblockPopup(true);
                             }}
                             reportPopupHandler={() => setreportPopup(true)}

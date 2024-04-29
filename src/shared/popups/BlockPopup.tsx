@@ -5,9 +5,7 @@ function BlockPopup({ onBlock, dangetBtnText, openBlock, onBlockClose, DangerTex
         <Modal open={openBlock}>
             <ClickAwayListener onClickAway={onBlockClose}>
                 <div onClick={(e) => e.stopPropagation()} className={style.parent}>
-                    <p className={style.text}>
-                        {DangerText || 'Are you sure you want to block Mohamed ?'}
-                    </p>
+                    <p className={style.text}>{DangerText || ''}</p>
                     <div>
                         <button onClick={onBlock} className={style.redBtn}>
                             {dangetBtnText || 'Block'}

@@ -17,6 +17,7 @@ function Actions(props: any) {
         valuesH,
         valuesH2,
         setSmsRef,
+        setSmsId,
         setreplysms,
         replySms,
         insertKeyH,
@@ -145,7 +146,9 @@ function Actions(props: any) {
                                 <div className={style.subContent}>
                                     {item.stared && <img src={starMsg} alt="" />}
                                     <p>{item.time}</p>
-                                    {!item.isrecevied && <img src={seenMsgSvg} alt="" />}
+                                    {!item?.isrecevied && item?.isRead && (
+                                        <img src={seenMsgSvg} alt="" />
+                                    )}
                                 </div>
                                 {item.emojis && (
                                     <div
@@ -166,6 +169,7 @@ function Actions(props: any) {
                                         <img
                                             onClick={() => {
                                                 setSmsRef(item?.msg);
+                                                setSmsId(item?.id);
                                                 setreplysms(!replySms);
                                             }}
                                             src={tagMsg}
