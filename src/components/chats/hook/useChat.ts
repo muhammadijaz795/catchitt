@@ -91,7 +91,10 @@ function useChat() {
                 (
                     chats: {
                         lastModifiedTime: string | number | Date;
-                        lastMessage: { message: any };
+                        lastMessage: {
+                            createdTime: string | number | Date;
+                            message: any;
+                        };
                         isPinned: any;
                         unReadMsgsCount: any;
                         users: {
