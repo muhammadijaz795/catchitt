@@ -192,7 +192,6 @@ function useChat() {
     const markMessageAsSeen = (messageId: any) => {
         (socketRef.current as any).emit('mark-message-as-seen', { userId: sender, messageId });
     };
-
     useEffect(() => {
         scrollToBottom();
     }, [msg]);
