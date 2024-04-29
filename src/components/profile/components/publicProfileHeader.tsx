@@ -1,7 +1,7 @@
 import { Avatar, CircularProgress } from '@mui/material';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { followingsMethod } from '../../../redux/AsyncFuncs';
 import COPY_AND_SEND_MENU from '../../../shared/Menu/copyAndSend';
 import LinkIcon from '../svg-components/LinkIcon';
@@ -38,7 +38,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     const [stories, setStories] = useState([]);
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
-
+    const navigate = useNavigate();
     //@ts-ignore
     const followings = useSelector((store) => store.reducers.followings);
 
@@ -131,7 +131,13 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                 </div>
                 <p className={styles.about}>{profileData?.bio}</p>
                 <div className={styles.actions}>
-                    <button style={{ width: 112 }} className={styles.button}>
+                    <button
+                        onClick={() =>
+                            navigate('/comingsoon', { state: { value: profileData?._id } })
+                        }
+                        style={{ width: 112 }}
+                        className={styles.button}
+                    >
                         Messages
                     </button>
                     {followings?.data?.length > 0 &&

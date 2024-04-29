@@ -8,52 +8,52 @@ export const DEMI_USERS = [
         lastSeen: '4:01 PM',
         unReadMsgs: '201',
     },
-    {
-        userId: 2,
-        userName: 'ahmad',
-        lastMsg:
-            'We really care about your safety. We will stop showing this message once you mark it safe.',
-        ispined: false,
-        unReadMsgs: '9',
-        lastSeen: '4:01 PM',
-    },
-    {
-        userId: 3,
-        userName: 'Group',
-        lastMsg:
-            'We really care about your safety. We will stop showing this message once you mark it safe.',
-        ispined: false,
-        unReadMsgs: '9',
-        lastSeen: '4:01 PM',
-        isGroup: true,
-    },
-    {
-        userId: 4,
-        userName: 'Eromaisa',
-        lastMsg:
-            'We really care about your safety. We will stop showing this message once you mark it safe.',
-        ispined: false,
-        unReadMsgs: '9',
-        lastSeen: '4:01 PM',
-    },
-    {
-        userId: 5,
-        userName: 'Eromaisa',
-        lastMsg:
-            'We really care about your safety. We will stop showing this message once you mark it safe.',
-        ispined: false,
-        unReadMsgs: '9',
-        lastSeen: '4:01 PM',
-    },
-    {
-        userId: 6,
-        userName: 'Eromaisa',
-        lastMsg:
-            'We really care about your safety. We will stop showing this message once you mark it safe.',
-        ispined: false,
-        unReadMsgs: '9',
-        lastSeen: '4:01 PM',
-    },
+    // {
+    //     userId: 2,
+    //     userName: 'ahmad',
+    //     lastMsg:
+    //         'We really care about your safety. We will stop showing this message once you mark it safe.',
+    //     ispined: false,
+    //     unReadMsgs: '9',
+    //     lastSeen: '4:01 PM',
+    // },
+    // {
+    //     userId: 3,
+    //     userName: 'Group',
+    //     lastMsg:
+    //         'We really care about your safety. We will stop showing this message once you mark it safe.',
+    //     ispined: false,
+    //     unReadMsgs: '9',
+    //     lastSeen: '4:01 PM',
+    //     isGroup: true,
+    // },
+    // {
+    //     userId: 4,
+    //     userName: 'Eromaisa',
+    //     lastMsg:
+    //         'We really care about your safety. We will stop showing this message once you mark it safe.',
+    //     ispined: false,
+    //     unReadMsgs: '9',
+    //     lastSeen: '4:01 PM',
+    // },
+    // {
+    //     userId: 5,
+    //     userName: 'Eromaisa',
+    //     lastMsg:
+    //         'We really care about your safety. We will stop showing this message once you mark it safe.',
+    //     ispined: false,
+    //     unReadMsgs: '9',
+    //     lastSeen: '4:01 PM',
+    // },
+    // {
+    //     userId: 6,
+    //     userName: 'Eromaisa',
+    //     lastMsg:
+    //         'We really care about your safety. We will stop showing this message once you mark it safe.',
+    //     ispined: false,
+    //     unReadMsgs: '9',
+    //     lastSeen: '4:01 PM',
+    // },
 ];
 export const chats = [
     {

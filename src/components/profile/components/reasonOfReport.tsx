@@ -32,27 +32,25 @@ function ReasonOfReport({ onclose, video, popupHandler }: Types) {
     };
     const submitH = async () => {
         if (selectedReason) {
+            var conversationId = localStorage.getItem('conversationId');
             try {
-                const response: any = await fetch(
-                    `${API_KEY}/media-content/reports/63d0a04dbf17138077e2cdbe`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ reason: selectedReason }),
-                    }
-                );
+                const response: any = await fetch(`${API_KEY}/chat/report`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ reason: selectedReason, conversationId }),
+                });
                 if (response.status === 200) {
                     popupHandler(false);
                 } else {
                     popupHandler(true);
                 }
-                // if (response?.data) {
-                //     const responseData = await response.json();
-
-                // }
+                if (response?.data) {
+                    const responseData = await response.json();
+                    console.log('Reported Successfully', responseData);
+                }
             } catch (error) {
                 console.error(error);
                 popupHandler(true);
