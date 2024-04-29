@@ -31,7 +31,6 @@ function useChat() {
     const [activeUser, setActiveUser] = useState<any>({});
     const [activeChat, setactiveChat] = useState<any>({});
     const socketRef = useRef();
-    // const [users, setUsers] = useState<any[]>(DEMI_USERS);
     const [users, setUsers] = useState<any[]>(DEMI_USERS);
     const [sender, setSender] = useState('');
     const [receiver, setReceiver] = useState('');
