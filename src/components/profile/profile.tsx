@@ -25,7 +25,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { get } from '../../axios/axiosClient';
 import { useUpdateEffect } from 'react-use';
 import UnfollowPopup from './components/unfollow-popup';
-import { getFriends, getRandomUsers } from '../../redux/AsyncFuncs';
+import { getFriends, getProfileData, getRandomUsers } from '../../redux/AsyncFuncs';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -95,96 +95,106 @@ export const Profile = (props: any) => {
     };
     const onSave = () => {
         setProfileModal(false);
+        
+       
     };
     useEffect(() => {
-        // 63a04301a00ed2af91f17e1d user id contain videos
-        fetch(`${API_KEY}/profile/${userId}/videos`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUserVideos(data.data.data);
-                console.log('dataaa', data.data.data);
-                setLoading(false);
+        const fetchData = async () => {
+            // 63a04301a00ed2af91f17e1d user id contain videos
+            await fetch(`${API_KEY}/profile/${userId}/videos`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+                .then((res) => res.json())
+                .then((data) => {
+                    
+                    setUserVideos(data.data.data);
+                     
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                });
 
-        fetch(`${API_KEY}/profile/${authstore._id}/liked-videos`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUserlikedVideos(data.data.data);
-                console.log(data.data.data);
 
-                setLoading(false);
+            fetch(`${API_KEY}/profile/${userId}/liked-videos`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+                .then((res) => res.json())
+                .then((data:any) => {
+                    
+                    setUserlikedVideos(data.data.data);
+                    
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                });
 
-        fetch(`${API_KEY}/profile/tagged-videos`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUsertaggedVideos(data.data.data);
-                console.log(data.data.data);
-
-                setLoading(false);
+            fetch(`${API_KEY}/profile/tagged-videos`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+                .then((res) => res.json())
+                .then((data) => {
+                    setUsertaggedVideos(data.data.data);
+                    console.log(data.data.data);
 
-        // fetch(`${API_KEY}/filter/bookmarkedFilters`, {
-        fetch(`${API_KEY}/media-content/collections`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('collections');
-                setbookmarkVideos(data.data.data);
-                setLoading(false);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                });
+
+            // fetch(`${API_KEY}/filter/bookmarkedFilters`, {
+            fetch(`${API_KEY}/profile/collection?page=1&pageSize=10`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log('collections');
+                    setbookmarkVideos(data.data.data);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                });
 
-        fetch(`${API_KEY}/profile/collection`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('collectons', data);
-                setbookmarkVideos(data.data.data);
-                console.log('bookmarked videos');
-                console.log(data.data.data);
+            fetch(`${API_KEY}/profile/collection`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             })
-            .catch((err) => {
-                console.log('collectons error', err);
-            });
+                .then((res) => res.json())
+                .then((data) => {
+                  
+                    setbookmarkVideos(data.data.data);
+                  
+                })
+                .catch((err) => {
+                    console.log('collectons error', err);
+                });
 
-        dispatch(getRandomUsers());
-        dispatch(getFriends());
+            dispatch(getRandomUsers());
+            dispatch(getFriends());
+            dispatch(getProfileData());
+
+        };//fetchload
+
+        fetchData();
+
     }, []);
     const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
 
     const closeFollowModal = () => {
-        console.log('close the model');
+        console.log("close the model")
         setFollowModal(null);
     };
     const onVideoModal = (video: any) => {
@@ -220,13 +230,11 @@ export const Profile = (props: any) => {
                     <Modal open={!!followModal} className={styles.likesModal}>
                         <ClickAwayListener onClickAway={() => setFollowModal(null)}>
                             <div className={styles.likesModalContainer}>
-                                <FollowModal onClose={closeFollowModal} />
+                                <FollowModal isPublic={false} onClose={closeFollowModal} userId={undefined} />
                             </div>
                         </ClickAwayListener>
                     </Modal>
-                ) : (
-                    ''
-                )}
+                ) : null}
                 <Modal open={profileModal} className={styles.modal}>
                     <ClickAwayListener onClickAway={onCancel}>
                         <div className={styles.modalContainer}>
@@ -326,3 +334,4 @@ export const Profile = (props: any) => {
         </Layout>
     );
 };
+ 

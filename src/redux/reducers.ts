@@ -14,6 +14,7 @@ import {
 import loginSlice from './reducers/auth';
 import isuploading from './reducers/upload';
 import videoCategories from './reducers/videoCategories';
+import { isArray } from 'lodash';
 
 const followings: any = createSlice({
     name: 'followings',
@@ -25,6 +26,30 @@ const followings: any = createSlice({
         });
     },
 });
+ 
+
+
+const followers: any = createSlice({
+    name: 'followings',
+    initialState: {
+        total : 0,
+        data: []
+    },
+    reducers: {},
+    extraReducers: (builder: any) => {
+        builder.addCase(loadFollowers.fulfilled, (state : any, action:any) => {
+            console.log("followers data in followers slice")
+            console.log(action.payload)
+            state.data = action.payload;
+            state.total = action.payload?.length;
+            return state;
+        });
+    },
+});
+ 
+
+ 
+
 const homeVideos: any = createSlice({
     name: 'homeVideos',
     initialState: [],
@@ -123,11 +148,7 @@ const profileSlice = createSlice({
     } as profileInitialState,
     reducers: {},
     extraReducers: (builder: any) => {
-        builder.addCase(loadFollowers.fulfilled, (state : profileInitialState, action:any) => {
-            console.log("followers data")
-            console.log(action.payload)
-            state.followers = action.payload;
-        });
+      
         builder.addCase(loadFollowing.fulfilled, (state : profileInitialState, action:any) => {
             console.log("following data")
             console.log(action.payload)
@@ -157,6 +178,7 @@ export const { updateHomeVideos } = homeVideos.actions;
 
 export default combineReducers({
     followings: followings.reducer,
+    followers: followers.reducer,
     homeVideos: homeVideos.reducer,
     profileSlice: profileSlice.reducer,
     suggestedAccounts: suggestedAccounts.reducer,

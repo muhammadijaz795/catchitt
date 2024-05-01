@@ -13,7 +13,8 @@ import { useAuthStore } from '../../../store/authStore';
 import COPY_AND_SEND_MENU from '../../../shared/Menu/copyAndSend';
 import { useSelector } from 'react-redux';
 import CoverImagePopup from './cover-img-popup';
-
+import { getProfileData, loadFollowers } from '../../../redux/AsyncFuncs';
+import { useDispatch } from 'react-redux';
 interface Props {
     setProfileModal: (value: boolean) => void;
     setLikesModal: (value: boolean) => void;
@@ -33,20 +34,26 @@ const ProfileHeader: FunctionComponent<Props> = ({
 }) => {
     const API_KEY = process.env.VITE_API_URL;
     const [stories, setStories] = useState([]);
-    const token = useAuthStore((state) => state.token);
+
+    // const token = useAuthStore((state) => state.token);
     const auth = useAuthStore((state) => state._id);
+    const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
     const [selectImagePopup, setSelectImagePopup] = useState(false);
-    const [imgBase64, setImgBase64] = useState(profileData?.cover);
-    let localProfile = null;
 
+    let localProfile = null;
+    const dispatch = useDispatch();
+    const profileImg = useSelector((state: any) => state?.reducers?.profile?.avatar);
+    const name = useSelector((state: any) => state?.reducers?.profile?.name);
+    const coverImg = useSelector((state: any) => state?.reducers?.profile?.cover);
+    const [imgBase64, setImgBase64] = useState(coverImg);
     try {
         const profileFromStorage = localStorage.getItem('profile');
         if (profileFromStorage) {
             localProfile = JSON.parse(profileFromStorage);
         }
     } catch (error: any) {
-        console.error('Error parsing JSON from localStorage:', error.message);
+        console.error('Error parsing JSON from localStorage:', error?.message);
     }
 
     const chooseNewCoverImg = () => {
@@ -58,10 +65,63 @@ const ProfileHeader: FunctionComponent<Props> = ({
     };
 
     const onCoverImageSelect = (img: any) => {
-        console.log('img selected edit profile');
-        console.log(img);
         setImgBase64(img);
+
+        uploadBase64Image(img).then((file) => {
+            handleCoverImageRequest(file);
+        });
         setSelectImagePopup(false);
+    };
+
+    const uploadBase64Image = async (base64Url: string) => {
+        try {
+            // Fetch the base64 image data
+            const res = await fetch(base64Url);
+            const blob = await res.blob();
+
+            // Create a FormData object and append the image file
+            const fd = new FormData();
+            const file = new File([blob], 'filename.jpeg');
+            fd.append('image', file);
+
+            console.log('base64 to file');
+            console.log(file);
+            return file;
+        } catch (error) {
+            console.error('Error fetching base64 image:', error);
+        }
+    };
+
+    const handleCoverImageRequest = (file: any) => {
+        try {
+            const formData = new FormData();
+
+            // Append other fields to the FormData object
+
+            if (file != null) {
+                formData.append('cover', file);
+            }
+
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
+
+            // Send the PATCH request with FormData
+            fetch(`${API_KEY}/profile`, {
+                method: 'PATCH',
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData,
+            })
+                .then((res) => res.json())
+                .catch((err) => {
+                    console.log(err);
+                });
+
+            dispatch(getProfileData());
+            
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -77,11 +137,19 @@ const ProfileHeader: FunctionComponent<Props> = ({
             .catch((err) => {
                 console.log('collectons error', err);
             });
+
+            dispatch(loadFollowers());
     }, []);
     console.log('profileData', profileData);
 
-    const totalFollwers = useSelector((state: any) => state?.reducers?.profile?.followers);
+    
+    const totalFollowers = useSelector((state: any) => {
+         console.log("state in total followers in profile header")
+         console.log(state)
+        return state.reducers?.followers.total;
+    });
     const totalFollwing = useSelector((state: any) => state?.reducers?.followings?.total);
+    const totalLikes = useSelector((state: any) => state?.reducers?.profile?.likesNum);
 
     return (
         <>
@@ -101,7 +169,11 @@ const ProfileHeader: FunctionComponent<Props> = ({
                         <EditIcon />
                     </div>
                     {imgBase64 != '' && (
-                        <img className={styles.bannerImg} src={imgBase64} alt="Banner Img" />
+                        <img
+                            className={styles.bannerImg}
+                            src={imgBase64 != '' ? imgBase64 : coverImg}
+                            alt="Banner Img"
+                        />
                     )}
                 </div>
                 <div className={styles.bottomContainer}>
@@ -115,7 +187,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
                     >
                         <Avatar
                             style={{ width: '100%', height: '100%' }}
-                            src={profileData?.avatar}
+                            src={profileImg ? profileImg : Avatar}
                             alt={profileData?.name}
                         />
                     </div>
@@ -133,18 +205,18 @@ const ProfileHeader: FunctionComponent<Props> = ({
                 <div className={styles.pfContent}>
                     <div className={styles.userInfo}>
                         <p className={styles.boldText}>{profileData?.username}</p>
-                        <p className={styles.text}>{profileData?.name}</p>
+                        <p className={styles.text}>{name}</p>
                     </div>
                     <div className={styles.userStats}>
                         <div
                             onClick={() => onFollowModalActive('followers')}
                             className={styles.statContainer}
                         >
-                            <p className={styles.boldText}>{totalFollwers}</p>
+                            <p className={styles.boldText}>{totalFollowers}</p>
                             <p className={styles.text}>Followers</p>
                         </div>
                         <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
-                            <p className={styles.boldText}> 32</p>
+                            <p className={styles.boldText}> {totalLikes}</p>
                             <p className={styles.text}>Likes</p>
                         </div>
                         <div

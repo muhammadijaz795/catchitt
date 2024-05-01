@@ -4,21 +4,23 @@ import { defaultAvatar } from '../../../icons';
 import { Link } from 'react-router-dom';
  
 const API_KEY = process.env.VITE_API_URL;
-const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }> = ({
+
+
+const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any }> = ({
     user,
-    onfollowClick,
+    onRemoveClick,
     popupClose,
 }) => {
     const [loading, setLoading] = useState(false);
-    const [text, setText] = useState('Follow');
+    const [text, setText] = useState('Remove');
 
-    const follow = () => {
+    const remove = () => {
         //   onfollowClick(user);
         // handleFollowClick();
-        handleFollowClick();
+        handleRemoveClick();
     };
 
-    const handleFollowClick = async () => {
+    const handleRemoveClick = async () => {
         setLoading(true);
 
         const accountId = user?._id;
@@ -63,14 +65,14 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.avatar || defaultAvatar}
+                            srcSet={user?.follower_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
                         <Link onClick={popupClose} to={'/profile/' + user?._id}>
-                            <div className={styles['div-20']}>{user?.name}</div>
+                            <div className={styles['div-20']}>{user?.follower_userID?.name}</div>
                         </Link>
                     </div>
-                    <div onClick={follow} style={button}>
+                    <div onClick={remove} style={button}>
                         {loading ? '...' : text}
                     </div>
                 </div>
@@ -80,7 +82,9 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
     );
 };
 
-export default SuggestedUser
+
+export default FollowerUser
+
 
 const button:any = {
   color: 'white',

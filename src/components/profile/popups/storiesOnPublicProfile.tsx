@@ -18,6 +18,10 @@ export default function StoriesOnPublicProfile({ story, onclose, openReport }: a
     const [ismute, setMute] = useState(true);
     const [dropdown, setDropdown] = useState(false);
     const [stories, setStories] = useState<any>([])
+
+
+    // const token = localStorage.getItem('token') ? localStorage.getItem('token') : "";
+    
     useEffect(() => {
         if (params.id) {
             fetch(`${API_KEY}/media-content/stories`, {

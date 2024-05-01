@@ -1,27 +1,28 @@
 import React, { useState } from 'react'
 import styles from './user.module.scss';
 import { defaultAvatar } from '../../../icons';
+import UnfollowPopup from '../components/unfollow-popup';
 import { Link } from 'react-router-dom';
- 
+
+
 const API_KEY = process.env.VITE_API_URL;
-const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }> = ({
-    user,
-    onfollowClick,
-    popupClose,
-}) => {
+const PublicUser: React.FC<{
+    user: any;
+    onUnfollowClick: (user: any) => void;
+    popupClose: () => void;
+}> = ({ user, onUnfollowClick, popupClose }) => {
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState('Follow');
 
     const follow = () => {
-        //   onfollowClick(user);
-        // handleFollowClick();
+        // onUnfollowClick(user);
         handleFollowClick();
     };
 
-    const handleFollowClick = async () => {
+      const handleFollowClick = async () => {
         setLoading(true);
 
-        const accountId = user?._id;
+        const accountId = user?.follower_userID?._id;
         const token = localStorage.getItem('token');
 
         if (token) {
@@ -53,6 +54,8 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
         }
     };
 
+    
+
     return (
         <>
             <div className={styles.user}>
@@ -63,14 +66,20 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.avatar || defaultAvatar}
+                            srcSet={user?.followed_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
-                        <Link onClick={popupClose} to={'/profile/' + user?._id}>
-                            <div className={styles['div-20']}>{user?.name}</div>
+                        <Link
+                            onClick={() => {
+                                console.log('afff');
+                                popupClose();
+                            }}
+                            to={'/profile/' + user?.follower_userID?.username}
+                        > 
+                            <div className={styles['div-20']}>{user?.follower_userID?.name}</div>
                         </Link>
                     </div>
-                    <div onClick={follow} style={button}>
+                    <div onClick={follow} className={styles['div-21']}>
                         {loading ? '...' : text}
                     </div>
                 </div>
@@ -80,26 +89,4 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
     );
 };
 
-export default SuggestedUser
-
-const button:any = {
-  color: 'white',
-  whiteSpace: "nowrap",
-  justifyContent: "center",
-  alignItems: "center",
-  borderRadius: "6px",
-  border: "1px solid var(--foundation-primary-primary-500, #5448b2)",
-  alignSelf: "center",
-  flexGrow: 1,
-  textAlign: "center",
-  margin: "auto 0",
-  padding: "12px 20px",
-  font: "600 14px/17px Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-  maxWidth: "116px",
-  cursor: "pointer",
-  backgroundColor:"#5448b2"
-};
-
-// Usage example:
-// Apply these styles to a React component
-// <div style={componentStyles}>Your component content here</div>
+export default PublicUser
