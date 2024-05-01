@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import styles from './user.module.scss';
 import { defaultAvatar } from '../../../icons';
 import UnfollowPopup from './unfollow-popup';
 import { Link } from 'react-router-dom';
 
-interface UserProps {
-    user: any;
-    popupClose: () => void;
-    onUnfollowClick?: () => void;
-}
+
 const API_KEY = process.env.VITE_API_URL;
-const User: React.FC<{ user: any; onUnfollowClick: any; popupClose: any }> = ({
-    user,
-    onUnfollowClick,
-    popupClose,
-}: any) => {
+const User: React.FC<{
+    user: any;
+    onUnfollowClick: (user: any) => void;
+    popupClose: () => void;
+}> = ({ user, onUnfollowClick, popupClose }) => {
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState('Unfollow');
 
@@ -60,4 +56,4 @@ const User: React.FC<{ user: any; onUnfollowClick: any; popupClose: any }> = ({
     );
 };
 
-export default User;
+export default User

@@ -1,15 +1,19 @@
 import React from 'react';
 import styles from './likesModal.module.scss';
+import { useSelector } from 'react-redux';
 
 interface LikesModalProps {}
 function LikesModal(props:LikesModalProps) {
+    const totalLikes = useSelector((state: any) => state?.reducers?.profile?.likesNum);
+    const name = useSelector((state: any) => state?.reducers?.profile?.name);
+
     return (
         <>
             <div className={styles['main-container']}>
                 <div className={styles.header}>
-                    <span className={styles.name}>Radwa Aly</span>
+                    <span className={styles.name}>{name}</span>
                     <span className={styles.separator}> </span>
-                    <span className={styles.likes}>received 2.1M likes across all videos.</span>
+                    <span className={styles.likes}>received {totalLikes} likes across all videos.</span>
                 </div>
                 <img
                     loading="lazy"

@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import style from './select-profile-img.scss';
-import { Box, Modal, Button } from '@mui/material';
+import {Box, Modal,Button } from '@mui/material';
 import { defaultAvatar } from '../../../icons';
-
+ 
 import CoverCropbox from './cover-cropbox';
 
 const CoverImagePopup = ({ open, onCancel, onSelect }: any) => {
-    const [imgBase64, setImgBase64] = useState('');
-    const onImageCropped = (img: any) => {
-        onSelect(img);
-    };
+    const [imgBase64, setImgBase64]= useState('');
+    const onImageCropped = (img:string) => {
+        
+        onSelect(img)
+        
+    }
     return (
         <Modal
             open={open}
@@ -25,28 +27,37 @@ const CoverImagePopup = ({ open, onCancel, onSelect }: any) => {
                         alignItems: 'center',
                         height: '342px',
                         padding: '10px',
+
                     }}
                 >
+
+                     
                     <CoverCropbox onChangeImage={onImageCropped} />
-                    <div
-                        style={{
-                            width: '300px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '20px',
-                        }}
-                    >
+                    <div style={{
+                        width:'300px',
+                        display:'flex',
+                        flexDirection:'column',
+                        gap:'20px'
+
+                    }}>
+                      
+
                         <Button variant="contained" sx={secondaryBtn} onClick={onCancel}>
                             Cancel
                         </Button>
                     </div>
+                    
+                   
                 </div>
             </Box>
         </Modal>
     );
-};
+}
 
-export default CoverImagePopup;
+export default CoverImagePopup
+
+
+
 
 const popupStyle = {
     position: 'absolute' as 'absolute',
@@ -64,7 +75,8 @@ const popupStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-};
+}
+
 
 var filledButton = {
     fontFamily: 'Poppins !important',
@@ -76,12 +88,13 @@ var filledButton = {
     alignItems: 'center !important',
     borderRadius: '6px !important',
     background: 'var(--foundation-primary-primary-500, #5448B2) !important',
-    textTransform: 'none !important',
+    textTransform: 'none !important'
 };
 
 var secondaryBtn = {
-    ...filledButton,
+    ...filledButton, 
     color: 'var(--foundation-primary-primary-500, #5448B2) !important',
     background: 'white',
-    border: '1px solid var(--foundation-primary-primary-500, #5448B2)',
-};
+    border: '1px solid var(--foundation-primary-primary-500, #5448B2)'
+
+}

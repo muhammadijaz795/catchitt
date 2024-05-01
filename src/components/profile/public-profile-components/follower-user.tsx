@@ -4,24 +4,26 @@ import { defaultAvatar } from '../../../icons';
 import { Link } from 'react-router-dom';
  
 const API_KEY = process.env.VITE_API_URL;
-const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }> = ({
+
+
+const PbulicFollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any }> = ({
     user,
-    onfollowClick,
+    onRemoveClick,
     popupClose,
 }) => {
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState('Follow');
 
-    const follow = () => {
+    const remove = () => {
         //   onfollowClick(user);
         // handleFollowClick();
-        handleFollowClick();
+        handleRemoveClick();
     };
 
-    const handleFollowClick = async () => {
+    const handleRemoveClick = async () => {
         setLoading(true);
 
-        const accountId = user?._id;
+        const accountId = user?.followed_userID?._id;
         const token = localStorage.getItem('token');
 
         if (token) {
@@ -63,14 +65,14 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.avatar || defaultAvatar}
+                            srcSet={user?.followed_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
-                        <Link onClick={popupClose} to={'/profile/' + user?._id}>
-                            <div className={styles['div-20']}>{user?.name}</div>
+                        <Link onClick={popupClose} to={'/profile/' + user?.followed_userID?.username}>
+                            <div className={styles['div-20']}>{user?.followed_userID?.name}</div>
                         </Link>
                     </div>
-                    <div onClick={follow} style={button}>
+                    <div onClick={remove} style={button}>
                         {loading ? '...' : text}
                     </div>
                 </div>
@@ -80,7 +82,9 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
     );
 };
 
-export default SuggestedUser
+
+export default PbulicFollowerUser
+
 
 const button:any = {
   color: 'white',

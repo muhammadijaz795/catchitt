@@ -41,35 +41,37 @@ export const PublicProfile = (props: any) => {
 
     const navigate = useNavigate();
 
-    // Use Function For Get the User Followers
     useEffect(() => {
-        fetch(`${API_KEY}/profile/${params.id}`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setProfileData(data.data);
+        const fetchData = async () => {
+            try {
+                const profileResponse = await fetch(`${API_KEY}/profile/${params.id}`, {
+                    method: 'GET',
+                    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+                });
+                const profileData = await profileResponse.json();
+                setProfileData(profileData.data);
                 setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+                console.log("profileee dataaa for public profile")
+                console.log(profileData)
 
-        fetch(`${API_KEY}/profile/${params.id}/videos`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setVideosData(data?.data?.data);
-            })
-            .catch((err) => {
-                console.log(err);
+                const { _id } = profileData?.data;
+
+                const videosResponse = await fetch(`${API_KEY}/profile/${_id}/videos`, {
+                    method: 'GET',
+                    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+                });
+                const videosData = await videosResponse.json();
+                setVideosData(videosData?.data?.data);
+            } catch (error) {
+                console.log(error);
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchData();
     }, [params?.id]);
+
+
     const tabs = [
         {
             title: 'Videos',
@@ -127,17 +129,19 @@ export const PublicProfile = (props: any) => {
                 <Modal open={!!followModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setFollowModal(null)}>
                         <div className={styles.likesModalContainer}>
-                            <FollowModal />
+                            <FollowModal isPublic={true} onClose={function (): void {
+                                setFollowModal(null);
+                            } } userId={profileData?._id} />
                         </div>
                     </ClickAwayListener>
                 </Modal>
-                <Modal open={profileModal} className={styles.modal}>
+                {/* <Modal open={profileModal} className={styles.modal}>
                     <ClickAwayListener onClickAway={onCancel}>
                         <div className={styles.modalContainer}>
                             <EditProfile onCancel={onCancel} onSave={onSave} />
                         </div>
                     </ClickAwayListener>
-                </Modal>
+                </Modal> */}
                 <div className={styles.middleSectionDiv}>
                     <PublicProfileHeader
                         profileData={profileData}

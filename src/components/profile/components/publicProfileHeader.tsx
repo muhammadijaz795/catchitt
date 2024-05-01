@@ -1,7 +1,7 @@
 import { Avatar, CircularProgress } from '@mui/material';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { followingsMethod } from '../../../redux/AsyncFuncs';
 import COPY_AND_SEND_MENU from '../../../shared/Menu/copyAndSend';
 import LinkIcon from '../svg-components/LinkIcon';
@@ -38,7 +38,8 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     const [stories, setStories] = useState([]);
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
-    const navigate = useNavigate();
+
+    const userId = profileData?._id;
     //@ts-ignore
     const followings = useSelector((store) => store.reducers.followings);
 
@@ -60,7 +61,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
 
     const manageFollowBtn = async () => {
         setfollowBtnLoading(true);
-        dispatch(followingsMethod(params?.id)).then(() => setfollowBtnLoading(false));
+        dispatch(followingsMethod(userId)).then(() => setfollowBtnLoading(false));
     };
 
     return (
@@ -101,18 +102,18 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                         onClick={() => onFollowModalActive('followers')}
                         className={styles.statContainer}
                     >
-                        <p className={styles.boldText}>{profileData?.followersNumber}</p>
+                        <p className={styles.boldText}>{profileData?.followingNumber}</p>
                         <p className={styles.text}>Followers</p>
                     </div>
                     <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
-                        <p className={styles.boldText}> 32</p>
+                        <p className={styles.boldText}> {profileData?.likesNum}</p>
                         <p className={styles.text}>Likes</p>
                     </div>
                     <div
                         onClick={() => onFollowModalActive('following')}
                         className={styles.statContainer}
                     >
-                        <p className={styles.boldText}>{profileData?.followingNumber}</p>
+                        <p className={styles.boldText}>{profileData?.followersNumber}</p>
                         <p className={styles.text}>Following</p>
                     </div>
                 </div>
@@ -131,13 +132,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                 </div>
                 <p className={styles.about}>{profileData?.bio}</p>
                 <div className={styles.actions}>
-                    <button
-                        onClick={() =>
-                            navigate('/comingsoon', { state: { value: profileData?._id } })
-                        }
-                        style={{ width: 112 }}
-                        className={styles.button}
-                    >
+                    <button style={{ width: 112 }} className={styles.button}>
                         Messages
                     </button>
                     {followings?.data?.length > 0 &&

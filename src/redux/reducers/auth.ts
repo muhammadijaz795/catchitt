@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { post } from '../../axios/axiosClient';
 import { useAuthStore } from '../../store/authStore';
 import { db } from '../../utils/db';
+import { getProfileData } from '../AsyncFuncs';
 
 const loginSlice: any = createSlice({
     name: 'auth',
@@ -18,12 +19,20 @@ const loginSlice: any = createSlice({
         updateProfileType: (_state, action) => {
              
             localStorage.setItem('accountType',action.payload.type);
-            // _state.accountType = action.type;
+            // _state.accologinServiceuntType = action.type;
             return _state;
-        }
+        },
+        updateAvatar: (_state: any, action: any) => {
+            console.log('updating the avatar');
+            _state.avatar = action?.payload;
+            // _state.accologinServiceuntType = action.type;
+            return _state;
+        },
 
         
     },
+
+
     extraReducers: (builder: any) => {
         builder.addCase(loginService.fulfilled, (_state: any, action: any) => {
              
@@ -32,11 +41,25 @@ const loginSlice: any = createSlice({
             localStorage.setItem('profile', JSON.stringify(action?.payload?.data) || '');
             db.profile.add(action?.payload?.data); 
             useAuthStore.setState(action?.payload?.data);
-            console.log("actionaction")
-            console.log(action)
-            
+             
             return action?.payload?.data;
         });
+
+
+        builder.addCase(getProfileData.fulfilled, (_state: any, action: any) => {
+             
+             
+              _state.avatar = action?.payload?.avatar;
+              _state.cover = action?.payload?.cover;
+              _state.name = action?.payload?.name;
+              _state.likesNum = action?.payload?.likesNum;
+            // return _state.cover = action.pay;
+            // return action?.payload?.data;
+            return _state;
+        });
+
+
+       
 
         builder.addCase(loginService.rejected, (_state: any, action: any) => {
             // Handle login service rejection (error) here

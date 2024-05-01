@@ -9,13 +9,19 @@ export const followingsMethod: any = createAsyncThunk(
     async (id?: string) => {
         try {
             if (id) {
-                await post(`/profile/follow/${id}/`);
+                let res = await post(`/profile/follow/${id}/`);
+                 console.log("follow action res public profile")
+                console.log(res)
+
             }
             const response = await get(`/profile/${userId}/followers`);
 
             if (response?.data?.data) {
                 const responseData = response?.data;
+                console.log("following list public profile")
+                console.log(responseData)
                 return responseData?.data;
+                
             } else {
                 return {};
             }
@@ -218,6 +224,39 @@ export const loadFollowers: any = createAsyncThunk('get/profileSlice/followers',
 });
 
 
+export const loadLikes: any = createAsyncThunk('get/profile/likes', async () => {
+    // get id from localstorage
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    if(token){
+
+        try {
+            const response = await fetch(`${API_KEY}/profile/${userId}/following`, {
+                method: 'GET',
+                // add bearer token to heders
+                headers: { 
+                    'Content-type': 'application/json',
+                     'Authorization': `Bearer ${token}`
+                },
+            });
+    
+            if (response.ok) {
+                const responseData = await response.json();
+                // getRandomAccounts(responseData.data.data, 4)
+                console.log("loadFOllowers")
+                console.log(responseData)
+                return responseData.data.data;
+            } else {
+                console.log(response);
+            }
+        } catch (error) {
+            // console.error(error);
+            console.error();
+        }
+    }
+});
+
+
 
 
 export const loadFollowing: any = createAsyncThunk('get/profileSlice/following', async () => {
@@ -242,6 +281,39 @@ export const loadFollowing: any = createAsyncThunk('get/profileSlice/following',
                  console.log("loadFollowing")
                 console.log(responseData)
                 return responseData.data.data;
+            } else {
+                console.log(response);
+            }
+        } catch (error) {
+            // console.error(error);
+            console.error();
+        }
+    }
+});
+
+
+export const getProfileData: any = createAsyncThunk('get/getProfileData', async () => {
+    // get id from localstorage
+    // const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    if(token){
+
+        try {
+            const response = await fetch(`${API_KEY}/profile/`, {
+                method: 'GET',
+                // add bearer token to heders
+                headers: { 
+                    'Content-type': 'application/json',
+                     'Authorization': `Bearer ${token}`
+                },
+            });
+    
+            if (response.ok) {
+                const responseData = await response.json();
+                // getRandomAccounts(responseData.data.data, 4)
+                 console.log("getting profile data")
+                console.log(responseData.data)
+                return responseData.data;
             } else {
                 console.log(response);
             }

@@ -5,6 +5,9 @@ interface Type {
     openVideoModal: any
 }
 export default function VideoesMaping({ videos, openVideoModal }: Type) {
+
+    console.log("video obj")
+    console.log(videos)
     return (
         <div className={styles.posts}>
             {videos &&
