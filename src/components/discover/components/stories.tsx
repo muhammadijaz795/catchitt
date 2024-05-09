@@ -5,7 +5,12 @@ import 'slick-carousel/slick/slick.css';
 import { get } from '../../../axios/axiosClient';
 import styles from './stories.module.scss';
 
-export default function Stories({ showStories }: any) {
+function Stories({ showStories }: any) {
+
+ 
+
+
+
     const [stories, setStories] = useState([]);
     const sliderRef: any = useRef(null);
     const API_KEY = process.env.VITE_API_URL;
@@ -15,7 +20,7 @@ export default function Stories({ showStories }: any) {
     useEffect(() => {
         get('/media-content/stories')
             .then((data:any) => {
-                setStories(data?.data?.data);
+                // setStories(data?.data?.data);
             })
             .catch((err) => {
                 console.log('collectons error', err);
@@ -48,6 +53,8 @@ export default function Stories({ showStories }: any) {
     };
     return (
         <>
+            
+             
             {/* {
                 sliderIndex > 0 ?
                     <img className={styles.prevArrow} onClick={prevSlide} src="../../../public/images/icons/nextArrow.svg" alt="" />
@@ -61,14 +68,24 @@ export default function Stories({ showStories }: any) {
             } */}
 
             <Slider className={styles.slider} ref={sliderRef} {...settings}>
-                {stories.map((story: any, i: any) => {
-                    return (
-                        <div onClick={showStories} className={styles.story}>
-                            <img src={story?.stories[0].thumbnailUrl} alt="" />
+                  
+                 
+ 
+                {stories.map((storyGroup: any, index: number) => {
+                   console.log('afking stories',storyGroup?.stories[0]?.thumbnailUrl)
+                   return (
+                        <div key={index} onClick={showStories} className={styles.story}>
+                            <img src={storyGroup?.stories[0]?.thumbnailUrl} alt="" />
                         </div>
-                    );
-                })}
+                    )
+                }
+                        
+                    
+                )}
             </Slider>
         </>
     );
 }
+
+
+export default Stories;

@@ -1,5 +1,5 @@
 import { ClickAwayListener, Modal } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../shared/layout';
@@ -13,7 +13,7 @@ import VideoesMaping from './components/videoesMaping';
 import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 import PopupForVideoPlayer from './popups/popupForVideoPlayer';
-import StoriesOnPublicProfile from './popups/storiesOnPublicProfile';
+ 
 import styles from './profile.module.scss';
 import { Bookmark } from './svg-components/Bookmark';
 import { Liked } from './svg-components/Liked';
@@ -26,6 +26,7 @@ import { get } from '../../axios/axiosClient';
 import { useUpdateEffect } from 'react-use';
 import UnfollowPopup from './components/unfollow-popup';
 import { getFriends, getProfileData, getRandomUsers } from '../../redux/AsyncFuncs';
+import publicProfileStories from './popups/publicProfileStories';
 
 export const Profile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -216,6 +217,9 @@ export const Profile = (props: any) => {
         }
     });
 
+
+    const MemoizedStoriesOnPublicProfile = memo(publicProfileStories);
+
     return (
         <Layout showCopyPopup={copyPopup}>
             <div className={styles.container}>
@@ -248,7 +252,10 @@ export const Profile = (props: any) => {
                         onFollowModalActive={onFollowModalActive}
                         setProfileModal={setProfileModal}
                         setLikesModal={setLikesModal}
-                        showStory={() => setStoryPopup(true)}
+                        showStory={() => {
+                            console.log("sett story popup caling ")
+                            setStoryPopup(true)
+                        }}
                         copyHandler={() => setcopyPopup(true)}
                     />
                     <div className={styles.tabs}>
@@ -317,7 +324,7 @@ export const Profile = (props: any) => {
                     userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
-                <StoriesOnPublicProfile
+                <MemoizedStoriesOnPublicProfile
                     story={storyPopup}
                     onclose={() => setStoryPopup(false)}
                     openReport={() => setReportPopup(true)}

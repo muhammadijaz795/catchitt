@@ -1,5 +1,5 @@
 import { ClickAwayListener, Modal } from "@mui/material"
-import style from "./storiesOnPublicProfile.module.scss"
+import style from './publicProfileStories.module.scss';
 import Slider from "react-slick";
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../../../store/authStore";
@@ -7,7 +7,7 @@ import VideoPlayer from "./storyVideo";
 import { useParams } from "react-router-dom";
 const API_KEY = process.env.VITE_API_URL;
 
-function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
+function publicProfileStories({ story, onclose, openReport }: any) {
     const params: any = useParams();
     // const token = useAuthStore((state) => state.token);
     const token = localStorage.getItem('token');
@@ -324,6 +324,6 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
 }
 
 
-export default StoriesOnPublicProfile;
+export default publicProfileStories;
 
 

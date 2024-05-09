@@ -8,6 +8,43 @@ const API_KEY = process.env.VITE_API_URL;
 
 export default function StoriesOnDiscover({ story, onclose, openReport }: any) {
 
+
+
+
+    const mockStories = [
+    {
+        stories: [
+        {
+            thumbnailUrl: "https://d1qomu2i6h2trq.cloudfront.net/output/videos/6436660cacee813edc53be2a/thumbnail/6436660cacee813edc53be2a-thumbnail.jpg",
+
+            reducedVideoUrl: "https://d1qomu2i6h2trq.cloudfront.net/output/videos/6436660cacee813edc53be2a/reduced/6436660cacee813edc53be2a-reduced.mp4",
+            user: {
+            name: "John Doe",
+            username: "john_doe",
+            avatar: "https://seezitt-videos-source-bucket.s3.amazonaws.com/1671036058694-3Cc3SHjbOh.jpg",
+            }
+        }
+        ]
+    },
+    {
+        stories: [
+        {
+            thumbnailUrl: "https://d1qomu2i6h2trq.cloudfront.net/output/videos/6436660cacee813edc53be2a/thumbnail/6436660cacee813edc53be2a-thumbnail.jpg",
+
+            reducedVideoUrl: "https://d1qomu2i6h2trq.cloudfront.net/output/videos/6436660cacee813edc53be2a/reduced/6436660cacee813edc53be2a-reduced.mp4",
+            
+            user: {
+            name: "Jane Smith",
+            username: "jane_smith",
+            avatar: "https://seezitt-videos-source-bucket.s3.amazonaws.com/1671036058694-3Cc3SHjbOh.jpg",
+            }
+        }
+        ]
+    },
+    // Add more stories data as needed
+    ];
+
+    
     const token = useAuthStore((state) => state.token);
     const [sliderIndex, setSliderIndex] = useState<any>(0)
     const sliderRef = useRef<any>(null);
@@ -17,8 +54,9 @@ export default function StoriesOnDiscover({ story, onclose, openReport }: any) {
     const [ismute, setMute] = useState(true);
     const [dropdown, setDropdown] = useState(false);
 
-    const [fetchStories, setFetchStories] = useState<any>([])
-    const [stories, setStories] = useState<any>([])
+    const [fetchStories, setFetchStories] = useState<any>()
+    const [stories, setStories] = useState<any>(mockStories)
+
     useEffect(() => {
         fetch(`${API_KEY}/media-content/stories`, {
             method: 'GET',
@@ -128,7 +166,8 @@ export default function StoriesOnDiscover({ story, onclose, openReport }: any) {
                             {fetchStories[storiesIndex - 1]?.stories[0]?.thumbnailUrl ?
                                 <img src={fetchStories[storiesIndex + 2]?.stories[0]?.thumbnailUrl} alt="" /> : null
                             }
-                        </div>                        <Slider ref={sliderRef} {...settings} afterChange={handleAfterChange} className={style.slider2} >
+                        </div>                       
+                         <Slider ref={sliderRef} {...settings} afterChange={handleAfterChange} className={style.slider2} >
                             {
                                 stories?.map((story: any, i: any) => {
                                     return (

@@ -24,6 +24,8 @@ interface Props {
     copyHandler: any;
 }
 
+
+
 const ProfileHeader: FunctionComponent<Props> = ({
     setProfileModal,
     onFollowModalActive,
@@ -33,7 +35,8 @@ const ProfileHeader: FunctionComponent<Props> = ({
     copyHandler,
 }) => {
     const API_KEY = process.env.VITE_API_URL;
-    const [stories, setStories] = useState([]);
+    const [stories, setStories] = useState([1,2,3,4,5,6,7,8,9,10]);
+     
 
     // const token = useAuthStore((state) => state.token);
     const auth = useAuthStore((state) => state._id);
@@ -125,7 +128,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
     };
 
     useEffect(() => {
-        fetch(`${API_KEY}/media-content/stories`, {
+        fetch(`${API_KEY}/media-content/stories/feed`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         })
@@ -138,7 +141,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
                 console.log('collectons error', err);
             });
 
-            dispatch(loadFollowers());
+            // dispatch(loadFollowers());
     }, []);
     console.log('profileData', profileData);
 
@@ -185,11 +188,14 @@ const ProfileHeader: FunctionComponent<Props> = ({
                         }}
                         className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}
                     >
+                        
+
                         <Avatar
                             style={{ width: '100%', height: '100%' }}
                             src={profileImg ? profileImg : Avatar}
                             alt={profileData?.name}
                         />
+                         
                     </div>
                     <button
                         style={{
@@ -260,3 +266,9 @@ const ProfileHeader: FunctionComponent<Props> = ({
 };
 
 export default ProfileHeader;
+
+
+const storyIndicator = {
+    background: "red",
+    padding: '3px'
+}

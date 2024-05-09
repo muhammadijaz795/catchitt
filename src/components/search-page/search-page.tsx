@@ -195,7 +195,7 @@ export const SearchPage = () => {
         setIsLoading(true);
         try {
             const response = await fetch(
-                `${API_KEY}/discover/search?searchQuery=${query}&page=${page ? page : 1}`,
+                `${API_KEY}/discover/search?searchQuery=${query}&page=${page ? page : 1}&pageSize=10`,
                 {
                     method: 'GET',
                     headers: {

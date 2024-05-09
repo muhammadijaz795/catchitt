@@ -8,13 +8,14 @@ import PopupForReport from '../profile/popups/PopupForReport';
 import PopupForBlock from '../profile/popups/popupForBlock';
 import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import StoriesOnPublicProfile from '../profile/popups/storiesOnPublicProfile';
-import Stories from './components/stories';
+ 
 import SuggestedFollower from './components/suggestedFollower';
 import VideoPanel from './components/videoPanel';
 import styles from './discover.module.scss';
 import Gifts from './popups/gifts';
 import { CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';
+import DiscoverStories from './components/discoverStories';
 
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
@@ -167,7 +168,8 @@ export default function Discover() {
                         {/* Slider Configration for Stories */}
                         <div className={styles.sliderp}>
                             <div className={styles.slider}>
-                                <Stories showStories={() => setStoryPopup(true)} />
+                                 
+                                <DiscoverStories showStories={() => setStoryPopup(true)} />
                             </div>
                         </div>
                         <div style={{ marginTop: 48 }} className={styles.postsp}>

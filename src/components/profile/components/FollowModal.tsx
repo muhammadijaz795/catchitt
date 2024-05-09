@@ -5,7 +5,7 @@ import FollowersTab from './FollowersTab';
 import SuggestedTab from './SuggestedTab';
 import MessageTab from './MessageTab';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadFollowing } from '../../../redux/AsyncFuncs';
+import { loadFollowers, loadFollowing } from '../../../redux/AsyncFuncs';
 const API_KEY = process.env.VITE_API_URL;
 interface Tab {
     name: string;
@@ -23,13 +23,13 @@ const FollowModal: React.FC<{ onClose: () => void; isPublic: boolean; userId: an
         return state.reducers?.followers.total;
     });
 
+    const followers = useSelector((state: any) =>  state.reducers?.followers.data);
  
     const totalFollowing = useSelector((state: any) => state?.reducers?.followings?.total);
     const totalFriends = useSelector((state: any) => state?.friends?.total);
    
     const following = useSelector( (state:any )=>  state?.reducers?.followings?.data );
-    const followers = useSelector((state: any) =>  state.reducers?.followers.data);
-   
+    
   
     const [loading, setLoading] = useState(false);
     const [publicFollowers, setPublicFollowers] = useState([]);
@@ -43,61 +43,56 @@ const FollowModal: React.FC<{ onClose: () => void; isPublic: boolean; userId: an
 
     const dispatch = useDispatch();
 
+     const [followingPage, setFollowingPage] = useState(1);
+     const [followersPage, setFollowersPage] = useState(1);
+                                                 
+    const loadMoreFollorwing = () => {
+        console.log("reached bottom load more following..")
+        setFollowingPage(followingPage + 1);
+        // Fetch more data for the next page
+    };                                          
+    const loadMoreFollowers = () => {
+        console.log("reached bottom load more followers..")
+        setFollowersPage(followersPage + 1);
+        // Fetch more data for the next page
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (isPublic) {
-                    const followersResponse = await fetch(
-                        `${API_KEY}/profile/${userId}/followers`,
-                        {
-                            method: 'GET',
-                            headers: {
-                                'Content-type': 'application/json',
-                                Authorization: `Bearer ${token}`,
-                            },
-                        }
-                    );
-                    const followingResponse = await fetch(
-                        `${API_KEY}/profile/${userId}/following`,
-                        {
-                            method: 'GET',
-                            headers: {
-                                'Content-type': 'application/json',
-                                Authorization: `Bearer ${token}`,
-                            },
-                        }
-                    );
+                if (isPublic ) {
+                    // console.log("totalFollowersPublic")
+                    // console.log(totalFollowersPublic)
+                    // console.log("publicFollowers")
+                    // console.log(publicFollowers.length)
 
-                    const followersData = await followersResponse.json();
-                    const followingData = await followingResponse.json();
+                    if( followingPage ==1 ||  totalFollowersPublic > publicFollowers.length){ 
+                        
+                        const followingResponse = await fetch(
+                            // `${API_KEY}/profile/${userId}/following?page=${followingPage}&pageSize=10`,
+                            `${API_KEY}/profile/${userId}/following?page=${followingPage}&pageSize=10`,
+                            {
+                                method: 'GET',
+                                headers: {
+                                    'Content-type': 'application/json',
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            }
+                        );
 
-                    // console.log('followers data ');
-                    // console.log(followersData);
-                    // console.log('followingData data ');
-                    // console.log(followingData);
 
-                    // console.log("followersData?.total")
-                    // console.log(followersData?.total)
+                        const followingData = await followingResponse.json();
 
-                    // console.log("ollowingData?.total")
-                    // console.log(followingData?.total)
-               
-                     
-                    setPublicFollowers(followingData?.data?.data);
-                    setPublicFollowings(followersData?.data?.data);
-                    
-
-                    setTotalFollowersPublic(followingData?.data?.total);
-                    setTotalFollowingPublic(followersData?.data?.total);
+                        setPublicFollowers(publicFollowers.concat(followingData?.data?.data || []));
+                       if(followingPage ==1){
+                        setTotalFollowersPublic(followingData?.data?.total || 0);
+                        
+                       }
+                        
+                    }
                 } else {
-
-                     dispatch(loadFollowing());
-                    // Use data from state
-                    // setFollowers([]); // Set state with the data from Redux store if available
-                    // setFollowings([]); // Set state with the data from Redux store if available
-                    // setTotalFollowersPublic(totalFollowers); // Use the total from Redux store
-                    // setTotalFollowingPublic(totalFollowing); // Use the total from Redux store
+                    
+                    dispatch(loadFollowing());
                 }
                 setLoading(false);
             } catch (error) {
@@ -107,14 +102,70 @@ const FollowModal: React.FC<{ onClose: () => void; isPublic: boolean; userId: an
         };
 
         fetchData();
-    }, [isPublic, userId]);
+    }, [isPublic, userId, followingPage]);
+
+
+     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (isPublic) {
+                    if( followersPage ==1 ||  totalFollowingPublic > publicFollowing.length){ 
+                        const followersResponse = await fetch(
+                            `${API_KEY}/profile/${userId}/followers?page=${followersPage}&pageSize=10`,
+                            {
+                                method: 'GET',
+                                headers: {
+                                    'Content-type': 'application/json',
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            }
+                        );
+
+                    
+                        const followingData = await followersResponse.json();
+
+                        // console.log('followers data ');
+                        // console.log(followersData);
+                        // console.log('followingData data ');
+                        // console.log(followingData);
+
+                        // console.log("followersData?.total")
+                        // console.log(followersData?.total)
+
+                        // console.log("ollowingData?.total")
+                        // console.log(followingData?.total)
+                
+                        
+                        setPublicFollowings(publicFollowing.concat(followingData?.data?.data || []));
+                        if(followersPage == 1){
+                            setTotalFollowingPublic(
+                                totalFollowingPublic + (followingData?.data?.total || 0)
+                            );
+                        }
+                    }
+                     
+                } else {
+
+                     dispatch(loadFollowers());
+                }
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [isPublic, userId, followersPage]);
 
     const tabs: Tab[] = [
         {
             name: 'Following',
             content: (
                 <>
-                    <FollowingTab isPublic={isPublic} following={isPublic ? publicFollowers : following} onClose={onClose} />
+                                                                    
+                                                                 
+                    <FollowingTab onScrollBottom={loadMoreFollorwing} isPublic={isPublic} following={isPublic ? publicFollowers : following} onClose={onClose} />
                 </>
             ),
         },
@@ -122,7 +173,7 @@ const FollowModal: React.FC<{ onClose: () => void; isPublic: boolean; userId: an
             name: 'Followers',
             content: (
                 <>
-                    <FollowersTab isPublic={isPublic} followers={isPublic ? publicFollowing : followers} onClose={onClose} />
+                    <FollowersTab  onScrollBottom={loadMoreFollowers} isPublic={isPublic} followers={isPublic ? publicFollowing : followers} onClose={onClose} />
                 </>
             ),
         },

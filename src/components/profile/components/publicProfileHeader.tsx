@@ -35,7 +35,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     const params: any = useParams();
     const [dropdown, setDropdown] = useState(false);
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
-    const [stories, setStories] = useState([]);
+    const [stories, setStories] = useState([1,2,3]);
     const API_KEY = process.env.VITE_API_URL;
     const token = useAuthStore((state) => state.token);
 

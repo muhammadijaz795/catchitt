@@ -1,4 +1,6 @@
- const VideoPlayer = ({ videoPath, index, onEnded, autoplay, onTimeUpdate }: any) => {
+import React, { memo } from 'react';
+
+const VideoPlayer = memo(({ videoPath, index, onEnded, autoplay, onTimeUpdate }: any) => {
     return (
         <video
             id={`video-${index}`}
@@ -10,6 +12,6 @@
             {/* Your browser does not support the video tag. */}
         </video>
     );
-};
+});
 
-export default VideoPlayer
+export default VideoPlayer;

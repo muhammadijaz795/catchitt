@@ -1,5 +1,5 @@
 import { ClickAwayListener, Modal } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../../shared/layout';
 import { useAuthStore } from '../../store/authStore';
@@ -18,6 +18,7 @@ import styles from './profile.module.scss';
 import { Liked } from './svg-components/Liked';
 import { Tagged } from './svg-components/Tagged';
 import { VideoIcon } from './svg-components/VideoIcon';
+import publicProfileStories from './popups/publicProfileStories';
 
 export const PublicProfile = (props: any) => {
     const { selectedIndex, setIndex } = useAuthStore();
@@ -40,6 +41,8 @@ export const PublicProfile = (props: any) => {
     const [copyPopup, setcopyPopup] = useState(false);
 
     const navigate = useNavigate();
+
+    const MemoizedStoriesOnPublicProfile = memo(publicProfileStories);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -184,7 +187,7 @@ export const PublicProfile = (props: any) => {
                         {activeTab !== 'Videos' ? <PrivatePosts /> : null}
                     </div>
                 </div>
-                <StoriesOnPublicProfile
+                 <MemoizedStoriesOnPublicProfile
                     story={storyPopup}
                     onclose={() => setStoryPopup(false)}
                     openReport={() => setReportPopup(true)}
