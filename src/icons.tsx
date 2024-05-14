@@ -67,6 +67,12 @@ import eyeIcon from './assets/eye.svg';
 import rankingIcon from './assets/ranking.svg';
 import uploadPrimaryIcon from './assets/upload.svg';
 import downArrow from './assets/downArrow.svg';
+import cross from './assets/cross.svg';
+import goLive from './assets/go-live.svg';
+import camera from './assets/camera.svg';
+import seezittLogo from './assets/seezitt-logo.svg';
+import cameraThumbnail from './assets/camera-thumbnail.svg';
+import chevronToggle from './assets/chevron-toggle.svg';
 
 export {
     duet,
@@ -137,5 +143,11 @@ export {
     eyeIcon,
     rankingIcon,
     uploadPrimaryIcon,
-    downArrow
+    downArrow,
+    cross,
+    goLive,
+    camera,
+    seezittLogo,
+    cameraThumbnail,
+    chevronToggle
 };

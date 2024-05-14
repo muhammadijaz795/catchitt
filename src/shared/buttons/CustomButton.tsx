@@ -11,6 +11,7 @@ function CustomButton(props: any) {
         fontWeight = 600,
         backgroundColor,
         loading,
+        preference,
         ...restProps
     } = props;
     const BasicButton = styled(Button)(({ theme }) => ({

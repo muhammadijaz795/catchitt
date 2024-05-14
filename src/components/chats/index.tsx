@@ -62,6 +62,8 @@ function ChatsSec() {
         staredMsgs,
         staredmodal,
         setstaredmodal,
+        showSearchMessage,
+        searchMessage,
         DangerText,
         setDengerText,
         dangetBtnText,
@@ -74,6 +76,7 @@ function ChatsSec() {
         setforwardModal,
         selectedData,
         onUsersInputChangeHandler,
+        searchMessagesHandler,
         showToast,
         handleScroll,
     } = hook();
@@ -117,6 +120,12 @@ function ChatsSec() {
                             }}
                             onReportClick={() => setreportPopup(true)}
                             onMarkSafe={() => setMarkTheMsgSafe(true)}
+                            searchMessage={searchMessage}
+                            showSearchMessage={showSearchMessage}
+                            searchMessagesHandler={searchMessagesHandler}
+                            searchMsgBar={() => {
+                                showSearchMessage(false);
+                            }}
                         />
                         {activeChat?.chats?.length === 0 ? (
                             !activeUser?.isGroup ? (
@@ -192,6 +201,10 @@ function ChatsSec() {
                             staredModal={() => {
                                 setshowShortSidebar(true);
                                 setstaredmodal(true);
+                                setMoreOptions(false);
+                            }}
+                            searchMsgBar={() => {
+                                showSearchMessage(true);
                                 setMoreOptions(false);
                             }}
                             numberOfMessages={staredMsgs[0]?.chats?.length}

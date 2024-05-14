@@ -14,7 +14,7 @@ import { AllVideos } from './components/discover/components/allVideosPage';
 import Discover from './components/discover/discover';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { RequestOtp } from './components/forgot-password/request-otp';
- 
+
 import HomePage from './components/homePage';
 import Event from './components/homePage/components/event';
 import { PrivacySecurityPage } from './components/privacy-security-page/privacy-security-page';
@@ -36,7 +36,10 @@ import { useAuthStore } from './store/authStore';
 import useApp from './useApp';
 import { OtpVerification } from './components/forgot-password/otp-verification';
 import CreateStoryPage from './components/stories';
- 
+import MyReports from './components/my-reports';
+import GoLive from './components/go-live';
+import Analytics from './components/analytics';
+
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
     const navigate = useNavigate();
@@ -126,7 +129,9 @@ function App() {
                             <Route path="/videos/:id" element={<AllVideos />} />
                             <Route path="/upload" element={<UploadPage />} />
                             <Route path="/create-story" element={<CreateStoryPage />} />
-                            <Route path="/live" element={<Event />} />
+                            <Route path="/golive" element={<GoLive />} />
+                            <Route path="/myreports" element={<MyReports />} />
+                            <Route path="/analytics" element={<Analytics />} />
                         </Routes>
                     </Router>
                 </VideoProvider>

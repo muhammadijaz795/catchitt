@@ -22,6 +22,7 @@ function useChat() {
     const [replySms, setreplysms] = useState<boolean>(false);
     const [forwardModal, setforwardModal] = useState<boolean>(false);
     const [staredmodal, setstaredmodal] = useState<boolean>(true);
+    const [searchMessage, showSearchMessage] = useState<boolean>(true);
     const [selectedData, setselectedData] = useState<any[]>([]);
     const [addMembersPopup, setAddMembersPopup] = useState<boolean>(false);
     const [showShortSidebar, setshowShortSidebar] = useState<boolean>(false);
@@ -63,12 +64,12 @@ function useChat() {
     };
     // Function to load more messages
     const loadMoreMessages = () => {
-        console.log("AAAAA");
+        console.log('AAAAA');
         setPage((prevPage) => prevPage + 1);
     };
 
     // Function to handle scrolling to the bottom of the message list
-    const handleScroll = (event) => {
+    const handleScroll = (event: any) => {
         const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
         if (scrollTop + clientHeight === scrollHeight) {
             // User has scrolled to the bottom
@@ -140,6 +141,10 @@ function useChat() {
                     // Format the date using moment.js
                     const conversationTimeStamp = moment(date).format('h:mm A');
                     // chats?.users?.forEach((user) => {
+
+                    const isLastIndex = index === res?.data?.data?.length - 1;
+
+                    if (isLastIndex) markMessageAsSeen(chats?.users[0]?._id, chats?._id);
                     tempArr.push({
                         userId: chats?.users[1]?._id,
                         userName: chats?.users[1]?.name,
@@ -298,9 +303,10 @@ function useChat() {
         (socketRef.current as any).emit('remove-react', { from: sender, messageId });
     };
 
-    const markMessageAsSeen = (messageId: any) => {
-        (socketRef.current as any).emit('mark-message-as-seen', { userId: sender, messageId });
+    const markMessageAsSeen = (userId: any, conversationId: any) => {
+        (socketRef.current as any).emit('mark-conversation-as-seen', { userId, conversationId });
     };
+
     useEffect(() => {
         scrollToBottom();
     }, [msg]);
@@ -487,6 +493,7 @@ function useChat() {
                 setConversationId(user?.conversationId);
                 loadChatMessages(user?.senderId, user?.receiverId, user?.conversationId);
                 setActiveUser(user);
+                markMessageAsSeen(user?.senderId, user?.conversationId);
             }
         });
 
@@ -521,14 +528,60 @@ function useChat() {
                 // Format the date using moment.js
                 const messageTimeStamp = moment(date).format('h:mm A');
 
-                const isLastIndex = index === array.length - 1;
-
-                if (isLastIndex) markMessageAsSeen(element?._id);
-
                 setactiveChat((currentChat: any) => ({
                     ...currentChat,
                     chats: [
                         ...currentChat?.chats,
+                        {
+                            msg: element?.message,
+                            time: messageTimeStamp,
+                            emojis: false,
+                            dropdown: false,
+                            id: element?._id,
+                            isrecevied: element?.receiverId?._id == receiverId ? false : true,
+                            stared: element?.isStarred,
+                            isRead: element?.isRead,
+                            replysms: element?.repliedMessage
+                                ? element?.repliedMessage?.message
+                                : false,
+                        },
+                    ],
+                }));
+            });
+        } catch (error) {
+            console.log('error chat messages', error);
+        }
+    };
+
+    const searchChatMessages = async (
+        query: String | Number,
+        receiverId: String | Number,
+        conversationId: String | Number
+    ) => {
+        try {
+            const response = await fetch(
+                `${API_KEY}/chat/search/conversation/messages?page=${page}&pageSize=10&searchQuery=${query}&conversationId=${conversationId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const res = await response.json();
+            res?.data?.data.forEach((element: any, index: number, array: any[]) => {
+                console.log('Chat Messages : ', element);
+                // Convert milliseconds to date
+                const date = new Date(element?.createdTime);
+
+                // Format the date using moment.js
+                const messageTimeStamp = moment(date).format('h:mm A');
+
+                setactiveChat((currentChat: any) => ({
+                    ...currentChat,
+                    chats: [
+                        // ...currentChat?.chats,
                         {
                             msg: element?.message,
                             time: messageTimeStamp,
@@ -587,6 +640,7 @@ function useChat() {
         setshowShortSidebar(false);
         setGroupOptions(false);
         setstaredmodal(false);
+        showSearchMessage(false);
         setMoreOptions(false);
         setstaredMsgs([]);
     }, [activeUser]);
@@ -875,8 +929,19 @@ function useChat() {
         searchChats(e);
     };
 
+    const searchMessagesHandler = (e: any) => {
+        console.log('Messages : ', typeof e);
+        if (e.length >= 3) {
+            searchChatMessages(e, receiver, conversationId);
+        }
+        if (e.length === 0) {
+            loadChatMessages(sender, receiver, conversationId);
+        }
+    };
+
     return {
         onUsersInputChangeHandler,
+        searchMessagesHandler,
         moreOptions,
         setMoreOptions,
         reportPopup,
@@ -927,6 +992,8 @@ function useChat() {
         staredMsgs,
         staredmodal,
         setstaredmodal,
+        showSearchMessage,
+        searchMessage,
         DangerText,
         dangetBtnText,
         setDengerText,

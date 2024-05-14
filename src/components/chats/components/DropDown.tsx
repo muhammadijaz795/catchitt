@@ -1,14 +1,16 @@
 import { Switch } from 'antd';
 import style from './DropDown.module.scss';
 import { rightArrow as arrow } from '../../../icons';
+import { search } from '../../../icons';
 import { useState } from 'react';
+
 function DropDown(props: any) {
-    const { blockH, reportH, pinUserH, activeUser, staredModal, numberOfMessages } = props || {};
+    const { blockH, reportH, pinUserH, activeUser, staredModal, numberOfMessages,searchMsgBar } = props || {};
     const [muteN, setmuteN] = useState(false);
     return (
         <div onClick={(e) => e.stopPropagation()} className={style.dropdownMenu}>
             <div className={style.dropdownRow}>
-                <p>Mute notificaions</p>
+                <p>Mute notifications</p>
                 <Switch
                     onChange={() => setmuteN(!muteN)}
                     value={muteN}
@@ -32,13 +34,19 @@ function DropDown(props: any) {
                     <img className={style.arrowRight} src={arrow} alt="arrow right" />
                 </div>
             </div>
+            <div onClick={searchMsgBar} className={style.dropdownRow}>
+                <p>Search Messages</p>
+                <div className={style.starredMessagesRow}>
+                    <img src={search} style={{ width: 20, height: 20 }} alt="" />
+                </div>
+            </div>
             <div onClick={blockH} className={style.dropdownRow}>
                 <p className={style.warningMenuItem}>
                     {activeUser?.isBlocked ? 'UnBlock' : 'Block'}
                 </p>
                 <div style={{ visibility: 'hidden' }} className={style.starredMessagesRow}>
                     <p>A</p>
-                    <img className={style.arrowRight} src={arrow} alt="arrow right" />
+                    <img style={{ height: 20, width: 20 }} src={arrow} alt="arrow right" />
                 </div>
             </div>
             <div className={style.dropdownRow} onClick={reportH}>

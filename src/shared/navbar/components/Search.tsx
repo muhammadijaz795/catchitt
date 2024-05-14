@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { search } from '../../../icons';
+import { search, cross } from '../../../icons';
 
-function Search({ placeholder, onInputChangeHandler, submitHandler }: any) {
+function Search({
+    placeholder,
+    onInputChangeHandler,
+    submitHandler,
+    showClose = false,
+    searchMsgBar,
+}: any) {
     const { pathname } = useLocation();
 
     const [Search, setSearch] = useState<any>('');
@@ -22,7 +28,7 @@ function Search({ placeholder, onInputChangeHandler, submitHandler }: any) {
                 flex: 1,
                 height: 40,
                 background: '#F8F8F8',
-                borderRadius: 4,
+                borderRadius: showClose ? 0 : 4,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
@@ -54,6 +60,9 @@ function Search({ placeholder, onInputChangeHandler, submitHandler }: any) {
                     value={Search}
                 />
             </form>
+            {showClose && (
+                <img onClick={searchMsgBar} style={{ cursor: 'pointer' }} src={cross} alt="" />
+            )}
         </div>
     );
 }

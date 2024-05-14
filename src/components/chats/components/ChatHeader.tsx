@@ -1,8 +1,19 @@
-import { useState } from 'react';
-import { avatar, groupDefaultIcon, more } from '../../../icons';
+import Search from '../../../shared/navbar/components/Search';
+
+import { avatar, groupDefaultIcon, more, cross } from '../../../icons';
 import style from './ChatHeader.module.scss';
 function ChatHeader(props: any) {
-    const { moreOptionH, name, isGroup, safeMsg, onReportClick, onMarkSafe } = props || {};
+    const {
+        moreOptionH,
+        name,
+        isGroup,
+        safeMsg,
+        onReportClick,
+        onMarkSafe,
+        searchMessagesHandler,
+        searchMessage,
+        searchMsgBar,
+    } = props || {};
 
     // const [mark, setmark] = useState(false);
     return (
@@ -10,7 +21,12 @@ function ChatHeader(props: any) {
             <div className={style.chatHeader}>
                 <div>
                     {isGroup ? (
-                        <img style={{padding:8}} className={style.avatar} src={groupDefaultIcon} alt="" />
+                        <img
+                            style={{ padding: 8 }}
+                            className={style.avatar}
+                            src={groupDefaultIcon}
+                            alt=""
+                        />
                     ) : (
                         <img className={style.avatar} src={avatar} alt="" />
                     )}
@@ -33,6 +49,16 @@ function ChatHeader(props: any) {
                             Mark safe
                         </button>
                     </div>
+                </div>
+            )}
+            {searchMessage && (
+                <div className="flex flex-row items-center justify-between">
+                    <Search
+                        onInputChangeHandler={searchMessagesHandler}
+                        placeholder={'Search'}
+                        showClose={true}
+                        searchMsgBar={searchMsgBar}
+                    />
                 </div>
             )}
         </div>

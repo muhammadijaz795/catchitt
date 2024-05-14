@@ -11,7 +11,15 @@ function UserChat(props: any) {
             onClick={() => OnChatClick(userId)}
         >
             <div>
-                {isGroup ? <img style={{padding:8 , background:'#EAEAEA'}} src={groupDefaultIcon} alt="" /> : <img src={avatar} alt="" />}
+                {isGroup ? (
+                    <img
+                        style={{ padding: 8, background: '#EAEAEA' }}
+                        src={groupDefaultIcon}
+                        alt=""
+                    />
+                ) : (
+                    <img src={avatar} alt="" />
+                )}
                 <div>
                     <p className={style.nameText}>{userName}</p>
                     <p className={style.msgText}>{lastMsg}</p>
@@ -19,12 +27,14 @@ function UserChat(props: any) {
             </div>
             <div>
                 <p className={style.seenStatus}>{lastSeen}</p>
-                {!ispined ? (
+                {ispined ? (
+                    <img src={pinChat} alt="" />
+                ) : unReadMsgs > 0 ? (
                     <div className={style.msgCounter}>
                         <p>{unReadMsgs}</p>
                     </div>
                 ) : (
-                    <img src={pinChat} alt="" />
+                    <div ></div>
                 )}
             </div>
         </div>
