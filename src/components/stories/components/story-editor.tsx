@@ -36,6 +36,7 @@ const StoryEditor = ({file}:any) => {
     const [thumbnail, setVideoThumbnail] = useState<any>(null);
     const [finalVideoBlob, setFinalVideoBlob] = useState<any>(null);
     const [fileType, setFileType] = useState<any>("");
+    const [isPosting, setIsPosting] = useState(false);
 
     // useEffect(() => {
 
@@ -184,6 +185,8 @@ const StoryEditor = ({file}:any) => {
         }
         // return;
 
+
+        setIsPosting(true);
         fetch(`${API_KEY}/media-content`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
@@ -193,9 +196,11 @@ const StoryEditor = ({file}:any) => {
             
                 console.log("res from post story")
                 console.log(res)
+                setIsPosting(false);
         })
         .catch((err) => {
             console.log(err);
+            setIsPosting(false);
         });
         
     };
@@ -478,7 +483,7 @@ const StoryEditor = ({file}:any) => {
                 console.log("exported image blob")
                 console.log(img)
                 // const img = new Image();
-            //  img.src = canvasDataURL;
+                //  img.src = canvasDataURL;
                 setFinalVideoBlob(img);
                 setPreviewUrl(canvasDataURL);
                 setIsPreview(true);
@@ -587,7 +592,7 @@ const StoryEditor = ({file}:any) => {
                 
             </div>
             {
-                isPreview ? <StoryPreview open={isPreview} url={previewUrl} 
+                isPreview ? <StoryPreview isPosing={isPosting} open={isPreview} url={previewUrl} 
                 onCancel={
                     ()=>{
                         setIsPreview(false)

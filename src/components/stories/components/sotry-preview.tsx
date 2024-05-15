@@ -1,6 +1,27 @@
 import { Box, Modal } from '@mui/material';
 import styles from './story-preview.module.scss';
-const StoryPreview = ({ open, onCancel, onPost, url }: any) => {
+import { useEffect, useState } from 'react';
+const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
+
+
+    const [isVideo, setIsVideo] = useState(false);
+    useEffect(() => {
+        console.log("comming in preview")
+        // console.log(url)
+        if (url.startsWith('data:image/')) {
+            console.log("Base64 image");
+            setIsVideo(false)
+
+        } else if (url.startsWith('blob:http') || url.startsWith('blob:https')) {
+            console.log("Video blob");
+            // Handle video blob
+             setIsVideo(true)
+
+        } else {
+            console.log("Unknown URL format");
+        }
+        // const imageUrl = URL.createObjectURL(blob);
+    }, [url]);
     return (
         <div>
             <Modal
@@ -11,14 +32,31 @@ const StoryPreview = ({ open, onCancel, onPost, url }: any) => {
             >
                 <Box sx={popupStyle}>
                     <div className="flex flex-col gap-2 relative">
-                        <video
-                            className="h-[600px]  "
-                            src={url}
-                            width={340}
-                            height={600}
-                            autoPlay
-                        ></video>
+                        {
+                            isVideo ? 
+                            <video
+                                className="h-[600px]  "
+                                src={url}
+                                width={340}
+                                height={600}
+                                autoPlay
+                            ></video> 
+                            :
+                             <img  width={340}
+                                height={600} 
+                                src={url} alt="" />
+                        }
 
+                        {isPosting?
+                            <div className="w-[330px] h-[560px] flex  justify-center items-center text-white absolute top-0 left-0 bg-[#5448B299]">
+                                Posting...
+
+                            </div>
+                            :
+                            ""
+                        }
+                        
+                       
                         <div className="flex justify-between w-[325px] h-[40px]">
                             <button onClick={onCancel} style={secondaryBtn}>
                                 Discard
