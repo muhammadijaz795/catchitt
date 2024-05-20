@@ -13,7 +13,7 @@ import VideoesMaping from './components/videoesMaping';
 import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 import PopupForVideoPlayer from './popups/popupForVideoPlayer';
- 
+
 import styles from './profile.module.scss';
 import { Bookmark } from './svg-components/Bookmark';
 import { Liked } from './svg-components/Liked';
@@ -52,7 +52,7 @@ export const Profile = (props: any) => {
     const [copyPopup, setcopyPopup] = useState(false);
 
     // @ts-ignore
-    const profileData = useSelector((store) => store?.reducers?.profile);
+    let profileData = useSelector((store) => store?.reducers?.profile);
     const profile = useLiveQuery(() => db.profile.toArray())?.[0];
     console.log('profile', profile);
 
@@ -96,8 +96,6 @@ export const Profile = (props: any) => {
     };
     const onSave = () => {
         setProfileModal(false);
-        
-       
     };
     useEffect(() => {
         const fetchData = async () => {
@@ -108,9 +106,8 @@ export const Profile = (props: any) => {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    
                     setUserVideos(data.data.data);
-                     
+
                     setLoading(false);
                 })
                 .catch((err) => {
@@ -118,16 +115,14 @@ export const Profile = (props: any) => {
                     setLoading(false);
                 });
 
-
             fetch(`${API_KEY}/profile/${userId}/liked-videos`, {
                 method: 'GET',
                 headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             })
                 .then((res) => res.json())
-                .then((data:any) => {
-                    
+                .then((data: any) => {
                     setUserlikedVideos(data.data.data);
-                    
+
                     setLoading(false);
                 })
                 .catch((err) => {
@@ -173,9 +168,7 @@ export const Profile = (props: any) => {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                  
                     setbookmarkVideos(data.data.data);
-                  
                 })
                 .catch((err) => {
                     console.log('collectons error', err);
@@ -183,19 +176,18 @@ export const Profile = (props: any) => {
 
             dispatch(getRandomUsers());
             dispatch(getFriends());
-            dispatch(getProfileData());
-
-        };//fetchload
+            const data = await dispatch(getProfileData());
+            profileData = data;
+        }; //fetchload
 
         fetchData();
-
     }, []);
     const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
 
     const closeFollowModal = () => {
-        console.log("close the model")
+        console.log('close the model');
         setFollowModal(null);
     };
     const onVideoModal = (video: any) => {
@@ -217,7 +209,6 @@ export const Profile = (props: any) => {
         }
     });
 
-
     const MemoizedStoriesOnPublicProfile = memo(publicProfileStories);
 
     return (
@@ -234,7 +225,11 @@ export const Profile = (props: any) => {
                     <Modal open={!!followModal} className={styles.likesModal}>
                         <ClickAwayListener onClickAway={() => setFollowModal(null)}>
                             <div className={styles.likesModalContainer}>
-                                <FollowModal isPublic={false} onClose={closeFollowModal} userId={undefined} />
+                                <FollowModal
+                                    isPublic={false}
+                                    onClose={closeFollowModal}
+                                    userId={undefined}
+                                />
                             </div>
                         </ClickAwayListener>
                     </Modal>
@@ -253,9 +248,10 @@ export const Profile = (props: any) => {
                         setProfileModal={setProfileModal}
                         setLikesModal={setLikesModal}
                         showStory={() => {
-                            console.log("sett story popup caling ")
-                            setStoryPopup(true)
+                            console.log('sett story popup caling ');
+                            setStoryPopup(true);
                         }}
+                        onProfileEdit={onSave}
                         copyHandler={() => setcopyPopup(true)}
                     />
                     <div className={styles.tabs}>
@@ -280,15 +276,18 @@ export const Profile = (props: any) => {
                             {activeTab === 'Videos' ? (
                                 <VideoesMaping videos={userVideos} openVideoModal={onVideoModal} />
                             ) : null}
-                            {activeTab === 'Liked Videos' ? (
-                                <VideoesMaping
-                                    videos={userlikedVideos}
-                                    openVideoModal={onVideoModal}
-                                />
+                            {activeTab === 'Private' ? (
+                                <VideoesMaping videos={userVideos} openVideoModal={onVideoModal} />
                             ) : null}
                             {activeTab === 'Bookmarks' ? (
                                 <VideoesMaping
                                     videos={bookmarkVideos}
+                                    openVideoModal={onVideoModal}
+                                />
+                            ) : null}
+                            {activeTab === 'Liked Videos' ? (
+                                <VideoesMaping
+                                    videos={userlikedVideos}
                                     openVideoModal={onVideoModal}
                                 />
                             ) : null}
@@ -329,16 +328,7 @@ export const Profile = (props: any) => {
                     onclose={() => setStoryPopup(false)}
                     openReport={() => setReportPopup(true)}
                 />
-                {/* <div
-                    style={{
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                    }}
-                ></div> */}
             </div>
-            {/* </div> */}
         </Layout>
     );
 };
- 

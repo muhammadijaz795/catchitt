@@ -115,10 +115,7 @@ export default function COPY_AND_SEND_MENU({ copyHandler }: any) {
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
                     </div>
                 </MenuItem>
-                <MenuItem
-                    onClick={handleClose}
-                    style={{ padding: '0px', margin: '0px' }}
-                >
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={copyHandler}>
                         <img src={copyLink} />
                         <p className={`${style.p} ${style.black_500}`}>Copy link</p>

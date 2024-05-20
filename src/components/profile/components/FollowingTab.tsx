@@ -24,7 +24,6 @@ function FollowingTab({ onClose, following, isPublic, onScrollBottom }: any) {
         setUnfollowPopup(false);
     };
 
-    
     const handleScroll = (e: any) => {
         // console.log("handle scroll");
         // console.log(e.target.scrollHeight - e.target.scrollTop);
@@ -32,17 +31,21 @@ function FollowingTab({ onClose, following, isPublic, onScrollBottom }: any) {
 
         // Adjusted calculation with a small threshold
         const threshold = 1;
-        const bottom = e.target.scrollHeight - e.target.scrollTop <= e.target.clientHeight + threshold;
+        const bottom =
+            e.target.scrollHeight - e.target.scrollTop <= e.target.clientHeight + threshold;
 
         if (bottom) {
             onScrollBottom();
         }
     };
     return (
-        <div style={{
-           
-            overflowY:'scroll',
-        }} className={styles.div} onScroll={handleScroll}>
+        <div
+            style={{
+                overflowY: 'scroll',
+            }}
+            className={styles.div}
+            onScroll={handleScroll}
+        >
             {following?.map((user: any) =>
                 isPublic ? (
                     <PublicUser

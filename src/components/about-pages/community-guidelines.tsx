@@ -23,9 +23,9 @@ export const CommunityPage = ({ className }: CommunityPageProps) => {
         setSettingsDropdown(true);
     };
 
-    if (!isLoggedIn) {
-        return <Navigate to="/auth" />;
-    }
+    // if (!isLoggedIn) {
+    //     return <Navigate to="/auth" />;
+    // }
 
     useEffect(() => {
         setIndex(7);

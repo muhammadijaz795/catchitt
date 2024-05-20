@@ -22,7 +22,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => {
   // Check if a user is already logged in based on localStorage
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
   const accountType = localStorage.getItem('accountType')
   const _id = localStorage.getItem('_id');
   const email = localStorage.getItem('email');

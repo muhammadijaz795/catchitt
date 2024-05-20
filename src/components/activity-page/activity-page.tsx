@@ -76,7 +76,7 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 setActivityData(responseData.data.data);
-                // console.log(responseData.data.data[0].user._id);
+                console.log('DATA Notifictions : ', responseData.data.data);
                 globalUserId = responseData.data.data[0].user._id;
                 // console.log(`the global user id: ${globalUserId}`);
                 handleFetchFollowedUsers(globalUserId);
@@ -121,9 +121,9 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
         // handleFetchFollowedUsers(globalUserId);
     }, []);
 
-    if (!isLoggedIn) {
-        return <Navigate to="/auth" />;
-    }
+    // if (!isLoggedIn) {
+    //     return <Navigate to="/auth" />;
+    // }
 
     // Calculate the pagination boundaries
     const lastIndex = currentPage * itemsPerPage;
@@ -219,11 +219,11 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                                                 <button
                                                     className={
                                                         followedUsersData.length > 0 &&
-                                                            followedUsersData.some(
-                                                                (user) =>
-                                                                    user.followed_userID._id ===
-                                                                    activity.triggeredUser._id
-                                                            )
+                                                        followedUsersData.some(
+                                                            (user) =>
+                                                                user.followed_userID._id ===
+                                                                activity.triggeredUser._id
+                                                        )
                                                             ? styles.followingBtn
                                                             : styles.followBtn
                                                     }
@@ -234,11 +234,11 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                                                     }
                                                 >
                                                     {followedUsersData.length > 0 &&
-                                                        followedUsersData.some(
-                                                            (user) =>
-                                                                user.followed_userID._id ===
-                                                                activity.triggeredUser._id
-                                                        )
+                                                    followedUsersData.some(
+                                                        (user) =>
+                                                            user.followed_userID._id ===
+                                                            activity.triggeredUser._id
+                                                    )
                                                         ? 'Following'
                                                         : 'Follow'}
                                                 </button>

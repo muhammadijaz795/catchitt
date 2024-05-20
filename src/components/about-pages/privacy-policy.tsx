@@ -26,9 +26,9 @@ export const PrivacyPage = ({ className }: PrivacyPageProps) => {
         setSettingsDropdown(true)
     };
 
-    if (!isLoggedIn) {
-        return <Navigate to="/auth" />;
-    }
+    // if (!isLoggedIn) {
+    //     return <Navigate to="/auth" />;
+    // }
 
     useEffect(() => {
         setIndex(7)
