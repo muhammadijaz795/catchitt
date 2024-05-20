@@ -47,9 +47,10 @@ export const PushNotificationsPage = ({ className }: PushNotificationsPageProps)
         setSettingsDropdown(true);
     };
 
-    if (!isLoggedIn) {
-        return <Navigate to="/auth" />;
-    }
+    // if (!isLoggedIn) {
+        console.log("IS Logged In : ",isLoggedIn);
+        // return <Navigate to="/auth" />;
+    // }
 
     useEffect(() => {
         setIndex(5);

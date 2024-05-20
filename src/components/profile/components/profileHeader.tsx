@@ -1,23 +1,20 @@
-import { FunctionComponent, useEffect, useState } from 'react';
-import styles from './profileHeader.module.scss';
-import ShareIcon from '../svg-components/ShareIcon';
-import EditIcon from '../svg-components/EditIcon';
-import LinkIcon from '../svg-components/LinkIcon';
-import MailIcon from '../svg-components/MailIcon';
-import EditProfileIcon from '../svg-components/EditProfileIcon';
-import ProfileViewIcon from '../svg-components/ProfileViewIcon';
-import EditButtonIcon from '../svg-components/EditButtonIcon';
-import LikesModal from './LikesModal';
 import { Avatar } from '@mui/material';
-import { useAuthStore } from '../../../store/authStore';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { getProfileData } from '../../../redux/AsyncFuncs';
 import COPY_AND_SEND_MENU from '../../../shared/Menu/copyAndSend';
-import { useSelector } from 'react-redux';
-import CoverImagePopup from './cover-img-popup';
-import { getProfileData, loadFollowers } from '../../../redux/AsyncFuncs';
-import { useDispatch } from 'react-redux';
+import { useAuthStore } from '../../../store/authStore';
 import AddIcon from '../svg-components/AddIcon';
+import EditButtonIcon from '../svg-components/EditButtonIcon';
+import EditIcon from '../svg-components/EditIcon';
+import MailIcon from '../svg-components/MailIcon';
+import ProfileViewIcon from '../svg-components/ProfileViewIcon';
+import ShareIcon from '../svg-components/ShareIcon';
+import link from '../svg-components/link-icon.png';
+import CoverImagePopup from './cover-img-popup';
 import CreateStoryPopup from './createStoryPopup';
-import { useNavigate } from "react-router-dom";
+import styles from './profileHeader.module.scss';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -26,9 +23,8 @@ interface Props {
     profileData: any;
     showStory: any;
     copyHandler: any;
+    onProfileEdit: any;
 }
-
-
 
 const ProfileHeader: FunctionComponent<Props> = ({
     setProfileModal,
@@ -37,11 +33,13 @@ const ProfileHeader: FunctionComponent<Props> = ({
     profileData,
     showStory,
     copyHandler,
+    onProfileEdit,
 }) => {
     const API_KEY = process.env.VITE_API_URL;
-    const [stories, setStories] = useState([1,2,3,4,5,6,7,8,9,10]);
-     
-      const navigate = useNavigate();
+    const [stories, setStories] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const [websiteLink, setWebsiteLink] = useState<string>('');
+    const [bio, setBio] = useState<string>('');
+    const navigate = useNavigate();
 
     // const token = useAuthStore((state) => state.token);
     const auth = useAuthStore((state) => state._id);
@@ -127,7 +125,6 @@ const ProfileHeader: FunctionComponent<Props> = ({
                 });
 
             dispatch(getProfileData());
-            
         } catch (error) {
             console.log(error);
         }
@@ -135,9 +132,35 @@ const ProfileHeader: FunctionComponent<Props> = ({
 
     const addStory = () => {
         setAddStoryPopup(true);
-        console.log("add story")
+        console.log('add story');
     };
+
+    const loadProfile = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/`, {
+                method: 'GET',
+                // add bearer token to heders
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                const { data } = await response.json();
+                console.log('DATA UPDATED', data);
+                setWebsiteLink(data?.website);
+                setBio(data?.bio);
+            } else {
+                console.log(response);
+            }
+        } catch (error) {
+            console.error();
+        }
+    };
+
     useEffect(() => {
+        loadProfile();
         fetch(`${API_KEY}/media-content/stories/feed`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
@@ -150,15 +173,16 @@ const ProfileHeader: FunctionComponent<Props> = ({
             .catch((err) => {
                 console.log('collectons error', err);
             });
-
-            // dispatch(loadFollowers());
     }, []);
-    console.log('profileData', profileData);
 
-    
+    useEffect(() => {
+        console.log('OnProfile Edit : ');
+        loadProfile();
+    }, [onProfileEdit]);
+
     const totalFollowers = useSelector((state: any) => {
-         console.log("state in total followers in profile header")
-         console.log(state)
+        console.log('state in total followers in profile header');
+        console.log(state);
         return state.reducers?.followers.total;
     });
     const totalFollwing = useSelector((state: any) => state?.reducers?.followings?.total);
@@ -180,8 +204,8 @@ const ProfileHeader: FunctionComponent<Props> = ({
                     onCancel={() => setAddStoryPopup(false)}
                     open={addStoryPopup}
                     onSelect={() => {
-                        setAddStoryPopup(false)
-                          navigate("/create-story");
+                        setAddStoryPopup(false);
+                        navigate('/create-story');
                     }}
                 />
             ) : (
@@ -202,28 +226,26 @@ const ProfileHeader: FunctionComponent<Props> = ({
                     )}
                 </div>
                 <div className={styles.bottomContainer}>
-                    <div style={{ display: 'flex', flexDirection:'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <div
-                        onClick={() => {
+                            onClick={() => {
                                 if (stories?.length > 0) {
                                     showStory();
                                 }
                             }}
                             className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}
                         >
-                        
-
-                        <Avatar
-                            style={{ width: '100%', height: '100%' }}
-                            src={profileImg ? profileImg : Avatar}
-                            alt={profileData?.name}
-                        />
+                            <Avatar
+                                style={{ width: '100%', height: '100%' }}
+                                src={profileImg ? profileImg : Avatar}
+                                alt={profileData?.name}
+                            />
                         </div>
                         <span className={styles.addStoryIcon} onClick={addStory}>
-                             <AddIcon />
+                            <AddIcon />
                         </span>
                     </div>
-                   
+
                     <button
                         style={{
                             position: 'relative',
@@ -242,40 +264,41 @@ const ProfileHeader: FunctionComponent<Props> = ({
                     </div>
                     <div className={styles.userStats}>
                         <div
-                            onClick={() => onFollowModalActive('followers')}
-                            className={styles.statContainer}
-                        >
-                            <p className={styles.boldText}>{totalFollowers}</p>
-                            <p className={styles.text}>Followers</p>
-                        </div>
-                        <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
-                            <p className={styles.boldText}> {totalLikes}</p>
-                            <p className={styles.text}>Likes</p>
-                        </div>
-                        <div
                             onClick={() => onFollowModalActive('following')}
                             className={styles.statContainer}
                         >
-                            <p className={styles.boldText}>{totalFollwing}</p>
+                            <p className={styles.boldText}>{profileData?.following ?? 0}</p>
                             <p className={styles.text}>Following</p>
+                        </div>
+                        <div
+                            onClick={() => onFollowModalActive('followers')}
+                            className={styles.statContainer}
+                        >
+                            <p className={styles.boldText}>{profileData?.followers ?? 0}</p>
+                            <p className={styles.text}>Followers</p>
+                        </div>
+                        <div onClick={() => setLikesModal(true)} className={styles.statContainer}>
+                            <p className={styles.boldText}> {profileData?.likesNum ?? 0}</p>
+                            <p className={styles.text}>Likes</p>
                         </div>
                     </div>
                     <div className={styles.links}>
-                        {profileData?.website && (
-                            <>
-                                <div className={styles.linkContainer}>
-                                    <LinkIcon />
-                                    <p className={styles.link}>{profileData?.website}</p>
-                                </div>
-                                /
-                            </>
-                        )}
                         <div className={styles.linkContainer}>
+                            <img
+                                src={link}
+                                className="object-contain"
+                                width={16.67}
+                                height={16.67}
+                            />
+                            <p className={styles.link}>{websiteLink}</p>
+                        </div>
+                        /
+                        <a className={styles.linkContainer} href={`mailto:${profileData?.email}`}>
                             <MailIcon />
                             <p className={styles.link}>{profileData?.email}</p>
-                        </div>
+                        </a>
                     </div>
-                    <p className={styles.about}>{profileData?.bio}</p>
+                    <p className={styles.about}>{bio}</p>
                     <div className={styles.actions}>
                         <button onClick={() => setProfileModal(true)} className={styles.button}>
                             <EditButtonIcon />
@@ -293,9 +316,3 @@ const ProfileHeader: FunctionComponent<Props> = ({
 };
 
 export default ProfileHeader;
-
-
-const storyIndicator = {
-    background: "red",
-    padding: '3px'
-}

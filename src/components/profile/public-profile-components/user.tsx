@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import styles from './user.module.scss';
 import { defaultAvatar } from '../../../icons';
 import UnfollowPopup from '../components/unfollow-popup';
 import { Link } from 'react-router-dom';
-
 
 const API_KEY = process.env.VITE_API_URL;
 const PublicUser: React.FC<{
@@ -19,7 +18,7 @@ const PublicUser: React.FC<{
         handleFollowClick();
     };
 
-      const handleFollowClick = async () => {
+    const handleFollowClick = async () => {
         setLoading(true);
 
         const accountId = user?.follower_userID?._id;
@@ -54,8 +53,6 @@ const PublicUser: React.FC<{
         }
     };
 
-    
-
     return (
         <>
             <div className={styles.user}>
@@ -75,7 +72,7 @@ const PublicUser: React.FC<{
                                 popupClose();
                             }}
                             to={'/profile/' + user?.follower_userID?.username}
-                        > 
+                        >
                             <div className={styles['div-20']}>{user?.follower_userID?.name}</div>
                         </Link>
                     </div>
@@ -89,4 +86,4 @@ const PublicUser: React.FC<{
     );
 };
 
-export default PublicUser
+export default PublicUser;
