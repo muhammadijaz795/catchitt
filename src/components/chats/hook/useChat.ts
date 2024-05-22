@@ -417,7 +417,7 @@ function useChat() {
             message: msg,
             from: sender,
             type: 'Text',
-            
+            repliedMessageId: 0,
         };
         // Get current time
         const currentTime = moment();
