@@ -2,7 +2,7 @@ import Navbar from '../../shared/navbar';
 import { camera, seezittLogo, cameraThumbnail, chevronToggle } from '../../icons';
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
-import protooClient from 'protoo-client';
+// import protooClient from 'protoo-client';
 
 function GoLive() {
     const [isRotated, setIsRotated] = useState(false);
@@ -16,12 +16,12 @@ function GoLive() {
     const [permissionState, setPermissionState] = useState(false);
 
     useEffect(() => {
-        startSocket();
-        return () => {
-            if (socketRef.current as any) {
-                (socketRef.current as any).disconnect();
-            }
-        };
+        // startSocket();
+        // return () => {
+        //     if (socketRef.current as any) {
+        //         (socketRef.current as any).disconnect();
+        //     }
+        // };
     });
 
     useEffect(() => {
@@ -83,18 +83,18 @@ function GoLive() {
     }, []);
 
     function startSocket() {
-        // console.log("Here");
-        // if ((socketRef.current as any) && (socketRef.current as any).connected) {
-        //     console.log('Socket already connected.');
-        //     console.log("Here Inside");
-        //     return;
-        // }
-        // (socketRef.current as any) = io(SERVER_URL, {
-        //     transports: ['websocket'],
-        // });
-        const transport = new protooClient.WebSocketTransport(SERVER_URL);
+        console.log("Here");
+        if ((socketRef.current as any) && (socketRef.current as any).connected) {
+            console.log('Socket already connected.');
+            console.log("Here Inside");
+            return;
+        }
+        (socketRef.current as any) = io(SERVER_URL, {
+            transports: ['websocket'],
+        });
+        // const transport = new protooClient.WebSocketTransport(SERVER_URL);
 
-        console.log('Transport : ', transport);
+        // console.log('Transport : ', transport);
     }
 
     const handlePermissionRequest = async () => {
