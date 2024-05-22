@@ -4,9 +4,6 @@
 // import { io } from 'socket.io-client';
 // // import protooClient from 'protoo-client';
 
-import { useEffect } from "react";
-import { io } from "socket.io-client";
-
 // function GoLive() {
 // //     const [isRotated, setIsRotated] = useState(false);
 // //     const socketRef = useRef();
@@ -18,43 +15,14 @@ import { io } from "socket.io-client";
 // //     let localstream: { getTracks: () => any[] };
 // //     const [permissionState, setPermissionState] = useState(false);
 
-    useEffect(() => {
-        startSocket();
-        return () => {
-            if (socketRef.current as any) {
-                (socketRef.current as any).disconnect();
-            }
-        };
-    });
-
-    useEffect(() => {
-        // Connect to the WebSocket server
-        const socket = io('wss://staginglive1.seezitt.com');
-
-        // Handle connection events
-        socket.on('connect', () => {
-            console.log('Connected to WebSocket server');
-
-            // Authenticate with token
-            const token = 'your_token_here';
-            socket.emit('authenticate', { token });
-        });
-
-        socket.on('disconnect', () => {
-            console.log('Disconnected from WebSocket server');
-        });
-
-        // Handle incoming stream data
-        socket.on('stream_data', (data) => {
-            console.log('Received stream data:', data);
-            // Process the stream data as needed
-        });
-
-        return () => {
-            // Disconnect from WebSocket server when component unmounts
-            socket.disconnect();
-        };
-    }, []);
+// //     useEffect(() => {
+// //         // startSocket();
+// //         // return () => {
+// //         //     if (socketRef.current as any) {
+// //         //         (socketRef.current as any).disconnect();
+// //         //     }
+// //         // };
+// //     });
 
 // //     useEffect(() => {
 // //         // Connect to the WebSocket server
