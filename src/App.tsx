@@ -130,7 +130,7 @@ function App() {
                             <Route path="/videos/:id" element={<AllVideos />} />
                             <Route path="/upload" element={<UploadPage />} />
                             <Route path="/create-story" element={<CreateStoryPage />} />
-                            <Route path="/golive" element={<GoLive />} />
+                            {/* <Route path="/golive" element={<GoLive />} /> */}
                             <Route path="/myreports" element={<MyReports />} />
                             <Route path="/analytics" element={<Analytics />} />
                             <Route path="/contactus" element={<ContactUs />} />
