@@ -37,7 +37,7 @@ import useApp from './useApp';
 import { OtpVerification } from './components/forgot-password/otp-verification';
 import CreateStoryPage from './components/stories';
 import MyReports from './components/my-reports';
-import GoLive from './components/go-live';
+// import GoLive from './components/go-live';
 import Analytics from './components/analytics';
 import ContactUs from './components/contact-us';
 

@@ -230,9 +230,9 @@ const Account = ({ className, openModal }: AccountProps) => {
         handleSignIn(password, email);
     };
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<string | ArrayBuffer | null>(null); // useState(null);
 
-    const handleImageChange = (event) => {
+    const handleImageChange = (event:any ) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
