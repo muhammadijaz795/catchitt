@@ -4,6 +4,9 @@
 // import { io } from 'socket.io-client';
 // // import protooClient from 'protoo-client';
 
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+
 // function GoLive() {
 // //     const [isRotated, setIsRotated] = useState(false);
 // //     const socketRef = useRef();
