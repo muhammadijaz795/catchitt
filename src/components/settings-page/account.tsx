@@ -1408,7 +1408,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         type="file"
                                         accept="image/*"
                                         className="hidden"
-                                        onChange={handleImageChange}
+                                      
                                     />
                                     <img src={upload} height={18.5} width={19.04} alt="" />
                                     <p>Upload photo (0/4)</p>
