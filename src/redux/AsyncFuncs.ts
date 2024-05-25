@@ -39,7 +39,7 @@ export const getHomeVideos: any = createAsyncThunk('get/foryou/videos', async (t
         link =
             token && userId
                 ? `/media-content/videos/feed?page=1&pageSize=5`
-                : `/media-content/public/videos/feed?page=1&pageSize=5`;
+                : `/media-content/public/videos/feed/upgraded?page=1&pageSize=5`;
     } else {
         console.log('Live Tab');
     }

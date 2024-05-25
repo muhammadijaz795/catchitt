@@ -20,6 +20,7 @@ import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
 import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
+import { useAuthStore } from '../../store/authStore';
 
 function ForDesktop(props: any) {
     const { videoes, activeTab, setActiveTab, showVideoModal, videoModal, setSendPopup, loading } =
@@ -43,6 +44,7 @@ function ForDesktop(props: any) {
         { img: commentInHome, actionType: 'comment', activeImage: commentInHome },
         { img: like, actionType: 'like', activeImage: activeLike },
     ];
+    const isLoggedIn = localStorage.getItem('token');
 
     const navigate: any = useNavigate();
     const isFollowing = false;
@@ -72,8 +74,9 @@ function ForDesktop(props: any) {
         } else {
             settoastOfUploading(false);
         }
-        console.log('ISFOLLOWING : ', suggestedUsers);
+        console.log('POST USER : ', videoes);
     }, [isuploading]);
+
     return (
         <Layout
             showCopyPopup={showCopyPopup}
@@ -115,13 +118,245 @@ function ForDesktop(props: any) {
                         >
                             <CircularProgress />
                         </div>
-                    ) : !isFollowing && activeTab === 1 ? (
+                    ) : isLoggedIn ? (
+                        activeTab === 1 && isFollowing ? (
+                            videoes?.length > 0 &&
+                            videoes?.map((post: any, number: number) => {
+                                return (
+                                    <div key={number} className={style.videoParent}>
+                                        <div className={style.videoHeader}>
+                                            <div className={style.videoHeaderSec1}>
+                                                <img
+                                                    style={{
+                                                        borderRadius: '50%',
+                                                        width: '44px',
+                                                        height: '44px',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                    src={post?.user?.avatar || defaultAvatar}
+                                                    alt=""
+                                                    onClick={() =>
+                                                        navigate(`/profile/${post?.user?._id}`)
+                                                    }
+                                                />
+                                                <div>
+                                                    <p className={style.name}>{post?.user?.name}</p>
+                                                    <p className={style.userName}>
+                                                        {post?.user?.username}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                className={
+                                                    followers?.data?.some(
+                                                        (user: any) =>
+                                                            user.followed_userID._id ===
+                                                            post?.user?._id
+                                                    )
+                                                        ? style.btn2
+                                                        : style.btn
+                                                }
+                                                onClick={() =>
+                                                    follow_Unfollow_handler(post?.user?._id)
+                                                }
+                                            >
+                                                {followBtnLoading &&
+                                                followimgbtnId === post?.user?._id ? (
+                                                    <CircularProgress
+                                                        style={{ width: 20, height: 20 }}
+                                                    />
+                                                ) : followers?.data?.some(
+                                                      (user: any) =>
+                                                          user.followed_userID._id ===
+                                                          post?.user?._id
+                                                  ) ? (
+                                                    'Following'
+                                                ) : (
+                                                    'Follow'
+                                                )}
+                                            </button>
+                                        </div>
+                                        <div className={style.contentSec}>
+                                            <p>{post?.description}</p>
+                                            {post?.sound && (
+                                                <div>
+                                                    <img src={music} alt="" />
+                                                    <p>{post?.sound?.category?.name}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={style.mediaContainer}>
+                                            <div
+                                                style={{
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    margin: 'auto',
+                                                    overflowX: 'hidden',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                }}
+                                                className={style.mainContainer}
+                                            >
+                                                <CustomPlayer
+                                                    videoModal={videoModal}
+                                                    src={
+                                                        post?.reducedVideoUrl
+                                                            ? post?.reducedVideoUrl
+                                                            : post?.reducedVideoHlsUrl
+                                                            ? post?.reducedVideoHlsUrl
+                                                            : post?.originalUrl
+                                                    }
+                                                    controls={true}
+                                                />
+                                            </div>
+                                            <div className={style.actions}>
+                                                {userActions.map((obj: any, i: number) => {
+                                                    return (
+                                                        <Action
+                                                            key={i}
+                                                            copyHandler={copyHandler}
+                                                            visibleReportPopup={() =>
+                                                                setreportPopup(true)
+                                                            }
+                                                            obj={obj}
+                                                            popupHandler={() => setSendPopup(true)}
+                                                            showVideoModal={showVideoModal}
+                                                            post={post}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : activeTab === 1 && !isFollowing ? (
+                            <div className={style.suggestedUsersContainer}>
+                                {suggestedUsers.map((suggestedUser: any, key: number) => {
+                                    return <FollowUserCard key={key} user={suggestedUser} />;
+                                })}
+                            </div>
+                        ) : activeTab === 2 ? (
+                            videoes?.length > 0 &&
+                            videoes?.map((post: any, number: number) => {
+                                return (
+                                    <div key={number} className={style.videoParent}>
+                                        <div className={style.videoHeader}>
+                                            <div className={style.videoHeaderSec1}>
+                                                <img
+                                                    style={{
+                                                        borderRadius: '50%',
+                                                        width: '44px',
+                                                        height: '44px',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                    src={post?.user?.avatar || defaultAvatar}
+                                                    alt=""
+                                                    onClick={() =>
+                                                        navigate(`/profile/${post?.user?._id}`)
+                                                    }
+                                                />
+                                                <div>
+                                                    <p className={style.name}>{post?.user?.name}</p>
+                                                    <p className={style.userName}>
+                                                        {post?.user?.username}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                className={
+                                                    followers?.data?.some(
+                                                        (user: any) =>
+                                                            user.followed_userID._id ===
+                                                            post?.user?._id
+                                                    )
+                                                        ? style.btn2
+                                                        : style.btn
+                                                }
+                                                onClick={() =>
+                                                    follow_Unfollow_handler(post?.user?._id)
+                                                }
+                                            >
+                                                {followBtnLoading &&
+                                                followimgbtnId === post?.user?._id ? (
+                                                    <CircularProgress
+                                                        style={{ width: 20, height: 20 }}
+                                                    />
+                                                ) : followers?.data?.some(
+                                                      (user: any) =>
+                                                          user.followed_userID._id ===
+                                                          post?.user?._id
+                                                  ) ? (
+                                                    'Following'
+                                                ) : (
+                                                    'Follow'
+                                                )}
+                                            </button>
+                                        </div>
+                                        <div className={style.contentSec}>
+                                            <p>{post?.description}</p>
+                                            {post?.sound && (
+                                                <div>
+                                                    <img src={music} alt="" />
+                                                    <p>{post?.sound?.category?.name}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={style.mediaContainer}>
+                                            <div
+                                                style={{
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    margin: 'auto',
+                                                    overflowX: 'hidden',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                }}
+                                                className={style.mainContainer}
+                                            >
+                                                <CustomPlayer
+                                                    videoModal={videoModal}
+                                                    src={
+                                                        post?.reducedVideoUrl
+                                                            ? post?.reducedVideoUrl
+                                                            : post?.reducedVideoHlsUrl
+                                                            ? post?.reducedVideoHlsUrl
+                                                            : post?.originalUrl
+                                                    }
+                                                    controls={true}
+                                                />
+                                            </div>
+                                            <div className={style.actions}>
+                                                {userActions.map((obj: any, i: number) => {
+                                                    return (
+                                                        <Action
+                                                            key={i}
+                                                            copyHandler={copyHandler}
+                                                            visibleReportPopup={() =>
+                                                                setreportPopup(true)
+                                                            }
+                                                            obj={obj}
+                                                            popupHandler={() => setSendPopup(true)}
+                                                            showVideoModal={showVideoModal}
+                                                            post={post}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <>GO LIVE</>
+                        )
+                    ) : activeTab === 1 ? (
                         <div className={style.suggestedUsersContainer}>
                             {suggestedUsers.map((suggestedUser: any, key: number) => {
                                 return <FollowUserCard key={key} user={suggestedUser} />;
                             })}
                         </div>
-                    ) : (
+                    ) : activeTab === 2 ? (
                         videoes?.length > 0 &&
                         videoes?.map((post: any, number: number) => {
                             return (
@@ -228,6 +463,8 @@ function ForDesktop(props: any) {
                                 </div>
                             );
                         })
+                    ) : (
+                        <>GO LIVE</>
                     )}
                 </div>
                 {toastOfUploading && (
