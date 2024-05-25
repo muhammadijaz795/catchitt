@@ -125,12 +125,12 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url }: any) {
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Save video</p>
                     </div>
                 </MenuItem>
-                {/* <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
                         <img src={notAllowed} />
                         <p className={`${style.p} ${style.black_500}`}>Not interested</p>
                     </div>
-                </MenuItem> */}
+                </MenuItem>
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={visibleReportPopup}>
                         <img src={report} />

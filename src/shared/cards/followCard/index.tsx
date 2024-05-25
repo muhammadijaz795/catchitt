@@ -12,7 +12,7 @@ function FollowUserCard({ user }: any) {
                 src={defaultAvatar || user?.avatar}
                 alt=""
             />
-            <p className={style.name}>{user?.name}oiueioyiowyeuiweuwyui</p>
+            <p className={style.name}>{user?.name}</p>
             {user?.bio && <p className={style.bio}>{user?.bio?.slice(0, 30)}</p>}
             <p className={style.followers}>
                 {`${user?.followers}`} <span className={style.noOfFollowers}>{'Followers'}</span>
