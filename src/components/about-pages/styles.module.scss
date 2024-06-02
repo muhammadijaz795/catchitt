@@ -20,7 +20,6 @@ h6 {
     margin: 0;
 }
 
-
 .topBarDiv {
     width: 100%;
 }
@@ -59,7 +58,6 @@ h6 {
     align-items: flex-start;
     justify-content: space-between;
     border-radius: 8px;
-
 }
 
 .container {
@@ -81,9 +79,8 @@ h6 {
     flex-direction: column;
     align-items: flex-start;
     border-radius: 8px;
-    background: var(--default-white, #FFF);
+    background: var(--default-white, #fff);
 }
-
 
 .gridContainer {
     display: grid;
@@ -119,11 +116,9 @@ h6 {
     line-height: 1;
     // gap: 16px;
     // row-gap: 32px;
-    background: var(--default-white, #FFF);
+    background: var(--default-white, #fff);
     border-radius: 8px;
-
 }
-
 
 .suggestedContent h4 {
     color: var(--default-body, #222);
@@ -150,7 +145,6 @@ h6 {
     line-height: 120%;
     /* 19.2px */
 }
-
 
 .pageHeader {
     display: flex;
@@ -223,7 +217,9 @@ h6 {
 
 .header {
     color: #000;
-    font-feature-settings: 'salt' on, 'liga' off;
+    font-feature-settings:
+        "salt" on,
+        "liga" off;
     font-family: Poppins;
     font-size: 22px;
     font-style: normal;

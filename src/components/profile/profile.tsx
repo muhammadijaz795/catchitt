@@ -18,10 +18,13 @@ import publicProfileStories from './popups/publicProfileStories';
 import styles from './profile.module.scss';
 import { Bookmark } from './svg-components/Bookmark';
 import { Liked } from './svg-components/Liked';
+import { Badge } from './svg-components/Badge';
 import { Private } from './svg-components/Private';
 import { Tagged } from './svg-components/Tagged';
 import { VideoIcon } from './svg-components/VideoIcon';
 import { ToastContainer } from 'react-toastify';
+import ViewsModal from './components/ViewsModal';
+import viewerAvatarPlaceholder from './svg-components/placeholderAvatar.png';
 
 export const Profile = (props: any) => {
     const [activeTab, setActiveTab] = useState('Videos');
@@ -43,6 +46,8 @@ export const Profile = (props: any) => {
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
     const [copyPopup, setcopyPopup] = useState(false);
+    const [viewsModal, setViewsModal] = useState(false);
+    const [profileViewsContent, setProfileViewsContent] = useState<any>([]);
 
     // @ts-ignore
     const dispatch = useDispatch();
@@ -68,11 +73,11 @@ export const Profile = (props: any) => {
             icon: <Liked active={activeTab === 'Liked Videos'} />,
             key: 4,
         },
-        // {
-        //     title: 'Badges',
-        //     icon: <Badge active={activeTab === 'Badges'} />,
-        //     key: 5,
-        // },
+        {
+            title: 'Badges',
+            icon: <Badge active={activeTab === 'Badges'} />,
+            key: 5,
+        },
         {
             title: 'Tagged Posts',
             icon: <Tagged active={activeTab === 'Tagged Posts'} />,
@@ -88,91 +93,6 @@ export const Profile = (props: any) => {
         setProfileModal(false);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            // 63a04301a00ed2af91f17e1d user id contain videos
-            await fetch(`${API_KEY}/profile/${userId}/videos`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setUserVideos(data.data.data);
-
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    setLoading(false);
-                });
-
-            fetch(`${API_KEY}/profile/${userId}/liked-videos`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            })
-                .then((res) => res.json())
-                .then((data: any) => {
-                    setUserlikedVideos(data.data.data);
-
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    setLoading(false);
-                });
-
-            fetch(`${API_KEY}/profile/tagged-videos`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setUsertaggedVideos(data.data.data);
-                    console.log(data.data.data);
-
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    setLoading(false);
-                });
-
-            // fetch(`${API_KEY}/filter/bookmarkedFilters`, {
-            fetch(`${API_KEY}/profile/collection?page=1&pageSize=10`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log('collections');
-                    setbookmarkVideos(data.data.data);
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    setLoading(false);
-                });
-
-            fetch(`${API_KEY}/profile/collection`, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setbookmarkVideos(data.data.data);
-                })
-                .catch((err) => {
-                    console.log('collectons error', err);
-                });
-
-            dispatch(getRandomUsers());
-            dispatch(getFriends());
-            const data = await dispatch(getProfileData());
-        }; //fetchload
-
-        fetchData();
-    }, []);
-
     const onFollowModalActive = (tab: string | null) => {
         setFollowModal(tab);
     };
@@ -184,7 +104,190 @@ export const Profile = (props: any) => {
     const onVideoModal = (video: any) => {
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
+        markVideoDisplayed(video?.mediaId);
+        markVideoViewed(video?.mediaId);
     };
+
+    const markVideoDisplayed = async (id: string) => {
+        const url = `${API_KEY}/media-profileViewsContent/mark-as-displayed/${id}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error making POST request:', error);
+        }
+    };
+
+    const markVideoViewed = async (id: string) => {
+        const url = `${API_KEY}/media-profileViewsContent/mark-as-started-watching/${id}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error making POST request:', error);
+        }
+    };
+
+    const viewItemClickHandler = (index: number) => {
+        console.log('View Item Click : ', index);
+    };
+
+    const fetchData = async () => {
+        // 63a04301a00ed2af91f17e1d user id contain videos
+        await fetch(`${API_KEY}/profile/${userId}/videos`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setUserVideos(data.data.data);
+
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            });
+
+        fetch(`${API_KEY}/profile/${userId}/liked-videos`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data: any) => {
+                setUserlikedVideos(data.data.data);
+
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            });
+
+        fetch(`${API_KEY}/profile/tagged-videos`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setUsertaggedVideos(data.data.data);
+                console.log(data.data.data);
+
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            });
+
+        // fetch(`${API_KEY}/filter/bookmarkedFilters`, {
+        fetch(`${API_KEY}/profile/collection?page=1&pageSize=10`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('collections');
+                setbookmarkVideos(data.data.data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            });
+
+        fetch(`${API_KEY}/profile/collection`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setbookmarkVideos(data.data.data);
+            })
+            .catch((err) => {
+                console.log('collectons error', err);
+            });
+
+        await fetch(`${API_KEY}/profile/visitors`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('PRofile views data : ', data);
+
+                makeProfileViews(data?.data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+            });
+
+        dispatch(getRandomUsers());
+        dispatch(getFriends());
+        const data = await dispatch(getProfileData());
+    };
+
+    const makeProfileViews = (data: any) => {
+        const newProfileViewsContent = data?.map(
+            (viewItem: { avatar: any; name: any; isFollower: any; isFollowing: any }) => {
+                const viewerAvatar =
+                    viewItem?.avatar !== '' && viewItem?.avatar
+                        ? viewItem?.avatar
+                        : viewerAvatarPlaceholder;
+                const viewerName = viewItem?.name;
+                let relationWithViewer = '';
+
+                if (!viewItem.isFollower && !viewItem.isFollowing) {
+                    relationWithViewer = 'Follow';
+                } else if (viewItem.isFollower && viewItem.isFollowing) {
+                    relationWithViewer = 'Friends';
+                } else if (viewItem.isFollowing && !viewItem.isFollower) {
+                    relationWithViewer = 'Requested';
+                } else {
+                    relationWithViewer = 'Following';
+                }
+                return {
+                    viewerAvatar,
+                    viewerName,
+                    relationWithViewer,
+                };
+            }
+        );
+
+        setProfileViewsContent(newProfileViewsContent);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     useEffect(() => {
         if (copyPopup) {
@@ -243,6 +346,7 @@ export const Profile = (props: any) => {
                         }}
                         onProfileEdit={onSave}
                         copyHandler={() => setcopyPopup(true)}
+                        setViewsModal={() => setViewsModal(!viewsModal)}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -312,6 +416,13 @@ export const Profile = (props: any) => {
                     // @ts-ignore
                     userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />
+                {viewsModal && (
+                    <ViewsModal
+                        content={profileViewsContent}
+                        handleOverlayClick={() => setViewsModal(false)}
+                        viewItemClickHandler={viewItemClickHandler}
+                    />
+                )}
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />
                 <MemoizedStoriesOnPublicProfile
                     story={storyPopup}

@@ -23,30 +23,14 @@ export const CommunityPage = ({ className }: CommunityPageProps) => {
         setSettingsDropdown(true);
     };
 
-    // if (!isLoggedIn) {
-    //     return <Navigate to="/auth" />;
-    // }
-
     useEffect(() => {
         setIndex(7);
         setSettingsDropdown(true);
     }, []);
 
     return (
-        // <div className={classNames(styles.root, className)}>
         <Layout>
-            {/* <div className={styles.topBarDiv}>
-                <TopBar />
-            </div> */}
             <div className={styles.container}>
-                {/* <div className={styles.leftSide}>
-                    <div className={styles.sideNavDiv}>
-                        <SideNavBar selectedIndex={selectedIndex} settingsDropdownState={true} />
-                    </div>
-                    <div className={styles.suggestedActivityDiv}>
-                        <SuggestedActivity showActivity={true} showSuggestedContent={true} />
-                    </div>
-                </div> */}
                 <div className={styles.middleSectionDiv}>
                     <div className={styles.pageHeader}>
                         <IconButton

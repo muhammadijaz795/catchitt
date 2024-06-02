@@ -1,8 +1,6 @@
 import axios from "axios";
 import urlJoin from "url-join";
 import { jsonToFormData } from "formdata2json";
-import { f7 } from "framework7-react";
-import { useAuthStore } from "../store/authStore";
 
 const API_KEY = process.env.VITE_API_URL
 
@@ -57,16 +55,7 @@ const request = async (url: any, params: any = null, auth = null) => {
 
 	const token: any = localStorage.getItem('token')
 
-	let percentageCompleted;
-
 	try {
-		// if (url.includes("upload_file")) {
-		// 	apiClient.interceptors.request.use((config) => {
-		// 		f7.store.dispatch("setUploadProgress", 0);
-		// 		return config;
-		// 	});
-		// }
-
 		const response = await apiClient
 			.request({
 				url: url,
@@ -80,38 +69,6 @@ const request = async (url: any, params: any = null, auth = null) => {
 				},
 				...(options.data && { data: options.data }),
 				...(req_id && { signal: makeCancellable(req_id) }),
-				// onDownloadProgress: (progressEvent: any) => {
-				// 	// const total = parseFloat(
-				// 	//   progressEvent.currentTarget.responseHeaders["Content-Length"]
-				// 	// );
-				// 	// const current = progressEvent.currentTarget.response.length;
-
-				// 	percentageCompleted = Math.floor(
-				// 		(progressEvent.loaded * 100) / progressEvent.total
-				// 	);
-				// 	if (url.includes("conversations")) {
-				// 		console.log("Percentage : ", percentageCompleted);
-				// 	}
-				// },
-				// onUploadProgress: (progressEvent: any) => {
-				// 	// const total = parseFloat(
-				// 	//   progressEvent.currentTarget.responseHeaders["Content-Length"]
-				// 	// );
-				// 	// const current = progressEvent.currentTarget.response.length;
-				// 	percentageCompleted = Math.floor(
-				// 		(progressEvent.loaded * 100) / progressEvent.total
-				// 	);
-				// 	// if (url.includes("upload_file")) {
-				// 	// 	if (percentageCompleted === 100) {
-				// 	// 		f7.store.dispatch("setUploadProgress", -1);
-				// 	// 	} else {
-				// 	// 		f7.store.dispatch(
-				// 	// 			"setUploadProgress",
-				// 	// 			percentageCompleted
-				// 	// 		);
-				// 	// 	}
-				// 	// }
-				// },
 			})
 			.catch(function (error) {
 				if (error.response) {
@@ -129,15 +86,6 @@ const request = async (url: any, params: any = null, auth = null) => {
 				}
 		 
 			});
-
-		// if (url.includes("conversations") && response?.data) {
-		// 	response.data = {
-		// 		...response?.data,
-		// 		percentage: percentageCompleted,
-		// 	};
-		// }
-
-		console.log("request", url, response);
 
 		return response;
 	} catch (e) {

@@ -1,6 +1,6 @@
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import profileIcon from '../../assets/defaultProfileIcon.png';
 import { useAuthStore } from '../../store/authStore';
 import styles from './activity-page.module.scss';
@@ -14,7 +14,6 @@ export interface ActivityPageProps {
 }
 
 interface Activity {
-    // className?: string;
     _id?: string;
     createdTime: number;
     user: {
@@ -49,7 +48,6 @@ interface FollowedUser {
 
 export const ActivityPage = ({ className }: ActivityPageProps) => {
     let globalUserId: string = '';
-    const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const token = useAuthStore((state) => state.token);
     const [currentPage] = useState(1);
     const itemsPerPage = 9;
@@ -59,7 +57,6 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
     const API_KEY = process.env.VITE_API_URL;
     const activityEndPoint = '/notification';
     const [followLoading, setFollowLoading] = useState(false);
-    // const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object
     const navigate = useNavigate();
 
     const handleGoBack = () => {
@@ -76,9 +73,7 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 setActivityData(responseData.data.data);
-                console.log('DATA Notifictions : ', responseData.data.data);
                 globalUserId = responseData.data.data[0].user._id;
-                // console.log(`the global user id: ${globalUserId}`);
                 handleFetchFollowedUsers(globalUserId);
             } else {
                 const errorResponseData = await response.json();
@@ -86,7 +81,6 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
                 setErrorMessage(errorMessageFromServer);
             }
         } catch (error) {
-            // console.error(error);
             console.log(errorMessage);
         }
     };
@@ -101,9 +95,6 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 setFollowedUsersData(responseData.data.data);
-                console.log(`the users I'm following: `);
-                console.log(responseData.data);
-                // handleFetchActivity;
             }
         } catch (error) {
             // Handle any errors here.
@@ -113,17 +104,11 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
 
     useEffect(() => {
         handleFetchActivity();
-        // handleFetchFollowedUsers(globalUserId);
     }, [setFollowedUsersData, followLoading]);
 
     useEffect(() => {
         handleFetchActivity();
-        // handleFetchFollowedUsers(globalUserId);
     }, []);
-
-    // if (!isLoggedIn) {
-    //     return <Navigate to="/auth" />;
-    // }
 
     // Calculate the pagination boundaries
     const lastIndex = currentPage * itemsPerPage;
@@ -146,8 +131,6 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
         }
     });
 
-    // const followedAccountsEndPoint = `profile/${activityData?.user.id}/following`;
-
     const handleFollowClick = async (userId: any) => {
         setFollowLoading(true); // Set loading state before API call
         const response = await fetch(`${API_KEY}/profile/follow/${userId}/`, {
@@ -159,12 +142,9 @@ export const ActivityPage = ({ className }: ActivityPageProps) => {
         });
         if (response.ok) {
             console.log(`user: ${userId} is followed`);
-            // console.log(`the triggered notification user is: ${activi}`)
             handleFetchFollowedUsers(globalUserId);
         }
         setFollowLoading(false); // Set loading state back to false after API call
-        // handleFetchActivity()
-        // handleFetchFollowedUsers()
     };
 
     return (

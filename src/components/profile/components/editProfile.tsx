@@ -1,13 +1,12 @@
 import { Avatar, CircularProgress } from '@mui/material';
-import EditProfileIcon from '../svg-components/EditProfileIcon';
 import { useEffect, useState } from 'react';
-import styles from './editProfile.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import { defaultAvatar } from '../../../icons';
-import SelectProfileImgPopup from './select-profile-img';
-import { useSelector } from 'react-redux';
 import { getProfileData } from '../../../redux/AsyncFuncs';
-import { useDispatch } from 'react-redux';
 import { showToast } from '../../../utils/constants';
+import EditProfileIcon from '../svg-components/EditProfileIcon';
+import styles from './editProfile.module.scss';
+import SelectProfileImgPopup from './select-profile-img';
 
 interface Props {
     onCancel: () => void;
@@ -22,21 +21,21 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
-    const [category, setCategory] = useState('default');
+    const [category, setCategory] = useState('');
+    const [country, setCountry] = useState('');
     const [day, setDay] = useState('');
     const [month, setMonth] = useState('');
     const API_KEY = process.env.VITE_API_URL;
     const [year, setYear] = useState('');
     const [profileData, setProfileData] = useState<any>(null);
-    const [mediaCategories, setMediaCategories] = useState([]);
-    const [country, setCountry] = useState('default');
+    const [mediaCategories, setMediaCategories] = useState<any>([]);
+    const [countries, setCountries] = useState<any>([]);
     const [loading, setLoading] = useState(false);
     const [newProfileImg, setNewProfileImg] = useState('');
     const [selectImagePopup, setSelectImagePopup] = useState(false);
     const [userSelectedCategory, setUserSelectedCategory] = useState('');
 
     const [fileObj, setFileObj] = useState<any>(null);
-    // const token = useAuthStore((state) => state.token);
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
     const dispatch = useDispatch();
 
@@ -50,7 +49,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                 name,
                 bio,
                 birthday: `${month}-${day}-${year}`,
-                country,
+                countries,
                 contactEmail: email,
                 website,
                 businessCategory: category,
@@ -62,7 +61,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
             // formData.append('name', name);
             // formData.append('bio', bio);
             // formData.append('birthday', `${month}-${day}-${year}`);
-            // formData.append('country', country);
+            // formData.append('countries', countries);
             // formData.append('website', website);
             // formData.append('businessCategory', category);
 
@@ -105,6 +104,12 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     };
 
     useEffect(() => {
+        loadProfile();
+        loadCountries();
+        loadMediaCategories();
+    }, []);
+
+    const loadProfile = () => {
         setLoading(true);
         try {
             fetch(`${API_KEY}/profile`, {
@@ -121,12 +126,19 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                     setEmail(response?.email);
                     setWebsite(response?.website);
                     setAvatar(response?.avatar);
-                    setCountry(response?.country);
                     setYear(response?.dateOfBirth?.slice(0, 4));
                     setMonth(response?.dateOfBirth?.slice(5, 7));
                     setDay(response?.dateOfBirth?.slice(8, 10));
-                    setMediaCategories(response?.mediaCategories);
-                    setUserSelectedCategory(response?.businessCategory);
+                    setUserSelectedCategory(
+                        response?.businessCategory !== null && response?.businessCategory !== ''
+                            ? response?.businessCategory
+                            : '-- Select an option --'
+                    );
+                    setCountry(
+                        response?.country !== null && response?.country !== ''
+                            ? response?.country
+                            : '-- Select an option --'
+                    );
                 })
                 .catch((err) => {
                     console.log(err);
@@ -136,7 +148,67 @@ export default function EditProfile({ onCancel, onSave }: Props) {
         } finally {
             setLoading(false);
         }
-    }, []);
+    };
+
+    const loadCountries = () => {
+        setLoading(true);
+        try {
+            fetch(`${API_KEY}/util/countries`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    let response = data?.data;
+                    const countriesList = response?.countries?.map(
+                        (country: { name: string; code: string }) => {
+                            const name = country?.name;
+                            const code = country?.code;
+                            return {
+                                name,
+                                code,
+                            };
+                        }
+                    );
+                    setCountries(countriesList);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const loadMediaCategories = () => {
+        setLoading(true);
+        try {
+            fetch(`${API_KEY}/media-content/categories`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    let response = data?.data;
+                    const mediaCategoryList = response?.map((mediaItem: { name: string }) => {
+                        const name = mediaItem?.name;
+                        return {
+                            name,
+                        };
+                    });
+                    setMediaCategories(mediaCategoryList);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const onResetField = (name: string) => {
         switch (name) {
@@ -152,8 +224,8 @@ export default function EditProfile({ onCancel, onSave }: Props) {
             case 'year':
                 setYear('');
                 break;
-            case 'country':
-                setCountry('');
+            case 'countries':
+                setCountries([]);
                 break;
         }
     };
@@ -249,8 +321,10 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                             onChange={(e) => setCategory(e.target.value)}
                         >
                             <option value={'default'}>{userSelectedCategory}</option>
-                            {mediaCategories.map((category, index) => (
-                                <option className={styles['div-16']}>{category}</option>
+                            {mediaCategories.map((category: { name: string }, index: number) => (
+                                <option key={index} className={styles['div-16']}>
+                                    {category?.name}
+                                </option>
                             ))}
                         </select>
                         <div className={styles['div-17']}>Birth Date</div>
@@ -307,8 +381,14 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                             value={country}
                             onChange={(e) => setCountry(e.target.value)}
                         >
-                            <option value={'default'}> -- Select an option -- </option>
-                            <option className={styles['div-26']}>{country}</option>
+                            <option value={'default'}>{country}</option>
+                            {countries?.map(
+                                (country: { name: string; code: string }, index: number) => (
+                                    <option key={index} className={styles['div-16']}>
+                                        {country?.name}
+                                    </option>
+                                )
+                            )}
                         </select>
                         <div className={styles['div-27']}>
                             <div onClick={onCancel} className={styles['div-28']}>

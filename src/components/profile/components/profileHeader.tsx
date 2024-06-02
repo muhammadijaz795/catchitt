@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getProfileData } from '../../../redux/AsyncFuncs';
 import COPY_AND_SEND_MENU from '../../../shared/Menu/copyAndSend';
-import { useAuthStore } from '../../../store/authStore';
+import { showToast } from '../../../utils/constants';
 import AddIcon from '../svg-components/AddIcon';
 import EditButtonIcon from '../svg-components/EditButtonIcon';
 import EditIcon from '../svg-components/EditIcon';
@@ -15,8 +15,6 @@ import link from '../svg-components/link-icon.png';
 import CoverImagePopup from './cover-img-popup';
 import CreateStoryPopup from './createStoryPopup';
 import styles from './profileHeader.module.scss';
-import { toast } from 'react-toastify';
-import { showToast } from '../../../utils/constants';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -25,6 +23,7 @@ interface Props {
     showStory: any;
     copyHandler: any;
     onProfileEdit: any;
+    setViewsModal: (value: boolean) => void;
 }
 
 const ProfileHeader: FunctionComponent<Props> = ({
@@ -34,6 +33,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
     showStory,
     copyHandler,
     onProfileEdit,
+    setViewsModal,
 }) => {
     const API_KEY = process.env.VITE_API_URL;
     const [stories, setStories] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -142,7 +142,6 @@ const ProfileHeader: FunctionComponent<Props> = ({
 
             if (response.ok) {
                 const { data } = await response.json();
-                console.log('PROFILE DATA : ', data);
                 setProfileData(data);
             } else {
                 console.log(response);
@@ -168,7 +167,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
     }, []);
 
     useEffect(() => {
-        loadProfile();
+        // loadProfile();
     }, [onProfileEdit]);
 
     return (
@@ -294,7 +293,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
                             <EditButtonIcon />
                             Edit Profile
                         </button>
-                        <button className={styles.button2}>
+                        <button onClick={() => setViewsModal(true)} className={styles.button2}>
                             <ProfileViewIcon />
                             Profile Views
                         </button>
