@@ -41,6 +41,7 @@ import MyReports from './components/my-reports';
 import Analytics from './components/analytics';
 import ContactUs from './components/contact-us';
 import Login from './components/login';
+import PhoneOrEmail from './components/login/phone-or-email';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -92,6 +93,10 @@ function App() {
                             <Route
                                 path="/login"
                                 element={<Login setLanguage={setLanguage} language={appLanguage} />}
+                            />
+                            <Route
+                                path="/login/phone-or-email"
+                                element={<PhoneOrEmail />}
                             />
                             <Route path="/forgot-password" element={<ForgotPassword />} />
                             <Route path="/request-verification-otp" element={<RequestOtp />} />

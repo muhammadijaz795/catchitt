@@ -1,9 +1,42 @@
-import { qrCode } from '../../icons';
 import { APP_TEXTS, LOGIN_OPTIONS } from '../../utils/constants';
 import ItemLogin from '../item-login';
 import './login.scss';
+import { useNavigate } from 'react-router-dom';
 
 const Login = (props: any) => {
+
+    const navigate = useNavigate();
+
+    const loginItemClickHandler = (name: string) => {
+        switch (name) {
+            case 'Use QR Code':
+                // Handle QR code login
+                console.log('QR Code login');
+                break;
+            case 'Use phone / email / username':
+                // Handle phone / email / username login
+                navigate('/login/phone-or-email');
+                break;
+            case 'Continue with Facebook':
+                // Handle Facebook login
+                console.log('Facebook login');
+                break;
+            case 'Continue with Google':
+                // Handle Google login
+                console.log('Google login');
+                break;
+            case 'Continue with Twitter':
+                // Handle Twitter login
+                console.log('Twitter login');
+                break;
+            case 'Continue with Apple':
+                // Handle Apple login
+                console.log('Apple login');
+                break;
+            default:
+                console.log('Default case');
+        }
+    };
     return (
         <div className="h-screen">
             <div className="flex flex-row justify-between items-center p-3">
@@ -21,6 +54,7 @@ const Login = (props: any) => {
                     </p>
                     {LOGIN_OPTIONS.map((option, index) => (
                         <ItemLogin
+                            loginItemClickHandler={loginItemClickHandler}
                             key={index}
                             name={option.name}
                             image={option.image}
