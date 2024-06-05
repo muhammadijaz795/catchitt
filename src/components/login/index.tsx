@@ -14,9 +14,11 @@ const Login = (props: any) => {
                 </div>
             </div>
             <div className="w-[22.688rem] mx-auto mt-14">
-                <h2 className="font-bold text-4xl">Log in to Seezitt</h2>
-                <p className="font-normal text-sm text-subtext mt-6">{APP_TEXTS.LOGIN_SUBTEXT}</p>
-                <div className="mt-3 overflow-auto item-login-container">
+                <div className="overflow-auto item-login-container">
+                    <h2 className="font-bold text-4xl">Log in to Seezitt</h2>
+                    <p className="font-normal text-sm text-subtext mt-6 mb-3 ">
+                        {APP_TEXTS.LOGIN_SUBTEXT}
+                    </p>
                     {LOGIN_OPTIONS.map((option, index) => (
                         <ItemLogin
                             key={index}
@@ -42,7 +44,7 @@ const Login = (props: any) => {
                 </div>
             </div>
             <div className="absolute w-full bottom-0">
-                <div className="border-t border-custom-1 text-center p-4">
+                <div className="border-t border-custom-1 text-center p-4 sign-up-label">
                     <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1">
                         {APP_TEXTS.NO_ACCOUNT}{' '}
                         <span className="text-danger-1 font-semibold hover:underline cursor-pointer">
@@ -50,9 +52,11 @@ const Login = (props: any) => {
                         </span>
                     </h3>
                 </div>
-                <div className="bg-black flex flex-row justify-between items-center py-8 px-32">
+                <div className="bg-black flex flex-row justify-between items-center py-8 px-32 language-label">
                     <div className="border border-custom-2 pl-2 rounded-sm w-[10rem] cursor-pointer">
-                        <p className="text-white text-left p-2 font-normal text-sm">English</p>
+                        <p className="text-white text-left p-2 font-normal text-sm country-label">
+                            English
+                        </p>
                     </div>
                     <p className="font-normal text-sm text-white">© 2024 Seezitt</p>
                 </div>
