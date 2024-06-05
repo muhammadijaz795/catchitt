@@ -41,6 +41,9 @@ import MyReports from './components/my-reports';
 import Analytics from './components/analytics';
 import ContactUs from './components/contact-us';
 import Signup from './components/signup';
+import SignupEmail from './components/signup/email/email';
+import SignupPhone from './components/signup/mobile/mobile';
+
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -136,6 +139,8 @@ function App() {
                             <Route path="/analytics" element={<Analytics />} />
                             <Route path="/contactus" element={<ContactUs />} />
                             <Route path="/signup" element={<Signup />} />
+                            <Route path="/signup/phone-or-email/email" element={<SignupEmail />} />
+                            <Route path="/signup/phone-or-email/phone" element={<SignupPhone />} />
                         </Routes>
                     </Router>
                 </VideoProvider>

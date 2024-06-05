@@ -88,7 +88,7 @@
 // export default Signup;
 
 
-// import { APP_TEXTS, LOGIN_OPTIONS } from '../../utils/constants';
+import { SIGNUP_APP_TEXTS, SIGNUP_OPTIONS } from '../../utils/constants';
 import SignupHandler from './signupHandler';
 import './signup-styles.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -96,6 +96,21 @@ import { useNavigate } from 'react-router-dom';
 const Signup = (props: any) => {
 
     const navigate = useNavigate();
+    
+    const signupItemClickHandler = (name: string) => {
+        switch (name) {
+            case 'Use Phone or Email':
+                navigate('/signup/phone-or-email/email');
+                break;
+            case 'Continue with Facebook':
+               
+                break;
+            case 'Continue with Google':
+                break;
+            default:
+                console.log('Default case');
+        }
+    };
        
     return (
         <div className="h-screen">
@@ -108,19 +123,19 @@ const Signup = (props: any) => {
             </div>
             <div className="w-[22.688rem] mx-auto mt-14">
                 <div className="overflow-auto item-signup-container">
-                    <h2 className="font-bold text-4xl">Sign up for TikTok</h2>
+                    <h2 className="font-bold text-4xl">Sign up for Seezitt</h2>
                     <p className="font-normal text-sm text-subtext mt-6 mb-3 ">
                     Create a profile, follow other accounts, make your own videos, and more.
                     </p>
-                    {/* {LOGIN_OPTIONS.map((option, index) => (
+                    {SIGNUP_OPTIONS.map((option, index) => (
                         <SignupHandler
-                            loginItemClickHandler={loginItemClickHandler}
+                            singupItemClickHandler={signupItemClickHandler}
                             key={index}
                             name={option.name}
                             image={option.image}
                             styles={option.styles}
                         />
-                    ))} */}
+                    ))}
                 </div>
                 <div className="mt-3.5">
                     <p className="font-normal text-[0.688rem] text-policy">

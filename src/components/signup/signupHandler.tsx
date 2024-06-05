@@ -4,16 +4,16 @@ const signupHandler = ({
     name,
     image,
     styles,
-    loginItemClickHandler,
+    singupItemClickHandler,
 }: {
     name: string;
     image: any;
     styles?: any;
-    loginItemClickHandler: any;
+    singupItemClickHandler: any;
 }) => {
     return (
         <div
-            onClick={() => loginItemClickHandler(name)}
+            onClick={() => singupItemClickHandler(name)}
             className={`rounded-[0.5rem] font-medium text-base flex flex-row items-center border border-loginItem h-11 px-3 cursor-pointer hover:bg-slate-100 ${styles}`}
         >
             <img className="object-contain h-4 w-4" src={image} />
