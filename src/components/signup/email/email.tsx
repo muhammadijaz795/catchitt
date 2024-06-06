@@ -1,9 +1,25 @@
 import { SIGNUP_APP_TEXTS } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import './email.module.scss';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const PhoneOrEmail = (props: any) => {
     const navigate = useNavigate();
+    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+    const [month, setMonth] = useState('');
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setMonth(event.target.value as string);
+  };
 
     return (
         <div className="h-screen">
@@ -28,12 +44,74 @@ const PhoneOrEmail = (props: any) => {
                             name=""
                             id=""
                         /> */}
-                        <div className='flex flex-row p-2'>
-                        <select className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md p-2.5" >
+                        <div className='flex flex-row p-0.5'>
+                        <FormControl fullWidth className='p-0.5'>
+                        <InputLabel id="demo-simple-select-label">Month</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={month}
+                            label="Month"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={1}>January</MenuItem>
+                            <MenuItem value={2}>Febuary</MenuItem>
+                            <MenuItem value={3}>March</MenuItem>
+                            <MenuItem value={4}>April</MenuItem>
+                            <MenuItem value={5}>May</MenuItem>
+                            <MenuItem value={6}>June</MenuItem>
+                            <MenuItem value={7}>July</MenuItem>
+                            <MenuItem value={8}>August</MenuItem>
+                          
+                        </Select>
+                        </FormControl>
+
+                        <FormControl fullWidth className='p-0.5'>
+                        <InputLabel id="demo-simple-select-label">Month</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={month}
+                            label="Month"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={1}>January</MenuItem>
+                            <MenuItem value={2}>Febuary</MenuItem>
+                            <MenuItem value={3}>March</MenuItem>
+                            <MenuItem value={4}>April</MenuItem>
+                            <MenuItem value={5}>May</MenuItem>
+                            <MenuItem value={6}>June</MenuItem>
+                            <MenuItem value={7}>July</MenuItem>
+                            <MenuItem value={8}>August</MenuItem>
+                          
+                        </Select>
+                        </FormControl>
+
+                        <FormControl fullWidth >
+                        <InputLabel id="demo-simple-select-label">Month</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={month}
+                            label="Month"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={1}>January</MenuItem>
+                            <MenuItem value={2}>Febuary</MenuItem>
+                            <MenuItem value={3}>March</MenuItem>
+                            <MenuItem value={4}>April</MenuItem>
+                            <MenuItem value={5}>May</MenuItem>
+                            <MenuItem value={6}>June</MenuItem>
+                            <MenuItem value={7}>July</MenuItem>
+                            <MenuItem value={8}>August</MenuItem>
+                          
+                        </Select>
+                        </FormControl>
+                        {/* <select className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md p-2.5" >
                             <option>Month</option>
                             <option>January</option>
-                            <option>Febuary</option>
-                            <option>March</option>
+                            <option></option>
+                            <option></option>
                             <option>April</option>
                             <option>May</option>
                             <option>June</option>
@@ -63,7 +141,7 @@ const PhoneOrEmail = (props: any) => {
                             <option>June</option>
                             <option>July</option>
                             <option>August</option>
-                        </select>
+                        </select> */}
                         </div>
                     {/* </div> */}
 
@@ -110,16 +188,15 @@ const PhoneOrEmail = (props: any) => {
                         </div>
                     </div>
                     <div className="font-medium text-left text-xs text-gray-600 mt-2.5">
-                        <input
-                            className="checkboxIcon"
-                            type="checkbox"
-                            placeholder="Enter 6-digit code"
-                            name=""
-                            id=""
+                    {/* <FormGroup> */}
+                        <FormControlLabel
+                            control={
+                            <Checkbox  name="gilad" style={{ padding:'0px', width: '30%'}}/>
+                            }
+                            label="Get trending content, newsletters, promotions, recommendations, and account updates sent to your email"
                         />
-                        <div className=''>
-                            Get trending content, newsletters, promotions, recommendations, and account updates sent to your email
-                        </div>
+                    {/* </FormGroup> */}
+                    
                     </div>
                     <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-4 rounded-md py-2.5 px-3 cursor-pointer">
                         <div className="flex flex-row justify-center items-center gap-2 flex-1">
