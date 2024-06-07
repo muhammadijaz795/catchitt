@@ -95,6 +95,12 @@ const PhoneOrEmail = (props: any) => {
         countryCodeModelHandler();
     };
 
+    const menuClickHandler = () => {
+        if (countryModelOpened) {
+            countryCodeModelHandler();
+        }
+    };
+
     const goBackHandler = () => {
         navigate(-1);
     };
@@ -104,7 +110,7 @@ const PhoneOrEmail = (props: any) => {
     }, []);
 
     return (
-        <div onClick={countryCodeModelHandler} className="h-screen">
+        <div onClick={menuClickHandler} className="h-screen">
             <div className="flex flex-row justify-between items-center p-3">
                 <img className="object-contain h-12 w-24" src={logoAuth} />
                 <div className="flex flex-row justify-center items-center gap-2">
@@ -146,7 +152,9 @@ const PhoneOrEmail = (props: any) => {
                                     {countryModelOpened && (
                                         <div
                                             onClick={modelClickHandler}
-                                            className="absolute h-80 w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10"
+                                            className={`absolute ${
+                                                filteredCountryCodes.length === 0 ? 'h-fit' : 'h-80'
+                                            }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
                                         >
                                             <div className="flex flex-row items-center p-2 gap-2">
                                                 <img
@@ -162,7 +170,13 @@ const PhoneOrEmail = (props: any) => {
                                                 />
                                             </div>
                                             <div className="w-full h-[1px] bg-gray-300" />
-                                            <div className="overflow-y-auto max-h-[17.188rem]">
+                                            <div
+                                                className={`overflow-y-auto ${
+                                                    filteredCountryCodes.length === 0
+                                                        ? 'h-fit'
+                                                        : 'max-h-[17.188rem]'
+                                                } `}
+                                            >
                                                 {filteredCountryCodes.map((countryItem, index) => (
                                                     <div
                                                         onClick={() =>
@@ -190,6 +204,11 @@ const PhoneOrEmail = (props: any) => {
                                                         )}
                                                     </div>
                                                 ))}
+                                                {filteredCountryCodes.length === 0 && (
+                                                    <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
+                                                        No result found
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     )}
