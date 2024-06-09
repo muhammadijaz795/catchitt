@@ -2,6 +2,7 @@ import { SIGNUP_APP_TEXTS } from '../../../utils/constants';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './mobile.module.scss';
+import { back, checkCountryCode, chevronDown, search } from '../../../icons';
 
 const Mobile = (props: any) => {
     const [countryModelOpened, setCountryModelOpened] = useState(false);
