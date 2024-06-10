@@ -126,6 +126,8 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                     controls={false}
                     autoPlay={true}
                     width="300px"
+                    preload='auto'
+                    playsInline
                     src={
                         info?.reducedVideoUrl.length > 0 ? info?.reducedVideoUrl : info?.originalUrl
                     }

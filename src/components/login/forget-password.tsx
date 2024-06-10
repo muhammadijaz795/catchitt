@@ -1,23 +1,20 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { CircularProgress } from '@mui/material';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { back, checkCountryCode, chevronDown, search } from '../../icons';
-import { loginService } from '../../redux/reducers/auth';
 import { APP_TEXTS, END_POINTS, METHOD } from '../../utils/constants';
 import Footer from './footer';
 import Header from './header';
 
-const PhoneOrEmail = (props: any) => {
+const ForgetPassword = (props: any) => {
     const [loginWithPhone, setLoginWithPhone] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
-    const dispatch = useDispatch<any>();
-    // const [error, setError] = useState<string>('');
-    // const [code, setCode] = useState<any>(null);
+    const [error, setError] = useState<string>('');
+    const [code, setCode] = useState<any>(null);
     const [loginWithPassword, setLoginWithPassword] = useState<boolean>(false);
     const [countryModelOpened, setCountryModelOpened] = useState<boolean>(false);
+    const [forgetPassword, setForgetPassword] = useState<boolean>(false);
     const [countryCodes, setCountryCodes] = useState([]);
     const [selectedCountryIndex, setSelectedCountryIndex] = useState<number>(-1);
     const API_KEY = process.env.VITE_API_URL;
@@ -26,61 +23,40 @@ const PhoneOrEmail = (props: any) => {
     const [phoneNumber, setPhoneNumber] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [countryCode, setCountryCode] = useState<string>('');
-    const [isoCode, setIsoCode] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isError, setIsError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [passwordBorderColor, setPasswordBorderColor] = useState('');
+    const location = useLocation();
+    const { showEmail } = location.state || {}; // Default to an empty object if state is undefined
 
     const toggleLoginMethod = () => {
         setLoginWithPhone(!loginWithPhone);
     };
 
-    const loginHandler = async () => {
-        setIsLoading(true);
-        dispatch(loginService({ password, email }))
-            .then((res: any) => {
-                if (res?.error) {
-                    setIsError(true);
-                    setPasswordBorderColor('border-red-400');
-                    setErrorMessage(res?.payload || res?.error?.message);
-                    setIsLoading(false);
-                } else if (res?.payload?.status == 200) {
-                    console.log('data after successfull login', res?.payload?.data);
-                    setIsLoading(false);
-                    navigate('/home');
-                }
-            })
-            .catch((error: any) => {
-                setIsError(true);
-                setIsLoading(false);
-            });
+    const loginHandler = () => {
+        console.log('Login Successfull!');
     };
 
     const togglePassword = () => {
         setShowPassword(!showPassword);
     };
 
-    // const handleChange = (event: { target: { value: any } }) => {
-    //     const inputValue = event.target.value;
+    const handleChange = (event: { target: { value: any } }) => {
+        const inputValue = event.target.value;
 
-    //     if (/^\d{0,6}$/.test(inputValue)) {
-    //         setCode(inputValue);
-    //         setError('');
-    //     } else {
-    //         setError('Enter 6-digit code');
-    //     }
-    // };
+        if (/^\d{0,6}$/.test(inputValue)) {
+            setCode(inputValue);
+            setError('');
+        } else {
+            setError('Enter 6-digit code');
+        }
+    };
 
     const loginOrForgetPasswordHandler = () => {
         if (loginWithPhone && !loginWithPassword) {
             loginWithPasswordToggler();
+        } else {
+            forgetPasswordHandler();
         }
-        // else {
-        // forgetPasswordHandler();
-        // }
     };
 
     const loginWithPasswordToggler = () => {
@@ -89,7 +65,6 @@ const PhoneOrEmail = (props: any) => {
 
     const forgetPasswordHandler = () => {
         console.log('Forget password');
-        // navigate('/login/forget-password', { state: { showEmail: !loginWithPhone } });
     };
 
     const countryCodeModelHandler = () => {
@@ -110,12 +85,11 @@ const PhoneOrEmail = (props: any) => {
     };
 
     const countryItemClickHandler = (
-        countryItem: { name: string; code: string; iso: string },
+        countryItem: { name: string; code: string },
         index: number
     ) => {
         setSelectedCountryIndex(index);
         setCountryCode(countryItem?.code);
-        setIsoCode(countryItem?.iso);
         countryCodeModelHandler();
     };
 
@@ -138,20 +112,11 @@ const PhoneOrEmail = (props: any) => {
             // Set first country as initial country code
             setCountryCode(data?.countries[0]?.code);
 
-            // Set first isoCode as initial country iso code
-            setIsoCode(data?.countries[0]?.iso);
-
             // Setting all values to countryCodes state
             setCountryCodes(data?.countries);
         } catch (error) {
             console.log('🚀 ~ fetchCountriesList ~ error:', error);
         }
-    };
-
-    const passwordOperationsHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-        setIsError(false);
-        setPasswordBorderColor('');
     };
 
     const goBackHandler = () => {
@@ -167,7 +132,7 @@ const PhoneOrEmail = (props: any) => {
             <Header />
             <div className="w-[22.688rem] mx-auto mt-14 h-auto">
                 <div className="overflow-visible">
-                    <h2 className="font-bold text-3xl">Log in</h2>
+                    <h2 className="font-bold text-3xl">Reset Password</h2>
                     <div className="flex flex-row justify-between items-center mt-3.5">
                         <p className="font-medium text-[0.938rem]">
                             {loginWithPhone ? 'Phone' : 'Email or username'}
@@ -186,7 +151,7 @@ const PhoneOrEmail = (props: any) => {
                                     onClick={countryCodeModelHandler}
                                     className="flex flex-row items-center gap-2 flex-1 cursor-pointer relative"
                                 >
-                                    <p>{isoCode + ' ' + countryCode}</p>
+                                    <p>{countryCode}</p>
                                     <img
                                         className={`object-contain h-2.5 w-2.5 chevron ${
                                             countryModelOpened ? 'rotate' : ''
@@ -239,9 +204,7 @@ const PhoneOrEmail = (props: any) => {
                                                             }`}
                                                         >
                                                             <p className="font-normal text-black text-left text-xs hover:bg-gray-50">
-                                                                {countryItem?.name +
-                                                                    ' ' +
-                                                                    countryItem?.code}
+                                                                {countryItem?.name}
                                                             </p>
                                                             {selectedCountryIndex === index && (
                                                                 <img
@@ -270,7 +233,7 @@ const PhoneOrEmail = (props: any) => {
                                     onChange={(e) => setPhoneNumber(e.target.value)}
                                 />
                             </div>
-                            {/* {!loginWithPassword ? (
+                            {!loginWithPassword ? (
                                 <>
                                     <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3">
                                         <input
@@ -299,29 +262,29 @@ const PhoneOrEmail = (props: any) => {
                                     )}
                                 </>
                             ) : (
-                                <> */}
-                            <div className="flex flex-row justify-between items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3">
-                                <input
-                                    className="w-2/3 bg-login-btn"
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                                {!showPassword ? (
-                                    <Visibility
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={togglePassword}
-                                    />
-                                ) : (
-                                    <VisibilityOff
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={togglePassword}
-                                    />
-                                )}
-                            </div>
-                            {/* </>
-                            )} */}
+                                <>
+                                    <div className="flex flex-row justify-between items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3">
+                                        <input
+                                            className="w-2/3 bg-login-btn"
+                                            type={showPassword ? 'text' : 'password'}
+                                            placeholder="Password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
+                                        {!showPassword ? (
+                                            <Visibility
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={togglePassword}
+                                            />
+                                        ) : (
+                                            <VisibilityOff
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={togglePassword}
+                                            />
+                                        )}
+                                    </div>
+                                </>
+                            )}
                         </>
                     ) : (
                         <>
@@ -334,15 +297,13 @@ const PhoneOrEmail = (props: any) => {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
-                            <div
-                                className={`flex flex-row justify-between items-center border-[1px] ${passwordBorderColor} bg-login-btn mt-2 rounded-md py-2.5 px-3`}
-                            >
+                            <div className="flex flex-row justify-between items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3">
                                 <input
                                     className="w-2/3 bg-login-btn"
                                     type={showPassword ? 'text' : 'password'}
                                     placeholder="Password"
                                     value={password}
-                                    onChange={(e) => passwordOperationsHandler(e)}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                                 {!showPassword ? (
                                     <Visibility
@@ -366,7 +327,7 @@ const PhoneOrEmail = (props: any) => {
                                 : ''
                         } `}
                     >
-                        {/* {loginWithPhone && !loginWithPassword ? (
+                        {loginWithPhone && !loginWithPassword ? (
                             'Log in with password'
                         ) : loginWithPassword ? (
                             <div className="flex flex-row items-center gap-3 -mt-2.5">
@@ -375,52 +336,32 @@ const PhoneOrEmail = (props: any) => {
                                     className="font-medium text-left text-xs text-gray-600 mt-2.5 hover:underline cursor-pointer"
                                 >
                                     {APP_TEXTS.FORGOT_PASSWORD}
-                                </p> */}
-                        {/* {loginWithPhone && (
-                                    <>
-                                        <p className="font-medium text-left text-xs text-gray-300 mt-2.5 hover:underline cursor-pointer">
-                                            |
-                                        </p>
-                                        <p
-                                            onClick={loginWithPasswordToggler}
-                                            className="font-medium text-left text-xs text-gray-600 mt-2.5 hover:underline cursor-pointer"
-                                        >
-                                            {APP_TEXTS.LOGIN_WITH_CODE}
-                                        </p>
-                                    </>
-                                )} */}
-                        {/* </div>
-                        ) : ( */}
-                        {isError && (
+                                </p>
+                                <p className="font-medium text-left text-xs text-gray-300 mt-2.5 hover:underline cursor-pointer">
+                                    |
+                                </p>
+                                <p
+                                    onClick={loginWithPasswordToggler}
+                                    className="font-medium text-left text-xs text-gray-600 mt-2.5 hover:underline cursor-pointer"
+                                >
+                                    {APP_TEXTS.LOGIN_WITH_CODE}
+                                </p>
+                            </div>
+                        ) : (
                             <p
                                 onClick={forgetPasswordHandler}
-                                className="font-light text-left text-xs text-red-700 mt-2.5"
+                                className="font-medium text-left text-xs text-gray-600 mt-2.5 hover:underline cursor-pointer"
                             >
-                                {errorMessage}
+                                {APP_TEXTS.FORGOT_PASSWORD}
                             </p>
                         )}
-                        <p
-                            onClick={forgetPasswordHandler}
-                            className="font-medium text-left text-xs text-gray-600 mt-2.5 hover:underline cursor-pointer"
-                        >
-                            {APP_TEXTS.FORGOT_PASSWORD}
-                        </p>
-                        {/* // )} */}
                     </p>
                     <div
                         onClick={loginHandler}
                         className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer`}
                     >
                         <div className="flex flex-row justify-center items-center gap-2 flex-1">
-                            <p>
-                                {isLoading ? (
-                                    <CircularProgress
-                                        style={{ width: 18, height: 18, color: 'red' }}
-                                    />
-                                ) : (
-                                    APP_TEXTS.LOGIN
-                                )}
-                            </p>
+                            <p>{APP_TEXTS.LOGIN}</p>
                         </div>
                     </div>
                     <div
@@ -447,4 +388,4 @@ const PhoneOrEmail = (props: any) => {
     );
 };
 
-export default PhoneOrEmail;
+export default ForgetPassword;

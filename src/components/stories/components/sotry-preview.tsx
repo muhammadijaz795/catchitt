@@ -40,6 +40,8 @@ const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
                                 width={340}
                                 height={600}
                                 autoPlay
+                                preload='auto'
+                                playsInline
                             ></video> 
                             :
                              <img  width={340}

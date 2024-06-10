@@ -49,6 +49,8 @@ function CustomPlayer({ src, videoModal, post, controls }: any) {
                     src={src}
                     ref={videoRef}
                     className={style.video}
+                    preload='auto'
+                    playsInline
                 />
             </div>
         </div>
