@@ -1,0 +1,76 @@
+/* Base style */
+.item-login-container {
+    height: auto; /* Default height, if necessary */
+}
+
+/* Media queries ordered from largest to smallest */
+@media only screen and (max-width: 1900px) {
+    .item-login-container {
+        height: 14rem; /* Adjust the height for screens up to 1900px */
+    }
+}
+
+@media only screen and (max-width: 1800px) {
+    .item-login-container {
+        height: 25.5rem; /* Adjust the height for screens up to 1800px */
+    }
+}
+
+@media only screen and (max-width: 1650px) {
+    .item-login-container {
+        height: 19rem; /* Adjust the height for screens up to 1650px */
+    }
+}
+
+@media only screen and (max-width: 1550px) {
+    .item-login-container {
+        height: 22rem; /* Adjust the height for screens up to 1550px */
+    }
+}
+
+@media only screen and (max-width: 1450px) {
+    .item-login-container {
+        height: 15rem; /* Adjust the height for screens up to 1450px */
+    }
+}
+
+@media only screen and (max-width: 1400px) {
+    .item-login-container {
+        height: 11rem; /* Adjust the height for screens up to 1400px */
+    }
+}
+
+@media only screen and (max-width: 1300px) {
+    .item-login-container {
+        height: 7rem; /* Adjust the height for screens up to 1300px */
+    }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.chevron {
+    transition: transform 0.3s ease-in-out;
+}
+
+.chevron.rotate {
+    transform: rotate(180deg);
+}
+
+::-moz-selection {
+    /* Code for Firefox */
+    background: rgb(160, 158, 158);
+}
+
+::selection {
+    background: rgb(160, 158, 158);
+}

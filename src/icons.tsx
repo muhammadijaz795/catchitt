@@ -73,6 +73,15 @@ import camera from './assets/camera.svg';
 import seezittLogo from './assets/seezitt-logo.svg';
 import cameraThumbnail from './assets/camera-thumbnail.svg';
 import chevronToggle from './assets/chevron-toggle.svg';
+import qrCode from './assets/qr-code.png';
+import back from './assets/back.png';
+import qrCodeAuth from './components/login/svg-components/qr-auth.svg';
+import emailOrPhone from './components/login/svg-components/email-or-phone-auth.svg';
+import facebookAuth from './components/login/svg-components/facebook-auth.svg';
+import googleAuth from './components/login/svg-components/google-auth.svg';
+import twitterAuth from './components/login/svg-components/twitter-auth.svg';
+import appleAuth from './components/login/svg-components/apple-auth.svg';
+import logoAuth from './components/login/svg-components/logo-auth.svg';
 import chevronUp from './assets/chevron-up.png';
 import chevronDown from './assets/chevron-down.png';
 import checkCountryCode from './assets/check-country-code.png';
@@ -153,7 +162,16 @@ export {
     seezittLogo,
     cameraThumbnail,
     chevronToggle,
+    qrCode,
+    back,
+    qrCodeAuth,
+    emailOrPhone,
+    facebookAuth,
+    googleAuth,
+    twitterAuth,
+    appleAuth,
+    logoAuth,
     chevronUp,
     chevronDown,
-    checkCountryCode,
+    checkCountryCode
 };

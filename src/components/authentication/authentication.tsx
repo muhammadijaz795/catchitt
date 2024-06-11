@@ -12,10 +12,8 @@ import authSplashImg from '../../assets/authSplashImg.png';
 import playStoreBtn from '../../assets/playStoreBtn.png';
 import { arrow } from '../../icons';
 import { loginService, signupService } from '../../redux/reducers/auth';
-import { useAuthStore } from '../../store/authStore';
 import styles from './authentication.module.scss';
 import Input from './components/Input';
-import { i } from 'mathjs';
 
 export interface AuthenticationProps {
     className?: string;
@@ -96,21 +94,23 @@ export const Authentication = (props: any) => {
             const { name, password, email } = user;
             dispatch(signupService({ name, password, email })).then(() => {
                 setLoader(false);
-                // navigate('/home'); 
-                localStorage.setItem('isSignupOtp',"true");
-                 navigate(`/otp-verification/${email}`)
+                // navigate('/home');
+                localStorage.setItem('isSignupOtp', 'true');
+                navigate(`/otp-verification/${email}`);
             });
         }
     };
- 
-   const VerificationLinkClick = () => {
+
+    const VerificationLinkClick = () => {
         const linkStyle = {
             color: '#5448b2',
             cursor: 'pointer', // Add pointer cursor on hover
         };
 
         return (
-            <p onClick={ ()=>navigate(`/request-verification-otp`)} style={linkStyle}>Verify Email</p>
+            <p onClick={() => navigate(`/request-verification-otp`)} style={linkStyle}>
+                Verify Email
+            </p>
         );
     };
 
@@ -119,27 +119,25 @@ export const Authentication = (props: any) => {
         setLoader(true);
         const { password, email } = user;
         dispatch(loginService({ password, email }))
-            .then((res:any) => {
-
-                console.log("response of login")
-                console.log(res)
-                if(res?.error){
+            .then((res: any) => {
+                console.log('response of login');
+                console.log(res);
+                if (res?.error) {
                     //  setErrorMessage(res?.message);
                     setErrorMessage('Invalid Email or Password');
-                    setVerificationLink(true)
+                    setVerificationLink(true);
                     setLoader(false);
-                }else if(res?.payload?.status == 200){
-                    console.log("data after successfull login")
-                    console.log(res?.payload?.data)
-                    setLoader(false); 
+                } else if (res?.payload?.status == 200) {
+                    console.log('data after successfull login');
+                    console.log(res?.payload?.data);
+                    setLoader(false);
                     navigate('/home');
                 }
-
             })
-            .catch((error:any) => {
+            .catch((error: any) => {
                 console.error(error);
                 setErrorMessage('Invalid Email or Password');
-                setVerificationLink(true)
+                setVerificationLink(true);
                 setLoader(false);
             });
     };
@@ -183,17 +181,13 @@ export const Authentication = (props: any) => {
                                             fontSize: '16px',
                                             color: 'red',
                                             marginBottom: '20px',
-                                            lineHeight:"2rem"
+                                            lineHeight: '2rem',
                                         }}
                                     >
                                         {errorMessage}
-                                        {verificationLink? (
-                                            <VerificationLinkClick />
-                                        ) : null}
-                                         
+                                        {verificationLink ? <VerificationLinkClick /> : null}
                                     </h4>
                                 ) : null}
-                               
                             </div>
                             <div
                                 className={styles.inputsDiv}
@@ -274,7 +268,7 @@ export const Authentication = (props: any) => {
                             </div>
                         </form>
                     ) : /** Sign in Flow */
-                     
+
                     form === 'signin' ? (
                         <form className={styles.authInputFields}>
                             <h3 className={styles.creatTitle} style={{ marginTop: '10%' }}>
@@ -291,7 +285,7 @@ export const Authentication = (props: any) => {
                                         }}
                                     >
                                         {errorMessage}
-                                        {verificationLink ? (<VerificationLinkClick/>):null}
+                                        {verificationLink ? <VerificationLinkClick /> : null}
                                     </h4>
                                 ) : null}
                             </div>

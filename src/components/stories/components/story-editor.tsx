@@ -574,6 +574,8 @@ const StoryEditor = ({file}:any) => {
                             style={{width: '100%', height: '100%'}}
                             onTimeUpdate={updateProgress}
                             onEnded={videoEnded}
+                            preload='auto'
+                            playsInline
                         
                         ></video>
 

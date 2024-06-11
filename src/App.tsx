@@ -44,6 +44,9 @@ import Signup from './components/signup';
 import SignupEmail from './components/signup/email/email';
 import SignupPhone from './components/signup/mobile/mobile';
 
+import Login from './components/login';
+import PhoneOrEmail from './components/login/phone-or-email';
+import ForgetPassword from './components/login/forget-password';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -83,7 +86,7 @@ function App() {
                     <Router>
                         <Routes>
                             <Route path="/" element={<InitialRouteHandler />} />
-                            <Route
+                            {/* <Route
                                 path="/auth"
                                 element={
                                     <Authentication
@@ -91,6 +94,18 @@ function App() {
                                         language={appLanguage}
                                     />
                                 }
+                            /> */}
+                            <Route
+                                path="/auth"
+                                element={<Login setLanguage={setLanguage} language={appLanguage} />}
+                            />
+                            <Route
+                                path="/login/phone-or-email"
+                                element={<PhoneOrEmail />}
+                            />
+                            <Route
+                                path="/login/forget-password"
+                                element={<ForgetPassword />}
                             />
                             <Route path="/forgot-password" element={<ForgotPassword />} />
                             <Route path="/request-verification-otp" element={<RequestOtp />} />

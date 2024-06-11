@@ -65,7 +65,7 @@ export const loginService = createAsyncThunk(
     'auth/loginService',
     async (values: any, { rejectWithValue }) => {
         try {
-            let res = await post('/auth/sign-in', {
+            let res: any = await post('/auth/sign-in', {
                 type: 'application/json',
                 data: { isLoggedIn: true, ...values },
             });
@@ -74,7 +74,8 @@ export const loginService = createAsyncThunk(
                 console.log('Responsessss :', res?.data);
                 return res?.data;
             } else {
-                return rejectWithValue('Invalid status code');
+                console.log('Responsessss :', res?.message);
+                return rejectWithValue(res?.message || 'Invalid status code');
             }
         } catch (error: any) {
             return rejectWithValue(error?.message);

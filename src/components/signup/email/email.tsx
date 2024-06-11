@@ -10,26 +10,41 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Footer from '../../login/footer';
+import Header from '../../login/header';
 
 const PhoneOrEmail = (props: any) => {
     const navigate = useNavigate();
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const API_KEY = process.env.VITE_API_URL;
     const [month, setMonth] = useState('');
+    const [date, setDate] = useState('');
+    const [year, setYear] = useState('');
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleMonthChange = (event: SelectChangeEvent) => {
     setMonth(event.target.value as string);
   };
 
+  const handleDateChange = (event: SelectChangeEvent) => {
+    setDate(event.target.value as string);
+  };
+
+  const handleYearChange = (event: SelectChangeEvent) => {
+    setYear(event.target.value as string);
+  };
+
+       
+  const handleLoginClick = () => {
+    navigate('/login/phone-or-email');
+  }
+
+  const handleSignupWithPhoneClick = () => {
+    navigate('/signup/phone-or-email/phone');
+  }
+
     return (
         <div className="h-screen">
-            <div className="flex flex-row justify-between items-center p-3">
-                <h3 className="font-bold text-4xl">Seezitt</h3>
-                <div className="flex flex-row justify-center items-center gap-3">
-                    <p>?</p>
-                    <p className="hover:underline cursor-pointer">{SIGNUP_APP_TEXTS.FEEDBACK}</p>
-                </div>
-            </div>
+            <Header />
             <div className="w-[22.688rem] mx-auto mt-14 h-auto">
                 <div className="overflow-auto">
                     <h2 className="font-bold text-3xl">Sign up</h2>
@@ -44,15 +59,15 @@ const PhoneOrEmail = (props: any) => {
                             name=""
                             id=""
                         /> */}
-                        <div className='flex flex-row p-0.5'>
-                            <FormControl fullWidth className='p-1'>
+                        <div className='flex flex-row'>
+                            <FormControl fullWidth className='dobselectbox p-1'>
                             <InputLabel id="demo-simple-select-label">Month</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={month}
                                 label="Month"
-                                onChange={handleChange}
+                                onChange={handleMonthChange}
                             >
                                 <MenuItem value={1}>January</MenuItem>
                                 <MenuItem value={2}>Febuary</MenuItem>
@@ -75,9 +90,9 @@ const PhoneOrEmail = (props: any) => {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={month}
+                                value={date}
                                 label="Month"
-                                onChange={handleChange}
+                                onChange={handleDateChange}
                             >
                                 <MenuItem value={1}>1</MenuItem>
                                 <MenuItem value={2}>2</MenuItem>
@@ -119,9 +134,9 @@ const PhoneOrEmail = (props: any) => {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={month}
+                                value={year}
                                 label="Month"
-                                onChange={handleChange}
+                                onChange={handleYearChange}
                             >
                             {(function (rows, i, len) {
                                     while (--i >= len) {
@@ -139,7 +154,7 @@ const PhoneOrEmail = (props: any) => {
                     <div>
                         <div className="flex flex-row justify-between items-center mt-3.5">
                             <p className="font-medium text-[0.938rem]">Email</p>
-                            <p className="font-medium text-xs text-gray-600">
+                            <p className="font-medium text-xs text-gray-600" onClick={handleSignupWithPhoneClick}>
                                 Sign up with phone
                             </p>
                         </div>
@@ -203,17 +218,12 @@ const PhoneOrEmail = (props: any) => {
                 <div className="border-t border-custom-1 text-center p-4">
                     <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1">
                         {SIGNUP_APP_TEXTS.ALREADY_ACCOUNT}{' '}
-                        <span className="text-danger-1 font-semibold hover:underline cursor-pointer">
+                        <span className="text-danger-1 font-semibold hover:underline cursor-pointer" onClick={handleLoginClick}>
                             {SIGNUP_APP_TEXTS.LOGIN}
                         </span>
                     </h3>
                 </div>
-                <div className="bg-black flex flex-row justify-between items-center py-8 px-32">
-                    <div className="border border-custom-2 pl-2 rounded-sm w-[10rem] cursor-pointer">
-                        <p className="text-white text-left p-2 font-normal text-sm">English</p>
-                    </div>
-                    <p className="font-normal text-sm text-white">© 2024 Seezitt</p>
-                </div>
+                <Footer />
             </div>
         </div>
     );
