@@ -12,6 +12,8 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Footer from '../../login/footer';
 import Header from '../../login/header';
+import './mobile.module.scss';
+import {  checkCountryCode, chevronDown, search } from '../../../icons';
 
 const PhoneOrEmail = (props: any) => {
     const navigate = useNavigate();
@@ -42,6 +44,73 @@ const PhoneOrEmail = (props: any) => {
     navigate('/signup/phone-or-email/phone');
   }
 
+
+  const [countryModelOpened, setCountryModelOpened] = useState(false);
+  const [countryCodes, setCountryCodes] = useState([]);
+  const [selectedCountryIndex, setSelectedCountryIndex] = useState(0);
+//   const API_KEY = process.env.VITE_API_URL;
+
+  // Input Values
+  const [phoneNumber, setPhoneNumber] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [countryCode, setCountryCode] = useState<string>('');
+  const [isoCode, setIsoCode] = useState<string>('');
+
+
+  const handleMobileNumberChange = (event: SelectChangeEvent) => {
+      setPhoneNumber(event.target.value as string);
+      buttonClickHandler();
+  };
+
+
+
+
+  const countryCodeModelHandler = () => {
+    setCountryModelOpened(!countryModelOpened);
+};
+
+const modelClickHandler = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+};
+
+// Filter country codes based on search query
+const filteredCountryCodes = countryCodes?.filter((countryItem) =>
+    countryItem?.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
+const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+};
+
+const countryItemClickHandler = (
+    countryItem: { name: string; code: string },
+    index: number
+) => {
+    setSelectedCountryIndex(index);
+    setCountryCode(countryItem?.code);
+    setIsoCode(countryItem?.iso);
+    countryCodeModelHandler();
+};
+
+const menuClickHandler = () => {
+    if (countryModelOpened) {
+        countryCodeModelHandler();
+    }
+};
+
+const buttonClickHandler = () => {
+    if (date && month && year && countryCode && phoneNumber) {
+        console.log("enter");
+    }else{
+        console.log("no enter");
+    }
+};
+
+const nextClickHandler = () => {
+   
+};
+
+
     return (
         <div className="h-screen">
             <Header />
@@ -51,14 +120,6 @@ const PhoneOrEmail = (props: any) => {
                     <div className="flex flex-row justify-between items-center mt-3.5">
                         <p className="font-medium text-[0.938rem]">When’s your birthday?</p>
                     </div>
-                    {/* <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md p-2.5"> */}
-                        {/* <input
-                            className="w-2/3 bg-gray-100"
-                            type="phone"
-                            placeholder="Phone number"
-                            name=""
-                            id=""
-                        /> */}
                         <div className='flex flex-row'>
                             <FormControl fullWidth className='dobselectbox p-1'>
                             <InputLabel id="demo-simple-select-label">Month</InputLabel>
@@ -151,34 +212,134 @@ const PhoneOrEmail = (props: any) => {
                         </div>
                         
 
+                        <div>
+                            <div className="flex flex-row justify-between items-center mt-3.5">
+                                <p className="font-medium text-[0.938rem]">Email</p>
+                                <p className="font-medium text-xs text-gray-600" onClick={handleSignupWithPhoneClick}>
+                                    Sign up with phone
+                                </p>
+                            </div>
+                            <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md p-2.5">
+                                <input
+                                    className="w-2/3 bg-gray-100"
+                                    type="email"
+                                    placeholder="Email address"
+                                    name=""
+                                    id=""
+                                />
+                            </div>
+
+                            <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md p-2.5">
+                                <input
+                                    className="w-2/3 bg-gray-100"
+                                    type="password"
+                                    placeholder="Password"
+                                    name=""
+                                    id=""
+                                />
+                            </div>
+                        </div>
+
                     <div>
                         <div className="flex flex-row justify-between items-center mt-3.5">
-                            <p className="font-medium text-[0.938rem]">Email</p>
-                            <p className="font-medium text-xs text-gray-600" onClick={handleSignupWithPhoneClick}>
-                                Sign up with phone
+                            <p className="font-medium text-[0.938rem]">Phone</p>
+                            <p className="font-medium text-xs text-gray-600">
+                                Sign up with Email
                             </p>
                         </div>
                         <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md p-2.5">
+                            
+                            <div
+                                    onClick={countryCodeModelHandler}
+                                    className="flex flex-row border-r-2 items-center gap-1 flex-auto cursor-pointer relative"
+                                >
+                                    <p>{isoCode + ' ' + countryCode}</p>
+                                    <img
+                                        className={`object-contain h-2.5 w-2.5 chevron ${
+                                            countryModelOpened ? 'rotate' : ''
+                                        }`}
+                                        src={chevronDown}
+                                    />
+                                    {/* <p className="text-gray-400 "> | </p> */}
+                                    {countryModelOpened && (
+                                        <div
+                                            onClick={modelClickHandler}
+                                            className={`absolute ${
+                                                filteredCountryCodes.length === 0 ? 'h-fit' : 'h-80'
+                                            }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
+                                        >
+                                            <div className="flex flex-row items-center p-2 gap-2">
+                                                <img
+                                                    className="object-contain h-3 w-3 m-2"
+                                                    src={search}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search"
+                                                    className="w-full text-sm font-normal caret-red-500 bg-white"
+                                                    value={searchQuery}
+                                                    onChange={handleSearchChange}
+                                                />
+                                            </div>
+                                            <div className="w-full h-[1px] bg-gray-300" />
+                                            <div
+                                                className={`overflow-y-auto ${
+                                                    filteredCountryCodes.length === 0
+                                                        ? 'h-fit'
+                                                        : 'max-h-[17.188rem]'
+                                                } `}
+                                            >
+                                                {filteredCountryCodes.map(
+                                                    (countryItem: any, index: number) => (
+                                                        <div
+                                                            onClick={() =>
+                                                                countryItemClickHandler(
+                                                                    countryItem,
+                                                                    index
+                                                                )
+                                                            }
+                                                            key={index}
+                                                            className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${
+                                                                selectedCountryIndex === index
+                                                                    ? 'bg-gray-50'
+                                                                    : ''
+                                                            }`}
+                                                        >
+                                                            <p className="font-normal text-black text-left text-xs hover:bg-gray-50">
+                                                                {countryItem?.name +
+                                                                    ' ' +
+                                                                    countryItem?.code}
+                                                            </p>
+                                                            {selectedCountryIndex === index && (
+                                                                <img
+                                                                    className="h-4 w-4 object-contain"
+                                                                    alt="check-mark"
+                                                                    src={checkCountryCode}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    )
+                                                )}
+                                                {filteredCountryCodes.length === 0 && (
+                                                    <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
+                                                        {APP_TEXTS.NO_RESULT_FOUND}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             <input
-                                className="w-2/3 bg-gray-100"
-                                type="email"
-                                placeholder="Email address"
+                                className=" gap-1 w-2/3 bg-gray-100"
+                                type="phone"
+                                placeholder="Phone number"
                                 name=""
                                 id=""
+                                value={phoneNumber}
+                                onChange={handleMobileNumberChange}
                             />
-                        </div>
-
-                        <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md p-2.5">
-                            <input
-                                className="w-2/3 bg-gray-100"
-                                type="password"
-                                placeholder="Password"
-                                name=""
-                                id=""
-                            />
-                        </div>
                     </div>
-                    
+                    </div>
 
                     <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md py-2.5 px-3">
                         <input

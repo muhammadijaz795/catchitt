@@ -344,7 +344,7 @@ const Mobile = (props: any) => {
                             </div> */}
                             <div
                                     onClick={countryCodeModelHandler}
-                                    className="flex flex-row items-center gap-2 flex-1 cursor-pointer relative"
+                                    className="flex flex-row border-r-2 items-center gap-1 flex-auto cursor-pointer relative"
                                 >
                                     <p>{isoCode + ' ' + countryCode}</p>
                                     <img
@@ -353,7 +353,7 @@ const Mobile = (props: any) => {
                                         }`}
                                         src={chevronDown}
                                     />
-                                    <p className="text-gray-400 "> | </p>
+                                    {/* <p className="text-gray-400 "> | </p> */}
                                     {countryModelOpened && (
                                         <div
                                             onClick={modelClickHandler}
@@ -423,7 +423,7 @@ const Mobile = (props: any) => {
                                     )}
                                 </div>
                             <input
-                                className="w-2/3 bg-gray-100"
+                                className=" gap-1 w-2/3 bg-gray-100"
                                 type="phone"
                                 placeholder="Phone number"
                                 name=""
