@@ -83,7 +83,6 @@ export const LOGIN_OPTIONS = [
     },
 ];
 
-
 export const END_POINTS = {
     COUNTRY_LIST: 'util/countries',
 };
@@ -95,3 +94,10 @@ export const METHOD = {
     PATCH: 'PATCH',
     DELETE: 'DELETE',
 };
+
+export const MENU_POPUP_OPTIONS = [
+    { menuOption: 'English', imageUrl: '' },
+    { menuOption: 'Feedback and help', imageUrl: '' },
+    { menuOption: 'Keyboard shortcuts', imageUrl: '' },
+    { menuOption: 'Dark mode', imageUrl: '' },
+];
