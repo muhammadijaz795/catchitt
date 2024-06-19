@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@mui/material';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createIcon, defaultAvatar, logo } from '../../icons';
@@ -7,6 +7,8 @@ import { logoutUser } from '../../redux/reducers/auth';
 import style from './Navbar.module.scss';
 import NavbarMunu from './components/Menu';
 import Search from './components/Search';
+import { openLoginPopup } from '../../redux/reducers';
+import MenuDropdownPopup from '../Menu/dropdownPopup';
 
 function Navbar() {
     const isLoggedIn: boolean = localStorage.getItem('token') ? true : false;
@@ -17,15 +19,27 @@ function Navbar() {
     const submitHandler = (searchValue: any) => {
         navigate(`/searchPage/${searchValue}/All`);
     };
-
+    const [menuPopupStatus, setMenuPopupStatus] = useState('hidden');
     const dispatch = useDispatch();
     const logoutAccount = () => {
         dispatch(logoutUser({ navigate }));
     };
+    const menuPopupStatusToggler = () => {
+        let status = '';
+        if (menuPopupStatus === 'hidden') {
+            status = 'block';
+        } else {
+            status = 'hidden';
+        }
+        setMenuPopupStatus(status);
+    };
 
+    const menuItemClickHandler = (menuItem: { menuOption: string; imageUrl: string }) => {
+        console.log('<Menu Item> : ', menuItem?.menuOption);
+    };
     return (
         <div className={style.parent}>
-            <div onClick={()=> navigate('/')} className={style.sec1}>
+            <div onClick={() => navigate('/')} className={style.sec1}>
                 <img src={logo} alt="" />
             </div>
             {!isMobile ? (
@@ -68,20 +82,27 @@ function Navbar() {
                             </div>
                         </div>
                     ) : (
-                        <button
-                            style={{
-                                background: '#5448B2',
-                                color: '#FFF',
-                                padding: '0px 18px',
-                                borderRadius: 6,
-                                height: 40,
-                                fontWeight: 600,
-                                fontSize: 14,
-                            }}
-                            onClick={() => navigate('/auth')}
-                        >
-                            Login
-                        </button>
+                        <>
+                            <button
+                                style={{
+                                    background: '#5448B2',
+                                    color: '#FFF',
+                                    padding: '0px 18px',
+                                    borderRadius: 6,
+                                    height: 40,
+                                    fontWeight: 600,
+                                    fontSize: 14,
+                                }}
+                                onClick={() => dispatch(openLoginPopup())}
+                            >
+                                Login
+                            </button>
+                            <MenuDropdownPopup
+                                menuPopupStatusToggler={menuPopupStatusToggler}
+                                menuPopupStatus={menuPopupStatus}
+                                menuItemClickHandler={menuItemClickHandler}
+                            />
+                        </>
                     )}
                 </div>
             ) : (

@@ -1,6 +1,7 @@
 import logo from '../assets/assets/icons/logo.svg';
 import avatar from '../assets/icons/avatar.svg';
 import closeSvg from '../public/images/icons/Close Square.svg';
+import closeIcon from '../public/images/icons/close.svg';
 import apple from './assets/apple.svg';
 import arrow from './assets/arrow.svg';
 import copyMsg from './assets/copy.svg';
@@ -173,5 +174,6 @@ export {
     logoAuth,
     chevronUp,
     chevronDown,
-    checkCountryCode
+    checkCountryCode,
+    closeIcon,
 };

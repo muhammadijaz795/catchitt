@@ -99,14 +99,8 @@ function App() {
                                 path="/auth"
                                 element={<Login setLanguage={setLanguage} language={appLanguage} />}
                             />
-                            <Route
-                                path="/login/phone-or-email"
-                                element={<PhoneOrEmail />}
-                            />
-                            <Route
-                                path="/login/forget-password"
-                                element={<ForgetPassword />}
-                            />
+                            <Route path="/login/phone-or-email" element={<PhoneOrEmail />} />
+                            <Route path="/login/forget-password" element={<ForgetPassword />} />
                             <Route path="/forgot-password" element={<ForgotPassword />} />
                             <Route path="/request-verification-otp" element={<RequestOtp />} />
                             <Route path="/otp-verification/:email" element={<OtpVerification />} />

@@ -26,6 +26,22 @@ const followings: any = createSlice({
     },
 });
 
+const popupSlice: any = createSlice({
+    name: 'popupSlice',
+    initialState: { isLoginPopup: false },
+    reducers: {
+        openLoginPopup: (state) => {
+            state.isLoginPopup = true;
+        },
+        closeLoginPopup: (state) => {
+            state.isLoginPopup = false;
+        },
+        toggleLoginPopup: (state) => {
+            state.isLoginPopup = !state.isLoginPopup;
+        },
+    },
+});
+
 const followers: any = createSlice({
     name: 'followings',
     initialState: {
@@ -158,6 +174,7 @@ const suggestedAccounts: any = createSlice({
 });
 
 export const { updateHomeVideos } = homeVideos.actions;
+export const { openLoginPopup, closeLoginPopup, toggleLoginPopup } = popupSlice.actions;
 
 export default combineReducers({
     followings: followings.reducer,
@@ -168,4 +185,5 @@ export default combineReducers({
     profile: loginSlice,
     isuploading,
     videoCategories,
+    popupSlice: popupSlice.reducer,
 });
