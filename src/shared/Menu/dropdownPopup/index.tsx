@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import { MENU_POPUP_OPTIONS } from '../../../utils/constants';
 import './switch.scss';
 import { useDispatch } from 'react-redux';
@@ -9,9 +9,14 @@ const MenuDropdownPopup = ({
     menuItemClickHandler,
 }: any) => {
     const dispatch = useDispatch();
+    const [checked, setChecked] = useState(false);
 
-    const handleToggle = (e: { stopPropagation: () => void }) => {
-        e.stopPropagation();
+    const handleToggle = () => {
+        // e.stopPropagation();
+        setChecked(!checked);
+        // console.log("checked",checked);
+        // console.log("value",e.target.value);
+        // localStorage.setItem('items', JSON.stringify(items));
     };
     return (
         <div
@@ -49,8 +54,8 @@ const MenuDropdownPopup = ({
                                     </li>
                                 </div>
                                 {index === MENU_POPUP_OPTIONS?.length - 1 && (
-                                    <label onClick={handleToggle} className="switchToggler mr-2">
-                                        <input type="checkbox" />
+                                    <label  className="switchToggler mr-2">
+                                        <input type="checkbox" onClick={handleToggle} />
                                         <span className="sliderForSwitch switchRound"></span>
                                     </label>
                                 )}

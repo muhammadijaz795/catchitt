@@ -2,7 +2,7 @@ import { useMediaQuery } from '@mui/material';
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createIcon, defaultAvatar, logo } from '../../icons';
+import { createIcon, defaultAvatar, logo, logoAuth } from '../../icons';
 import { logoutUser } from '../../redux/reducers/auth';
 import style from './Navbar.module.scss';
 import NavbarMunu from './components/Menu';
@@ -40,7 +40,7 @@ function Navbar() {
     return (
         <div className={style.parent}>
             <div onClick={() => navigate('/')} className={style.sec1}>
-                <img src={logo} alt="" />
+                <img src={logoAuth} alt="" />
             </div>
             {!isMobile ? (
                 <div className={style.sec2}>

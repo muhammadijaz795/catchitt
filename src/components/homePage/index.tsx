@@ -8,6 +8,8 @@ import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import ForDesktop from './ForDesktop';
 import ForMobile from './ForMobile';
 import useHome from './hooks/useHome';
+
+
 import { APP_TEXTS, SIGNUP_APP_TEXTS, END_POINTS, LOGIN_OPTIONS, SIGNUP_OPTIONS, METHOD } from '../../utils/constants';
 import ItemLogin from '../item-login';
 import SignupHandler from '../signup/signupHandler';
@@ -34,6 +36,8 @@ function HomePage() {
     const [videoModal, setVideoModal] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
     const [sendPopup, setSendPopup] = useState(false);
+
+
     const [loginWithPhone, setLoginWithPhone] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [isMainLoginOption, setIsMainLoginOption] = useState(true);
@@ -132,7 +136,7 @@ function HomePage() {
             .then((res: any) => {
                 if (res?.error) {
                     setIsError(true);
-                    setPasswordBorderColor('border-red-400');
+                    // setPasswordBorderColor('border-red-400');
                     setErrorMessage(res?.payload || res?.error?.message);
                     setIsLoading(false);
                 } else if (res?.payload?.status == 200) {
@@ -150,15 +154,23 @@ function HomePage() {
 
 
     const signupHandler = async () => {
+        let dob= year+"-"+month+"-"+date;
+        setDateOfBirth(dob);
+        console.log("signup", password, email, dateOfBirth, name);
+        // return false;
         setIsLoading(true);
         dispatch(signupService({ password, email, dateOfBirth, name }))
             .then((res: any) => {
-                if (res?.error) {
+                console.log("res",res);
+                if (res?.payload?.status == 400) {
+                    console.log("res 1",res);
                     setIsError(true);
-                    setPasswordBorderColor('border-red-400');
-                    setErrorMessage(res?.payload || res?.error?.message);
+                    // setPasswordBorderColor('border-red-400');
+                    // setErrorMessage(res?.payload || res?.payload?.message);
+                    setErrorMessage(res?.payload?.message)
                     setIsLoading(false);
                 } else if (res?.payload?.status == 200) {
+                    console.log("res 2",res);
                     console.log('data after successfull login', res?.payload?.data);
                     setIsLoading(false);
                     closeLoginPopupHandler();
@@ -166,6 +178,7 @@ function HomePage() {
                 }
             })
             .catch((error: any) => {
+                console.log("error",error);
                 setIsError(true);
                 setIsLoading(false);
             });
@@ -296,20 +309,23 @@ function HomePage() {
 
     const handleMonthChange = (event: SelectChangeEvent) => {
         setMonth(event.target.value as string);
-        let dob= date +"-"+ month+"-"+year;
-        setDateOfBirth(dob);
+        // let dob= date +"-"+ month+"-"+year;
+        // setDateOfBirth(dob);
+        // console.log(dob);
     };
 
     const handleDateChange = (event: SelectChangeEvent) => {
         setDate(event.target.value as string);
-        let dob= date +"-"+ month+"-"+year;
-        setDateOfBirth(dob);
+        // let dob= date +"-"+ month+"-"+year;
+        // setDateOfBirth(dob);
+        // console.log(dob);
     };
 
     const handleYearChange = (event: SelectChangeEvent) => {
         setYear(event.target.value as string);
-        let dob= date +"-"+ month+"-"+year;
-        setDateOfBirth(dob);
+        // let dob= date +"-"+ month+"-"+year;
+        // setDateOfBirth(dob);
+        // console.log(dob);
     };
 
     
@@ -714,6 +730,7 @@ function HomePage() {
                                                         <Select
                                                             labelId="demo-simple-select-label"
                                                             id="demo-simple-select"
+                                                            className='bg-login-btn'
                                                             value={month}
                                                             label="Month"
                                                             onChange={handleMonthChange}
@@ -738,6 +755,7 @@ function HomePage() {
                                                         <InputLabel id="demo-simple-select-label">Date</InputLabel>
                                                         <Select
                                                             labelId="demo-simple-select-label"
+                                                            className='bg-login-btn'
                                                             id="demo-simple-select"
                                                             value={date}
                                                             label="Month"
@@ -783,6 +801,7 @@ function HomePage() {
                                                         <Select
                                                             labelId="demo-simple-select-label"
                                                             id="demo-simple-select"
+                                                            className='bg-login-btn'
                                                             value={year}
                                                             label="Month"
                                                             onChange={handleYearChange}
@@ -1030,6 +1049,12 @@ function HomePage() {
                                                         </p>
                                                     </div>
                                                 </div>
+                                             { isError ? ( <p style={{
+                                                            color: 'red',
+                                                        }}>
+                                                {errorMessage}
+                                            </p>):null} 
+                                               
                                         </>
                                     )}
 
