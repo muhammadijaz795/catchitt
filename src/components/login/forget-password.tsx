@@ -1,6 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { checkCountryCode, chevronDown, search } from '../../icons';
 import {
@@ -13,8 +13,11 @@ import {
 } from '../../utils/constants';
 import Footer from './footer';
 import Header from './header';
+import { loginService } from '../../redux/reducers/auth';
+import { useDispatch } from 'react-redux';
+import Loader from '../loader';
 
-const ForgetPassword = (props: any) => {
+const ForgetPassword = () => {
     const location = useLocation();
     const { showEmail } = location.state || {}; // Default to an empty object if state is undefined
     const [resetWithPhone, setResetWithPhone] = useState<boolean>(!showEmail);
@@ -33,7 +36,10 @@ const ForgetPassword = (props: any) => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [isoCode, setIsoCode] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loadingOtp, setLoadingOtp] = useState<boolean>(false);
+    const [loadingLogin, setLoadingLogin] = useState<boolean>(false);
+    const dispatch: any = useDispatch();
+    const navigate = useNavigate();
 
     const toggleResetMethod = () => {
         if (resetWithPhone) {
@@ -45,7 +51,7 @@ const ForgetPassword = (props: any) => {
     };
 
     const loginHandler = async () => {
-        let reqJon = {
+        let reqJon: any = {
             password,
             otp: code,
         };
@@ -70,7 +76,7 @@ const ForgetPassword = (props: any) => {
                 });
                 const data: any = await response.json();
 
-                console.log('Response Login after reset : ', data);
+                handleSignInSubmit();
 
                 // Here i've to confirm from team that i should rather call dispatch(loginService({ password, email })
                 // OR i should manipulate the state using response of same API
@@ -78,6 +84,26 @@ const ForgetPassword = (props: any) => {
                 console.log('🚀 ~ fetchCountriesList ~ error:', error);
             }
         }
+    };
+
+    const handleSignInSubmit = () => {
+        setLoadingLogin(true);
+        dispatch(loginService({ password, email }))
+            .then((res: any) => {
+                if (res?.error) {
+                    showToastError(res?.message || 'Error Logging in');
+                    setLoadingLogin(false);
+                    return;
+                }
+
+                if (res?.payload?.status == STATUS_CODE.OK) {
+                    setLoadingLogin(false);
+                    navigate('/home');
+                }
+            })
+            .catch(() => {
+                setLoadingLogin(false);
+            });
     };
 
     const togglePassword = () => {
@@ -97,13 +123,13 @@ const ForgetPassword = (props: any) => {
 
     const sendOTP = async () => {
         if (phoneNumber?.length > 0 || email.length > 0) {
-            var reqJon = {};
+            var reqJon: any = {};
             if (email?.length > 0) {
                 reqJon['email'] = email;
             } else {
                 reqJon['phoneNumber'] = phoneNumber;
             }
-            setLoading(true);
+            setLoadingOtp(true);
             try {
                 const response: any = await fetch(`${API_KEY}/${END_POINTS.FORGOT_PASSWORD}`, {
                     method: METHOD.POST,
@@ -113,7 +139,7 @@ const ForgetPassword = (props: any) => {
                     body: JSON.stringify(reqJon),
                 });
                 const data: any = await response.json();
-                setLoading(false);
+                setLoadingOtp(false);
 
                 if (data?.status === STATUS_CODE.OK) {
                     showToastSuccess(data?.message);
@@ -121,7 +147,7 @@ const ForgetPassword = (props: any) => {
                     showToastError(data?.message);
                 }
             } catch (error) {
-                setLoading(false);
+                setLoadingOtp(false);
                 console.log('🚀 ~ fetchCountriesList ~ error:', error);
             }
         }
@@ -334,9 +360,7 @@ const ForgetPassword = (props: any) => {
                             >
                                 {APP_TEXTS.SEND_CODE}
                             </p>
-                            {loading && (
-                                <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent border-solid rounded-full animate-spin"></div>
-                            )}
+                            {loadingOtp && <Loader />}
                         </div>
                     </div>
                     {error && (
@@ -364,7 +388,7 @@ const ForgetPassword = (props: any) => {
                             password?.length > 0
                                 ? 'bg-red-500'
                                 : 'bg-login-btn'
-                        } mt-4 rounded-md py-2.5 px-3 cursor-pointer`}
+                        } mt-4 rounded-md py-2.5 px-3 cursor-pointer h-11`}
                     >
                         <div
                             className={`${
@@ -375,7 +399,7 @@ const ForgetPassword = (props: any) => {
                                     : 'text-black'
                             } flex flex-row justify-center items-center gap-2 flex-1`}
                         >
-                            <p>{APP_TEXTS.LOGIN}</p>
+                            <p>{loadingLogin ? <Loader /> : APP_TEXTS.LOGIN}</p>
                         </div>
                     </div>
                 </div>
