@@ -86,10 +86,42 @@ export const loginService = createAsyncThunk(
 export const signupService = createAsyncThunk('auth/signupService', async (values: any) => {
     if (!values) return;
     try {
-        let res = await post('/auth/sign-up', {
+        let res = await post('/auth/web-sign-up', {
             type: 'application/json',
             data: {
                 isLoggedIn: true,
+                ...values,
+            },
+        });
+        return res?.data;
+    } catch (error) {
+        return;
+    }
+});
+
+export const signupOTPService = createAsyncThunk('auth/signupOTPService', async (values: any) => {
+    if (!values) return;
+    try {
+        let res = await post('/auth/request-verify-email', {
+            type: 'application/json',
+            data: {
+                // isLoggedIn: true,
+                ...values,
+            },
+        });
+        return res?.data;
+    } catch (error) {
+        return;
+    }
+});
+
+export const signupVerifyOTPService = createAsyncThunk('auth/signupVerifyOTPService', async (values: any) => {
+    if (!values) return;
+    try {
+        let res = await post('/auth/verifyOtp', {
+            type: 'application/json',
+            data: {
+                // isLoggedIn: true,
                 ...values,
             },
         });
