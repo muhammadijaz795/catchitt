@@ -32,6 +32,20 @@ export const showToast = (toastMessage: string) => {
     });
 };
 
+export const showToastSuccess = (toastMessage: string) => {
+    toast.success(`${toastMessage}`, {
+        position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
+        autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
+    });
+};
+
+export const showToastError = (toastMessage: string) => {
+    toast.error(`${toastMessage}`, {
+        position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
+        autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
+    });
+};
+
 export const APP_TEXTS = {
     FEEDBACK: 'Feedback and help',
     LOGIN_SUBTEXT: 'Manage your account, check notifications, comment on videos, and more.',
@@ -85,6 +99,8 @@ export const LOGIN_OPTIONS = [
 
 export const END_POINTS = {
     COUNTRY_LIST: 'util/countries',
+    FORGOT_PASSWORD: 'auth/password/forgot',
+    SET_NEW_PASSWORD: 'auth/password/set-new',
 };
 
 export const METHOD = {
@@ -93,6 +109,10 @@ export const METHOD = {
     POST: 'POST',
     PATCH: 'PATCH',
     DELETE: 'DELETE',
+};
+
+export const STATUS_CODE = {
+    OK: 200,
 };
 
 export const MENU_POPUP_OPTIONS = [

@@ -71,10 +71,8 @@ export const loginService = createAsyncThunk(
             });
 
             if (res?.status === 200) {
-                console.log('Responsessss :', res?.data);
                 return res?.data;
             } else {
-                console.log('Responsessss :', res?.message);
                 return rejectWithValue(res?.message || 'Invalid status code');
             }
         } catch (error: any) {

@@ -88,8 +88,7 @@ const PhoneOrEmail = (props: any) => {
     };
 
     const forgetPasswordHandler = () => {
-        console.log('Forget password');
-        // navigate('/login/forget-password', { state: { showEmail: !loginWithPhone } });
+        navigate('/login/forget-password', { state: { showEmail: !loginWithPhone } });
     };
 
     const countryCodeModelHandler = () => {
