@@ -149,12 +149,12 @@ function HomePage() {
                 body: JSON.stringify({ email:email, otp: otpCode }),
             });
             const { data }: any = await response.json();
-            // if(response.code == 200){
+            if(response.code == 200){
                 setOtpError(false)
                 setSignupNext(true);
-            // }else{
-            //     setOtpError(true)
-            // }
+            }else{
+                setOtpError(true)
+            }
             
             console.log('otp response', response);
         } catch (error) {
