@@ -244,9 +244,9 @@ const Account = ({ className, openModal }: AccountProps) => {
         }
     };
 
-    const handleClickMore = () => {
-        document.getElementById('fileInput').click();
-    };
+    // const handleClickMore = () => {
+    //     document.getElementById('fileInput').click();
+    // };
 
     const submitReportHandler = () => {
         setOpenReportsModal(false);
@@ -1426,7 +1426,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     )}
                                     {images.length < 4 && (
                                         <div
-                                            onClick={handleClickMore}
+                                            // onClick={handleClickMore}
                                             className="h-[6.375rem] w-[6.25rem] items-center flex justify-center bg-[#DFDFDF] rounded cursor-pointer"
                                         >
                                             <img
@@ -1441,7 +1441,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 type="file"
                                                 accept="image/*"
                                                 className="hidden"
-                                                onChange={handleImageChange}
+                                                // onChange={handleImageChange}
                                             />
                                         </div>
                                     )}
@@ -1453,7 +1453,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         type="file"
                                         accept="image/*"
                                         className="hidden"
-                                        onChange={handleImageChange}
+                                        // onChange={handleImageChange}
                                     />
                                     <img src={upload} height={18.5} width={19.04} alt="" />
                                     <p>Upload photo (0/4)</p>
