@@ -191,3 +191,32 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(12.7px);
 }
+
+.NextBtn {
+  // display: flex;
+  // flex-direction: column;
+  // align-items: start;
+  // align-content: center;
+  // justify-content: center;
+  // width: 80px;
+  // justify-items: start;
+  // align-self: center;
+  // min-width: auto;
+
+  // height: 40px;
+  // padding: 0px 12px;
+  // justify-content: ce/nter;
+  // align-items: center;
+  // border-radius: 6px;
+  background-color: var(--foundation-primary-primary-500, #5448B2) !important;
+
+  color: var(--default-white, #fff);
+
+  /* Small/Semibold */
+  // font-family: Poppins;
+  // font-size: 14px;
+  // font-style: normal;
+  // font-weight: 600;
+  // line-height: 120%;
+  /* 16.8px */
+}

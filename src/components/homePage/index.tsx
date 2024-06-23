@@ -10,7 +10,9 @@ import ForMobile from './ForMobile';
 import useHome from './hooks/useHome';
 
 
+
 import { APP_TEXTS, SIGNUP_APP_TEXTS, END_POINTS, LOGIN_OPTIONS, SIGNUP_OPTIONS, METHOD } from '../../utils/constants';
+import { validateEmail } from '../../utils/common';
 import ItemLogin from '../item-login';
 import SignupHandler from '../signup/signupHandler';
 import { closeIcon } from '../../icons';
@@ -26,6 +28,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import style from './index.module.scss';
 
 function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
@@ -69,6 +72,11 @@ function HomePage() {
     const [signupNext, setSignupNext] = useState<boolean>(false);
     const [name, setName] = useState<any>(null);
     const [dateOfBirth, setDateOfBirth] = useState<any>(null);
+    const [emailIdError, setEmailIdError] = useState<boolean>(false);
+    const [otpbuttonText, setOtpbuttonText] = useState<string>("Send code");
+    const [otpCode, setOtpCode] = useState<string>('');
+    const [otpError, setOtpError] = useState<boolean>(false);
+    
 
     const signupItemClickHandler = (name: string) => {
         switch (name) {
@@ -125,8 +133,35 @@ function HomePage() {
         setSignupWithPhone(!signupWithPhone);
     };
 
-    const signupNextScreen = () => {
-        setSignupNext(true);
+    const signupNextScreen = async () => {
+
+        if(email && validateEmail(email)){
+            setEmailIdError(false);
+        }else{
+            setEmailIdError(true);
+        }
+        try {
+            const response: any = await fetch(`${API_KEY}/auth/verifyOtp`, {
+                method: "PATCH",
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({ email:email, otp: otpCode }),
+            });
+            const { data }: any = await response.json();
+            // if(response.code == 200){
+                setOtpError(false)
+                setSignupNext(true);
+            // }else{
+            //     setOtpError(true)
+            // }
+            
+            console.log('otp response', response);
+        } catch (error) {
+            console.log('send otp error:', error);
+        }
+
+        
     };
     
 
@@ -273,6 +308,30 @@ function HomePage() {
         }
     };
 
+    const sendOTPCode = async () => {
+        if(email && validateEmail(email)){
+            setEmailIdError(false);
+        }else{
+            setEmailIdError(true);
+        }
+        try {
+            const response: any = await fetch(`${API_KEY}/auth/request-verify-email`, {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({ email:email }),
+            });
+            const { data }: any = await response.json();
+            
+            setOtpbuttonText("Resend")
+            
+            console.log('otp verify response', data);
+        } catch (error) {
+            console.log('send otp error:', error);
+        }
+    };
+
     const passwordOperationsHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
         setIsError(false);
@@ -281,6 +340,11 @@ function HomePage() {
 
     const goBackHandler = () => {
         setIsMainLoginOption(true);
+    };
+
+    const goBackSignupHandler = () => {
+        setIsMainLoginOption(true);
+        setSignupNext(false)
     };
 
     const closeLoginPopupHandler =()=>{
@@ -294,7 +358,7 @@ function HomePage() {
 
 
     const handleLoginClick = () => {
-        setIsLoginSection(true);
+        setIsLoginSection(false);
       }
 
     const handleSignupClick = () => {
@@ -643,7 +707,7 @@ function HomePage() {
                                         </p>
                                         <div
                                             onClick={loginHandler}
-                                            className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer`}
+                                            className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
                                         >
                                             <div className="flex flex-row justify-center items-center gap-2 flex-1">
                                                 <p>
@@ -949,13 +1013,36 @@ function HomePage() {
                                                                 onChange={(e) => setEmail(e.target.value)}
                                                             />
                                                         </div>
+                                                        { emailIdError ?  
+                                                            (<p className="font-light text-left text-xs text-red-700 mt-2.5" >
+                                                                {"Please enter email id"}
+                                                            </p>):null}
+        
+                                                        <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md py-2.5 px-3">
+                                                            <input
+                                                                className="w-2/3 bg-gray-100"
+                                                                type="text"
+                                                                placeholder="Enter 6-digit code"
+                                                                name="code"
+                                                                value={otpCode}
+                                                                onChange={(e) => setOtpCode(e.target.value)}
+                                                            />
+                                                            <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                                                <p className="text-gray-400 "> | </p>
+                                                                <p onClick={sendOTPCode} >{otpbuttonText}</p>
+                                                            </div>
+                                                        </div>
+                                                        {otpError ? (<p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                                                {"Please enter valid otp"}
+                                                            </p>):null}
                                                        
                                                     </>
                                                 )}
                                             
                                                 <div
                                                     onClick={signupNextScreen}
-                                                    className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer`}
+                                                
+                                                    className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
                                                 >
                                                     <div className="flex flex-row justify-center items-center gap-2 flex-1">
                                                         <p>
@@ -1031,7 +1118,7 @@ function HomePage() {
 
                                             <div
                                                     onClick={signupHandler}
-                                                    className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer`}
+                                                    className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
                                                 >
                                                     <div className="flex flex-row justify-center items-center gap-2 flex-1">
                                                         <p>
@@ -1049,11 +1136,17 @@ function HomePage() {
                                                         </p>
                                                     </div>
                                                 </div>
-                                             { isError ? ( <p style={{
-                                                            color: 'red',
-                                                        }}>
+                                             { isError ? ( <p className="font-light text-left text-xs text-red-700 mt-2.5">
                                                 {errorMessage}
                                             </p>):null} 
+
+                                            <div
+                                                    onClick={goBackSignupHandler}
+                                                    className="flex flex-row justify-center items-center gap-2 mt-4 cursor-pointer"
+                                                >
+                                                    <img src={back} className="h-2.5 w-2.5 object-contain" />
+                                                    <p className="font-medium text-xs">Go Back</p>
+                                                </div>
                                                
                                         </>
                                     )}
