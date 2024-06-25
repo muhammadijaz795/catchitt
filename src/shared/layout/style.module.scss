@@ -22,3 +22,35 @@
 // .shortSideBar > div:hover {
 //   background: #5448b2;
 // }
+
+// .darkTheme , .div_black > * 
+div.darkTheme {
+  background: rgb(18, 18, 18) !important;
+  // color:white !important;
+}
+
+
+
+// div.darkTheme div.selected  {
+//   background: rgb(198, 17, 17) !important;
+//   // color:white !important;
+// }
+.darkTheme div {
+  background: rgb(18, 18, 18) !important;
+  // color:white !important;
+  
+}
+
+div.darkTheme > p > h1, h2, h3, h4  {
+  color:white !important;
+}
+
+div.darkTheme p{
+  color:white !important;
+}
+
+div.darkTheme input{
+  background: rgb(255, 255, 255) !important;
+  color:black !important;
+}
+

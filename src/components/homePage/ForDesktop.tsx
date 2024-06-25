@@ -31,6 +31,7 @@ function ForDesktop(props: any) {
     const [toastOfUploading, settoastOfUploading] = useState(false);
     const [followimgbtnId, setFollowimgbtnId] = useState('');
     const [showCopyPopup, setshowCopyPopup] = useState(false);
+    const [darkTheme, setdarkTheme] = useState('');
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
     // @ts-ignore
@@ -74,6 +75,15 @@ function ForDesktop(props: any) {
             settoastOfUploading(false);
         }
     }, [isuploading]);
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+        } 
+    });
+    
     return (
         <Layout
             showCopyPopup={showCopyPopup}
@@ -81,7 +91,7 @@ function ForDesktop(props: any) {
             closeReportPopup={() => setreportPopup(false)}
             paddingBottomProp={true}
         >
-            <div className={`relative  ${style.parent} ${style.darkTheme}`}>
+            <div className={`relative  ${style.parent} ${darkTheme}`}>
                 <div className={style.tabs}>
                     <div
                         onClick={() => setActiveTab(1)}
@@ -212,7 +222,7 @@ function ForDesktop(props: any) {
                     ) : videoes?.length === 0 && !loading && activeTab === 1 ? (
                         <div className={style.suggestedUsersContainer}>
                             {suggestedUsers.map((suggestedUser: any, key: number) => {
-                                return <FollowUserCard key={key} user={suggestedUser} />;
+                                return <FollowUserCard key={key} user={suggestedUser} darkTheme={darkTheme} />;
                             })}
                         </div>
                     ) : !loading && activeTab === 3 ? (

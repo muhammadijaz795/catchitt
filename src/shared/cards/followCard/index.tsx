@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router';
 import { defaultAvatar } from '../../../icons';
 import FollowBtn from '../../buttons/Follow';
 import style from './index.module.scss';
-function FollowUserCard({ user }: any) {
+function FollowUserCard({ user, darkTheme }: any) {
     const navigate = useNavigate();
     return (
-        <div className={`${style.parent} ${style.darkTheme}`}>
+        <div className={`${style.parent} ${darkTheme}`}>
             <img
                 onClick={() => navigate(`/profile/${user?.id}`)}
                 style={{ cursor: 'pointer' }}

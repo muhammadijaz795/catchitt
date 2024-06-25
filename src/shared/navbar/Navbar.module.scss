@@ -65,3 +65,16 @@
   display: flex;
   gap: 16px;
 }
+
+div.darkTheme {
+  background: rgb(18, 18, 18) !important;
+  // color:white !important;
+}
+
+div.darkTheme p{
+  color:white !important;
+}
+
+div.darkTheme input{
+  color:black !important;
+}

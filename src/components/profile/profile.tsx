@@ -307,7 +307,7 @@ export const Profile = (props: any) => {
 
     return (
         <Layout showCopyPopup={copyPopup}>
-            <div className={styles.container}>
+            <div className={` ${styles.container} ${styles.darkTheme}`}>
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>

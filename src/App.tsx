@@ -80,76 +80,76 @@ function App() {
         window.localStorage.setItem('lang', language);
     };
     // window.localStorage.setItem('theme', "light");
-    var themeColor = window.localStorage.getItem('theme');
+    // var themeColor = window.localStorage.getItem('theme');
 
-    if(themeColor == "dark"){
-        const divElements = document.querySelectorAll('div');
-        const aElements = document.querySelectorAll('a');
-        const pElements = document.querySelectorAll('p');
-        const h1Elements = document.querySelectorAll('h1');
-        const h2Elements = document.querySelectorAll('h2');
-        const h3Elements = document.querySelectorAll('h3');
-        const h4Elements = document.querySelectorAll('h4');
-        const h5Elements = document.querySelectorAll('h5');
-        divElements.forEach((div: HTMLElement) => {
-          div.style.background = 'black';
-          div.style.color = 'white';
-        });
-        aElements.forEach((a: HTMLElement) => {
-            a.style.color = 'white';
+    // if(themeColor == "dark"){
+    //     const divElements = document.querySelectorAll('div');
+    //     const aElements = document.querySelectorAll('a');
+    //     const pElements = document.querySelectorAll('p');
+    //     const h1Elements = document.querySelectorAll('h1');
+    //     const h2Elements = document.querySelectorAll('h2');
+    //     const h3Elements = document.querySelectorAll('h3');
+    //     const h4Elements = document.querySelectorAll('h4');
+    //     const h5Elements = document.querySelectorAll('h5');
+    //     divElements.forEach((div: HTMLElement) => {
+    //       div.style.background = 'black';
+    //       div.style.color = 'white';
+    //     });
+    //     aElements.forEach((a: HTMLElement) => {
+    //         a.style.color = 'white';
             
-          });
-          pElements.forEach((p: HTMLElement) => {
-            p.style.color = 'white';
-          });
-    }
+    //       });
+    //       pElements.forEach((p: HTMLElement) => {
+    //         p.style.color = 'white';
+    //       });
+    // }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if(themeColor == "dark"){
-            // const divElements = document.querySelectorAll('div');
-            // const aElements = document.querySelectorAll('a');
-            // const pElements = document.querySelectorAll('p');
-            // const h1Elements = document.querySelectorAll('h1');
-            // const h2Elements = document.querySelectorAll('h2');
-            // const h3Elements = document.querySelectorAll('h3');
-            // const h4Elements = document.querySelectorAll('h4');
-            // const h5Elements = document.querySelectorAll('h5');
-            // divElements.forEach((div: HTMLElement) => {
-            //   div.style.background = 'black';
-            //   div.style.color = 'white';
-            // });
-            // aElements.forEach((a: HTMLElement) => {
-            //     a.style.color = 'white';
+    //     if(themeColor == "dark"){
+    //         // const divElements = document.querySelectorAll('div');
+    //         // const aElements = document.querySelectorAll('a');
+    //         // const pElements = document.querySelectorAll('p');
+    //         // const h1Elements = document.querySelectorAll('h1');
+    //         // const h2Elements = document.querySelectorAll('h2');
+    //         // const h3Elements = document.querySelectorAll('h3');
+    //         // const h4Elements = document.querySelectorAll('h4');
+    //         // const h5Elements = document.querySelectorAll('h5');
+    //         // divElements.forEach((div: HTMLElement) => {
+    //         //   div.style.background = 'black';
+    //         //   div.style.color = 'white';
+    //         // });
+    //         // aElements.forEach((a: HTMLElement) => {
+    //         //     a.style.color = 'white';
                 
-            //   });
-            //   pElements.forEach((p: HTMLElement) => {
-            //     p.style.color = 'white';
-            //   });
-        }else{
-        //     const divElements = document.querySelectorAll('div');
-        //     const aElements = document.querySelectorAll('a');
-        //     const pElements = document.querySelectorAll('p');
-        //     const h1Elements = document.querySelectorAll('h1');
-        //     const h2Elements = document.querySelectorAll('h2');
-        //     const h3Elements = document.querySelectorAll('h3');
-        //     const h4Elements = document.querySelectorAll('h4');
-        //     const h5Elements = document.querySelectorAll('h5');
-        //     divElements.forEach((div: HTMLElement) => {
-        //       div.style.background = 'none';
-        //       div.style.color = 'black';
-        //     });
-        //     aElements.forEach((a: HTMLElement) => {
-        //         a.style.color = 'black';
+    //         //   });
+    //         //   pElements.forEach((p: HTMLElement) => {
+    //         //     p.style.color = 'white';
+    //         //   });
+    //     }else{
+    //     //     const divElements = document.querySelectorAll('div');
+    //     //     const aElements = document.querySelectorAll('a');
+    //     //     const pElements = document.querySelectorAll('p');
+    //     //     const h1Elements = document.querySelectorAll('h1');
+    //     //     const h2Elements = document.querySelectorAll('h2');
+    //     //     const h3Elements = document.querySelectorAll('h3');
+    //     //     const h4Elements = document.querySelectorAll('h4');
+    //     //     const h5Elements = document.querySelectorAll('h5');
+    //     //     divElements.forEach((div: HTMLElement) => {
+    //     //       div.style.background = 'none';
+    //     //       div.style.color = 'black';
+    //     //     });
+    //     //     aElements.forEach((a: HTMLElement) => {
+    //     //         a.style.color = 'black';
                 
-        //       });
-        //       pElements.forEach((p: HTMLElement) => {
-        //         p.style.color = 'black';
-        //       });
-        }
+    //     //       });
+    //     //       pElements.forEach((p: HTMLElement) => {
+    //     //         p.style.color = 'black';
+    //     //       });
+    //     }
         
 
-    }, []);
+    // }, []);
 
     return (
 

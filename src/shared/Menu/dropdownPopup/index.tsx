@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useEffect,useState } from 'react';
 import { MENU_POPUP_OPTIONS } from '../../../utils/constants';
 import './switch.scss';
 import { useDispatch } from 'react-redux';
@@ -8,24 +8,49 @@ const MenuDropdownPopup = ({
     menuPopupStatus,
     menuItemClickHandler,
 }: any) => {
-    const dispatch = useDispatch();
-    const [checked, setChecked] = useState(true);
+    // const dispatch = useDispatch();
+    const [checked, setChecked] = useState(false);
     
 
-    const handleToggle = () => {
+    const handleToggle = (e: any) => {
         // e.stopPropagation();
-        console.log("checked 1",checked);
-        setChecked(!checked);
+        // console.log("target",e.target.checked);
+        // console.log("checked 1",prevState);
+        // // if(e.target.checked ==true){
+        // //     setChecked(true);
+        // // }else{
+        // //     setChecked(false);
+        // // }
+        // setChecked(checked => !checked)
+        // // setChecked(e.target.checked);
+        setChecked((prevState) => !prevState)
+
         console.log("checked",checked);
-        // console.log("value",e.target.value);
+        console.log("value",e.target.value);
+        console.log("checked",checked);
         // localStorage.setItem('items', JSON.stringify(items));
-        if(checked){
+        if(e.target.checked == true){
             window.localStorage.setItem('theme', "dark");
+            window.location.reload();
         }else{
             window.localStorage.setItem('theme', "light");
+            window.location.reload();
         }
         
     };
+
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setChecked(true);
+        }else{
+            setChecked(false);
+        } 
+    },[]);
+
+   
     return (
         <div
             onClick={menuPopupStatusToggler}
@@ -63,7 +88,7 @@ const MenuDropdownPopup = ({
                                 </div>
                                 {index === MENU_POPUP_OPTIONS?.length - 1 && (
                                     <label  className="switchToggler mr-2">
-                                        <input type="checkbox" onClick={handleToggle} />
+                                        <input type="checkbox" onClick={handleToggle} checked={checked} />
                                         <span className="sliderForSwitch switchRound"></span>
                                     </label>
                                 )}

@@ -6,6 +6,7 @@ import { commentTab, forthTab, homeTab, settingsTab, thirdTab } from '../../icon
 import Navbar from '../navbar';
 import BlockPopup from '../popups/BlockPopup';
 import style from './style.module.scss';
+import { useEffect, useState } from 'react';
 
 function Layout(props: any) {
     const {
@@ -25,9 +26,31 @@ function Layout(props: any) {
         popups,
     } = props || {};
     const showSidebar = useMediaQuery('(max-width:1000px)');
+    const [darkTheme, setdarkTheme] = useState('');
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+        } 
+    });
+
+    // useEffect(() => {
+    //     window.addEventListener('storage', () => {
+    //       // When local storage changes, dump the list to
+    //       // the console.
+    //     //    setCart(JSON.parse(localStorage.getItem('myCart')) || [])   
+    //     var themeColor = window.localStorage.getItem('theme');
+    //     if(themeColor == "dark"){ 
+    //         setdarkTheme(style.darkTheme);
+    //     } 
+    //     }); 
+    //     }, [])
 
     return (
         <div
+            
             style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}
             onClick={globalClicker}
         >
@@ -36,7 +59,8 @@ function Layout(props: any) {
             {/* <TopBar /> */}
             <div style={{ display: 'flex', height: '100vh', width: '100vw', paddingTop: 80 }}>
                 {!showSidebar && !showShortSidebar ? (
-                    <div
+                    <div 
+                        className={` ${darkTheme}`}
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -47,13 +71,13 @@ function Layout(props: any) {
                         }}
                     >
                         <SideNavBar />
-                        <div style={{ background: '#FFF', borderRadius: 16 }}>
+                        <div style={{ background: '#FFF', borderRadius: 16 }}  >
                             <SuggestedActivity showActivity={true} showSuggestedContent={true} />
                         </div>
                     </div>
                 ) : (
                     !showShortSidebar && (
-                        <div className={style.shortSideBar}>
+                        <div className={` ${style.shortSideBar} ${darkTheme} `}>
                             <div>
                                 <img src={homeTab} alt="" />
                             </div>
@@ -73,7 +97,7 @@ function Layout(props: any) {
                     )
                 )}
                 {!showSidebar && showShortSidebar && (
-                    <div className={style.shortSideBar}>
+                    <div className={` ${style.shortSideBar} ${darkTheme}`}>
                         <div>
                             <img src={homeTab} alt="" />
                         </div>
