@@ -27,12 +27,14 @@ function Layout(props: any) {
     } = props || {};
     const showSidebar = useMediaQuery('(max-width:1000px)');
     const [darkTheme, setdarkTheme] = useState('');
+    const [darkThemeblack, setdarkThemeblack] = useState('');
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
         if(themeColor == "dark"){ 
             setdarkTheme(style.darkTheme);
+            setdarkThemeblack(style.darkThemeblack);
         } 
     });
 
@@ -157,6 +159,7 @@ function Layout(props: any) {
                 )}
 
                 <div
+                 className={` ${darkThemeblack}`}
                     style={{
                         overflow: 'scroll',
                         height: 'auto',

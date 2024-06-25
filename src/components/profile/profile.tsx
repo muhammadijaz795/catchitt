@@ -25,6 +25,7 @@ import { VideoIcon } from './svg-components/VideoIcon';
 import { ToastContainer } from 'react-toastify';
 import ViewsModal from './components/ViewsModal';
 import viewerAvatarPlaceholder from './svg-components/placeholderAvatar.png';
+import style from './profile.module.scss';
 
 export const Profile = (props: any) => {
     const [activeTab, setActiveTab] = useState('Videos');
@@ -48,7 +49,7 @@ export const Profile = (props: any) => {
     const [copyPopup, setcopyPopup] = useState(false);
     const [viewsModal, setViewsModal] = useState(false);
     const [profileViewsContent, setProfileViewsContent] = useState<any>([]);
-
+    const [darkTheme, setdarkTheme] = useState('');
     // @ts-ignore
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -304,10 +305,19 @@ export const Profile = (props: any) => {
     });
 
     const MemoizedStoriesOnPublicProfile = memo(publicProfileStories);
+   
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+        } 
+    });
 
     return (
         <Layout showCopyPopup={copyPopup}>
-            <div className={` ${styles.container} ${styles.darkTheme}`}>
+            <div className={` ${styles.container} ${darkTheme}`}>
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
