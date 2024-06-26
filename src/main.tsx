@@ -11,6 +11,7 @@ import App from './App';
 import './index.css';
 import { persistor, store } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 i18next
     .use(HttpApi)
@@ -41,7 +42,13 @@ root.render(
     <Provider store={store}>
         <Suspense fallback={loadingMarkup}>
             <PersistGate loading={null} persistor={persistor}>
-                <App />
+                <GoogleOAuthProvider
+                    clientId="523656475565-ju45seka7c5dta4sm99ua3gu64dundht.apps.googleusercontent.com"
+                    clientSecret="abcDEfGhIJKlmnoPQRstuVWxyZ"
+                    redirectUri="http://localhost:3000"
+                >
+                    <App />
+                </GoogleOAuthProvider>
             </PersistGate>
         </Suspense>
     </Provider>

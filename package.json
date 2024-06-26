@@ -14,6 +14,7 @@
     "@gumlet/react-hls-player": "^1.0.1",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.14.2",
+    "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^1.9.2",
     "@types/lodash": "^4.14.199",
     "@types/react-lazyload": "^3.2.0",

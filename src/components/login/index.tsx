@@ -4,6 +4,7 @@ import ItemLogin from '../item-login';
 import Footer from './footer';
 import Header from './header';
 import './login.scss';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
 const Login = (props: any) => {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Login = (props: any) => {
                 console.log('Facebook login');
                 break;
             case APP_TEXTS.GOOGLE:
-                // Handle Google login
+                loginWithGoogleHandler();
                 console.log('Google login');
                 break;
             case APP_TEXTS.TWITTER:
@@ -37,6 +38,11 @@ const Login = (props: any) => {
                 console.log('Default case');
         }
     };
+
+    const loginWithGoogleHandler = useGoogleLogin({
+        onSuccess: (tokenResponse) => console.log(tokenResponse),
+    });
+
     return (
         <div className="h-screen">
             <Header />

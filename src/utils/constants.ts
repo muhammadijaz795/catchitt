@@ -65,11 +65,11 @@ export const APP_TEXTS = {
 };
 
 export const LOGIN_OPTIONS = [
-    {
-        styles: '',
-        name: APP_TEXTS.QR_CODE,
-        image: qrCodeAuth,
-    },
+    // {
+    //     styles: '',
+    //     name: APP_TEXTS.QR_CODE,
+    //     image: qrCodeAuth,
+    // },
     {
         styles: 'mt-3',
         name: APP_TEXTS.EMAIL_OR_PHONE,
