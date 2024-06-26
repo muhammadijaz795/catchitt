@@ -2,6 +2,7 @@ import React,{ useEffect,useState } from 'react';
 import { MENU_POPUP_OPTIONS } from '../../../utils/constants';
 import './switch.scss';
 import { useDispatch } from 'react-redux';
+import style from './index.module.scss';
 
 const MenuDropdownPopup = ({
     menuPopupStatusToggler,
@@ -10,6 +11,7 @@ const MenuDropdownPopup = ({
 }: any) => {
     // const dispatch = useDispatch();
     const [checked, setChecked] = useState(false);
+    const [darkThemeWhite, setdarkThemeWhite] = useState('');
     
 
     const handleToggle = (e: any) => {
@@ -45,8 +47,10 @@ const MenuDropdownPopup = ({
 
         if(themeColor == "dark"){ 
             setChecked(true);
+            setdarkThemeWhite(style.darkThemeWhite);
         }else{
             setChecked(false);
+            setdarkThemeWhite('');
         } 
     },[]);
 
@@ -56,9 +60,9 @@ const MenuDropdownPopup = ({
             onClick={menuPopupStatusToggler}
             className="flex flex-col justify-center items-center gap-1 p-2 cursor-pointer -m-4"
         >
-            <div className="h-1 w-1 rounded-full bg-black" />
-            <div className="h-1 w-1 rounded-full bg-black" />
-            <div className="h-1 w-1 rounded-full bg-black relative">
+            <div className={`h-1 w-1 rounded-full bg-black ${darkThemeWhite} `} />
+            <div className={`h-1 w-1 rounded-full bg-black ${darkThemeWhite} `} />
+            <div className={`h-1 w-1 rounded-full bg-black relative ${darkThemeWhite} `}>
                 <div
                     className={`absolute mt-2 w-56 bg-white shadow-md rounded-md top-2 -right-4 ${menuPopupStatus}`}
                 >
