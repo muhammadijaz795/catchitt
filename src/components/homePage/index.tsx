@@ -77,6 +77,8 @@ function HomePage() {
     const [otpCode, setOtpCode] = useState<string>('');
     const [otpError, setOtpError] = useState<boolean>(false);
     const [darkTheme, setdarkTheme] = useState('');
+    const [lightDarkTheme, setlightDarkTheme] = useState('');
+    
 
     const signupItemClickHandler = (name: string) => {
         switch (name) {
@@ -410,6 +412,7 @@ function HomePage() {
 
         if(themeColor == "dark"){ 
             setdarkTheme(style.darkTheme);
+            setlightDarkTheme(style.lightdarkTheme);
         } 
     });
 
@@ -446,7 +449,7 @@ function HomePage() {
             {isLoginPopup && (
                 <div className={`w-full z-50 h-full bg-black/50 fixed top-0 `} >
 
-                    <div className={`w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[95%] ${darkTheme} popupdiv`}>
+                    <div className={`w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[95%] ${lightDarkTheme} popupdiv`}>
                         <div
                             onClick={closeLoginPopupHandler}
                             className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center absolute right-5 p-1 cursor-pointer"

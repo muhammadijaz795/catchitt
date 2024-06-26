@@ -54,9 +54,17 @@ div.darkTheme input{
   color:black !important;
 }
 
-
-.darkThemeblack div {
-  background: rgb(18, 18, 18) !important;
-  // color:white !important;
-  
+.darkThemeblack {
+  background: black !important;
 }
+
+div.darkThemeblack div{
+  background: black !important;
+  color:white !important;
+}
+
+div.darkThemeblack p{
+  color: white !important;
+}
+
+
