@@ -1,5 +1,7 @@
 import FormLeftSide from './formLeftSide';
 import FormRightSide from './formRightSide';
+import { useState,useEffect } from 'react';
+import style from '../index.module.scss';
 
 function UploadForm(props: any) {
     const {
@@ -11,9 +13,24 @@ function UploadForm(props: any) {
         SubmitHandler,
         isPosing,
     } = props;
+    const [darkTheme, setdarkTheme] = useState('');
+    const [lightTheme, setlightTheme] = useState('bg-custom-light');
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+            setlightTheme('');
+        }else{
+            setlightTheme('bg-custom-light');
+        }
+    });
+
     return (
-        <div className="max-w-[71.25rem] bg-custom-light flex-col mt-[7rem] mx-auto mb-[2rem] rounded-[0.5rem] flex md:flex-row ">
+        <div className={`max-w-[71.25rem] ${darkTheme} ${lightTheme} flex-col mt-[7rem] mx-auto mb-[2rem] rounded-[0.5rem] flex md:flex-row `}>
             <FormLeftSide
+                darkTheme={darkTheme}
                 selectedVideoSrc={selectedVideoSrc}
                 selectFilesHandler={selectFilesHandler}
                 updateState={updateState}

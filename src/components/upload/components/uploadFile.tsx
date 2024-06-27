@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { goLive, uploadPrimaryIcon } from '../../../icons';
 import CustomButton from '../../../shared/buttons/CustomButton';
 import { useNavigate } from 'react-router-dom';
+import style from '../index.module.scss';
 
 function UploadFile({ selectFilesHandler }: any) {
     const [currentOptions, setCurrentOptions] = useState(0);
@@ -15,9 +16,23 @@ function UploadFile({ selectFilesHandler }: any) {
         // navigate('/golive');
     };
 
+    const [darkTheme, setdarkTheme] = useState('');
+    const [lightTheme, setlightTheme] = useState('bg-custom-light');
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+            setlightTheme('');
+        }else{
+            setlightTheme('bg-custom-light');
+        }
+    });
+
     return (
-        <div className="w-[100%] h-[100vh]  flex justify-center items-center pt-[5rem]">
-            <div className="min-w-[19rem] h-[auto] bg-custom-light xl:w-[71.5rem] rounded-[0.5rem] p-[1.5rem] text-right">
+        <div className={`w-[100%] h-[100vh]  flex justify-center items-center pt-[5rem] ${darkTheme}`}>
+            <div className={`min-w-[19rem] h-[auto] ${lightTheme} xl:w-[71.5rem] rounded-[0.5rem] p-[1.5rem] text-right`}>
                 <div
                     className="flex flexrow items-center justify-between rounded-[0.5rem] px-[1rem] py-[4rem] gap-4"
                 >

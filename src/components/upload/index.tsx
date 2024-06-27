@@ -2,6 +2,8 @@ import Navbar from '../../shared/navbar';
 import UploadFile from './components/uploadFile';
 import UploadForm from './components/uploadForm';
 import useUpload from './hooks';
+import style from './index.module.scss';
+import { useState,useEffect } from 'react';
 
 function UploadPage() {
     const {
@@ -17,8 +19,19 @@ function UploadPage() {
         isPosing,
     } = useUpload();
 
+    const [darkTheme, setdarkTheme] = useState('');
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+        }else{
+        }
+    });
+
     return (
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${darkTheme}`}>
             <Navbar />
             {!selectedFile ? (
                 <UploadFile selectFilesHandler={selectFilesHandler} />

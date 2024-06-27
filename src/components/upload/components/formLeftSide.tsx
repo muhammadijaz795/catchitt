@@ -4,7 +4,7 @@ import style from '../styles.module.scss';
 import CustomPopup from '../../../shared/popups/CustomPopup';
 import React from 'react';
 
-function FormLeftSide({ selectedVideoSrc, selectFilesHandler }: any) {
+function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme }: any) {
     const [replaceVideoPopup, setReplaceVideoPopup] = React.useState(false);
     return (
         <div className="flex-[0.6] p-[2.5rem] flex flex-col gap-[1rem]">
@@ -31,6 +31,8 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler }: any) {
                 description="Caption and video settings will still be saved."
                 btnText="Continue editing"
                 primaryBtnText="Replace"
+                backgroundColor={darkTheme? '#000':'#FFF'}
+                color={darkTheme? '#FFF':'#222222'}
                 onBtnClick={() => setReplaceVideoPopup(false)}
                 onPrimaryBtnClick={selectFilesHandler}
                 onClose={() => setReplaceVideoPopup(false)}

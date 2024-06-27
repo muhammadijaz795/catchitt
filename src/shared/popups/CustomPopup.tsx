@@ -6,7 +6,8 @@ function CustomPopup(props: any) {
     const {
         maxWidth = 480,
         height = 'auto',
-        backgroundColor = '#FFF',
+        backgroundColor= props.backgroundColor,
+        color,
         borderRadius = 8,
         padding = '1.5rem',
         onClose,
@@ -39,12 +40,14 @@ function CustomPopup(props: any) {
                         fontSize={18}
                         fontWeight={600}
                         text={title}
+                        color={color}
                         marginBottom="1.5rem"
                     />
                     <Text
                         textAlign="center"
                         fontWeight={400}
                         text={description}
+                        color={color}
                         lineHeight="1.5rem"
                         margin="0px auto 1rem auto"
                         width="70%"

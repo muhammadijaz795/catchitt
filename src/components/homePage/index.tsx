@@ -78,6 +78,8 @@ function HomePage() {
     const [otpError, setOtpError] = useState<boolean>(false);
     const [darkTheme, setdarkTheme] = useState('');
     const [lightDarkTheme, setlightDarkTheme] = useState('');
+    const [darkWhiteTheme, setDarkWhiteTheme] = useState('');
+    
     
 
     const signupItemClickHandler = (name: string) => {
@@ -413,7 +415,10 @@ function HomePage() {
         if(themeColor == "dark"){ 
             setdarkTheme(style.darkTheme);
             setlightDarkTheme(style.lightdarkTheme);
-        } 
+            setDarkWhiteTheme('');
+        } else{
+            setDarkWhiteTheme('hover:bg-slate-100');
+        }
     });
 
     return (
@@ -471,6 +476,7 @@ function HomePage() {
                                             name={option.name}
                                             image={option.image}
                                             styles={option.styles}
+                                            darkWhiteTheme={darkWhiteTheme}
                                         />
                                     ))
                                 ) : (
@@ -800,6 +806,7 @@ function HomePage() {
                                                     name={option.name}
                                                     image={option.image}
                                                     styles={option.styles}
+                                                    darkWhiteTheme={darkWhiteTheme}
                                                 />
                                             ))
                                         ) : (
