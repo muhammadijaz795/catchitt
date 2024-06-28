@@ -42,6 +42,18 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     const profileImg = useSelector((state: any) => state?.reducers?.profile?.avatar);
     const [imgBase64, setImgBase64] = useState(profileImg || defaultAvatar);
 
+    const [darkTheme, setdarkTheme] = useState('');
+    const [lightTheme, setlightTheme] = useState('bg-custom-light');
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(styles.darkTheme);
+   
+        }
+    });
+
     const handleSubmit = (e: any) => {
         e.preventDefault();
         try {
@@ -250,7 +262,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     };
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={`${darkTheme}`}>
                 {loading && <CircularProgress />}
                 {!loading && (
                     <div className={styles.div}>

@@ -1,12 +1,16 @@
 import { ClickAwayListener, Modal, styled } from '@mui/material';
 import Text from '../components/Text';
 import CustomButton from '../buttons/CustomButton';
+import { useState,useEffect } from 'react';
+import style from '../index.module.scss';
 
 function CustomPopup(props: any) {
+    const [background, setBackgroundColor] = useState('');
+    const [textColor, setTextColor] = useState('');
     const {
         maxWidth = 480,
         height = 'auto',
-        backgroundColor= props.backgroundColor,
+        backgroundColor = "#FFF",
         color,
         borderRadius = 8,
         padding = '1.5rem',
@@ -28,6 +32,20 @@ function CustomPopup(props: any) {
         border: 0,
         outline: 0,
     }));
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setBackgroundColor("#000");
+            setTextColor('#FFF');
+        }else{
+            setBackgroundColor('#FFF');
+            setTextColor('#222222');
+        }
+    });
+
+
     return (
         <Modal
             style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}

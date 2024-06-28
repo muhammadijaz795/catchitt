@@ -608,3 +608,27 @@
     white-space: initial;
   }
 }
+
+
+.darkTheme div {
+  background: rgb(18, 18, 18) !important;
+  color:white !important;
+  
+}
+
+div.darkTheme > p > h1, h2, h3, h4  {
+  color:white !important;
+}
+
+div.darkTheme p{
+  color:white !important;
+}
+
+div.darkTheme span{
+  color:white !important;
+}
+
+div.darkTheme input{
+  background: rgb(255, 255, 255) !important;
+  color:black !important;
+}

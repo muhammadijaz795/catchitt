@@ -31,8 +31,6 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme }: any) 
                 description="Caption and video settings will still be saved."
                 btnText="Continue editing"
                 primaryBtnText="Replace"
-                backgroundColor={darkTheme? '#000':'#FFF'}
-                color={darkTheme? '#FFF':'#222222'}
                 onBtnClick={() => setReplaceVideoPopup(false)}
                 onPrimaryBtnClick={selectFilesHandler}
                 onClose={() => setReplaceVideoPopup(false)}
