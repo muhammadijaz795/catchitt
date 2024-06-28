@@ -3,6 +3,7 @@ import { post } from '../../axios/axiosClient';
 import { useAuthStore } from '../../store/authStore';
 import { db } from '../../utils/db';
 import { getProfileData } from '../AsyncFuncs';
+import { STATUS_CODE } from '../../utils/constants';
 
 const loginSlice: any = createSlice({
     name: 'auth',
@@ -29,6 +30,16 @@ const loginSlice: any = createSlice({
 
     extraReducers: (builder: any) => {
         builder.addCase(loginService.fulfilled, (_state: any, action: any) => {
+            localStorage.setItem('userId', action?.payload?.data?._id || '');
+            localStorage.setItem('token', action?.payload?.data?.token || '');
+            localStorage.setItem('profile', JSON.stringify(action?.payload?.data) || '');
+            db.profile.add(action?.payload?.data);
+            useAuthStore.setState(action?.payload?.data);
+
+            return action?.payload?.data;
+        });
+
+        builder.addCase(loginWithGoogleService.fulfilled, (_state: any, action: any) => {
             localStorage.setItem('userId', action?.payload?.data?._id || '');
             localStorage.setItem('token', action?.payload?.data?.token || '');
             localStorage.setItem('profile', JSON.stringify(action?.payload?.data) || '');
@@ -71,6 +82,26 @@ export const loginService = createAsyncThunk(
             });
 
             if (res?.status === 200) {
+                return res?.data;
+            } else {
+                return rejectWithValue(res?.message || 'Invalid status code');
+            }
+        } catch (error: any) {
+            return rejectWithValue(error?.message);
+        }
+    }
+);
+
+export const loginWithGoogleService = createAsyncThunk(
+    'auth/loginWithGoogleService',
+    async (values: any, { rejectWithValue }) => {
+        try {
+            let res: any = await post('/auth/social/google-access-token', {
+                type: 'application/json',
+                data: { isLoggedIn: true, ...values },
+            });
+
+            if (res?.status === STATUS_CODE.OK) {
                 return res?.data;
             } else {
                 return rejectWithValue(res?.message || 'Invalid status code');

@@ -5,10 +5,13 @@ import Footer from './footer';
 import Header from './header';
 import './login.scss';
 import { useGoogleLogin } from '@react-oauth/google';
-import FacebookLogin from 'react-facebook-login';
+// import FacebookLogin from 'react-facebook-login';
+import { useDispatch } from 'react-redux';
+import { loginWithGoogleService } from '../../redux/reducers/auth';
 
 const Login = (props: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch<any>();
 
     const loginItemClickHandler = (name: string) => {
         switch (name) {
@@ -43,6 +46,7 @@ const Login = (props: any) => {
     const loginWithGoogleHandler = useGoogleLogin({
         onSuccess: (tokenResponse) => {
             console.log('Google Auth : ', tokenResponse);
+            loginWithGoogleAccessToken(tokenResponse?.access_token);
         },
         onError: (error) => {
             console.log('Error : ', error);
@@ -52,9 +56,24 @@ const Login = (props: any) => {
         },
     });
 
-    const responseFacebook = (response) => {
-        console.log(response);
+    const loginWithGoogleAccessToken = async (accessToken: string) => {
+        dispatch(loginWithGoogleService({ accessToken }))
+            .then((res: any) => {
+                if (res?.error) {
+                    console.log('Response error : ', res?.error);
+                } else if (res?.payload?.status == 200) {
+                    console.log('data after successfull login', res?.payload?.data);
+                    navigate('/home');
+                }
+            })
+            .catch((error: any) => {
+                console.log('Error login with google : ', error);
+            });
     };
+
+    // const responseFacebook = (response) => {
+    //     console.log(response);
+    // };
 
     return (
         <div className="h-screen">
@@ -74,12 +93,12 @@ const Login = (props: any) => {
                             styles={option.styles}
                         />
                     ))}
-                    <FacebookLogin
-                        appId="1088597931155576"
+                    {/* <FacebookLogin
+                        appId="281129028310496"
                         autoLoad={true}
                         fields="name,email,picture"
                         callback={responseFacebook}
-                    />
+                    /> */}
                 </div>
                 <div className="mt-3.5">
                     <p className="font-normal text-[0.688rem] text-policy">
