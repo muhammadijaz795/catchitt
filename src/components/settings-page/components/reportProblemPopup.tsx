@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { QRCode } from 'react-qrcode-logo';
 import { useAuthStore } from '../../../store/authStore';
 import loadingCircle from '../svg-components/loadingCircle.svg';
@@ -65,12 +65,23 @@ export const ReportProblemPopup = ({
             });
     };
 
+    const [lightdarkTheme, setlightdarkTheme] = useState('');
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setlightdarkTheme(styles.darkTheme);
+        } 
+       
+    });
+
     return (
         <div className={classNames(styles.root, className)}>
             <div>
                 {firstModalVisible && (
                     <>
-                        <div className={styles.frame}>
+                        <div className={`${styles.frame} ${styles.lightdarkTheme}`}>
                             <div className={styles.contentPrefHeader}>
                                 <h4 className={styles.contentPrefModalHeader}>Report a problem</h4>
                                 <p className={styles.blueText}>Tell us your problem</p>

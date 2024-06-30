@@ -4,8 +4,8 @@ import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-route
 import messages from '../src/languages-intl';
 import styles from './App.module.scss';
 import CommunityPage from './components/about-pages/community-guidelines';
-import PrivacyPage from './components/about-pages/privacy-policy';
-import { TermsPage } from './components/about-pages/terms-conditions';
+import PrivacyPage from './components/about-pages/privacy-policy-page';
+import TermsPage from './components/about-pages/terms-conditions-page';
 import { ActivityPage } from './components/activity-page/activity-page';
 import { Authentication } from './components/authentication/authentication';
 // import ComingSoon from './components/coming-soon/coming-soon';

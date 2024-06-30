@@ -125,8 +125,8 @@ export const METHOD = {
 };
 
 export const MENU_POPUP_OPTIONS = [
-    { menuOption: 'English', imageUrl: '' },
+    // { menuOption: 'English', imageUrl: '' },
     { menuOption: 'Feedback and help', imageUrl: '' },
-    { menuOption: 'Keyboard shortcuts', imageUrl: '' },
+    // { menuOption: 'Keyboard shortcuts', imageUrl: '' },
     { menuOption: 'Dark mode', imageUrl: '' },
 ];

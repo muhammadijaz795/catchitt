@@ -4,14 +4,30 @@ import emailMsg from './svg-components/email-msg-icon.svg';
 import callUs from './svg-components/call-icon.svg';
 import location from './svg-components/gps-icon.svg';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import style from './index.module.scss';
 
 const ContactUs = () => {
     const navigate = useNavigate();
+    const [darkTheme, setdarkTheme] = useState('');
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+            // setlightDarkTheme(style.lightdarkTheme);
+            // setDarkWhiteTheme('');
+        } 
+        // else{
+        //     setDarkWhiteTheme('hover:bg-slate-100');
+        // }
+    });
 
     return (
         <div>
             <Navbar />
-            <div className="py-6 px-32 mt-24">
+            <div className={`py-6 px-32 mt-24 ${darkTheme}`}>
                 <div onClick={() => navigate(-1)} className="flex flex-row items-center gap-4 cursor-pointer">
                     <img
                         className="object-contain"

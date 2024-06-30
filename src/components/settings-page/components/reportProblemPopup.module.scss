@@ -295,3 +295,16 @@
     flex-direction: column;
     align-items: center;
 }
+
+.lightdarkTheme {
+    background: rgb(18, 18, 18) !important;
+    color:white !important;
+  }
+
+  .lightdarkTheme input {
+    color:black !important;
+  }
+
+  div.lightdarkTheme > p > h1, h2, h3, h4  {
+    color:white !important;
+  }

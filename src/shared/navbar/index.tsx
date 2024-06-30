@@ -90,7 +90,13 @@ function Navbar() {
                                     {/* </div> */}
                                 </div>
                                 <p className={style.name}>{profile?.name?.split(' ')[0]}</p>
+                                
                             </div>
+                            <MenuDropdownPopup
+                                        menuPopupStatusToggler={menuPopupStatusToggler}
+                                        menuPopupStatus={menuPopupStatus}
+                                        menuItemClickHandler={menuItemClickHandler}
+                                />
                         </div>
                     ) : (
                         <>
@@ -129,6 +135,7 @@ function Navbar() {
                         Onlogout={() => logoutAccount()}
                         onSettings={() => navigate('/settings/account')}
                     />
+                    
                 </div>
             )}
         </div>

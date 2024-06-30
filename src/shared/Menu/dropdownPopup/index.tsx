@@ -80,7 +80,7 @@ const MenuDropdownPopup = ({
                                 }`}
                             >
                                 <div className="flex flex-row items-center gap-2 px-3">
-                                    <img className="h-2 w-2 object-contain" alt="menuOption" />
+                                    {/* <img className="h-2 w-2 object-contain" alt="menuOption" /> */}
                                     <li>
                                         <a
                                             href="#"
