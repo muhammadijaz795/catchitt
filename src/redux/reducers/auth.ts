@@ -11,7 +11,8 @@ const loginSlice: any = createSlice({
     reducers: {
         logoutUser: (_state, action) => {
             localStorage.setItem('token', '');
-            action.payload.navigate('/auth'); // Use navigate here
+            action.payload.navigate('/'); // Use navigate here
+            window.location.reload();
             return {};
         },
         updateProfile: (_state, action) => {
