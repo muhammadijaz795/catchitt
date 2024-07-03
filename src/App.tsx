@@ -553,8 +553,8 @@ function App() {
                         </Routes>
 
                         {isLoginPopup && (
-                            <div className="w-full z-50 h-full bg-black/50 fixed top-0">
-                                <div className="w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[95%]">
+                            <div className="w-full z-50 h-full bg-black/50 fixed top-0 flex justify-center items-center">
+                                <div className="w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[37.125rem]">
                                     <div
                                         onClick={closeLoginPopupHandler}
                                         className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center absolute right-5 p-1 cursor-pointer"
@@ -562,7 +562,7 @@ function App() {
                                         <img className="h-4 w-4 object-contain" src={closeIcon} />
                                     </div>
                                     <div className="overflow-auto w-[21.888rem] mx-auto ">
-                                        <h2 className="font-bold text-3xl mt-5 mb-4">
+                                        <h2 className="font-bold text-3xl mt-5 mb-4 text-subtext">
                                             {isMainLoginOption
                                                 ? 'Log in to Seezitt'
                                                 : isForgotPasswordScenario
@@ -1025,7 +1025,7 @@ function App() {
                                             </p>
                                         </div>
                                     )}
-                                    <div className="mt-3 bottom-0 relative">
+                                    <div className="mt-3">
                                         <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
                                             <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1">
                                                 {APP_TEXTS.NO_ACCOUNT}{' '}

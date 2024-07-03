@@ -5,7 +5,7 @@ import Footer from './footer';
 import Header from './header';
 import './login.scss';
 import { useGoogleLogin } from '@react-oauth/google';
-// import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login';
 import { useDispatch } from 'react-redux';
 import { loginWithGoogleService } from '../../redux/reducers/auth';
 
@@ -71,9 +71,9 @@ const Login = (props: any) => {
             });
     };
 
-    // const responseFacebook = (response) => {
-    //     console.log(response);
-    // };
+    const responseFacebook = (response: any) => {
+        console.log(response);
+    };
 
     return (
         <div className="h-screen">
@@ -93,12 +93,12 @@ const Login = (props: any) => {
                             styles={option.styles}
                         />
                     ))}
-                    {/* <FacebookLogin
+                    <FacebookLogin
                         appId="281129028310496"
                         autoLoad={true}
                         fields="name,email,picture"
                         callback={responseFacebook}
-                    /> */}
+                    />
                 </div>
                 <div className="mt-3.5">
                     <p className="font-normal text-[0.688rem] text-policy">
