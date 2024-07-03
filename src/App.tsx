@@ -51,7 +51,7 @@ import Login from './components/login';
 import ForgetPassword from './components/login/forget-password';
 import PhoneOrEmail from './components/login/phone-or-email';
 import { closeLoginPopup } from './redux/reducers';
-import { loginService } from './redux/reducers/auth';
+import { loginService, loginWithGoogleService } from './redux/reducers/auth';
 import {
     APP_TEXTS,
     END_POINTS,
@@ -63,7 +63,7 @@ import {
 } from './utils/constants';
 import { back, checkCountryCode, chevronDown, search, closeIcon } from './icons';
 import ProtectedRoute from './components/protected-routed/ProtectedRoute';
-
+import { useGoogleLogin } from '@react-oauth/google';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -113,7 +113,7 @@ function App() {
     //     });
     //     aElements.forEach((a: HTMLElement) => {
     //         a.style.color = 'white';
-            
+
     //       });
     //       pElements.forEach((p: HTMLElement) => {
     //         p.style.color = 'white';
@@ -137,7 +137,7 @@ function App() {
     //         // });
     //         // aElements.forEach((a: HTMLElement) => {
     //         //     a.style.color = 'white';
-                
+
     //         //   });
     //         //   pElements.forEach((p: HTMLElement) => {
     //         //     p.style.color = 'white';
@@ -157,13 +157,12 @@ function App() {
     //     //     });
     //     //     aElements.forEach((a: HTMLElement) => {
     //     //         a.style.color = 'black';
-                
+
     //     //       });
     //     //       pElements.forEach((p: HTMLElement) => {
     //     //         p.style.color = 'black';
     //     //       });
     //     }
-        
 
     // }, []);
 
@@ -211,6 +210,7 @@ function App() {
                 break;
             case APP_TEXTS.GOOGLE:
                 // Handle Google login
+                loginWithGoogleHandler();
                 console.log('Google login');
                 break;
             case APP_TEXTS.TWITTER:
@@ -224,6 +224,34 @@ function App() {
             default:
                 console.log('Default case');
         }
+    };
+
+    const loginWithGoogleHandler = useGoogleLogin({
+        onSuccess: (tokenResponse) => {
+            console.log('Google Auth : ', tokenResponse);
+            loginWithGoogleAccessToken(tokenResponse?.access_token);
+        },
+        onError: (error) => {
+            console.log('Error : ', error);
+        },
+        onNonOAuthError(nonOAuthError) {
+            console.log('No Auth : ', nonOAuthError);
+        },
+    });
+
+    const loginWithGoogleAccessToken = async (accessToken: string) => {
+        dispatch(loginWithGoogleService({ accessToken }))
+            .then((res: any) => {
+                if (res?.error) {
+                    console.log('Response error : ', res?.error);
+                } else if (res?.payload?.status == 200) {
+                    console.log('data after successfull login', res?.payload?.data);
+                    window.location.href = '/home';
+                }
+            })
+            .catch((error: any) => {
+                console.log('Error login with google : ', error);
+            });
     };
 
     const toggleLoginMethod = () => {
@@ -449,9 +477,7 @@ function App() {
     }, []);
 
     return (
-
         <IntlProvider locale={appLanguage} messages={messages[appLanguage]}>
-         
             <div className={styles.App}>
                 <VideoProvider>
                     <Router>
@@ -483,7 +509,10 @@ function App() {
                             <Route path="/comingsoon" element={<ChatsSec />} />
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/profile/:id" element={<PublicProfile />} />
-                            <Route path="/settings/account" element={<ProtectedRoute element={Account} />} />
+                            <Route
+                                path="/settings/account"
+                                element={<ProtectedRoute element={Account} />}
+                            />
                             <Route
                                 path="/settings/account/activity"
                                 element={<PushNotificationsPage />}
