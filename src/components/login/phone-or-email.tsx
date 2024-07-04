@@ -39,8 +39,20 @@ const PhoneOrEmail = (props: any) => {
     };
 
     const loginHandler = async () => {
+        let payload;
+        if (loginWithPhone) {
+            payload = {
+                phoneNumber : countryCode + phoneNumber,
+                password,
+            };
+        } else {
+            payload = {
+                email,
+                password,
+            };
+        }
         setIsLoading(true);
-        dispatch(loginService({ password, email }))
+        dispatch(loginService(payload))
             .then((res: any) => {
                 if (res?.error) {
                     setIsError(true);
