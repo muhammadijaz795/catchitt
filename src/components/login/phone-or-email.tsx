@@ -134,12 +134,6 @@ const PhoneOrEmail = (props: any) => {
             });
             const { data }: any = await response.json();
 
-            // Set first country as initial country code
-            setCountryCode(data?.countries[0]?.code);
-
-            // Set first isoCode as initial country iso code
-            setIsoCode(data?.countries[0]?.iso);
-
             // Setting all values to countryCodes state
             setCountryCodes(data?.countries);
         } catch (error) {
@@ -157,7 +151,29 @@ const PhoneOrEmail = (props: any) => {
         navigate(-1);
     };
 
+    const useGeoService = async () => {
+        try {
+            // Get the IP address
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const ipAddress = ipData.ip;
+
+            // Get geolocation data based on the IP address
+            const geoResponse = await fetch(`https://ipapi.co/${ipAddress}/json/`);
+            const geoData = await geoResponse.json();
+
+            // Set first country as initial country code
+            setCountryCode(geoData?.country_calling_code);
+
+            // Set first isoCode as initial country iso code
+            setIsoCode(geoData?.country_code);
+        } catch (error) {
+            console.log('🚀 ~ fetchGeoData ~ error:', error);
+        }
+    };
+
     useEffect(() => {
+        useGeoService();
         fetchCountriesList();
     }, []);
 
