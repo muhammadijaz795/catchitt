@@ -590,7 +590,7 @@ function App() {
                                         <img className="h-4 w-4 object-contain" src={closeIcon} />
                                     </div>
                                     <div className="overflow-auto w-[21.888rem] mx-auto ">
-                                        <h2 className="font-bold text-3xl mt-5 mb-4 text-subtext">
+                                        <h2 className="font-bold text-3xl mt-5 mb-4 text-black">
                                             {isMainLoginOption
                                                 ? 'Log in to Seezitt'
                                                 : isForgotPasswordScenario
@@ -1055,7 +1055,7 @@ function App() {
                                     )}
                                     <div className="mt-3 absolute bottom-0 w-full py-4">
                                         <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
-                                            <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1">
+                                            <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 text-black">
                                                 {APP_TEXTS.NO_ACCOUNT}{' '}
                                                 <span className="text-danger-1 font-semibold hover:underline cursor-pointer">
                                                     {APP_TEXTS.SIGN_UP}

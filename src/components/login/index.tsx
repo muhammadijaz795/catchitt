@@ -80,7 +80,7 @@ const Login = (props: any) => {
             <Header />
             <div className="w-[22.688rem] mx-auto mt-12">
                 <div className="overflow-auto item-login-container">
-                    <h2 className="font-bold text-3xl">Log in to Seezitt</h2>
+                    <h2 className="font-bold text-3xl text-black">Log in to Seezitt</h2>
                     <p className="font-normal text-sm text-subtext mt-6 mb-3 ">
                         {APP_TEXTS.LOGIN_SUBTEXT}
                     </p>
@@ -117,7 +117,7 @@ const Login = (props: any) => {
             </div>
             <div className="absolute w-full bottom-0">
                 <div className="border-t border-custom-1 text-center p-4 sign-up-label">
-                    <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1">
+                    <h3 className="font-normal text-[0.938rem] text-black flex flex-row items-center justify-center gap-1">
                         {APP_TEXTS.NO_ACCOUNT}{' '}
                         <span className="text-danger-1 font-semibold hover:underline cursor-pointer">
                             {APP_TEXTS.SIGN_UP}
