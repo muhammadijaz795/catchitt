@@ -1053,7 +1053,7 @@ function App() {
                                             </p>
                                         </div>
                                     )}
-                                    <div className="mt-3">
+                                    <div className="mt-3 absolute bottom-0 w-full py-4">
                                         <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
                                             <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1">
                                                 {APP_TEXTS.NO_ACCOUNT}{' '}
