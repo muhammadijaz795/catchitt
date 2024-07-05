@@ -51,7 +51,7 @@ import Login from './components/login';
 import ForgetPassword from './components/login/forget-password';
 import PhoneOrEmail from './components/login/phone-or-email';
 import { closeLoginPopup } from './redux/reducers';
-import { loginService, loginWithGoogleService } from './redux/reducers/auth';
+import { loginService, loginWithGoogleService, signupService } from './redux/reducers/auth';
 import {
     APP_TEXTS,
     END_POINTS,
@@ -60,10 +60,20 @@ import {
     STATUS_CODE,
     showToastError,
     showToastSuccess,
+    SIGNUP_APP_TEXTS,
+    SIGNUP_OPTIONS
 } from './utils/constants';
 import { back, checkCountryCode, chevronDown, search, closeIcon } from './icons';
 import ProtectedRoute from './components/protected-routed/ProtectedRoute';
 import { useGoogleLogin } from '@react-oauth/google';
+import { validateEmail } from '../src/utils/common';
+import SignupHandler from '../src/components/signup/signupHandler';
+
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import style from './components/homePage/index.module.scss';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -169,6 +179,8 @@ function App() {
     const [loginWithPhone, setLoginWithPhone] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [isMainLoginOption, setIsMainLoginOption] = useState(true);
+    const [isMainSignupOption, setIsMainSignupOption] = useState(true);
+    const [isLoginSection, setIsLoginSection] = useState(true);
     const [isForgotPasswordScenario, setIsForgotPasswordScenario] = useState(false);
     const isLoginPopup = useSelector((store: any) => store?.reducers?.popupSlice?.isLoginPopup);
     const dispatch = useDispatch<any>();
@@ -193,6 +205,35 @@ function App() {
     const [passwordBorderColor, setPasswordBorderColor] = useState('');
     const [loadingOtp, setLoadingOtp] = useState<boolean>(false);
     const [loadingLogin, setLoadingLogin] = useState<boolean>(false);
+
+    const [signupWithPhone, setSignupWithPhone] = useState<boolean>(false);
+    const [signupNext, setSignupNext] = useState<boolean>(false);
+    const [name, setName] = useState<any>(null);
+    const [dateOfBirth, setDateOfBirth] = useState<any>(null);
+    const [emailIdError, setEmailIdError] = useState<boolean>(false);
+    const [otpbuttonText, setOtpbuttonText] = useState<string>("Send code");
+    const [otpCode, setOtpCode] = useState<string>('');
+    const [otpError, setOtpError] = useState<boolean>(false);
+    const [darkTheme, setdarkTheme] = useState('');
+    const [lightDarkTheme, setlightDarkTheme] = useState('');
+    const [darkWhiteTheme, setDarkWhiteTheme] = useState('');
+    const [textColor, setTextColor] = useState('text-black');
+
+    const signupItemClickHandler = (name: string) => {
+        switch (name) {
+            case 'Use Phone or Email':
+                setIsMainSignupOption(!isMainSignupOption);
+                // navigate('/signup/phone-or-email/email');
+                break;
+            case 'Continue with Facebook':
+               
+                break;
+            case 'Continue with Google':
+                break;
+            default:
+                console.log('Default case');
+        }
+    };
 
     const loginItemClickHandler = (name: string) => {
         switch (name) {
@@ -258,6 +299,40 @@ function App() {
         setLoginWithPhone(!loginWithPhone);
     };
 
+    const toggleSignupMethod = () => {
+        setSignupWithPhone(!signupWithPhone);
+    };
+
+    const signupNextScreen = async () => {
+
+        if(email && validateEmail(email)){
+            setEmailIdError(false);
+        }else{
+            setEmailIdError(true);
+        }
+        try {
+            const response: any = await fetch(`${API_KEY}/auth/verifyOtp`, {
+                method: "PATCH",
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({ email:email, otp: otpCode }),
+            });
+            const { data }: any = await response.json();
+            if(response.code == 200){
+                setOtpError(false)
+                setSignupNext(true);
+            }else{
+                setOtpError(true)
+            }
+            
+            console.log('otp response', response);
+        } catch (error) {
+            console.log('send otp error:', error);
+        }
+ 
+    };
+
     const simpleLoginHandler = async () => {
         setIsLoading(true);
         dispatch(loginService({ password, email }))
@@ -314,6 +389,37 @@ function App() {
                 console.log('🚀 ~ fetchCountriesList ~ error:', error);
             }
         }
+    };
+
+    const signupHandler = async () => {
+        let dob= year+"-"+month+"-"+date;
+        setDateOfBirth(dob);
+        console.log("signup", password, email, dateOfBirth, name);
+        // return false;
+        setIsLoading(true);
+        dispatch(signupService({ password, email, dateOfBirth, name }))
+            .then((res: any) => {
+                console.log("res",res);
+                if (res?.payload?.status == 400) {
+                    console.log("res 1",res);
+                    setIsError(true);
+                    // setPasswordBorderColor('border-red-400');
+                    // setErrorMessage(res?.payload || res?.payload?.message);
+                    setErrorMessage(res?.payload?.message)
+                    setIsLoading(false);
+                } else if (res?.payload?.status == 200) {
+                    console.log("res 2",res);
+                    console.log('data after successfull login', res?.payload?.data);
+                    setIsLoading(false);
+                    closeLoginPopupHandler();
+                    // navigate('/home');
+                }
+            })
+            .catch((error: any) => {
+                console.log("error",error);
+                setIsError(true);
+                setIsLoading(false);
+            });
     };
 
     const handleSignInSubmit = () => {
@@ -453,6 +559,30 @@ function App() {
         }
     };
 
+    const sendOTPCode = async () => {
+        if(email && validateEmail(email)){
+            setEmailIdError(false);
+        }else{
+            setEmailIdError(true);
+        }
+        try {
+            const response: any = await fetch(`${API_KEY}/auth/request-verify-email`, {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({ email:email }),
+            });
+            const { data }: any = await response.json();
+            
+            setOtpbuttonText("Resend")
+            
+            console.log('otp verify response', data);
+        } catch (error) {
+            console.log('send otp error:', error);
+        }
+    };
+
     const passwordOperationsHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
         setIsError(false);
@@ -475,6 +605,75 @@ function App() {
     useEffect(() => {
         fetchCountriesList();
     }, []);
+
+
+    const handleLoginClick = () => {
+        setIsLoginSection(false);
+      }
+
+    const handleSignupClick = () => {
+        setIsLoginSection(false);
+    }
+
+    const goBackSignupHandler = () => {
+        setIsMainLoginOption(true);
+        setSignupNext(false)
+    };
+
+
+    const [month, setMonth] = useState('');
+    const [date, setDate] = useState('');
+    const [year, setYear] = useState('');
+
+
+    const handleMonthChange = (event: SelectChangeEvent) => {
+        setMonth(event.target.value as string);
+        // let dob= date +"-"+ month+"-"+year;
+        // setDateOfBirth(dob);
+        // console.log(dob);
+    };
+
+    const handleDateChange = (event: SelectChangeEvent) => {
+        setDate(event.target.value as string);
+        // let dob= date +"-"+ month+"-"+year;
+        // setDateOfBirth(dob);
+        // console.log(dob);
+    };
+
+    const handleYearChange = (event: SelectChangeEvent) => {
+        setYear(event.target.value as string);
+        // let dob= date +"-"+ month+"-"+year;
+        // setDateOfBirth(dob);
+        // console.log(dob);
+    };
+
+    function generateMenuItems() {
+        const rows = [];
+        let i = 2025; // Start with 2025
+        const len = 1900; // End at 1900
+      
+        while (i >= len) {
+          rows.push(<MenuItem key={i} value={i}>{i}</MenuItem>);
+          i--; // Decrement i in each iteration
+        }
+      
+        return rows;
+      }
+
+      useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if(themeColor == "dark"){ 
+            setdarkTheme(style.darkTheme);
+            setlightDarkTheme(style.lightdarkTheme);
+            setDarkWhiteTheme('');
+            setTextColor('text-white');
+        } else{
+            setDarkWhiteTheme('hover:bg-slate-100');
+            setTextColor('text-black');
+        }
+    });
+
 
     return (
         <IntlProvider locale={appLanguage} messages={messages[appLanguage]}>
@@ -554,7 +753,7 @@ function App() {
 
                         {isLoginPopup && (
                             <div className="w-full z-50 h-full bg-black/50 fixed top-0 flex justify-center items-center">
-                                <div className="w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[37.125rem]">
+                                <div className={`w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[37.125rem]  ${lightDarkTheme} `}>
                                     <div
                                         onClick={closeLoginPopupHandler}
                                         className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center absolute right-5 p-1 cursor-pointer"
@@ -564,7 +763,7 @@ function App() {
                                     { isLoginSection ? (
                                         <>
                                             <div className="overflow-auto w-[21.888rem] mx-auto ">
-                                                <h2 className="font-bold text-3xl mt-5 mb-4 text-black">
+                                                <h2 className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}>
                                                     {isMainLoginOption
                                                         ? 'Log in to Seezitt'
                                                         : isForgotPasswordScenario
@@ -684,7 +883,7 @@ function App() {
                                                                                                         : ''
                                                                                                 }`}
                                                                                             >
-                                                                                                <p className="font-normal text-black text-left text-xs hover:bg-gray-50">
+                                                                                                <p className={`font-normal ${textColor} text-left text-xs hover:bg-gray-50`}>
                                                                                                     {countryItem?.name +
                                                                                                         ' ' +
                                                                                                         countryItem?.code}
@@ -754,7 +953,7 @@ function App() {
                                                                                         phoneNumber?.length >
                                                                                             0 ||
                                                                                         email.length > 0
-                                                                                            ? 'text-black'
+                                                                                            ? textColor
                                                                                             : 'text-gray-400'
                                                                                     }`}
                                                                                 >
@@ -844,7 +1043,7 @@ function App() {
                                                                                         phoneNumber?.length >
                                                                                             0 ||
                                                                                         email.length > 0
-                                                                                            ? 'text-black'
+                                                                                            ? textColor
                                                                                             : 'text-gray-400'
                                                                                     }`}
                                                                                 >
@@ -934,7 +1133,7 @@ function App() {
                                                                         code?.length > 0 &&
                                                                         password?.length > 0
                                                                             ? 'text-white'
-                                                                            : 'text-black'
+                                                                            : textColor
                                                                     } flex flex-row justify-center items-center gap-2 flex-1`}
                                                                 >
                                                                     <p>
@@ -985,15 +1184,15 @@ function App() {
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
                                                         By continuing with an account located in{' '}
-                                                        <span className="text-black cursor-pointer">
+                                                        <span className={` ${textColor} cursor-pointer`}>
                                                             Pakistan
                                                         </span>
                                                         , you agree to our{' '}
-                                                        <span className="text-black cursor-pointer hover:underline">
+                                                        <span className={` ${textColor} cursor-pointer hover:underline`}>
                                                             Terms of Service
                                                         </span>{' '}
                                                         and acknowledge that you have read our{' '}
-                                                        <span className="text-black cursor-pointer hover:underline">
+                                                        <span className={` ${textColor}  cursor-pointer hover:underline`}>
                                                             Privacy Policy.
                                                         </span>
                                                     </p>
@@ -1001,9 +1200,9 @@ function App() {
                                             )}
                                             <div className="mt-3 absolute bottom-0 w-full py-4">
                                                 <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
-                                                    <h3 className="font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 text-black">
+                                                    <h3 className={`font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 ${textColor}`}>
                                                         {APP_TEXTS.NO_ACCOUNT}{' '}
-                                                        <span className="text-danger-1 font-semibold hover:underline cursor-pointer">
+                                                        <span className="text-danger-1 font-semibold hover:underline cursor-pointer" onClick={handleSignupClick}>
                                                             {APP_TEXTS.SIGN_UP}
                                                         </span>
                                                     </h3>
@@ -1211,7 +1410,7 @@ function App() {
                                                                                                                 : ''
                                                                                                         }`}
                                                                                                     >
-                                                                                                        <p className="font-normal text-black text-left text-xs hover:bg-gray-50">
+                                                                                                        <p className={`font-normal ${textColor} text-left text-xs hover:bg-gray-50`}>
                                                                                                             {countryItem?.name +
                                                                                                                 ' ' +
                                                                                                                 countryItem?.code}
@@ -1405,13 +1604,13 @@ function App() {
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
                                                         By continuing with an account located in{' '}
-                                                        <span className="text-black cursor-pointer">Pakistan</span>, you
+                                                        <span className={`${textColor} cursor-pointer`}>Pakistan</span>, you
                                                         agree to our{' '}
-                                                        <span className="text-black cursor-pointer hover:underline">
+                                                        <span className={` ${textColor} cursor-pointer hover:underline`}>
                                                             Terms of Service
                                                         </span>{' '}
                                                         and acknowledge that you have read our{' '}
-                                                        <span className="text-black cursor-pointer hover:underline">
+                                                        <span className={` ${textColor} cursor-pointer hover:underline`}>
                                                             Privacy Policy.
                                                         </span>
                                                     </p>
