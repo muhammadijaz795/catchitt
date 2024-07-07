@@ -110,7 +110,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
 
     return (
         <div
-            className={style.div}
+            className={` ${style.div} ${style.lightdarkTheme}`}
             onClick={() => {
                 if (more) {
                     setMore(false);
