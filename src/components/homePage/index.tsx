@@ -338,11 +338,11 @@ function HomePage() {
         }
     };
 
-    const passwordOperationsHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-        setIsError(false);
-        setPasswordBorderColor('');
-    };
+    // const passwordOperationsHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    //     setPassword(e.target.value);
+    //     setIsError(false);
+    //     setPasswordBorderColor('');
+    // };
 
     const goBackHandler = () => {
         setIsMainLoginOption(true);
