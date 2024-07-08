@@ -755,7 +755,7 @@ function App() {
                             <Route path="/profile/:id" element={<PublicProfile />} />
                             <Route
                                 path="/settings/account"
-                                element={<ProtectedRoute element={Account} />}
+                                 element={<Account />}
                             />
                             <Route
                                 path="/settings/account/activity"
