@@ -101,11 +101,11 @@ const Login = (props: any) => {
 
                     {/* <FacebookLogin
                         appId="281129028310496"
-                        autoLoad={true}
+                        autoLoad={false}
                         fields="name,email,picture"
                         callback={responseFacebook}
                         render={(renderProps: {onClick: () => void}) => (
-                        <div
+                        <div onClick={renderProps.onClick
                             className={`rounded-[0.5rem] font-medium text-base flex flex-row items-center border border-loginItem h-11 px-3 cursor-pointer hover:bg-slate-100 `}
                         >
                             <img className="object-contain h-5 w-5" src={fb} />

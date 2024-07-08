@@ -51,7 +51,7 @@ import Login from './components/login';
 import ForgetPassword from './components/login/forget-password';
 import PhoneOrEmail from './components/login/phone-or-email';
 import { closeLoginPopup } from './redux/reducers';
-import { loginService, loginWithGoogleService, signupService } from './redux/reducers/auth';
+import { loginService, loginWithGoogleService, loginWithFBService, signupService } from './redux/reducers/auth';
 import {
     APP_TEXTS,
     END_POINTS,
@@ -63,7 +63,7 @@ import {
     SIGNUP_APP_TEXTS,
     SIGNUP_OPTIONS
 } from './utils/constants';
-import { back, checkCountryCode, chevronDown, search, closeIcon } from './icons';
+import { back, checkCountryCode, chevronDown, search, closeIcon, fb } from './icons';
 import ProtectedRoute from './components/protected-routed/ProtectedRoute';
 import { useGoogleLogin } from '@react-oauth/google';
 import { validateEmail } from '../src/utils/common';
@@ -74,6 +74,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import style from './components/homePage/index.module.scss';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -723,6 +724,25 @@ function App() {
         }
     });
 
+    const responseFacebook = (response: any) => {
+        console.log(response);
+        loginWithFBAccessToken(response?.access_token);
+    };
+
+    const loginWithFBAccessToken = async (accessToken: string) => {
+        dispatch(loginWithFBService({ accessToken }))
+            .then((res: any) => {
+                if (res?.error) {
+                    console.log('Response error : ', res?.error);
+                } else if (res?.payload?.status == 200) {
+                    console.log('data after successfull login', res?.payload?.data);
+                    window.location.href = '/home';
+                }
+            })
+            .catch((error: any) => {
+                console.log('Error login with google : ', error);
+            });
+    };
 
     return (
         <IntlProvider locale={appLanguage} messages={messages[appLanguage]}>
@@ -820,7 +840,8 @@ function App() {
                                                         : 'Log in'}
                                                 </h2>
                                                 {isMainLoginOption ? (
-                                                    LOGIN_OPTIONS?.map((option, index) => (
+                                                    <>
+                                                    {(LOGIN_OPTIONS?.map((option, index) => (
                                                         <ItemLogin
                                                             loginItemClickHandler={loginItemClickHandler}
                                                             key={index}
@@ -828,7 +849,27 @@ function App() {
                                                             image={option.image}
                                                             styles={option.styles}
                                                         />
-                                                    ))
+
+                                                        
+                                                    )))}
+                                                    <div className='mt-3'>
+                                                        <FacebookLogin
+                                                            appId="281129028310496"
+                                                            autoLoad={false}
+                                                            fields="name,email,picture"
+                                                            callback={responseFacebook}
+                                                            render={(renderProps: {onClick: () => void}) => (
+                                                            <div onClick={renderProps.onClick}
+                                                                className={`rounded-[0.5rem] font-medium text-base flex flex-row items-center border border-loginItem h-11 px-3 cursor-pointer hover:bg-slate-100 `}
+                                                            >
+                                                                <img className="object-contain h-5 w-5" src={fb} />
+                                                                <p className="mx-auto text-[0.938rem]">Continue with Facebook</p>
+                                                            </div>
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </>
+                                                   
                                                 ) : (
                                                     <>
                                                         <div className="flex flex-row justify-between items-center mt-3.5">
@@ -1267,7 +1308,8 @@ function App() {
                                                     {signupNext == false ? (
                                                         <>
                                                         {isMainSignupOption ? (
-                                                            SIGNUP_OPTIONS?.map((option, index) => (
+                                                            <>
+                                                            {(SIGNUP_OPTIONS?.map((option, index) => (
                                                                 <SignupHandler
                                                                     singupItemClickHandler={signupItemClickHandler}
                                                                     key={index}
@@ -1276,7 +1318,24 @@ function App() {
                                                                     styles={option.styles}
                                                                     darkWhiteTheme={darkWhiteTheme}
                                                                 />
-                                                            ))
+                                                            )))}
+                                                            <div className='mt-3'>
+                                                                <FacebookLogin
+                                                                    appId="281129028310496"
+                                                                    autoLoad={false}
+                                                                    fields="name,email,picture"
+                                                                    callback={responseFacebook}
+                                                                    render={(renderProps: {onClick: () => void}) => (
+                                                                    <div onClick={renderProps.onClick}
+                                                                        className={`rounded-[0.5rem] font-medium text-base flex flex-row items-center border border-loginItem h-11 px-3 cursor-pointer hover:bg-slate-100 `}
+                                                                    >
+                                                                        <img className="object-contain h-5 w-5" src={fb} />
+                                                                        <p className="mx-auto text-[0.938rem]">Continue with Facebook</p>
+                                                                    </div>
+                                                            )}
+                                                                />
+                                                            </div>
+                                                        </>
                                                         ) : (
                                                                 <>
                                                                 <div className="flex flex-row justify-between items-center mt-3.5">

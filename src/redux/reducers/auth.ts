@@ -113,6 +113,26 @@ export const loginWithGoogleService = createAsyncThunk(
     }
 );
 
+export const loginWithFBService = createAsyncThunk(
+    'auth/loginWithFBService',
+    async (values: any, { rejectWithValue }) => {
+        try {
+            let res: any = await post('/auth/social/facebook', {
+                type: 'application/json',
+                data: { isLoggedIn: true, ...values },
+            });
+
+            if (res?.status === STATUS_CODE.OK) {
+                return res?.data;
+            } else {
+                return rejectWithValue(res?.message || 'Invalid status code');
+            }
+        } catch (error: any) {
+            return rejectWithValue(error?.message);
+        }
+    }
+);
+
 export const signupService = createAsyncThunk('auth/signupService', async (values: any) => {
     if (!values) return;
     try {

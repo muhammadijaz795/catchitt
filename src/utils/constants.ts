@@ -57,11 +57,11 @@ export const SIGNUP_OPTIONS = [
         name: 'Use Phone or Email',
         image: defaultAvatar,
     },
-    {
-        styles: 'mt-3',
-        name: 'Continue with Facebook',
-        image: fb,
-    },
+    // {
+    //     styles: 'mt-3',
+    //     name: 'Continue with Facebook',
+    //     image: fb,
+    // },
     {
         styles: 'mt-3',
         name: 'Continue with Google',
@@ -104,11 +104,11 @@ export const LOGIN_OPTIONS = [
         name: APP_TEXTS.EMAIL_OR_PHONE,
         image: emailOrPhone,
     },
-    {
-        styles: 'mt-3',
-        name: APP_TEXTS.FACEBOOK,
-        image: facebookAuth,
-    },
+    // {
+    //     styles: 'mt-3',
+    //     name: APP_TEXTS.FACEBOOK,
+    //     image: facebookAuth,
+    // },
     {
         styles: 'mt-3',
         name: APP_TEXTS.GOOGLE,
