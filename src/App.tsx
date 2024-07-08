@@ -1193,9 +1193,9 @@ function App() {
                                                         ) : (
                                                             <div
                                                                 onClick={simpleLoginHandler}
-                                                                className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer`}
+                                                                className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer  ${style.NextBtn}`}
                                                             >
-                                                                <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                                                <div className={`flex flex-row justify-center items-center gap-2 flex-1`}>
                                                                     <p>
                                                                         {isLoading ? (
                                                                             <CircularProgress
