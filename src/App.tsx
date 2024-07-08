@@ -652,6 +652,10 @@ function App() {
         setIsLoginSection(false);
       }
 
+    const handleSignUpMainScreen = () => {
+        setIsMainSignupOption(true)
+    }
+
     const handleLoginpopupClick = () => {
     setIsLoginSection(true);
     }
@@ -1554,7 +1558,7 @@ function App() {
                                                                     </div>
                                                                 </div>
                                                                 <div
-                                                                    onClick={handleLoginpopupClick}
+                                                                    onClick={handleSignUpMainScreen}
                                                                     className="flex flex-row justify-center items-center gap-2 mt-4 cursor-pointer"
                                                                 >
                                                                     <img src={back} className="h-2.5 w-2.5 object-contain" />
