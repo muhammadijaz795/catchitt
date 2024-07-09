@@ -319,7 +319,7 @@ function App() {
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({ email:email, otp: otpCode }),
+                body: JSON.stringify({ email:email, otp: Number(otpCode) }),
             });
             const { data }: any = await response.json();
             if(response.code == 200){
