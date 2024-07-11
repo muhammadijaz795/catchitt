@@ -19,6 +19,9 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
     const [isRotated, setRotated] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdownState);
+    // const [sidebarTextStyle, setSidebarTextStyle] = useState(styles.sidebarTextStyle);
+
+    
 
 
     const handleLinkClick = (index: number) => {

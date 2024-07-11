@@ -7,6 +7,7 @@ import Navbar from '../navbar';
 import BlockPopup from '../popups/BlockPopup';
 import style from './style.module.scss';
 import { useEffect, useState } from 'react';
+import { e } from 'mathjs';
 
 function Layout(props: any) {
     const {
@@ -35,7 +36,9 @@ function Layout(props: any) {
         if(themeColor == "dark"){ 
             setdarkTheme(style.darkTheme);
             setdarkThemeblack(style.darkThemeblack);
-        } 
+        }else{
+            // setdarkTheme(style.lightTheme);
+        }
     });
 
     // useEffect(() => {
