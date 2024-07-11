@@ -89,9 +89,11 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 strokeLinejoin="round"
                             />
                         </svg>
-                        <p className={styles.linkWord}>Home</p>
+                        <p className={styles.linkWord}>For You</p>
                     </div>
                 </Link>
+                {/*
+                //new theme 
                 <Link to="/comingsoon" reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <div
                         className={classNames(
@@ -148,7 +150,9 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         </svg>
                         <p className={styles.linkWord}>Chat (Coming Soon)</p>
                     </div>
-                </Link>
+                </Link> 
+                // end new theme 
+                */}
                 <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
                     <div
@@ -190,9 +194,68 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 strokeLinejoin="round"
                             />
                         </svg>
-                        <p className={styles.linkWord}>Discover</p>
+                        <p className={styles.linkWord}>Explore</p>
                     </div>
                 </Link>
+
+                <Link to="/suggested-accounts" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                    <div
+                        className={classNames(
+                            `${pathname.includes('/suggested-accounts') ? styles.selected : styles.navLink}`
+                        )}
+                        onClick={() => {
+                            handleLinkClick(2)
+                            setSettingsDropdown(false)
+                        }}
+                    >
+                        <svg id="svg-section" width="24" data-e2e="" height="32" viewBox="0 0 48 48" fill={ pathname.includes('/suggested-accounts') ? "white":"#5448B2"} xmlns="http://www.w3.org/2000/svg"
+                        className={classNames(
+                            `${pathname.includes('/suggested-accounts') ? styles.selectedStroke : ''}`
+                        )}
+                        >
+                            <path d="M25.5 17C25.5 21.1421 22.1421 24.5 18 24.5C13.8579 24.5 10.5 21.1421 10.5 17C10.5 12.8579 13.8579 9.5 18 9.5C22.1421 9.5 25.5 12.8579 25.5 17Z">
+                            </path>
+                            <path d="M7.10396 34.7906C8.78769 30.2189 12.8204 27 18.0009 27C23.1818 27 27.2107 30.2213 28.8958 34.7898C29.3075 35.906 28.6141 37 27.5 37H8.5C7.38629 37 6.69289 35.9067 7.10396 34.7906Z">
+                            </path>
+                            <path d="M40.6308 37H32C31.2264 34.1633 30.0098 31.5927 28.144 29.7682C29.5384 28.9406 31.1829 28.5 33 28.5C37.239 28.5 40.536 30.8992 41.9148 35.0108C42.2516 36.0154 41.5423 37 40.6308 37Z">
+                            </path>
+                            <path d="M33 26.5C36.0376 26.5 38.5 24.0376 38.5 21C38.5 17.9624 36.0376 15.5 33 15.5C29.9624 15.5 27.5 17.9624 27.5 21C27.5 24.0376 29.9624 26.5 33 26.5Z">
+                            </path>
+                        </svg>
+                        <p className={styles.linkWord}>Following</p>
+                    </div>
+                </Link>
+
+                <Link to="/profile" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                    <div
+                        className={classNames(
+                            `${pathname.includes('/profile') ? styles.selected : styles.navLink}`
+                        )}
+                        onClick={() => {
+                            handleLinkClick(2)
+                            setSettingsDropdown(false)
+                        }}
+                    >
+                        <svg id="svg-section" width="24" data-e2e="" height="32" viewBox="0 0 48 48" fill={ pathname.includes('/profile') ? "white":"#5448B2"} xmlns="http://www.w3.org/2000/svg"
+                        className={classNames(
+                            `${pathname.includes('/profile') ? styles.selectedStroke : ''}`
+                        )}
+                        >
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M24.0003 7C20.1343 7 17.0003 10.134 17.0003 14C17.0003 17.866 20.1343 21 24.0003 21C27.8663 21 31.0003 17.866 31.0003 14C31.0003 10.134 27.8663 7 24.0003 7ZM13.0003 14C13.0003 7.92487 17.9252 3 24.0003 3C30.0755 3 35.0003 7.92487 35.0003 14C35.0003 20.0751 30.0755 25 24.0003 25C17.9252 25 13.0003 20.0751 13.0003 14ZM24.0003 33C18.0615 33 13.0493 36.9841 11.4972 42.4262C11.3457 42.9573 10.8217 43.3088 10.2804 43.1989L8.32038 42.8011C7.77914 42.6912 7.4266 42.1618 7.5683 41.628C9.49821 34.358 16.1215 29 24.0003 29C31.8792 29 38.5025 34.358 40.4324 41.628C40.5741 42.1618 40.2215 42.6912 39.6803 42.8011L37.7203 43.1989C37.179 43.3088 36.6549 42.9573 36.5035 42.4262C34.9514 36.9841 29.9391 33 24.0003 33Z"></path>
+                        </svg>
+                        <p className={styles.linkWord}>Following</p>
+                    </div>
+                </Link>
+
+                <div className={styles.sidebarLoginBox}>
+                    <p className={styles.sidebarTextStyle}>Log in to follow creators, like videos, and view comments.</p>
+                    <button type="button"  className={styles.sidebarLogin}>Log in</button>
+                </div>
+
+                {/*  //new theme 
+                
                 <Link to="/notifications" reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <div
                         className={classNames(
@@ -235,8 +298,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             Notifications
                         </p>
                     </div>
-                </Link>
-                <div style={{
+                </Link> 
+                 <div style={{
                     textDecoration: 'none',
                     display: 'flex',
                     alignItems: 'center',
@@ -282,6 +345,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         </svg>
                     </div>
                 </div>
+
                 {isDropdownOpen && (
                     <>
                         <Link to="/settings/account" reloadDocument={false} style={{ textDecoration: 'none' }}>
@@ -350,7 +414,9 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             </div>
                         </Link>
                     </>
-                )}
+                )} 
+                 // end new theme 
+                 */}
             </div>
         </div>
     );

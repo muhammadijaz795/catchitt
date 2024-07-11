@@ -69,13 +69,18 @@ function Layout(props: any) {
                             gap: 32,
                             overflow: 'scroll',
                             height: '100%',
-                            padding: '40px 40px 0px 40px',
+                            width: "244px", //new theme  
+                            // padding: '40px 40px 0px 40px', //new theme 
                         }}
                     >
                         <SideNavBar />
+                        {/*
+                        //new theme 
                         <div style={{ background: '#FFF', borderRadius: 16 }}  >
                             <SuggestedActivity showActivity={true} showSuggestedContent={true} />
-                        </div>
+                        </div> 
+                        //end new theme 
+                        */}
                     </div>
                 ) : (
                     !showShortSidebar && (

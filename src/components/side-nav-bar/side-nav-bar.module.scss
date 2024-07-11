@@ -4,10 +4,10 @@
 .cardDiv {
   display: flex;
   flex-direction: column;
-  width: 325px;
+  // width: 325px; //new theme 
   height: 312px;
   color: #000000;
-  background-color: #ffffff;
+  // background-color: #ffffff;
   border-radius: 16px;
   padding: 16px;
   font-family: Poppins;
@@ -107,3 +107,48 @@
   width: 16px;
   height: 9px;
 }
+
+
+// //new theme 
+.sidebarTextStyle {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-family:  Arial, Tahoma, PingFangSC, sans-serif;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: left;
+}
+
+.sidebarLoginBox{
+    position: relative;
+    padding: 20px 8px 24px;
+    margin: 0px;
+}
+
+.sidebarLogin {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  color: rgb(255, 59, 92);
+  border-color: rgb(255, 59, 92);
+  background-color: rgba(255, 255, 255, 0.08);
+  min-width: 168px;
+  min-height: 48px;
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 600;
+  font-family: TikTokDisplayFont, PingFangSC, sans-serif;
+  display: flex;
+  position: relative;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  padding: 6px 8px;
+  user-select: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin-top: 20px;
+  width: 100%;
+}
+
+// end new theme 
