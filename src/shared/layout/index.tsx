@@ -65,10 +65,10 @@ function Layout(props: any) {
             <div style={{ display: 'flex', height: '100vh', width: '100vw', paddingTop: 80 }}>
                 {!showSidebar && !showShortSidebar ? (
                     <div 
-                        className={` ${darkTheme}`}
+                        // className={` ${darkTheme}`}
                         style={{
-                            display: 'flex',
-                            flexDirection: 'column',
+                            // display: 'flex',
+                            // flexDirection: 'column',
                             gap: 32,
                             overflow: 'scroll',
                             height: '100%',

@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   // width: 325px; //new theme 
-  height: 312px;
+  height: 100vh;
   color: #000000;
   // background-color: #ffffff;
   border-radius: 16px;
@@ -17,8 +17,8 @@
   line-height: 120%;
   text-decoration: none;
   border-radius: 16px;
-  // background: var(--Default-white, #fff); //new theme 
-  // box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.03);  //new theme 
+  background: var(--Default-white, #fff); //new theme 
+  box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.03);  //new theme 
 }
 
 .cardDivOpened {
@@ -53,8 +53,8 @@
 }
 
 .selected {
-  background-color: #5448b2 !important;
-  color: #ffffff;
+  // background-color: #5448b2 !important;
+  color:  rgb(255, 59, 92); //#ffffff;
   display: flex;
   width: 293px;
   padding: 16px 0px 16px 16px;
