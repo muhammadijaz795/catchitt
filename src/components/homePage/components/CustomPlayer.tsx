@@ -45,7 +45,7 @@ function CustomPlayer({ src, videoModal, post, controls }: any) {
                     loop={true}
                     autoPlay={videoModal ? false : inView}
                     controls={controls}
-                    style={{ maxWidth: '100%', height: '70vh', position: 'relative', zIndex: 1 }}
+                    // style={{ maxWidth: '100%', height: '70vh', position: 'relative', zIndex: 1 }}
                     src={src}
                     ref={videoRef}
                     className={style.video}
