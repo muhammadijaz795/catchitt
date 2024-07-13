@@ -92,8 +92,8 @@ function ForDesktop(props: any) {
             paddingBottomProp={true}
         >
             <div className={`relative  ${style.parent} ${darkTheme}`}>
-                <div className={style.tabs}>
-                    {/* <div
+                {/* <div className={style.tabs}>
+                     <div
                         onClick={() => setActiveTab(1)}
                         className={activeTab === 1 ? style.activeTab : style.tab}
                     >
@@ -110,8 +110,8 @@ function ForDesktop(props: any) {
                         className={activeTab === 3 ? style.activeTab : style.tab}
                     >
                         <p>Live</p>
-                    </div> */}
-                </div>
+                    </div> 
+                </div> */}
                 <div className={style.videoesParent}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
                         videoes.map((post: any, number: number) => {
@@ -199,6 +199,15 @@ function ForDesktop(props: any) {
                                                 controls={true}
                                             />
                                         </div>
+                                        <div className={style.DivMediaCardBottom}>
+                                                <p>{post?.description}</p>
+                                                {post?.sound && (
+                                                    <div>
+                                                        <img src={music} alt="" />
+                                                        <p>{post?.sound?.category?.name}</p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         <div className={style.actions}>
                                             
                                             {userActions.map((obj: any, i: number) => {
@@ -217,10 +226,10 @@ function ForDesktop(props: any) {
                                                 );
                                             })}
                                             <div className={style.DivAvatarActionItemContainer }>
-                                                <a data-e2e="video-author-avatar" className="e1g2yhv83 css-1w9wqra-StyledLink-AvatarLink er1vbsz0" href="/@sherjangkhan5">
+                                                <a className="e1g2yhv83 css-1w9wqra-StyledLink-AvatarLink er1vbsz0" href="/@sherjangkhan5">
                                                     <div className={style.AvatarDivContainer} style={{width: '48px', height: '48px'}}>
                                                         <span  className={style.SpanAvatarContainer} style={{width: '48px', height: '48px'}}>
-                                                            <img loading="lazy" alt="sherjangkhan5" src="https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/477a523669b3c8bf784959032600a067~c5_100x100.jpeg?lk3s=a5d48078&amp;nonce=19370&amp;refresh_token=6b90921858aaa4e36c486d7bf4b8b3eb&amp;x-expires=1721012400&amp;x-signature=cgvLzhlKeiDtzaHJgA26hMGmi1U%3D&amp;shp=a5d48078&amp;shcp=81f88b70" className="css-1zpj2q-ImgAvatar e1e9er4e1" /></span>
+                                                            <img loading="lazy" alt="sherjangkhan5" src={post?.user?.avatar || defaultAvatar} className="css-1zpj2q-ImgAvatar e1e9er4e1" /></span>
                                                     </div>
                                                 </a>
                                                 <button className={style.AvatarFollowButton} data-e2e="feed-follow">
