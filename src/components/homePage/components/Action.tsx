@@ -61,8 +61,8 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
         >
             <div
                 style={{
-                    width: 40,
-                    height: 40,
+                    width: 48,
+                    height: 48,
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',

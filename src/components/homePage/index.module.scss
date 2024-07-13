@@ -52,7 +52,7 @@
 .videoesParent {
   margin: auto;
   overflow-y: scroll;
-  height: 82%;
+  height: 99%;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -375,4 +375,22 @@ div.darkTheme div.darkWhiteTheme :hover{
   opacity: 1;
   overflow: hidden;
   gap: 4px;
+}
+
+.DivMediaCardBottom {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  padding: 12px 12px 8px;
+  max-height: 50%;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-pack: end;
+  justify-content: end;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  background: linear-gradient(rgba(18, 18, 18, 0) 0%, rgba(12, 12, 12, 0.5) 30%, rgba(12, 12, 12, 0.9) 100%);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
 }
