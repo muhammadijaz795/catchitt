@@ -77,7 +77,7 @@
             align-items: center;
             flex-shrink: 0;
             border-radius: 6px;
-            background: #5448b2;
+            background: rgb(255, 59, 92);
             gap: 10px;
             color: #fff;
             font-size: 14px;
@@ -142,7 +142,7 @@
                 align-items: center;
                 flex-shrink: 0;
                 border-radius: 6px;
-                background: #5448b2;
+                background: rgb(255, 59, 92);
                 gap: 10px;
                 color: #fff;
                 font-size: 14px;
@@ -161,8 +161,8 @@
                 border-radius: 6px;
                 background: white;
                 gap: 10px;
-                color: #5448b2;
-                border: 1.5px solid #5448b2;
+                color: rgb(255, 59, 92);
+                border: 1.5px solid rgb(255, 59, 92);
             }
         }
     }
@@ -175,7 +175,7 @@
         align-items: center;
         flex-shrink: 0;
         gap: 10px;
-        color: #5448b2;
+        color: rgb(255, 59, 92);
         border: 0;
         border-radius: 6px;
         background: var(--foundation-primary-primary-50, #eeedf7);
@@ -213,7 +213,7 @@
     }
 
     .link {
-        color: #5448b2;
+        color: rgb(255, 59, 92);
         font-family: Poppins;
         font-size: 14px;
         font-style: normal;

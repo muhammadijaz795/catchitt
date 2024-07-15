@@ -84,7 +84,7 @@
   .div-6 {
     align-self      : stretch;
     transition      : ease-in-out 0.2s;
-    background-color: var(--foundation-primary-primary-500, #5448b2);
+    background-color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
     display         : flex;
     margin-top      : 7px;
     height          : 2px;
@@ -92,7 +92,7 @@
   }
 
   .div-5 {
-    color      : var(--foundation-primary-primary-500, #5448b2);
+    color      : var(--foundation-primary-primary-500, rgb(255, 59, 92));
     transition : ease-in-out 0.2s;
     white-space: nowrap;
     font       : 500 16px/19px Poppins, -apple-system, Roboto, Helvetica, sans-serif;

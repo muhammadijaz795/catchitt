@@ -69,7 +69,7 @@
         justify-content: center;
         align-items: center;
         border-radius: 6px;
-        background: var(--foundation-primary-primary-500, #5448B2);
+        background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
         color: var(--default-white, #FFF);
     }
 
@@ -100,7 +100,7 @@
     width: 104px;
     height: 104px;
     border-radius: 50%;
-    background-color: #5448B2;
+    background-color: rgb(255, 59, 92);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -138,7 +138,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 6px;
-    background: var(--foundation-primary-primary-500, #5448B2);
+    background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
     color: var(--default-white, #FFF);
     font-family: 'Poppins';
     font-size: 16px;
@@ -156,9 +156,9 @@
     justify-content: center;
     align-items: center;
     border-radius: 6px;
-    border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+    border: 1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92));
     background: var(--default-white, #FFF);
-    color: var(--foundation-primary-primary-500, #5448B2);
+    color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
     font-family: Poppins;
     font-size: 16px;
     font-style: normal;

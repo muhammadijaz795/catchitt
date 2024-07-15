@@ -153,7 +153,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                     ) : (
                         <button
                             className={styles.button2}
-                            style={{ background: '#5448b2', color: '#FFF', width: 116 }}
+                            style={{ background: 'rgb(255, 59, 92)', color: '#FFF', width: 116 }}
                             onClick={manageFollowBtn}
                         >
                             {!followBtnLoading ? (
