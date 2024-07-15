@@ -88,7 +88,7 @@ const button:any = {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "6px",
-  border: "1px solid var(--foundation-primary-primary-500, #5448b2)",
+  border: "1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))",
   alignSelf: "center",
   flexGrow: 1,
   textAlign: "center",
@@ -97,7 +97,7 @@ const button:any = {
   font: "600 14px/17px Poppins, -apple-system, Roboto, Helvetica, sans-serif",
   maxWidth: "116px",
   cursor: "pointer",
-  backgroundColor:"#5448b2"
+  backgroundColor:"rgb(255, 59, 92)"
 };
 
 // Usage example:

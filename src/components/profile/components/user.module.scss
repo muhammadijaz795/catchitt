@@ -52,12 +52,12 @@
     }
 
     .div-21 {
-        color          : var(--foundation-primary-primary-500, #5448b2);
+        color          : var(--foundation-primary-primary-500, rgb(255, 59, 92));
         white-space    : nowrap;
         justify-content: center;
         align-items    : center;
         border-radius  : 6px;
-        border         : 1px solid var(--foundation-primary-primary-500, #5448b2);
+        border         : 1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92));
         align-self     : center;
         flex-grow      : 1;
         text-align     : center;

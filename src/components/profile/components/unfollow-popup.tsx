@@ -131,15 +131,15 @@ var filledButton = {
     justifyContent: 'center !important',
     alignItems: 'center !important',
     borderRadius: '6px !important',
-    background: 'var(--foundation-primary-primary-500, #5448B2) !important',
+    background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
     textTransform: 'none !important'
 };
 
 var secondaryBtn = {
     ...filledButton, 
-    color: 'var(--foundation-primary-primary-500, #5448B2) !important',
+    color: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
     background: 'white',
-    border: '1px solid var(--foundation-primary-primary-500, #5448B2)'
+    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))'
 
 }
 export default UnfollowPopup
