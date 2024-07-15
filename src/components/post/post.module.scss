@@ -328,14 +328,14 @@
 
 .followingBtn {
   border-radius: 6px;
-  background-color: #5448b2;
+  background-color: rgb(255, 59, 92);
   width: 108px;
   display: flex;
   height: 32px;
   padding: 0px 12px;
   justify-content: center;
   align-items: center;
-  border-color: #5448b2;
+  border-color: rgb(255, 59, 92);
   color: #ffffff;
   /* Small/Semibold */
   font-family: Poppins;
@@ -355,8 +355,8 @@
   padding: 0px 12px;
   justify-content: center;
   align-items: center;
-  border-color: #5448b2;
-  color: #5448b2;
+  border-color: rgb(255, 59, 92);
+  color: rgb(255, 59, 92);
   /* Small/Semibold */
   font-family: Poppins;
   font-size: 14px;
@@ -783,9 +783,9 @@
   justify-content: center;
   align-items: center;
   border-radius: 6px;
-  border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+  border: 1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92));
   background: var(--default-white, #FFF);
-  color: var(--foundation-primary-primary-500, #5448B2);
+  color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 
   /* Small/Semibold */
   font-family: Poppins;
@@ -807,8 +807,8 @@
   justify-content: center;
   align-items: center;
   border-radius: 6px;
-  background: var(--foundation-primary-primary-500, #5448B2);
-  border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+  background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
+  border: 1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92));
 
   color: var(--default-white, #FFF);
 
@@ -986,7 +986,7 @@
   // flex-shrink: 0;
   padding: 5px 10px;
   border-radius: 0px 0px 4px 4px;
-  background: var(--foundation-primary-primary-500, #5448B2);
+  background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 }
 
 .giftSendBtnHidden {
@@ -997,7 +997,7 @@
   padding: 5px 10px;
   padding-top: 10px;
   border-radius: 0px 0px 4px 4px;
-  background: var(--foundation-primary-primary-500, #5448B2);
+  background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 }
 
 .giftsBottomDiv {
@@ -1053,7 +1053,7 @@
 }
 
 .price:hover {
-  border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+  border: 1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92));
   background: var(--default-white, #FFF);
 }
 
@@ -1136,7 +1136,7 @@
 
 .warningMsg p {
   margin: 0;
-  color: var(--foundation-primary-primary-500, #5448B2);
+  color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 
   /* Extra Small/Medium */
   font-family: Poppins;
@@ -1183,7 +1183,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 6px;
-  background: var(--foundation-primary-primary-500, #5448B2);
+  background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 }
 
 .rechargeBtn p {
@@ -1298,7 +1298,7 @@ details[open] summary {
   margin-bottom: 0px;
   border-radius: 5px;
   color: #FFFFFF;
-  background: #5448B2;
+  background: rgb(255, 59, 92);
   /* Small/Medium */
   font-family: Poppins;
   font-size: 14px;
@@ -1379,7 +1379,7 @@ details>div {
   border-radius: 4px;
   background: var(--foundation-primary-primary-50, #EEEDF7);
 
-  color: var(--foundation-primary-primary-500, #5448B2);
+  color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 
   /* Small/Regular */
   font-family: Poppins;
@@ -1391,7 +1391,7 @@ details>div {
 }
 
 .selected {
-  border: 1px solid #5448B2;
+  border: 1px solid rgb(255, 59, 92);
 }
 
 .giftsBottomDivPaymentMethod {

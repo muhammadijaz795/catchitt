@@ -75,7 +75,7 @@ export default function RechargePopup({ faqs, onCustomPopup }: any) {
                 {
                     demiPlan.map((plan: any, index: number) => {
                         return (
-                            <div style={{ border: selectedIndex === index ? '2px solid #5448B2' : '1px solid #EAEAEA' }} onClick={() => {
+                            <div style={{ border: selectedIndex === index ? '2px solid rgb(255, 59, 92)' : '1px solid #EAEAEA' }} onClick={() => {
                                 setCoinsAmount(plan.coins)
                                 setSelectedIndex(index)
                             }} key={index} className={style.card}>

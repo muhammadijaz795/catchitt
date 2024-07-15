@@ -80,20 +80,20 @@ function ForMobile(props: any) {
         >
             <div className={style.sec1}>
                 <p
-                    style={{ color: activeTab === 1 ? '#5448b2' : '#FFF' }}
+                    style={{ color: activeTab === 1 ? 'rgb(255, 59, 92)' : '#FFF' }}
                     onClick={() => setActiveTab(1)}
                 >
                     Following
                 </p>
                 <p
-                    style={{ color: activeTab === 2 ? '#5448b2' : '#FFF' }}
+                    style={{ color: activeTab === 2 ? 'rgb(255, 59, 92)' : '#FFF' }}
                     onClick={() => setActiveTab(2)}
                 >
                     ForYou
                 </p>
                 <p
                     onClick={() => setActiveTab(3)}
-                    style={{ color: activeTab === 3 ? '#5448b2' : '#FFF' }}
+                    style={{ color: activeTab === 3 ? 'rgb(255, 59, 92)' : '#FFF' }}
                 >
                     Live
                 </p>

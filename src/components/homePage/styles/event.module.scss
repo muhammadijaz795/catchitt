@@ -133,11 +133,11 @@
 
     .giftBoxParent:hover > div:nth-child(2) {
       border-radius: 0rem 0rem 0.25rem 4px;
-      background: var(--foundation-primary-primary-500, #5448b2);
+      background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
     }
 
     .sendMsg {
-      background: #5448b2;
+      background: rgb(255, 59, 92);
       font-family: Poppins;
       font-size: 0.75rem;
       font-weight: 500;

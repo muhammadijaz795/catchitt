@@ -160,7 +160,7 @@
 // //             <div className="w-[71.25rem] h-[35.125rem] bg-white mt-40 rounded-lg text-left p-8">
 // //                 <div className="flex flex-row items-center justify-between">
 // //                     <p className="font-semibold text-xl text-[#222222]">Go LIVE</p>
-// //                     <div className="bg-[#5448B2] py-0 px-4 rounded-md w-[10.25rem] h-12 flex justify-center items-center cursor-pointer">
+// //                     <div className="bg-[rgb(255, 59, 92)] py-0 px-4 rounded-md w-[10.25rem] h-12 flex justify-center items-center cursor-pointer">
 // //                         <p className="font-semibold text-base text-white">Go LIVE</p>
 // //                     </div>
 // //                 </div>
