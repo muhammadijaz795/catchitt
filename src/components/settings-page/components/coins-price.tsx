@@ -6,7 +6,7 @@ const CoinsPrice = ({index, coinsAmount, coinsPrice, onAmountSelection, selected
   
   const textColor = selected ? 'white' : '';
   return (
-    <div className={styles.price} style={{ backgroundColor: selected ? "#5448B2" : ""}} onClick={() => onAmountSelection(index)}>
+    <div className={styles.price} style={{ backgroundColor: selected ? "rgb(255, 59, 92)" : ""}} onClick={() => onAmountSelection(index)}>
       <div className={styles.coinsAmount} style={{color: textColor}}>
         <img src={coin} alt='' style={{ width: '16px', height: '16px', marginRight: '5px',  }} />
         {coinsAmount}

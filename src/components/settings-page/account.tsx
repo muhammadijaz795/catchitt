@@ -996,7 +996,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     sx={mainModalBtnstyle}
                                     style={{
                                         minHeight: '48px !important',
-                                        background: '#5448B2',
+                                        background: 'rgb(255, 59, 92)',
                                     }}
                                 >
                                     Done
@@ -1187,7 +1187,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             component="h2"
                                             sx={{
                                                 // Create new password
-                                                color: '#5448B2',
+                                                color: 'rgb(255, 59, 92)',
                                                 fontSize: '18px',
                                                 fontFamily: 'Poppins',
                                                 fontWeight: '500',
@@ -1330,7 +1330,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={isChecked(category)}
                                                             sx={{
                                                                 '&.Mui-checked': {
-                                                                    color: '#5448B2',
+                                                                    color: 'rgb(255, 59, 92)',
                                                                 },
                                                             }}
                                                         />
@@ -1452,7 +1452,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             <h2 className="font-medium text-xl text-[#222222] mb-2 text-center">
                                 Report a problem
                             </h2>
-                            <h3 className="font-normal text-base text-[#5448B2] mb-4 text-center">
+                            <h3 className="font-normal text-base text-[rgb(255, 59, 92)] mb-4 text-center">
                                 Tell us your problem
                             </h3>
                             <textarea
@@ -1531,7 +1531,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                 onClick={submitReportHandler}
                                 className="bg-[#EEEDF7] text-white font-semibold px-4 rounded-md w-full"
                             >
-                                <p className="text-[#5448B2]">Submit</p>
+                                <p className="text-[rgb(255, 59, 92)]">Submit</p>
                             </button>
                         </div>
                     </div>
@@ -1570,7 +1570,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             </p>
                             <button
                                 onClick={() => setOpenReportSubmittedModal(false)}
-                                className="bg-[#5448B2] text-white font-semibold px-4 rounded-md w-full mt-3.5 py-3"
+                                className="bg-[rgb(255, 59, 92)] text-white font-semibold px-4 rounded-md w-full mt-3.5 py-3"
                             >
                                 <p className="text-[##FFFFFF] font-semibold text-base">Done</p>
                             </button>
@@ -1630,7 +1630,7 @@ var mainModalBtnstyle = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '6px',
-    background: 'var(--foundation-primary-primary-500, #5448B2) !important',
+    background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
     textTransform: 'none',
 };
 
@@ -1659,7 +1659,7 @@ var instructionsModalBtnstyle = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '6px',
-    background: 'var(--foundation-primary-primary-500, #5448B2)',
+    background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
     textTransform: 'none',
     marginBottom: '16px',
 
@@ -1682,10 +1682,10 @@ var instructionsModalOutlinedBtnstyle = {
     flexShrink: 0,
 
     borderRadius: '6px',
-    border: '1px solid var(--foundation-primary-primary-500, #5448B2)',
+    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))',
     background: 'var(--default-white, #FFF)',
 
-    color: 'var(--foundation-primary-primary-500, #5448B2)',
+    color: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
     fontFamily: 'Poppins',
     fontSize: '16px',
     fontStyle: 'normal',
