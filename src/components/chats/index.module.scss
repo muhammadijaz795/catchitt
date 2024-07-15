@@ -64,7 +64,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #5448b2;
+      background: rgb(255, 59, 92);
       border-radius: 50%;
       cursor: pointer;
     }
@@ -77,7 +77,7 @@
     }
     .replyC {
       // border-radius: 16px 0px 0px 16px;
-      border-left: 6px solid #5448b2 !important;
+      border-left: 6px solid rgb(255, 59, 92) !important;
       background: var(--Default-white, #fff);
       width: 100%;
       position: relative;
@@ -99,7 +99,7 @@
         word-break: break-all;
       }
       .name {
-        color: var(--Foundation-Primary-primary-500, #5448b2);
+        color: var(--Foundation-Primary-primary-500, rgb(255, 59, 92));
         font-family: Poppins;
         font-size: 14px;
         font-style: normal;

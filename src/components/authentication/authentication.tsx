@@ -103,7 +103,7 @@ export const Authentication = (props: any) => {
 
     const VerificationLinkClick = () => {
         const linkStyle = {
-            color: '#5448b2',
+            color: 'rgb(255, 59, 92)',
             cursor: 'pointer', // Add pointer cursor on hover
         };
 
