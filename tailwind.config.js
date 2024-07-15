@@ -11,7 +11,7 @@ export default {
                 'custom-gray-300': '#f2f1fa',
                 'custom-gray-400': '#EAEAEA',
                 'custom-color-999': '#999999',
-                'custom-primary': '#5448B2',
+                'custom-primary': 'rgb(255, 59, 92)',
                 'custom-dark-222': '#222222',
                 'custom-color-000': '#000000',
                 'custom-light': '#fff',
@@ -21,7 +21,7 @@ export default {
                 'login-btn': '#f1f1f2',
             },
             borderColor: {
-                liveSelected: '#5448B2',
+                liveSelected: 'rgb(255, 59, 92)',
                 loginItem: '#BABABA',
                 'custom-1': '#a7a9acfe',
                 'custom-2': '#a2a3a5df',

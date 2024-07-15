@@ -1,7 +1,7 @@
 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Danger Circle">
-<path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M8 15.4375C4.169 15.4375 1.0625 12.3317 1.0625 8.5C1.0625 4.669 4.169 1.5625 8 1.5625C11.8318 1.5625 14.9375 4.669 14.9375 8.5C14.9375 12.3318 11.8318 15.4375 8 15.4375Z" stroke="#5448B2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Stroke 3" d="M8 11.3467L8 8.03243" stroke="#5448B2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Stroke 5" d="M8.00375 5.65332L7.99625 5.65332" stroke="#5448B2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M8 15.4375C4.169 15.4375 1.0625 12.3317 1.0625 8.5C1.0625 4.669 4.169 1.5625 8 1.5625C11.8318 1.5625 14.9375 4.669 14.9375 8.5C14.9375 12.3318 11.8318 15.4375 8 15.4375Z" stroke="rgb(255, 59, 92)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Stroke 3" d="M8 11.3467L8 8.03243" stroke="rgb(255, 59, 92)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Stroke 5" d="M8.00375 5.65332L7.99625 5.65332" stroke="rgb(255, 59, 92)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 </svg>
