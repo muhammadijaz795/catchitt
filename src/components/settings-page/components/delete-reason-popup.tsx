@@ -254,7 +254,7 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                                 control={<Radio
                                                     sx={{
                                                         '&.Mui-checked': {
-                                                            color: '#5448B2'
+                                                            color: 'rgb(255, 59, 92)'
                                                         }
                                                     }}
                                                 />}
@@ -270,7 +270,7 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                             control={<Radio
                                                 sx={{
                                                     '&.Mui-checked': {
-                                                        color: '#5448B2'
+                                                        color: 'rgb(255, 59, 92)'
                                                     }
                                                 }}
                                             />} label="Another reason" />
@@ -470,9 +470,9 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                         </button>
                                         <button onClick={handleCloseConfirmationLastModal}
                                             style={{
-                                                border: '1px solid #5448B2',
+                                                border: '1px solid rgb(255, 59, 92)',
                                                 background: '#FFF',
-                                                color: '#5448B2'
+                                                color: 'rgb(255, 59, 92)'
                                             }}
                                         >
                                             Cancel
@@ -516,7 +516,7 @@ var mainModalBtnstyle = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '6px',
-    background: 'var(--foundation-primary-primary-500, #5448B2)',
+    background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
     textTransform: 'none'
 };
 

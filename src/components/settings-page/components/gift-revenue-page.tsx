@@ -141,7 +141,7 @@ const GiftRevenuePage = ({ className }: GiftRevenuePageProps) => {
                                 display: 'flex', marginBottom: '0px', justifyContent: 'space-between'
                             }}>
                                 <p>
-                                    Go to LIVE now to earn <span style={{ color: '#5448B2' }}>Cesium</span>
+                                    Go to LIVE now to earn <span style={{ color: 'rgb(255, 59, 92)' }}>Cesium</span>
                                 </p>
                                 <Button variant="contained" disableElevation={true} sx={smallColoredBtn} >
                                     Go LIVE
@@ -191,10 +191,10 @@ const withdrawBtn = {
     alignItems: 'center',
 
     borderRadius: '6px',
-    border: '1px solid #5448B2',
+    border: '1px solid rgb(255, 59, 92)',
     background: '#FFF',
 
-    color: 'var(--foundation-primary-primary-500, #5448B2)',
+    color: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
     fontFamily: 'Poppins',
     fontSize: '16px',
     fontStyle: 'normal',
@@ -214,10 +214,10 @@ const smallBtn = {
     alignItems: 'center',
 
     borderRadius: '6px',
-    border: '1px solid #5448B2',
+    border: '1px solid rgb(255, 59, 92)',
     background: '#FFF',
 
-    color: 'var(--foundation-primary-primary-500, #5448B2)',
+    color: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
     fontFamily: 'Poppins',
     fontSize: '16px',
     fontStyle: 'normal',
@@ -237,8 +237,8 @@ const smallColoredBtn = {
     alignItems: 'center',
 
     borderRadius: '6px',
-    border: '1px solid #5448B2',
-    background: '#5448B2',
+    border: '1px solid rgb(255, 59, 92)',
+    background: 'rgb(255, 59, 92)',
 
     color: 'var(--foundation-primary-primary-500, #fff)',
     fontFamily: 'Poppins',
