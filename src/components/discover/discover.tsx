@@ -1,83 +1,33 @@
+import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import Layout from '../../shared/layout';
-import { useAuthStore } from '../../store/authStore';
 import PopupForReport from '../profile/popups/PopupForReport';
 import PopupForBlock from '../profile/popups/popupForBlock';
 import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import StoriesOnPublicProfile from '../profile/popups/storiesOnPublicProfile';
-
-import SuggestedFollower from './components/suggestedFollower';
 import VideoPanel from './components/videoPanel';
 import styles from './discover.module.scss';
 import Gifts from './popups/gifts';
-import { CircularProgress } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import DiscoverStories from './components/discoverStories';
-import { openLoginPopup } from '../../redux/reducers';
+import { DISCOVER_CATEGORIES } from '../../utils/constants';
 
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
-    const [trendingvideos, setTrendingvideos] = useState([]);
     const [hashtagVideos, setHashtagVideos] = useState([]);
+    const [hashtagVideosToShow, setHashtagVideosToShow] = useState([]);
     const [videoModal, setVideoModal] = useState(false);
-    // @ts-ignore
     const [videoModalInfo, setVideoModalInfo] = useState({});
     const token = localStorage.getItem('token');
     const [reportPopup, setReportPopup] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const dispatch = useDispatch();
     const [giftPopup, setGiftPopup] = useState(false);
-    // const token = useSelector((store: any) => store?.reducers?.profile?.token);
     const [storyPopup, setStoryPopup] = useState(false);
-
-    const [randomAccs, setRandomAccs] = useState([]);
-    const Navigate = useNavigate();
-    useEffect(() => {
-        if (!token) {
-            // dispatch(openLoginPopup());
-        }
-    }, [token]);
-
-    const getRandomAccounts = (arr: any, count: number) => {
-        const shuffled = arr.slice(); // Create a copy of the array to avoid modifying the original one
-        let i = arr.length;
-        let temp;
-        let index;
-
-        while (i > 0) {
-            index = Math.floor(Math.random() * i);
-            i--;
-
-            // Swap elements between the current index and the randomly selected index
-            temp = shuffled[i];
-            shuffled[i] = shuffled[index];
-            shuffled[index] = temp;
-        }
-
-        return shuffled.slice(0, count); // Return the first 'count' elements
-    };
 
     useEffect(() => {
         const apisIntegration = async () => {
             setIsLoading(true);
-            try {
-                const response = await fetch(`${API_KEY}/discover/trending/videos`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const res = await response.json();
-                setTrendingvideos(res.data.data);
-            } catch (error) {
-                console.log('error trendingvideos', error);
-            }
-
             try {
                 const response = await fetch(`${API_KEY}/discover/trending/hashtags`, {
                     method: 'GET',
@@ -86,29 +36,15 @@ export default function Discover() {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                const res = await response.json();
-                setHashtagVideos(res.data.data);
-            } catch (error) {
-                console.log('error trendinghashtags', error);
-            }
-
-            try {
-                const response = await fetch(`${API_KEY}/profile/public/suggested-users?page=1`, {
-                    method: 'GET',
-                    headers: { 'Content-type': 'application/json' },
-                });
-
-                if (response.ok) {
-                    const responseData = await response.json();
-                    setRandomAccs(getRandomAccounts(responseData.data.data, 10));
-                } else {
-                    console.log(response);
-                }
-            } catch (error) {
-                // console.error(error);
-                console.error();
-            } finally {
+                const { data } = await response.json();
+                const allVideos = data?.data[4]?.relatedVideos;
                 setIsLoading(false);
+                setHashtagVideos(allVideos?.slice(10));
+                setHashtagVideosToShow(allVideos?.slice(0, 10));
+                console.log('🚀 ~ apisIntegration ~ res:', data?.data);
+            } catch (error) {
+                setIsLoading(false);
+                console.log('Error fetching trending videos : ', error);
             }
         };
         apisIntegration();
@@ -121,8 +57,12 @@ export default function Discover() {
         const totalHeight = document.documentElement.offsetHeight;
 
         // Adjust the threshold as needed
-        if (scrollPosition === totalHeight) {
+        if (scrollPosition >= totalHeight) {
             // When the user reaches the bottom, load more videos
+            setHashtagVideosToShow((prev) => [
+                ...prev,
+                ...hashtagVideos.slice(videosToShow, videosToShow + 10),
+            ]);
             setVideosToShow((prev) => prev + 10);
         }
     };
@@ -132,26 +72,18 @@ export default function Discover() {
         window.addEventListener('scroll', handleScroll);
 
         // Remove the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [handleScroll, hashtagVideos, videosToShow]);
 
     const openvideomodal = (video: any) => {
         setVideoModalInfo(video);
         setVideoModal(true);
-        console.log(video);
-    };
-
-    const sendDataByQ = (argument: any) => {
-        const url = `/videos/data?hashtag=${encodeURIComponent(argument)}`;
-        window.location.href = url;
     };
 
     return (
         <Layout>
             <div className={styles.root}>
-                {isLoading && (
+                {isLoading ? (
                     <div
                         style={{
                             display: 'flex',
@@ -164,115 +96,37 @@ export default function Discover() {
                     >
                         <CircularProgress />
                     </div>
-                )}
-                {/* <div className={styles.container}> */}
-                {!isLoading && (
-                    <div className={styles.rightSide}>
-                        {/* Slider Configration for Stories */}
-                        <div className={styles.sliderp}>
-                            <div className={styles.slider}>
-                                <DiscoverStories showStories={() => setStoryPopup(true)} />
-                            </div>
-                        </div>
-                        <div style={{ marginTop: 48 }} className={styles.postsp}>
-                            <div className="d-flex justify-content-between">
-                                <p className={styles.trendingText}>Trending</p>
-                                <p
-                                    className={styles.seeAll}
-                                    onClick={() => {
-                                        Navigate('/videos/trending-videos');
-                                    }}
+                ) : (
+                    <>
+                        <div className="flex flex-row mt-8 gap-4 overflow-auto">
+                            {DISCOVER_CATEGORIES?.map((category, index) => (
+                                <button
+                                    className={`flex items-center px-3 h-[2.625rem] ${
+                                        index === 1
+                                            ? 'text-white bg-black'
+                                            : 'text-[#222] bg-unselected-category'
+                                    }  rounded-lg cursor-pointer text-base border-none whitespace-nowrap w-auto`}
+                                    key={index}
                                 >
-                                    See All
-                                </p>
-                            </div>
-                            <div className={styles.posts}>
-                                {trendingvideos.length >= 0
-                                    ? trendingvideos.map((video: any, i) => {
-                                          return (
-                                              <VideoPanel
-                                                  index={i}
-                                                  video={video}
-                                                  videomodal={() => openvideomodal(video)}
-                                              />
-                                          );
-                                      })
-                                    : null}
-                            </div>
-                        </div>
-                        <div className={styles.suggestedHashTag}>
-                            <img src="../../../public/images/motherDay.svg" alt="" />
-                            <p className={styles.joinH}>Join hashtag</p>
-                            <p className={styles.motherday}>#MothersDay</p>
-                        </div>
-                        <div className={styles.suggestedUsers}>
-                            <div className="d-flex justify-content-between">
-                                <p className={styles.trendingText}>Suggested people to follow</p>
-                                <p
-                                    className={styles.seeAll}
-                                    onClick={() => Navigate('/suggested-accounts')}
-                                >
-                                    See All
-                                </p>
-                            </div>
-                            <div className={styles.followers}>
-                                {randomAccs.slice(0, videosToShow).map((randonUser: any) => {
-                                    return <SuggestedFollower randonUser={randonUser} />;
-                                })}
-                            </div>
-                        </div>
-                        <div className={styles.invite}>
-                            <img src="../../../public/images/invite.svg" alt="" />
-                            <div>
-                                <p>
-                                    Invite a friend and get
-                                    <span>FREE coins!</span>
-                                </p>
-                                <button>
-                                    <img src="../../../public/images/icons/copy.svg" alt="" />
-                                    Copy link
+                                    {category?.category}
                                 </button>
-                            </div>
+                            ))}
                         </div>
-
-                        {!hashtagVideos
-                            ? ''
-                            : hashtagVideos.map((obj: any, i) => {
-                                  return (
-                                      <div
-                                          style={{ marginTop: 41 }}
-                                          key={i}
-                                          className={styles.postsp}
-                                      >
-                                          <div className="d-flex justify-content-between">
-                                              <p className={styles.trendingText}>{obj?.name}</p>
-                                              <p
-                                                  className={styles.seeAll}
-                                                  onClick={() => sendDataByQ(obj.name)}
-                                              >
-                                                  See All
-                                              </p>
-                                          </div>
-                                          <div className={styles.posts}>
-                                              {obj?.relatedVideos
-                                                  .slice(0, videosToShow)
-                                                  .map((video: any, i: any) => {
-                                                      return (
-                                                          <VideoPanel
-                                                              videomodal={() =>
-                                                                  openvideomodal(video)
-                                                              }
-                                                              video={video}
-                                                          />
-                                                      );
-                                                  })}
-                                          </div>
-                                      </div>
-                                  );
-                              })}
-                    </div>
+                        <div className="grid grid-flow-row grid-cols-4 gap-2.5 mr-4">
+                            {hashtagVideosToShow &&
+                                hashtagVideosToShow.map((video: any, i) => {
+                                    return (
+                                        <div key={i}>
+                                            <VideoPanel
+                                                videomodal={() => openvideomodal(video)}
+                                                video={video}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                        </div>
+                    </>
                 )}
-                {/* </div> */}
 
                 <PopupForVideoPlayer
                     onBlockPopup={() => setBlockPopup(true)}

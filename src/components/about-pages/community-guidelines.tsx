@@ -14,7 +14,7 @@ export interface CommunityPageProps {
 
 export const CommunityPage = ({ className }: CommunityPageProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
     const handleGoBack = () => {

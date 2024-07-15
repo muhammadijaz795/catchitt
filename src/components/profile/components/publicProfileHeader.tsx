@@ -37,7 +37,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
     const [stories, setStories] = useState([1,2,3]);
     const API_KEY = process.env.VITE_API_URL;
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
 
     const userId = profileData?._id;
     //@ts-ignore

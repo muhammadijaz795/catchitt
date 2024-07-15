@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import whiteRightArrow from './svg-components/whiteRightArrow.svg';
-import { useAuthStore } from '../../store/authStore';
+import { useEffect, useState } from 'react';
 import Layout from '../../shared/layout';
+import whiteRightArrow from './svg-components/whiteRightArrow.svg';
 
 const Analytics = () => {
     const [currentTab, setCurrentTab] = useState(0);

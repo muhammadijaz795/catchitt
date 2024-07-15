@@ -9,7 +9,7 @@ const API_KEY = process.env.VITE_API_URL;
 
 function publicProfileStories({ story, onclose, openReport }: any) {
     const params: any = useParams();
-    // const token = useAuthStore((state) => state.token);
+    // const token = localStorage.getItem('token');
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     

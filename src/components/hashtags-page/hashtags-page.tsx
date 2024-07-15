@@ -67,7 +67,7 @@ interface MediaData {
 
 export const HashtagsPage = ({ hashtagName, hashtagViews, className }: HashtagPageProps) => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const [mediaData, setMediaData] = useState<MediaData[]>([]);
     const API_KEY = process.env.VITE_API_URL;
     const mediaDataEndPoint = '/discover/videos-by-hashtag';

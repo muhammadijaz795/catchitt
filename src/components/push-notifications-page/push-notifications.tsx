@@ -29,7 +29,7 @@ interface NotificationsSettings {
 
 export const PushNotificationsPage = ({ className }: PushNotificationsPageProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const [notificationsSettingsData, setNotificationsSettingsData] =
         useState<NotificationsSettings>();
     const [settings, setSettings] = useState({

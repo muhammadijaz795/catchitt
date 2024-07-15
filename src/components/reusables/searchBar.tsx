@@ -63,7 +63,7 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
     const { onClose, selectedValue, open } = props;
     const [openDialog, setOpenDialog] = useState(false);
     const API_KEY = process.env.VITE_API_URL;
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
     const [searchQuery, setSearchQuery] = useState('')

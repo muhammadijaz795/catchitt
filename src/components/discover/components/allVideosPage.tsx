@@ -23,7 +23,7 @@ interface Account {
 export const AllVideos = ({ className }: SuggestedAccountsPageProps) => {
     const [videoModal, setVideoModal] = useState(false);
     const [videoModalInfo, setVideoModalInfo] = useState({});
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const params = useParams();
     const [trendingvideos, setTrendingvideos] = useState([]);
     const [hashtagVideos, setHashtagVideos] = useState([]);

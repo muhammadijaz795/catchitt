@@ -14,7 +14,7 @@ function ReasonOfReport({ onclose, video, popupHandler }: Types) {
     const [selectedReason, setselectedReason] = useState('');
     const [reasons, setReasons] = useState<any>([]);
     const API_KEY = process.env.VITE_API_URL;
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
 
     const valuesManager = (e: any) => {
         if (e.target.checked) {

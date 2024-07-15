@@ -14,7 +14,7 @@ export interface PrivacyPolicyPageProps {
 
 export const PrivacyPolicyPage = ({ className }: PrivacyPolicyPageProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
     const handleGoBack = () => {

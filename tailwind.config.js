@@ -19,6 +19,7 @@ export default {
                 'danger-1': '#f75c59',
                 policy: '#7b7d82fe',
                 'login-btn': '#f1f1f2',
+                'unselected-category': '#d47cff0f',
             },
             borderColor: {
                 liveSelected: '#5448B2',

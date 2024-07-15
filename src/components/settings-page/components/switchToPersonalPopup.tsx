@@ -27,7 +27,7 @@ const defaultUser: User = {
 };
 
 export const SwitchToPersonalPopup = ({ className, onSubmit, handleOpen, handleClose }: SwitchToPersonalPopupProps) => {
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const email = useAuthStore((state) => state.email)
     const accountType = useAuthStore((state) => state.accountType)
 const dispatch = useDispatch();

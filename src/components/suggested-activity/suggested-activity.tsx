@@ -69,7 +69,7 @@ export const SuggestedActivity = memo(
         const API_KEY = process.env.VITE_API_URL;
         const suggestedEndPoint = '/profile/suggested-users';
         const activityEndPoint = '/notification';
-        // const token = useAuthStore((state) => state.token);
+        // const token = localStorage.getItem('token');
         const token = localStorage.getItem('token');
         // const [activityUserFollowed, setActivityUserFollowed] = useState(false);
         const [followedAccounts, setFollowedAccounts] = useState<any>({}); // Initialize as an empty object

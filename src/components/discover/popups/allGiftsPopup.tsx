@@ -44,7 +44,7 @@ const arr = [
 export default function AllGiftsPopup({ sendImg, openRechargePopup, allGifts, mediaId }: any) {
     const balance: number = useAuthStore((state: any) => state?.balance)
     const API_KEY = process.env.VITE_API_URL;
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
 
     const sendAGift = async (giftData: any) => {
         try {

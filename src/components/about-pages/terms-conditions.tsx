@@ -17,7 +17,7 @@ export interface TermsPageProps {
 
 export const TermsPage = ({ className }: TermsPageProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
     const handleGoBack = () => {

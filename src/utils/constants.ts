@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import {
-    fb, 
-    googleIcon, 
+    fb,
+    googleIcon,
     defaultAvatar,
     qrCodeAuth,
     emailOrPhone,
@@ -49,8 +49,6 @@ export const showToastError = (toastMessage: string) => {
     });
 };
 
-
-
 export const SIGNUP_OPTIONS = [
     {
         styles: '',
@@ -66,14 +64,14 @@ export const SIGNUP_OPTIONS = [
         styles: 'mt-3',
         name: 'Continue with Google',
         image: googleIcon,
-    }
+    },
 ];
 
 export const SIGNUP_APP_TEXTS = {
     FEEDBACK: 'Feedback and help',
     SINGUP_SUBTEXT: 'Create a profile, follow other accounts, make your own videos, and more.',
-    ALREADY_ACCOUNT: "Already have an account?",
-    LOGIN: "Log in",
+    ALREADY_ACCOUNT: 'Already have an account?',
+    LOGIN: 'Log in',
 };
 export const APP_TEXTS = {
     FEEDBACK: 'Feedback and help',
@@ -149,4 +147,87 @@ export const MENU_POPUP_OPTIONS = [
     { menuOption: 'Feedback and help', imageUrl: '' },
     // { menuOption: 'Keyboard shortcuts', imageUrl: '' },
     { menuOption: 'Dark mode', imageUrl: '' },
+];
+
+export const DISCOVER_CATEGORIES = [
+    {
+        id: 1,
+        category: 'Singing & Dancing',
+    },
+    {
+        id: 2,
+        category: 'Comedy',
+    },
+    {
+        id: 3,
+        category: 'Sports',
+    },
+    {
+        id: 4,
+        category: 'Anime & Comics',
+    },
+    {
+        id: 5,
+        category: 'Relationship',
+    },
+    {
+        id: 6,
+        category: 'Shows',
+    },
+    {
+        id: 7,
+        category: 'Lipsync',
+    },
+    {
+        id: 8,
+        category: 'Daily Life',
+    },
+    {
+        id: 9,
+        category: 'Beauty Care',
+    },
+    {
+        id: 10,
+        category: 'Games',
+    },
+    {
+        id: 11,
+        category: 'Society',
+    },
+    {
+        id: 12,
+        category: 'Outfit',
+    },
+    {
+        id: 13,
+        category: 'Cars',
+    },
+    {
+        id: 14,
+        category: 'Food',
+    },
+    {
+        id: 15,
+        category: 'Animals',
+    },
+    {
+        id: 16,
+        category: 'Family',
+    },
+    {
+        id: 17,
+        category: 'Drama',
+    },
+    {
+        id: 18,
+        category: 'Fitness & Health',
+    },
+    {
+        id: 19,
+        category: 'Education',
+    },
+    {
+        id: 20,
+        category: 'Technology',
+    },
 ];

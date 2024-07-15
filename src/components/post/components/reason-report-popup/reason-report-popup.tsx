@@ -32,7 +32,7 @@ export const ReasonReportPopup = ({
     handleOpen,
     mediaId,
 }: ReasonReportPopupProps) => {
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
 
     const [formData, setFormData] = useState<FormData>({
         MISLEADING_INFO: false,

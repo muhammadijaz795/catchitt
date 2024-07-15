@@ -31,7 +31,7 @@ const defaultUser: User = {
 };
 
 export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose }: DeleteReasonPopupProps) => {
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const username = useAuthStore((state) => state.username)
     const email = useAuthStore((state) => state.email)
     const logout = useAuthStore(state => state.logout);

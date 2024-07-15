@@ -4,7 +4,7 @@ import { useAuthStore } from '../../../store/authStore';
 
 function BlockUser({ onclose, popupH, userId }: any) {
     const API_KEY = process.env.VITE_API_URL;
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const blockUser = async () => {
         const res: any = await fetch(`${API_KEY}/profile/${userId?.id}/block`, {
             method: 'POST',

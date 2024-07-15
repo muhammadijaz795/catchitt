@@ -29,7 +29,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
     const [fvrt, setFvrt] = useState(info?.isSaved);
     const [nofvrt, setnoFvrt] = useState<number>(256);
     const [share, setShare] = useState(false);
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const [more, setMore] = useState(false);
     const [userComments, setUserComments] = useState<any[]>([]);
     // @ts-ignore

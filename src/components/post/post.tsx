@@ -87,7 +87,7 @@ export const Post: React.FC<PostProps> = memo(
             threshold: 0.1, // Adjust the threshold as needed
         });
 
-        const token = useAuthStore((state) => state.token);
+        const token = localStorage.getItem('token');
 
         const [openRechargeBalanceModal, setOpenRechargeBalanceModal] = useState(false);
         const handleCloseRechargeBalanceModal = () => {

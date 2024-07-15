@@ -14,7 +14,7 @@ export interface TermsAndConditionsPageProps {
 
 export const TermsAndConditionsPage = ({ className }: TermsAndConditionsPageProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
     const handleGoBack = () => {

@@ -24,7 +24,7 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
     const [revenueData, setRevenueData] = useState<any>([])
 
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const email = useAuthStore((state) => state.email);
     const navigate = useNavigate();
 

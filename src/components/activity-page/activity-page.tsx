@@ -48,7 +48,7 @@ interface FollowedUser {
 
 export const ActivityPage = ({ className }: ActivityPageProps) => {
     let globalUserId: string = '';
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const [currentPage] = useState(1);
     const itemsPerPage = 9;
     const [errorMessage, setErrorMessage] = useState('');

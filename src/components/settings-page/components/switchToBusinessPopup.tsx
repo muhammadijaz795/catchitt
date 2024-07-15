@@ -51,7 +51,7 @@ export const SwitchToBusinessPopup = ({ className, onSubmit, handleOpen, handleC
     const dispatch = useDispatch();
 
 
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const email = useAuthStore((state) => state.email)
     const accountType = useAuthStore((state) => state.accountType)
     

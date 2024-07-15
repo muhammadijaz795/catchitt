@@ -45,7 +45,7 @@ export default function StoriesOnDiscover({ story, onclose, openReport }: any) {
     ];
 
     
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const [sliderIndex, setSliderIndex] = useState<any>(0)
     const sliderRef = useRef<any>(null);
     const [storiesIndex, setStoriesIndex] = useState(0);

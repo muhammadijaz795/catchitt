@@ -162,7 +162,7 @@ export const SearchPage = () => {
     const mySearch = useRef('');
     const [pageSize, setPageSize] = useState(10);
     const API_KEY = process.env.VITE_API_URL;
-    // const token = useAuthStore((state) => state.token);
+    // const token = localStorage.getItem('token');
     const {token,email} = useSelector((store: any) => store?.reducers?.profile);
     const selectedIndex = useAuthStore((state) => state.selectedIndex);
     const loggedUserId = useAuthStore((state) => state._id);

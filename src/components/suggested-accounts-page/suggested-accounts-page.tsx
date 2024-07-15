@@ -21,7 +21,7 @@ interface Account {
 
 export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps) => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const navigator = useNavigate();
     const { selectedTab, setTab } = useAuthStore();
 

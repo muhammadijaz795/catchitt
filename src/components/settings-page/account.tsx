@@ -117,7 +117,7 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [user, setUser] = useState(defaultUser);
 
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    // const token = useAuthStore((state) => state.token);
+    // const token = localStorage.getItem('token');
     // lconst email = useAuthStore((state) => state.email);
 
     const accountType = useAuthStore((state) => state.accountType);

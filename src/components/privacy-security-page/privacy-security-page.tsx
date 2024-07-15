@@ -42,7 +42,7 @@ interface BlockedUser {
 
 export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => {
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = localStorage.getItem('token');
     const [privacySettingsData, setPrivacySettingsData] = useState<PrivacySettings>();
     const [blockedAccountsData, setBlockedAccountsData] = useState<any>([]);
     const [openBlockedListModal, setOpenBlockedListModal] = useState(false);
