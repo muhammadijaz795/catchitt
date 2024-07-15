@@ -115,7 +115,7 @@
 .frdsBtn>button {
   font-size: 14px;
   font-weight: 600;
-  color: var(--foundation-primary-primary-500, #5448b2);
+  color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
   background: var(--foundation-primary-primary-50, #eeedf7);
   border-radius: 6px;
   width: 116px;
@@ -444,7 +444,7 @@
 }
 
 .replySomeoOne>div:nth-child(2)>p {
-  color: var(--foundation-primary-primary-500, #5448b2);
+  color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
   font-family: 'Poppins';
   font-size: 14px;
   font-style: normal;
@@ -456,8 +456,8 @@
   width: 85px;
   height: 32px;
   border-radius: 6px;
-  border: 1px solid #5448b2;
-  color: #5448b2;
+  border: 1px solid rgb(255, 59, 92);
+  color: rgb(255, 59, 92);
   background: transparent;
   display: flex;
   justify-content: center;
