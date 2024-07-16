@@ -11,7 +11,7 @@ function BasicCheckBox({ ...restProps }) {
             borderRadius: '4px !important',
         },
         '& svg': {
-            color: '#5448B2',
+            color: 'rgb(255, 59, 92)',
         },
     }));
     return <StyledCheckBox {...restProps} />;
