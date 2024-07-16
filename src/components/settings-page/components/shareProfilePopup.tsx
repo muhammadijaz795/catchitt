@@ -79,7 +79,7 @@ export const ShareProfilePopup = ({ className, onSubmit, handleOpen, handleClose
                                         qrStyle='dots'
                                         value={`https://app.seezitt.com/profile/${userId}`}
                                         bgColor='white'
-                                        fgColor='#5448B2'
+                                        fgColor='rgb(255, 59, 92)'
                                         logoImage={qrCodeLogo}
                                         removeQrCodeBehindLogo={true}
                                     />
@@ -136,7 +136,7 @@ var mainModalBtnstyle = {
     justifyContent: 'center !important',
     alignItems: 'center !important',
     borderRadius: '6px !important',
-    background: 'var(--foundation-primary-primary-500, #5448B2)  !important',
+    background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))  !important',
     textTransform: 'none !important'
 };
 
