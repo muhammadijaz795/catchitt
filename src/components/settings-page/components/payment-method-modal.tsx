@@ -61,7 +61,7 @@ const PaymentMethodModal = ({ openPaymentModal, onClosePaymentModal, next }: any
 
                         <div className={styles.paymentInstructions}>
                             <p className={styles.title}>Payment Method</p>
-                            <p style={{color:'#5448B2'}}>Choose your payment method</p>
+                            <p style={{color:'rgb(255, 59, 92)'}}>Choose your payment method</p>
                             <p style={{width:'70%', textAlign:'center'}}>You will not be charged until you confirm this order
                                 on the next page.</p>
                         </div>

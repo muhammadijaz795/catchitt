@@ -71,7 +71,7 @@ function Layout(props: any) {
                             // flexDirection: 'column',
                             gap: 32,
                             overflow: 'scroll',
-                            height: '100%',
+                            height: '102%',
                             width: "244px", //new theme  
                             // padding: '40px 40px 0px 40px', //new theme 
                         }}

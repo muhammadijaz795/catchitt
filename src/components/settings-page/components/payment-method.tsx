@@ -5,7 +5,7 @@ const PaymentMethod = ({ method, isSelected, onSelect }:any) => {
   return (
     <div
       className={styles.paymentMethod}
-      style={{ border: isSelected ? '1px solid #5448B2' : '' }}
+      style={{ border: isSelected ? '1px solid rgb(255, 59, 92)' : '' }}
       onClick={() => onSelect(method.name)}
     >
       <span className={styles.radio}>{isSelected && <span></span>}</span>

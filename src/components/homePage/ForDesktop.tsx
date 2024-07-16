@@ -24,7 +24,14 @@ import { ToastContainer } from 'react-toastify';
 // import { Toast } from 'react-toastify/dist/components';
 
 function ForDesktop(props: any) {
-    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal, setSendPopup, loading } =
+
+    interface Video {
+        id: number;
+        title: string;
+        // Add more fields as per your API response
+      }
+
+    const { activeTab, setActiveTab, showVideoModal, videoModal, setSendPopup } =
         props || {};
     const [reportPopup, setreportPopup] = useState(false);
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
@@ -46,6 +53,12 @@ function ForDesktop(props: any) {
         { img: commentInHome, actionType: 'comment' },
         { img: like, actionType: 'like', activeImage: activeLike },
     ];
+
+    const [videos, setVideos] = useState<Video[]>([]);
+    const [page, setPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+
 
     const navigate: any = useNavigate();
 
@@ -83,7 +96,52 @@ function ForDesktop(props: any) {
             setdarkTheme(style.darkTheme);
         } 
     });
+
+
+    useEffect(() => {
+        // Function to fetch data from your API
+        const fetchVideos = async () => {
+          setLoading(true);
+          try {
+            const response = await fetch(`https://prodapi.seezitt.com/media-content/public/videos/feed/upgraded?page=1&pageSize=5`);
+            const data = await response.json();
+
+            // Type assertion or guard check
+            const newVideos = Array.isArray(data) ? data as Video[] : [];
+            setVideos(prevVideos => [...prevVideos, ...newVideos]);
+            setHasMore(newVideos.length > 0);
+          } catch (error) {
+            console.error('Error fetching videos:', error);
+          }
+          setLoading(false);
+        };
     
+        if (hasMore) {
+          fetchVideos();
+        }
+      }, [page]); // Fetch new data when `page` changes
+    
+
+
+
+   // Function to handle scrolling and trigger pagination
+  const handleScroll = () => {
+    if (!loading && hasMore) {
+      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+      if (scrollTop + clientHeight >= scrollHeight - 20) {
+        setPage(prevPage => prevPage + 1);
+      }
+    }
+  };
+
+  // Attach scroll event listener when component mounts
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []); // Clean up scroll event listener
+
+
+        
     return (
         <Layout
             showCopyPopup={showCopyPopup}
@@ -113,11 +171,11 @@ function ForDesktop(props: any) {
                     </div> 
                 </div> */}
                 <div className={style.videoesParent}>
-                    {videoes?.length > 0 && !loading && activeTab !== 3 ? (
-                        videoes.map((post: any, number: number) => {
+                    {videos?.length > 0 && !loading && activeTab !== 3 ? (
+                        videos.map((post: any, number: number) => {
                             return (
                                 <div key={number} className={style.videoParent}>
-                                    <div className={style.videoHeader}>
+                                    {/* <div className={style.videoHeader}>
                                         <div className={style.videoHeaderSec1}>
                                             <img
                                                 style={{
@@ -164,8 +222,8 @@ function ForDesktop(props: any) {
                                                 'Follow'
                                             )}
                                         </button>
-                                    </div>
-                                    <div className={style.contentSec}>
+                                    </div> */}
+                                    {/* <div className={style.contentSec}>
                                         <p>{post?.description}</p>
                                         {post?.sound && (
                                             <div>
@@ -173,7 +231,7 @@ function ForDesktop(props: any) {
                                                 <p>{post?.sound?.category?.name}</p>
                                             </div>
                                         )}
-                                    </div>
+                                    </div> */}
                                     <div className={style.mediaContainer}>
                                         <div
                                             style={{
@@ -200,12 +258,9 @@ function ForDesktop(props: any) {
                                             />
                                         </div>
                                         <div className={style.DivMediaCardBottom}>
-                                                <p>{post?.description}</p>
-                                                {post?.sound && (
-                                                    <div>
-                                                        <img src={music} alt="" />
-                                                        <p>{post?.sound?.category?.name}</p>
-                                                    </div>
+                                                <p style={{ textOverflow: "ellipsis",overflow: "hidden",whiteSpace: "nowrap"}}> {post?.description}</p>
+                                                {post?.sound && ( 
+                                                       <p className='flex' style={{ textOverflow: "ellipsis",overflow: "hidden",whiteSpace: "nowrap"}}><img src={music} alt="" /> {post?.sound?.category?.name} </p>
                                                 )}
                                             </div>
                                         <div className={style.actions}>
@@ -226,7 +281,11 @@ function ForDesktop(props: any) {
                                                 );
                                             })}
                                             <div className={style.DivAvatarActionItemContainer }>
-                                                <a className="e1g2yhv83 css-1w9wqra-StyledLink-AvatarLink er1vbsz0" href="/@sherjangkhan5">
+                                                <a className="e1g2yhv83 css-1w9wqra-StyledLink-AvatarLink er1vbsz0" href="#"
+                                                onClick={() =>
+                                                    navigate(`/profile/${post?.user?._id}`)
+                                                }
+                                                >
                                                     <div className={style.AvatarDivContainer} style={{width: '48px', height: '48px'}}>
                                                         <span  className={style.SpanAvatarContainer} style={{width: '48px', height: '48px'}}>
                                                             <img loading="lazy" alt="sherjangkhan5" src={post?.user?.avatar || defaultAvatar} className="css-1zpj2q-ImgAvatar e1e9er4e1" /></span>
@@ -245,7 +304,7 @@ function ForDesktop(props: any) {
                                 </div>
                             );
                         })
-                    ) : videoes?.length === 0 && !loading && activeTab === 1 ? (
+                    ) : videos?.length === 0 && !loading && activeTab === 1 ? (
                         <div className={style.suggestedUsersContainer}>
                             {suggestedUsers.map((suggestedUser: any, key: number) => {
                                 return <FollowUserCard key={key} user={suggestedUser} darkTheme={darkTheme} />;
