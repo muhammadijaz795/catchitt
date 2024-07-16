@@ -50,7 +50,7 @@ const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
                         }
 
                         {isPosting?
-                            <div className="w-[330px] h-[560px] flex  justify-center items-center text-white absolute top-0 left-0 bg-[#5448B299]">
+                            <div className="w-[330px] h-[560px] flex  justify-center items-center text-white absolute top-0 left-0 bg-[rgb(255, 59, 92)99]">
                                 Posting...
 
                             </div>
@@ -65,7 +65,7 @@ const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
                             </button>
                             <button
                                 onClick={onPost}
-                                className="bg-[#5448B2] text-[white]"
+                                className="bg-[rgb(255, 59, 92)] text-[white]"
                                 style={{ ...filledButton, textTransform: 'none' }}
                             >
                                 Post
@@ -111,14 +111,14 @@ var filledButton = {
     justifyContent: 'center !important',
     alignItems: 'center !important',
     borderRadius: '50% !important',
-    background: 'var(--foundation-primary-primary-500, #5448B2) !important',
+    background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
     // textTransform: 'none !important'
 };
 
 var secondaryBtn = {
     ...filledButton, 
-    color: 'var(--foundation-primary-primary-500, #5448B2) !important',
+    color: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
     background: 'white',
-    border: '1px solid var(--foundation-primary-primary-500, #5448B2)'
+    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))'
 
 }

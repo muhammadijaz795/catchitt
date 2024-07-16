@@ -140,7 +140,7 @@ const StoryEditor = ({file}:any) => {
             new fabric.Rect({
                 width: 100,
                 height: 100,
-                fill: '#5448B2',
+                fill: 'rgb(255, 59, 92)',
                 top: 50,
                 left: 50,
             })
@@ -217,7 +217,7 @@ const StoryEditor = ({file}:any) => {
                 top: 50,
                 fontSize: 24,
                 fill: 'white',  // Text color
-                backgroundColor: '#5448B2',  // Background color
+                backgroundColor: 'rgb(255, 59, 92)',  // Background color
                 padding: 0,  // Padding around the text
                 cornerRadius: 50  // Rounded corners
             })
@@ -513,7 +513,7 @@ const StoryEditor = ({file}:any) => {
     return (
         <div className="w-[100%] relative h-[100vh]  flex flex-col justify-center items-center pt-[5rem]">
             {
-                isExporting ? <div className='w-[100%]  justify-center items-center h-[100vh]  flex bg-[#5448B277] absolute top-0 left-0 z-20'>
+                isExporting ? <div className='w-[100%]  justify-center items-center h-[100vh]  flex bg-[rgb(255, 59, 92)77] absolute top-0 left-0 z-20'>
                <p className='text-[10rem] text-[white] '> {progress}%</p>
             </div>: ""
             }
@@ -531,7 +531,7 @@ const StoryEditor = ({file}:any) => {
                         Video downloads
                     </p>
                 </div>
-                <button className='py-2 bg-[#5448B2] text-white' onClick={exportVideo}>Done</button>
+                <button className='py-2 bg-[rgb(255, 59, 92)] text-white' onClick={exportVideo}>Done</button>
             </div>
             <div className="flex  w-[28rem]   min-w-[30%] h-[650px] bg-custom-light xl:w-[31.5rem] rounded-[0.5rem] ">
          
