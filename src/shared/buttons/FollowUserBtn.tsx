@@ -3,7 +3,7 @@ function FollowUserBtn(props: any) {
     const {
         width = '87px',
         height = '32px',
-        bg = '#5448B2',
+        bg = 'rgb(255, 59, 92)',
         padding = '0px 16px',
         redius = '4px',
         color = '#FFF',

@@ -17,13 +17,13 @@ function CustomButton(props: any) {
     const BasicButton = styled(Button)(({ theme }) => ({
         width,
         height,
-        color: color ? color : !islight ? '#FFF !important' : '#5448B2 !important',
+        color: color ? color : !islight ? '#FFF !important' : 'rgb(255, 59, 92) !important',
         backgroundColor: backgroundColor
             ? backgroundColor
             : !islight
-            ? '#5448B2 !important'
+            ? 'rgb(255, 59, 92) !important'
             : '#FFF !important',
-        border: '1px solid #5448B2',
+        border: '1px solid rgb(255, 59, 92)',
         fontSize,
         fontWeight,
         [theme.breakpoints.down(600)]: {
