@@ -157,10 +157,10 @@ h6 {
     align-items: center;
 
     border-radius: 4px;
-    border: 1px solid #5448B2;
+    border: 1px solid rgb(255, 59, 92);
     padding: 9px 8px;
     background-color: transparent;
-    color: #5448B2;
+    color: rgb(255, 59, 92);
 
     font-family: Poppins;
     font-size: 12px;
@@ -216,7 +216,7 @@ h6 {
 
 .warningMsg p {
     margin: 0;
-    color: var(--foundation-primary-primary-500, #5448B2);
+    color: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 
     /* Extra Small/Medium */
     font-family: Poppins;
@@ -263,7 +263,7 @@ h6 {
     justify-content: center;
     align-items: center;
     border-radius: 6px;
-    background: var(--foundation-primary-primary-500, #5448B2);
+    background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 }
 
 .rechargeBtn {
@@ -274,7 +274,7 @@ h6 {
     justify-content: center;
     align-items: center;
     border-radius: 6px;
-    background: var(--foundation-primary-primary-500, #5448B2);
+    background: var(--foundation-primary-primary-500, rgb(255, 59, 92));
 }
 
 .rechargeBtn p {
@@ -375,7 +375,7 @@ h6 {
 }
 
 .price:hover {
-    border: 1px solid var(--foundation-primary-primary-500, #5448B2);
+    border: 1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92));
     background: var(--default-white, #FFF);
 }
 

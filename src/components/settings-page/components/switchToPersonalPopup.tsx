@@ -151,6 +151,6 @@ var mainModalBtnstyle = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '6px',
-    background: 'var(--foundation-primary-primary-500, #5448B2)',
+    background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
     textTransform: 'none'
 };
