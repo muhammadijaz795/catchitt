@@ -70,7 +70,7 @@ function Layout(props: any) {
                             // display: 'flex',
                             // flexDirection: 'column',
                             gap: 32,
-                            overflow: 'scroll',
+                            // overflow: 'scroll',
                             height: '102%',
                             width: "244px", //new theme  
                             // padding: '40px 40px 0px 40px', //new theme 
@@ -167,6 +167,7 @@ function Layout(props: any) {
                 )}
 
                 <div
+                 id="contentDiv"
                  className={` ${darkThemeblack}`}
                     style={{
                         overflow: 'scroll',

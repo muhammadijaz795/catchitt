@@ -66,6 +66,9 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     const [darkThemeblack, setdarkThemeblack] = useState('');
     const [textColor, setTextColor] = useState('black');
     const [textColorClass, setTextColorClass] = useState(styles.textBlackColor);
+    const [activeCompanyClass, setActiveCompanyClass] = useState(false);
+    const [activeProgramClass, setActiveProgramClass] = useState(false);
+    const [activeTermClass, setActiveTermClass] = useState(false);
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -289,6 +292,35 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     <p className={styles.sidebarTextStyle}>Log in to follow creators, like videos, and view comments.</p>
                     <button type="button"  onClick={() => dispatch(openLoginPopup())} className={styles.sidebarLogin}>Log in</button>
                 </div>
+
+                <div className={styles.divFooterContainer}>
+                    {/* <div data-e2e="eh-footer-banner" class="css-24h4dh-DivEffectHouseEntranceContainer e125wy4z2">
+                        <a href="https://effecthouse.tiktok.com/download?utm_campaign=ttweb_entrance_v1&amp;utm_source=tiktok_webapp_main" target="_blank" class="e125wy4z4 css-1hd22mh-ALink-StyledEHEntranceLink er1vbsz1">
+                            <div class="css-h4cuyj">
+                                <img src="https://sf16-website-login.neutral.ttwstatic.com/obj/tiktok_web_login_static/tiktok/webapp/main/webapp-desktop/8152caf0c8e8bc67ae0d.png" alt="eh-background" class="css-1holeui">
+                                <div class="css-hcepfy" style="left: 50px; text-align: start; width: 141px;">
+                                    <div style="max-height: 40px; overflow: hidden; width: 100%;">
+                                        <h4 class="css-12i83zi">Create TikTok effects, get a reward</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div> */}
+                    <h4 className={`${styles.sideBarLinks} ${activeCompanyClass? styles.activeClass:''}`} onClick={(e)=> {setActiveCompanyClass(!activeCompanyClass)}} >Company</h4>
+                    {activeCompanyClass && <div className={styles.DivLinkContainer}>
+                        <Link to="/about/community-guidelines" target="_blank" className={styles.ALinkStyledNavLink} >About</Link>
+                        <Link to="/contactus"  target="_blank" className={styles.ALinkStyledNavLink} >Contact</Link>
+                    </div>}
+                    <h4 className={`${styles.sideBarLinks} ${activeProgramClass? styles.activeClass:''}`} onClick={(e)=> {setActiveProgramClass(!activeProgramClass)}} >Program</h4>
+                    {activeProgramClass && <div className={styles.DivLinkContainer}>
+                        <Link to="#" target="_blank" className={styles.ALinkStyledNavLink} >Seezit Live</Link>
+                    </div>}
+                    <h4 className={`${styles.sideBarLinks} ${activeTermClass? styles.activeClass:''}`} onClick={(e)=> {setActiveTermClass(!activeTermClass)}} >Term</h4>
+                    {activeTermClass && <div className={styles.DivLinkContainer}>
+                        <Link to="/about/terms-conditions" target="_blank" className={styles.ALinkStyledNavLink} >Terms</Link>
+                        <Link to="/about/privacy-policy"  target="_blank" className={styles.ALinkStyledNavLink} >Privacy policy</Link>
+                    </div>}
+                    <span data-e2e="copyright" className={styles.SpanCopyright}>© 2024 TikTok</span></div>
 
                 {/*  //new theme 
                 
