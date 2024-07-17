@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -30,7 +30,7 @@ function ForDesktop(props: any) {
         title: string;
         // Add more fields as per your API response
       }
-
+      console.log(props,"props");
     const { activeTab, setActiveTab, showVideoModal, videoModal, setSendPopup } =
         props || {};
     const [reportPopup, setreportPopup] = useState(false);
@@ -57,7 +57,10 @@ function ForDesktop(props: any) {
     const [videos, setVideos] = useState<Video[]>([]);
     const [page, setPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingVideo, setLoadingVideo] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
+    const [scrollY, setScrollY] = useState(0);
+    const scrollableDivRef = useRef<HTMLDivElement>(null);
 
 
     const navigate: any = useNavigate();
@@ -101,45 +104,49 @@ function ForDesktop(props: any) {
     useEffect(() => {
         // Function to fetch data from your API
         const fetchVideos = async () => {
-          setLoading(true);
+        //   setLoading(true);
           try {
-            const response = await fetch(`https://prodapi.seezitt.com/media-content/public/videos/feed/upgraded?page=1&pageSize=5`);
-            const data = await response.json();
-
-            // Type assertion or guard check
-            const newVideos = Array.isArray(data) ? data as Video[] : [];
+            const response = await fetch(`https://prodapi.seezitt.com/media-content/public/videos/feed/upgraded?page=${page}&pageSize=5`);
+            const responseData = await response.json();
+            const newVideos = Array.isArray(responseData.data) ? responseData.data as Video[] : [];
             setVideos(prevVideos => [...prevVideos, ...newVideos]);
             setHasMore(newVideos.length > 0);
           } catch (error) {
             console.error('Error fetching videos:', error);
           }
-          setLoading(false);
+          setLoadingVideo(false);
         };
     
         if (hasMore) {
           fetchVideos();
         }
-      }, [page]); // Fetch new data when `page` changes
-    
+      }, [page]); 
 
+const handleScroll = () => {
+    if (scrollableDivRef.current) {
+      const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef.current;
 
-
-   // Function to handle scrolling and trigger pagination
-  const handleScroll = () => {
-    if (!loading && hasMore) {
-      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-      if (scrollTop + clientHeight >= scrollHeight - 20) {
+      if (scrollTop + clientHeight >= scrollHeight) {
+        console.log('Reached bottom of scroll');
         setPage(prevPage => prevPage + 1);
+        setLoadingVideo(true);
       }
     }
   };
 
-  // Attach scroll event listener when component mounts
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // Clean up scroll event listener
 
+useEffect(() => {
+
+    if (scrollableDivRef.current) {
+       scrollableDivRef.current.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (scrollableDivRef.current) {
+        scrollableDivRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
         
     return (
@@ -170,11 +177,11 @@ function ForDesktop(props: any) {
                         <p>Live</p>
                     </div> 
                 </div> */}
-                <div className={style.videoesParent}>
+                <div className={style.videoesParent}  ref={scrollableDivRef}>
                     {videos?.length > 0 && !loading && activeTab !== 3 ? (
                         videos.map((post: any, number: number) => {
                             return (
-                                <div key={number} className={style.videoParent}>
+                                <div key={number} className={style.videoParent} >
                                     {/* <div className={style.videoHeader}>
                                         <div className={style.videoHeaderSec1}>
                                             <img
@@ -301,6 +308,8 @@ function ForDesktop(props: any) {
                                             </div>
                                         </div>
                                     </div>
+                                    <br />
+                                    { loadingVideo && <CircularProgress /> }
                                 </div>
                             );
                         })

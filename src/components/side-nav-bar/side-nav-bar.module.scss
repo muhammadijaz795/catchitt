@@ -206,8 +206,8 @@ div.darkTheme input{
 }
 
 div.darkThemeblack div{
-  background: black !important;
-  color:white !important;
+  background: black;
+  color:white ;
 }
 
 div.darkThemeblack p{
@@ -221,4 +221,53 @@ div.darkThemeblack p{
 
 .textBlackColor{
   color:black;
+}
+
+.sideBarLinks{
+    font-size: 15px;
+    line-height: 22px;
+    margin-top: 5px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-family: TikTokDisplayFont;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    
+}
+
+.divFooterContainer {
+  position: relative;
+  padding-top: 16px;
+  padding-left: 8px;
+}
+
+.DivLinkContainer {
+  margin-bottom: 8px;
+}
+
+.ALinkStyledNavLink {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  display: inline-block;
+  margin-right: 6px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.SpanCopyright {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: TikTokFont, Arial, Tahoma, PingFangSC, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  display: inline-block;
+  margin-right: 6px;
+  margin-top: 5px;
+}
+
+.activeClass{
+  color:white !important;
 }
