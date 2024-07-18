@@ -1,5 +1,5 @@
 import { ClickAwayListener, Modal } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../shared/layout';
@@ -26,6 +26,7 @@ import { ToastContainer } from 'react-toastify';
 import ViewsModal from './components/ViewsModal';
 import viewerAvatarPlaceholder from './svg-components/placeholderAvatar.png';
 import style from './profile.module.scss';
+import { useUpdateEffect } from 'react-use';
 
 export const Profile = (props: any) => {
     const [activeTab, setActiveTab] = useState('Videos');
@@ -38,10 +39,10 @@ export const Profile = (props: any) => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const [videoModal, setVideoModal] = useState(false);
-    const [userVideos, setUserVideos] = useState([]);
-    const [userlikedVideos, setUserlikedVideos] = useState([]);
-    const [usertaggedVideos, setUsertaggedVideos] = useState([]);
-    const [bookmarkVideos, setbookmarkVideos] = useState([]);
+    const [userVideos, setUserVideos] = useState<any>([]);
+    const [userlikedVideos, setUserLikedVideos] = useState([]);
+    const [usertaggedVideos, setUserTaggedVideos] = useState([]);
+    const [bookmarkVideos, setBookmarkVideos] = useState([]);
     const [videoModalInfo, setVideoModalInfo] = useState({});
     const [reportPopup, setReportPopup] = useState(false);
     const [giftsPopup, setGiftsPopup] = useState(false);
@@ -50,6 +51,17 @@ export const Profile = (props: any) => {
     const [viewsModal, setViewsModal] = useState(false);
     const [profileViewsContent, setProfileViewsContent] = useState<any>([]);
     const [darkTheme, setdarkTheme] = useState('');
+
+    const [videosPage, setVideosPage] = useState(1);
+    const [likedVideosPage, setLikedVideosPage] = useState(1);
+    const [taggedVideosPage, setTaggedVideosPage] = useState(1);
+    const [bookmarkVideosPage, setBookmarkVideosPage] = useState(1);
+
+    const [hasMoreVideos, setHasMoreVideos] = useState(true);
+    const [hasMoreLikedVideos, setHasMoreLikedVideos] = useState(true);
+    const [hasMoreTaggedVideos, setHasMoreTaggedVideos] = useState(true);
+    const [hasMoreBookmarkVideos, setHasMoreBookmarkVideos] = useState(true);
+
     // @ts-ignore
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -161,63 +173,122 @@ export const Profile = (props: any) => {
 
     const fetchData = async () => {
         // 63a04301a00ed2af91f17e1d user id contain videos
-        await fetch(`${API_KEY}/profile/${userId}/videos?page=1&pageSize=10`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUserVideos(data.data.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+        setLoading(true);
+        const pageSize = 10;
+        const promises = [];
+        console.log('ACTIVE TAB in fetchdata : ', activeTab);
 
-        fetch(`${API_KEY}/profile/${userId}/liked-videos?page=1&pageSize=10`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data: any) => {
-                setUserlikedVideos(data.data.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+        // Fetch Videos
+        if (hasMoreVideos && activeTab === 'Videos') {
+            promises.push(
+                fetch(
+                    `${API_KEY}/profile/${userId}/videos?page=${videosPage}&pageSize=${pageSize}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log('VIDEO PAGE', videosPage);
+                        setUserVideos((prev) => [...prev, ...data.data.data]);
+                        setHasMoreVideos(data.data.total > pageSize * videosPage);
+                        setVideosPage((prev) => prev + 1);
+                    })
+                    .catch((err) => console.log(err))
+            );
+        }
 
-        fetch(`${API_KEY}/profile/tagged-videos?page=1&pageSize=10`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUsertaggedVideos(data.data.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+        // Fetch Liked Videos
+        if (hasMoreLikedVideos && activeTab === 'Liked Videos') {
+            promises.push(
+                fetch(
+                    `${API_KEY}/profile/${userId}/liked-videos?page=${likedVideosPage}&pageSize=${pageSize}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setUserLikedVideos((prev) => [...prev, ...data.data.data]);
+                        setHasMoreLikedVideos(data.data.total > pageSize * likedVideosPage);
+                        setLikedVideosPage((prev) => prev + 1);
+                    })
+                    .catch((err) => console.log(err))
+            );
+        }
 
-        // fetch(`${API_KEY}/filter/bookmarkedFilters`, {
-        fetch(`${API_KEY}/profile/collection?page=1&pageSize=10`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setbookmarkVideos(data.data.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+        // Fetch Tagged Videos
+        if (hasMoreTaggedVideos && activeTab === 'Tagged Posts') {
+            promises.push(
+                fetch(
+                    `${API_KEY}/profile/tagged-videos?page=${taggedVideosPage}&pageSize=${pageSize}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setUserTaggedVideos((prev) => [...prev, ...data.data.data]);
+                        setHasMoreTaggedVideos(data.data.total > pageSize * taggedVideosPage);
+                        setTaggedVideosPage((prev) => prev + 1);
+                    })
+                    .catch((err) => console.log(err))
+            );
+        }
 
+        // Fetch Bookmark Videos
+        if (hasMoreBookmarkVideos && activeTab === 'Bookmarks') {
+            promises.push(
+                fetch(
+                    `${API_KEY}/profile/collection?page=${bookmarkVideosPage}&pageSize=${pageSize}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setBookmarkVideos((prev) => [...prev, ...data.data.data]);
+                        setHasMoreBookmarkVideos(data.data.total > pageSize * bookmarkVideosPage);
+                        setBookmarkVideosPage((prev) => prev + 1);
+                    })
+                    .catch((err) => console.log(err))
+            );
+        }
+
+        await Promise.all(promises);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        initialFetchData();
+    }, []);
+
+    const initialFetchData = async () => {
+        setVideosPage(1);
+        setLikedVideosPage(1);
+        setTaggedVideosPage(1);
+        setBookmarkVideosPage(1);
+        setUserVideos([]);
+        setUserLikedVideos([]);
+        setUserTaggedVideos([]);
+        setBookmarkVideos([]);
+        // await fetchData();
         await fetch(`${API_KEY}/profile/visitors`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
@@ -225,16 +296,14 @@ export const Profile = (props: any) => {
             .then((res) => res.json())
             .then((data) => {
                 makeProfileViews(data?.data);
-                setLoading(false);
             })
             .catch((err) => {
                 console.log(err);
-                setLoading(false);
             });
 
         dispatch(getRandomUsers());
         dispatch(getFriends());
-        const data = await dispatch(getProfileData());
+        await dispatch(getProfileData());
     };
 
     const makeProfileViews = (data: any) => {
@@ -295,9 +364,64 @@ export const Profile = (props: any) => {
         }
     });
 
+    const mainDivRef = useRef(null);
+
+    const handleScroll = useCallback(() => {
+        console.log('ACTIVE TAB >>>>>>>> : ', activeTab);
+        if (mainDivRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
+            // console.log(`scrollTop: ${scrollTop}, clientHeight: ${clientHeight}, scrollHeight: ${scrollHeight}`);
+            if (scrollTop + clientHeight >= scrollHeight - 0.5) {
+                // Adding a small buffer
+                fetchData();
+            }
+        }
+    }, [
+        activeTab,
+        videosPage,
+        likedVideosPage,
+        taggedVideosPage,
+        bookmarkVideosPage,
+        hasMoreVideos,
+        hasMoreLikedVideos,
+        hasMoreTaggedVideos,
+        hasMoreBookmarkVideos,
+    ]);
+
+    useEffect(() => {
+        const mainDiv = mainDivRef.current;
+        if (mainDiv) {
+            mainDiv.addEventListener('scroll', handleScroll);
+            return () => mainDiv.removeEventListener('scroll', handleScroll);
+        }
+    }, [
+        handleScroll,
+        activeTab,
+        videosPage,
+        likedVideosPage,
+        taggedVideosPage,
+        bookmarkVideosPage,
+        hasMoreVideos,
+        hasMoreLikedVideos,
+        hasMoreTaggedVideos,
+        hasMoreBookmarkVideos,
+    ]);
+
+    const tabChangeHandler = (title: any) => {
+        console.log('ACTIVE TAB', title);
+        setActiveTab(title);
+    };
+
+    useUpdateEffect(() => {
+        fetchData();
+    }, [activeTab]);
+
     return (
         <Layout showCopyPopup={copyPopup}>
-            <div className={` ${styles.container} ${darkTheme}`}>
+            <div
+                ref={mainDivRef}
+                className={` ${styles.container} h-screen overflow-y-auto ${darkTheme}`}
+            >
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
@@ -340,7 +464,7 @@ export const Profile = (props: any) => {
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
                             <div
-                                onClick={() => setActiveTab(item.title)}
+                                onClick={() => tabChangeHandler(item?.title)}
                                 style={{
                                     borderColor: activeTab === item.title ? 'rgb(255, 59, 92)' : '#DFDFDF',
                                 }}
