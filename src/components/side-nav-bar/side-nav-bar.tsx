@@ -327,7 +327,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <Link to="/about/terms-conditions" target="_blank" className={styles.ALinkStyledNavLink} >Terms</Link>
                         <Link to="/about/privacy-policy"  target="_blank" className={styles.ALinkStyledNavLink} >Privacy policy</Link>
                     </div>}
-                    <span data-e2e="copyright" className={styles.SpanCopyright}>© 2024 TikTok</span></div>
+                    <span data-e2e="copyright" className={styles.SpanCopyright}>© 2024 Seezitt</span></div>
 
                 {/*  //new theme 
                 
