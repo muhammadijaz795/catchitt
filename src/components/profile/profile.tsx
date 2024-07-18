@@ -62,6 +62,8 @@ export const Profile = (props: any) => {
     const [hasMoreTaggedVideos, setHasMoreTaggedVideos] = useState(true);
     const [hasMoreBookmarkVideos, setHasMoreBookmarkVideos] = useState(true);
 
+    const [initialCalled, setInitialCalled] = useState<boolean>(false);
+
     // @ts-ignore
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -270,6 +272,10 @@ export const Profile = (props: any) => {
         }
 
         await Promise.all(promises);
+
+        if (!initialCalled) {
+            setInitialCalled(true);
+        }
         setLoading(false);
     };
 
@@ -286,7 +292,6 @@ export const Profile = (props: any) => {
         setUserLikedVideos([]);
         setUserTaggedVideos([]);
         setBookmarkVideos([]);
-        // await fetchData();
         await fetch(`${API_KEY}/profile/visitors`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
@@ -369,7 +374,10 @@ export const Profile = (props: any) => {
             const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
             if (scrollTop + clientHeight >= scrollHeight - 0.5) {
                 // Adding a small buffer
-                fetchData();
+                console.log('SCROLL BUFFER >>>>>>>');
+                if (initialCalled) {
+                    fetchData();
+                }
             }
         }
     }, [
@@ -405,9 +413,11 @@ export const Profile = (props: any) => {
 
     const tabChangeHandler = (title: any) => {
         setActiveTab(title);
+        setInitialCalled(false);
     };
 
     useUpdateEffect(() => {
+        console.log('USE BUFFER >>>>>>>');
         fetchData();
     }, [activeTab]);
 
@@ -461,7 +471,8 @@ export const Profile = (props: any) => {
                             <div
                                 onClick={() => tabChangeHandler(item?.title)}
                                 style={{
-                                    borderColor: activeTab === item.title ? 'rgb(255, 59, 92)' : '#DFDFDF',
+                                    borderColor:
+                                        activeTab === item.title ? 'rgb(255, 59, 92)' : '#DFDFDF',
                                 }}
                                 className={styles.tab}
                                 key={item.key}
