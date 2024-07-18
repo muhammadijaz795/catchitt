@@ -176,7 +176,6 @@ export const Profile = (props: any) => {
         setLoading(true);
         const pageSize = 10;
         const promises = [];
-        console.log('ACTIVE TAB in fetchdata : ', activeTab);
 
         // Fetch Videos
         if (hasMoreVideos && activeTab === 'Videos') {
@@ -193,7 +192,6 @@ export const Profile = (props: any) => {
                 )
                     .then((res) => res.json())
                     .then((data) => {
-                        console.log('VIDEO PAGE', videosPage);
                         setUserVideos((prev) => [...prev, ...data.data.data]);
                         setHasMoreVideos(data.data.total > pageSize * videosPage);
                         setVideosPage((prev) => prev + 1);
@@ -367,10 +365,8 @@ export const Profile = (props: any) => {
     const mainDivRef = useRef(null);
 
     const handleScroll = useCallback(() => {
-        console.log('ACTIVE TAB >>>>>>>> : ', activeTab);
         if (mainDivRef.current) {
             const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
-            // console.log(`scrollTop: ${scrollTop}, clientHeight: ${clientHeight}, scrollHeight: ${scrollHeight}`);
             if (scrollTop + clientHeight >= scrollHeight - 0.5) {
                 // Adding a small buffer
                 fetchData();
@@ -408,7 +404,6 @@ export const Profile = (props: any) => {
     ]);
 
     const tabChangeHandler = (title: any) => {
-        console.log('ACTIVE TAB', title);
         setActiveTab(title);
     };
 
