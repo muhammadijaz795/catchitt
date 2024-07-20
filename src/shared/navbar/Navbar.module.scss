@@ -13,7 +13,7 @@
 }
 
 .sec1 {
-  width: 42%;
+  width: 5%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -28,8 +28,10 @@
 
 .sec2 {
   display: flex;
-  gap: 50px;
-  width: 58%;
+  // gap: 20%;
+  // width: 50%;
+    gap: 25%;
+  width: 66%;
   justify-content: space-between;
 }
 

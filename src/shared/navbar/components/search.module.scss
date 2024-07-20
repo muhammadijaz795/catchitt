@@ -1,0 +1,56 @@
+.DivHeaderCenterContainer {
+  position: relative;
+  min-width: 200px;
+  padding: 0px 8px;
+  width: 516px;
+}
+
+.DivSearchFormContainer {
+  position: relative;
+}
+
+.SearchFormElement {
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgb(101 95 95 / 19%);
+  border-radius: 92px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  margin: 0px;
+}
+
+.SearchInputElement {
+  font-family: popins, Arial, Tahoma, PingFangSC, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0px;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.9);
+  caret-color: rgb(255, 59, 92);
+  appearance: textfield;
+}
+
+.SearchSpanSpliter {
+  width: 1px;
+  height: 28px;
+  margin: -3px 0px;
+  background: #9ca3af;
+}
+
+.searchButtonSearch {
+  padding: 11px 16px 11px 12px;
+  margin: -12px -16px -12px 0px;
+  font-size: 0px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: transparent;
+}
