@@ -68,7 +68,7 @@ function Search({
         // </div>
         <div className={style.DivHeaderCenterContainer}>
             <div className={style.DivSearchFormContainer}>
-                <form data-e2e="search-box" className={style.SearchFormElement} action="/search">
+                <form data-e2e="search-box" className={style.SearchFormElement} onSubmit={submitH} >
                     <input  type="search"
                     placeholder="Search"
                     onChange={(e) => {

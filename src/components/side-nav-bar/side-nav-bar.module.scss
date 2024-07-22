@@ -262,13 +262,16 @@ div.darkThemeblack p{
 
 .SpanCopyright {
   color: rgb(122 124 133 / 71%);
-  font-family: TikTokFont, Arial, Tahoma, PingFangSC, sans-serif;
+  font-family: Poppins;
   font-weight: 600;
   font-size: 12px;
   line-height: 16px;
   display: inline-block;
   margin-right: 6px;
   margin-top: 5px;
+  // text-align: left;
+  justify-content: left;
+  align-items: left;
 }
 
 .activeClass{

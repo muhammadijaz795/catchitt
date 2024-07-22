@@ -74,3 +74,89 @@ div.darkThemeblack p{
 }
 
 
+.GetAppDivBottomContainer{
+  right: 24px;
+  position: fixed;
+  bottom: 0px;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 8px;
+  transform: none;
+  transition: all 400ms cubic-bezier(0.65, 0, 0.35, 1) 0s;
+}
+
+.GetAppDivPromotionContainer{
+  display: flex;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.GetAppButtonGetAppText{
+  border: 1px solid rgba(22, 24, 35, 0.12);
+  background: none rgb(255, 255, 255);
+  outline: none;
+  color: rgba(22, 24, 35, 0.75);
+  font-family: TikTokFont, Arial, Tahoma, PingFangSC, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  position: relative;
+  right: 0px;
+  bottom: 0px;
+  padding: 0px 8px;
+  min-width: 90px;
+  height: 32px;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 8px;
+  border-radius: 52px;
+  cursor: pointer;
+  line-height: 30px;
+  text-align: center;
+  white-space: nowrap;
+  transition: transform 0.3s cubic-bezier(0.4, 0.14, 0.3, 1) 0s;
+  transform-origin: right bottom;
+  transform: none;
+}
+
+.GetAppDivExpandContainer{
+  font-family: TikTokFont, Arial, Tahoma, PingFangSC, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 21px;
+  position: absolute;
+  bottom: -1px;
+  background: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 8px;
+  border: 1px solid rgba(22, 24, 35, 0.03);
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0.14, 0.3, 1) 0s;
+  transform-origin: right bottom;
+  transform: scale(0);
+  right: -1px;
+}
+
+.GetAppDivXMarkWrapper{
+  right: 16px;
+  position: absolute;
+  top: 16px;
+  cursor: pointer;
+}
+
+.GetAppDivExpandWrapper{
+  margin-right: 48px;
+  margin-left: 16px;
+}
+
+.GetAppDivItemContainer{
+  margin: 6px 0px;
+  display: flex;
+  flex-direction: row;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.GetAppSpanText{
+  margin-left: 8px;
+  white-space: nowrap;
+}
