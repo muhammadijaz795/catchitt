@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import Layout from '../../shared/layout';
@@ -26,6 +26,8 @@ export default function Discover() {
     const [storyPopup, setStoryPopup] = useState(false);
     const [videosToShow, setVideosToShow] = useState(10);
     const [selectedCategory, setSelectedCategory] = useState(0);
+    const mainDivRef = useRef(null);
+    const [muteStates, setMuteStates] = useState([]);
 
     useEffect(() => {
         const apisIntegration = async () => {
@@ -43,6 +45,7 @@ export default function Discover() {
                 setIsLoading(false);
                 setHashtagVideos(allVideos?.slice(10));
                 setHashtagVideosToShow(allVideos?.slice(0, 10));
+                setMuteStates(Array(allVideos?.length).fill(true)); // Initialize mute states
                 console.log('🚀 ~ apisIntegration ~ res:', data?.data);
             } catch (error) {
                 setIsLoading(false);
@@ -53,21 +56,25 @@ export default function Discover() {
     }, []);
 
     const handleScroll = useCallback(() => {
-        const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
-        const totalHeight = document.documentElement.offsetHeight;
-
-        if (scrollPosition >= totalHeight) {
-            setHashtagVideosToShow((prev) => [
-                ...prev,
-                ...hashtagVideos.slice(videosToShow, videosToShow + 10),
-            ]);
-            setVideosToShow((prev) => prev + 10);
+        if (mainDivRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
+            if (scrollTop + clientHeight >= scrollHeight) {
+                console.log('BOTTTTOMMMM');
+                // Adding a small buffer
+                const newVideosToShow = hashtagVideos.slice(videosToShow, videosToShow + 10);
+                setHashtagVideosToShow((prev) => [...prev, ...newVideosToShow]);
+                setVideosToShow((prev) => prev + 10);
+                setMuteStates((prevMuteStates) => [...prevMuteStates, ...Array(newVideosToShow.length).fill(true)]);
+            }
         }
-    }, [hashtagVideos, videosToShow]);
+    }, [videosToShow, hashtagVideos]);
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const mainDiv = mainDivRef.current;
+        if (mainDiv) {
+            mainDiv.addEventListener('scroll', handleScroll);
+            return () => mainDiv.removeEventListener('scroll', handleScroll);
+        }
     }, [handleScroll]);
 
     const openVideoModal = (video: any) => {
@@ -75,13 +82,13 @@ export default function Discover() {
         setVideoModal(true);
     };
 
-    const categoryHandler =(index:number)=>{
+    const categoryHandler = (index: number) => {
         setSelectedCategory(index);
-    }
+    };
 
     return (
         <Layout>
-            <div className={styles.root}>
+            <div ref={mainDivRef} className={`${styles.root} h-screen overflow-y-auto`}>
                 {isLoading ? (
                     <div
                         style={{
@@ -100,9 +107,9 @@ export default function Discover() {
                         <div className="flex flex-row mt-8 gap-4 overflow-auto">
                             {DISCOVER_CATEGORIES?.map((category, index) => (
                                 <button
-                                onClick={() =>categoryHandler(index)}
+                                    onClick={() => categoryHandler(index)}
                                     className={`flex items-center px-3 h-[2.625rem] ${
-                                        selectedCategory === index 
+                                        selectedCategory === index
                                             ? 'text-white bg-black'
                                             : 'text-[#222] bg-unselected-category'
                                     }  rounded-lg cursor-pointer text-base border-none whitespace-nowrap w-auto`}
@@ -112,16 +119,13 @@ export default function Discover() {
                                 </button>
                             ))}
                         </div>
-                        <div className="grid grid-flow-row grid-cols-4 gap-2.5 mr-4">
-                            {hashtagVideosToShow &&
-                                hashtagVideosToShow.map((video: any, i) => (
-                                    <div key={i}>
-                                        <VideoPanel
-                                            videomodal={() => openVideoModal(video)}
-                                            video={video}
-                                        />
-                                    </div>
-                                ))}
+                        <div>
+                            <VideoPanel
+                                openVideoModal={openVideoModal}
+                                videos={hashtagVideosToShow}
+                                muteStates={muteStates} // Pass mute states
+                                setMuteStates={setMuteStates} // Pass setter for mute states
+                            />
                         </div>
                     </>
                 )}
