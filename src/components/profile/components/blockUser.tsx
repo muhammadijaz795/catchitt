@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
 import style from './blockUser.module.scss';
-import { useAuthStore } from '../../../store/authStore';
 
 function BlockUser({ onclose, popupH, userId }: any) {
     const API_KEY = process.env.VITE_API_URL;

@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
-import style from './blockUser.module.scss'
-import { ClickAwayListener, Modal } from '@mui/material'
+import style from './blockUser.module.scss';
 
 interface TYpes {
-    onclose: any
+    onclose: any;
 }
 function BlockMsgOnError({ onclose }: TYpes) {
     return (
@@ -13,8 +11,7 @@ function BlockMsgOnError({ onclose }: TYpes) {
             <p>Something went wrong.</p>
             <button onClick={onclose}>Done</button>
         </div>
-
-    )
+    );
 }
 
-export default BlockMsgOnError
+export default BlockMsgOnError;

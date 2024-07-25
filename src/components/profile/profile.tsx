@@ -27,6 +27,7 @@ import ViewsModal from './components/ViewsModal';
 import viewerAvatarPlaceholder from './svg-components/placeholderAvatar.png';
 import style from './profile.module.scss';
 import { useUpdateEffect } from 'react-use';
+import PopupForDeleteVideo from './popups/popupForDeleteVideo';
 
 export const Profile = (props: any) => {
     const [activeTab, setActiveTab] = useState('Videos');
@@ -47,6 +48,7 @@ export const Profile = (props: any) => {
     const [reportPopup, setReportPopup] = useState(false);
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
+    const [deleteVideoPopup, setDeleteVideoPopup] = useState(false);
     const [copyPopup, setcopyPopup] = useState(false);
     const [viewsModal, setViewsModal] = useState(false);
     const [profileViewsContent, setProfileViewsContent] = useState<any>([]);
@@ -520,6 +522,7 @@ export const Profile = (props: any) => {
                     gifts={() => setGiftsPopup(true)}
                     onBlockPopup={() => setBlockPopup(true)}
                     onReportPopup={() => setReportPopup(true)}
+                    deleteVideoPopup={() => setDeleteVideoPopup(true)}
                     videoModal={videoModal}
                     onclose={() => setVideoModal(false)}
                     info={videoModalInfo}
@@ -532,7 +535,13 @@ export const Profile = (props: any) => {
                 <PopupForBlock
                     openBlock={blockPopup}
                     onBlockClose={() => setBlockPopup(false)}
-                    onReportClose={() => setReportPopup(false)}
+                    info={videoModalInfo}
+                    // @ts-ignore
+                    userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
+                />
+                <PopupForDeleteVideo
+                    openBlock={deleteVideoPopup}
+                    onBlockClose={() => setDeleteVideoPopup(false)}
                     info={videoModalInfo}
                     // @ts-ignore
                     userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}

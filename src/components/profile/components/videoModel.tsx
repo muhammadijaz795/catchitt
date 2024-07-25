@@ -5,13 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import defaultProfileIcon from '../../../assets/defaultProfileIcon.png';
-import { commentMethod, followingsMethod, videoLikehandle, videoSavehandle } from '../../../redux/AsyncFuncs';
-import { useAuthStore } from '../../../store/authStore';
+import { closeSquare, deleteVideoIcon } from '../../../icons';
+import {
+    commentMethod,
+    followingsMethod,
+    videoLikehandle,
+    videoSavehandle,
+} from '../../../redux/AsyncFuncs';
+import { timeConverter } from '../../../utils';
 import Comment from './comment';
 import style from './videoModel.module.scss';
-import { timeConverter } from '../../../utils';
-import CustomPlayer from '../../homePage/components/CustomPlayer';
-import {closeSquare} from '../../../icons'
 
 interface Props {
     onModalClose: any;
@@ -20,9 +23,18 @@ interface Props {
     block: any;
     gifts: any;
     sendPopupHandler?: any;
+    deleteVideo: any;
 }
 
-function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler }: Props) {
+function VideoModel({
+    onModalClose,
+    info,
+    report,
+    block,
+    gifts,
+    sendPopupHandler,
+    deleteVideo,
+}: Props) {
     const navigate = useNavigate();
     //For Images Ref.
     const [like, setLike] = useState(false);
@@ -66,6 +78,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
     };
 
     useEffect(() => {
+        console.log('INFO >>>', info);
         setUserComments(info?.comments);
     }, []);
 
@@ -127,7 +140,7 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                     controls={false}
                     autoPlay={true}
                     width="300px"
-                    preload='auto'
+                    preload="auto"
                     playsInline
                     src={
                         info?.reducedVideoUrl.length > 0 ? info?.reducedVideoUrl : info?.originalUrl
@@ -248,10 +261,10 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                         onClick={() => {
                             setFvrt(!fvrt);
                             if (fvrt) {
-                                dispatch(videoSavehandle(info?.mediaId))
+                                dispatch(videoSavehandle(info?.mediaId));
                                 setnoFvrt(nofvrt - 1);
                             } else {
-                                dispatch(videoSavehandle(info?.mediaId))
+                                dispatch(videoSavehandle(info?.mediaId));
                                 setnoFvrt(nofvrt + 1);
                             }
                             if (more) {
@@ -356,14 +369,18 @@ function VideoModel({ onModalClose, info, report, block, gifts, sendPopupHandler
                                         src="../../../../public/images/icons/Group (3).svg"
                                         alt=""
                                     />
-                                    <p className={style['text5']}>Report</p>
+                                    <p className={`${style['text5']} text-black`}>Report</p>
                                 </div>
                                 <div onClick={block}>
                                     <img
                                         src="../../../../public/images/icons/Group (4).svg"
                                         alt=""
                                     />
-                                    <p className={style['text5']}>Block</p>
+                                    <p className={`${style['text5']} text-black`}>Block</p>
+                                </div>
+                                <div onClick={deleteVideo}>
+                                    <img src={deleteVideoIcon} alt="delete video" />
+                                    <p className={`${style['text5']} text-black`}>Delete</p>
                                 </div>
                             </div>
                         ) : null}

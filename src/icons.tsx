@@ -108,6 +108,7 @@ import whatsappShare from './assets/whatsapp-share.svg';
 import twitterShare from './assets/twitter-share.svg';
 import facebookShare from './assets/facebook-share.svg';
 import linkedInShare from './assets/linkedin-share.svg';
+import deleteVideoIcon from './assets/delete-video.svg';
 
 export {
     duet,
@@ -219,4 +220,5 @@ export {
     twitterShare,
     facebookShare,
     linkedInShare,
+    deleteVideoIcon,
 };
