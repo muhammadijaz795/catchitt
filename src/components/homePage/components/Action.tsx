@@ -11,7 +11,6 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
 
-    console.log("POSt : ",post);
     const actionClickHandler = async () => {
         try {
             if(isUserLoggedIn() == true){
