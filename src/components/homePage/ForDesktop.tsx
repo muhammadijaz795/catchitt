@@ -13,6 +13,12 @@ import {
     moreInHome,
     music,
     shareInHome,
+    commentBlack,
+    likeBlack,
+    shareBlack,
+    moreBlack,
+    savedBlack,
+    
 } from '../../icons';
 import { followingsMethod, getHomeVideos, addMoreVideos } from '../../redux/AsyncFuncs';
 import Layout from '../../shared/layout';
@@ -41,6 +47,7 @@ function ForDesktop(props: any) {
     const [followimgbtnId, setFollowimgbtnId] = useState('');
     const [showCopyPopup, setshowCopyPopup] = useState(false);
     const [darkTheme, setdarkTheme] = useState('');
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
     // @ts-ignore
@@ -50,10 +57,17 @@ function ForDesktop(props: any) {
     const dispatch = useDispatch();
     const userActions: any = [
         { img: moreInHome, actionType: 'more' },
-        { img: shareInHome, actionType: 'share', activeImage: activeShare },
-        { img: fvrt, actionType: 'fvrt', activeImage: activeFvrt },
-        { img: commentInHome, actionType: 'comment' },
+        { img: shareInHome, actionType: 'share', activeImage: shareInHome },
+        { img: fvrt, actionType: 'fvrt', activeImage: fvrt },
+        { img: commentInHome, actionType: 'comment', activeImage: commentInHome },
         { img: like, actionType: 'like', activeImage: activeLike },
+    ];
+    const userBlackActions: any = [
+        { img: moreBlack, actionType: 'more' },
+        { img: shareBlack, actionType: 'share', activeImage: shareBlack },
+        { img: savedBlack, actionType: 'fvrt', activeImage: savedBlack },
+        { img: commentBlack, actionType: 'comment', activeImage: commentBlack },
+        { img: likeBlack, actionType: 'like', activeImage: activeLike },
     ];
 
     const [videos, setVideos] = useState<Video[]>([]);
@@ -99,6 +113,7 @@ function ForDesktop(props: any) {
 
         if(themeColor == "dark"){ 
             setdarkTheme(style.darkTheme);
+            setIsDarkTheme(true);
         } 
     });
 
@@ -112,10 +127,10 @@ function ForDesktop(props: any) {
             const responseData = await response.json();
             const newVideos = Array.isArray(responseData.data) ? responseData.data as Video[] : [];
             // const newVideos = useSelector((store:any) => store.reducers.homeVideos);
-        //     // const API_KEY = process.env.VITE_API_URL;
+            // const API_KEY = process.env.VITE_API_URL;
             // dispatch(addMoreVideos(newVideos));
-        //     // dispatch(getHomeVideos({tab : 2, token})).then(() => setLoading(false));
-        //     // setVideos(prevVideos => [...prevVideos, ...newVideos]);
+            // dispatch(getHomeVideos({tab : 2, token})).then(() => setLoading(false));
+            // setVideos(prevVideos => [...prevVideos, ...newVideos]);
             const token = localStorage.getItem('token');
             dispatch(addMoreVideos({tab : activeTab, token, page: page}))
             // setHasMore(newVideos.length > 0);
@@ -283,7 +298,22 @@ useEffect(() => {
                                             </div>
                                         <div className={style.actions}>
                                             
-                                            {userActions.map((obj: any, i: number) => {
+                                            {isDarkTheme == true && userActions.map((obj: any, i: number) => {
+                                                return (
+                                                    <Action
+                                                        key={i}
+                                                        copyHandler={copyHandler}
+                                                        visibleReportPopup={() =>
+                                                            setreportPopup(true)
+                                                        }
+                                                        obj={obj}
+                                                        popupHandler={() => setSendPopup(true)}
+                                                        showVideoModal={showVideoModal}
+                                                        post={post}
+                                                    />
+                                                );
+                                            })}
+                                             {isDarkTheme == false && userBlackActions.map((obj: any, i: number) => {
                                                 return (
                                                     <Action
                                                         key={i}

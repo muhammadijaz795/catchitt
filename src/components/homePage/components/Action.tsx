@@ -85,7 +85,7 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    background: '#EAEAEA',
+                    background: 'rgb(179 181 189 / 18%)', // '#EAEAEA',
                     borderRadius: '50%',
                     cursor: 'pointer',
                     position: 'relative',

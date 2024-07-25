@@ -34,6 +34,7 @@ function CustomPlayer({ src, videoModal, post, controls }: any) {
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
+                // height: '85vh',
             }}
             ref={ref}
             className={`${style.mainContainer} video-container`}
@@ -45,7 +46,8 @@ function CustomPlayer({ src, videoModal, post, controls }: any) {
                     loop={true}
                     autoPlay={videoModal ? false : inView}
                     controls={controls}
-                    style={{  height: '85vh', position: 'relative', zIndex: 1 }}
+                    style={{  height: '85vh',
+                         position: 'relative', zIndex: 1 }}
                     src={src}
                     ref={videoRef}
                     className={style.video}

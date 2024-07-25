@@ -110,7 +110,8 @@ function Navbar() {
                         </div>
                     ) : (
                         <>
-                            <button
+                        <div className={style.DivHeaderRightContainer}>
+                            {/* <button
                                 style={{
                                     background: 'rgb(255, 59, 92)',
                                     color: '#FFF',
@@ -123,7 +124,9 @@ function Navbar() {
                                 onClick={() => dispatch(openLoginPopup())}
                             >
                                 Login
-                            </button>
+                            </button> */}
+                            <button type="button" className={style.StyledLoginButton}  onClick={() => dispatch(openLoginPopup())} >Log in</button>
+                            </div>
                             <MenuDropdownPopup
                                 menuPopupStatusToggler={menuPopupStatusToggler}
                                 menuPopupStatus={menuPopupStatus}

@@ -97,6 +97,11 @@ import privacyPolicyIconWhite from './assets/privacyPolicyIcon-white.svg';
 import reportProblemIconWhite from './assets/reportProblemIcon-white.svg';
 import termsConditionsIconWhite from './assets/termsConditionsIcon-white.svg';
 import closeSquare from './assets/closeSquare.svg';
+import commentBlack from './assets/commentBlack.svg';
+import likeBlack from './assets/likeBlack.svg';
+import shareBlack from './assets/shareBlack.svg';
+import moreBlack from './assets/moreBlack.svg';
+import savedBlack from './assets/savedBlack.svg';
 
 
 export {
@@ -199,4 +204,9 @@ export {
     reportProblemIconWhite,
     termsConditionsIconWhite,
     closeSquare,
+    commentBlack,
+    likeBlack,
+    shareBlack,
+    moreBlack,
+    savedBlack,
 };
