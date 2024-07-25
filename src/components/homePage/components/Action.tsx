@@ -11,6 +11,7 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
 
+    console.log("POSt : ",post);
     const actionClickHandler = async () => {
         try {
             if(isUserLoggedIn() == true){
@@ -104,6 +105,8 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
                     <COPY_AND_SEND_MENU_HOME
                         copyHandler={() => copyHandler(post?.reducedVideoUrl)}
                         popupHandler={popupHandler}
+                        videoUrl={post?.reducedVideoUrl}
+                        videoTitle={post?.description} // Assuming you have a title property
                     />
                 )}
                 {obj.actionType === 'more' && (

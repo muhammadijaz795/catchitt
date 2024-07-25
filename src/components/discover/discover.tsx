@@ -14,20 +14,20 @@ import { DISCOVER_CATEGORIES } from '../../utils/constants';
 
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
-    const [hashtagVideos, setHashtagVideos] = useState([]);
-    const [hashtagVideosToShow, setHashtagVideosToShow] = useState([]);
-    const [videoModal, setVideoModal] = useState(false);
-    const [videoModalInfo, setVideoModalInfo] = useState({});
+    const [hashtagVideos, setHashtagVideos] = useState<any>([]);
+    const [hashtagVideosToShow, setHashtagVideosToShow] = useState<any>([]);
+    const [videoModal, setVideoModal] = useState<any>(false);
+    const [videoModalInfo, setVideoModalInfo] = useState<any>({});
     const token = localStorage.getItem('token');
-    const [reportPopup, setReportPopup] = useState(false);
-    const [blockPopup, setBlockPopup] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [giftPopup, setGiftPopup] = useState(false);
-    const [storyPopup, setStoryPopup] = useState(false);
-    const [videosToShow, setVideosToShow] = useState(10);
-    const [selectedCategory, setSelectedCategory] = useState(0);
-    const mainDivRef = useRef(null);
-    const [muteStates, setMuteStates] = useState([]);
+    const [reportPopup, setReportPopup] = useState<any>(false);
+    const [blockPopup, setBlockPopup] = useState<any>(false);
+    const [isLoading, setIsLoading] = useState<any>(false);
+    const [giftPopup, setGiftPopup] = useState<any>(false);
+    const [storyPopup, setStoryPopup] = useState<any>(false);
+    const [videosToShow, setVideosToShow] = useState<any>(10);
+    const [selectedCategory, setSelectedCategory] = useState<any>(0);
+    const mainDivRef = useRef<any>(null);
+    const [muteStates, setMuteStates] = useState<any>([]);
 
     useEffect(() => {
         const apisIntegration = async () => {
@@ -62,9 +62,9 @@ export default function Discover() {
                 console.log('BOTTTTOMMMM');
                 // Adding a small buffer
                 const newVideosToShow = hashtagVideos.slice(videosToShow, videosToShow + 10);
-                setHashtagVideosToShow((prev) => [...prev, ...newVideosToShow]);
-                setVideosToShow((prev) => prev + 10);
-                // setMuteStates((prevMuteStates) => [...prevMuteStates, ...Array(newVideosToShow.length).fill(true)]);
+                setHashtagVideosToShow((prev: any) => [...prev, ...newVideosToShow]);
+                setVideosToShow((prev: number) => prev + 10);
+                setMuteStates((prevMuteStates: any) => [...prevMuteStates, ...Array(newVideosToShow.length).fill(true)]);
             }
         }
     }, [videosToShow, hashtagVideos]);

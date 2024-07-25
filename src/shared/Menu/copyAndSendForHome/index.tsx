@@ -4,11 +4,25 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
-import { copyLink, send } from '../../../icons';
+import {
+    copyLink,
+    send,
+    embedShare,
+    whatsappShare,
+    linkedInShare,
+    twitterShare,
+    facebookShare,
+} from '../../../icons';
 import style from './index.module.scss';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
-export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bottonSide }: any) {
+export default function COPY_AND_SEND_MENU_HOME({
+    copyHandler,
+    popupHandler,
+    bottonSide,
+    videoUrl,
+    videoTitle,
+}: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const open = Boolean(anchorEl);
@@ -71,6 +85,28 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
         },
     }));
 
+    const shareToWhatsApp = () => {
+        window.open(`https://api.whatsapp.com/send?text=${videoTitle} - ${videoUrl}`, '_blank');
+    };
+
+    const shareToFacebook = () => {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${videoUrl}`, '_blank');
+    };
+
+    const shareToTwitter = () => {
+        window.open(
+            `https://twitter.com/intent/tweet?url=${videoUrl}&text=${videoTitle}`,
+            '_blank'
+        );
+    };
+
+    const shareToLinkedIn = () => {
+        window.open(
+            `https://www.linkedin.com/shareArticle?url=${videoUrl}&title=${videoTitle}`,
+            '_blank'
+        );
+    };
+
     return (
         <div
             style={{
@@ -81,14 +117,14 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
                 // // zIndex: 200,
                 // width: '100%',
                 // height: '100%',
-                
+
                 // marginRight:20,
                 // display:'flex'
-                background: 'transparent !important'
+                background: 'transparent !important',
             }}
             className={style.actionShareStyle}
         >
-            <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }} >
+            <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
                 <ListItemButton
                     id="lock-button"
                     aria-haspopup="listbox"
@@ -126,6 +162,36 @@ export default function COPY_AND_SEND_MENU_HOME({ copyHandler, popupHandler, bot
                     <div className={style.menuItem} onClick={copyHandler}>
                         <img src={copyLink} />
                         <p className={`${style.p} ${style.black_500}`}>Copy link</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={copyHandler}>
+                        <img src={embedShare} />
+                        <p className={`${style.p} ${style.black_500}`}>Embed</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToWhatsApp}>
+                        <img src={whatsappShare} />
+                        <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToFacebook}>
+                        <img src={facebookShare} />
+                        <p className={`${style.p} ${style.black_500}`}>Facebook</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToTwitter}>
+                        <img src={twitterShare} />
+                        <p className={`${style.p} ${style.black_500}`}>Twitter</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToLinkedIn}>
+                        <img src={linkedInShare} />
+                        <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
                     </div>
                 </MenuItem>
             </StyledMenu>
