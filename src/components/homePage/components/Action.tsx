@@ -4,6 +4,8 @@ import { videoLikehandle, videoSavehandle } from '../../../redux/AsyncFuncs';
 import COPY_AND_SEND_MENU_HOME from '../../../shared/Menu/copyAndSendForHome';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
 import style from './Action.module.scss';
+import {isUserLoggedIn} from '../../../utils/common';
+import { openLoginPopup } from '../../../redux/reducers';
 
 function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoModal, post }: any) {
     const [isActive, setIsActive] = useState(false);
@@ -11,18 +13,22 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
 
     const actionClickHandler = async () => {
         try {
-            if (obj.actionType === 'like') {
-                // console.log("post",post)
-                dispatch(videoLikehandle(post.mediaId));
-                // dispatch(likeHandler);
+            if(isUserLoggedIn() == true){
+                if (obj.actionType === 'like') {
+                    // console.log("post",post)
+                    dispatch(videoLikehandle(post.mediaId));
+                    // dispatch(likeHandler);
+                }
+                if (obj?.actionType === 'comment') {
+                    showVideoModal(post);
+                }
+                if (obj?.actionType === 'fvrt') {
+                    dispatch(videoSavehandle(post.mediaId));
+                }
+                setIsActive(!isActive);
+            }else{
+                dispatch(openLoginPopup())
             }
-            if (obj?.actionType === 'comment') {
-                showVideoModal(post);
-            }
-            if (obj?.actionType === 'fvrt') {
-                dispatch(videoSavehandle(post.mediaId));
-            }
-            setIsActive(!isActive);
         } catch (error) {
             console.log('error', error);
         }
