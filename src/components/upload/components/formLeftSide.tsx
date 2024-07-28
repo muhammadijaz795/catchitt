@@ -4,7 +4,7 @@ import style from '../styles.module.scss';
 import CustomPopup from '../../../shared/popups/CustomPopup';
 import React from 'react';
 
-function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme }: any) {
+function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo }: any) {
     const [replaceVideoPopup, setReplaceVideoPopup] = React.useState(false);
     return (
         <div className="flex-[0.6] p-[2.5rem] flex flex-col gap-[1rem]">
@@ -17,7 +17,7 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme }: any) 
             <div
                 className={`mx-auto md:mx-0 w-[17.5rem] h-[36rem] mt-[1.25rem] mb-[1rem] ${style.emulator}`}
             >
-                <CustomPlayer src={selectedVideoSrc} />
+                <CustomPlayer src={selectedVideoSrc ? selectedVideoSrc : videoInfo?.originalUrl} />
             </div>
             <CustomButton
                 onClick={() => setReplaceVideoPopup(true)}

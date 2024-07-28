@@ -4,6 +4,7 @@ import UploadForm from './components/uploadForm';
 import useUpload from './hooks';
 import style from './index.module.scss';
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function UploadPage() {
     const {
@@ -16,10 +17,12 @@ function UploadPage() {
         updateState,
         state,
         SubmitHandler,
-        isPosing,
+        isPosting,
     } = useUpload();
 
     const [darkTheme, setdarkTheme] = useState('');
+    const location = useLocation();
+    const { isEditMode, info } = location.state || { isEditMode: false, info: {} };
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -33,7 +36,7 @@ function UploadPage() {
     return (
         <div className={`flex flex-col ${darkTheme}`}>
             <Navbar />
-            {!selectedFile ? (
+            {!selectedFile && !isEditMode ? (
                 <UploadFile selectFilesHandler={selectFilesHandler} />
             ) : (
                 <UploadForm
@@ -43,7 +46,8 @@ function UploadPage() {
                     updateState={updateState}
                     state={state}
                     SubmitHandler={SubmitHandler}
-                    isPosing={isPosing}
+                    isPosing={isPosting}
+                    videoInfo={info}
                 />
             )}
             <input
