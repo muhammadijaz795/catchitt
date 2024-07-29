@@ -5,24 +5,21 @@ export default function PopupForGetApp({ openAppPopup, closeAppPopup, info }: an
     const [popupH, setPopupH] = useState<any>()
 
     return (
-        <div className={style.parent}>
-            <Modal open={openAppPopup} >
-                <ClickAwayListener onClickAway={() => {
+      
+        <Modal open={openAppPopup}>
+            <ClickAwayListener onClickAway={() => {
                     closeAppPopup()
                 }}>
-                    <div onClick={(e) => e.stopPropagation()} className={style.child}>
-                        <p className={style.text}>{ 'asdasdasdasd'}</p>
-                        <div>
-                            <button  className={style.redBtn}>
-                                {'Block'}
-                            </button>
-                            <button className={style.btn}>
-                                Cancel
-                            </button>
-                        </div>
+                <div onClick={(e) => e.stopPropagation()} className={style.parent}>
+                    <p className={style.text}>{"Get the Seezitt app"}</p>
+                    <hr/>
+                    <div>
+                     <center>
+                        <img style={{width: "50%"}} src="https://sf16-website-login.neutral.ttwstatic.com/obj/tiktok_web_login_static/tiktok/webapp/main/webapp-desktop/c287bca871661e22ee8a.png" />
+                    </center>
                     </div>
-                </ClickAwayListener>
-            </Modal>
-        </div>
+                </div>
+            </ClickAwayListener>
+        </Modal>
     )
 }
