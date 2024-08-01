@@ -4,7 +4,15 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
-import { copyLink, send } from '../../../icons';
+import { 
+    copyLink,
+    send, 
+    embedShare,
+    whatsappShare,
+    linkedInShare,
+    twitterShare,
+    facebookShare
+ } from '../../../icons';
 import style from './index.module.scss';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
@@ -70,6 +78,28 @@ export default function COPY_AND_SEND_MENU({ copyHandler }: any) {
         },
     }));
 
+    const shareToWhatsApp = () => {
+        window.open(`https://api.whatsapp.com/send?text=${window.location.href}`, '_blank');
+    };
+
+    const shareToFacebook = () => {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, '_blank');
+    };
+
+    const shareToTwitter = () => {
+        window.open(
+            `https://twitter.com/intent/tweet?url=${window.location.href}`,
+            '_blank'
+        );
+    };
+
+    const shareToLinkedIn = () => {
+        window.open(
+            `https://www.linkedin.com/shareArticle?url=${window.location.href}`,
+            '_blank'
+        );
+    };
+
     return (
         <div
             style={{
@@ -119,6 +149,30 @@ export default function COPY_AND_SEND_MENU({ copyHandler }: any) {
                     <div className={style.menuItem} onClick={copyHandler}>
                         <img src={copyLink} />
                         <p className={`${style.p} ${style.black_500}`}>Copy link</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToWhatsApp}>
+                        <img src={whatsappShare} />
+                        <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToFacebook}>
+                        <img src={facebookShare} />
+                        <p className={`${style.p} ${style.black_500}`}>Facebook</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToTwitter}>
+                        <img src={twitterShare} />
+                        <p className={`${style.p} ${style.black_500}`}>Twitter</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <div className={style.menuItem} onClick={shareToLinkedIn}>
+                        <img src={linkedInShare} />
+                        <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
                     </div>
                 </MenuItem>
             </StyledMenu>
