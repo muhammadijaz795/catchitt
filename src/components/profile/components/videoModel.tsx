@@ -35,7 +35,7 @@ function VideoModel({
     gifts,
     sendPopupHandler,
     deleteVideo,
-    editVideoHandler
+    editVideoHandler,
 }: Props) {
     const navigate = useNavigate();
     //For Images Ref.
@@ -123,7 +123,7 @@ function VideoModel({
 
     return (
         <div
-            className={` ${style.div} ${style.lightdarkTheme}`}
+            className={`${style.div} ${style.lightdarkTheme}`}
             onClick={() => {
                 if (more) {
                     setMore(false);
@@ -142,11 +142,13 @@ function VideoModel({
                     preload="auto"
                     playsInline
                     src={
-                        info?.reducedVideoUrl.length > 0 ? info?.reducedVideoUrl : info?.originalUrl
+                        info?.reducedVideoUrl?.length > 0
+                            ? info?.reducedVideoUrl
+                            : info?.originalUrl
                     }
                 />
             </div>
-            <div className={style['cotent-sec']} style={{ width: '100%' }}>
+            <div className={`${style['cotent-sec']}`} style={{ }}>
                 <img
                     onClick={onModalClose}
                     className={style['close-btn-img']}
@@ -221,10 +223,10 @@ function VideoModel({
                         </button>
                     </div>
                 </div>
-                <p style={{ marginBottom: 24 }} className={style['text3']}>
-                    Animals Lover #animal #zoo #park
+                <p style={{ marginBottom: 24 }} className={`${style['text3']} w-3/4`}>
+                    {info?.description}
                 </p>
-                <div className="d-flex " style={{ marginBottom: 24 }}>
+                <div className="d-flex" style={{ marginBottom: 24 }}>
                     <img
                         className={style['music-icon']}
                         src="../../../../public/images/icons/Group.svg"

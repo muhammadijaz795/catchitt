@@ -13,7 +13,7 @@ import CustomPopup from '../../../shared/popups/CustomPopup';
 import BasicSwitch from '../../../shared/switch/BasicSwitch';
 
 function FormRightSide(props: any) {
-    const { thumbnails, updateState, state, SubmitHandler, isPosing } = props;
+    const { thumbnails, updateState, state, SubmitHandler, isPosing, videoInfo } = props;
     const [dropDown, setdropDown] = useState(false);
     const [videoThumbnails, setVideoThumbnails] = useState<any[]>([]);
     const [selectedThumb, setSelectedThumb] = useState(0);
@@ -22,6 +22,8 @@ function FormRightSide(props: any) {
     const [postLocationsPopup, setPostLocationsPopup] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [taggedUsers, setTaggedUser] = useState<any[]>([]);
+
+    console.log('Video info : ', videoInfo);
 
     useMemo(() => {
         setVideoThumbnails(thumbnails);
