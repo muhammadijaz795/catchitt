@@ -17,6 +17,7 @@ function UploadPage() {
         updateState,
         state,
         SubmitHandler,
+        updateMediaHandler,
         isPosting,
     } = useUpload();
 
@@ -46,7 +47,8 @@ function UploadPage() {
                     updateState={updateState}
                     state={state}
                     SubmitHandler={SubmitHandler}
-                    isPosing={isPosting}
+                    updateMediaHandler={updateMediaHandler}
+                    isPosting={isPosting}
                     videoInfo={info}
                 />
             )}

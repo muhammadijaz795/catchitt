@@ -120,3 +120,12 @@ export const get = async (url: any, params: any = null) => {
 export const post = async (url: any, params: any = null, auth = null) => {
     return await request(url, { method: 'POST', ...(params && params) }, auth);
 };
+
+/**
+ * Alias function for making patch request
+ * @param {string | URL} endpoint - Endpoint or URL
+ * @param {object} [params={type: "application/json", params: null, data: null}] - Request data
+ */
+export const patch = async (url: any, params: any = null, auth = null) => {
+    return await request(url, { method: 'PATCH', ...(params && params) }, auth);
+};

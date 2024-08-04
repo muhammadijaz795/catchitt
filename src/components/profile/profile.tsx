@@ -127,7 +127,7 @@ export const Profile = (props: any) => {
     };
 
     const markVideoDisplayed = async (id: string) => {
-        const url = `${API_KEY}/media-profileViewsContent/mark-as-displayed/${id}`;
+        const url = `${API_KEY}/media-content/mark-as-displayed/${id}`;
 
         try {
             const response = await fetch(url, {
@@ -150,7 +150,7 @@ export const Profile = (props: any) => {
     };
 
     const markVideoViewed = async (id: string) => {
-        const url = `${API_KEY}/media-profileViewsContent/mark-as-started-watching/${id}`;
+        const url = `${API_KEY}/media-content/mark-as-started-watching/${id}`;
 
         try {
             const response = await fetch(url, {

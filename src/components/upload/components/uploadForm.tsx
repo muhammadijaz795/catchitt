@@ -11,7 +11,8 @@ function UploadForm(props: any) {
         updateState,
         state,
         SubmitHandler,
-        isPosing,
+        updateMediaHandler,
+        isPosting,
         videoInfo,
     } = props;
     const [darkTheme, setdarkTheme] = useState('');
@@ -45,7 +46,8 @@ function UploadForm(props: any) {
                 thumbnails={thumbnails}
                 state={state}
                 SubmitHandler={SubmitHandler}
-                isPosing={isPosing}
+                updateMediaHandler={updateMediaHandler}
+                isPosting={isPosting}
             />
         </div>
     );
