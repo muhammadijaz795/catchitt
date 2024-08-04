@@ -22,6 +22,7 @@ export default function COPY_AND_SEND_MENU_HOME({
     bottonSide,
     videoUrl,
     videoTitle,
+    generateEmbedCodeHandler
 }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
@@ -175,7 +176,7 @@ export default function COPY_AND_SEND_MENU_HOME({
                     </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem} onClick={copyHandler}>
+                    <div className={style.menuItem} onClick={generateEmbedCodeHandler}>
                         <img src={embedShare} />
                         <p className={`${style.p} ${style.black_500}`}>Embed</p>
                     </div>
