@@ -83,8 +83,6 @@ export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => 
             if (response.ok) {
                 const responseData = await response.json();
                 setPrivacySettingsData(responseData.data);
-                console.log(`my notifications settings: `);
-                console.log(responseData.data);
             }
         } catch (error) {
             console.log(error);
@@ -100,8 +98,6 @@ export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => 
             if (response.ok) {
                 const responseData = await response.json();
                 setBlockedAccountsData([...responseData.data]);
-                console.log(`my blocked accounts data: `);
-                console.log(responseData.data);
             }
         } catch (error) {
             console.log(error);
@@ -115,7 +111,6 @@ export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => 
                 headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             });
             if (response.ok) {
-                console.log(`Account blocked`);
                 handleFetchBlockedAccounts();
             }
         } catch (error) {
@@ -144,7 +139,6 @@ export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => 
             [name]: event.target.checked,
         };
         setSettings(updatedSettings);
-        console.log(JSON.stringify(updatedSettings));
         // Make a PATCH request to update the settings
         fetch(`${API_KEY}/profile/privacy-settings`, {
             method: 'PATCH',
@@ -161,7 +155,6 @@ export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => 
                 } else {
                     // Handle errors here
                     console.error(response);
-                    console.log(response);
                 }
             })
             .catch((error) => {

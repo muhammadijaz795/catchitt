@@ -89,8 +89,6 @@ export const SuggestedActivity = memo(
                 if (response.ok) {
                     const responseData = await response.json();
                     setFollowedUsersData(responseData.data.data);
-                    console.log(`the users I'm following: `);
-                    console.log(responseData.data);
                     // handleFetchActivity;
                 }
             } catch (error) {
@@ -113,8 +111,6 @@ export const SuggestedActivity = memo(
                     if (response.ok) {
                         const responseData = await response.json();
                         setRandomAccs(getRandomAccounts(responseData.data.data, 4));
-                        console.log('fetched public suggested acccounts: ');
-                        console.log(response);
                     } else {
                         console.log(response);
                     }
@@ -163,7 +159,6 @@ export const SuggestedActivity = memo(
 
                 if (response.ok) {
                     // Handle success as needed
-                    console.log(`user: ${accountId} is followed`);
                     // Update the followedAccounts state
                     setFollowedAccounts((prevFollowedAccounts: any) => ({
                         ...prevFollowedAccounts,
@@ -179,7 +174,6 @@ export const SuggestedActivity = memo(
             event: React.MouseEvent<HTMLElement>,
             accountId: string
         ) => {
-            console.log(accountId);
             if (!token) {
                 dispatch(openLoginPopup());
             } else {
@@ -209,12 +203,9 @@ export const SuggestedActivity = memo(
                     globalUserId = responseData.data.data[0].user._id;
                     // console.log(`the global user id: ${globalUserId}`);
                     handleFetchFollowedUsers(globalUserId);
-                    console.log(responseData);
-                    console.log(activityData);
                 }
             } catch (error) {
                 console.error(error);
-                console.log(errorMessage);
             }
         };
 

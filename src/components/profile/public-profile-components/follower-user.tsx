@@ -28,8 +28,6 @@ const PbulicFollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: 
 
         if (token) {
             try {
-                console.log('userID to unfollow');
-                console.log(user);
                 const response = await fetch(`${API_KEY}/profile/follow/${accountId}`, {
                     method: 'POST',
                     headers: {
@@ -40,7 +38,6 @@ const PbulicFollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: 
 
                 if (response.ok) {
                     // Handle success as needed
-                    console.log(`user: ${accountId} is followed`);
                     // Update the followedAccounts state
                     text == 'Unfollow' ? setText('Follow') : setText('Unfollow');
                     setLoading(false);

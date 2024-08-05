@@ -33,7 +33,7 @@ export default function Discover() {
         const apisIntegration = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`${API_KEY}/discover/trending/hashtags`, {
+                const response = await fetch(`${API_KEY}/discover/web/trending/hashtags?page=1&pageSize=2`, {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
@@ -41,12 +41,11 @@ export default function Discover() {
                     },
                 });
                 const { data } = await response.json();
-                const allVideos = data?.data[4]?.relatedVideos;
+                const allVideos = data?.data[1]?.relatedVideos;
                 setIsLoading(false);
-                setHashtagVideos(allVideos?.slice(10));
+                setHashtagVideos(allVideos);
                 setHashtagVideosToShow(allVideos?.slice(0, 10));
-                // setMuteStates(Array(allVideos?.length).fill(true)); // Initialize mute states
-                console.log('🚀 ~ apisIntegration ~ res:', data?.data);
+                setMuteStates(Array(allVideos?.length).fill(true)); // Initialize mute states
             } catch (error) {
                 setIsLoading(false);
                 console.log('Error fetching trending videos : ', error);
@@ -57,14 +56,17 @@ export default function Discover() {
 
     const handleScroll = useCallback(() => {
         if (mainDivRef.current) {
+            
             const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
             if (scrollTop + clientHeight >= scrollHeight) {
-                console.log('BOTTTTOMMMM');
                 // Adding a small buffer
                 const newVideosToShow = hashtagVideos.slice(videosToShow, videosToShow + 10);
                 setHashtagVideosToShow((prev: any) => [...prev, ...newVideosToShow]);
                 setVideosToShow((prev: number) => prev + 10);
-                setMuteStates((prevMuteStates: any) => [...prevMuteStates, ...Array(newVideosToShow.length).fill(true)]);
+                setMuteStates((prevMuteStates: any) => [
+                    ...prevMuteStates,
+                    ...Array(newVideosToShow.length).fill(true),
+                ]);
             }
         }
     }, [videosToShow, hashtagVideos]);
@@ -72,8 +74,8 @@ export default function Discover() {
     useEffect(() => {
         const mainDiv = mainDivRef.current;
         if (mainDiv) {
-            // mainDiv.addEventListener('scroll', handleScroll);
-            // return () => mainDiv.removeEventListener('scroll', handleScroll);
+            mainDiv.addEventListener('scroll', handleScroll);
+            return () => mainDiv.removeEventListener('scroll', handleScroll);
         }
     }, [handleScroll]);
 
@@ -104,28 +106,28 @@ export default function Discover() {
                     </div>
                 ) : (
                     <>
-                        <div className="flex flex-row mt-8 gap-4 overflow-auto">
-                            {DISCOVER_CATEGORIES?.map((category, index) => (
-                                <button
-                                    onClick={() => categoryHandler(index)}
-                                    className={`flex items-center px-3 h-[2.625rem] ${
-                                        selectedCategory === index
-                                            ? 'text-white bg-black'
-                                            : 'text-[#222] bg-unselected-category'
-                                    }  rounded-lg cursor-pointer text-base border-none whitespace-nowrap w-auto`}
-                                    key={index}
-                                >
-                                    {category?.category}
-                                </button>
-                            ))}
-                        </div>
                         <div>
-                            {/* <VideoPanel
+                            <div className="flex flex-row mt-8 gap-4 overflow-auto">
+                                {DISCOVER_CATEGORIES?.map((category, index) => (
+                                    <p
+                                        onClick={() => categoryHandler(index)}
+                                        className={`flex items-center px-3 h-[2.625rem] ${
+                                            selectedCategory === index
+                                                ? 'text-white bg-black'
+                                                : 'text-[#222] bg-unselected-category'
+                                        }  rounded-lg cursor-pointer text-base border-none whitespace-nowrap w-auto`}
+                                        key={index}
+                                    >
+                                        {category?.category}
+                                    </p>
+                                ))}
+                            </div>
+                            <VideoPanel
                                 openVideoModal={openVideoModal}
                                 videos={hashtagVideosToShow}
                                 muteStates={muteStates} // Pass mute states
-                                // setMuteStates={setMuteStates} // Pass setter for mute states
-                            /> */}
+                                setMuteStates={setMuteStates} // Pass setter for mute states
+                            />
                         </div>
                     </>
                 )}

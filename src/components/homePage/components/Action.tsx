@@ -4,16 +4,24 @@ import { videoLikehandle, videoSavehandle } from '../../../redux/AsyncFuncs';
 import COPY_AND_SEND_MENU_HOME from '../../../shared/Menu/copyAndSendForHome';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
 import style from './Action.module.scss';
-import {isUserLoggedIn} from '../../../utils/common';
+import { isUserLoggedIn } from '../../../utils/common';
 import { openLoginPopup } from '../../../redux/reducers';
 
-function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoModal, post }: any) {
+function Action({
+    obj,
+    visibleReportPopup,
+    popupHandler,
+    copyHandler,
+    showVideoModal,
+    post,
+    generateEmbedCodeHandler,
+}: any) {
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
 
     const actionClickHandler = async () => {
         try {
-            if(isUserLoggedIn() == true){
+            if (isUserLoggedIn() == true) {
                 if (obj.actionType === 'like') {
                     // console.log("post",post)
                     dispatch(videoLikehandle(post.mediaId));
@@ -26,8 +34,8 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
                     dispatch(videoSavehandle(post.mediaId));
                 }
                 setIsActive(!isActive);
-            }else{
-                dispatch(openLoginPopup())
+            } else {
+                dispatch(openLoginPopup());
             }
         } catch (error) {
             console.log('error', error);
@@ -103,6 +111,9 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
                 {obj.actionType === 'share' && (
                     <COPY_AND_SEND_MENU_HOME
                         copyHandler={() => copyHandler(post?.reducedVideoUrl)}
+                        generateEmbedCodeHandler={() =>
+                            generateEmbedCodeHandler(post?.reducedVideoUrl, post?.mediaId)
+                        }
                         popupHandler={popupHandler}
                         videoUrl={post?.reducedVideoUrl}
                         videoTitle={post?.description} // Assuming you have a title property
@@ -116,7 +127,7 @@ function Action({ obj, visibleReportPopup, popupHandler, copyHandler, showVideoM
                 )}
             </div>
             {obj?.actionType === 'like' ? (
-                <p className={style.actionC}>{post.likes+likes || 0}</p>
+                <p className={style.actionC}>{post.likes + likes || 0}</p>
             ) : obj?.actionType === 'comment' ? (
                 <p className={style.actionC}>{post?.comments?.length || 0}</p>
             ) : obj?.actionType === 'share' ? (

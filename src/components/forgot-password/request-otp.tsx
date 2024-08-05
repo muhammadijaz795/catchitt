@@ -232,7 +232,6 @@ export const RequestOtp = ({ className }: ForgotPasswordProps) => {
                                                 disabled: currentLanguageCode === code,
                                             })}
                                             onClick={() => {
-                                                console.log(`Changing language to: ${code}`);
                                                 i18next.changeLanguage(code);
                                             }}
                                         >

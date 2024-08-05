@@ -26,8 +26,6 @@ const PublicUser: React.FC<{
 
         if (token) {
             try {
-                console.log('userID to unfollow');
-                console.log(user);
                 const response = await fetch(`${API_KEY}/profile/follow/${accountId}`, {
                     method: 'POST',
                     headers: {
@@ -38,7 +36,6 @@ const PublicUser: React.FC<{
 
                 if (response.ok) {
                     // Handle success as needed
-                    console.log(`user: ${accountId} is followed`);
                     // Update the followedAccounts state
                     text == 'Unfollow' ? setText('Follow') : setText('Unfollow');
                     setLoading(false);
@@ -68,7 +65,6 @@ const PublicUser: React.FC<{
                         />
                         <Link
                             onClick={() => {
-                                console.log('afff');
                                 popupClose();
                             }}
                             to={'/profile/' + user?.follower_userID?.username}

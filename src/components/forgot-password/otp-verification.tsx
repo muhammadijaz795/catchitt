@@ -23,7 +23,7 @@ interface User {
 
 const defaultUser: User = {
     email: '',
-    otp: null
+    otp: null,
 };
 
 interface Languages {
@@ -46,7 +46,6 @@ const languages: Languages[] = [
 ];
 
 export const OtpVerification = ({ className }: ForgotPasswordProps) => {
-
     const navigate = useNavigate();
     const currentLanguageCode = cookies.get('i18next') || 'en';
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
@@ -58,49 +57,38 @@ export const OtpVerification = ({ className }: ForgotPasswordProps) => {
     const [user, setUser] = useState(defaultUser);
     const [response, setResponse] = useState(false);
     const [isSignupOtp, setIsSignupOtp] = useState(false);
-    
-    
-    const [otpMessage, setOtpMessage] = useState("We sent an OTP to your email.");
+
+    const [otpMessage, setOtpMessage] = useState('We sent an OTP to your email.');
     const [otp, setOtp] = useState<any>(null);
     let myOtp = +otp;
-  
-    const [isMail, setIsMail] = useState(true);
 
+    const [isMail, setIsMail] = useState(true);
 
     const profileData = useSelector((state: any) => state?.reducers?.profile);
 
-    console.log("Profile inside useSelector:", profileData);
-
-   const { email } = useParams();
+    const { email } = useParams();
 
     // if(email != ""){
     //     setUser({email, otp: ""});
     // }
     //**api call for resend api */
 
-   
-    const handleResendOtp:any = async (email: string) => {
-
-        if(email == "") {
+    const handleResendOtp: any = async (email: string) => {
+        if (email == '') {
             setErrorMessage('No Email');
             return;
         }
-         try {
+        try {
             const response = await fetch(`${API_KEY}${forgotPwdEndPoint}/generateOtp/${email}`, {
                 method: 'GET',
                 headers: { 'Content-type': 'application/json' },
                 // body: JSON.stringify({ email: email }),
             });
 
-             
-
             if (response.ok) {
                 const responseData = await response.json();
-                console.log("resend otp response data");
-                console.log(responseData)
                 setOtpMessage(responseData.message);
-                setOtp("");
-                
+                setOtp('');
             } else {
                 setErrorMessage('Invalid email');
                 console.log(response);
@@ -109,30 +97,23 @@ export const OtpVerification = ({ className }: ForgotPasswordProps) => {
             console.error(error);
             setErrorMessage('Invalid email');
         }
-    }
+    };
 
-    
-
-    
-     const handleRecendOtpSubmit = (e: React.FormEvent) => {
+    const handleRecendOtpSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // const { email } = user;
-        setErrorMessage("");
+        setErrorMessage('');
         handleResendOtp(email);
     };
 
-
-   
-  
     const handleVerifySubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
 
         // const { email } = user;
         handleVerify(email, otp);
-    }
+    };
 
     const handleVerify = async (email: string | undefined, otp: number) => {
-
         try {
             const response = await fetch(`${API_KEY}/auth/verifyOtp`, {
                 method: 'PATCH',
@@ -143,61 +124,43 @@ export const OtpVerification = ({ className }: ForgotPasswordProps) => {
                 body: JSON.stringify({ email: email, otp: myOtp }),
             });
 
-
-            
             let isSignup = localStorage.getItem('isSignupOtp');
-            if(isSignup && isSignup == "true"){
+            if (isSignup && isSignup == 'true') {
                 setIsSignupOtp(true);
-
             }
-             
-            console.log("profileData after otp verification")
-            console.log(profileData)
 
-            
-           if (response.ok) {
-                
-                 if(isSignupOtp){
-               
+            if (response.ok) {
+                if (isSignupOtp) {
                     localStorage.setItem('userId', profileData?._id || '');
                     localStorage.setItem('token', profileData?.token || '');
-                    localStorage.setItem('profile',profileData || '');
+                    localStorage.setItem('profile', profileData || '');
                     db.profile.add(profileData);
                     localStorage.getItem('isSignupOtp');
-                    if( localStorage.getItem('isSignupOtp')){
-                        localStorage.removeItem('isSignupOtp')
-
+                    if (localStorage.getItem('isSignupOtp')) {
+                        localStorage.removeItem('isSignupOtp');
                     }
-                    navigate('/home'); 
-                }else{
-
+                    navigate('/home');
+                } else {
                     const responseData = await response.json();
                     setResponse(true);
                 }
             } else {
                 // Handle the error response from the server
                 const errorResponseData = await response.json();
-                 // Assuming the error message is returned in a 'message' field
+                // Assuming the error message is returned in a 'message' field
                 setErrorMessage(errorResponseData.message);
- 
             }
         } catch (error) {
             console.error(error);
             setErrorMessage('Invalid email or password');
         }
-    }
-
-
-
+    };
 
     if (response) {
         let theOtp = otp;
-        user.otp = theOtp
-        return (
-            <SetNewPassword email={email} otp={user.otp} />
-        )
+        user.otp = theOtp;
+        return <SetNewPassword email={email} otp={user.otp} />;
     }
-
 
     return (
         <div className={classNames(styles.container, className)}>
@@ -228,18 +191,14 @@ export const OtpVerification = ({ className }: ForgotPasswordProps) => {
                         width: '80%',
                         alignContent: 'center',
                         alignSelf: 'center',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
                     }}
                 >
-                    
-
-                        <div className={styles.otpForm}>
-                            <h4>
-                                Verify your email
-                            </h4>
-                            <p>
-                                {otpMessage}
-                                <div style={{ marginTop: '20px' }}>
+                    <div className={styles.otpForm}>
+                        <h4>Verify your email</h4>
+                        <p>
+                            {otpMessage}
+                            <div style={{ marginTop: '20px' }}>
                                 {errorMessage ? (
                                     <h4
                                         style={{
@@ -253,29 +212,28 @@ export const OtpVerification = ({ className }: ForgotPasswordProps) => {
                                     </h4>
                                 ) : null}
                             </div>
-                            </p>
-                            <OtpInput
-                                value={otp}
-                                onChange={setOtp}
-                                numInputs={6}
-                                renderSeparator={<span></span>}
-                                inputStyle={otp === '' ? styles.otpInput : styles.otpInputNotEmpty}
-                                containerStyle={styles.otpContainer}
-                                renderInput={(props) => <input {...props} />}
-                                inputType={"tel"}
-                                skipDefaultStyles={true}
-                            />
-                            <div className={styles.signupSubmitDiv}>
-                                <button
-                                    className={styles.signupSubmitBtn}
-                                    onClick={handleVerifySubmit}
-                                >
-                                    Verify code
-                                </button>
-                            </div>
-                            <div onClick={handleRecendOtpSubmit} className={styles.resendCodeBtn}> Resend code </div>
+                        </p>
+                        <OtpInput
+                            value={otp}
+                            onChange={setOtp}
+                            numInputs={6}
+                            renderSeparator={<span></span>}
+                            inputStyle={otp === '' ? styles.otpInput : styles.otpInputNotEmpty}
+                            containerStyle={styles.otpContainer}
+                            renderInput={(props) => <input {...props} />}
+                            inputType={'tel'}
+                            skipDefaultStyles={true}
+                        />
+                        <div className={styles.signupSubmitDiv}>
+                            <button className={styles.signupSubmitBtn} onClick={handleVerifySubmit}>
+                                Verify code
+                            </button>
                         </div>
-                
+                        <div onClick={handleRecendOtpSubmit} className={styles.resendCodeBtn}>
+                            {' '}
+                            Resend code{' '}
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.afterTheFormDiv}>
                     <div className={classNames(styles.footerLightBg)}>
@@ -311,11 +269,10 @@ export const OtpVerification = ({ className }: ForgotPasswordProps) => {
                                     <li key={country_code}>
                                         <a
                                             href="#"
-                                            className={classNames("dropdown-item", {
+                                            className={classNames('dropdown-item', {
                                                 disabled: currentLanguageCode === code,
                                             })}
                                             onClick={() => {
-                                                console.log(`Changing language to: ${code}`);
                                                 i18next.changeLanguage(code);
                                             }}
                                         >

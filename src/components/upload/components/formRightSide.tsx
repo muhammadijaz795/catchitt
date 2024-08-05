@@ -13,7 +13,15 @@ import CustomPopup from '../../../shared/popups/CustomPopup';
 import BasicSwitch from '../../../shared/switch/BasicSwitch';
 
 function FormRightSide(props: any) {
-    const { thumbnails, updateState, state, SubmitHandler, isPosing, videoInfo } = props;
+    const {
+        thumbnails,
+        updateState,
+        state,
+        SubmitHandler,
+        isPosting,
+        videoInfo,
+        updateMediaHandler,
+    } = props;
     const [dropDown, setdropDown] = useState(false);
     const [videoThumbnails, setVideoThumbnails] = useState<any[]>([]);
     const [selectedThumb, setSelectedThumb] = useState(0);
@@ -183,7 +191,7 @@ function FormRightSide(props: any) {
                     <div className="w-[100%] flex flex-col gap-[1rem]">
                         <div className="flex justify-between w-[100%]">
                             <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
-                                Add location
+                                {videoInfo ? 'Edit' : 'Add'} location
                             </p>
                         </div>
                         <BasicInput
@@ -274,9 +282,9 @@ function FormRightSide(props: any) {
                             textSize="16px "
                             width="169px !important"
                             height="48px !important"
-                            text="Post"
-                            onClick={SubmitHandler}
-                            loading={isPosing}
+                            text={videoInfo ? 'Update' : 'Post'}
+                            onClick={videoInfo ? updateMediaHandler : SubmitHandler}
+                            loading={isPosting}
                         />
                     </div>
                 </div>

@@ -6,9 +6,9 @@ const VideoPage = () => {
 
     return (
         <Layout>
-            <div className="flex flex-col h-full justify-center items-center">
+            <div className="flex flex-col h-full justify-center items-center bg-gray-100">
                 <video
-                    className="h-[31.875rem] w-[49.875rem] object-cover"
+                    className="h-[31.875rem] w-[49.875rem] object-contain rounded-md shadow-xl"
                     loop={true}
                     controls={true}
                     autoPlay={true}

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { get } from '../../../axios/axiosClient';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { get, patch } from '../../../axios/axiosClient';
 import { updateUploadingStatus } from '../../../redux/reducers/upload';
-import { UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
+import { STATUS_CODE, UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 
 interface StateInterface {
@@ -22,14 +22,20 @@ interface StateInterface {
 
 function useUpload() {
     const [selectedFile, setselectedFile] = useState(null);
-    const [isPosing, setIsPosting] = useState(false);
+    const [isPosting, setIsPosting] = useState(false);
     const [selectedThumbnail, setSelectedThumbnail] = useState(null);
     const [thumbnails, setThumbnails] = useState<any>([]);
     const categories = useSelector((store: any) => store?.reducers?.videoCategories) || [];
+    const location = useLocation();
+    const { isEditMode, info } = location.state || { isEditMode: false, info: {} };
 
     const [state, setState] = useState<StateInterface>({
         category: {},
-        description: 'Hello everyone, I’m back! #vlog #trending',
+        description: info?.description,
+        allowDuet: info?.allowDuet,
+        videoId: info?.mediaId,
+        isOnlyMe: info?.privacyOptions?.isOnlyMe,
+        allowDownload: info?.privacyOptions.allowDownload,
     });
     const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -214,6 +220,42 @@ function useUpload() {
         setIsPosting(false);
     };
 
+    const updateMediaHandler = async () => {
+        setIsPosting(true);
+
+        // update video info
+        try {
+            let res: any = await patch(`/media-content/${state?.videoId}`, {
+                type: 'application/json',
+                data: {
+                    description: state?.description,
+                    tags: '',
+                    taggedUsers: [],
+                    category: '',
+                    privacyOptions: {
+                        allowDownload: state?.allowDownload,
+                        isOnlyMe: state?.isOnlyMe,
+                    },
+                    lat: info?.location?.coordinates[0],
+                    lng: info?.location?.coordinates[1],
+                    place: '',
+                    allowDuet: state?.allowDuet,
+                },
+            });
+
+            if (res?.status === STATUS_CODE.OK) {
+                console.log('Success Edit Video : ', res?.data);
+                navigate('/profile');
+            } else {
+                console.log(res?.message || 'Invalid status code');
+            }
+            setIsPosting(false);
+        } catch (error: any) {
+            setIsPosting(false);
+            return console.error(error?.message);
+        }
+    };
+
     useEffect(() => {
         updateState('category', categories?.[0] || {});
     }, [categories]);
@@ -234,7 +276,8 @@ function useUpload() {
         updateState,
         state,
         SubmitHandler,
-        isPosing,
+        updateMediaHandler,
+        isPosting,
     };
 }
 

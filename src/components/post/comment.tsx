@@ -22,10 +22,6 @@ const Comment: React.FC<{ comment: CommentType, handleReply: Function, handleLik
 		setReplying(true);
 		// setReplyingTo(userName); // Set the user being replied to
 		handleReply(comment.id, replyMessage, comment.user.name); // Pass the comment id and reply message to the parent component
-
-		console.log(comment.id);
-		console.log(replyMessage);
-		console.log(comment.user.name);
 	};
 
 	function formatTimeAgo(date: any) {

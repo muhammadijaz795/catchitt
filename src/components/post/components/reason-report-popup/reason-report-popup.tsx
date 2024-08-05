@@ -67,11 +67,9 @@ export const ReasonReportPopup = ({
             );
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
                 handleOpen();
             } else {
                 const errorResponseData = await response.json();
-                console.log(errorResponseData);
             }
         } catch (error) {
             console.error(error);

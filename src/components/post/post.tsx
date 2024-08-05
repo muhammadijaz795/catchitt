@@ -268,7 +268,6 @@ export const Post: React.FC<PostProps> = memo(
                 (res: any) => {
                     setMessage('');
                     setPostData(res.data as PostType);
-                    console.log('post refreshed');
                 }
             );
         };
@@ -278,9 +277,6 @@ export const Post: React.FC<PostProps> = memo(
             commentMessage: string,
             userName?: string
         ) => {
-            console.log(`commentId: ${commentId}`);
-            console.log(`commentMessage: ${commentMessage}`);
-            console.log(`userName: ${userName}`);
             setIsReplying(!isReplying);
             setReplyingMessage(`${userName}`);
             setCurrentCommentId(commentId);
@@ -332,7 +328,6 @@ export const Post: React.FC<PostProps> = memo(
                     setBookMarkStatus((prev) => !prev);
                 }
             );
-            console.log(response);
         };
         const dHandleBookmarking = useDebounce(handleBookmarking, 3);
 
@@ -385,7 +380,6 @@ export const Post: React.FC<PostProps> = memo(
             });
             if (response.ok) {
                 // Handle success as needed
-                console.log(`user: ${userId} is followed`);
                 // Update the followedAccounts state
                 setFollowedAccounts((prevFollowedAccounts: any) => ({
                     ...prevFollowedAccounts,
@@ -408,7 +402,6 @@ export const Post: React.FC<PostProps> = memo(
         }
 
         const handleSaveVideo = async (videoUrl: string) => {
-            console.log('save video clicked');
             const response = await axios.get(videoUrl, { responseType: 'blob' });
 
             // Extract the video content
@@ -439,7 +432,6 @@ export const Post: React.FC<PostProps> = memo(
 
                 const data = await response.json();
                 setGifts(data.data as Gift[]);
-                console.log(data);
             } catch (error) {
                 console.error('Error fetching gifts:', error);
             }
@@ -479,7 +471,6 @@ export const Post: React.FC<PostProps> = memo(
 
                 const responseData = await response.json();
                 const myData = responseData.status;
-                console.log(`The send gift response: ${myData}`);
 
                 // Move handleFetchCurrentPost outside the fetch block to ensure it runs after the fetch request.
                 await handleFetchCurrentPost(post.mediaId);
@@ -502,7 +493,6 @@ export const Post: React.FC<PostProps> = memo(
             setOpenPaypalPage(false);
         };
         const handlePaypalRequest = async () => {
-            console.log(selectedAmount);
             try {
                 const response = await fetch(`${API_KEY}/payment/web/coins/${selectedAmount}`, {
                     method: 'GET',
@@ -515,8 +505,6 @@ export const Post: React.FC<PostProps> = memo(
 
                 if (response.ok) {
                     const htmlContent = await response.text(); // Extract the HTML content
-                    console.log(htmlContent);
-                    console.log('it worked!!!!!');
                     setPaypalResponse(htmlContent);
                     handleOpenPaypalPage();
                 } else {
@@ -726,10 +714,6 @@ export const Post: React.FC<PostProps> = memo(
                                                                                         ._id
                                                                                 );
                                                                             } else {
-                                                                                console.log(
-                                                                                    'POST 1'
-                                                                                );
-
                                                                                 navigate('/auth');
                                                                             }
                                                                         }}
@@ -751,10 +735,6 @@ export const Post: React.FC<PostProps> = memo(
                                                                     className={styles.soundDiv}
                                                                     onClick={() => {
                                                                         setIndex(-1);
-                                                                        console.log(
-                                                                            'soundId:',
-                                                                            postData.sound?._id
-                                                                        );
                                                                         navigate(
                                                                             `/sounds/soundId=${
                                                                                 postData.sound
@@ -804,9 +784,6 @@ export const Post: React.FC<PostProps> = memo(
                                                                                     post,
                                                                                 ]);
                                                                             } else {
-                                                                                console.log(
-                                                                                    'POST 2'
-                                                                                );
                                                                                 navigate('/auth');
                                                                             }
                                                                         }}
@@ -843,9 +820,6 @@ export const Post: React.FC<PostProps> = memo(
                                                                             if (isLoggedIn) {
                                                                                 handleOpenCommentPopup();
                                                                             } else {
-                                                                                console.log(
-                                                                                    'POST 1'
-                                                                                );
                                                                                 navigate('/auth');
                                                                             }
                                                                         }}
@@ -896,9 +870,6 @@ export const Post: React.FC<PostProps> = memo(
                                                                                     []
                                                                                 );
                                                                             } else {
-                                                                                console.log(
-                                                                                    'POST 1'
-                                                                                );
                                                                                 navigate('/auth');
                                                                             }
                                                                         }}
@@ -1785,9 +1756,6 @@ export const Post: React.FC<PostProps> = memo(
                                                     if (isLoggedIn) {
                                                         handleFollowClick(postData.user._id);
                                                     } else {
-                                                        console.log(
-                                                            'POST 1'
-                                                        );
                                                         navigate('/auth');
                                                     }
                                                 }}
@@ -1808,7 +1776,6 @@ export const Post: React.FC<PostProps> = memo(
                                             className={styles.soundDiv}
                                             onClick={() => {
                                                 setIndex(-1);
-                                                console.log('soundId:', postData.sound?._id);
                                                 navigate(
                                                     `/sounds/soundId=${
                                                         postData.sound?._id === undefined ||
@@ -1866,9 +1833,6 @@ export const Post: React.FC<PostProps> = memo(
                                                                     postData.user._id
                                                                 );
                                                             } else {
-                                                                console.log(
-                                                                    'POST 1'
-                                                                );
                                                                 navigate('/auth');
                                                             }
                                                         }}
@@ -1909,7 +1873,6 @@ export const Post: React.FC<PostProps> = memo(
                                                 className={styles.soundDivMobile}
                                                 onClick={() => {
                                                     setIndex(-1);
-                                                    console.log('soundId:', postData.sound?._id);
                                                     navigate(
                                                         `/sounds/soundId=${
                                                             postData.sound?._id === undefined ||
@@ -1943,9 +1906,6 @@ export const Post: React.FC<PostProps> = memo(
                                                 if (isLoggedIn) {
                                                     dHandleLikePost([post]);
                                                 } else {
-                                                    console.log(
-                                                        'POST 1'
-                                                    );
                                                     navigate('/auth');
                                                 }
                                             }}
@@ -1981,9 +1941,6 @@ export const Post: React.FC<PostProps> = memo(
                                                 if (isLoggedIn) {
                                                     handleOpenCommentPopup();
                                                 } else {
-                                                    console.log(
-                                                        'POST 1'
-                                                    );
                                                     navigate('/auth');
                                                 }
                                             }}
@@ -2016,9 +1973,6 @@ export const Post: React.FC<PostProps> = memo(
                                                 if (isLoggedIn) {
                                                     dHandleBookmarking([]);
                                                 } else {
-                                                    console.log(
-                                                        'POST 1'
-                                                    );
                                                     navigate('/auth');
                                                 }
                                             }}

@@ -140,7 +140,6 @@ const homeVideos: any = createSlice({
         });
         builder.addCase(addMoreVideos.fulfilled, (state: any, action: any) => {
             // @ts-ignore
-            console.log("state / payload", state, action.payload);
             let filteredData =  [...state, ...action.payload]
             return filteredData;
         });

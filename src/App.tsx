@@ -332,7 +332,6 @@ function App() {
                 setOtpError(true);
             }
 
-            console.log('otp response', response);
         } catch (error) {
             console.log('send otp error:', error);
         }
@@ -434,7 +433,6 @@ function App() {
     const signupHandler = async () => {
         let dob = year + '-' + month + '-' + date;
         setDateOfBirth(dob);
-        console.log('signup', password, email, dateOfBirth, name);
 
         let signupObj;
         if (loginWithPhone) {
@@ -618,7 +616,6 @@ function App() {
 
             setOtpbuttonText('Resend');
 
-            console.log('otp verify response', data);
         } catch (error) {
             console.log('send otp error:', error);
         }
@@ -726,7 +723,6 @@ function App() {
     });
 
     const responseFacebook = (response: any) => {
-        console.log(response);
         loginWithFBAccessToken(response?.access_token);
     };
 

@@ -28,9 +28,6 @@ const MenuDropdownPopup = ({
         // // setChecked(e.target.checked);
         setChecked((prevState) => !prevState)
 
-        console.log("checked",checked);
-        console.log("value",e.target.value);
-        console.log("checked",checked);
         // localStorage.setItem('items', JSON.stringify(items));
         if(e.target.checked == true){
             window.localStorage.setItem('theme', "dark");

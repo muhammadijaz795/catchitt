@@ -74,7 +74,6 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
                 setResponseResult(responseData.message);
               
                 navigate(`/otp-verification/${email}`)
@@ -231,7 +230,6 @@ export const ForgotPassword = ({ className }: ForgotPasswordProps) => {
                                                 disabled: currentLanguageCode === code,
                                             })}
                                             onClick={() => {
-                                                console.log(`Changing language to: ${code}`);
                                                 i18next.changeLanguage(code);
                                             }}
                                         >

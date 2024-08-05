@@ -63,7 +63,6 @@ const PhoneOrEmail = (props: any) => {
                     setErrorMessage(res?.payload || res?.error?.message);
                     setIsLoading(false);
                 } else if (res?.payload?.status == 200) {
-                    console.log('data after successfull login', res?.payload?.data);
                     setIsLoading(false);
                     navigate('/home');
                 }

@@ -45,7 +45,6 @@ export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps)
         let onlyids = all.map((e) => e._id);
         let unique = Array.from(new Set(onlyids));
         let sanitized = unique.map((e) => all.find((c) => e == c._id));
-        console.log('only got those: ', sanitized.length);
     };
 
     const handleFetchSuggestedAccounts = async () => {
@@ -121,8 +120,6 @@ export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps)
     // 	return <Navigate to="/auth" />;
     // }
 
-    console.log('accounts', accountsData.length);
-
     const SuggestedAccount = memo(
         ({ account }: { account: Account }) => {
             const [isFollowed, setIsFollowed] = useState(false);
@@ -157,7 +154,6 @@ export const SuggestedAccountsPage = ({ className }: SuggestedAccountsPageProps)
                 event: React.MouseEvent<HTMLElement>,
                 account: Account
             ) => {
-                console.log('followed', account._id);
                 await handleFollowClick(account);
             };
 

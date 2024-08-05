@@ -87,14 +87,6 @@ function publicProfileStories({ story, onclose, openReport }: any) {
         setAfterItems(afterItems as any);
     }, [sliderIndex, stories]);
 
-    console.log("Index")
-    console.log(beforeItems)
-    console.log("beforeItems")
-    console.log(beforeItems)
-
-    console.log("afterITems")
-    console.log(afterItems)
-
     // const token = localStorage.getItem('token') ? localStorage.getItem('token') : "";
     
 
@@ -140,7 +132,6 @@ function publicProfileStories({ story, onclose, openReport }: any) {
     };
     const handleVideoTimeUpdate = (event: any) => {
         const video = event.target;
-        console.log("time updating")
         const currentProgress = (video.currentTime / video.duration) * 100;
         
         // setProgress(currentProgress);
@@ -235,7 +226,6 @@ function publicProfileStories({ story, onclose, openReport }: any) {
                         <Slider ref={sliderRef} {...settings} afterChange={handleAfterChange} className={style.slider} >
                             {
                                 stories?.map((story: any, i: any) => {
-                                    console.log("--------------------------------------")
                                     return (
                                         <div className={style.story} key={i}>
                                             <VideoPlayer

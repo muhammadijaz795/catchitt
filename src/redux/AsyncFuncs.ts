@@ -10,15 +10,11 @@ export const followingsMethod: any = createAsyncThunk(
         try {
             if (id) {
                 let res = await post(`/profile/follow/${id}/`);
-                console.log('follow action res public profile');
-                console.log(res);
             }
             const response = await get(`/profile/${userId}/followers`);
 
             if (response?.data?.data) {
                 const responseData = response?.data;
-                console.log('following list public profile');
-                console.log(responseData);
                 return responseData?.data;
             } else {
                 return {};
@@ -181,7 +177,6 @@ export const getRandomUsers: any = createAsyncThunk('get/random/users', async ()
             headers: { 'Content-type': 'application/json' },
         });
 
-        console.log('Random Users Response : ', response);
         if (response.ok) {
             const responseData = await response.json();
             return responseData.data.data;
@@ -236,8 +231,6 @@ export const loadFollowers: any = createAsyncThunk('get/profileSlice/followers',
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log('loadFOllowers');
-                console.log(responseData);
                 return responseData.data.data;
             } else {
                 console.log(response);
@@ -263,8 +256,6 @@ export const loadLikes: any = createAsyncThunk('get/profile/likes', async () => 
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log('loadFOllowers');
-                console.log(responseData);
                 return responseData.data.data;
             } else {
                 console.log(response);
@@ -290,8 +281,6 @@ export const loadFollowing: any = createAsyncThunk('get/profileSlice/following',
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log('loadFollowing');
-                console.log(responseData);
                 return responseData.data.data;
             } else {
                 console.log(response);
@@ -316,8 +305,6 @@ export const getProfileData: any = createAsyncThunk('get/getProfileData', async 
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log('getting profile data');
-                console.log(responseData.data);
                 return responseData.data;
             } else {
                 console.log(response);

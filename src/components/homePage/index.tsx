@@ -11,9 +11,15 @@ import ForMobile from './ForMobile';
 import useHome from './hooks/useHome';
 import { CircularProgress } from '@mui/material';
 
-
-
-import { APP_TEXTS, SIGNUP_APP_TEXTS, END_POINTS, LOGIN_OPTIONS, SIGNUP_OPTIONS, METHOD } from '../../utils/constants';
+import {
+    APP_TEXTS,
+    SIGNUP_APP_TEXTS,
+    END_POINTS,
+    LOGIN_OPTIONS,
+    SIGNUP_OPTIONS,
+    METHOD,
+    showToastSuccess,
+} from '../../utils/constants';
 import { validateEmail } from '../../utils/common';
 import ItemLogin from '../item-login';
 import SignupHandler from '../signup/signupHandler';
@@ -41,7 +47,6 @@ function HomePage() {
     const [videoModal, setVideoModal] = useState(false);
     const [blockPopup, setBlockPopup] = useState(false);
     const [sendPopup, setSendPopup] = useState(false);
-
 
     const [loginWithPhone, setLoginWithPhone] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -75,14 +80,19 @@ function HomePage() {
     const [name, setName] = useState<any>(null);
     const [dateOfBirth, setDateOfBirth] = useState<any>(null);
     const [emailIdError, setEmailIdError] = useState<boolean>(false);
-    const [otpbuttonText, setOtpbuttonText] = useState<string>("Send code");
+    const [otpbuttonText, setOtpbuttonText] = useState<string>('Send code');
     const [otpCode, setOtpCode] = useState<string>('');
     const [otpError, setOtpError] = useState<boolean>(false);
     const [darkTheme, setdarkTheme] = useState('');
     const [lightDarkTheme, setlightDarkTheme] = useState('');
     const [darkWhiteTheme, setDarkWhiteTheme] = useState('');
-    
-    
+    const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+    const [videoUrl, setVideoUrl] = useState<string>('');
+    const [mediaId, setMediaId] = useState<string>('');
+
+    const embedCode = `
+<blockquote class="seezitt-embed" cite="https://stagingweb.seezitt.com/video/${mediaId}" data-video-id="${mediaId}" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@sharjeelriaz489" href="https://stagingweb.seezitt.com/@sharjeelriaz489?refer=embed">@sharjeelriaz489</a> 14 Auguest coming soon very video 😂😂😂plzzz tik tok team viral my video plzzz <a title="support" target="_blank" href="https://stagingweb.seezitt.com/tag/support?refer=embed">#support</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral🖤tiktok" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral%F0%9F%96%A4tiktok?refer=embed">#fypシ゚viral🖤tiktok</a> ##<a title="foryou" target="_blank" href="https://stagingweb.seezitt.com/tag/foryou?refer=embed">#foryou</a> <a title="viral" target="_blank" href="https://stagingweb.seezitt.com/tag/viral?refer=embed">#viral</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral🖤tiktok☆♡🦋myvideo🤗foryou✨♥️" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral%F0%9F%96%A4tiktok%E2%98%86%E2%99%A1%F0%9F%A6%8Bmyvideo%F0%9F%A4%97foryou%E2%9C%A8%E2%99%A5%EF%B8%8F?refer=embed">#fypシ゚viral🖤tiktok☆♡🦋myvideo🤗foryou✨♥️</a> <a target="_blank" title="♬ original sound - 👑(SHÃRJÊÊL RIÃZ)👑" href="https://stagingweb.seezitt.com/music/original-sound-7398885360903965441?refer=embed">♬ original sound - 👑(SHÃRJÊÊL RIÃZ)👑</a> </section> </blockquote> <script async src="https://stagingweb.seezitt.com/embed.js"></script>
+  `;
 
     const signupItemClickHandler = (name: string) => {
         switch (name) {
@@ -91,7 +101,6 @@ function HomePage() {
                 // navigate('/signup/phone-or-email/email');
                 break;
             case 'Continue with Facebook':
-               
                 break;
             case 'Continue with Google':
                 break;
@@ -140,36 +149,31 @@ function HomePage() {
     };
 
     const signupNextScreen = async () => {
-
-        if(email && validateEmail(email)){
+        if (email && validateEmail(email)) {
             setEmailIdError(false);
-        }else{
+        } else {
             setEmailIdError(true);
         }
         try {
             const response: any = await fetch(`${API_KEY}/auth/verifyOtp`, {
-                method: "PATCH",
+                method: 'PATCH',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({ email:email, otp: otpCode }),
+                body: JSON.stringify({ email: email, otp: otpCode }),
             });
             const { data }: any = await response.json();
-            if(response.code == 200){
-                setOtpError(false)
+            if (response.code == 200) {
+                setOtpError(false);
                 setSignupNext(true);
-            }else{
-                setOtpError(true)
+            } else {
+                setOtpError(true);
             }
-            
-            console.log('otp response', response);
+
         } catch (error) {
             console.log('send otp error:', error);
         }
-
-        
     };
-    
 
     const loginHandler = async () => {
         setIsLoading(true);
@@ -193,33 +197,29 @@ function HomePage() {
             });
     };
 
-
     const signupHandler = async () => {
-        let dob= year+"-"+month+"-"+date;
+        let dob = year + '-' + month + '-' + date;
         setDateOfBirth(dob);
-        console.log("signup", password, email, dateOfBirth, name);
         // return false;
         setIsLoading(true);
         dispatch(signupService({ password, email, dateOfBirth, name }))
             .then((res: any) => {
-                console.log("res",res);
+                console.log('res', res);
                 if (res?.payload?.status == 400) {
-                    console.log("res 1",res);
+                    console.log('res 1', res);
                     setIsError(true);
                     // setPasswordBorderColor('border-red-400');
                     // setErrorMessage(res?.payload || res?.payload?.message);
-                    setErrorMessage(res?.payload?.message)
+                    setErrorMessage(res?.payload?.message);
                     setIsLoading(false);
                 } else if (res?.payload?.status == 200) {
-                    console.log("res 2",res);
-                    console.log('data after successfull login', res?.payload?.data);
                     setIsLoading(false);
                     closeLoginPopupHandler();
                     navigate('/home');
                 }
             })
             .catch((error: any) => {
-                console.log("error",error);
+                console.log('error', error);
                 setIsError(true);
                 setIsLoading(false);
             });
@@ -315,24 +315,23 @@ function HomePage() {
     };
 
     const sendOTPCode = async () => {
-        if(email && validateEmail(email)){
+        if (email && validateEmail(email)) {
             setEmailIdError(false);
-        }else{
+        } else {
             setEmailIdError(true);
         }
         try {
             const response: any = await fetch(`${API_KEY}/auth/request-verify-email`, {
-                method: "POST",
+                method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({ email:email }),
+                body: JSON.stringify({ email: email }),
             });
             const { data }: any = await response.json();
-            
-            setOtpbuttonText("Resend")
-            
-            console.log('otp verify response', data);
+
+            setOtpbuttonText('Resend');
+
         } catch (error) {
             console.log('send otp error:', error);
         }
@@ -350,32 +349,29 @@ function HomePage() {
 
     const goBackSignupHandler = () => {
         setIsMainLoginOption(true);
-        setSignupNext(false)
+        setSignupNext(false);
     };
 
-    const closeLoginPopupHandler =()=>{
+    const closeLoginPopupHandler = () => {
         dispatch(closeLoginPopup());
         setIsMainLoginOption(true);
-    }
+    };
 
     useEffect(() => {
         fetchCountriesList();
     }, []);
 
-
     const handleLoginClick = () => {
         setIsLoginSection(false);
-      }
+    };
 
     const handleSignupClick = () => {
         setIsLoginSection(false);
-    }
-
+    };
 
     const [month, setMonth] = useState('');
     const [date, setDate] = useState('');
     const [year, setYear] = useState('');
-
 
     const handleMonthChange = (event: SelectChangeEvent) => {
         setMonth(event.target.value as string);
@@ -402,23 +398,39 @@ function HomePage() {
         const rows = [];
         let i = 2025; // Start with 2025
         const len = 1900; // End at 1900
-      
-        while (i >= len) {
-          rows.push(<MenuItem key={i} value={i}>{i}</MenuItem>);
-          i--; // Decrement i in each iteration
-        }
-      
-        return rows;
-      }
 
-      useEffect(() => {
+        while (i >= len) {
+            rows.push(
+                <MenuItem key={i} value={i}>
+                    {i}
+                </MenuItem>
+            );
+            i--; // Decrement i in each iteration
+        }
+
+        return rows;
+    }
+
+    const copyEmbedCodeHandler = () => {
+        navigator.clipboard.writeText(embedCode).then(() => {
+            showToastSuccess('Embed Code Copied.');
+        });
+    };
+
+    const generateEmbedCodeHandler = (videoUrl: string, mediaId: string) => {
+        setVideoUrl(videoUrl);
+        setMediaId(mediaId);
+        setIsEmbedModalOpen(true);
+    };
+
+    useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
-        if(themeColor == "dark"){ 
+        if (themeColor == 'dark') {
             setdarkTheme(style.darkTheme);
             setlightDarkTheme(style.lightdarkTheme);
             setDarkWhiteTheme('');
-        } else{
+        } else {
             setDarkWhiteTheme('hover:bg-slate-100');
         }
     });
@@ -439,6 +451,7 @@ function HomePage() {
                 />
             ) : (
                 <ForDesktop
+                    generateEmbedCodeHandler={generateEmbedCodeHandler}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                     videoes={videos}
@@ -474,6 +487,50 @@ function HomePage() {
                 info={videoModalInfo}
                 userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
             />
+            {isEmbedModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-md shadow-lg w-2/5">
+                        <h2 className="text-xl font-bold mb-4 text-black text-left">Embed Video</h2>
+                        <div className="w-full h-[1px] bg-gray-300 mb-3 -mt-2" />
+                        <div className="flex flex-row justify-between items-center gap-4">
+                            <div className={'h-[400px] w-1/2'}>
+                                <video
+                                    className="h-full w-full rounded-md object-cover"
+                                    loop={true}
+                                    controls={false}
+                                    autoPlay={true}
+                                    width="300px"
+                                    preload="auto"
+                                    playsInline
+                                    src={videoUrl}
+                                />
+                            </div>
+                            <div className="w-1/2 flex flex-col justify-between items-center h-[400px]">
+                                <textarea
+                                    readOnly
+                                    className="w-full p-2 border border-gray-300 rounded-md mb-4 h-full bg-gray-100"
+                                    value={embedCode}
+                                />
+                                <div>
+
+                                <button
+                                    className="w-full px-4 py-2 bg-blue-500 text-white rounded-md"
+                                    onClick={copyEmbedCodeHandler}
+                                >
+                                    Copy Embed Code
+                                </button>
+                                <button
+                                    className="mt-4 w-full px-4 py-2 bg-gray-300 text-black rounded-md"
+                                    onClick={() => setIsEmbedModalOpen(false)}
+                                >
+                                    Close
+                                </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             <Gifts
                 mediaId={videoModalInfo?.mediaId}
                 openGifts={giftsPopup}

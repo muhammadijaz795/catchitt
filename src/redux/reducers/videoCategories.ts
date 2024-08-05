@@ -5,7 +5,6 @@ import { getVideoCategoriesEndPoind } from '../../utils/constants';
 export const getVideoCategories: any = createAsyncThunk('post/videoCategories', async () => {
     try {
         let res = await get(getVideoCategoriesEndPoind);
-        console.log(res?.data?.data);
         return res?.data?.data;
     } catch (error) {
         return;

@@ -23,7 +23,6 @@ const loginSlice: any = createSlice({
             return _state;
         },
         updateAvatar: (_state: any, action: any) => {
-            console.log('updating the avatar');
             _state.avatar = action?.payload;
             return _state;
         },
