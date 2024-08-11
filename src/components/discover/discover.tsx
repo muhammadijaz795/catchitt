@@ -30,33 +30,65 @@ export default function Discover() {
     const [muteStates, setMuteStates] = useState<any>([]);
 
     useEffect(() => {
-        const apisIntegration = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch(`${API_KEY}/discover/web/trending/hashtags?page=1&pageSize=2`, {
+        if (token != null && token != undefined && token != '') {
+            exploreForAuthorizedUser();
+        } else {
+            exploreForUnauthorizedUser();
+        }
+    }, []);
+
+    const exploreForAuthorizedUser = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(
+                `${API_KEY}/discover/web/trending/hashtags?page=1&pageSize=2`,
+                {
                     method: 'GET',
                     headers: {
                         'Content-type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     },
-                });
-                const { data } = await response.json();
-                const allVideos = data?.data[1]?.relatedVideos;
-                setIsLoading(false);
-                setHashtagVideos(allVideos);
-                setHashtagVideosToShow(allVideos?.slice(0, 10));
-                setMuteStates(Array(allVideos?.length).fill(true)); // Initialize mute states
-            } catch (error) {
-                setIsLoading(false);
-                console.log('Error fetching trending videos : ', error);
-            }
-        };
-        apisIntegration();
-    }, []);
+                }
+            );
+            const { data } = await response.json();
+            const allVideos = data?.data[1]?.relatedVideos;
+            setIsLoading(false);
+            setHashtagVideos(allVideos);
+            setHashtagVideosToShow(allVideos?.slice(0, 10));
+            setMuteStates(Array(allVideos?.length).fill(true)); // Initialize mute states
+        } catch (error) {
+            setIsLoading(false);
+            console.log('Error fetching trending videos : ', error);
+        }
+    };
+
+    const exploreForUnauthorizedUser = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(
+                `${API_KEY}/media-content/public/videos/feed/upgraded`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const { data } = await response.json();
+            console.log("🚀 ~ exploreForUnauthorizedUser ~ data:", data)
+            setIsLoading(false);
+            setHashtagVideos(data);
+            setHashtagVideosToShow(data?.slice(0, 10));
+            setMuteStates(Array(data?.length).fill(true)); // Initialize mute states
+        } catch (error) {
+            setIsLoading(false);
+            console.log('Error fetching trending videos : ', error);
+        }
+    };
 
     const handleScroll = useCallback(() => {
         if (mainDivRef.current) {
-            
             const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
             if (scrollTop + clientHeight >= scrollHeight) {
                 // Adding a small buffer
@@ -106,7 +138,7 @@ export default function Discover() {
                     </div>
                 ) : (
                     <>
-                        <div>
+                        <div className='pl-6'>
                             <div className="flex flex-row mt-8 gap-4 overflow-auto">
                                 {DISCOVER_CATEGORIES?.map((category, index) => (
                                     <p
