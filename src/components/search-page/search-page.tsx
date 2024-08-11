@@ -192,10 +192,11 @@ export const SearchPage = () => {
     const handleClose = () => setOpen(false);
 
     const handleFetchSearch = async (query?: string, page?: number) => {
+        console.log("test hit");
         setIsLoading(true);
         try {
             const response = await fetch(
-                `${API_KEY}/discover/search?searchQuery=${query}&page=${page ? page : 1}&pageSize=10`,
+                `${API_KEY}/discover/search?searchQuery=${query}&page=${page ? page : 1}&pageSize=30`,
                 {
                     method: 'GET',
                     headers: {
@@ -248,6 +249,19 @@ export const SearchPage = () => {
         setPage(1);
         typingDebouncedFetchSearch(searchQuery, 1);
     }, [searchQuery]);
+
+
+    const [darkTheme, setdarkTheme] = useState('');
+    const [textColor, setTextColor] = useState('black');
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+        if (themeColor == 'dark') {
+            setdarkTheme(styles.darkTheme);
+            setTextColor('white');
+        }else{
+            setTextColor('black');
+        }
+    });
 
     useEffect(() => {
         typingDebouncedFetchSearch(searchQuery, page);
@@ -350,7 +364,7 @@ export const SearchPage = () => {
                                         setVideoModal(true);
                                     }}
                                 />
-                                <h6 className={styles.videoDescription}>{video.description}</h6>
+                                <p className={styles.videoDescription}>{video.description}</p>
                                 <div className={styles.postInfo}>
                                     <div className={styles.postCreatorInfo}>
                                         <img
@@ -444,7 +458,7 @@ export const SearchPage = () => {
         );
     };
 
-    const renderUsersSearchResults = (usersData: User[]) => {
+    const renderUsersSearchResults = (usersData: User[], darkTheme: string, textColor: string) => {
         const categoryFilter = usersData.filter((user) => {
             const isVerifiedMatch = usersFilter.category === 'verified' ? user.isVerified : true;
             const isFollowedMatch = usersFilter.category === 'followed' ? user.isFollowed : true;
@@ -472,7 +486,7 @@ export const SearchPage = () => {
                         <h6 style={{ fontSize: '2rem' }}>No results found</h6>
                     </div>
                 ) : (
-                    <div className={styles.usersList}>
+                    <div className={`${styles.usersList} ${darkTheme}`}>
                         {filteredUsersData?.map((user, index) => (
                             <div
                                 className={styles.userFrame}
@@ -494,7 +508,7 @@ export const SearchPage = () => {
                                     }}
                                 >
                                     <div className={styles.userInfo}>
-                                        <h4 className={styles.userNameText}>@{user.username}</h4>
+                                        <p><h5 className={`${styles.userNameText} ${textColor}`}>{user.username}</h5></p>
                                         <div
                                             style={{
                                                 display: 'flex',
@@ -513,7 +527,7 @@ export const SearchPage = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    <div className={styles.viewsDiv}>
+                                    {/* <div className={styles.viewsDiv}>
                                         <button
                                             className={
                                                 (followedUsersData.length > 0 &&
@@ -533,7 +547,7 @@ export const SearchPage = () => {
                                                 ? 'Following'
                                                 : 'Follow'}
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         ))}
@@ -549,6 +563,7 @@ export const SearchPage = () => {
 
     const [selectedHashtagName, setSelectedHashtagName] = useState('');
     const [selectedHashtagViews, setSelectedHashtagViews] = useState(0);
+
 
     const renderHashtagsSearchResults = (hashtagsData: Hashtag[]) => {
         if (showHashtagPage) {
@@ -669,13 +684,13 @@ export const SearchPage = () => {
             case 'Sounds':
                 return renderSoundsSearchResults(soundsData);
             case 'Users':
-                return renderUsersSearchResults(usersData);
+                return renderUsersSearchResults(usersData, darkTheme, textColor);
             case 'Hashtags':
                 return renderHashtagsSearchResults(hashtagsData);
             default:
                 return renderVideosSearchResults(videosData);
         }
-    }, [searchQuery, selectedTab, applyFilter, searchResults]);
+    }, [searchQuery, selectedTab, applyFilter, searchResults, darkTheme]);
 
     const VideosModal = useMemo(() => {
         // Add your modal content for 'Videos' tab here
@@ -1381,7 +1396,7 @@ export const SearchPage = () => {
                         <div className={styles.container}>{renderSearchResults}</div>
                     ) : (
                         <div>
-                            <div style={{ display: 'flex' }} className={styles.searchBar}>
+                            {/* <div style={{ display: 'flex' }} className={styles.searchBar}>
                                 <TextField
                                     type="text"
                                     placeholder="Search..."
@@ -1455,7 +1470,7 @@ export const SearchPage = () => {
                                         />
                                     </IconButton>
                                 )}
-                            </div>
+                            </div> */}
 
                             <div className={styles.searchTabs}>
                                 <Tab
@@ -1469,16 +1484,6 @@ export const SearchPage = () => {
                                     Top
                                 </Tab>
                                 <Tab
-                                    onClick={() => handleTabChange('Videos')}
-                                    className={
-                                        selectedTab === 'Videos'
-                                            ? styles.searchTabsSelected
-                                            : styles.searchTab
-                                    }
-                                >
-                                    Videos
-                                </Tab>
-                                <Tab
                                     onClick={() => handleTabChange('Users')}
                                     className={
                                         selectedTab === 'Users'
@@ -1488,6 +1493,17 @@ export const SearchPage = () => {
                                 >
                                     Users
                                 </Tab>
+                                <Tab
+                                    onClick={() => handleTabChange('Videos')}
+                                    className={
+                                        selectedTab === 'Videos'
+                                            ? styles.searchTabsSelected
+                                            : styles.searchTab
+                                    }
+                                >
+                                    Videos
+                                </Tab>
+                               
                                 {/* <Tab
                                     onClick={() => handleTabChange('Sounds')}
                                     className={
@@ -1519,8 +1535,8 @@ export const SearchPage = () => {
                     {open && (
                         <div className={styles.modal}>
                             {selectedTab === 'All' ? VideosModal : null}
-                            {selectedTab === 'Videos' ? VideosModal : null}
                             {selectedTab === 'Users' ? UsersModal : null}
+                            {selectedTab === 'Videos' ? VideosModal : null}
                             {selectedTab === 'Sounds' ? SoundsModal : null}
                             {selectedTab === 'Hashtags' ? HashtagsModal : null}
                         </div>

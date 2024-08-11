@@ -236,6 +236,29 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     </div>
                 </Link>
 
+                { isUserLoggedIn() ? (
+                    <Link to="/suggested-accounts" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                    <div
+                        className={classNames(
+                            `${pathname.includes('/suggested-accounts') ? styles.selected : styles.navLink}`
+                        )}
+                        onClick={() => {
+                            handleLinkClick(2)
+                            setSettingsDropdown(false)
+                        }}
+                    >
+                        <svg id="svg-section" width="24" data-e2e="" height="32" viewBox="0 0 48 48" fill={ pathname.includes('/suggested-accounts') ? 'rgb(255, 59, 92)': textColor} xmlns="http://www.w3.org/2000/svg"
+                        className={classNames(
+                            `${pathname.includes('/suggested-accounts') ? styles.selectedStroke : ''}`
+                        )}
+                        >
+                           <path d="M18.99 4a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 4a6 6 0 1 0 0 12.01A6 6 0 0 0 19 8ZM18.99 27c2.96 0 5.6.58 7.87 1.65l-3.07 3.06a15.38 15.38 0 0 0-4.8-.71C10.9 31 6.3 36.16 6 44c-.02.55-.46 1-1.02 1h-2c-.55 0-1-.45-.98-1C2.33 33.99 8.7 27 19 27ZM35.7 42.88 31.82 39H45a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H31.82l3.88-3.88a1 1 0 0 0 0-1.41l-1.41-1.42a1 1 0 0 0-1.42 0l-7.3 7.3a2 2 0 0 0 0 2.82l7.3 7.3a1 1 0 0 0 1.42 0l1.41-1.42a1 1 0 0 0 0-1.41Z"></path>
+                        </svg>
+                        <p className={styles.linkWord}>Following</p>
+                    </div>
+                </Link>
+                ):(
                 <Link to="/suggested-accounts" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
                     <div
@@ -264,6 +287,39 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={styles.linkWord}>Following</p>
                     </div>
                 </Link>
+                )}
+                
+                { isUserLoggedIn() ? (
+                    <Link to="/friends" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                        <div
+                            className={classNames(
+                                `${pathname.includes('/friends') ? styles.selected : styles.navLink}`
+                            )}
+                            onClick={() => {
+                                handleLinkClick(2)
+                                setSettingsDropdown(false)
+                            }}
+                        >
+                            <svg id="svg-section" width="24" data-e2e="" height="32" viewBox="0 0 48 48" fill={ pathname.includes('/friends') ? 'rgb(255, 59, 92)': textColor} xmlns="http://www.w3.org/2000/svg"
+                            className={classNames(
+                                `${pathname.includes('/friends') ? styles.selectedStroke : ''}`
+                            )}
+                            >
+                                <path d="M25.5 17C25.5 21.1421 22.1421 24.5 18 24.5C13.8579 24.5 10.5 21.1421 10.5 17C10.5 12.8579 13.8579 9.5 18 9.5C22.1421 9.5 25.5 12.8579 25.5 17Z">
+                                </path>
+                                <path d="M7.10396 34.7906C8.78769 30.2189 12.8204 27 18.0009 27C23.1818 27 27.2107 30.2213 28.8958 34.7898C29.3075 35.906 28.6141 37 27.5 37H8.5C7.38629 37 6.69289 35.9067 7.10396 34.7906Z">
+                                </path>
+                                <path d="M40.6308 37H32C31.2264 34.1633 30.0098 31.5927 28.144 29.7682C29.5384 28.9406 31.1829 28.5 33 28.5C37.239 28.5 40.536 30.8992 41.9148 35.0108C42.2516 36.0154 41.5423 37 40.6308 37Z">
+                                </path>
+                                <path d="M33 26.5C36.0376 26.5 38.5 24.0376 38.5 21C38.5 17.9624 36.0376 15.5 33 15.5C29.9624 15.5 27.5 17.9624 27.5 21C27.5 24.0376 29.9624 26.5 33 26.5Z">
+                                </path>
+                            </svg>
+                            <p className={styles.linkWord}>Friends</p>
+                        </div>
+                    </Link>
+                ):null}
+                
 
                 <span
                    

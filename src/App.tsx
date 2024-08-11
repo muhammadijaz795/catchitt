@@ -771,6 +771,7 @@ function App() {
                             <Route path="/view/video/:onePost" element={<HomePage />} />
                             <Route path="/home" element={<HomePage />} />
                             <Route path="/suggested-accounts" element={<SuggestedAccountsPage />} />
+                            <Route path="/friends" element={<SuggestedAccountsPage />} />
                             <Route path="/notifications" element={<ActivityPage />} />
                             <Route path="/comingsoon" element={<ChatsSec />} />
                             <Route path="/profile" element={<Profile />} />

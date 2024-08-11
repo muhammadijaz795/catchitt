@@ -108,7 +108,7 @@ h6 {
 
 .userNameText {
   padding: 10px;
-  color: var(--default-body, #222);
+  // color: var(--default-body, #222);
   text-align: center;
 
   /* Small/Semibold */
@@ -571,7 +571,7 @@ h6 {
 
 .userNameText {
   padding: 10px;
-  color: var(--default-body, #222);
+  // color: var(--default-body, #222);
   text-align: center;
 
   /* Small/Semibold */
@@ -989,7 +989,7 @@ h6 {
 }
 
 .userNameText {
-  color: var(--default-body, #222);
+  // color: var(--default-body, #222);
 
   /* Small/Semibold */
   font-family: Poppins;
@@ -1188,4 +1188,9 @@ p {
   line-height: 120%;
   /* 19.2px */
 
+}
+
+.darkTheme {
+  background: black !important;
+  color:white !important;
 }
