@@ -11,6 +11,7 @@ import VideoPanel from './components/videoPanel';
 import styles from './discover.module.scss';
 import Gifts from './popups/gifts';
 import { DISCOVER_CATEGORIES } from '../../utils/constants';
+import { useUpdateEffect } from 'react-use';
 
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
@@ -28,6 +29,7 @@ export default function Discover() {
     const [selectedCategory, setSelectedCategory] = useState<any>(0);
     const mainDivRef = useRef<any>(null);
     const [muteStates, setMuteStates] = useState<any>([]);
+    const [pageNumber, setPageNumber] = useState<number>(1);
 
     useEffect(() => {
         if (token != null && token != undefined && token != '') {
@@ -36,6 +38,10 @@ export default function Discover() {
             exploreForUnauthorizedUser();
         }
     }, []);
+
+    useUpdateEffect(() => {
+        exploreForUnauthorizedUser();
+    }, [pageNumber]);
 
     const exploreForAuthorizedUser = async () => {
         setIsLoading(true);
@@ -63,10 +69,10 @@ export default function Discover() {
     };
 
     const exploreForUnauthorizedUser = async () => {
-        setIsLoading(true);
+        // setIsLoading(true);
         try {
             const response = await fetch(
-                `${API_KEY}/media-content/public/videos/feed/upgraded`,
+                `${API_KEY}/media-content/public/videos/feed/upgraded?page=${pageNumber}&pageSize=5`,
                 {
                     method: 'GET',
                     headers: {
@@ -76,11 +82,15 @@ export default function Discover() {
                 }
             );
             const { data } = await response.json();
-            console.log("🚀 ~ exploreForUnauthorizedUser ~ data:", data)
+            console.log('🚀 ~ exploreForUnauthorizedUser ~ data:', data);
             setIsLoading(false);
-            setHashtagVideos(data);
-            setHashtagVideosToShow(data?.slice(0, 10));
-            setMuteStates(Array(data?.length).fill(true)); // Initialize mute states
+            // Append the entire record to the existing data
+            setHashtagVideos((prev: any) => [...prev, ...data]);
+            setHashtagVideosToShow((prev: any) => [...prev, ...data]);
+            setMuteStates((prevMuteStates: any) => [
+                ...prevMuteStates,
+                ...Array(data?.length).fill(true),
+            ]);
         } catch (error) {
             setIsLoading(false);
             console.log('Error fetching trending videos : ', error);
@@ -92,6 +102,7 @@ export default function Discover() {
             const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
             if (scrollTop + clientHeight >= scrollHeight) {
                 // Adding a small buffer
+                setPageNumber((prevPageNumber) => prevPageNumber + 1);
                 const newVideosToShow = hashtagVideos.slice(videosToShow, videosToShow + 10);
                 setHashtagVideosToShow((prev: any) => [...prev, ...newVideosToShow]);
                 setVideosToShow((prev: number) => prev + 10);
@@ -138,7 +149,7 @@ export default function Discover() {
                     </div>
                 ) : (
                     <>
-                        <div className='pl-6'>
+                        <div className="pl-6">
                             <div className="flex flex-row mt-8 gap-4 overflow-auto">
                                 {DISCOVER_CATEGORIES?.map((category, index) => (
                                     <p
