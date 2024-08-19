@@ -1,0 +1,13 @@
+.forYouVideo {
+    color: rgb(22, 24, 35);
+    font-weight: 700;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3; /* Limits the text to 3 lines */
+    -webkit-box-orient: vertical;
+    margin-bottom: 4px;
+    word-break: break-word;
+    position: relative;
+    font-size: 15px;
+}
