@@ -7,7 +7,7 @@
     border-radius: 8px;
     background: #fff;
     width: 433px;
-    height: 400px;
+    height: 450px;
     outline: 0;
     padding: 32px;
     flex-direction: column;
@@ -79,3 +79,70 @@
   div.lightdarkTheme p{
     color:white !important;
   }
+
+  .DivMainContentContainer{
+    text-align: center;
+    max-width: 400px;
+  }
+
+  .DivMainQRContentContainer{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+
+  .SubTitle{
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    width: auto;
+    // padding: 0px 24px;
+  }
+
+  .DivOfQRContainer{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+
+  .DivOfQRCodeWrapper{
+    position: absolute;
+    width: 174px;
+    height: 174px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .ImgOfQRCode{
+    width: 100%;
+  }
+
+  .DivOfDownloadLContainer{
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 400px;
+    padding: 24px 24px 60px;
+  }
+
+  .DivOfDownloadContainer{
+    margin-top: 16px;
+    display: flex;
+    // flex-flow: wrap;
+    width: 288px;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+  }
+  
+  .AIconContainer{
+    margin-bottom: 8px;
+  }
+

@@ -110,6 +110,8 @@ import linkedInShare from './assets/linkedin-share.svg';
 import deleteVideoIcon from './assets/delete-video.svg';
 import editIcon from './assets/edit-icon.svg';
 import seezitt_qr from './assets/seezitt_qr.png';
+import google_play_Store from './assets/google_play_Store.png';
+import apple_play_store from './assets/apple_play_store.png';
 
 export {
     duet,
@@ -223,5 +225,7 @@ export {
     linkedInShare,
     deleteVideoIcon,
     editIcon,
-    seezitt_qr
+    seezitt_qr,
+    google_play_Store,
+    apple_play_store,
 };

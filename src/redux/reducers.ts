@@ -48,13 +48,13 @@ const popupLogoutSlice: any = createSlice({
     name: 'popupLogoutSlice',
     initialState: { isLogoutPopup: false },
     reducers: {
-        openLoginPopup: (state) => {
+        openLogoutPopup: (state) => {
             state.isLogoutPopup = true;
         },
-        closeLoginPopup: (state) => {
+        closeLogoutPopup: (state) => {
             state.isLogoutPopup = false;
         },
-        toggleLoginPopup: (state) => {
+        toggleLogoutPopup: (state) => {
             state.isLogoutPopup = !state.isLogoutPopup;
         },
     },

@@ -810,6 +810,7 @@ function App() {
                             <Route path="/discover" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
                             <Route path="/video/:videoId" element={<VideoPage />} />
+                            <Route path="/:username/video/:videoId" element={<VideoPage />} />
                             <Route path="/upload" element={<UploadPage />} />
                             <Route path="/create-story" element={<CreateStoryPage />} />
                             {/* <Route path="/golive" element={<GoLive />} /> */}
@@ -2072,6 +2073,7 @@ function App() {
                         )}
 
                         {isLogoutPopup && (
+                           
                             <div className="w-full z-50 h-full bg-black/50 fixed top-0 flex justify-center items-center">
                                 <div
                                     className={`w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[20.125rem]  ${lightDarkTheme} `}
@@ -2083,6 +2085,20 @@ function App() {
                                         <img className="h-4 w-4 object-contain" src={closeIcon} />
                                     </div>
                                     <>
+                                            <div className="overflow-auto w-[21.888rem] mx-auto ">
+                                                <h2
+                                                    className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
+                                                >
+                                                    {isMainLoginOption
+                                                        ? 'Log in to Seezitt'
+                                                        : isForgotPasswordScenario
+                                                        ? 'Reset Password'
+                                                        : 'Log in'}
+                                                </h2>
+
+                                                </div>
+                                    </>
+                                    {/* <>
                                     <div
                                                             className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
                                                         >
@@ -2102,7 +2118,7 @@ function App() {
                                                                 </p>
                                                             </div>
                                                         </div>
-                                    </>
+                                    </> */}
                                 </div>
                             </div>
                         )}

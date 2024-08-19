@@ -6,6 +6,8 @@ import styles from './side-nav-bar.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { openLoginPopup } from '../../redux/reducers';
 import {isUserLoggedIn} from '../../utils/common';
+import { logoutUser } from '../../redux/reducers/auth';
+import { openLogoutPopup } from '../../redux/reducers';
 
 export interface SideNavBarProps {
     className?: string;
@@ -24,8 +26,6 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     const [isRotated, setRotated] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdownState);
     // const [sidebarTextStyle, setSidebarTextStyle] = useState(styles.sidebarTextStyle);
-
-    
 
 
     const handleLinkClick = (index: number) => {
@@ -373,6 +373,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     {activeCompanyClass && <div className={styles.DivLinkContainer}>
                         <Link to="/about/community-guidelines" target="_blank" className={styles.ALinkStyledNavLink} >About</Link>
                         <Link to="/contactus"  target="_blank" className={styles.ALinkStyledNavLink} >Contact</Link>
+                        {/* <Link to="/https://help.seezitt.com/newsroom"  target="_blank" className={styles.ALinkStyledNavLink} >Newsroom</Link> */}
+                        <Link to="/https://help.seezitt.com/career"  target="_blank" className={styles.ALinkStyledNavLink} >Career</Link>
                     </div>}
                     <h4 className={`${styles.sideBarLinks} ${activeProgramClass? styles.activeClass:''}`} onClick={(e)=> {setActiveProgramClass(!activeProgramClass)}} >Program</h4>
                     {activeProgramClass && <div className={styles.DivLinkContainer}>
@@ -380,6 +382,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     </div>}
                     <h4 className={`${styles.sideBarLinks} ${activeTermClass? styles.activeClass:''}`} onClick={(e)=> {setActiveTermClass(!activeTermClass)}} >Term</h4>
                     {activeTermClass && <div className={styles.DivLinkContainer}>
+                        <Link to="https://help.seezitt.com/" target="_blank" className={styles.ALinkStyledNavLink} >Help</Link>
                         <Link to="/about/terms-conditions" target="_blank" className={styles.ALinkStyledNavLink} >Terms</Link>
                         <Link to="/about/privacy-policy"  target="_blank" className={styles.ALinkStyledNavLink} >Privacy policy</Link>
                     </div>}

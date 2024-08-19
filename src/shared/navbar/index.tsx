@@ -4,6 +4,7 @@ import { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createIcon, defaultAvatar, logo, logoAuth, logoAuthWhite } from '../../icons';
+import { openLogoutPopup } from '../../redux/reducers';
 import { logoutUser } from '../../redux/reducers/auth';
 import style from './Navbar.module.scss';
 import NavbarMunu from './components/Menu';
@@ -26,6 +27,7 @@ function Navbar() {
     const dispatch = useDispatch();
     const logoutAccount = () => {
         dispatch(logoutUser({ navigate }));
+        // dispatch(openLogoutPopup())
     };
     const menuPopupStatusToggler = () => {
         let status = '';
