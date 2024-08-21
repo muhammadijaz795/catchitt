@@ -71,6 +71,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     const [activeCompanyClass, setActiveCompanyClass] = useState(false);
     const [activeProgramClass, setActiveProgramClass] = useState(false);
     const [activeTermClass, setActiveTermClass] = useState(false);
+    const [activeClass, setActiveClass] = useState(styles.activeBlackClass);
+    
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -80,10 +82,12 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
             setdarkThemeblack(styles.darkThemeblack);
             setTextColor("white");
             setTextColorClass(styles.textWhiteColor);
+            setActiveClass(styles.activeClass);
         }else{
             // setdarkTheme(style.lightTheme);
             setTextColor("black");
             setTextColorClass(styles.textBlackColor);
+            setActiveClass(styles.activeBlackClass);
         }
     });
 
@@ -375,18 +379,18 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             </div>
                         </a>
                     </div> */}
-                    <h4 className={`${styles.sideBarLinks} ${activeCompanyClass? styles.activeClass:''}`} onClick={(e)=> {setActiveCompanyClass(!activeCompanyClass)}} >Company</h4>
+                    <h4 className={`${styles.sideBarLinks} ${activeCompanyClass? activeClass:''}`} onClick={(e)=> {setActiveCompanyClass(!activeCompanyClass)}} >Company</h4>
                     {activeCompanyClass && <div className={styles.DivLinkContainer}>
                         <Link to="/about/community-guidelines" target="_blank" className={styles.ALinkStyledNavLink} >About</Link>
                         <Link to="/contactus"  target="_blank" className={styles.ALinkStyledNavLink} >Contact</Link>
                         {/* <Link to="/https://help.seezitt.com/newsroom"  target="_blank" className={styles.ALinkStyledNavLink} >Newsroom</Link> */}
                         <Link to="/https://help.seezitt.com/career"  target="_blank" className={styles.ALinkStyledNavLink} >Career</Link>
                     </div>}
-                    <h4 className={`${styles.sideBarLinks} ${activeProgramClass? styles.activeClass:''}`} onClick={(e)=> {setActiveProgramClass(!activeProgramClass)}} >Program</h4>
+                    <h4 className={`${styles.sideBarLinks} ${activeProgramClass? activeClass:''}`} onClick={(e)=> {setActiveProgramClass(!activeProgramClass)}} >Program</h4>
                     {activeProgramClass && <div className={styles.DivLinkContainer}>
                         <Link to="#" target="_blank" className={styles.ALinkStyledNavLink} >Seezit Live</Link>
                     </div>}
-                    <h4 className={`${styles.sideBarLinks} ${activeTermClass? styles.activeClass:''}`} onClick={(e)=> {setActiveTermClass(!activeTermClass)}} >Term</h4>
+                    <h4 className={`${styles.sideBarLinks} ${activeTermClass? activeClass:''}`} onClick={(e)=> {setActiveTermClass(!activeTermClass)}} >Term</h4>
                     {activeTermClass && <div className={styles.DivLinkContainer}>
                         <Link to="https://help.seezitt.com/" target="_blank" className={styles.ALinkStyledNavLink} >Help</Link>
                         <Link to="/about/terms-conditions" target="_blank" className={styles.ALinkStyledNavLink} >Terms</Link>

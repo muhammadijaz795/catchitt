@@ -144,7 +144,7 @@ export const SuggestedActivity = memo(
                 handleFetchSuggestedAccounts();
             }
             // handleFetchSuggestedAccounts();
-            handleFetchActivity();
+            // handleFetchActivity();
         }, []);
 
         const handleFollowClick = async (accountId: string) => {
@@ -245,6 +245,18 @@ export const SuggestedActivity = memo(
             }
         });
 
+        const [textColor, setTextColor] = useState('#222');
+
+        useEffect(() => {
+            var themeColor = window.localStorage.getItem('theme');
+    
+            if (themeColor == 'dark') {
+                setTextColor('white');
+            } else {
+                setTextColor('#222');
+            }
+        });
+
         return (
             <div className={classNames(styles.root, className)}>
                 {pathname !== '/suggested-accounts'
@@ -287,7 +299,7 @@ export const SuggestedActivity = memo(
                                               >
                                                   <p
                                                       style={{
-                                                          color: '#222',
+                                                          color: textColor,
                                                           fontFamily: ' Poppins',
                                                           fontSize: '16px',
                                                           fontStyle: 'normal',
@@ -297,13 +309,13 @@ export const SuggestedActivity = memo(
                                                           whiteSpace: 'nowrap',
                                                           textOverflow: 'ellipsis',
                                                           overflow: 'hidden',
-                                                          maxWidth: '160px',
+                                                          maxWidth: '150px',
                                                       }}
                                                      
                                                   >{`${account.name} asdz`}</p>
                                                   <h4
                                                       style={{
-                                                          color: '#A9A9A9',
+                                                          color: textColor,
                                                           textAlign: 'left',
                                                           fontFamily: ' Poppins',
                                                           fontSize: '12px',
@@ -337,7 +349,7 @@ export const SuggestedActivity = memo(
                       )
                     : null}
 
-                {showActivity && isLoggedIn && (
+                {/* {showActivity && isLoggedIn && (
                     <>
                         {pathname !== '/suggested-accounts' && pathname !== '/notifications' ? (
                             <div className={styles.seperatorDiv}>
@@ -357,7 +369,7 @@ export const SuggestedActivity = memo(
                                     </p>
                                 </div>
                                 <div className={styles.suggestedContentActivity}>
-                                    {/* Sort the accountsData in descending order based on timestamp */}
+                                
                                     {activityData
                                         .slice(0, 4) // Take the latest 4 notifications
                                         .map((activity, index) => (
@@ -377,7 +389,7 @@ export const SuggestedActivity = memo(
                                                                 alt=""
                                                                 className={styles.plusIconStyle}
                                                             />
-                                                            {/* <div className={styles.accountName}> */}
+                                                      
                                                             <div
                                                                 style={{
                                                                     display: 'flex',
@@ -448,24 +460,19 @@ export const SuggestedActivity = memo(
                                                                     </button>
                                                                 ) : (
                                                                     ''
-                                                                    // <img
-                                                                    //     className={styles.squareIconStyle}
-                                                                    //     src={activity. || 'https://via.placeholder.com/128'} // Use the appropriate property from the activity object
-                                                                    //     alt=""
-                                                                    // />
                                                                 )}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {/* )} */}
+
                                             </>
                                         ))}
                                 </div>
                             </div>
                         ) : null}
                     </>
-                )}
+                )} */}
             </div>
         );
     }
