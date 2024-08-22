@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import Layout from '../../shared/layout';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import styles from './video-page.module.scss';
 import musicIcon from './svg-components/music-icon.svg';
 import atTheRateOf from './svg-components/at-the-rate-of.svg';
@@ -11,8 +11,11 @@ import emptyHeartIcon from './svg-components/empty-heart-icon.svg';
 import redHeartIcon from './svg-components/red-heart-icon.svg';
 import chevronDownIcon from './svg-components/chevron-down-icon.svg';
 import chevronTopIcon from './svg-components/chevron-top-icon.svg';
-import { COMMENTS } from '../../utils/constants';
+import { COMMENTS, showToastSuccess } from '../../utils/constants';
 import PopupForReport from '../profile/popups/PopupForReport';
+import moment from 'moment';
+import { CircularProgress } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
 
 const VideoPage = () => {
     // hooks
@@ -29,6 +32,21 @@ const VideoPage = () => {
     const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
     const [commentsArray, setCommentsArray] = useState<any>([]);
     const [reportPopup, setReportPopup] = useState(false);
+    const API_KEY = process.env.VITE_API_URL;
+    const token = localStorage.getItem('token');
+    const [userId, setUserId] = useState(null);
+    const [name, setName] = useState('');
+    const [userName, setUserName] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
+    const [videoLikes, setVideoLikes] = useState(0);
+    const [videoShares, setVideoShares] = useState(0);
+    const [videoViews, setVideoViews] = useState(0);
+    const [videoDescription, setVideoDescription] = useState('');
+    const [videoComments, setVideoComments] = useState([]);
+
+    const [isFollowed, setUserIsFollowed] = useState(false);
+    const [videoUrl, setVideoUrl] = useState('');
+    const [followToggleLoading, setFollowToggleLoading] = useState(false);
 
     // hooks for comment replies
     const [isCommentReplyTooltipVisible, setCommentReplyIsTooltipVisible] = useState(false);
@@ -49,20 +67,23 @@ const VideoPage = () => {
         }));
     };
 
-    const addCommentHandler = () => {
-        setComment('');
-        const newComment = {
-            id: commentsArray.length, // Assuming id is sequential
-            commenter_avatar:
-                'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/77a6196b8555a59958e6ca03c9bf2a6a~c5_100x100.jpeg?lk3s=a5d48078&nonce=86219&refresh_token=e85613d454ac21404be7f73c1e5ff0b8&x-expires=1724162400&x-signature=7uQ%2FXY5558aDIm1XIV%2Bpu2cGi90%3D&shp=a5d48078&shcp=81f88b70',
-            commenter_name: 'Commenter Name',
-            comment_data: comment, // Assuming the input value is the comment data
-            comment_time: 'Just now', // Example value
-            comment_likes: '0',
-            comment_replies: [],
-        };
-
-        setCommentsArray((prevComments: any) => [...prevComments, newComment]);
+    const addCommentHandler = async () => {
+        try {
+            const addCommentResponse = await fetch(`${API_KEY}/media-content/comment/${videoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ comment }),
+            });
+            await addCommentResponse.json();
+            setComment('');
+            showToastSuccess('Comment posted');
+            fetchMediaById();
+        } catch (error) {
+            console.log('🚀 ~ addCommentHandler ~ error:', error);
+        }
     };
 
     const replyToCommentHandler = (commentId: number, replyData: string) => {
@@ -103,6 +124,55 @@ const VideoPage = () => {
         }));
     };
 
+    const fetchMediaById = async () => {
+        try {
+            const fetchMediaResponse = await fetch(`${API_KEY}/media-content/videos/${videoId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const { data } = await fetchMediaResponse.json();
+            setUserId(data?.user?._id);
+            setName(data?.user?.name);
+            setUserName(data?.user?.username);
+            setUserAvatar(data?.user?.avatar);
+            setUserIsFollowed(data?.user?.isFollowed);
+            setVideoLikes(data?.likes);
+            setVideoShares(data?.shares);
+            setVideoViews(data?.views);
+            setVideoDescription(data?.description);
+            setVideoComments(data?.comments);
+            setVideoUrl(data?.reducedVideoUrl);
+        } catch (error) {
+            console.log('🚀 ~ fetchMediaById ~ error:', error);
+        }
+    };
+
+    const toggleFollow = async () => {
+        setFollowToggleLoading(true);
+        try {
+            const fetchMediaResponse = await fetch(`${API_KEY}/profile/follow/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            await fetchMediaResponse.json();
+            setUserIsFollowed(!isFollowed);
+            setFollowToggleLoading(false);
+        } catch (error) {
+            setFollowToggleLoading(false);
+            console.log('🚀 ~ toggleFollow ~ error:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchMediaById();
+    }, []);
+
     return (
         <Layout isScrollActive={false} paddingBottomProp={true}>
             <div className="flex flex-row h-full overflow-y-auto justify-between pt-4 pl-8">
@@ -115,29 +185,49 @@ const VideoPage = () => {
                         width="300px"
                         preload="auto"
                         playsInline
-                        src={`https://d1qomu2i6h2trq.cloudfront.net/output/videos/${videoId}/reduced/${videoId}-reduced.mp4`}
+                        src={videoUrl}
                     />
                     <div className="p-3.5 bg-[#16182308] rounded-b-xl">
                         <div className="flex flex-row items-center gap-2">
                             {/* avatar */}
                             <img
                                 className={`w-12 h-12 object-cover rounded-full cursor-pointer`}
-                                src={
-                                    'https://seezitt-new-videos-source-encoder-bucket-dev.s3.us-east-2.amazonaws.com/input/thumbnails/669ec9cfefe3e8cd42db3e35.png'
-                                }
-                                alt=""
+                                src={userAvatar}
+                                alt="avatar"
                             />
                             <div className="flex flex-row items-center gap-12">
                                 <div className="text-left">
                                     <p className="font-bold text-base text-black cursor-pointer hover:underline">
-                                        zakirjain5
+                                        {name}
                                     </p>
                                     <p className="font-normal text-black text-sm cursor-pointer">
-                                        🆉🅰ک🅸🆁 🆁🅰ج🅿🆄🆃
+                                        {userName}
                                     </p>
                                 </div>
-                                <div className="rounded-sm h-full bg-[#ff3b5c] hover:bg-[#e93654] px-4 py-2 cursor-pointer">
-                                    <p className="font-semibold text-sm text-white">Follow</p>
+                                <div
+                                    onClick={toggleFollow}
+                                    className="rounded-sm h-full bg-[#ff3b5c] hover:bg-[#e93654] px-4 py-2 cursor-pointer w-fit"
+                                    style={{
+                                        width: '100px',
+                                        height: '40px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {followToggleLoading ? (
+                                        <CircularProgress
+                                            style={{
+                                                width: 16,
+                                                height: 16,
+                                                color: 'white',
+                                            }}
+                                        />
+                                    ) : (
+                                        <p className="font-semibold text-sm text-white">
+                                            {isFollowed ? 'Friends' : 'Follow'}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -165,13 +255,14 @@ const VideoPage = () => {
                                 alt="music-icon"
                             />
                             <p className="text-black text-sm font-light">original sounds - </p>
-                            <h4 className="text-black text-sm font-normal">🆉🅰ک🅸🆁 🆁🅰ج🅿🆄🆃</h4>
+                            <h4 className="text-black text-sm font-normal">{userName}</h4>
                         </div>
                     </div>
                     {/* Add comment section */}
                     <div className="mt-6">
                         <p className="text-[#161823] font-bold text-[1.125rem] text-left">
-                            6576 comments
+                            {videoComments?.length || 0}{' '}
+                            {videoComments?.length === 1 ? 'comment' : 'comments'}
                         </p>
                         <div className="flex flex-row items-start gap-3 mt-3">
                             {/* Commenter avatar */}
@@ -227,7 +318,7 @@ const VideoPage = () => {
                         </div>
                     </div>
                     {/* All comments section */}
-                    {commentsArray?.map((comment: any, comment_index: number) => (
+                    {videoComments?.map((comment: any, comment_index: number) => (
                         <div key={comment?.id}>
                             <div
                                 onMouseEnter={() => {
@@ -242,20 +333,23 @@ const VideoPage = () => {
                             >
                                 <img
                                     className={`w-12 h-12 object-cover rounded-full cursor-pointer`}
-                                    src={comment?.commenter_avatar}
+                                    src={
+                                        comment?.user?.avatar ||
+                                        'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/21bafe37c07e329a26f2a40cd34c897b~c5_720x720.jpeg?lk3s=a5d48078&nonce=33422&refresh_token=cd4d8be7f5761e8aa2174dffea1125ad&x-expires=1724151600&x-signature=1L%2FhEFsCJ8ygi7vgIncr4O3rWcg%3D&shp=a5d48078&shcp=81f88b70'
+                                    }
                                     alt="commenter-avatar"
                                 />
                                 <div className="flex flex-row items-start justify-between gap-12 w-full">
                                     <div className="text-left">
                                         <p className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline">
-                                            {comment?.commenter_name}
+                                            {comment?.user?.name}
                                         </p>
                                         <p className="font-normal text-[#161823] text-base cursor-pointer">
-                                            {comment?.comment_data}
+                                            {comment?.comment}
                                         </p>
                                         <div className="flex flex-row items-center gap-4 mt-1">
                                             <p className="text-[#16182380] font-normal text-sm">
-                                                {comment?.comment_time}
+                                                {moment(comment?.createdTime).format('D-MM')}
                                             </p>
                                             <div
                                                 onClick={() => commentLikeToggler(comment?.id)}
@@ -271,7 +365,7 @@ const VideoPage = () => {
                                                     alt=""
                                                 />
                                                 <p className="text-[#161823] font-normal text-sm">
-                                                    {comment?.comment_likes}
+                                                    {comment?.likes}
                                                 </p>
                                             </div>
                                             <p
@@ -345,9 +439,9 @@ const VideoPage = () => {
                             </div>
                             {/* Comment Replies */}
                             <div className="pl-[3.25rem] mt-2">
-                                {comment?.comment_replies?.map(
+                                {comment?.replies?.map(
                                     (comment_replies: any, comment_reply_index: number) => (
-                                        <div key={comment_replies?.comment_reply_id}>
+                                        <div key={comment_replies?.id}>
                                             {visibleReplies[comment?.id] && (
                                                 <div
                                                     onMouseEnter={() => {
@@ -368,6 +462,7 @@ const VideoPage = () => {
                                                     <img
                                                         className={`w-6 h-w-6 object-cover rounded-full cursor-pointer`}
                                                         src={
+                                                            comment_replies?.user?.avatar ||
                                                             'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/21bafe37c07e329a26f2a40cd34c897b~c5_720x720.jpeg?lk3s=a5d48078&nonce=33422&refresh_token=cd4d8be7f5761e8aa2174dffea1125ad&x-expires=1724151600&x-signature=1L%2FhEFsCJ8ygi7vgIncr4O3rWcg%3D&shp=a5d48078&shcp=81f88b70'
                                                         }
                                                         alt="comment-replied-avatar"
@@ -375,25 +470,21 @@ const VideoPage = () => {
                                                     <div className="flex flex-row items-start justify-between gap-12 w-full">
                                                         <div className="text-left">
                                                             <p className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline">
-                                                                {
-                                                                    comment_replies?.comment_replier_name
-                                                                }
+                                                                {comment_replies?.user?.name}
                                                             </p>
                                                             <p className="font-normal text-[#161823] text-base cursor-pointer">
-                                                                {
-                                                                    comment_replies?.comment_reply_data
-                                                                }
+                                                                {comment_replies?.reply}
                                                             </p>
                                                             <div className="flex flex-row items-center gap-4 mt-1">
                                                                 <p className="text-[#16182380] font-normal text-sm">
-                                                                    {
-                                                                        comment_replies?.comment_reply_time
-                                                                    }
+                                                                    {moment(
+                                                                        comment?.createdTime
+                                                                    ).format('D-MM')}
                                                                 </p>
                                                                 <div
                                                                     onClick={() =>
                                                                         commentReplyLikeToggler(
-                                                                            comment_replies?.comment_reply_id
+                                                                            comment_replies?.id
                                                                         )
                                                                     }
                                                                     className="flex flex-row items-center gap-1.5"
@@ -402,8 +493,7 @@ const VideoPage = () => {
                                                                         className={`w-4 h-4 object-contain cursor-pointer`}
                                                                         src={
                                                                             likedReplies[
-                                                                                comment_replies
-                                                                                    ?.comment_reply_id
+                                                                                comment_replies?.id
                                                                             ]
                                                                                 ? redHeartIcon
                                                                                 : emptyHeartIcon
@@ -411,9 +501,7 @@ const VideoPage = () => {
                                                                         alt="like-icon"
                                                                     />
                                                                     <p className="text-[#161823] font-normal text-sm">
-                                                                        {
-                                                                            comment_replies?.comment_reply_likes
-                                                                        }
+                                                                        {comment_replies?.likes}
                                                                     </p>
                                                                 </div>
                                                                 <p
@@ -519,7 +607,7 @@ const VideoPage = () => {
                                 )}
 
                                 {/* Render "View Replies" or "Hide" outside of the loop */}
-                                {comment?.comment_replies?.length > 0 && (
+                                {comment?.replies?.length > 0 && (
                                     <div className="flex flex-row justify-between items-center">
                                         {!visibleReplies[comment?.id] ? (
                                             <div className="flex flex-row justify-between items-center w-full">
@@ -530,8 +618,7 @@ const VideoPage = () => {
                                                     className="flex flex-row items-center gap-2 text-left hover:underline decoration-[#16182380] cursor-pointer mt-[0.688rem]"
                                                 >
                                                     <p className="text-[#16182380] font-medium text-sm">
-                                                        View {comment?.comment_replies?.length}{' '}
-                                                        replies
+                                                        View {comment?.replies?.length} replies
                                                     </p>
                                                     <img
                                                         className="w-2.5 h-2.5 object-contain cursor-pointer"
@@ -873,6 +960,7 @@ const VideoPage = () => {
                     info={{}}
                 />
             )}
+            <ToastContainer />
         </Layout>
     );
 };
