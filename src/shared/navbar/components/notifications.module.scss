@@ -103,6 +103,9 @@
   text-overflow: ellipsis;
   width: 230px;
 }
+.notificationUsername,.inboxListDuration{
+  font-weight: 600;
+}
 .notificationContent.notificationFollow,
 .notificationUsername.notificationFollow{
   width: 170px;
