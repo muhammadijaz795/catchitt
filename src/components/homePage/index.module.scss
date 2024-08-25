@@ -177,7 +177,7 @@
 }
 
 .suggestedUsersContainer {
-  max-width: 435px;
+  max-width: 20%; //435px;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
@@ -185,7 +185,7 @@
   padding-bottom: 0.8rem;
 }
 .mainContainer {
-  background: rgba(0, 0, 0, 0.8);
+  // background: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
   backdrop-filter: blur(20px);

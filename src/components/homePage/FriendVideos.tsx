@@ -264,7 +264,7 @@ function FriendVideos(props: any) {
                                     <div className={style.mediaContainer}>
                                         <div
                                             style={{
-                                                width: '100%',
+                                                // width: '100%',
                                                 height: 'auto',
                                                 margin: 'auto',
                                                 overflowX: 'hidden',
