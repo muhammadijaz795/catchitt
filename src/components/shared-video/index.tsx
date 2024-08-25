@@ -16,6 +16,8 @@ import PopupForReport from '../profile/popups/PopupForReport';
 import moment from 'moment';
 import { CircularProgress } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
+import likesIcon from '../../../public/images/icons/Heart2.svg';
+import { cross } from '../../icons';
 
 const VideoPage = () => {
     // hooks
@@ -23,6 +25,7 @@ const VideoPage = () => {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [isMuted, setIsMuted] = useState(true);
     const [comment, setComment] = useState('');
+    const [commentReply, setCommentReply] = useState('');
     const [isTooltipVisible, setIsTooltipVisible] = useState(false);
     const [isReportElipsisVisible, setIsReportElipsisVisible] = useState(false);
     const [toggleImage, setToggleImage] = useState(false);
@@ -43,6 +46,13 @@ const VideoPage = () => {
     const [videoViews, setVideoViews] = useState(0);
     const [videoDescription, setVideoDescription] = useState('');
     const [videoComments, setVideoComments] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [youMayLikeVideos, setYouMayLikeVideos] = useState<any>([]);
+    const [muteStates, setMuteStates] = useState<any>([]);
+    const [pageNumber, setPageNumber] = useState<number>(1);
+    const [commenterName, setCommenterName] = useState('');
+    const [commenterAvatar, setCommenterAvatar] = useState('');
+    const [isReplyToCommentClicked, setIsReplyToCommentClicked] = useState(false);
 
     const [isFollowed, setUserIsFollowed] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
@@ -60,11 +70,29 @@ const VideoPage = () => {
         setComment((prev) => prev + '@');
     };
 
-    const commentLikeToggler = (commentId: number) => {
+    const commentLikeToggler = async (commentId: number) => {
         setLikedComments((prev) => ({
             ...prev,
             [commentId]: !prev[commentId],
         }));
+
+        try {
+            const addCommentResponse = await fetch(
+                `${API_KEY}/media-content/like/comment/${commentId}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ comment }),
+                }
+            );
+            await addCommentResponse.json();
+            fetchMediaById();
+        } catch (error) {
+            console.log('🚀 ~ addCommentHandler ~ error:', error);
+        }
     };
 
     const addCommentHandler = async () => {
@@ -86,33 +114,50 @@ const VideoPage = () => {
         }
     };
 
-    const replyToCommentHandler = (commentId: number, replyData: string) => {
-        const newReply = {
-            comment_reply_id: Date.now(), // Unique ID for the reply
-            comment_replier_name: 'Replier Name',
-            comment_reply_data: replyData,
-            comment_reply_time: 'Just now', // Example value
-            comment_reply_likes: '0',
-        };
-
-        setCommentsArray((prevComments: any) =>
-            prevComments.map((comment: any) =>
-                comment.id === commentId
-                    ? {
-                          ...comment,
-                          comment_replies: [...comment.comment_replies, newReply],
-                      }
-                    : comment
-            )
-        );
+    const replyToCommentHandler = async (commentId: number) => {
+        setIsReplyToCommentClicked(true);
+        try {
+            const addCommentResponse = await fetch(`${API_KEY}/media-content/comment/${videoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ comment: commentReply, commentId }),
+            });
+            await addCommentResponse.json();
+            setCommentReply('');
+            showToastSuccess('Comment reply posted');
+            fetchMediaById();
+        } catch (error) {
+            console.log('🚀 ~ addCommentHandler ~ error:', error);
+        }
     };
 
     // functions related to comment replies
-    const commentReplyLikeToggler = (replyId: number) => {
+    const commentReplyLikeToggler = async (commentId: number, replyId: number) => {
         setLikedReplies((prev) => ({
             ...prev,
             [replyId]: !prev[replyId],
         }));
+
+        try {
+            const addCommentResponse = await fetch(
+                `${API_KEY}/media-content/like/comment/${commentId}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ comment, replyId }),
+                }
+            );
+            await addCommentResponse.json();
+            fetchMediaById();
+        } catch (error) {
+            console.log('🚀 ~ commentReplyLikeToggler ~ error:', error);
+        }
     };
 
     const [visibleReplies, setVisibleReplies] = useState<any>({});
@@ -124,15 +169,18 @@ const VideoPage = () => {
         }));
     };
 
-    const fetchMediaById = async () => {
+    const fetchMediaById = async (videoIdPassed?: number) => {
         try {
-            const fetchMediaResponse = await fetch(`${API_KEY}/media-content/videos/${videoId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const fetchMediaResponse = await fetch(
+                `${API_KEY}/media-content/videos/${videoIdPassed ?? videoId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
             const { data } = await fetchMediaResponse.json();
             setUserId(data?.user?._id);
             setName(data?.user?.name);
@@ -169,8 +217,62 @@ const VideoPage = () => {
         }
     };
 
+    const getExplorePageData = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(
+                `${API_KEY}/media-content/public/videos/feed/upgraded?page=${pageNumber}&pageSize=5`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const { data } = await response.json();
+            setIsLoading(false);
+            if (data) {
+                // Append the entire record to the existing data
+                setYouMayLikeVideos((prev: any) => [...prev, ...data]);
+                setMuteStates((prevMuteStates: any) => [
+                    ...prevMuteStates,
+                    ...Array(data?.length).fill(true),
+                ]);
+            }
+        } catch (error) {
+            setIsLoading(false);
+            console.log('Error fetching trending videos : ', error);
+        }
+    };
+
+    const loadVideoFromYouMayLikeSection = (videoId: number) => {
+        setYouMayLikeVideos([]);
+        fetchMediaById(videoId);
+        getExplorePageData();
+    };
+
+    const loadUserProfile = async () => {
+        try {
+            const fetchMediaResponse = await fetch(`${API_KEY}/profile`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const { data } = await fetchMediaResponse.json();
+            setCommenterName(data?.name);
+            setCommenterAvatar(data?.avatar);
+        } catch (error) {
+            console.log('🚀 ~ fetchMediaById ~ error:', error);
+        }
+    };
+
     useEffect(() => {
+        loadUserProfile();
         fetchMediaById();
+        getExplorePageData();
     }, []);
 
     return (
@@ -190,11 +292,22 @@ const VideoPage = () => {
                     <div className="p-3.5 bg-[#16182308] rounded-b-xl">
                         <div className="flex flex-row items-center gap-2">
                             {/* avatar */}
-                            <img
-                                className={`w-12 h-12 object-cover rounded-full cursor-pointer`}
-                                src={userAvatar}
-                                alt="avatar"
-                            />
+
+                            {userAvatar && userAvatar != '' ? (
+                                <img
+                                    className={`w-12 h-12 object-cover rounded-full cursor-pointer`}
+                                    src={userAvatar}
+                                    alt="avatar"
+                                />
+                            ) : (
+                                <div
+                                    className={`w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
+                                >
+                                    <p className="text-lg text-white font-medium">
+                                        {userName.charAt(0).toUpperCase()}
+                                    </p>
+                                </div>
+                            )}
                             <div className="flex flex-row items-center gap-12">
                                 <div className="text-left">
                                     <p className="font-bold text-base text-black cursor-pointer hover:underline">
@@ -266,13 +379,21 @@ const VideoPage = () => {
                         </p>
                         <div className="flex flex-row items-start gap-3 mt-3">
                             {/* Commenter avatar */}
-                            <img
-                                className={`w-12 h-12 object-cover rounded-full`}
-                                src={
-                                    'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/21bafe37c07e329a26f2a40cd34c897b~c5_720x720.jpeg?lk3s=a5d48078&nonce=33422&refresh_token=cd4d8be7f5761e8aa2174dffea1125ad&x-expires=1724151600&x-signature=1L%2FhEFsCJ8ygi7vgIncr4O3rWcg%3D&shp=a5d48078&shcp=81f88b70'
-                                }
-                                alt=""
-                            />
+                            {commenterAvatar && commenterAvatar != '' ? (
+                                <img
+                                    className={`w-12 h-12 object-contain rounded-full`}
+                                    src={commenterAvatar}
+                                    alt=""
+                                />
+                            ) : (
+                                <div
+                                    className={`w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
+                                >
+                                    <p className="text-lg text-white font-medium">
+                                        {commenterName.charAt(0)}
+                                    </p>
+                                </div>
+                            )}
                             <div className="pb-6 border-b border-b-[#0000001f] cursor-pointer w-full flex flex-row items-center gap-2.5">
                                 <div className="bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full">
                                     <input
@@ -281,7 +402,7 @@ const VideoPage = () => {
                                         maxLength={150}
                                         placeholder="Add comment..."
                                         type="text"
-                                        className="bg-transparent placeholder-[#4d4e58] text-black w-full"
+                                        className="bg-transparent placeholder-[#4d4e58] w-full"
                                     />
                                     <div className="flex flex-row items-center">
                                         <div
@@ -324,6 +445,7 @@ const VideoPage = () => {
                                 onMouseEnter={() => {
                                     setIsReportElipsisVisible(true);
                                     setCurrentCommentIndex(comment_index);
+                                    setIsReplyToCommentClicked(false);
                                 }}
                                 onMouseLeave={() => {
                                     setIsReportElipsisVisible(false);
@@ -331,16 +453,23 @@ const VideoPage = () => {
                                 }}
                                 className="flex flex-row items-start gap-3 mt-4"
                             >
-                                <img
-                                    className={`w-12 h-12 object-cover rounded-full cursor-pointer`}
-                                    src={
-                                        comment?.user?.avatar ||
-                                        'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/21bafe37c07e329a26f2a40cd34c897b~c5_720x720.jpeg?lk3s=a5d48078&nonce=33422&refresh_token=cd4d8be7f5761e8aa2174dffea1125ad&x-expires=1724151600&x-signature=1L%2FhEFsCJ8ygi7vgIncr4O3rWcg%3D&shp=a5d48078&shcp=81f88b70'
-                                    }
-                                    alt="commenter-avatar"
-                                />
+                                {comment?.user?.avatar ? (
+                                    <img
+                                        className={`w-12 h-12 object-contain rounded-full`}
+                                        src={commenterAvatar}
+                                        alt=""
+                                    />
+                                ) : (
+                                    <div
+                                        className={`w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
+                                    >
+                                        <p className="text-lg text-white font-medium">
+                                            {comment?.user?.name?.charAt(0)}
+                                        </p>
+                                    </div>
+                                )}
                                 <div className="flex flex-row items-start justify-between gap-12 w-full">
-                                    <div className="text-left">
+                                    <div className="text-left w-full">
                                         <p className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline">
                                             {comment?.user?.name}
                                         </p>
@@ -369,73 +498,133 @@ const VideoPage = () => {
                                                 </p>
                                             </div>
                                             <p
-                                                onClick={() =>
-                                                    replyToCommentHandler(
-                                                        comment?.id,
-                                                        'this is sample reply'
-                                                    )
-                                                }
+                                                onClick={() => setIsReplyToCommentClicked(true)}
                                                 className="text-[#161823] font-normal text-[0.938rem] cursor-pointer"
                                             >
                                                 Reply
                                             </p>
                                         </div>
-                                    </div>
-                                </div>
-                                {isReportElipsisVisible &&
-                                    comment_index === currentCommentIndex && (
-                                        <div className="relative inline-block">
-                                            <img
-                                                className="w-5 h-5 object-contain cursor-pointer"
-                                                src={horizontalElipsisMenuIcon}
-                                                alt="horizontal-elipsis-menu-icon"
-                                                onMouseEnter={() => setIsTooltipVisible(true)}
-                                            />
-                                            {isTooltipVisible && (
-                                                <div
-                                                    className="absolute right-0 mt-2 cursor-pointer"
-                                                    onMouseEnter={() => setIsTooltipVisible(true)}
-                                                    onMouseLeave={() => setIsTooltipVisible(false)}
-                                                    onClick={() => setReportPopup(true)}
-                                                >
-                                                    <div
-                                                        onMouseEnter={() => setToggleImage(true)}
-                                                        onMouseLeave={() => setToggleImage(false)}
-                                                        className="bg-white text-black text-sm pr-16 pl-4 py-3 rounded-lg shadow flex flex-row justify-start gap-2.5 items-center"
-                                                    >
-                                                        {toggleImage ? (
-                                                            <img
-                                                                className="h-6 w-6 object-contain"
-                                                                src={reportFlagIcon}
-                                                                style={{
-                                                                    filter: 'invert(27%) sepia(100%) saturate(7098%) hue-rotate(339deg) brightness(92%) contrast(110%)',
-                                                                }}
-                                                            />
-                                                        ) : (
-                                                            <img
-                                                                className="h-6 w-6 object-contain bg-pink"
-                                                                src={reportFlagIcon}
-                                                            />
-                                                        )}
-                                                        <span
-                                                            style={{
-                                                                color: toggleImage
-                                                                    ? '#fe2c55'
-                                                                    : '#000000',
-                                                            }}
-                                                            className="font-semibold text-base mb-1"
-                                                        >
-                                                            Report
-                                                        </span>
+                                        {comment_index === currentCommentIndex &&
+                                            isReplyToCommentClicked && (
+                                                <div className="cursor-pointer flex w-full flex-row items-center gap-2.5 mt-2">
+                                                    <div className="bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full mr-1">
+                                                        <input
+                                                            value={commentReply}
+                                                            onChange={(e) =>
+                                                                setCommentReply(e.target.value)
+                                                            }
+                                                            maxLength={150}
+                                                            placeholder="Add comment..."
+                                                            type="text"
+                                                            className="bg-transparent placeholder-[#4d4e58] text-black w-full"
+                                                        />
+                                                        <div className="flex flex-row items-center">
+                                                            <div
+                                                                onClick={atRateHandler}
+                                                                className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem] mr-1"
+                                                            >
+                                                                <img
+                                                                    className={`w-5 h-5 object-contain rounded-full`}
+                                                                    src={atTheRateOf}
+                                                                    alt="at-the-rate-icon"
+                                                                />
+                                                            </div>
+                                                            <div className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
+                                                                <img
+                                                                    className={`w-5 h-5 object-contain rounded-full`}
+                                                                    src={commentIcon}
+                                                                    alt="comment-icon"
+                                                                />
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    {/* Tooltip arrow */}
-                                                    <div className="absolute top-2.5 right-1.5 transform -translate-x-1/2 -translate-y-full">
-                                                        <div className="w-3 h-3.5 bg-white rotate-45 shadow-lg"></div>
+                                                    <div
+                                                        onClick={() =>
+                                                            replyToCommentHandler(comment?.id)
+                                                        }
+                                                        className="mr-1"
+                                                    >
+                                                        <p
+                                                            className={`${
+                                                                commentReply?.length > 0
+                                                                    ? 'text-[#fe2c55]'
+                                                                    : 'text-[#16182357]'
+                                                            } font-semibold text-base`}
+                                                        >
+                                                            Post
+                                                        </p>
+                                                    </div>
+                                                    <div
+                                                        onClick={() =>
+                                                            setIsReplyToCommentClicked(false)
+                                                        }
+                                                        className="mr-1"
+                                                    >
+                                                        <img
+                                                            className={`w-5 h-5 object-contain rounded-full`}
+                                                            src={cross}
+                                                            alt="cross-icon"
+                                                        />
                                                     </div>
                                                 </div>
                                             )}
-                                        </div>
-                                    )}
+                                    </div>
+                                </div>
+                                {isReportElipsisVisible && comment_index === currentCommentIndex ? (
+                                    <div className="relative inline-block">
+                                        <img
+                                            className="w-5 h-5 object-contain cursor-pointer"
+                                            src={horizontalElipsisMenuIcon}
+                                            alt="horizontal-elipsis-menu-icon"
+                                            onMouseEnter={() => setIsTooltipVisible(true)}
+                                        />
+                                        {isTooltipVisible && (
+                                            <div
+                                                className="absolute right-0 mt-2 cursor-pointer"
+                                                onMouseEnter={() => setIsTooltipVisible(true)}
+                                                onMouseLeave={() => setIsTooltipVisible(false)}
+                                                onClick={() => setReportPopup(true)}
+                                            >
+                                                <div
+                                                    onMouseEnter={() => setToggleImage(true)}
+                                                    onMouseLeave={() => setToggleImage(false)}
+                                                    className="bg-white text-black text-sm pr-16 pl-4 py-3 rounded-lg shadow flex flex-row justify-start gap-2.5 items-center"
+                                                >
+                                                    {toggleImage ? (
+                                                        <img
+                                                            className="h-6 w-6 object-contain"
+                                                            src={reportFlagIcon}
+                                                            style={{
+                                                                filter: 'invert(27%) sepia(100%) saturate(7098%) hue-rotate(339deg) brightness(92%) contrast(110%)',
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            className="h-6 w-6 object-contain bg-pink"
+                                                            src={reportFlagIcon}
+                                                        />
+                                                    )}
+                                                    <span
+                                                        style={{
+                                                            color: toggleImage
+                                                                ? '#fe2c55'
+                                                                : '#000000',
+                                                        }}
+                                                        className="font-semibold text-base mb-1"
+                                                    >
+                                                        Report
+                                                    </span>
+                                                </div>
+                                                {/* Tooltip arrow */}
+                                                <div className="absolute top-2.5 right-1.5 transform -translate-x-1/2 -translate-y-full">
+                                                    <div className="w-3 h-3.5 bg-white rotate-45 shadow-lg"></div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="h-5 w-5" />
+                                )}
                             </div>
                             {/* Comment Replies */}
                             <div className="pl-[3.25rem] mt-2">
@@ -459,14 +648,21 @@ const VideoPage = () => {
                                                     }}
                                                     className="flex flex-row items-start gap-3 mt-3"
                                                 >
-                                                    <img
-                                                        className={`w-6 h-w-6 object-cover rounded-full cursor-pointer`}
-                                                        src={
-                                                            comment_replies?.user?.avatar ||
-                                                            'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/21bafe37c07e329a26f2a40cd34c897b~c5_720x720.jpeg?lk3s=a5d48078&nonce=33422&refresh_token=cd4d8be7f5761e8aa2174dffea1125ad&x-expires=1724151600&x-signature=1L%2FhEFsCJ8ygi7vgIncr4O3rWcg%3D&shp=a5d48078&shcp=81f88b70'
-                                                        }
-                                                        alt="comment-replied-avatar"
-                                                    />
+                                                    {comment?.user?.avatar ? (
+                                                        <img
+                                                            className={`w-6 h-6 object-contain rounded-full`}
+                                                            src={commenterAvatar}
+                                                            alt="comment-replyavatar"
+                                                        />
+                                                    ) : (
+                                                        <div
+                                                            className={`w-6 h-6 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
+                                                        >
+                                                            <p className="text-lg text-white font-medium">
+                                                                {comment?.user?.name?.charAt(0)}
+                                                            </p>
+                                                        </div>
+                                                    )}
                                                     <div className="flex flex-row items-start justify-between gap-12 w-full">
                                                         <div className="text-left">
                                                             <p className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline">
@@ -484,6 +680,7 @@ const VideoPage = () => {
                                                                 <div
                                                                     onClick={() =>
                                                                         commentReplyLikeToggler(
+                                                                            comment?.id,
                                                                             comment_replies?.id
                                                                         )
                                                                     }
@@ -504,17 +701,16 @@ const VideoPage = () => {
                                                                         {comment_replies?.likes}
                                                                     </p>
                                                                 </div>
-                                                                <p
+                                                                {/* <p
                                                                     onClick={() =>
-                                                                        replyToCommentHandler(
-                                                                            comment?.id,
-                                                                            'this is sample reply'
+                                                                        setIsReplyToCommentClicked(
+                                                                            true
                                                                         )
                                                                     }
                                                                     className="text-[#161823] font-normal text-[0.938rem] cursor-pointer"
                                                                 >
                                                                     Reply
-                                                                </p>
+                                                                </p> */}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -678,278 +874,80 @@ const VideoPage = () => {
                     ))}
                 </div>
                 <div className="text-start flex-1 px-4 min-w-[22.5rem]">
-                    <h3 className="font-semibold text-lg text-black mb-2.5 -mt-2">You May Like</h3>
+                    <p className="font-semibold text-lg mb-2.5 -mt-2">You May Like</p>
                     <div className="flex flex-wrap justify-between gap-3">
-                        <div className="w-[9.188rem]">
-                            <div
-                                onMouseEnter={() => setHoveredIndex(0)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                                className="cursor-pointer relative col-span-1 h-[12.625rem] w-full"
-                            >
-                                <video
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'block' : 'hidden'
-                                    }`}
-                                    src={`https://d1qomu2i6h2trq.cloudfront.net/output/videos/${videoId}/reduced/${videoId}-reduced.mp4`}
-                                    muted={isMuted}
-                                    loop
-                                    autoPlay={true}
-                                    preload="auto"
-                                    playsInline
-                                />
-                                <img
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'hidden' : 'block'
-                                    }`}
-                                    src={
-                                        'https://seezitt-new-videos-source-encoder-bucket-dev.s3.us-east-2.amazonaws.com/input/thumbnails/669ec9cfefe3e8cd42db3e35.png'
-                                    }
-                                    alt=""
-                                />
+                        {youMayLikeVideos.map((video: any, index: number) => (
+                            <div key={index} className="w-[9.188rem]">
                                 <div
-                                    className={
-                                        'absolute right-2 bottom-5 flex gap-2 bg-slate-800 p-1 rounded-sm'
-                                    }
+                                    onClick={() => loadVideoFromYouMayLikeSection(video?.mediaId)}
+                                    onMouseEnter={() => setHoveredIndex(index)}
+                                    onMouseLeave={() => setHoveredIndex(null)}
+                                    className="cursor-pointer relative col-span-1 h-[12.625rem] w-full"
                                 >
-                                    <p className={'text-[0.688rem] font-normal text-white'}>
-                                        {'0:07'}
-                                    </p>
+                                    <video
+                                        className={`w-full h-full object-cover rounded-lg ${
+                                            hoveredIndex === index ? 'block' : 'hidden'
+                                        }`}
+                                        src={
+                                            video?.reducedVideoUrl.length > 0
+                                                ? video?.reducedVideoUrl
+                                                : video?.originalUrl
+                                        }
+                                        muted={isMuted}
+                                        loop
+                                        autoPlay={true}
+                                        preload="auto"
+                                        playsInline
+                                    />
+                                    <img
+                                        className={`w-full h-full object-cover rounded-lg ${
+                                            hoveredIndex === index ? 'hidden' : 'block'
+                                        }`}
+                                        src={video?.thumbnailUrl}
+                                        alt="thumbnail-image"
+                                    />
+                                </div>
+                                <div className="flex flex-col w-full h-full">
+                                    <div className="flex relative">
+                                        <p className={styles.forYouVideo}>{video?.description}</p>
+                                    </div>
+                                    <div className="flex relative">
+                                        <p className={styles.forYouVideoUserName}>
+                                            {video?.user?.username}
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-row items-center relative gap-2">
+                                        <div className="flex flex-row justify-between items-center gap-1">
+                                            <img
+                                                className="w-5 h-5 object-contain rounded-lg"
+                                                src={likesIcon}
+                                                alt="likes-icon"
+                                            />
+                                            <p className="font-medium text-[0.9rem]">
+                                                {video?.likes}
+                                            </p>
+                                        </div>
+                                        {' . '}
+                                        <p className="font-medium text-[0.9rem]">
+                                            {moment(video?.createdTime).format('D-MM')}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col w-full h-full">
-                                <div className="flex relative">
-                                    <p className={styles.forYouVideo}>
-                                        pakistan zindabad#air force#100kviews #pakistan
-                                        #videoforyoupage🔥🔥💯💯 #foryouuuuuuuuuuuuu #14 auhgest
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-[9.188rem]">
+                        ))}
+                        {isLoading && (
                             <div
-                                onMouseEnter={() => setHoveredIndex(0)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                                className="cursor-pointer relative col-span-1 h-[12.625rem] w-full"
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    margin: '1rem',
+                                    width: '100%',
+                                }}
                             >
-                                <video
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'block' : 'hidden'
-                                    }`}
-                                    src={`https://d1qomu2i6h2trq.cloudfront.net/output/videos/${videoId}/reduced/${videoId}-reduced.mp4`}
-                                    muted={isMuted}
-                                    loop
-                                    autoPlay={true}
-                                    preload="auto"
-                                    playsInline
-                                />
-                                <img
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'hidden' : 'block'
-                                    }`}
-                                    src={
-                                        'https://seezitt-new-videos-source-encoder-bucket-dev.s3.us-east-2.amazonaws.com/input/thumbnails/669ec9cfefe3e8cd42db3e35.png'
-                                    }
-                                    alt=""
-                                />
-                                <div
-                                    className={
-                                        'absolute right-2 bottom-5 flex gap-2 bg-slate-800 p-1 rounded-sm'
-                                    }
-                                >
-                                    <p className={'text-[0.688rem] font-normal text-white'}>
-                                        {'0:07'}
-                                    </p>
-                                </div>
+                                <CircularProgress />
                             </div>
-                            <div className="flex flex-col w-full h-full">
-                                <div className="flex relative">
-                                    <p className={styles.forYouVideo}>
-                                        pakistan zindabad#air force#100kviews #pakistan
-                                        #videoforyoupage🔥🔥💯💯 #foryouuuuuuuuuuuuu #14 auhgest
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-[9.188rem]">
-                            <div
-                                onMouseEnter={() => setHoveredIndex(0)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                                className="cursor-pointer relative col-span-1 h-[12.625rem] w-full"
-                            >
-                                <video
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'block' : 'hidden'
-                                    }`}
-                                    src={`https://d1qomu2i6h2trq.cloudfront.net/output/videos/${videoId}/reduced/${videoId}-reduced.mp4`}
-                                    muted={isMuted}
-                                    loop
-                                    autoPlay={true}
-                                    preload="auto"
-                                    playsInline
-                                />
-                                <img
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'hidden' : 'block'
-                                    }`}
-                                    src={
-                                        'https://seezitt-new-videos-source-encoder-bucket-dev.s3.us-east-2.amazonaws.com/input/thumbnails/669ec9cfefe3e8cd42db3e35.png'
-                                    }
-                                    alt=""
-                                />
-                                <div
-                                    className={
-                                        'absolute right-2 bottom-5 flex gap-2 bg-slate-800 p-1 rounded-sm'
-                                    }
-                                >
-                                    <p className={'text-[0.688rem] font-normal text-white'}>
-                                        {'0:07'}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col w-full h-full">
-                                <div className="flex relative">
-                                    <p className={styles.forYouVideo}>
-                                        pakistan zindabad#air force#100kviews #pakistan
-                                        #videoforyoupage🔥🔥💯💯 #foryouuuuuuuuuuuuu #14 auhgest
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-[9.188rem]">
-                            <div
-                                onMouseEnter={() => setHoveredIndex(0)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                                className="cursor-pointer relative col-span-1 h-[12.625rem] w-full"
-                            >
-                                <video
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'block' : 'hidden'
-                                    }`}
-                                    src={`https://d1qomu2i6h2trq.cloudfront.net/output/videos/${videoId}/reduced/${videoId}-reduced.mp4`}
-                                    muted={isMuted}
-                                    loop
-                                    autoPlay={true}
-                                    preload="auto"
-                                    playsInline
-                                />
-                                <img
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'hidden' : 'block'
-                                    }`}
-                                    src={
-                                        'https://seezitt-new-videos-source-encoder-bucket-dev.s3.us-east-2.amazonaws.com/input/thumbnails/669ec9cfefe3e8cd42db3e35.png'
-                                    }
-                                    alt=""
-                                />
-                                <div
-                                    className={
-                                        'absolute right-2 bottom-5 flex gap-2 bg-slate-800 p-1 rounded-sm'
-                                    }
-                                >
-                                    <p className={'text-[0.688rem] font-normal text-white'}>
-                                        {'0:07'}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col w-full h-full">
-                                <div className="flex relative">
-                                    <p className={styles.forYouVideo}>
-                                        pakistan zindabad#air force#100kviews #pakistan
-                                        #videoforyoupage🔥🔥💯💯 #foryouuuuuuuuuuuuu #14 auhgest
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-[9.188rem]">
-                            <div
-                                onMouseEnter={() => setHoveredIndex(0)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                                className="cursor-pointer relative col-span-1 h-[12.625rem] w-full"
-                            >
-                                <video
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'block' : 'hidden'
-                                    }`}
-                                    src={`https://d1qomu2i6h2trq.cloudfront.net/output/videos/${videoId}/reduced/${videoId}-reduced.mp4`}
-                                    muted={isMuted}
-                                    loop
-                                    autoPlay={true}
-                                    preload="auto"
-                                    playsInline
-                                />
-                                <img
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'hidden' : 'block'
-                                    }`}
-                                    src={
-                                        'https://seezitt-new-videos-source-encoder-bucket-dev.s3.us-east-2.amazonaws.com/input/thumbnails/669ec9cfefe3e8cd42db3e35.png'
-                                    }
-                                    alt=""
-                                />
-                                <div
-                                    className={
-                                        'absolute right-2 bottom-5 flex gap-2 bg-slate-800 p-1 rounded-sm'
-                                    }
-                                >
-                                    <p className={'text-[0.688rem] font-normal text-white'}>
-                                        {'0:07'}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col w-full h-full">
-                                <div className="flex relative">
-                                    <p className={styles.forYouVideo}>
-                                        pakistan zindabad#air force#100kviews #pakistan
-                                        #videoforyoupage🔥🔥💯💯 #foryouuuuuuuuuuuuu #14 auhgest
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-[9.188rem]">
-                            <div
-                                onMouseEnter={() => setHoveredIndex(0)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                                className="cursor-pointer relative col-span-1 h-[12.625rem] w-full"
-                            >
-                                <video
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'block' : 'hidden'
-                                    }`}
-                                    src={`https://d1qomu2i6h2trq.cloudfront.net/output/videos/${videoId}/reduced/${videoId}-reduced.mp4`}
-                                    muted={isMuted}
-                                    loop
-                                    autoPlay={true}
-                                    preload="auto"
-                                    playsInline
-                                />
-                                <img
-                                    className={`w-full h-full object-cover rounded-lg ${
-                                        hoveredIndex === 0 ? 'hidden' : 'block'
-                                    }`}
-                                    src={
-                                        'https://seezitt-new-videos-source-encoder-bucket-dev.s3.us-east-2.amazonaws.com/input/thumbnails/669ec9cfefe3e8cd42db3e35.png'
-                                    }
-                                    alt=""
-                                />
-                                <div
-                                    className={
-                                        'absolute right-2 bottom-5 flex gap-2 bg-slate-800 p-1 rounded-sm'
-                                    }
-                                >
-                                    <p className={'text-[0.688rem] font-normal text-white'}>
-                                        {'0:07'}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col w-full h-full">
-                                <div className="flex relative">
-                                    <p className={styles.forYouVideo}>
-                                        pakistan zindabad#air force#100kviews #pakistan
-                                        #videoforyoupage🔥🔥💯💯 #foryouuuuuuuuuuuuu #14 auhgest
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>

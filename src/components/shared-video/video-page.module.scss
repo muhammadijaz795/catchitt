@@ -11,3 +11,17 @@
     position: relative;
     font-size: 15px;
 }
+
+.forYouVideoUserName {
+    color: rgb(22, 24, 35);
+    font-weight: 500;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1; /* Limits the text to 3 lines */
+    -webkit-box-orient: vertical;
+    margin-bottom: 4px;
+    word-break: break-word;
+    position: relative;
+    font-size: 0.8rem;
+}

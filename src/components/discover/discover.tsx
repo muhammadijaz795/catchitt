@@ -15,39 +15,26 @@ import { useUpdateEffect } from 'react-use';
 
 export default function Discover() {
     const API_KEY = process.env.VITE_API_URL;
-    const [hashtagVideos, setHashtagVideos] = useState<any>([]);
-    const [hashtagVideosToShow, setHashtagVideosToShow] = useState<any>([]);
+    const [exploredVideos, setExploredVideos] = useState<any>([]);
     const [videoModal, setVideoModal] = useState<any>(false);
     const [videoModalInfo, setVideoModalInfo] = useState<any>({});
     const token = localStorage.getItem('token');
     const [reportPopup, setReportPopup] = useState<any>(false);
     const [blockPopup, setBlockPopup] = useState<any>(false);
     const [isLoading, setIsLoading] = useState<any>(false);
+    const [isPaginating, setIsPaginating] = useState<any>(false);
     const [giftPopup, setGiftPopup] = useState<any>(false);
     const [storyPopup, setStoryPopup] = useState<any>(false);
-    const [videosToShow, setVideosToShow] = useState<any>(10);
-    const [selectedCategory, setSelectedCategory] = useState<any>(0);
+    const [selectedCategory, setSelectedCategory] = useState<any>('');
     const mainDivRef = useRef<any>(null);
     const [muteStates, setMuteStates] = useState<any>([]);
     const [pageNumber, setPageNumber] = useState<number>(1);
 
-    useEffect(() => {
-        if (token != null && token != undefined && token != '') {
-            exploreForAuthorizedUser();
-        } else {
-            exploreForUnauthorizedUser();
-        }
-    }, []);
-
-    useUpdateEffect(() => {
-        exploreForUnauthorizedUser();
-    }, [pageNumber]);
-
-    const exploreForAuthorizedUser = async () => {
-        setIsLoading(true);
+    const getExplorePageData = async () => {
+        setIsPaginating(true);
         try {
             const response = await fetch(
-                `${API_KEY}/discover/web/trending/hashtags?page=1&pageSize=2`,
+                `${API_KEY}/media-content/public/videos/feed/upgraded/${selectedCategory}?page=${pageNumber}&pageSize=5`,
                 {
                     method: 'GET',
                     headers: {
@@ -57,42 +44,17 @@ export default function Discover() {
                 }
             );
             const { data } = await response.json();
-            const allVideos = data?.data[1]?.relatedVideos;
-            setIsLoading(false);
-            setHashtagVideos(allVideos);
-            setHashtagVideosToShow(allVideos?.slice(0, 10));
-            setMuteStates(Array(allVideos?.length).fill(true)); // Initialize mute states
+            setIsPaginating(false);
+            if (data) {
+                // Append the entire record to the existing data
+                setExploredVideos((prev: any) => [...prev, ...data]);
+                setMuteStates((prevMuteStates: any) => [
+                    ...prevMuteStates,
+                    ...Array(data?.length).fill(true),
+                ]);
+            }
         } catch (error) {
-            setIsLoading(false);
-            console.log('Error fetching trending videos : ', error);
-        }
-    };
-
-    const exploreForUnauthorizedUser = async () => {
-        // setIsLoading(true);
-        try {
-            const response = await fetch(
-                `${API_KEY}/media-content/public/videos/feed/upgraded?page=${pageNumber}&pageSize=5`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const { data } = await response.json();
-            console.log('🚀 ~ exploreForUnauthorizedUser ~ data:', data);
-            setIsLoading(false);
-            // Append the entire record to the existing data
-            setHashtagVideos((prev: any) => [...prev, ...data]);
-            setHashtagVideosToShow((prev: any) => [...prev, ...data]);
-            setMuteStates((prevMuteStates: any) => [
-                ...prevMuteStates,
-                ...Array(data?.length).fill(true),
-            ]);
-        } catch (error) {
-            setIsLoading(false);
+            setIsPaginating(false);
             console.log('Error fetching trending videos : ', error);
         }
     };
@@ -100,19 +62,21 @@ export default function Discover() {
     const handleScroll = useCallback(() => {
         if (mainDivRef.current) {
             const { scrollTop, scrollHeight, clientHeight } = mainDivRef.current;
-            if (scrollTop + clientHeight >= scrollHeight) {
+            if (scrollTop + clientHeight >= scrollHeight - 0.5) {
                 // Adding a small buffer
                 setPageNumber((prevPageNumber) => prevPageNumber + 1);
-                const newVideosToShow = hashtagVideos.slice(videosToShow, videosToShow + 10);
-                setHashtagVideosToShow((prev: any) => [...prev, ...newVideosToShow]);
-                setVideosToShow((prev: number) => prev + 10);
-                setMuteStates((prevMuteStates: any) => [
-                    ...prevMuteStates,
-                    ...Array(newVideosToShow.length).fill(true),
-                ]);
             }
         }
-    }, [videosToShow, hashtagVideos]);
+    }, []);
+
+    const openVideoModal = (video: any) => {
+        setVideoModalInfo(video);
+        setVideoModal(true);
+    };
+
+    const categoryHandler = (category: string) => {
+        setSelectedCategory(category);
+    };
 
     useEffect(() => {
         const mainDiv = mainDivRef.current;
@@ -122,14 +86,28 @@ export default function Discover() {
         }
     }, [handleScroll]);
 
-    const openVideoModal = (video: any) => {
-        setVideoModalInfo(video);
-        setVideoModal(true);
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            await getExplorePageData();
+            setIsLoading(false);
+        };
+
+        fetchData();
+    }, []);
+
+    const refreshWithNewCategory = async () => {
+        setExploredVideos('');
+        getExplorePageData();
     };
 
-    const categoryHandler = (index: number) => {
-        setSelectedCategory(index);
-    };
+    useUpdateEffect(() => {
+        getExplorePageData();
+    }, [pageNumber]);
+
+    useUpdateEffect(() => {
+        refreshWithNewCategory();
+    }, [selectedCategory]);
 
     return (
         <Layout>
@@ -153,9 +131,9 @@ export default function Discover() {
                             <div className="flex flex-row mt-8 gap-4 overflow-auto">
                                 {DISCOVER_CATEGORIES?.map((category, index) => (
                                     <p
-                                        onClick={() => categoryHandler(index)}
+                                        onClick={() => categoryHandler(category.category)}
                                         className={`flex items-center px-3 h-[2.625rem] ${
-                                            selectedCategory === index
+                                            selectedCategory === category.category
                                                 ? 'text-white bg-black'
                                                 : 'text-[#222] bg-unselected-category'
                                         }  rounded-lg cursor-pointer text-base border-none whitespace-nowrap w-auto`}
@@ -167,11 +145,23 @@ export default function Discover() {
                             </div>
                             <VideoPanel
                                 openVideoModal={openVideoModal}
-                                videos={hashtagVideosToShow}
+                                videos={exploredVideos}
                                 muteStates={muteStates} // Pass mute states
                                 setMuteStates={setMuteStates} // Pass setter for mute states
                             />
                         </div>
+                        {isPaginating && (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    padding: '1rem',
+                                }}
+                            >
+                                <CircularProgress />
+                            </div>
+                        )}
                     </>
                 )}
 
