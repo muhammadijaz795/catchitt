@@ -185,6 +185,7 @@ function Layout(props: any) {
                         paddingBottom: paddingBottomProp ? 0 : 40,
                         display: 'block',
                         flex: 1,
+                        paddingTop: '1%',
                     }}
                 >
                     {children}

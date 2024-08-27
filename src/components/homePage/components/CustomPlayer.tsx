@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import style from './customPlayer.module.scss';
+import {
+    music,
+} from '../../../icons';
 
 function CustomPlayer({ src, videoModal, post, controls }: any) {
     const [duration, setDuration] = useState<number>();
@@ -51,9 +54,34 @@ function CustomPlayer({ src, videoModal, post, controls }: any) {
                     src={src}
                     ref={videoRef}
                     className={style.video}
-                    preload='auto'
+                    preload='metadata'
                     playsInline
                 />
+            </div>
+            <div className={style.DivMediaCardBottom}>
+                <p
+                    style={{
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    {' '}
+                    {post?.description}
+                </p>
+                {post?.sound && (
+                    <p
+                        className="flex"
+                        style={{
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        <img src={music} alt="" />{' '}
+                        {post?.sound?.category?.name}
+                    </p>
+                )}
             </div>
         </div>
     );

@@ -284,9 +284,10 @@ function FollowingVideos(props: any) {
                                                         : post?.originalUrl
                                                 }
                                                 controls={true}
+                                                post={post}
                                             />
                                         </div>
-                                        <div className={style.DivMediaCardBottom}>
+                                        {/* <div className={style.DivMediaCardBottom}>
                                             <p
                                                 style={{
                                                     textOverflow: 'ellipsis',
@@ -310,7 +311,7 @@ function FollowingVideos(props: any) {
                                                     {post?.sound?.category?.name}{' '}
                                                 </p>
                                             )}
-                                        </div>
+                                        </div> */}
                                         <div className={style.actions}>
                                             {isDarkTheme == true &&
                                                 userActions.map((obj: any, i: number) => {
