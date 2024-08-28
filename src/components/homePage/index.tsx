@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
 import Gifts from '../discover/popups/gifts';
@@ -9,36 +9,17 @@ import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import ForDesktop from './ForDesktop';
 import ForMobile from './ForMobile';
 import useHome from './hooks/useHome';
-import { CircularProgress } from '@mui/material';
 
-import {
-    APP_TEXTS,
-    SIGNUP_APP_TEXTS,
-    END_POINTS,
-    LOGIN_OPTIONS,
-    SIGNUP_OPTIONS,
-    METHOD,
-    showToastSuccess,
-} from '../../utils/constants';
-import { validateEmail } from '../../utils/common';
-import ItemLogin from '../item-login';
-import SignupHandler from '../signup/signupHandler';
-import { closeIcon } from '../../icons';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { closeLoginPopup } from '../../redux/reducers';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { loginService, signupService } from '../../redux/reducers/auth';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { back, checkCountryCode, chevronDown, search } from '../../icons';
+import { closeLoginPopup } from '../../redux/reducers';
+import { loginService, signupService } from '../../redux/reducers/auth';
+import { validateEmail } from '../../utils/common';
+import { APP_TEXTS, END_POINTS, METHOD, showToastSuccess } from '../../utils/constants';
 
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import { SelectChangeEvent } from '@mui/material/Select';
 import style from './index.module.scss';
-import ReactDOMServer from 'react-dom/server';
-import VideoBlockquote from './VideoBlockquote';
 
 function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
@@ -100,27 +81,49 @@ function HomePage() {
     const videoData = {
         videoId: mediaId,
         username: videoOwner,
-        caption:
-            description ||
-            '14 August coming soon very video 😂😂😂plzzz seezitt team viral my video plzzz',
+        caption: description,
         tags: ['support', 'fypシ゚viral', 'foryou', 'viral'],
-        musicTitle: musicTitle || 'original sound - 👑(SHÃRJÊÊL RIÃZ)👑',
-        musicLink:
-            musicLink ||
-            'https://stagingback.seezitt.com//music/original-sound-7398885360903965441?refer=embed',
+        musicTitle: musicTitle,
+        musicLink: musicLink,
     };
-
+    const embedVideoUrl = `https://stagingweb.seezitt.com/video/${videoData?.videoId}`;
+    const userUrl = `https://stagingweb.seezitt.com/@${videoData?.username}?refer=embed`;
     // Convert the VideoBlockquote component to HTML string
-    const embedCode = ReactDOMServer.renderToStaticMarkup(
-        <VideoBlockquote
-            videoId={videoData.videoId}
-            username={videoData.username}
-            caption={videoData.caption}
-            tags={videoData.tags}
-            musicTitle={videoData.musicTitle}
-            musicLink={videoData.musicLink}
-        />
-    );
+    const embedCode = `
+    <blockquote
+        className="your-embed-class"
+        cite="${videoUrl}"
+        data-video-id="${videoData?.videoId}"
+        style="max-width: 509px; min-width: 325px;"
+    >
+        <section>
+            <a target="_blank" rel="noopener noreferrer" title="@${
+                videoData?.username
+            }" href="${userUrl}">
+                @${videoData?.username}
+            </a>
+            ${videoData?.caption}
+            ${videoData?.tags
+                .map(
+                    (tag, index) => `
+                <a
+                    key=${index}
+                    title="${tag}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://stagingweb.seezitt.com/tag/${tag}?refer=embed"
+                >
+                    #${tag}
+                </a>
+            `
+                )
+                .join('')}
+            <a target="_blank" rel="noopener noreferrer" title="${musicTitle}" href="${musicLink}">
+                ♬ ${musicTitle}
+            </a>
+        </section>
+    </blockquote>
+    `;
 
     const signupItemClickHandler = (name: string) => {
         switch (name) {
