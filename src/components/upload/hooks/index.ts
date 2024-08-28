@@ -35,7 +35,7 @@ function useUpload() {
         allowDuet: info?.allowDuet,
         videoId: info?.mediaId,
         isOnlyMe: info?.privacyOptions?.isOnlyMe,
-        allowDownload: info?.privacyOptions.allowDownload,
+        allowDownload: info?.privacyOptions?.allowDownload,
     });
     const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
