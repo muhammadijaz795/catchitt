@@ -35,7 +35,7 @@ function useUpload() {
         allowDuet: info?.allowDuet,
         videoId: info?.mediaId,
         isOnlyMe: info?.privacyOptions?.isOnlyMe,
-        allowDownload: info?.privacyOptions.allowDownload,
+        allowDownload: info?.privacyOptions?.allowDownload,
     });
     const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -112,7 +112,7 @@ function useUpload() {
             setIsPosting(false);
             return;
         }
-
+        console.log( getLinks);
         postPayload.append('videoId', getLinks?.data?.data?.videoId);
         postPayload.append('videoUrl', getLinks?.data?.data?.videoUrl?.split('?')[0]);
         postPayload.append('thumbnailUrl', getLinks?.data?.data?.thumbnailUrl?.split('?')[0]);

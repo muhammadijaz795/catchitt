@@ -11,9 +11,9 @@ function UploadForm(props: any) {
         updateState,
         state,
         SubmitHandler,
-        updateMediaHandler,
+        // updateMediaHandler,
         isPosting,
-        videoInfo,
+        // videoInfo,
     } = props;
     const [darkTheme, setdarkTheme] = useState('');
     const [lightTheme, setlightTheme] = useState('bg-custom-light');
@@ -34,19 +34,19 @@ function UploadForm(props: any) {
             className={`max-w-[71.25rem] ${darkTheme} ${lightTheme} flex-col mt-[7rem] mx-auto mb-[2rem] rounded-[0.5rem] flex md:flex-row `}
         >
             <FormLeftSide
-                videoInfo={videoInfo}
+                // videoInfo={videoInfo}
                 darkTheme={darkTheme}
                 selectedVideoSrc={selectedVideoSrc}
                 selectFilesHandler={selectFilesHandler}
                 updateState={updateState}
             />
             <FormRightSide
-                videoInfo={videoInfo}
+                // videoInfo={videoInfo}
                 updateState={updateState}
                 thumbnails={thumbnails}
                 state={state}
                 SubmitHandler={SubmitHandler}
-                updateMediaHandler={updateMediaHandler}
+                // updateMediaHandler={updateMediaHandler}
                 isPosting={isPosting}
             />
         </div>

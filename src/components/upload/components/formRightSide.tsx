@@ -19,8 +19,8 @@ function FormRightSide(props: any) {
         state,
         SubmitHandler,
         isPosting,
-        videoInfo,
-        updateMediaHandler,
+        // videoInfo,
+        // updateMediaHandler,
     } = props;
     const [dropDown, setdropDown] = useState(false);
     const [videoThumbnails, setVideoThumbnails] = useState<any[]>([]);
@@ -31,7 +31,7 @@ function FormRightSide(props: any) {
     const [selectedLocation, setSelectedLocation] = useState('');
     const [taggedUsers, setTaggedUser] = useState<any[]>([]);
 
-    console.log('Video info : ', videoInfo);
+    // console.log('Video info : ', videoInfo);
 
     useMemo(() => {
         setVideoThumbnails(thumbnails);
@@ -191,7 +191,7 @@ function FormRightSide(props: any) {
                     <div className="w-[100%] flex flex-col gap-[1rem]">
                         <div className="flex justify-between w-[100%]">
                             <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
-                                {videoInfo ? 'Edit' : 'Add'} location
+                                {/* {videoInfo ? 'Edit' : 'Add'} location */} Add Location
                             </p>
                         </div>
                         <BasicInput
@@ -282,8 +282,8 @@ function FormRightSide(props: any) {
                             textSize="16px "
                             width="169px !important"
                             height="48px !important"
-                            text={videoInfo ? 'Update' : 'Post'}
-                            onClick={videoInfo ? updateMediaHandler : SubmitHandler}
+                            text="Post"    //{videoInfo ? 'Update' : 'Post'}
+                            onClick={SubmitHandler}
                             loading={isPosting}
                         />
                     </div>
