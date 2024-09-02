@@ -19,6 +19,7 @@ function Action({
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
 
+    console.log('POST: ', post);
     const actionClickHandler = async () => {
         try {
             if (isUserLoggedIn() == true) {
@@ -112,7 +113,12 @@ function Action({
                     <COPY_AND_SEND_MENU_HOME
                         copyHandler={() => copyHandler(post?.reducedVideoUrl)}
                         generateEmbedCodeHandler={() =>
-                            generateEmbedCodeHandler(post?.reducedVideoUrl, post?.mediaId)
+                            generateEmbedCodeHandler(
+                                post?.reducedVideoUrl,
+                                post?.mediaId,
+                                post?.user?.username,
+                                post?.description
+                            )
                         }
                         popupHandler={popupHandler}
                         videoUrl={post?.reducedVideoUrl}

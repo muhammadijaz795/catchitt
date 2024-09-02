@@ -1,4 +1,4 @@
-import { ClickAwayListener, Modal } from '@mui/material';
+import { CircularProgress, ClickAwayListener, Modal } from '@mui/material';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -63,6 +63,7 @@ export const Profile = (props: any) => {
     const [hasMoreLikedVideos, setHasMoreLikedVideos] = useState<any>(true);
     const [hasMoreTaggedVideos, setHasMoreTaggedVideos] = useState<any>(true);
     const [hasMoreBookmarkVideos, setHasMoreBookmarkVideos] = useState<any>(true);
+    const [isPaginating, setIsPaginating] = useState(false);
 
     const [initialCalled, setInitialCalled] = useState<boolean>(false);
     const mainDivRef = useRef<any>(null);
@@ -179,6 +180,7 @@ export const Profile = (props: any) => {
     const fetchData = async () => {
         // 63a04301a00ed2af91f17e1d user id contain videos
         setLoading(true);
+        setIsPaginating(true);
         const pageSize = 10;
         const promises = [];
 
@@ -280,6 +282,7 @@ export const Profile = (props: any) => {
             setInitialCalled(true);
         }
         setLoading(false);
+        setIsPaginating(false);
     };
 
     useEffect(() => {
@@ -509,7 +512,19 @@ export const Profile = (props: any) => {
                                     openVideoModal={onVideoModal}
                                 />
                             ) : null}
+                            {!loading && !isPaginating && (
+                                <div className="flex flex-row justify-center items-center mt-24 w-full h-full">
+                                    <p className="text-2xl font-bold">
+                                        No videos available in this category.
+                                    </p>
+                                </div>
+                            )}
                         </div>
+                        {isPaginating && (
+                            <div className="flex justify-center items-center p-4">
+                                <CircularProgress />
+                            </div>
+                        )}
                     </div>
                 </div>
 
