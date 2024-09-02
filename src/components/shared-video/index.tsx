@@ -64,6 +64,7 @@ const VideoPage = () => {
         useState(false);
     const [toggleCommentReplyImage, setToggleCommentReplyImage] = useState(false);
     const [likedReplies, setLikedReplies] = useState<{ [key: string]: boolean }>({});
+    const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
 
     // functions related to comment
     const atRateHandler = () => {
@@ -89,7 +90,7 @@ const VideoPage = () => {
                 }
             );
             await addCommentResponse.json();
-            fetchMediaById();
+            fetchMediaById(selectedVideoId);
         } catch (error) {
             console.log('🚀 ~ addCommentHandler ~ error:', error);
         }
@@ -97,7 +98,7 @@ const VideoPage = () => {
 
     const addCommentHandler = async () => {
         try {
-            const addCommentResponse = await fetch(`${API_KEY}/media-content/comment/${videoId}`, {
+            const addCommentResponse = await fetch(`${API_KEY}/media-content/comment/${selectedVideoId ?? videoId}`, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
@@ -108,7 +109,7 @@ const VideoPage = () => {
             await addCommentResponse.json();
             setComment('');
             showToastSuccess('Comment posted');
-            fetchMediaById();
+            fetchMediaById(selectedVideoId);
         } catch (error) {
             console.log('🚀 ~ addCommentHandler ~ error:', error);
         }
@@ -117,7 +118,7 @@ const VideoPage = () => {
     const replyToCommentHandler = async (commentId: number) => {
         setIsReplyToCommentClicked(true);
         try {
-            const addCommentResponse = await fetch(`${API_KEY}/media-content/comment/${videoId}`, {
+            const addCommentResponse = await fetch(`${API_KEY}/media-content/comment/${selectedVideoId ?? videoId}`, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
@@ -128,7 +129,7 @@ const VideoPage = () => {
             await addCommentResponse.json();
             setCommentReply('');
             showToastSuccess('Comment reply posted');
-            fetchMediaById();
+            fetchMediaById(selectedVideoId);
         } catch (error) {
             console.log('🚀 ~ addCommentHandler ~ error:', error);
         }
@@ -154,7 +155,7 @@ const VideoPage = () => {
                 }
             );
             await addCommentResponse.json();
-            fetchMediaById();
+            fetchMediaById(selectedVideoId);
         } catch (error) {
             console.log('🚀 ~ commentReplyLikeToggler ~ error:', error);
         }
@@ -247,6 +248,7 @@ const VideoPage = () => {
     };
 
     const loadVideoFromYouMayLikeSection = (videoId: number) => {
+        setSelectedVideoId(videoId);
         setYouMayLikeVideos([]);
         fetchMediaById(videoId);
         getExplorePageData();
