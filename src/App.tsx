@@ -809,7 +809,6 @@ function App() {
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />} />
                             <Route path="/discover" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
-                            <Route path="/video/:videoId" element={<VideoPage />} />
                             <Route path="/:username/video/:videoId" element={<VideoPage />} />
                             <Route path="/upload" element={<UploadPage />} />
                             <Route path="/create-story" element={<CreateStoryPage />} />

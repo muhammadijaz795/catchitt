@@ -14,6 +14,7 @@ import {
     facebookShare,
 } from '../../../icons';
 import style from './index.module.scss';
+import { API_KEY } from '../../../utils/constants';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
 export default function COPY_AND_SEND_MENU_HOME({
@@ -22,6 +23,7 @@ export default function COPY_AND_SEND_MENU_HOME({
     bottonSide,
     videoUrl,
     videoTitle,
+    userName,
     generateEmbedCodeHandler
 }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -93,24 +95,24 @@ export default function COPY_AND_SEND_MENU_HOME({
     }));
 
     const shareToWhatsApp = () => {
-        let url = `https://stagingweb.seezitt.com/video/${extractVideoId(videoUrl)}`;
+        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
         window.open(`https://api.whatsapp.com/send?text=${videoTitle} - ${url}`, '_blank');
     };
 
     const shareToFacebook = () => {
-        let url = `https://stagingweb.seezitt.com/video/${extractVideoId(videoUrl)}`;
+        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
 
         window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     };
 
     const shareToTwitter = () => {
-        let url = `https://stagingweb.seezitt.com/video/${extractVideoId(videoUrl)}`;
+        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
 
         window.open(`https://twitter.com/intent/tweet?url=${url}&text=${videoTitle}`, '_blank');
     };
 
     const shareToLinkedIn = () => {
-        let url = `https://stagingweb.seezitt.com/video/${extractVideoId(videoUrl)}`;
+        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
 
         window.open(
             `https://www.linkedin.com/shareArticle?url=${url}&title=${videoTitle}`,

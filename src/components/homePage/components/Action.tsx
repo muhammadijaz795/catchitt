@@ -6,6 +6,7 @@ import MORE_MENU_HOME from '../../../shared/Menu/more';
 import style from './Action.module.scss';
 import { isUserLoggedIn } from '../../../utils/common';
 import { openLoginPopup } from '../../../redux/reducers';
+import { API_KEY } from '../../../utils/constants';
 
 function Action({
     obj,
@@ -110,7 +111,9 @@ function Action({
                 <img src={shouldDisplayActiveImage() ? obj.activeImage : obj.img} alt="" />
                 {obj.actionType === 'share' && (
                     <COPY_AND_SEND_MENU_HOME
-                        copyHandler={() => copyHandler(post?.reducedVideoUrl)}
+                        copyHandler={() =>
+                            copyHandler(`${API_KEY}/${post?.user?.username}/video/${post?.mediaId}`)
+                        }
                         generateEmbedCodeHandler={() =>
                             generateEmbedCodeHandler(
                                 post?.reducedVideoUrl,
@@ -121,6 +124,7 @@ function Action({
                         }
                         popupHandler={popupHandler}
                         videoUrl={post?.reducedVideoUrl}
+                        userName={post?.user?.username}
                         videoTitle={post?.description} // Assuming you have a title property
                     />
                 )}

@@ -1,31 +1,35 @@
 import { CircularProgress } from '@mui/material';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { useUpdateEffect } from 'react-use';
 import likesIcon from '../../../public/images/icons/Heart2.svg';
-import { cross } from '../../icons';
+import {
+    cross, embedShare, facebookShare, linkedInShare,
+    twitterShare, whatsappShare
+} from '../../icons';
 import Layout from '../../shared/layout';
-import { showToastSuccess } from '../../utils/constants';
+import { showToast, showToastSuccess } from '../../utils/constants';
 import PopupForReport from '../profile/popups/PopupForReport';
 import atTheRateOf from './svg-components/at-the-rate-of.svg';
+import chevronDownIconVideo from './svg-components/chevron-down-icon-video.svg';
 import chevronDownIcon from './svg-components/chevron-down-icon.svg';
 import chevronTopIcon from './svg-components/chevron-top-icon.svg';
+import chevronUpIconVideo from './svg-components/chevron-up-icon-video.svg';
 import commentEmoji from './svg-components/comment-emoji.svg';
+import commentIcon from './svg-components/comment-icon.svg';
 import emptyHeartIcon from './svg-components/empty-heart-icon.svg';
 import horizontalElipsisMenuIcon from './svg-components/horizontal-elipsis-icon.svg';
+import linkIcon from './svg-components/link-icon.svg';
 import musicIcon from './svg-components/music-icon.svg';
 import redHeartIcon from './svg-components/red-heart-icon.svg';
 import reportFlagIcon from './svg-components/report-flag-icon.svg';
-import whiteHeartIcon from './svg-components/white-filled-heart-icon.svg';
-import commentIcon from './svg-components/comment-icon.svg';
 import saveIcon from './svg-components/save-icon.svg';
 import savedIcon from './svg-components/saved-icon.svg';
 import shareIcon from './svg-components/share-icon.svg';
-import chevronUpIconVideo from './svg-components/chevron-up-icon-video.svg';
-import chevronDownIconVideo from './svg-components/chevron-down-icon-video.svg';
+import whiteHeartIcon from './svg-components/white-filled-heart-icon.svg';
 import styles from './video-page.module.scss';
-import { useUpdateEffect } from 'react-use';
 
 const VideoPage = () => {
     // hooks
@@ -62,11 +66,13 @@ const VideoPage = () => {
     const [isReplyToCommentClicked, setIsReplyToCommentClicked] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [showSharePopup, setShowSharePopup] = useState(false);
 
     const [isFollowed, setUserIsFollowed] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
     const [followToggleLoading, setFollowToggleLoading] = useState(false);
     const [switchVideoIndex, setSwitchVideoIndex] = useState(-1);
+    const [isFirstRender, setIsFirstRender] = useState(false);
 
     // hooks for comment replies
     const [isCommentReplyTooltipVisible, setCommentReplyIsTooltipVisible] = useState(false);
@@ -212,27 +218,30 @@ const VideoPage = () => {
             setVideoUrl(data?.reducedVideoUrl);
             setIsSaved(data?.isSaved);
             setIsLiked(data?.isLiked);
+            setIsFirstRender(true);
         } catch (error) {
             console.log('🚀 ~ fetchMediaById ~ error:', error);
         }
     };
 
     const toggleFollow = async () => {
-        setFollowToggleLoading(true);
-        try {
-            const fetchMediaResponse = await fetch(`${API_KEY}/profile/follow/${userId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            await fetchMediaResponse.json();
-            setUserIsFollowed(!isFollowed);
-            setFollowToggleLoading(false);
-        } catch (error) {
-            setFollowToggleLoading(false);
-            console.log('🚀 ~ toggleFollow ~ error:', error);
+        if (safetyCheck(userId)) {
+            setFollowToggleLoading(true);
+            try {
+                const fetchMediaResponse = await fetch(`${API_KEY}/profile/follow/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                await fetchMediaResponse.json();
+                setUserIsFollowed(!isFollowed);
+                setFollowToggleLoading(false);
+            } catch (error) {
+                setFollowToggleLoading(false);
+                console.log('🚀 ~ toggleFollow ~ error:', error);
+            }
         }
     };
 
@@ -311,6 +320,7 @@ const VideoPage = () => {
     };
 
     const likeVideoToggler = async () => {
+        setIsFirstRender(false);
         setIsLiked(!isLiked);
         try {
             const likeUnlikeVideo = await fetch(
@@ -330,6 +340,88 @@ const VideoPage = () => {
         }
     };
 
+    const saveVideoToggler = async () => {
+        setIsFirstRender(false);
+        setIsSaved(!isSaved);
+        try {
+            const likeUnlikeVideo = await fetch(
+                `${API_KEY}/media-content/collections/${selectedVideoId ?? videoId}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            await likeUnlikeVideo.json();
+            fetchMediaById(selectedVideoId);
+        } catch (error) {
+            console.log('🚀 ~ saveVideoToggler ~ error:', error);
+        }
+    };
+
+    const safetyCheck = (param: any) => {
+        if (param !== null && param !== undefined && param !== '') {
+            return true;
+        }
+
+        return false;
+    };
+
+    const copyHandler = (msg: string) => {
+        navigator.clipboard
+            .writeText(`${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`)
+            .then(() => {
+                showToast(msg);
+            });
+    };
+
+    const shareToWhatsApp = () => {
+        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
+        window.open(`https://api.whatsapp.com/send?text=${videoDescription} - ${url}`, '_blank');
+    };
+
+    const shareToFacebook = () => {
+        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
+
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    };
+
+    const shareToTwitter = () => {
+        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
+
+        window.open(
+            `https://twitter.com/intent/tweet?url=${url}&text=${videoDescription}`,
+            '_blank'
+        );
+    };
+
+    const shareToLinkedIn = () => {
+        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
+
+        window.open(
+            `https://www.linkedin.com/shareArticle?url=${url}&title=${videoDescription}`,
+            '_blank'
+        );
+    };
+
+    const hideTimeoutRef = useRef<any>(null);
+
+    const showPopupHandler = () => {
+        if (hideTimeoutRef.current) {
+            clearTimeout(hideTimeoutRef.current);
+        }
+        setShowSharePopup(true);
+    };
+
+    const hideSharePopupHandler = () => {
+        hideTimeoutRef.current = setTimeout(() => {
+            setShowSharePopup(false);
+        }, 500);
+        // 0.5 second delay
+    };
+
     useEffect(() => {
         loadUserProfile();
         fetchMediaById();
@@ -338,10 +430,11 @@ const VideoPage = () => {
 
     useUpdateEffect(() => {
         loadVideosOnArrowClicks();
+        setIsFirstRender(true);
     }, [switchVideoIndex]);
 
     useUpdateEffect(() => {
-        if (isLiked) {
+        if (isLiked && !isFirstRender) {
             setVideoLikes((prevLikes) => prevLikes + 1);
         }
 
@@ -349,6 +442,16 @@ const VideoPage = () => {
             setVideoLikes((prevLikes) => prevLikes - 1);
         }
     }, [isLiked]);
+
+    useUpdateEffect(() => {
+        if (isSaved && !isFirstRender) {
+            setVideoSaves((prevSaves) => prevSaves + 1);
+        }
+
+        if (!isSaved && videoSaves > 0) {
+            setVideoSaves((prevSaves) => prevSaves - 1);
+        }
+    }, [isSaved]);
 
     return (
         <Layout isScrollActive={false} paddingBottomProp={true}>
@@ -398,19 +501,124 @@ const VideoPage = () => {
                             </div>
                             <div className="text-center">
                                 <img
+                                    onClick={saveVideoToggler}
                                     className="h-7 w-7 object-contain cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:rotate-12"
-                                    src={!isSaved ? savedIcon : saveIcon}
+                                    src={isSaved ? savedIcon : saveIcon}
                                 />
-                                <p className="font-bold text-sm mt-1.5 text-white">{videoShares}</p>
+                                <p className="font-bold text-sm mt-1.5 text-white">{videoSaves}</p>
                             </div>
-                            <div className="text-center">
+                            <div className="text-center relative">
                                 <img
+                                    onMouseEnter={showPopupHandler}
+                                    onMouseLeave={hideSharePopupHandler}
                                     className="h-7 w-7 object-contain cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:rotate-12"
                                     src={shareIcon}
                                 />
                                 <p className="font-bold text-sm mt-1.5 text-white">{videoShares}</p>
                             </div>
                         </div>
+                        {showSharePopup && (
+                            <div
+                                onMouseEnter={showPopupHandler}
+                                onMouseLeave={hideSharePopupHandler}
+                                className="absolute bottom-20 right-24 bg-white shadow-lg rounded-md p-6"
+                            >
+                                {/* Arrow pointing to the share icon */}
+                                <div className="absolute bottom-5 -right-1 transform rotate-45 bg-white w-4 h-4 border-l-0 border-t-0 border-gray-300"></div>
+
+                                <ul className="space-y-3">
+                                    <li className="flex items-center space-x-4 cursor-pointer">
+                                        <div className="bg-gray-500 w-8 h-8 rounded-full flex items-center justify-center">
+                                            {/* Embed Icon */}
+                                            <img
+                                                src={embedShare}
+                                                alt="Embed"
+                                                className="object-contain w-8 h-8"
+                                            />
+                                        </div>
+                                        <span className="text-black font-medium">Embed</span>
+                                    </li>
+                                    <li
+                                        onClick={() => copyHandler('Copied')}
+                                        className="flex items-center space-x-4 cursor-pointer pt-2"
+                                    >
+                                        <div className="bg-red-500 w-8 h-8 rounded-full flex items-center justify-center">
+                                            {/* Copy Link Icon */}
+                                            <img
+                                                src={linkIcon}
+                                                alt="Copy Link"
+                                                className="object-contain w-5 h-5"
+                                            />
+                                        </div>
+                                        <span className="text-black font-medium">Copy link</span>
+                                    </li>
+                                    <li
+                                        onClick={shareToWhatsApp}
+                                        className="flex items-center space-x-4 cursor-pointer pt-2"
+                                    >
+                                        <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center">
+                                            {/* Share to WhatsApp Icon */}
+                                            <img
+                                                src={whatsappShare}
+                                                alt="Share to WhatsApp"
+                                                className="object-contain w-8 h-8"
+                                            />
+                                        </div>
+                                        <span className="text-black font-medium">
+                                            Share to WhatsApp
+                                        </span>
+                                    </li>
+                                    <li
+                                        onClick={shareToFacebook}
+                                        className="flex items-center space-x-4 cursor-pointer pt-2"
+                                    >
+                                        <div className="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center">
+                                            {/* Share to WhatsApp Icon */}
+                                            <img
+                                                src={facebookShare}
+                                                alt="Share to Facebook"
+                                                className="object-contain w-8 h-8"
+                                            />
+                                        </div>
+                                        <span className="text-black font-medium">
+                                            Share to Facebook
+                                        </span>
+                                    </li>
+                                    <li
+                                        onClick={shareToTwitter}
+                                        className="flex items-center space-x-4 cursor-pointer pt-2"
+                                    >
+                                        <div className="bg-blue-400 w-8 h-8 rounded-full flex items-center justify-center">
+                                            {/* Share to Twitter Icon */}
+                                            <img
+                                                src={twitterShare}
+                                                alt="Share to Twitter"
+                                                className="object-contain w-8 h-8"
+                                            />
+                                        </div>
+                                        <span className="text-black font-medium">
+                                            Share to Twitter
+                                        </span>
+                                    </li>
+                                    <li
+                                        onClick={shareToLinkedIn}
+                                        className="flex items-center space-x-4 cursor-pointer pt-2"
+                                    >
+                                        <div className="bg-blue-700 w-8 h-8 rounded-full flex items-center justify-center">
+                                            {/* Share to LinkedIn Icon */}
+                                            <img
+                                                src={linkedInShare}
+                                                alt="Share to LinkedIn"
+                                                className="object-contain w-8 h-8"
+                                            />
+                                        </div>
+                                        <span className="text-black font-medium">
+                                            Share to LinkedIn
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
                     </div>
                     <div className="p-3.5 bg-[#16182308] rounded-b-xl">
                         <div className="flex flex-row items-center gap-2">
@@ -979,7 +1187,7 @@ const VideoPage = () => {
                                                         Hide
                                                     </p>
                                                     <img
-                                                        className="w-2.5 h-2.5 object-contain cursor-pointer"
+                                                        className="w-2.5 h-2.5 object-contain cursor-pointer animate-bounce"
                                                         src={chevronTopIcon}
                                                         alt="chevron-top-icon"
                                                         style={{
