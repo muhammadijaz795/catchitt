@@ -30,7 +30,10 @@ function ChatHeader(props: any) {
                     ) : (
                         <img className={style.avatar} src={avatar} alt="" />
                     )}
-                    <p className={style.name}>{name}</p>
+                    <div style={{display:'flex',flexDirection:'column'}}>
+                        <p className={style.name}>{name}</p>
+                        <p className={style.userMention}>@najeebullahkhan</p>
+                    </div>
                 </div>
                 <img onClick={moreOptionH} style={{ cursor: 'pointer' }} src={more} alt="" />
             </div>

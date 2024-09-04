@@ -40,7 +40,7 @@ function Actions(props: any) {
                             key={index}
                             className={style.msgContainer}
                             style={{
-                                margin: item.isrecevied ? '0px 20% 0px 0%' : '0px 0% 0px 20%',
+                                margin: item.isrecevied ? '0px 48% 0px 0%' : '0px 0% 0px 48%',
                                 flexDirection: item.isrecevied ? 'row' : 'row-reverse',
                             }}
                         >
@@ -54,6 +54,7 @@ function Actions(props: any) {
                                         style={{
                                             left: item?.isrecevied ? 'auto' : '-145px',
                                             right: item?.isrecevied ? '-145px' : 'auto',
+                                            display:'flex'
                                         }}
                                         className={style.dropd}
                                     >
@@ -67,29 +68,13 @@ function Actions(props: any) {
                                                 valuesH2(item, 'stared', !item.stared);
                                             }}
                                         >
-                                            <img src={!item.stared ? starMsg : unStarMsg} alt="" />
+                                            {/* <img src={!item.stared ? starMsg : unStarMsg} alt="" /> */}
                                             <p color="#222" className={style.dropdText}>
-                                                {item.stared ? 'Unstar' : 'Star'}
+                                                {item.stared ? 'Unlike' : 'Like'}
                                             </p>
                                         </div>
-                                        <hr className={style.hr} />
-                                        <div
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                copyH(item.msg);
-                                                showToast();
-                                            }}
-                                            style={{
-                                                cursor: 'pointer',
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <img src={copyMsg} alt="" />
-                                            <p color="#222" className={style.dropdText}>
-                                                Copy
-                                            </p>
-                                        </div>
-                                        <hr className={style.hr} />
+                                        {/* <hr className={style.hr} /> */}
+                                        |
                                         <div
                                             style={{
                                                 cursor: 'pointer',
@@ -100,16 +85,38 @@ function Actions(props: any) {
                                                 deleteH(item);
                                             }}
                                         >
-                                            <img src={deleteMsg} alt="" />
+                                            {/* <img src={deleteMsg} alt="" /> */}
                                             <p
-                                                style={{
-                                                    color: '#DE0C0C',
-                                                }}
+                                                // style={{
+                                                //     color: '#DE0C0C',
+                                                // }}
                                                 className={style.dropdText}
                                             >
                                                 Delete
                                             </p>
                                         </div>
+                                        {/* <hr className={style.hr} /> */} 
+                                        {item.isrecevied && (
+                                        <>
+                                            |
+                                            <div
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    copyH(item.msg);
+                                                    showToast();
+                                                }}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                {/* <img src={copyMsg} alt="" /> */}
+                                                <p color="#222" className={style.dropdText}>
+                                                    Report
+                                                </p>
+                                            </div>
+                                        </>
+                                         )}
                                     </div>
                                 )}
                                 <div style={{ position: 'relative', zIndex: 20 }}>
@@ -119,7 +126,7 @@ function Actions(props: any) {
                                                 className={style.tempparent}
                                                 onClick={(e) => e.stopPropagation()}
                                             >
-                                                <div>
+                                                <div className={style.replyText}>
                                                     <p className={style.primaryText}>
                                                         {activeUser?.userName}
                                                     </p>
@@ -146,7 +153,7 @@ function Actions(props: any) {
                                     </LongPressButton>
                                 </div>
                                 <div className={style.subContent}>
-                                    {item.stared && <img src={starMsg} alt="" />}
+                                    {item.stared && <><span>❤️</span> <img src={avatar} className={style.avatarLike} alt="" /></>}
                                     <p>{item.time}</p>
                                     {!item?.isrecevied && item?.isRead && (
                                         <img src={seenMsgSvg} alt="" />
@@ -156,8 +163,8 @@ function Actions(props: any) {
                                     <div
                                         onClick={(e) => e.stopPropagation()}
                                         style={{
-                                            left: !item?.isrecevied ? '-120px' : 'auto',
-                                            right: item?.isrecevied ? '-120px' : 'auto',
+                                            left: !item?.isrecevied ? '-75px' : 'auto',
+                                            right: item?.isrecevied ? '-75px' : 'auto',
                                         }}
                                         className={style.actionsOnLongP}
                                     >
@@ -168,7 +175,7 @@ function Actions(props: any) {
                                                 valuesH(item, 'showEmogis');
                                             }}
                                         />
-                                        <img
+                                        {/* <img
                                             onClick={() => {
                                                 setSmsRef(item?.msg);
                                                 setSmsId(item?.id);
@@ -176,7 +183,7 @@ function Actions(props: any) {
                                             }}
                                             src={tagMsg}
                                             alt=""
-                                        />
+                                        /> */}
                                         <img
                                             onClick={() => {
                                                 valuesH(item, 'dropdown');

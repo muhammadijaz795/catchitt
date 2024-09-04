@@ -72,7 +72,7 @@ function Layout(props: any) {
             <Navbar />
 
             {/* <TopBar /> */}
-            <div style={{ display: 'flex', height: '100vh', width: '100vw', paddingTop: 80 }}>
+            <div style={{ display: 'flex', width: '100vw', paddingTop: 80 }}>
                 {!showSidebar && !showShortSidebar ? (
                     <div
                         // className={` ${darkTheme}`}

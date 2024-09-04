@@ -1,6 +1,6 @@
 .doMsgContainer {
   display: flex;
-  padding: 16px;
+  padding: 10px 10px  10px 0px;
   gap: 16px;
   justify-content: space-between;
   background: #fff;
@@ -54,4 +54,9 @@
   background: rgb(255, 59, 92);
   border-radius: 50%;
   cursor: pointer;
+}
+.sendIcon {
+  color: rgb(255, 59, 92);
+  transform: rotate(330deg);
+  margin-bottom: 10px;
 }
