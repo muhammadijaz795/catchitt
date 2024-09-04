@@ -30,30 +30,35 @@ const defaultUser: User = {
     password: '',
 };
 
-export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose }: DeleteReasonPopupProps) => {
+export const DeleteReasonPopup = ({
+    className,
+    onSubmit,
+    handleOpen,
+    handleClose,
+}: DeleteReasonPopupProps) => {
     const token = localStorage.getItem('token');
-    const username = useAuthStore((state) => state.username)
-    const email = useAuthStore((state) => state.email)
-    const logout = useAuthStore(state => state.logout);
+    const username = useAuthStore((state) => state.username);
+    const email = useAuthStore((state) => state.email);
+    const logout = useAuthStore((state) => state.logout);
     const [user, setUser] = useState(defaultUser);
     const signInEndPoint = '/auth/sign-in';
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    const [otherReasonField, setOtherReasonField] = useState(false)
+    const [otherReasonField, setOtherReasonField] = useState(false);
 
     const [deleteReasonsData, setDeleteReasonsData] = useState({});
     const [selectedValue, setSelectedValue] = useState<string>('');
-    const [deleteReason, setDeleteReason] = useState('')
+    const [deleteReason, setDeleteReason] = useState('');
 
     const [firstModalVisible, setFirstModalVisible] = useState(true);
-    const [openConfirmationModal, setOpenConfirmationModal] = useState(false)
-    const [openPasswordCheckModal, setOpenPasswordCheckModal] = useState(false)
-    const [openConfirmationLastModal, setOpenConfirmationLastModal] = useState(false)
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
+    const [openPasswordCheckModal, setOpenPasswordCheckModal] = useState(false);
+    const [openConfirmationLastModal, setOpenConfirmationLastModal] = useState(false);
 
-    const [notAcceptable, setNotAcceptable] = useState(false)
+    const [notAcceptable, setNotAcceptable] = useState(false);
 
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState('');
 
     const API_KEY = process.env.VITE_API_URL;
 
@@ -75,16 +80,13 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                 const responseData = await response.json();
                 setErrorMessage('');
                 setSuccessMessage('Correct!');
-                console.log(responseData);
-                setOpenPasswordCheckModal(false)
-                setOpenConfirmationLastModal(true)
+                setOpenPasswordCheckModal(false);
+                setOpenConfirmationLastModal(true);
             } else {
-                console.log(email);
                 const errorResponseData = await response.json();
                 const errorMessageFromServer = errorResponseData.message;
                 setSuccessMessage('');
                 setErrorMessage(errorMessageFromServer);
-                console.log(response);
             }
         } catch (error) {
             console.error(error);
@@ -94,114 +96,103 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
 
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const select = event.target.value;
-        console.log(select);
         setSelectedValue(select);
-        setDeleteReason(select)
+        setDeleteReason(select);
         if (select === 'Another reason') {
-            console.log('Another reason selected!');
-            setDeleteReason('')
-            setOtherReasonField(true)
+            setDeleteReason('');
+            setOtherReasonField(true);
         } else {
-            setOtherReasonField(false)
+            setOtherReasonField(false);
         }
     };
 
     const handleFetchDeleteReasons = async () => {
         try {
-            const response = await fetch(
-                `${API_KEY}/profile/delete-account-reasons`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const response = await fetch(`${API_KEY}/profile/delete-account-reasons`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const data = await response.json();
             if (response.ok) {
                 setDeleteReasonsData(data.data);
-                console.log(data);
             } else {
                 console.error('Error fetching delete reasons:', data.message);
             }
         } catch (error) {
             console.error('Error fetching delete reasons:', error);
         }
-    }
+    };
 
     const handleOpenConfirmationFirstModal = () => {
-        setFirstModalVisible(false)
-        setOpenConfirmationModal(true)
-    }
+        setFirstModalVisible(false);
+        setOpenConfirmationModal(true);
+    };
 
     const handleCloseConfirmationFirstModal = () => {
-        setOpenConfirmationModal(false)
-        handleClose()
-    }
+        setOpenConfirmationModal(false);
+        handleClose();
+    };
 
     const handleOpenPasswordCheckModal = () => {
-        setOpenConfirmationModal(false)
-        setOpenPasswordCheckModal(true)
-    }
+        setOpenConfirmationModal(false);
+        setOpenPasswordCheckModal(true);
+    };
 
     const handleClosePasswordCheckModal = () => {
-        setOpenPasswordCheckModal(false)
-        user.password = ''
-        setErrorMessage('')
-        setSuccessMessage('')
-        handleClose()
-    }
+        setOpenPasswordCheckModal(false);
+        user.password = '';
+        setErrorMessage('');
+        setSuccessMessage('');
+        handleClose();
+    };
 
     const handleOpenConfirmationLastModal = () => {
-        setOpenPasswordCheckModal(false)
-        setOpenConfirmationModal(false)
-        setOpenConfirmationLastModal(true)
-    }
+        setOpenPasswordCheckModal(false);
+        setOpenConfirmationModal(false);
+        setOpenConfirmationLastModal(true);
+    };
 
     const handleCloseConfirmationLastModal = () => {
-        setOpenConfirmationLastModal(false)
-        handleClose()
-    }
+        setOpenConfirmationLastModal(false);
+        handleClose();
+    };
 
     const handleGoBackToReasonForDelete = () => {
-        setFirstModalVisible(true)
-        setOpenConfirmationModal(false)
-    }
+        setFirstModalVisible(true);
+        setOpenConfirmationModal(false);
+    };
 
     const handleGoBackToFirstDeleteConfirmation = () => {
-        setOpenPasswordCheckModal(false)
-        setOpenConfirmationModal(true)
-    }
+        setOpenPasswordCheckModal(false);
+        setOpenConfirmationModal(true);
+    };
 
     useEffect(() => {
-        handleFetchDeleteReasons()
-    }, [])
+        handleFetchDeleteReasons();
+    }, []);
 
     const handleDeleteSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await fetch(
-                `${API_KEY}/profile/`,
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ password: user.password, reason: selectedValue }),
-                }
-            );
+            const response = await fetch(`${API_KEY}/profile/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ password: user.password, reason: selectedValue }),
+            });
             if (response.ok) {
                 // Handle success
-                const responseData = await response.json();
-                console.log(responseData);
+                await response.json();
                 handleClose();
-                logout()
-                navigate('/auth')
+                logout();
+                navigate('/auth');
             } else {
-                const errorResponseData = await response.json();
-                console.log(errorResponseData);
+                await response.json();
             }
         } catch (error) {
             console.error(error);
@@ -209,13 +200,12 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
     };
 
     useEffect(() => {
-        if (deleteReason === '' && selectedValue === 'Another reason' || selectedValue === '') {
-            setNotAcceptable(true)
+        if ((deleteReason === '' && selectedValue === 'Another reason') || selectedValue === '') {
+            setNotAcceptable(true);
+        } else {
+            setNotAcceptable(false);
         }
-        else {
-            setNotAcceptable(false)
-        }
-    }, [deleteReason])
+    }, [deleteReason]);
 
     return (
         <div className={classNames(styles.root, className)}>
@@ -224,22 +214,25 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                     <>
                         <div className={styles.frame}>
                             <div className={styles.contentPrefHeader}>
-                                <h4 className={styles.contentPrefModalHeader}>
-                                    Delete account
-                                </h4>
-                                <p className={styles.blueText}>
-                                    Why are you leaving Seezitt?</p>
+                                <h4 className={styles.contentPrefModalHeader}>Delete account</h4>
+                                <p className={styles.blueText}>Why are you leaving Seezitt?</p>
                                 <p className={styles.greyText}>
-                                    It is sad to see you leave.
-                                    Could you tell us the reason you are leaving?
-                                    It well help us provide a happier environment for our community.
+                                    It is sad to see you leave. Could you tell us the reason you are
+                                    leaving? It well help us provide a happier environment for our
+                                    community.
                                 </p>
                             </div>
-                            <form onSubmit={(event) => handleDeleteSubmit(event)} className={styles.formStyle}>
+                            <form
+                                onSubmit={(event) => handleDeleteSubmit(event)}
+                                className={styles.formStyle}
+                            >
                                 <FormControl>
                                     <RadioGroup
                                         sx={{
-                                            display: 'flex', flexDirection: 'column', rowGap: '20px', width: '100%'
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            rowGap: '20px',
+                                            width: '100%',
                                         }}
                                         value={selectedValue}
                                         onChange={handleRadioChange}
@@ -251,13 +244,15 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                             <FormControlLabel
                                                 key={key}
                                                 value={key}
-                                                control={<Radio
-                                                    sx={{
-                                                        '&.Mui-checked': {
-                                                            color: 'rgb(255, 59, 92)'
-                                                        }
-                                                    }}
-                                                />}
+                                                control={
+                                                    <Radio
+                                                        sx={{
+                                                            '&.Mui-checked': {
+                                                                color: 'rgb(255, 59, 92)',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
                                                 label={String(value)}
                                                 style={{
                                                     borderBottom: '1px solid #DFDFDF',
@@ -266,18 +261,25 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                                 }}
                                             />
                                         ))}
-                                        <FormControlLabel value="Another reason"
-                                            control={<Radio
-                                                sx={{
-                                                    '&.Mui-checked': {
-                                                        color: 'rgb(255, 59, 92)'
-                                                    }
-                                                }}
-                                            />} label="Another reason" />
+                                        <FormControlLabel
+                                            value="Another reason"
+                                            control={
+                                                <Radio
+                                                    sx={{
+                                                        '&.Mui-checked': {
+                                                            color: 'rgb(255, 59, 92)',
+                                                        },
+                                                    }}
+                                                />
+                                            }
+                                            label="Another reason"
+                                        />
                                         {otherReasonField && (
                                             <input
                                                 className={styles.otherReasonInputField}
-                                                placeholder={'Please tell us the reason you are leaving'}
+                                                placeholder={
+                                                    'Please tell us the reason you are leaving'
+                                                }
                                                 onChange={(e) => setDeleteReason(e.target.value)}
                                             />
                                         )}
@@ -293,7 +295,11 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                     </button>
                                     <button
                                         type="submit"
-                                        className={notAcceptable ? styles.submitBtnDeactivated : styles.submitBtn}
+                                        className={
+                                            notAcceptable
+                                                ? styles.submitBtnDeactivated
+                                                : styles.submitBtn
+                                        }
                                         onClick={handleOpenConfirmationFirstModal}
                                         disabled={notAcceptable}
                                     >
@@ -316,40 +322,52 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                             <Box sx={mainModalstyle}>
                                 <div className={styles.frame}>
                                     <div className={styles.contentPrefHeaderConfirmationModal}>
-                                        <div className={styles.leftArrowImg} onClick={handleGoBackToReasonForDelete}>
-                                            <img src={LeftArrow} alt='' />
+                                        <div
+                                            className={styles.leftArrowImg}
+                                            onClick={handleGoBackToReasonForDelete}
+                                        >
+                                            <img src={LeftArrow} alt="" />
                                         </div>
                                         <div className={styles.headerTextDiv}>
                                             <h4 className={styles.contentPrefModalHeader}>
                                                 Delete account?
                                             </h4>
                                             <p className={styles.blueText}>
-                                                Delete {username} account?</p>
-                                            <p className={styles.greyText}
-                                                style={{ width: '372px' }}>
-                                                Your account will deactivate for 30 days, it will not be <br></br>
-                                                visible to public. You can reactivate your account <br></br>
+                                                Delete {username} account?
+                                            </p>
+                                            <p
+                                                className={styles.greyText}
+                                                style={{ width: '372px' }}
+                                            >
+                                                Your account will deactivate for 30 days, it will
+                                                not be <br></br>
+                                                visible to public. You can reactivate your account{' '}
+                                                <br></br>
                                                 by login in anytime during these 30 days.
                                             </p>
                                         </div>
                                     </div>
-                                    <div >
+                                    <div>
                                         <p className={styles.bodyText}>
                                             By deleting your account:<br></br>
                                         </p>
                                         <p className={styles.bodyText}>
                                             <ul style={{ padding: '0 24px 0 24px' }}>
                                                 <li>
-                                                    You no longer can login to this account.<br></br>
+                                                    You no longer can login to this account.
+                                                    <br></br>
                                                 </li>
                                                 <li>
-                                                    You lose all your drafts, and posted videos and images.<br></br>
+                                                    You lose all your drafts, and posted videos and
+                                                    images.<br></br>
                                                 </li>
                                                 <li>
-                                                    You can’t get a refund on any items purchased or recieved.<br></br>
+                                                    You can’t get a refund on any items purchased or
+                                                    recieved.<br></br>
                                                 </li>
                                                 <li>
-                                                    You lose all your direct messages, but others may still be able to see it.<br></br>
+                                                    You lose all your direct messages, but others
+                                                    may still be able to see it.<br></br>
                                                 </li>
                                             </ul>
                                             <br></br>
@@ -357,7 +375,8 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                         </p>
                                     </div>
                                 </div>
-                                <Button variant="contained"
+                                <Button
+                                    variant="contained"
                                     sx={mainModalBtnstyle}
                                     onClick={handleOpenPasswordCheckModal}
                                 >
@@ -378,18 +397,23 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                             <Box sx={mainModalstyle}>
                                 <div className={styles.frame}>
                                     <div className={styles.contentPrefHeaderConfirmationModal}>
-                                        <div className={styles.leftArrowImg} onClick={handleGoBackToFirstDeleteConfirmation}>
-                                            <img src={LeftArrow} alt='' />
+                                        <div
+                                            className={styles.leftArrowImg}
+                                            onClick={handleGoBackToFirstDeleteConfirmation}
+                                        >
+                                            <img src={LeftArrow} alt="" />
                                         </div>
                                         <div className={styles.headerTextDiv}>
                                             <h4 className={styles.contentPrefModalHeader}>
                                                 Delete account
                                             </h4>
-                                            <p className={styles.blueText}>
-                                                Enter password</p>
-                                            <p className={styles.greyText}
-                                                style={{ width: '372px' }}>
-                                                To continue, please enter your password to confirm<br></br>
+                                            <p className={styles.blueText}>Enter password</p>
+                                            <p
+                                                className={styles.greyText}
+                                                style={{ width: '372px' }}
+                                            >
+                                                To continue, please enter your password to confirm
+                                                <br></br>
                                                 this account belongs to you.
                                             </p>
                                         </div>
@@ -434,7 +458,8 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                                         />
                                     </div>
                                 </div>
-                                <Button variant="contained"
+                                <Button
+                                    variant="contained"
                                     sx={mainModalBtnstyle}
                                     onClick={() => handleSignIn(email ? email : '', user.password)}
                                 >
@@ -453,26 +478,29 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
                             aria-describedby="modal-modal-description"
                         >
                             <Box sx={lastConfirmationModalstyle}>
-                                <div className={styles.frame}
-                                    style={{ marginBottom: '0' }}>
-                                    <div className={styles.finalDeleteConfirmationDiv}
-                                        style={{ textAlign: 'center' }}>
+                                <div className={styles.frame} style={{ marginBottom: '0' }}>
+                                    <div
+                                        className={styles.finalDeleteConfirmationDiv}
+                                        style={{ textAlign: 'center' }}
+                                    >
                                         <h4>
                                             Are you sure you want to delete<br></br>
                                             account {username} ?
                                         </h4>
                                     </div>
                                     <div className={styles.confirmationBtnsDiv}>
-                                        <button onClick={handleDeleteSubmit}
+                                        <button
+                                            onClick={handleDeleteSubmit}
                                             style={{ background: '#DE0C0C', color: 'white' }}
                                         >
                                             Delete
                                         </button>
-                                        <button onClick={handleCloseConfirmationLastModal}
+                                        <button
+                                            onClick={handleCloseConfirmationLastModal}
                                             style={{
                                                 border: '1px solid rgb(255, 59, 92)',
                                                 background: '#FFF',
-                                                color: 'rgb(255, 59, 92)'
+                                                color: 'rgb(255, 59, 92)',
                                             }}
                                         >
                                             Cancel
@@ -487,7 +515,6 @@ export const DeleteReasonPopup = ({ className, onSubmit, handleOpen, handleClose
         </div>
     );
 };
-
 
 var mainModalstyle = {
     position: 'absolute' as 'absolute',
@@ -517,7 +544,7 @@ var mainModalBtnstyle = {
     alignItems: 'center',
     borderRadius: '6px',
     background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
-    textTransform: 'none'
+    textTransform: 'none',
 };
 
 var lastConfirmationModalstyle = {

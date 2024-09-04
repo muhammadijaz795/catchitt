@@ -37,11 +37,9 @@ export default function SuggestedFollower({ randonUser }: any) {
                 console.log(error);
             }
         } else {
-            console.log('Suggested Follower');
             // navigate('/auth');
         }
     };
-
 
     const navigate = useNavigate();
     const handleFollowClick = async (accountId: string) => {

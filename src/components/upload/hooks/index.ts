@@ -112,7 +112,6 @@ function useUpload() {
             setIsPosting(false);
             return;
         }
-        console.log( getLinks);
         postPayload.append('videoId', getLinks?.data?.data?.videoId);
         postPayload.append('videoUrl', getLinks?.data?.data?.videoUrl?.split('?')[0]);
         postPayload.append('thumbnailUrl', getLinks?.data?.data?.thumbnailUrl?.split('?')[0]);
@@ -244,7 +243,6 @@ function useUpload() {
             });
 
             if (res?.status === STATUS_CODE.OK) {
-                console.log('Success Edit Video : ', res?.data);
                 navigate('/profile');
             } else {
                 console.log(res?.message || 'Invalid status code');

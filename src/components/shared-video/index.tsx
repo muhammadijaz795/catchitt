@@ -1,13 +1,17 @@
 import { CircularProgress } from '@mui/material';
 import moment from 'moment';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useUpdateEffect } from 'react-use';
 import likesIcon from '../../../public/images/icons/Heart2.svg';
 import {
-    cross, embedShare, facebookShare, linkedInShare,
-    twitterShare, whatsappShare
+    cross,
+    embedShare,
+    facebookShare,
+    linkedInShare,
+    twitterShare,
+    whatsappShare,
 } from '../../icons';
 import Layout from '../../shared/layout';
 import { showToast, showToastSuccess } from '../../utils/constants';
@@ -21,6 +25,7 @@ import commentEmoji from './svg-components/comment-emoji.svg';
 import commentIcon from './svg-components/comment-icon.svg';
 import emptyHeartIcon from './svg-components/empty-heart-icon.svg';
 import horizontalElipsisMenuIcon from './svg-components/horizontal-elipsis-icon.svg';
+import horizontalElipsisMenuWhiteIcon from './svg-components/horizontal-elipsis-icon-white.svg';
 import linkIcon from './svg-components/link-icon.svg';
 import musicIcon from './svg-components/music-icon.svg';
 import redHeartIcon from './svg-components/red-heart-icon.svg';
@@ -30,6 +35,10 @@ import savedIcon from './svg-components/saved-icon.svg';
 import shareIcon from './svg-components/share-icon.svg';
 import whiteHeartIcon from './svg-components/white-filled-heart-icon.svg';
 import styles from './video-page.module.scss';
+import { isUserLoggedIn } from '../../utils/common';
+import { openLoginPopup } from '../../redux/reducers';
+import { useDispatch } from 'react-redux';
+import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 
 const VideoPage = () => {
     // hooks
@@ -61,18 +70,25 @@ const VideoPage = () => {
     const [youMayLikeVideos, setYouMayLikeVideos] = useState<any>([]);
     const [muteStates, setMuteStates] = useState<any>([]);
     const [pageNumber, setPageNumber] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(8);
     const [commenterName, setCommenterName] = useState('');
     const [commenterAvatar, setCommenterAvatar] = useState('');
     const [isReplyToCommentClicked, setIsReplyToCommentClicked] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [showSharePopup, setShowSharePopup] = useState(false);
+    const [musicTitle, setMusicTitle] = useState('');
+    const [musicLink, setMusicLink] = useState('');
+    const [isEmbedPopupVisible, setIsEmbedPopupVisible] = useState(false);
+    const dispatch = useDispatch();
 
     const [isFollowed, setUserIsFollowed] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
     const [followToggleLoading, setFollowToggleLoading] = useState(false);
     const [switchVideoIndex, setSwitchVideoIndex] = useState(-1);
     const [isFirstRender, setIsFirstRender] = useState(false);
+    const subDivRef = useRef<any>(null);
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
 
     // hooks for comment replies
     const [isCommentReplyTooltipVisible, setCommentReplyIsTooltipVisible] = useState(false);
@@ -82,33 +98,85 @@ const VideoPage = () => {
     const [likedReplies, setLikedReplies] = useState<{ [key: string]: boolean }>({});
     const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
 
+    const videoData = {
+        videoId: selectedVideoId ?? videoId,
+        username: userName,
+        caption: videoDescription,
+        tags: ['support', 'fypシ゚viral', 'foryou', 'viral'],
+        musicTitle: musicTitle,
+        musicLink: musicLink,
+    };
+
+    const userUrl = `${API_KEY}/@${videoData?.username}?refer=embed`;
+
+    // Convert the VideoBlockquote component to HTML string
+    const embedCode = `
+    <blockquote
+        className="your-embed-class"
+        cite="${videoUrl}"
+        data-video-id="${videoData?.videoId}"
+        style="max-width: 509px; min-width: 325px;"
+    >
+        <section>
+            <a target="_blank" rel="noopener noreferrer" title="@${
+                videoData?.username
+            }" href="${userUrl}">
+                @${videoData?.username}
+            </a>
+            ${videoData?.caption}
+            ${videoData?.tags
+                .map(
+                    (tag, index) => `
+                <a
+                    key=${index}
+                    title="${tag}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://stagingweb.seezitt.com/tag/${tag}?refer=embed"
+                >
+                    #${tag}
+                </a>
+            `
+                )
+                .join('')}
+            <a target="_blank" rel="noopener noreferrer" title="${musicTitle}" href="${musicLink}">
+                ♬ ${musicTitle}
+            </a>
+        </section>
+    </blockquote>
+    `;
+
     // functions related to comment
     const atRateHandler = () => {
         setComment((prev) => prev + '@');
     };
 
     const commentLikeToggler = async (commentId: number) => {
-        setLikedComments((prev) => ({
-            ...prev,
-            [commentId]: !prev[commentId],
-        }));
+        if (isUserLoggedIn()) {
+            setLikedComments((prev) => ({
+                ...prev,
+                [commentId]: !prev[commentId],
+            }));
 
-        try {
-            const addCommentResponse = await fetch(
-                `${API_KEY}/media-content/like/comment/${commentId}`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ comment }),
-                }
-            );
-            await addCommentResponse.json();
-            fetchMediaById(selectedVideoId);
-        } catch (error) {
-            console.log('🚀 ~ commentLikeToggler ~ error:', error);
+            try {
+                const addCommentResponse = await fetch(
+                    `${API_KEY}/media-content/like/comment/${commentId}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ comment }),
+                    }
+                );
+                await addCommentResponse.json();
+                fetchMediaById(selectedVideoId);
+            } catch (error) {
+                console.log('🚀 ~ commentLikeToggler ~ error:', error);
+            }
+        } else {
+            loginPopup();
         }
     };
 
@@ -135,25 +203,29 @@ const VideoPage = () => {
     };
 
     const replyToCommentHandler = async (commentId: number) => {
-        setIsReplyToCommentClicked(true);
-        try {
-            const addCommentResponse = await fetch(
-                `${API_KEY}/media-content/comment/${selectedVideoId ?? videoId}`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ comment: commentReply, commentId }),
-                }
-            );
-            await addCommentResponse.json();
-            setCommentReply('');
-            showToastSuccess('Comment reply posted');
-            fetchMediaById(selectedVideoId);
-        } catch (error) {
-            console.log('🚀 ~ addCommentHandler ~ error:', error);
+        if (isUserLoggedIn()) {
+            setIsReplyToCommentClicked(true);
+            try {
+                const addCommentResponse = await fetch(
+                    `${API_KEY}/media-content/comment/${selectedVideoId ?? videoId}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ comment: commentReply, commentId }),
+                    }
+                );
+                await addCommentResponse.json();
+                setCommentReply('');
+                showToastSuccess('Comment reply posted');
+                fetchMediaById(selectedVideoId);
+            } catch (error) {
+                console.log('🚀 ~ addCommentHandler ~ error:', error);
+            }
+        } else {
+            loginPopup();
         }
     };
 
@@ -193,9 +265,10 @@ const VideoPage = () => {
     };
 
     const fetchMediaById = async (videoIdPassed?: number) => {
+        let identifier = token ? 'videos' : 'public/videos';
         try {
             const fetchMediaResponse = await fetch(
-                `${API_KEY}/media-content/videos/${videoIdPassed ?? videoId}`,
+                `${API_KEY}/media-content/${identifier}/${videoIdPassed ?? videoId}`,
                 {
                     method: 'GET',
                     headers: {
@@ -218,6 +291,8 @@ const VideoPage = () => {
             setVideoUrl(data?.reducedVideoUrl);
             setIsSaved(data?.isSaved);
             setIsLiked(data?.isLiked);
+            setMusicTitle(data?.sound?.title);
+            setMusicLink(data?.sound?.url);
             setIsFirstRender(true);
         } catch (error) {
             console.log('🚀 ~ fetchMediaById ~ error:', error);
@@ -225,23 +300,27 @@ const VideoPage = () => {
     };
 
     const toggleFollow = async () => {
-        if (safetyCheck(userId)) {
-            setFollowToggleLoading(true);
-            try {
-                const fetchMediaResponse = await fetch(`${API_KEY}/profile/follow/${userId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                await fetchMediaResponse.json();
-                setUserIsFollowed(!isFollowed);
-                setFollowToggleLoading(false);
-            } catch (error) {
-                setFollowToggleLoading(false);
-                console.log('🚀 ~ toggleFollow ~ error:', error);
+        if (isUserLoggedIn()) {
+            if (safetyCheck(userId)) {
+                setFollowToggleLoading(true);
+                try {
+                    const fetchMediaResponse = await fetch(`${API_KEY}/profile/follow/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    await fetchMediaResponse.json();
+                    setUserIsFollowed(!isFollowed);
+                    setFollowToggleLoading(false);
+                } catch (error) {
+                    setFollowToggleLoading(false);
+                    console.log('🚀 ~ toggleFollow ~ error:', error);
+                }
             }
+        } else {
+            loginPopup();
         }
     };
 
@@ -249,7 +328,7 @@ const VideoPage = () => {
         setIsLoading(true);
         try {
             const response = await fetch(
-                `${API_KEY}/media-content/public/videos/feed/upgraded?page=${pageNumber}&pageSize=5`,
+                `${API_KEY}/media-content/public/videos/feed/upgraded?page=${pageNumber}&pageSize=${pageSize}`,
                 {
                     method: 'GET',
                     headers: {
@@ -282,19 +361,23 @@ const VideoPage = () => {
     };
 
     const loadUserProfile = async () => {
-        try {
-            const fetchMediaResponse = await fetch(`${API_KEY}/profile`, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const { data } = await fetchMediaResponse.json();
-            setCommenterName(data?.name);
-            setCommenterAvatar(data?.avatar);
-        } catch (error) {
-            console.log('🚀 ~ fetchMediaById ~ error:', error);
+        // If user is logged-in only then we can fetch it's data
+        if (token) {
+            try {
+                const fetchMediaResponse = await fetch(`${API_KEY}/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const { data } = await fetchMediaResponse.json();
+                setCommenterName(data?.name);
+                setCommenterAvatar(data?.avatar);
+            } catch (error) {
+                console.log('🚀 ~ fetchMediaById ~ error:', error);
+            }
+        } else {
         }
     };
 
@@ -320,44 +403,52 @@ const VideoPage = () => {
     };
 
     const likeVideoToggler = async () => {
-        setIsFirstRender(false);
-        setIsLiked(!isLiked);
-        try {
-            const likeUnlikeVideo = await fetch(
-                `${API_KEY}/media-content/like/${selectedVideoId ?? videoId}`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            await likeUnlikeVideo.json();
-            fetchMediaById(selectedVideoId);
-        } catch (error) {
-            console.log('🚀 ~ likeVideoToggler ~ error:', error);
+        if (isUserLoggedIn()) {
+            setIsFirstRender(false);
+            setIsLiked(!isLiked);
+            try {
+                const likeUnlikeVideo = await fetch(
+                    `${API_KEY}/media-content/like/${selectedVideoId ?? videoId}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                await likeUnlikeVideo.json();
+                fetchMediaById(selectedVideoId);
+            } catch (error) {
+                console.log('🚀 ~ likeVideoToggler ~ error:', error);
+            }
+        } else {
+            loginPopup();
         }
     };
 
     const saveVideoToggler = async () => {
-        setIsFirstRender(false);
-        setIsSaved(!isSaved);
-        try {
-            const likeUnlikeVideo = await fetch(
-                `${API_KEY}/media-content/collections/${selectedVideoId ?? videoId}`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            await likeUnlikeVideo.json();
-            fetchMediaById(selectedVideoId);
-        } catch (error) {
-            console.log('🚀 ~ saveVideoToggler ~ error:', error);
+        if (isUserLoggedIn()) {
+            setIsFirstRender(false);
+            setIsSaved(!isSaved);
+            try {
+                const likeUnlikeVideo = await fetch(
+                    `${API_KEY}/media-content/collections/${selectedVideoId ?? videoId}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                await likeUnlikeVideo.json();
+                fetchMediaById(selectedVideoId);
+            } catch (error) {
+                console.log('🚀 ~ saveVideoToggler ~ error:', error);
+            }
+        } else {
+            loginPopup();
         }
     };
 
@@ -369,6 +460,16 @@ const VideoPage = () => {
         return false;
     };
 
+    const embedShareHandler = () => {
+        setIsEmbedPopupVisible(true);
+    };
+
+    const copyEmbedCodeHandler = () => {
+        navigator.clipboard.writeText(embedCode).then(() => {
+            showToastSuccess('Embed Code Copied.');
+        });
+    };
+
     const copyHandler = (msg: string) => {
         navigator.clipboard
             .writeText(`${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`)
@@ -378,32 +479,22 @@ const VideoPage = () => {
     };
 
     const shareToWhatsApp = () => {
-        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
-        window.open(`https://api.whatsapp.com/send?text=${videoDescription} - ${url}`, '_blank');
+        window.open(`https://api.whatsapp.com/send?text=${window.location.href}`, '_blank');
     };
 
     const shareToFacebook = () => {
-        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
-
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`,
+            '_blank'
+        );
     };
 
     const shareToTwitter = () => {
-        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
-
-        window.open(
-            `https://twitter.com/intent/tweet?url=${url}&text=${videoDescription}`,
-            '_blank'
-        );
+        window.open(`https://twitter.com/intent/tweet?url=${window.location.href}`, '_blank');
     };
 
     const shareToLinkedIn = () => {
-        let url = `${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`;
-
-        window.open(
-            `https://www.linkedin.com/shareArticle?url=${url}&title=${videoDescription}`,
-            '_blank'
-        );
+        window.open(`https://www.linkedin.com/shareArticle?url=${window.location.href}`, '_blank');
     };
 
     const hideTimeoutRef = useRef<any>(null);
@@ -420,6 +511,16 @@ const VideoPage = () => {
             setShowSharePopup(false);
         }, 500);
         // 0.5 second delay
+    };
+
+    const loginToCommentHandler = () => {
+        if (!isUserLoggedIn()) {
+            loginPopup();
+        }
+    };
+
+    const loginPopup = () => {
+        dispatch(openLoginPopup());
     };
 
     useEffect(() => {
@@ -453,9 +554,41 @@ const VideoPage = () => {
         }
     }, [isSaved]);
 
+    useUpdateEffect(() => {
+        getExplorePageData();
+    }, [pageNumber]);
+
+    const handleScroll = useCallback(() => {
+        if (subDivRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = subDivRef.current;
+            if (scrollTop + clientHeight >= scrollHeight - 0.5) {
+                setPageNumber((prevPageNumber) => prevPageNumber + 1);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        const mainDiv = subDivRef.current;
+        if (mainDiv) {
+            mainDiv.addEventListener('scroll', handleScroll);
+            return () => mainDiv.removeEventListener('scroll', handleScroll);
+        }
+    }, [handleScroll]);
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if (themeColor == 'dark') {
+            setIsDarkTheme(true);
+        }
+    });
+
     return (
         <Layout isScrollActive={false} paddingBottomProp={true}>
-            <div className="flex flex-row h-full overflow-y-auto justify-between pt-4 pl-8">
+            <div
+                ref={subDivRef}
+                className="flex flex-row h-full overflow-y-auto justify-between pt-4 pl-8"
+            >
                 <div className="w-full">
                     <div className="relative">
                         <video
@@ -527,7 +660,10 @@ const VideoPage = () => {
                                 <div className="absolute bottom-5 -right-1 transform rotate-45 bg-white w-4 h-4 border-l-0 border-t-0 border-gray-300"></div>
 
                                 <ul className="space-y-3">
-                                    <li className="flex items-center space-x-4 cursor-pointer">
+                                    <li
+                                        onClick={embedShareHandler}
+                                        className="flex items-center space-x-4 cursor-pointer"
+                                    >
                                         <div className="bg-gray-500 w-8 h-8 rounded-full flex items-center justify-center">
                                             {/* Embed Icon */}
                                             <img
@@ -676,19 +812,7 @@ const VideoPage = () => {
                         </div>
                         <div className="text-left mt-3 flex flex-row items-center justify-center w-fit gap-1">
                             <span className="font-semibold text-[0.938rem] text-[#2B5DB9] hover:underline cursor-pointer">
-                                #foryoupage
-                            </span>
-                            <span className="font-semibold text-[0.938rem] text-[#2B5DB9] hover:underline cursor-pointer">
-                                #viralvideo
-                            </span>
-                            <span className="font-semibold text-[0.938rem] text-[#2B5DB9] hover:underline cursor-pointer">
-                                #viral
-                            </span>
-                            <span className="font-semibold text-[0.938rem] text-[#2B5DB9] hover:underline cursor-pointer">
-                                #fyp
-                            </span>
-                            <span className="font-semibold text-[0.938rem] text-[#2B5DB9] hover:underline cursor-pointer">
-                                #333
+                                {videoDescription}
                             </span>
                         </div>
                         <div className="flex flex-row items-center mt-1.5 gap-1 hover:underline cursor-pointer">
@@ -697,7 +821,9 @@ const VideoPage = () => {
                                 src={musicIcon}
                                 alt="music-icon"
                             />
-                            <p className="text-black text-sm font-light">original sounds - </p>
+                            <p className="text-black text-sm font-light">
+                                {musicTitle?.toLowerCase()} -{' '}
+                            </p>
                             <h4 className="text-black text-sm font-normal">{userName}</h4>
                         </div>
                     </div>
@@ -709,62 +835,83 @@ const VideoPage = () => {
                         </p>
                         <div className="flex flex-row items-start gap-3 mt-3">
                             {/* Commenter avatar */}
-                            {commenterAvatar && commenterAvatar != '' ? (
-                                <img
-                                    className={`w-12 h-12 object-contain rounded-full`}
-                                    src={commenterAvatar}
-                                    alt=""
-                                />
-                            ) : (
-                                <div
-                                    className={`w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
-                                >
-                                    <p className="text-lg text-white font-medium">
-                                        {commenterName.charAt(0)}
-                                    </p>
-                                </div>
+                            {isUserLoggedIn() && (
+                                <>
+                                    {commenterAvatar && commenterAvatar !== '' ? (
+                                        <img
+                                            className="w-12 h-12 object-contain rounded-full"
+                                            src={commenterAvatar}
+                                            alt=""
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center">
+                                            <p className="text-lg text-white font-medium">
+                                                {commenterName?.charAt(0)}
+                                            </p>
+                                        </div>
+                                    )}
+                                </>
                             )}
+
                             <div className="pb-6 border-b border-b-[#0000001f] cursor-pointer w-full flex flex-row items-center gap-2.5">
-                                <div className="bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full">
+                                <div
+                                    className={`bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${
+                                        isUserLoggedIn() ? 'focus-within:border-[#16182333]' : ''
+                                    } rounded-lg cursor-text pr-2 pl-4 w-full`}
+                                >
                                     <input
+                                        onClick={loginToCommentHandler}
                                         value={comment}
                                         onChange={(e) => setComment(e.target.value)}
                                         maxLength={150}
-                                        placeholder="Add comment..."
+                                        placeholder={`${
+                                            isUserLoggedIn()
+                                                ? 'Add comment...'
+                                                : 'Log in to comment'
+                                        }`}
                                         type="text"
-                                        className="bg-transparent placeholder-[#4d4e58] w-full"
+                                        readOnly={!isUserLoggedIn()}
+                                        className={`bg-transparent w-full ${
+                                            !isUserLoggedIn()
+                                                ? 'my-[0.438rem] p-[0.313rem] cursor-pointer placeholder-[#ff3b5c] font-medium'
+                                                : 'placeholder-[#4d4e58]'
+                                        }`}
                                     />
-                                    <div className="flex flex-row items-center">
-                                        <div
-                                            onClick={atRateHandler}
-                                            className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem] mr-1"
+                                    {isUserLoggedIn() && (
+                                        <div className="flex flex-row items-center">
+                                            <div
+                                                onClick={atRateHandler}
+                                                className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem] mr-1"
+                                            >
+                                                <img
+                                                    className={`w-5 h-5 object-contain rounded-full`}
+                                                    src={atTheRateOf}
+                                                    alt="at-the-rate-icon"
+                                                />
+                                            </div>
+                                            <div className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
+                                                <img
+                                                    className={`w-5 h-5 object-contain rounded-full`}
+                                                    src={commentEmoji}
+                                                    alt="comment-icon"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                {isUserLoggedIn() && (
+                                    <div onClick={addCommentHandler} className="mr-1">
+                                        <p
+                                            className={`${
+                                                comment?.length > 0
+                                                    ? 'text-[#fe2c55]'
+                                                    : 'text-[#16182357]'
+                                            } font-semibold text-base`}
                                         >
-                                            <img
-                                                className={`w-5 h-5 object-contain rounded-full`}
-                                                src={atTheRateOf}
-                                                alt="at-the-rate-icon"
-                                            />
-                                        </div>
-                                        <div className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
-                                            <img
-                                                className={`w-5 h-5 object-contain rounded-full`}
-                                                src={commentEmoji}
-                                                alt="comment-icon"
-                                            />
-                                        </div>
+                                            Post
+                                        </p>
                                     </div>
-                                </div>
-                                <div onClick={addCommentHandler} className="mr-1">
-                                    <p
-                                        className={`${
-                                            comment?.length > 0
-                                                ? 'text-[#fe2c55]'
-                                                : 'text-[#16182357]'
-                                        } font-semibold text-base`}
-                                    >
-                                        Post
-                                    </p>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -786,7 +933,7 @@ const VideoPage = () => {
                                 {comment?.user?.avatar ? (
                                     <img
                                         className={`w-12 h-12 object-contain rounded-full`}
-                                        src={commenterAvatar}
+                                        src={comment?.user?.avatar}
                                         alt=""
                                     />
                                 ) : (
@@ -904,7 +1051,11 @@ const VideoPage = () => {
                                     <div className="relative inline-block">
                                         <img
                                             className="w-5 h-5 object-contain cursor-pointer"
-                                            src={horizontalElipsisMenuIcon}
+                                            src={
+                                                isDarkTheme
+                                                    ? horizontalElipsisMenuWhiteIcon
+                                                    : horizontalElipsisMenuIcon
+                                            }
                                             alt="horizontal-elipsis-menu-icon"
                                             onMouseEnter={() => setIsTooltipVisible(true)}
                                         />
@@ -1289,6 +1440,14 @@ const VideoPage = () => {
                 />
             )}
             <ToastContainer />
+            {isEmbedPopupVisible && (
+                <EmbedSharePopup
+                    videoUrl={videoUrl}
+                    embedCode={embedCode}
+                    copyEmbedCodeHandler={copyEmbedCodeHandler}
+                    setIsEmbedModalOpen={setIsEmbedPopupVisible}
+                />
+            )}
         </Layout>
     );
 };

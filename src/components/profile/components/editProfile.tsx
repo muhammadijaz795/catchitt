@@ -48,9 +48,8 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
-        if(themeColor == "dark"){ 
+        if (themeColor == 'dark') {
             setdarkTheme(styles.darkTheme);
-   
         }
     });
 
@@ -253,8 +252,6 @@ export default function EditProfile({ onCancel, onSave }: Props) {
             const file = new File([blob], 'filename.jpeg');
             fd.append('image', file);
 
-            console.log('base64 to file');
-            console.log(file);
             return file;
         } catch (error) {
             console.error('Error fetching base64 image:', error);

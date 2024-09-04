@@ -1,11 +1,11 @@
-import { IconButton } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/authStore";
+import { IconButton } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../../store/authStore';
 import { LeftArrow } from '../../push-notifications-page/svg-components/LeftArrow';
-import { SideNavBar } from "../../side-nav-bar/side-nav-bar";
-import { SuggestedActivity } from "../../suggested-activity/suggested-activity";
-import { TopBar } from "../../top-bar/top-bar";
+import { SideNavBar } from '../../side-nav-bar/side-nav-bar';
+import { SuggestedActivity } from '../../suggested-activity/suggested-activity';
+import { TopBar } from '../../top-bar/top-bar';
 import styles from './transaction-history-page.module.scss';
 
 export interface TransactionHistoryPageProps {
@@ -21,41 +21,40 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [loadingAnimation, setLoadingAnimation] = useState(false);
 
-    const [revenueData, setRevenueData] = useState<any>([])
+    const [revenueData, setRevenueData] = useState<any>([]);
 
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
     const token = localStorage.getItem('token');
     const email = useAuthStore((state) => state.email);
     const navigate = useNavigate();
 
-    const [openCalculatorModal, setOpenCalculatorModal] = useState(false)
+    const [openCalculatorModal, setOpenCalculatorModal] = useState(false);
     const handleOpenCalculatorModal = () => {
-        setOpenCalculatorModal(true)
-    }
+        setOpenCalculatorModal(true);
+    };
     const handleCloseCalculatorModal = () => {
-        setOpenCalculatorModal(false)
-    }
+        setOpenCalculatorModal(false);
+    };
 
-    const [openFaqsModal, setOpenFaqsModal] = useState(false)
+    const [openFaqsModal, setOpenFaqsModal] = useState(false);
     const handleOpenFaqsModal = () => {
-        setOpenCalculatorModal(false)
-        setOpenFaqsModal(true)
-    }
+        setOpenCalculatorModal(false);
+        setOpenFaqsModal(true);
+    };
     const handleCloseFaqsModal = () => {
-        setOpenFaqsModal(false)
-    }
+        setOpenFaqsModal(false);
+    };
 
     const handleEmailClick = () => {
         const email = 'info@ogoul.com';
         window.location.href = `mailto:${email}`;
-        setOpenFaqsModal(false)
-    }
+        setOpenFaqsModal(false);
+    };
 
     const handleGoBack = () => {
         navigate('/settings/account/balance'); // Navigate back to the previous page
-        setSettingsDropdown(true)
+        setSettingsDropdown(true);
     };
-
 
     const handleFetchRevenueData = async () => {
         try {
@@ -69,24 +68,24 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
             const data = await response.json();
             // Format the currentMonth value
             const currentMonthDate = new Date(data.data.currentMonth);
-            const formattedCurrentMonth = `${currentMonthDate.getMonth() + 1}/${currentMonthDate.getFullYear()}`;
+            const formattedCurrentMonth = `${
+                currentMonthDate.getMonth() + 1
+            }/${currentMonthDate.getFullYear()}`;
 
             setRevenueData({
                 ...data.data,
                 currentMonth: formattedCurrentMonth,
             });
             // setRevenueData(data.data);
-            console.log('Fetched revenue:', JSON.stringify(data.data));
         } catch (error) {
             console.error('Error fetching profile data:', error);
         }
     };
 
-
     useEffect(() => {
-        setIndex(4)
-        handleFetchRevenueData()
-    }, [])
+        setIndex(4);
+        handleFetchRevenueData();
+    }, []);
 
     return (
         <>
@@ -97,7 +96,10 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
                 <div className={styles.container}>
                     <div className={styles.leftSide}>
                         <div className={styles.sideNavDiv}>
-                            <SideNavBar selectedIndex={selectedIndex} settingsDropdownState={true} />
+                            <SideNavBar
+                                selectedIndex={selectedIndex}
+                                settingsDropdownState={true}
+                            />
                         </div>
                         <div className={styles.suggestedActivityDiv}>
                             <SuggestedActivity showActivity={true} showSuggestedContent={true} />
@@ -106,8 +108,10 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
                     <div className={styles.middleSectionDiv}>
                         <div className={styles.settingsWrapper}>
                             <div className={styles.pageHeader}>
-                                <IconButton sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
-                                    onClick={handleGoBack}>
+                                <IconButton
+                                    sx={{ margin: '0px', padding: '0px', alignSelf: 'center' }}
+                                    onClick={handleGoBack}
+                                >
                                     <LeftArrow />
                                 </IconButton>
                                 <h4>Transactions History</h4>
@@ -117,27 +121,43 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
                                 <h4 className={styles.sectionTitle}>Type</h4>
                                 <h4 className={styles.sectionTitle}>Amount</h4>
                             </div>
-                            {revenueData.userGiftsTransactions?.map((transaction: any, index: number) => {
-                                const formattedDate = new Date(transaction.createdTime).toLocaleDateString('en-GB');
-                                const formattedTime = new Date(transaction.createdTime).toLocaleTimeString('en-GB');
+                            {revenueData.userGiftsTransactions?.map(
+                                (transaction: any, index: number) => {
+                                    const formattedDate = new Date(
+                                        transaction.createdTime
+                                    ).toLocaleDateString('en-GB');
+                                    const formattedTime = new Date(
+                                        transaction.createdTime
+                                    ).toLocaleTimeString('en-GB');
 
-                                return (
-                                    <div>
-                                        <div key={index} className={styles.tableField}>
-                                            <h4 className={styles.sectionTitle} style={{ textAlign: 'start' }}>{`${formattedDate} ${formattedTime}`}</h4>
-                                            <h4 className={styles.sectionTitle}>{transaction.type}</h4>
-                                            <h4 className={styles.sectionTitle} style={{ textAlign: 'end' }}>QAR {transaction.amount}</h4>
+                                    return (
+                                        <div>
+                                            <div key={index} className={styles.tableField}>
+                                                <h4
+                                                    className={styles.sectionTitle}
+                                                    style={{ textAlign: 'start' }}
+                                                >{`${formattedDate} ${formattedTime}`}</h4>
+                                                <h4 className={styles.sectionTitle}>
+                                                    {transaction.type}
+                                                </h4>
+                                                <h4
+                                                    className={styles.sectionTitle}
+                                                    style={{ textAlign: 'end' }}
+                                                >
+                                                    QAR {transaction.amount}
+                                                </h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                }
+                            )}
                         </div>
                     </div>
                 </div>
-            </div >
+            </div>
         </>
-    )
-}
+    );
+};
 
 export default TransactionHistoryPage;
 
@@ -150,7 +170,7 @@ const defModalStyle = {
     maxWidth: '600px',
     // maxHeight: '549px',
     padding: '0',
-}
+};
 
 const CustomCoinsModalStyle = {
     position: 'absolute' as 'absolute',
@@ -165,7 +185,7 @@ const CustomCoinsModalStyle = {
     // maxWidth: '600px',
     // maxHeight: '549px',
     padding: '16px',
-}
+};
 
 const pricesBox = {
     display: 'grid',
@@ -174,7 +194,7 @@ const pricesBox = {
     marginTop: '16px',
     columnGap: '8px',
     rowGap: '8px',
-}
+};
 
 const faqsModal = {
     position: 'absolute' as 'absolute',
@@ -187,4 +207,4 @@ const faqsModal = {
     minWidth: 420,
     minHeight: 410,
     padding: '24px',
-}
+};

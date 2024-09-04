@@ -49,7 +49,6 @@ export const ReportProblemPopup = ({
         navigator.clipboard
             .writeText(qrCodeValue)
             .then(() => {
-                console.log('Copied to clipboard:', qrCodeValue);
                 // You can also show a success message or perform additional actions.
                 setIsCopied(true);
                 setLoading(true);
@@ -70,10 +69,9 @@ export const ReportProblemPopup = ({
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
-        if(themeColor == "dark"){ 
+        if (themeColor == 'dark') {
             setlightdarkTheme(styles.darkTheme);
-        } 
-       
+        }
     });
 
     return (

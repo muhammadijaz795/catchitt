@@ -21,7 +21,6 @@ function useApp() {
             dispatch(getRandomUsers());
         }
     }, [token]);
-    console.log(useSelector((store: any) => store?.reducers));
     return {};
 }
 

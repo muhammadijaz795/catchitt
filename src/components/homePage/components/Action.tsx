@@ -20,11 +20,12 @@ function Action({
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
 
+    console.log('POST : ', post);
+
     const actionClickHandler = async () => {
         try {
-            if (isUserLoggedIn() == true) {
+            if (isUserLoggedIn()) {
                 if (obj.actionType === 'like') {
-                    // console.log("post",post)
                     dispatch(videoLikehandle(post.mediaId));
                     // dispatch(likeHandler);
                 }
@@ -36,7 +37,9 @@ function Action({
                 }
                 setIsActive(!isActive);
             } else {
-                dispatch(openLoginPopup());
+                if (obj?.actionType !== 'share') {
+                    dispatch(openLoginPopup());
+                }
             }
         } catch (error) {
             console.log('error', error);
@@ -119,7 +122,9 @@ function Action({
                                 post?.reducedVideoUrl,
                                 post?.mediaId,
                                 post?.user?.username,
-                                post?.description
+                                post?.description,
+                                post?.sound?.title,
+                                post?.sound?.url
                             )
                         }
                         popupHandler={popupHandler}

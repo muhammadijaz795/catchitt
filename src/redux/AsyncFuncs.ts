@@ -159,7 +159,7 @@ export const addMoreVideos: any = createAsyncThunk(
                 const res = await get(link);
                 if (res?.data?.data) {
                     const responseData = res?.data;
-                    return responseData?.data.data;
+                    return responseData?.data;
                 } else {
                     return {};
                 }

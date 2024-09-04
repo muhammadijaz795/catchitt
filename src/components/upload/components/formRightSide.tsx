@@ -31,8 +31,6 @@ function FormRightSide(props: any) {
     const [selectedLocation, setSelectedLocation] = useState('');
     const [taggedUsers, setTaggedUser] = useState<any[]>([]);
 
-    // console.log('Video info : ', videoInfo);
-
     useMemo(() => {
         setVideoThumbnails(thumbnails);
         setSelectedThumb(0);

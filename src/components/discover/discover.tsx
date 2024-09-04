@@ -32,14 +32,13 @@ export default function Discover() {
 
     // theme
     const [darkTheme, setdarkTheme] = useState('');
-    const [darkThemeblack, setdarkThemeblack] = useState('');
-    const [textColor, setTextColor] = useState('black');
 
     const getExplorePageData = useCallback(async () => {
+        let identifier = selectedCategory ? `/${selectedCategory}` : '';
         setIsPaginating(true);
         try {
             const response = await fetch(
-                `${API_KEY}/media-content/public/videos/feed/upgraded/${selectedCategory}?page=${pageNumber}&pageSize=5`,
+                `${API_KEY}/media-content/public/videos/feed/upgraded${identifier}?page=${pageNumber}&pageSize=15&forWeb=1`,
                 {
                     method: 'GET',
                     headers: {
@@ -49,11 +48,12 @@ export default function Discover() {
                 }
             );
             const { data } = await response.json();
-            if (Array.isArray(data)) {
-                setExploredVideos((prev: any) => [...prev, ...data]);
+            console.log('DATA >>>>>>> ', data?.data);
+            if (Array.isArray(data?.data)) {
+                setExploredVideos((prev: any) => [...prev, ...data?.data]);
                 setMuteStates((prevMuteStates: any) => [
                     ...prevMuteStates,
-                    ...Array(data.length).fill(true),
+                    ...Array(data?.data?.length).fill(true),
                 ]);
             }
         } catch (error) {
@@ -94,12 +94,10 @@ export default function Discover() {
     useEffect(() => {
         setIsLoading(true);
         getExplorePageData();
-        getExplorePageData();
         setIsLoading(false);
     }, [getExplorePageData]);
 
     useUpdateEffect(() => {
-        getExplorePageData();
         getExplorePageData();
     }, [pageNumber]);
 
@@ -114,9 +112,6 @@ export default function Discover() {
 
         if (themeColor == 'dark') {
             setdarkTheme(styles.darkTheme);
-            setTextColor('white');
-        } else {
-            setTextColor('black');
         }
     });
 
