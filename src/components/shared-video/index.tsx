@@ -1,6 +1,7 @@
 import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useUpdateEffect } from 'react-use';
@@ -13,8 +14,11 @@ import {
     twitterShare,
     whatsappShare,
 } from '../../icons';
+import { openLoginPopup } from '../../redux/reducers';
+import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import Layout from '../../shared/layout';
-import { showToast, showToastSuccess } from '../../utils/constants';
+import { isUserLoggedIn } from '../../utils/common';
+import { BASE_URL_FRONTEND, showToast, showToastSuccess } from '../../utils/constants';
 import PopupForReport from '../profile/popups/PopupForReport';
 import atTheRateOf from './svg-components/at-the-rate-of.svg';
 import chevronDownIconVideo from './svg-components/chevron-down-icon-video.svg';
@@ -24,8 +28,8 @@ import chevronUpIconVideo from './svg-components/chevron-up-icon-video.svg';
 import commentEmoji from './svg-components/comment-emoji.svg';
 import commentIcon from './svg-components/comment-icon.svg';
 import emptyHeartIcon from './svg-components/empty-heart-icon.svg';
-import horizontalElipsisMenuIcon from './svg-components/horizontal-elipsis-icon.svg';
 import horizontalElipsisMenuWhiteIcon from './svg-components/horizontal-elipsis-icon-white.svg';
+import horizontalElipsisMenuIcon from './svg-components/horizontal-elipsis-icon.svg';
 import linkIcon from './svg-components/link-icon.svg';
 import musicIcon from './svg-components/music-icon.svg';
 import redHeartIcon from './svg-components/red-heart-icon.svg';
@@ -35,10 +39,6 @@ import savedIcon from './svg-components/saved-icon.svg';
 import shareIcon from './svg-components/share-icon.svg';
 import whiteHeartIcon from './svg-components/white-filled-heart-icon.svg';
 import styles from './video-page.module.scss';
-import { isUserLoggedIn } from '../../utils/common';
-import { openLoginPopup } from '../../redux/reducers';
-import { useDispatch } from 'react-redux';
-import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 
 const VideoPage = () => {
     // hooks
@@ -472,7 +472,7 @@ const VideoPage = () => {
 
     const copyHandler = (msg: string) => {
         navigator.clipboard
-            .writeText(`${API_KEY}/${userName}/video/${selectedVideoId ?? videoId}`)
+            .writeText(`${BASE_URL_FRONTEND}/${userName}/video/${selectedVideoId ?? videoId}`)
             .then(() => {
                 showToast(msg);
             });
@@ -770,7 +770,7 @@ const VideoPage = () => {
                                     className={`w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
                                 >
                                     <p className="text-lg text-white font-medium">
-                                        {userName?.charAt(0).toUpperCase()}
+                                        {userName?.charAt(0)?.toUpperCase()}
                                     </p>
                                 </div>
                             )}

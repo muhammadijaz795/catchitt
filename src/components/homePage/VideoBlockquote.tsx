@@ -1,8 +1,8 @@
-import React from 'react';
+import { BASE_URL_FRONTEND } from '../../utils/constants';
 
 const VideoBlockquote = ({ videoId, username, caption, tags, musicTitle, musicLink }: any) => {
-    const videoUrl = `https://stagingweb.seezitt.com/video/${videoId}`;
-    const userUrl = `https://stagingweb.seezitt.com/@${username}?refer=embed`;
+    const videoUrl = `${BASE_URL_FRONTEND}/video/${videoId}`;
+    const userUrl = `${BASE_URL_FRONTEND}/@${username}?refer=embed`;
 
     return (
         <blockquote

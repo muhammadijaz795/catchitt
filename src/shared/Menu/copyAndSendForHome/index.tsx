@@ -6,15 +6,15 @@ import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
 import {
     copyLink,
-    send,
     embedShare,
-    whatsappShare,
-    linkedInShare,
-    twitterShare,
     facebookShare,
+    linkedInShare,
+    send,
+    twitterShare,
+    whatsappShare,
 } from '../../../icons';
+import { BASE_URL_FRONTEND } from '../../../utils/constants';
 import style from './index.module.scss';
-import { API_KEY } from '../../../utils/constants';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
 export default function COPY_AND_SEND_MENU_HOME({
@@ -24,7 +24,7 @@ export default function COPY_AND_SEND_MENU_HOME({
     videoUrl,
     videoTitle,
     userName,
-    generateEmbedCodeHandler
+    generateEmbedCodeHandler,
 }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
@@ -95,24 +95,24 @@ export default function COPY_AND_SEND_MENU_HOME({
     }));
 
     const shareToWhatsApp = () => {
-        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
+        let url = `${BASE_URL_FRONTEND}/${userName}/video/${extractVideoId(videoUrl)}`;
         window.open(`https://api.whatsapp.com/send?text=${videoTitle} - ${url}`, '_blank');
     };
 
     const shareToFacebook = () => {
-        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
+        let url = `${BASE_URL_FRONTEND}/${userName}/video/${extractVideoId(videoUrl)}`;
 
         window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     };
 
     const shareToTwitter = () => {
-        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
+        let url = `${BASE_URL_FRONTEND}/${userName}/video/${extractVideoId(videoUrl)}`;
 
         window.open(`https://twitter.com/intent/tweet?url=${url}&text=${videoTitle}`, '_blank');
     };
 
     const shareToLinkedIn = () => {
-        let url = `${API_KEY}/${userName}/video/${extractVideoId(videoUrl)}`;
+        let url = `${BASE_URL_FRONTEND}/${userName}/video/${extractVideoId(videoUrl)}`;
 
         window.open(
             `https://www.linkedin.com/shareArticle?url=${url}&title=${videoTitle}`,

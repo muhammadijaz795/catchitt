@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
 import Gifts from '../discover/popups/gifts';
@@ -8,35 +8,24 @@ import PopupForBlock from '../profile/popups/popupForBlock';
 import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import ForMobile from './ForMobile';
 import useHome from './hooks/useHome';
-import { CircularProgress } from '@mui/material';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { closeLoginPopup } from '../../redux/reducers';
+import { loginService, signupService } from '../../redux/reducers/auth';
+import { validateEmail } from '../../utils/common';
 import {
     APP_TEXTS,
-    SIGNUP_APP_TEXTS,
+    BASE_URL_FRONTEND,
     END_POINTS,
-    LOGIN_OPTIONS,
-    SIGNUP_OPTIONS,
     METHOD,
     showToastSuccess,
 } from '../../utils/constants';
-import { validateEmail } from '../../utils/common';
-import ItemLogin from '../item-login';
-import SignupHandler from '../signup/signupHandler';
-import { closeIcon } from '../../icons';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { closeLoginPopup } from '../../redux/reducers';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { loginService, signupService } from '../../redux/reducers/auth';
-import { useNavigate } from 'react-router-dom';
-import { back, checkCountryCode, chevronDown, search } from '../../icons';
 
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import style from './index.module.scss';
+import { SelectChangeEvent } from '@mui/material/Select';
 import FollowingVideos from './FollowingVideos';
+import style from './index.module.scss';
 
 function FollowingPage() {
     const isMobile = useMediaQuery('(max-width:700px)');
@@ -65,7 +54,6 @@ function FollowingPage() {
     const API_KEY = process.env.VITE_API_URL;
 
     // Input Values
-    const [phoneNumber, setPhoneNumber] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [countryCode, setCountryCode] = useState<string>('');
     const [isoCode, setIsoCode] = useState<string>('');
@@ -74,7 +62,6 @@ function FollowingPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [passwordBorderColor, setPasswordBorderColor] = useState('');
     const [signupWithPhone, setSignupWithPhone] = useState<boolean>(false);
     const [signupNext, setSignupNext] = useState<boolean>(false);
     const [name, setName] = useState<any>(null);
@@ -91,7 +78,7 @@ function FollowingPage() {
     const [mediaId, setMediaId] = useState<string>('');
 
     const embedCode = `
-<blockquote class="seezitt-embed" cite="https://stagingweb.seezitt.com/video/${mediaId}" data-video-id="${mediaId}" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@sharjeelriaz489" href="https://stagingweb.seezitt.com/@sharjeelriaz489?refer=embed">@sharjeelriaz489</a> 14 Auguest coming soon very video 😂😂😂plzzz tik tok team viral my video plzzz <a title="support" target="_blank" href="https://stagingweb.seezitt.com/tag/support?refer=embed">#support</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral🖤tiktok" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral%F0%9F%96%A4tiktok?refer=embed">#fypシ゚viral🖤tiktok</a> ##<a title="foryou" target="_blank" href="https://stagingweb.seezitt.com/tag/foryou?refer=embed">#foryou</a> <a title="viral" target="_blank" href="https://stagingweb.seezitt.com/tag/viral?refer=embed">#viral</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral🖤tiktok☆♡🦋myvideo🤗foryou✨♥️" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral%F0%9F%96%A4tiktok%E2%98%86%E2%99%A1%F0%9F%A6%8Bmyvideo%F0%9F%A4%97foryou%E2%9C%A8%E2%99%A5%EF%B8%8F?refer=embed">#fypシ゚viral🖤tiktok☆♡🦋myvideo🤗foryou✨♥️</a> <a target="_blank" title="♬ original sound - 👑(SHÃRJÊÊL RIÃZ)👑" href="https://stagingweb.seezitt.com/music/original-sound-7398885360903965441?refer=embed">♬ original sound - 👑(SHÃRJÊÊL RIÃZ)👑</a> </section> </blockquote> <script async src="https://stagingweb.seezitt.com/embed.js"></script>
+<blockquote class="seezitt-embed" cite="${BASE_URL_FRONTEND}/video/${mediaId}" data-video-id="${mediaId}" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@sharjeelriaz489" href="https://stagingweb.seezitt.com/@sharjeelriaz489?refer=embed">@sharjeelriaz489</a> 14 Auguest coming soon very video 😂😂😂plzzz tik tok team viral my video plzzz <a title="support" target="_blank" href="https://stagingweb.seezitt.com/tag/support?refer=embed">#support</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral🖤tiktok" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral%F0%9F%96%A4tiktok?refer=embed">#fypシ゚viral🖤tiktok</a> ##<a title="foryou" target="_blank" href="https://stagingweb.seezitt.com/tag/foryou?refer=embed">#foryou</a> <a title="viral" target="_blank" href="https://stagingweb.seezitt.com/tag/viral?refer=embed">#viral</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral?refer=embed">#fypシ゚viral</a> <a title="fypシ゚viral🖤tiktok☆♡🦋myvideo🤗foryou✨♥️" target="_blank" href="https://stagingweb.seezitt.com/tag/fyp%E3%82%B7%E3%82%9Aviral%F0%9F%96%A4tiktok%E2%98%86%E2%99%A1%F0%9F%A6%8Bmyvideo%F0%9F%A4%97foryou%E2%9C%A8%E2%99%A5%EF%B8%8F?refer=embed">#fypシ゚viral🖤tiktok☆♡🦋myvideo🤗foryou✨♥️</a> <a target="_blank" title="♬ original sound - 👑(SHÃRJÊÊL RIÃZ)👑" href="https://stagingweb.seezitt.com/music/original-sound-7398885360903965441?refer=embed">♬ original sound - 👑(SHÃRJÊÊL RIÃZ)👑</a> </section> </blockquote> <script async src="https://stagingweb.seezitt.com/embed.js"></script>
   `;
 
     const signupItemClickHandler = (name: string) => {
@@ -169,7 +156,6 @@ function FollowingPage() {
             } else {
                 setOtpError(true);
             }
-
         } catch (error) {
             console.log('send otp error:', error);
         }
@@ -331,7 +317,6 @@ function FollowingPage() {
             const { data }: any = await response.json();
 
             setOtpbuttonText('Resend');
-
         } catch (error) {
             console.log('send otp error:', error);
         }
@@ -512,19 +497,18 @@ function FollowingPage() {
                                     value={embedCode}
                                 />
                                 <div>
-
-                                <button
-                                    className="w-full px-4 py-2 bg-blue-500 text-white rounded-md"
-                                    onClick={copyEmbedCodeHandler}
-                                >
-                                    Copy Embed Code
-                                </button>
-                                <button
-                                    className="mt-4 w-full px-4 py-2 bg-gray-300 text-black rounded-md"
-                                    onClick={() => setIsEmbedModalOpen(false)}
-                                >
-                                    Close
-                                </button>
+                                    <button
+                                        className="w-full px-4 py-2 bg-blue-500 text-white rounded-md"
+                                        onClick={copyEmbedCodeHandler}
+                                    >
+                                        Copy Embed Code
+                                    </button>
+                                    <button
+                                        className="mt-4 w-full px-4 py-2 bg-gray-300 text-black rounded-md"
+                                        onClick={() => setIsEmbedModalOpen(false)}
+                                    >
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         </div>

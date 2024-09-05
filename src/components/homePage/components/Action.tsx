@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { videoLikehandle, videoSavehandle } from '../../../redux/AsyncFuncs';
+import { openLoginPopup } from '../../../redux/reducers';
 import COPY_AND_SEND_MENU_HOME from '../../../shared/Menu/copyAndSendForHome';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
-import style from './Action.module.scss';
 import { isUserLoggedIn } from '../../../utils/common';
-import { openLoginPopup } from '../../../redux/reducers';
-import { API_KEY } from '../../../utils/constants';
+import { BASE_URL_FRONTEND } from '../../../utils/constants';
+import style from './Action.module.scss';
 
 function Action({
     obj,
@@ -115,7 +115,9 @@ function Action({
                 {obj.actionType === 'share' && (
                     <COPY_AND_SEND_MENU_HOME
                         copyHandler={() =>
-                            copyHandler(`${API_KEY}/${post?.user?.username}/video/${post?.mediaId}`)
+                            copyHandler(
+                                `${BASE_URL_FRONTEND}/${post?.user?.username}/video/${post?.mediaId}`
+                            )
                         }
                         generateEmbedCodeHandler={() =>
                             generateEmbedCodeHandler(

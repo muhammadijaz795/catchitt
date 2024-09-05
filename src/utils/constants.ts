@@ -1,17 +1,9 @@
 import { toast } from 'react-toastify';
-import {
-    fb,
-    googleIcon,
-    defaultAvatar,
-    qrCodeAuth,
-    emailOrPhone,
-    facebookAuth,
-    googleAuth,
-    twitterAuth,
-    appleAuth,
-} from '../icons';
+import { appleAuth, defaultAvatar, emailOrPhone, googleAuth, googleIcon } from '../icons';
 
 export const API_KEY = process.env.VITE_API_URL;
+
+export const BASE_URL_FRONTEND = process.env.VITE_FRONTEND_URL;
 
 export const uploadCategories = [
     '📷 People and Blogs',
