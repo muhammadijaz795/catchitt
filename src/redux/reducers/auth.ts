@@ -26,6 +26,11 @@ const loginSlice: any = createSlice({
             _state.avatar = action?.payload;
             return _state;
         },
+        logoutUserPopup: (_state, action) => {
+            localStorage.setItem('token', '');
+            window.location.reload();
+            return {};
+        },
     },
 
     extraReducers: (builder: any) => {
@@ -70,7 +75,7 @@ const loginSlice: any = createSlice({
     },
 });
 
-export const { logoutUser, updateProfile, updateProfileType } = loginSlice.actions;
+export const { logoutUser, updateProfile, updateProfileType, logoutUserPopup } = loginSlice.actions;
 
 export const loginService = createAsyncThunk(
     'auth/loginService',

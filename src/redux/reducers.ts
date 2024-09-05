@@ -213,5 +213,6 @@ export default combineReducers({
     isuploading,
     videoCategories,
     popupSlice: popupSlice.reducer,
+    popupLogoutSlice:popupLogoutSlice.reducer,
     geo: geoSlice,
 });

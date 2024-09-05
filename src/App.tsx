@@ -50,12 +50,13 @@ import SignupEmail from './components/signup/email/email';
 import Login from './components/login';
 import ForgetPassword from './components/login/forget-password';
 import PhoneOrEmail from './components/login/phone-or-email';
-import { closeLoginPopup } from './redux/reducers';
+import { closeLoginPopup, closeLogoutPopup } from './redux/reducers';
 import {
     loginService,
     loginWithGoogleService,
     loginWithFBService,
     signupService,
+    logoutUserPopup,
 } from './redux/reducers/auth';
 import {
     APP_TEXTS,
@@ -104,7 +105,6 @@ const InitialRouteHandler = () => {
 
 function App() {
     const {} = useApp();
-
     const [appLanguage, setAppLanguage] = useState(
         (window.localStorage.getItem('lang') as string) || 'en'
     );
@@ -692,6 +692,16 @@ function App() {
         // let dob= date +"-"+ month+"-"+year;
         // setDateOfBirth(dob);
         // console.log(dob);
+    };
+
+    
+    const closeLogoutPopupHandler = () => {
+        dispatch(closeLogoutPopup());
+    };
+
+    const logoutAccount = () => {
+        dispatch(logoutUserPopup());
+        // dispatch(openLogoutPopup())
     };
 
     function generateMenuItems() {
@@ -2075,27 +2085,20 @@ function App() {
                            
                             <div className="w-full z-50 h-full bg-black/50 fixed top-0 flex justify-center items-center">
                                 <div
-                                    className={`w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[20.125rem]  ${lightDarkTheme} `}
+                                    className={`w-[25.688rem] mx-auto mt-3 bg-white rounded-lg relative h-[14rem]  ${lightDarkTheme} `}
                                 >
-                                    <div
-                                        onClick={closeLoginPopupHandler}
-                                        className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center absolute right-5 p-1 cursor-pointer"
-                                    >
-                                        <img className="h-4 w-4 object-contain" src={closeIcon} />
-                                    </div>
                                     <>
-                                            <div className="overflow-auto w-[21.888rem] mx-auto ">
-                                                <h2
-                                                    className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
-                                                >
-                                                    {isMainLoginOption
-                                                        ? 'Log in to Seezitt'
-                                                        : isForgotPasswordScenario
-                                                        ? 'Reset Password'
-                                                        : 'Log in'}
-                                                </h2>
-
-                                                </div>
+                                        <div className="w-[17rem] mx-auto ">
+                                            <h2
+                                                className={`font-bold text-xl mt-5 mb-1 ${textColor}`}
+                                            >
+                                                Are you sure you want to log out?
+                                            </h2>
+                                            <div className={styles.DivButtonWrapper}>
+                                            <button type="button" className={`${styles.StyledLogoutCancelButton}`} onClick={closeLogoutPopupHandler}>Cancel</button>{' '}
+                                            <button type="button" className={`${styles.StyledLogoutButton}`} onClick={() => logoutAccount()}>Log out</button>
+                                            </div>
+                                        </div>
                                     </>
                                     {/* <>
                                     <div

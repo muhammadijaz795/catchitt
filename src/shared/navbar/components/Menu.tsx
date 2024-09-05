@@ -7,11 +7,13 @@ import * as React from 'react';
 import { goldCoin, logoutSvg, settingsDark, switchAcount, viewProfile } from '../../../icons';
 import style from './menu.module.scss';
 import { useAuthStore } from '../../../store/authStore';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 const options = ['View profile', 'Get Coins', 'Settings', 'Switch Account', 'Logout'];
 import { useEffect, useState } from 'react';
+import { openLogoutPopup } from '../../../redux/reducers';
 
 export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any) {
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [darkTheme, setdarkTheme] = useState('');
     const [darkThemeblack, setdarkThemeblack] = useState('');
@@ -221,7 +223,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                     style={{ margin: 0, padding: 0 }}
                     onClick={() => {
                         handleClose();
-                        Onlogout();
+                        dispatch(openLogoutPopup());
                         // reportPopupHandler();
                     }}
                 >
