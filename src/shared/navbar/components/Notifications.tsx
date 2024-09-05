@@ -52,13 +52,13 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         />
     ))(({ theme }) => ({
         '& .MuiPaper-root': {
-            borderRadius: 6,
+            borderRadius: 8,
             marginTop: theme.spacing(1),
             minWidth: 380,
-            left: '1320px !important',
+            boxShadow:'rgba(0, 0, 0, 0.12) 0px -4px 32px',
+            left: '1320px',
+            transform: 'translate(65px, 0px) !important',
             color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-            boxShadow:
-                'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
             '& .MuiMenu-list': {
                 padding: '4px 0',
             },
