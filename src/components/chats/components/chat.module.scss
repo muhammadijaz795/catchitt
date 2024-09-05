@@ -1,10 +1,11 @@
 .chat > div:nth-child(1) {
   display: flex;
   gap: 12px;
+  align-items: end;
 }
 .chat > div:nth-child(1) > img:nth-child(1) {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
 }
 .chat > div:nth-child(1) > div:nth-child(2) {
@@ -24,11 +25,12 @@
   gap: 8px;
 }
 .chat {
-  padding: 16px 8px;
+  padding: 16px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 10px;
-  border-bottom: 1px solid #dfdfdf;
+  // border-bottom: 1px solid #dfdfdf;
   //   max-width: 334px;
   cursor: pointer;
   .nameText {

@@ -1,5 +1,5 @@
 .parent {
-  padding: 20px 40px;
+  padding: 20px 10px;
   height: 80px;
   display: flex;
   justify-content: space-between;
@@ -139,4 +139,10 @@ div.darkTheme p{
   align-items: center;
   position: relative;
   margin-inline-end: unset;
+}
+
+.sendIcon {
+  color: #000;
+  transform: rotate(330deg);
+  margin-right: -10px;
 }

@@ -1,15 +1,19 @@
 .parent {
-  height: 80vh;
+  height: 90vh;
   margin: 40px 40px 40px 0px;
-  background: #fff;
+  // background: #fff;
   border-radius: 8px;
   display: flex;
+  width: 1144px;
+  margin: 0 auto;
+  padding: 16px 24px 10px 20px;
 
   .chat {
     flex: 1;
     display: flex;
     flex-direction: column;
     // align-items: flex-end;
+    background-color: #fff;
     justify-content: space-between;
     position: relative;
     .doMsgContainer {
