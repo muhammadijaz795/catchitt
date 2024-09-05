@@ -227,6 +227,11 @@
     background-color: #fff;
 }
 
+.selectedCategory {
+    color: black !important;
+    background-color: #ffffff !important;
+}
+
 div.darkTheme {
     background: black !important;
     color: white !important;
@@ -239,14 +244,9 @@ h4 {
     color: white !important;
 }
 
-.selectedCategory {
-    color: black !important;
-    background-color: #FFFFFF!important;
-}
-
 div.darkTheme p {
     color: white !important;
-    background-color: #FFFFFF14!important;
+    background-color: #ffffff14 !important;
 }
 
 div.darkTheme span {

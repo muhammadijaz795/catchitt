@@ -147,7 +147,6 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                     }
                 );
                 const responseData = await response.json();
-                console.log("Notification", responseData);
                 const newNotificationList = Array.isArray(responseData.data.data)
                     ? (responseData.data.data as Notification[])
                     : [];

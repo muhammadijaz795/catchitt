@@ -136,7 +136,6 @@ const ComingSoon: React.FC = (className: ComingSoonProps) => {
     const sendMessageHandler = (e: any) => {
         e.preventDefault();
         if (message) {
-            console.log('Message Text : ', message);
             setMessage('');
             setsendMessages((current: any) => [
                 ...current,
@@ -159,7 +158,6 @@ const ComingSoon: React.FC = (className: ComingSoonProps) => {
     };
     useEffect(() => {
         scrollToBottom();
-        console.log(receivedMessages);
     }, [receivedMessages , sendMessages]);
 
     useEffect(() => {

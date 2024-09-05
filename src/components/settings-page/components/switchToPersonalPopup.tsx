@@ -1,4 +1,3 @@
-
 import classNames from 'classnames';
 import styles from './switchToPersonalPopup.module.scss';
 
@@ -7,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 
 import { useDispatch } from 'react-redux';
-import {updateProfileType } from '../../../redux/reducers/auth';
+import { updateProfileType } from '../../../redux/reducers/auth';
 
 export interface SwitchToPersonalPopupProps {
     className?: string;
@@ -26,23 +25,27 @@ const defaultUser: User = {
     password: '',
 };
 
-export const SwitchToPersonalPopup = ({ className, onSubmit, handleOpen, handleClose }: SwitchToPersonalPopupProps) => {
+export const SwitchToPersonalPopup = ({
+    className,
+    onSubmit,
+    handleOpen,
+    handleClose,
+}: SwitchToPersonalPopupProps) => {
     const token = localStorage.getItem('token');
-    const email = useAuthStore((state) => state.email)
-    const accountType = useAuthStore((state) => state.accountType)
-const dispatch = useDispatch();
-
+    const email = useAuthStore((state) => state.email);
+    const accountType = useAuthStore((state) => state.accountType);
+    const dispatch = useDispatch();
 
     const [firstModalVisible, setFirstModalVisible] = useState(true);
 
-    const [currentAccountType, setCurrentAccountType] = useState(accountType)
+    const [currentAccountType, setCurrentAccountType] = useState(accountType);
 
     const API_KEY = process.env.VITE_API_URL;
 
     const navigate = useNavigate();
 
     const handleSwitchToPersonal = async (event: React.FormEvent) => {
-        event.preventDefault()
+        event.preventDefault();
         try {
             const response = await fetch(`${API_KEY}/profile/`, {
                 method: 'PATCH',
@@ -54,31 +57,26 @@ const dispatch = useDispatch();
             });
             if (response.ok) {
                 const responseData = await response.json();
-                setCurrentAccountType("Personal")
-                  dispatch(updateProfileType({type:'Personal'}));
+                setCurrentAccountType('Personal');
+                dispatch(updateProfileType({ type: 'Personal' }));
                 useAuthStore.setState({
-                    accountType: accountType
+                    accountType: accountType,
                 });
-                console.log(responseData);
-                handleCloseModal()
+                handleCloseModal();
             } else {
-                console.log(email);
-                const errorResponseData = await response.json();
-                console.log(response);
+                await response.json();
             }
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     const handleCloseModal = () => {
-        setFirstModalVisible(false)
+        setFirstModalVisible(false);
         handleClose();
-    }
+    };
 
-    useEffect(() => {
-
-    }, [currentAccountType])
+    useEffect(() => {}, [currentAccountType]);
 
     return (
         <div className={classNames(styles.root, className)}>
@@ -91,14 +89,14 @@ const dispatch = useDispatch();
                                     Switch to Personal Account?
                                 </h4>
                                 <p className={styles.greyText}>
-                                    You will lose all the Business Account features,
-                                    your profile <br></br>will not show the business website and email,
-                                    you will still <br></br>be responsible for any violations received on your<br></br>
+                                    You will lose all the Business Account features, your profile{' '}
+                                    <br></br>will not show the business website and email, you will
+                                    still <br></br>be responsible for any violations received on
+                                    your<br></br>
                                     business account.
                                 </p>
                             </div>
-                            <form
-                                className={styles.formStyle}>
+                            <form className={styles.formStyle}>
                                 <div className={styles.btnsDiv}>
                                     <button
                                         className={styles.submitBtn}
@@ -152,5 +150,5 @@ var mainModalBtnstyle = {
     alignItems: 'center',
     borderRadius: '6px',
     background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))',
-    textTransform: 'none'
+    textTransform: 'none',
 };

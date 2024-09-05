@@ -6,8 +6,6 @@ import React, { useEffect, useState } from 'react';
 import UnfollowPopup from './unfollow-popup';
 import PublicUser from '../public-profile-components/user';
 function FollowingTab({ onClose, following, isPublic, onScrollBottom }: any) {
-    // console.log('following');
-    // console.log(following);
     const [unfollowPopup, setUnfollowPopup] = useState(false);
     const [clickedUser, setClickedUser] = useState({});
 
@@ -25,10 +23,6 @@ function FollowingTab({ onClose, following, isPublic, onScrollBottom }: any) {
     };
 
     const handleScroll = (e: any) => {
-        // console.log("handle scroll");
-        // console.log(e.target.scrollHeight - e.target.scrollTop);
-        // console.log("height", e.target.clientHeight);
-
         // Adjusted calculation with a small threshold
         const threshold = 1;
         const bottom =

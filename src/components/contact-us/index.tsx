@@ -14,11 +14,11 @@ const ContactUs = () => {
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
-        if(themeColor == "dark"){ 
+        if (themeColor == 'dark') {
             setdarkTheme(style.darkTheme);
             // setlightDarkTheme(style.lightdarkTheme);
             // setDarkWhiteTheme('');
-        } 
+        }
         // else{
         //     setDarkWhiteTheme('hover:bg-slate-100');
         // }
@@ -28,7 +28,10 @@ const ContactUs = () => {
         <div>
             <Navbar />
             <div className={`py-6 px-32 mt-24 ${darkTheme}`}>
-                <div onClick={() => navigate(-1)} className="flex flex-row items-center gap-4 cursor-pointer">
+                <div
+                    onClick={() => navigate(-1)}
+                    className="flex flex-row items-center gap-4 cursor-pointer"
+                >
                     <img
                         className="object-contain"
                         height={7}
@@ -90,10 +93,7 @@ const ContactUs = () => {
                             className="h-[13.5rem] rounded-md text-[#D1D1D1] mt-4 border w-full resize-none p-3"
                             placeholder="Your message"
                         ></textarea>
-                        <button
-                            className="bg-[rgb(255, 59, 92)] rounded-md px-4 h-12 text-white font-semibold text-base w-full mt-4"
-                            onClick={() => console.log('Submitted')}
-                        >
+                        <button className="bg-[rgb(255, 59, 92)] rounded-md px-4 h-12 text-white font-semibold text-base w-full mt-4">
                             Send message
                         </button>
                     </div>

@@ -6,11 +6,6 @@ import { get } from '../../../axios/axiosClient';
 import styles from './stories.module.scss';
 
 function Stories({ showStories }: any) {
-
- 
-
-
-
     const [stories, setStories] = useState([]);
     const sliderRef: any = useRef(null);
     const API_KEY = process.env.VITE_API_URL;
@@ -19,7 +14,7 @@ function Stories({ showStories }: any) {
     const [sliderIndex, setSliderIndex] = useState(0);
     useEffect(() => {
         get('/media-content/stories')
-            .then((data:any) => {
+            .then((data: any) => {
                 // setStories(data?.data?.data);
             })
             .catch((err) => {
@@ -48,13 +43,10 @@ function Stories({ showStories }: any) {
         slidesToScroll: 1,
         // afterChange: (currentSlide: any) => {
         //     setSliderIndex(currentSlide)
-        //     console.log(currentSlide);
         // }
     };
     return (
         <>
-            
-             
             {/* {
                 sliderIndex > 0 ?
                     <img className={styles.prevArrow} onClick={prevSlide} src="../../../public/images/icons/nextArrow.svg" alt="" />
@@ -68,24 +60,16 @@ function Stories({ showStories }: any) {
             } */}
 
             <Slider className={styles.slider} ref={sliderRef} {...settings}>
-                  
-                 
- 
                 {stories.map((storyGroup: any, index: number) => {
-                   console.log('afking stories',storyGroup?.stories[0]?.thumbnailUrl)
-                   return (
+                    return (
                         <div key={index} onClick={showStories} className={styles.story}>
                             <img src={storyGroup?.stories[0]?.thumbnailUrl} alt="" />
                         </div>
-                    )
-                }
-                        
-                    
-                )}
+                    );
+                })}
             </Slider>
         </>
     );
 }
-
 
 export default Stories;

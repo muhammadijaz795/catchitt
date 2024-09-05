@@ -1,98 +1,93 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import styles from './unfollow-popup-module.scss';
-import {Box, Modal,Button } from '@mui/material';
+import { Box, Modal, Button } from '@mui/material';
 import { defaultAvatar } from '../../../icons';
 
 const API_KEY = process.env.VITE_API_URL;
 const UnfollowPopup = ({ openUnfollowPopup, onUnfollow, onCancel, user }: any) => {
-    console.log("UnfollowPopup")
+    console.log('UnfollowPopup');
     const [loading, setLoading] = useState(false);
-    const [text, setText] = useState("Unfollow");
+    const [text, setText] = useState('Unfollow');
 
+    const handleFollowClick = async () => {
+        setLoading(true);
 
-    const handleFollowClick = async ( ) => {
-       
-        
-     setLoading(true);
-
-    
         const accountId = user?.followed_userID?._id;
         const token = localStorage.getItem('token');
-      
-        if(token){
- 
-              
+
+        if (token) {
             try {
-                 
-                console.log("userID to unfollow")
-                console.log(user)
                 const response = await fetch(`${API_KEY}/profile/follow/${accountId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
                 if (response.ok) {
                     // Handle success as needed
-                    console.log(`user: ${accountId} is followed`);
                     // Update the followedAccounts state
-                    text == "Unfollow" ? setText("Follow") : setText("Unfollow")
+                    text == 'Unfollow' ? setText('Follow') : setText('Unfollow');
                     setLoading(false);
-                
-                }else{
+                } else {
                     setLoading(false);
                 }
             } catch (error) {
                 // Handle error as needed
                 setLoading(false);
-                console.log(error)
+                console.log(error);
             }
-            
         }
     };
     return (
-       <Modal
+        <Modal
             open={openUnfollowPopup}
-                
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
             <Box sx={CustomSuccessPaymentModalStyle}>
-                <div style={{
-                    display:'flex',
-                    flexDirection:'column',
-                    justifyContent: 'space-between',
-                    alignItems:'center',
-                    height: '342px', 
-                    padding:'10px'
-
-                }}>
-                    <img 
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        height: '342px',
+                        padding: '10px',
+                    }}
+                >
+                    <img
                         style={{
-                            height:'100px',
-                            width:'100px',
+                            height: '100px',
+                            width: '100px',
                             borderRadius: '50%',
                         }}
-                        srcSet={user?.followed_userID?.avatar || defaultAvatar} alt="" />
-                <p style={{
-                    textAlign:'center'
-                }}>If you changed your mind you will have to request to follow {user?.followed_userID?.name} aggain.</p>
-               
-                 <Button
+                        srcSet={user?.followed_userID?.avatar || defaultAvatar}
+                        alt=""
+                    />
+                    <p
+                        style={{
+                            textAlign: 'center',
+                        }}
+                    >
+                        If you changed your mind you will have to request to follow{' '}
+                        {user?.followed_userID?.name} aggain.
+                    </p>
+
+                    <Button
                         variant="contained"
                         sx={filledButton}
                         onClick={handleFollowClick}
-                    // disabled={notAcceptable}
+                        // disabled={notAcceptable}
                     >
-                        {loading ? "..." : text}
+                        {loading ? '...' : text}
                     </Button>
-                <Button
+                    <Button
                         variant="contained"
                         sx={secondaryBtn}
                         onClick={onCancel}
-                    // disabled={notAcceptable}
+                        // disabled={notAcceptable}
                     >
                         Close
                     </Button>
@@ -101,8 +96,6 @@ const UnfollowPopup = ({ openUnfollowPopup, onUnfollow, onCancel, user }: any) =
         </Modal>
     );
 };
-
- 
 
 const CustomSuccessPaymentModalStyle = {
     position: 'absolute' as 'absolute',
@@ -120,7 +113,7 @@ const CustomSuccessPaymentModalStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-}
+};
 
 var filledButton = {
     fontFamily: 'Poppins !important',
@@ -132,14 +125,13 @@ var filledButton = {
     alignItems: 'center !important',
     borderRadius: '6px !important',
     background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
-    textTransform: 'none !important'
+    textTransform: 'none !important',
 };
 
 var secondaryBtn = {
-    ...filledButton, 
+    ...filledButton,
     color: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
     background: 'white',
-    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))'
-
-}
-export default UnfollowPopup
+    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))',
+};
+export default UnfollowPopup;

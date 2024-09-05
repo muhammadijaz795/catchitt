@@ -35,7 +35,7 @@ import myReportsBlack from './svg-components/my-reports.svg';
 import contactUSBlack from './svg-components/contact-us-icon.svg';
 import redRightArrow from './svg-components/redRightArrow.svg';
 import whiteRightArrow from './svg-components/whiteRightArrow.svg';
-import { 
+import {
     changePassIconWhite,
     contactUsIconWhite,
     contentIconWhite,
@@ -44,8 +44,8 @@ import {
     privacyPolicyIconWhite,
     reportProblemIconWhite,
     termsConditionsIconWhite,
-    analyticsWhite
-     } from '../../icons';
+    analyticsWhite,
+} from '../../icons';
 
 export interface AccountProps {
     className?: string;
@@ -151,7 +151,6 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [openReportSubmittedModal, setOpenReportSubmittedModal] = useState(false);
     const [reportMessage, setReportMessage] = useState('');
 
-
     const [lightdarkTheme, setlightdarkTheme] = useState('');
     const [themeColor, setThemeColor] = useState('');
     const [changePassIcon, setChangePassIcon] = useState(changePassIconblack);
@@ -163,14 +162,14 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [contentIcon, setContentIcon] = useState(contentIconBlack);
     const [notificationBell, setNotificationBell] = useState(notificationBellBlack);
     const [analytics, setAnalytics] = useState(analyticsBlack);
-    const [privacyColor, setprivacyColor] = useState("#222222");
-    const [balanceColor, setBalanceColor] = useState("#222222");
-    const [otherBalanceColor, setOtherBalanceColor] = useState("#130F26");
+    const [privacyColor, setprivacyColor] = useState('#222222');
+    const [balanceColor, setBalanceColor] = useState('#222222');
+    const [otherBalanceColor, setOtherBalanceColor] = useState('#130F26');
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
-        if(themeColor == "dark"){ 
+        if (themeColor == 'dark') {
             setlightdarkTheme(styles.lightdarkTheme);
             setThemeColor(themeColor);
             setChangePassIcon(changePassIconWhite);
@@ -182,12 +181,11 @@ const Account = ({ className, openModal }: AccountProps) => {
             setContentIcon(contentIconWhite);
             setNotificationBell(notificationBellIconWhite);
             setAnalytics(analyticsWhite);
-            setprivacyColor("#fff");
-            setBalanceColor("#fff");
-            setOtherBalanceColor("#fff");
-
-        } else{
-            setThemeColor("light");
+            setprivacyColor('#fff');
+            setBalanceColor('#fff');
+            setOtherBalanceColor('#fff');
+        } else {
+            setThemeColor('light');
             setChangePassIcon(changePassIconblack);
             setContactUS(contactUSBlack);
             setPrivacyPolicyIcon(privacyPolicyIconBlack);
@@ -197,11 +195,10 @@ const Account = ({ className, openModal }: AccountProps) => {
             setContentIcon(contentIconBlack);
             setNotificationBell(notificationBellBlack);
             setAnalytics(analyticsBlack);
-            setprivacyColor("#222222");
-            setBalanceColor("#222222");
-            setOtherBalanceColor("#130F26");
+            setprivacyColor('#222222');
+            setBalanceColor('#222222');
+            setOtherBalanceColor('#130F26');
         }
-       
     });
 
     const navigate = useNavigate();
@@ -316,10 +313,7 @@ const Account = ({ className, openModal }: AccountProps) => {
     const submitReportHandler = () => {
         setOpenReportsModal(false);
         setOpenReportSubmittedModal(true);
-        images.forEach((element: any) => {
-            console.log('Images : ', element);
-        });
-        console.log('Report Message : ', reportMessage);
+        images.forEach((element: any) => {});
     };
 
     const handleSignIn = async (password: string, email: string | null) => {
@@ -344,7 +338,6 @@ const Account = ({ className, openModal }: AccountProps) => {
                     balance: balance,
                 });
                 login(email, accountType, token, _id, balance, username, name); // Call the login function from the Zustand store
-                console.log(responseData);
                 // handleForgotPasswordSubmit()
                 setLoadingAnimation(false);
                 handleCloseChangePassMainModal();
@@ -357,7 +350,6 @@ const Account = ({ className, openModal }: AccountProps) => {
                 const errorResponseData = await response.json();
                 const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
                 setErrorMessage(errorMessageFromServer);
-                console.log(response);
             }
         } catch (error) {
             console.error(error);
@@ -431,10 +423,8 @@ const Account = ({ className, openModal }: AccountProps) => {
     useEffect(() => {
         if (selectedCategories.length > 5 || selectedCategories.length < 1) {
             setNotAcceptable(true);
-            console.log(selectedCategories);
         } else {
             setNotAcceptable(false);
-            console.log(selectedCategories);
         }
     }, [selectedCategories]);
 
@@ -503,7 +493,6 @@ const Account = ({ className, openModal }: AccountProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 // const { token } = responseData.data; // Extract token value from data object
-                console.log(responseData);
                 setResponseResult(responseData.message);
                 setResponse(true);
                 // navigate('/dashboard');
@@ -545,7 +534,6 @@ const Account = ({ className, openModal }: AccountProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 // const { token } = responseData.data; // Extract token value from data object
-                console.log(responseData);
                 setResponseResult(responseData.message);
                 setResponse(true);
                 setLoadingAnimation(false);
@@ -592,9 +580,6 @@ const Account = ({ className, openModal }: AccountProps) => {
 
         user.resetPassEmail = pathSegments[2];
         user.resetPassToken = pathSegments.slice(3).join('/');
-
-        console.log('Email:', user.resetPassEmail);
-        console.log('Token:', user.resetPassToken);
     }, [openSetNewPassModal]);
 
     const handleCloseSwitchToPersonal = () => {
@@ -618,10 +603,8 @@ const Account = ({ className, openModal }: AccountProps) => {
         var themeColor = window.localStorage.getItem('theme');
         if (themeColor == 'dark') {
             setdarkTheme(styles.darkTheme);
-
         }
     });
-
 
     return (
         <>
@@ -960,7 +943,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
-                            <Box sx={ themeColor == "dark" ? mainModalDarkstyle: mainModalstyle}  style={{ width: '433px' }}>
+                            <Box
+                                sx={themeColor == 'dark' ? mainModalDarkstyle : mainModalstyle}
+                                style={{ width: '433px' }}
+                            >
                                 <div style={{ marginBottom: '24px' }}>
                                     <div
                                         style={{
@@ -1026,7 +1012,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
-                            <Box sx={ themeColor == "dark" ? mainModalDarkstyle: mainModalstyle} >
+                            <Box sx={themeColor == 'dark' ? mainModalDarkstyle : mainModalstyle}>
                                 <div style={{ marginBottom: '24px' }}>
                                     <Typography
                                         id="modal-modal-title"
@@ -1301,7 +1287,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={ themeColor == "dark" ? contentPrefDarkModalStyle: contentPrefModalStyle} >
+                        <Box
+                            sx={
+                                themeColor == 'dark'
+                                    ? contentPrefDarkModalStyle
+                                    : contentPrefModalStyle
+                            }
+                        >
                             <div className={styles.contentPrefHeader}>
                                 <h4 className={styles.contentPrefModalHeader}>
                                     Content Preference
@@ -1311,8 +1303,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                                 </p>
                                 <p className={styles.greyText}>You can choose from 1 to 5 topics</p>
                             </div>
-                            <div className={ themeColor == "dark" ?  `${styles.whiteCards} ` : `${styles.cards}` }   
-                            //{styles.cards}
+                            <div
+                                className={
+                                    themeColor == 'dark'
+                                        ? `${styles.whiteCards} `
+                                        : `${styles.cards}`
+                                }
+                                //{styles.cards}
                             >
                                 <FormGroup
                                     sx={{
@@ -1321,7 +1318,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         flexDirection: 'row',
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
-                                        color:"white",
+                                        color: 'white',
                                     }}
                                 >
                                     {categoriesData.map((category: any) => {
@@ -1378,7 +1375,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={ themeColor == "dark" ? contentPrefDarkModalStyle: contentPrefModalStyle}>
+                        <Box
+                            sx={
+                                themeColor == 'dark'
+                                    ? contentPrefDarkModalStyle
+                                    : contentPrefModalStyle
+                            }
+                        >
                             <DeleteReasonPopup
                                 onSubmit={() => setOpenDeleteAccountMainModal(false)} // Pass the onClose function
                                 // handleOpen={handleOpenConfirmation}
@@ -1397,7 +1400,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={ themeColor == "dark" ? contentPrefDarkModalStyle: contentPrefModalStyle}>
+                        <Box
+                            sx={
+                                themeColor == 'dark'
+                                    ? contentPrefDarkModalStyle
+                                    : contentPrefModalStyle
+                            }
+                        >
                             <SwitchToPersonalPopup
                                 // onSubmit={() => setOpenDeleteAccountMainModal(false)} // Pass the onClose function
                                 // handleOpen={handleOpenConfirmation}
@@ -1416,7 +1425,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={ themeColor == "dark" ? contentPrefDarkModalStyle: contentPrefModalStyle}>
+                        <Box
+                            sx={
+                                themeColor == 'dark'
+                                    ? contentPrefDarkModalStyle
+                                    : contentPrefModalStyle
+                            }
+                        >
                             <SwitchToBusinessPopup
                                 // onSubmit={() => setOpenDeleteAccountMainModal(false)} // Pass the onClose function
                                 // handleOpen={handleOpenConfirmation}
@@ -1435,7 +1450,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={ themeColor == "dark" ? contentPrefDarkModalStyle: contentPrefModalStyle}>
+                        <Box
+                            sx={
+                                themeColor == 'dark'
+                                    ? contentPrefDarkModalStyle
+                                    : contentPrefModalStyle
+                            }
+                        >
                             <ShareProfilePopup handleClose={handleCloseSwitchToBusinessModal} />
                         </Box>
                     </Modal>
@@ -1457,7 +1478,11 @@ const Account = ({ className, openModal }: AccountProps) => {
                     >
                         <div
                             onClick={handleClickInside}
-                            className={ themeColor == "dark" ? `${lightdarkTheme} rounded-lg p-6 w-[32.875rem] h-[33.875rem] flex flex-col`: `bg-white rounded-lg p-6 w-[32.875rem] h-[33.875rem] flex flex-col` }
+                            className={
+                                themeColor == 'dark'
+                                    ? `${lightdarkTheme} rounded-lg p-6 w-[32.875rem] h-[33.875rem] flex flex-col`
+                                    : `bg-white rounded-lg p-6 w-[32.875rem] h-[33.875rem] flex flex-col`
+                            }
                         >
                             <h2 className="font-medium text-xl text-[#222222] mb-2 text-center">
                                 Report a problem

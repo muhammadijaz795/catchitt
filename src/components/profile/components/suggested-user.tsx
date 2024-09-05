@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import styles from './user.module.scss';
 import { defaultAvatar } from '../../../icons';
 import { Link } from 'react-router-dom';
- 
+
 const API_KEY = process.env.VITE_API_URL;
 const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }> = ({
     user,
@@ -26,8 +26,6 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
 
         if (token) {
             try {
-                console.log('userID to unfollow');
-                console.log(user);
                 const response = await fetch(`${API_KEY}/profile/follow/${accountId}`, {
                     method: 'POST',
                     headers: {
@@ -38,7 +36,6 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
 
                 if (response.ok) {
                     // Handle success as needed
-                    console.log(`user: ${accountId} is followed`);
                     // Update the followedAccounts state
                     text == 'Unfollow' ? setText('Follow') : setText('Unfollow');
                     setLoading(false);
@@ -80,24 +77,24 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
     );
 };
 
-export default SuggestedUser
+export default SuggestedUser;
 
-const button:any = {
-  color: 'white',
-  whiteSpace: "nowrap",
-  justifyContent: "center",
-  alignItems: "center",
-  borderRadius: "6px",
-  border: "1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))",
-  alignSelf: "center",
-  flexGrow: 1,
-  textAlign: "center",
-  margin: "auto 0",
-  padding: "12px 20px",
-  font: "600 14px/17px Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-  maxWidth: "116px",
-  cursor: "pointer",
-  backgroundColor:"rgb(255, 59, 92)"
+const button: any = {
+    color: 'white',
+    whiteSpace: 'nowrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '6px',
+    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))',
+    alignSelf: 'center',
+    flexGrow: 1,
+    textAlign: 'center',
+    margin: 'auto 0',
+    padding: '12px 20px',
+    font: '600 14px/17px Poppins, -apple-system, Roboto, Helvetica, sans-serif',
+    maxWidth: '116px',
+    cursor: 'pointer',
+    backgroundColor: 'rgb(255, 59, 92)',
 };
 
 // Usage example:

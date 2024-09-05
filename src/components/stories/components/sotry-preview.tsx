@@ -2,23 +2,15 @@ import { Box, Modal } from '@mui/material';
 import styles from './story-preview.module.scss';
 import { useEffect, useState } from 'react';
 const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
-
-
     const [isVideo, setIsVideo] = useState(false);
     useEffect(() => {
-        console.log("comming in preview")
-        // console.log(url)
         if (url.startsWith('data:image/')) {
-            console.log("Base64 image");
-            setIsVideo(false)
-
+            setIsVideo(false);
         } else if (url.startsWith('blob:http') || url.startsWith('blob:https')) {
-            console.log("Video blob");
             // Handle video blob
-             setIsVideo(true)
-
+            setIsVideo(true);
         } else {
-            console.log("Unknown URL format");
+            console.log('Unknown URL format');
         }
         // const imageUrl = URL.createObjectURL(blob);
     }, [url]);
@@ -32,33 +24,28 @@ const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
             >
                 <Box sx={popupStyle}>
                     <div className="flex flex-col gap-2 relative">
-                        {
-                            isVideo ? 
+                        {isVideo ? (
                             <video
                                 className="h-[600px]  "
                                 src={url}
                                 width={340}
                                 height={600}
                                 autoPlay
-                                preload='auto'
+                                preload="auto"
                                 playsInline
-                            ></video> 
-                            :
-                             <img  width={340}
-                                height={600} 
-                                src={url} alt="" />
-                        }
+                            ></video>
+                        ) : (
+                            <img width={340} height={600} src={url} alt="" />
+                        )}
 
-                        {isPosting?
+                        {isPosting ? (
                             <div className="w-[330px] h-[560px] flex  justify-center items-center text-white absolute top-0 left-0 bg-[rgb(255, 59, 92)99]">
                                 Posting...
-
                             </div>
-                            :
-                            ""
-                        }
-                        
-                       
+                        ) : (
+                            ''
+                        )}
+
                         <div className="flex justify-between w-[325px] h-[40px]">
                             <button onClick={onCancel} style={secondaryBtn}>
                                 Discard
@@ -78,9 +65,7 @@ const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
     );
 };
 
-export default StoryPreview
-
-
+export default StoryPreview;
 
 const popupStyle = {
     position: 'absolute' as 'absolute',
@@ -88,7 +73,7 @@ const popupStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
-    
+
     borderRadius: '8px',
     width: '359px',
     height: '680px',
@@ -98,9 +83,7 @@ const popupStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-}
-
-
+};
 
 var filledButton = {
     fontFamily: 'Poppins !important',
@@ -116,9 +99,8 @@ var filledButton = {
 };
 
 var secondaryBtn = {
-    ...filledButton, 
+    ...filledButton,
     color: 'var(--foundation-primary-primary-500, rgb(255, 59, 92)) !important',
     background: 'white',
-    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))'
-
-}
+    border: '1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92))',
+};

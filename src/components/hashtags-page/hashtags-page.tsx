@@ -8,7 +8,11 @@ import playIcon from './svg-components/playIcon.png';
 // import { Post as PostType } from '../post/postTypes';
 import hashtagIcon from '../../assets/singleHashtagIcon.png';
 
-export interface HashtagPageProps { hashtagName: string, hashtagViews: number, className?: string }
+export interface HashtagPageProps {
+    hashtagName: string;
+    hashtagViews: number;
+    className?: string;
+}
 
 interface Hashtag {
     _id: string;
@@ -64,7 +68,6 @@ interface MediaData {
     filter: any; // You can specify the type of filter if needed
 }
 
-
 export const HashtagsPage = ({ hashtagName, hashtagViews, className }: HashtagPageProps) => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const token = localStorage.getItem('token');
@@ -84,8 +87,6 @@ export const HashtagsPage = ({ hashtagName, hashtagViews, className }: HashtagPa
             if (response.ok) {
                 const responseData = await response.json();
                 setMediaData(responseData.data.data);
-                console.log(hashtagName);
-                console.log(responseData.data.data);
             }
         } catch (error) {
             console.error(error);
@@ -105,45 +106,64 @@ export const HashtagsPage = ({ hashtagName, hashtagViews, className }: HashtagPa
         return <Navigate to="/auth" />;
     }
 
-    return mediaData && (
-        <>
-            <div className={styles.pageHeader}>
-                <div className={styles.suggestedContent2}>
-                    <img src={hashtagIcon} alt='' style={{
-                        'width': '130px',
-                        'height': '130px'
-                    }} />
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', textAlign: 'start', color: '#999999' }}>
-                        <div className={styles.soundInfo} style={{ display: 'flex', flexDirection: 'column' }}>
-                            <h6 className={styles.soundTitle}>{hashtagName}</h6>
-                            <h6>{hashtagViews} views</h6>
-                        </div>
-                        <div >
+    return (
+        mediaData && (
+            <>
+                <div className={styles.pageHeader}>
+                    <div className={styles.suggestedContent2}>
+                        <img
+                            src={hashtagIcon}
+                            alt=""
+                            style={{
+                                width: '130px',
+                                height: '130px',
+                            }}
+                        />
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: '1fr 3fr',
+                                textAlign: 'start',
+                                color: '#999999',
+                            }}
+                        >
+                            <div
+                                className={styles.soundInfo}
+                                style={{ display: 'flex', flexDirection: 'column' }}
+                            >
+                                <h6 className={styles.soundTitle}>{hashtagName}</h6>
+                                <h6>{hashtagViews} views</h6>
+                            </div>
+                            <div></div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className={styles.postsList}>
-                {mediaData?.map((media, index) => (
-                    <div className={styles.postCard} key={index}>
-                        <img src={media.thumbnailUrl} alt='' style={{ 'objectFit': 'cover' }} />
-                        <h6>{media.description}</h6>
-                        <div className={styles.postInfo}>
-                            <div className={styles.postCreatorInfo}>
-                                <img src={media.user.avatar === '' ? profileIcon : media.user.avatar} alt='' />
-                                <p>{media.user.name}</p>
-                            </div>
-                            <div className={styles.viewsDiv}>
-                                <img src={playIcon} alt='' />
-                                <p>
-                                    {media.views}
-                                </p>
+                <div className={styles.postsList}>
+                    {mediaData?.map((media, index) => (
+                        <div className={styles.postCard} key={index}>
+                            <img src={media.thumbnailUrl} alt="" style={{ objectFit: 'cover' }} />
+                            <h6>{media.description}</h6>
+                            <div className={styles.postInfo}>
+                                <div className={styles.postCreatorInfo}>
+                                    <img
+                                        src={
+                                            media.user.avatar === ''
+                                                ? profileIcon
+                                                : media.user.avatar
+                                        }
+                                        alt=""
+                                    />
+                                    <p>{media.user.name}</p>
+                                </div>
+                                <div className={styles.viewsDiv}>
+                                    <img src={playIcon} alt="" />
+                                    <p>{media.views}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-
-            </div>
-        </>
+                    ))}
+                </div>
+            </>
+        )
     );
 };

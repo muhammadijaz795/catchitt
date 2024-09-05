@@ -1,51 +1,42 @@
-import { useState } from "react";
-import ImgCrop from "antd-img-crop";
-import { Upload, UploadFile } from "antd";
-import ReactDOM from "react-dom";
+import { useState } from 'react';
+import ImgCrop from 'antd-img-crop';
+import { Upload, UploadFile } from 'antd';
+import ReactDOM from 'react-dom';
 
+const getBase64FromFile = (file: any) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
 
+        reader.onload = () => {
+            resolve(reader.result);
+        };
 
-const getBase64FromFile = (file:any) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+        reader.onerror = (error) => {
+            reject(error);
+        };
 
-    reader.onload = () => {
-      resolve(reader.result);
-    };
-
-    reader.onerror = (error) => {
-      reject(error);
-    };
-
-    reader.readAsDataURL(file);
-  });
+        reader.readAsDataURL(file);
+    });
 };
 
-
-const getSrcFromFile = (file:any) => {
-    console.log("getSrcFromFile")
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file.originFileObj);
-    reader.onload = () =>{
-        console.log("loaded")
-         resolve(reader.result);
-    }
-
-  });
+const getSrcFromFile = (file: any) => {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+    });
 };
- 
 
 const CoverCropbox = ({ onChangeImage }: any) => {
     const [fileList, setFileList] = useState<any>([]);
 
     const onChange = ({ fileList: newFileList }: any) => {
-        console.log('onchangee');
         setFileList(fileList);
     };
 
     const onPreview = async (file: any) => {
-        console.log('on previewww');
         const src = file.url || (await getSrcFromFile(file));
         const imgWindow = window.open(src);
 
@@ -58,7 +49,7 @@ const CoverCropbox = ({ onChangeImage }: any) => {
         }
     };
 
-    const onCropped = (c:any) => {
+    const onCropped = (c: any) => {
         console.log(c);
     };
 
@@ -82,10 +73,12 @@ const CoverCropbox = ({ onChangeImage }: any) => {
             <ImgCrop
                 showGrid
                 showReset
-                modalProps={{
-                    width: '800px',
-                    height: '600px',
-                } as any}
+                modalProps={
+                    {
+                        width: '800px',
+                        height: '600px',
+                    } as any
+                }
                 aspect={1.92 / 1}
                 cropShape="rect"
             >
@@ -104,4 +97,4 @@ const CoverCropbox = ({ onChangeImage }: any) => {
     );
 };
 
-export default CoverCropbox
+export default CoverCropbox;

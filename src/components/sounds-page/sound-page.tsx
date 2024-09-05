@@ -16,7 +16,9 @@ import ShareClicked from './svg-components/shareClicked.png';
 // import { Post as PostType } from '../post/postTypes';
 import ClipboardJS from 'clipboard';
 
-export interface SoundPageProps { className?: string }
+export interface SoundPageProps {
+    className?: string;
+}
 
 interface Sound {
     _id: string;
@@ -85,25 +87,24 @@ interface Post {
     receivedGifts: any[]; // You can define a proper type for gifts if possible.
     taggedUsers: any[]; // You can define a proper type for users if possible.
     sound: {
-        _id: string,
-        url: string,
+        _id: string;
+        url: string;
         owner: {
-            _id: string,
-            avatar: string,
-            username: string,
-            name: string,
-            isVerified: boolean
-        },
-        title: string,
+            _id: string;
+            avatar: string;
+            username: string;
+            name: string;
+            isVerified: boolean;
+        };
+        title: string;
         category: {
-            _id: string,
-            name: string,
-            isActive: boolean
-        },
-        isBookmarked: boolean
-    },
+            _id: string;
+            name: string;
+            isActive: boolean;
+        };
+        isBookmarked: boolean;
+    };
 }
-
 
 export const SoundPage = (className: SoundPageProps) => {
     const clipboard = new ClipboardJS('btn');
@@ -136,7 +137,6 @@ export const SoundPage = (className: SoundPageProps) => {
 
         if (response.ok) {
             const responseData = await response.json();
-            console.log(`the posts fetch response data:`, responseData);
             setPostData(responseData.data);
         } else {
             console.log(response);
@@ -153,7 +153,6 @@ export const SoundPage = (className: SoundPageProps) => {
             if (response.ok) {
                 const responseData = await response.json();
                 setSoundData(responseData.data);
-                console.log(`the response for sound: ${response}`);
             } else {
                 const errorResponseData = await response.json();
                 const errorMessageFromServer = errorResponseData.message; // Assuming the error message is returned in a 'message' field
@@ -173,7 +172,7 @@ export const SoundPage = (className: SoundPageProps) => {
         handleFetchSound();
     }, [setSoundData]);
 
-    const [linkCopied, setLinkCopied] = useState(false)
+    const [linkCopied, setLinkCopied] = useState(false);
     const [open, setOpen] = useState(false);
 
     const handleTooltipClose = () => {
@@ -203,28 +202,25 @@ export const SoundPage = (className: SoundPageProps) => {
 
         // Remove the temporary input element from the DOM
         document.body.removeChild(tempInput);
-        setLinkCopied(true)
-        handleTooltipOpen()
+        setLinkCopied(true);
+        handleTooltipOpen();
     };
 
     const handleBookmarking = async () => {
         try {
-            const response = await fetch(
-                `${API_KEY}/profile/toggleBookmarkSound`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ soundId: extractedValue }),
-                }
-            );
+            const response = await fetch(`${API_KEY}/profile/toggleBookmarkSound`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ soundId: extractedValue }),
+            });
 
             if (response.ok) {
                 // Toggle the bookmark status here
                 // setBookMarkStatus(!bookMarkStatus);
-                handleFetchSound()
+                handleFetchSound();
             } else {
                 console.error('Failed to toggle bookmark:', response.status);
             }
@@ -235,91 +231,126 @@ export const SoundPage = (className: SoundPageProps) => {
         }
     };
 
-
     if (!isLoggedIn) {
         return <Navigate to="/auth" />;
     }
 
-    return soundData && (
-        <div className={styles.root}>
-            <div className={styles.topBarDiv}>
-                <TopBar />
-            </div>
-
-            <div className={styles.container}>
-                <div className={styles.leftSide}>
-                    <div className={styles.sideNavDiv}>
-                        <SideNavBar selectedIndex={3} />
-                    </div>
-                    <div className={styles.suggestedActivityDiv}>
-                        <SuggestedActivity showActivity={true} showSuggestedContent={true} />
-                    </div>
+    return (
+        soundData && (
+            <div className={styles.root}>
+                <div className={styles.topBarDiv}>
+                    <TopBar />
                 </div>
-                <div className={styles.middleSectionDiv}>
-                    <div className={styles.pageHeader}>
-                        <div className={styles.suggestedContent2}>
-                            <img src={soundData.owner.avatar === "" ? exampleSound : ''} alt='' style={{
-                                'minWidth': '130px',
-                                'minHeight': '130px'
-                            }} />
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', textAlign: 'end' }}>
-                                <div className={styles.soundInfo} style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <h6 className={styles.soundTitle}>{soundData.title}</h6>
-                                    <h6 className={styles.soundArtist}>{soundData.owner.name}</h6>
-                                    <h6 className={styles.soundUsed}>{soundData.usedCount} Videos</h6>
-                                </div>
-                                <div >
-                                    <IconButton onClick={handleBookmarking}>
-                                        {/* {soundData.isBookmarked ? (
+
+                <div className={styles.container}>
+                    <div className={styles.leftSide}>
+                        <div className={styles.sideNavDiv}>
+                            <SideNavBar selectedIndex={3} />
+                        </div>
+                        <div className={styles.suggestedActivityDiv}>
+                            <SuggestedActivity showActivity={true} showSuggestedContent={true} />
+                        </div>
+                    </div>
+                    <div className={styles.middleSectionDiv}>
+                        <div className={styles.pageHeader}>
+                            <div className={styles.suggestedContent2}>
+                                <img
+                                    src={soundData.owner.avatar === '' ? exampleSound : ''}
+                                    alt=""
+                                    style={{
+                                        minWidth: '130px',
+                                        minHeight: '130px',
+                                    }}
+                                />
+                                <div
+                                    style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: '1fr 3fr',
+                                        textAlign: 'end',
+                                    }}
+                                >
+                                    <div
+                                        className={styles.soundInfo}
+                                        style={{ display: 'flex', flexDirection: 'column' }}
+                                    >
+                                        <h6 className={styles.soundTitle}>{soundData.title}</h6>
+                                        <h6 className={styles.soundArtist}>
+                                            {soundData.owner.name}
+                                        </h6>
+                                        <h6 className={styles.soundUsed}>
+                                            {soundData.usedCount} Videos
+                                        </h6>
+                                    </div>
+                                    <div>
+                                        <IconButton onClick={handleBookmarking}>
+                                            {/* {soundData.isBookmarked ? (
                                             <Bookmark bookmarked={true} />
                                         ) :
                                             <Bookmark bookmarked={false} />
                                         } */}
-                                        <Bookmark bookmarked={soundData.isBookmarked} />
-                                    </IconButton>
-                                    <ClickAwayListener onClickAway={handleTooltipClose}>
-                                        <Tooltip PopperProps={{
-                                            disablePortal: true,
-                                        }}
-                                            onClose={handleTooltipClose}
-                                            open={open}
-                                            disableFocusListener
-                                            disableHoverListener
-                                            disableTouchListener
-                                            title="Link copied!" >
-                                            <IconButton>
-                                                <img src={linkCopied === true ? ShareClicked : Share} alt='' onClick={handleCopyToClipboard} />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </ClickAwayListener>
+                                            <Bookmark bookmarked={soundData.isBookmarked} />
+                                        </IconButton>
+                                        <ClickAwayListener onClickAway={handleTooltipClose}>
+                                            <Tooltip
+                                                PopperProps={{
+                                                    disablePortal: true,
+                                                }}
+                                                onClose={handleTooltipClose}
+                                                open={open}
+                                                disableFocusListener
+                                                disableHoverListener
+                                                disableTouchListener
+                                                title="Link copied!"
+                                            >
+                                                <IconButton>
+                                                    <img
+                                                        src={
+                                                            linkCopied === true
+                                                                ? ShareClicked
+                                                                : Share
+                                                        }
+                                                        alt=""
+                                                        onClick={handleCopyToClipboard}
+                                                    />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </ClickAwayListener>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className={styles.postsList}>
-                        {postData?.map((post, index) => (
-                            <div className={styles.postCard} key={index}>
-                                <img src={post.thumbnailUrl} alt='' style={{ 'objectFit': 'cover' }} />
-                                <h6>{post.description}</h6>
-                                <div className={styles.postInfo}>
-                                    <div className={styles.postCreatorInfo}>
-                                        <img src={post.user.avatar === '' ? profileIcon : post.user.avatar} alt='' />
-                                        <p>{post.user.name}</p>
-                                    </div>
-                                    <div className={styles.viewsDiv}>
-                                        <img src={playIcon} alt='' />
-                                        <p>
-                                            {post.views}
-                                        </p>
+                        <div className={styles.postsList}>
+                            {postData?.map((post, index) => (
+                                <div className={styles.postCard} key={index}>
+                                    <img
+                                        src={post.thumbnailUrl}
+                                        alt=""
+                                        style={{ objectFit: 'cover' }}
+                                    />
+                                    <h6>{post.description}</h6>
+                                    <div className={styles.postInfo}>
+                                        <div className={styles.postCreatorInfo}>
+                                            <img
+                                                src={
+                                                    post.user.avatar === ''
+                                                        ? profileIcon
+                                                        : post.user.avatar
+                                                }
+                                                alt=""
+                                            />
+                                            <p>{post.user.name}</p>
+                                        </div>
+                                        <div className={styles.viewsDiv}>
+                                            <img src={playIcon} alt="" />
+                                            <p>{post.views}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-
+                            ))}
+                        </div>
                     </div>
-
                 </div>
             </div>
-        </div>
+        )
     );
 };

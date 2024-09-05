@@ -151,7 +151,6 @@ export const PrivacySecurityPage = ({ className }: PrivacySecurityPageProps) => 
             .then((response) => {
                 if (response.ok) {
                     // Handle a successful response here
-                    console.log('Settings updated successfully');
                 } else {
                     // Handle errors here
                     console.error(response);
@@ -483,7 +482,8 @@ const IOSSwitch = styled((props: SwitchProps) => (
             transform: 'translateX(16px)',
             color: '#fff',
             '& + .MuiSwitch-track': {
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(255, 59, 92)' : 'rgb(255, 59, 92)',
+                backgroundColor:
+                    theme.palette.mode === 'dark' ? 'rgb(255, 59, 92)' : 'rgb(255, 59, 92)',
                 opacity: 1,
                 border: 0,
             },

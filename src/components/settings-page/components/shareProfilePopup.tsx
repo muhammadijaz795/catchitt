@@ -1,4 +1,3 @@
-
 import { Button } from '@mui/material';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -25,16 +24,21 @@ const defaultUser: User = {
     password: '',
 };
 
-export const ShareProfilePopup = ({ className, onSubmit, handleOpen, handleClose }: ShareProfilePopupProps) => {
-    const username = useAuthStore((state) => state.username)
-    const userId = useAuthStore((state) => state._id)
-    const email = useAuthStore((state) => state.email)
-    const logout = useAuthStore(state => state.logout);
+export const ShareProfilePopup = ({
+    className,
+    onSubmit,
+    handleOpen,
+    handleClose,
+}: ShareProfilePopupProps) => {
+    const username = useAuthStore((state) => state.username);
+    const userId = useAuthStore((state) => state._id);
+    const email = useAuthStore((state) => state.email);
+    const logout = useAuthStore((state) => state.logout);
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const [firstModalVisible, setFirstModalVisible] = useState(true);
-    const [openConfirmationModal, setOpenConfirmationModal] = useState(false)
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
 
     const API_KEY = process.env.VITE_API_URL;
@@ -42,9 +46,9 @@ export const ShareProfilePopup = ({ className, onSubmit, handleOpen, handleClose
     const handleCopyToClipboard = () => {
         const qrCodeValue = `https://app.seezitt.com/profile/${userId}`;
         // Copy to clipboard
-        navigator.clipboard.writeText(qrCodeValue)
+        navigator.clipboard
+            .writeText(qrCodeValue)
             .then(() => {
-                console.log('Copied to clipboard:', qrCodeValue);
                 // You can also show a success message or perform additional actions.
                 setIsCopied(true);
                 setLoading(true);
@@ -67,19 +71,22 @@ export const ShareProfilePopup = ({ className, onSubmit, handleOpen, handleClose
                     <>
                         <div className={styles.frame}>
                             <div className={styles.contentPrefHeader}>
-                                <h4 className={styles.contentPrefModalHeader}>
-                                    QR Code
-                                </h4>
-                                <p className={styles.blueText}>
-                                    Your profile’s QR Code</p>
-                                <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+                                <h4 className={styles.contentPrefModalHeader}>QR Code</h4>
+                                <p className={styles.blueText}>Your profile’s QR Code</p>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
                                     <QRCode
                                         size={220}
                                         logoPadding={5}
-                                        qrStyle='dots'
+                                        qrStyle="dots"
                                         value={`https://app.seezitt.com/profile/${userId}`}
-                                        bgColor='white'
-                                        fgColor='rgb(255, 59, 92)'
+                                        bgColor="white"
+                                        fgColor="rgb(255, 59, 92)"
                                         logoImage={qrCodeLogo}
                                         removeQrCodeBehindLogo={true}
                                     />
@@ -88,12 +95,13 @@ export const ShareProfilePopup = ({ className, onSubmit, handleOpen, handleClose
                                     Share this QR code to get people to follow you easily!
                                 </p>
                             </div>
-                            <Button variant="contained"
+                            <Button
+                                variant="contained"
                                 sx={mainModalBtnstyle}
                                 onClick={handleCopyToClipboard}
                             >
                                 {loading === true ? (
-                                    <img src={loadingCircle} alt='' style={{ width: '40px' }} />
+                                    <img src={loadingCircle} alt="" style={{ width: '40px' }} />
                                 ) : (
                                     'Copy to clipboard'
                                 )}
@@ -107,7 +115,6 @@ export const ShareProfilePopup = ({ className, onSubmit, handleOpen, handleClose
         </div>
     );
 };
-
 
 var mainModalstyle = {
     position: 'absolute' as 'absolute',
@@ -137,7 +144,7 @@ var mainModalBtnstyle = {
     alignItems: 'center !important',
     borderRadius: '6px !important',
     background: 'var(--foundation-primary-primary-500, rgb(255, 59, 92))  !important',
-    textTransform: 'none !important'
+    textTransform: 'none !important',
 };
 
 var lastConfirmationModalstyle = {

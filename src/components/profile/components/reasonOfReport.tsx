@@ -1,9 +1,5 @@
-import React, { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import style from './reasonOfReport.module.scss';
-import { ClickAwayListener, Modal } from '@mui/material';
-import axios from 'axios';
-import BlockMsgOnError from './blockMsgOnError';
-import { useAuthStore } from '../../../store/authStore';
 interface Types {
     onclose: any;
     video: any;
@@ -15,6 +11,7 @@ function ReasonOfReport({ onclose, video, popupHandler }: Types) {
     const [reasons, setReasons] = useState<any>([]);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
+    const [darkTheme, setdarkTheme] = useState('');
 
     const valuesManager = (e: any) => {
         if (e.target.checked) {
@@ -59,8 +56,16 @@ function ReasonOfReport({ onclose, video, popupHandler }: Types) {
             }
         }
     };
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if (themeColor == 'dark') {
+            setdarkTheme(style.darkTheme);
+        }
+    });
     return (
-        <div className={style.parentDiv}>
+        <div className={`${style.parentDiv} ${style.darkTheme}`}>
             <p>Reason for report</p>
             <div className={style.checkboxParent}>
                 <div>

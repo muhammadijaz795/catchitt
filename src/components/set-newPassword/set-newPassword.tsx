@@ -80,7 +80,6 @@ export const SetNewPassword = (props: any, className: SetNewPasswordProps) => {
     //     console.log('Token:', user.token);
     // }, [])
 
-
     const handleLanguageChange = (code: string, name: string) => {
         // i18next.changeLanguage(code);
         setLanguageSelector(name);
@@ -92,7 +91,6 @@ export const SetNewPassword = (props: any, className: SetNewPasswordProps) => {
 
     /** Handling Forgot Password Scenario */
     const handleSetNewPassword = async (password: string, email: string, otp: number) => {
-        console.log(email, password, otp);
         try {
             const response = await fetch(`${API_KEY}/auth/password/set-new`, {
                 method: 'PATCH',
@@ -101,23 +99,21 @@ export const SetNewPassword = (props: any, className: SetNewPasswordProps) => {
             });
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
                 setResponseResult(responseData.message);
                 setResponse(true);
                 navigate('/auth');
             } else {
-                setErrorMessage('Please make sure the password aligns with the requirements')
-                console.log(response.statusText);
+                setErrorMessage('Please make sure the password aligns with the requirements');
             }
         } catch (error) {
-            setErrorMessage('Please make sure the password aligns with the requirements')
+            setErrorMessage('Please make sure the password aligns with the requirements');
             console.log(error);
         }
     };
 
     const handleSetNewPasswordSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Prevent the default form submission behavior
-        setErrorMessage('')
+        setErrorMessage('');
         if (user.password !== user.confirmPassword) {
             setErrorMessage('Passwords are not matching');
             return;
@@ -188,7 +184,7 @@ export const SetNewPassword = (props: any, className: SetNewPasswordProps) => {
                             special characters
                         </p>
                         <div style={{ marginTop: '20px' }}>
-                            {errorMessage !== "" ? (
+                            {errorMessage !== '' ? (
                                 <h4
                                     style={{
                                         fontWeight: '700',
