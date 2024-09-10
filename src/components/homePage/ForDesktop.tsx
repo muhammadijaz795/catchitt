@@ -74,6 +74,7 @@ function ForDesktop(props: any) {
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [scrollY, setScrollY] = useState(0);
     const scrollableDivRef = useRef<HTMLDivElement>(null);
+    const currentVideo = useRef<HTMLDivElement>(null);
     const APP_URL = process.env.VITE_API_URL;
 
     const navigate: any = useNavigate();
