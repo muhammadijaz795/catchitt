@@ -5,10 +5,11 @@ import { useAuthStore } from '../../store/authStore';
 import styles from './side-nav-bar.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { openLoginPopup } from '../../redux/reducers';
-import {isUserLoggedIn} from '../../utils/common';
+import {isUserLoggedIn, isUserLoggedInData} from '../../utils/common';
 import { logoutUser } from '../../redux/reducers/auth';
 import { openLogoutPopup } from '../../redux/reducers';
 import { SuggestedActivity } from '../../components/suggested-activity/suggested-activity';
+import { defaultAvatar } from '../../icons';
 
 export interface SideNavBarProps {
     className?: string;
@@ -72,11 +73,11 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     const [activeProgramClass, setActiveProgramClass] = useState(false);
     const [activeTermClass, setActiveTermClass] = useState(false);
     const [activeClass, setActiveClass] = useState(styles.activeBlackClass);
-    
+
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
-
+        
         if(themeColor == "dark"){ 
             setdarkTheme(styles.darkTheme);
             setdarkThemeblack(styles.darkThemeblack);
@@ -339,13 +340,28 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             setSettingsDropdown(false)
                         }}
                     >
+                          { isUserLoggedInData() != "" ? (
+                            <>
+                            <img
+                            style={{
+                                width: '22px',
+                                height: '22px',
+                                cursor: 'pointer',
+                                borderRadius: '50%',
+                                maxWidth:'initial'
+                            }}
+                            src={isUserLoggedInData().avatar || defaultAvatar}
+                            alt=""
+                        /></>
+                           ):
+                            (
                         <svg id="svg-section" width="24" data-e2e="" height="32" viewBox="0 0 48 48" fill={ pathname.includes('/profile') ?  'rgb(255, 59, 92)': textColor} xmlns="http://www.w3.org/2000/svg"
                         className={classNames(
                             `${pathname.includes('/profile') ? styles.selectedStroke : ''}`
                         )}
                         >
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M24.0003 7C20.1343 7 17.0003 10.134 17.0003 14C17.0003 17.866 20.1343 21 24.0003 21C27.8663 21 31.0003 17.866 31.0003 14C31.0003 10.134 27.8663 7 24.0003 7ZM13.0003 14C13.0003 7.92487 17.9252 3 24.0003 3C30.0755 3 35.0003 7.92487 35.0003 14C35.0003 20.0751 30.0755 25 24.0003 25C17.9252 25 13.0003 20.0751 13.0003 14ZM24.0003 33C18.0615 33 13.0493 36.9841 11.4972 42.4262C11.3457 42.9573 10.8217 43.3088 10.2804 43.1989L8.32038 42.8011C7.77914 42.6912 7.4266 42.1618 7.5683 41.628C9.49821 34.358 16.1215 29 24.0003 29C31.8792 29 38.5025 34.358 40.4324 41.628C40.5741 42.1618 40.2215 42.6912 39.6803 42.8011L37.7203 43.1989C37.179 43.3088 36.6549 42.9573 36.5035 42.4262C34.9514 36.9841 29.9391 33 24.0003 33Z"></path>
-                        </svg>
+                         <path fill-rule="evenodd" clip-rule="evenodd" d="M24.0003 7C20.1343 7 17.0003 10.134 17.0003 14C17.0003 17.866 20.1343 21 24.0003 21C27.8663 21 31.0003 17.866 31.0003 14C31.0003 10.134 27.8663 7 24.0003 7ZM13.0003 14C13.0003 7.92487 17.9252 3 24.0003 3C30.0755 3 35.0003 7.92487 35.0003 14C35.0003 20.0751 30.0755 25 24.0003 25C17.9252 25 13.0003 20.0751 13.0003 14ZM24.0003 33C18.0615 33 13.0493 36.9841 11.4972 42.4262C11.3457 42.9573 10.8217 43.3088 10.2804 43.1989L8.32038 42.8011C7.77914 42.6912 7.4266 42.1618 7.5683 41.628C9.49821 34.358 16.1215 29 24.0003 29C31.8792 29 38.5025 34.358 40.4324 41.628C40.5741 42.1618 40.2215 42.6912 39.6803 42.8011L37.7203 43.1989C37.179 43.3088 36.6549 42.9573 36.5035 42.4262C34.9514 36.9841 29.9391 33 24.0003 33Z"></path>
+                        </svg>)}
                         <p className={styles.linkWord}>Profile</p>
                     </div>
                 </span>

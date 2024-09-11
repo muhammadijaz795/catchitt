@@ -15,6 +15,7 @@ import link from '../svg-components/link-icon.png';
 import CoverImagePopup from './cover-img-popup';
 import CreateStoryPopup from './createStoryPopup';
 import styles from './profileHeader.module.scss';
+import { BASE_URL_FRONTEND } from '../../../utils/constants';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -151,20 +152,20 @@ const ProfileHeader: FunctionComponent<Props> = ({
         }
     };
 
-    useEffect(() => {
-        loadProfile();
-        fetch(`${API_KEY}/media-content/stories/feed`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setStories(data.data[0].stories);
-            })
-            .catch((err) => {
-                console.log('collectons error', err);
-            });
-    }, []);
+    // useEffect(() => {
+    //     loadProfile();
+    //     fetch(`${API_KEY}/media-content/stories/feed`, {
+    //         method: 'GET',
+    //         headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+    //     })
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             setStories(data.data[0].stories);
+    //         })
+    //         .catch((err) => {
+    //             console.log('collectons error', err);
+    //         });
+    // }, []);
 
     useEffect(() => {
         // loadProfile();
@@ -210,12 +211,13 @@ const ProfileHeader: FunctionComponent<Props> = ({
                 <div className={styles.bottomContainer}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <div
-                            onClick={() => {
-                                if (stories?.length > 0) {
-                                    showStory();
-                                }
-                            }}
-                            className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}
+                            // onClick={() => {
+                            //     if (stories?.length > 0) {
+                            //         showStory();
+                            //     }
+                            // }}
+                            // className={stories?.length > 0 ? styles.avatarBox2 : styles.avatarBox}
+                            className={styles.avatarBox}
                         >
                             <Avatar
                                 style={{ width: '100%', height: '100%' }}
@@ -236,7 +238,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
                     >
                         <ShareIcon />
                         Share
-                        <COPY_AND_SEND_MENU copyHandler={copyHandler} />
+                        <COPY_AND_SEND_MENU copyHandler={copyHandler} BASE_URL_FRONTEND={BASE_URL_FRONTEND} profileData={profileData} />
                     </button>
                 </div>
                 <div className={styles.pfContent}>

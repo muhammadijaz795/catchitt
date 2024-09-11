@@ -11,3 +11,12 @@ export const isUserLoggedIn = () => {
   }
   return false;
 };
+
+
+export const isUserLoggedInData = () => {
+  let getToken = localStorage.getItem('profile');
+  if(getToken){
+    return JSON.parse(getToken);
+  }
+  return "";
+};

@@ -16,7 +16,9 @@ import {
 import style from './index.module.scss';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
-export default function COPY_AND_SEND_MENU({ copyHandler }: any) {
+
+export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, profileData }: any) {
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const open = Boolean(anchorEl);
@@ -79,23 +81,23 @@ export default function COPY_AND_SEND_MENU({ copyHandler }: any) {
     }));
 
     const shareToWhatsApp = () => {
-        window.open(`https://api.whatsapp.com/send?text=${window.location.href}`, '_blank');
+        window.open(`https://api.whatsapp.com/send?text=/${BASE_URL_FRONTEND}/profile/${profileData.id}`, '_blank');
     };
 
     const shareToFacebook = () => {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, '_blank');
+        window.open(`https://www.facebook.com/share/share.php?u=${BASE_URL_FRONTEND}/profile/${profileData.id}`, '_blank');
     };
 
     const shareToTwitter = () => {
         window.open(
-            `https://twitter.com/intent/tweet?url=${window.location.href}`,
+            `https://twitter.com/intent/tweet?url=${BASE_URL_FRONTEND}/profile/${profileData.id}`,
             '_blank'
         );
     };
 
     const shareToLinkedIn = () => {
         window.open(
-            `https://www.linkedin.com/shareArticle?url=${window.location.href}`,
+            `https://www.linkedin.com/shareArticle?url=${BASE_URL_FRONTEND}/profile/${profileData.id}`,
             '_blank'
         );
     };
@@ -139,12 +141,12 @@ export default function COPY_AND_SEND_MENU({ copyHandler }: any) {
                     // display:'flex !important'
                 }}
             >
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                {/* <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
                         <img src={send} />
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
                     </div>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={copyHandler}>
                         <img src={copyLink} />
