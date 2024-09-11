@@ -2,7 +2,7 @@ import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useUpdateEffect } from 'react-use';
 import likesIcon from '../../../public/images/icons/Heart2.svg';
@@ -73,6 +73,7 @@ const VideoPage = () => {
     const [pageSize, setPageSize] = useState<number>(8);
     const [commenterName, setCommenterName] = useState('');
     const [commenterAvatar, setCommenterAvatar] = useState('');
+    const [commenterUsername, setCommenterUsername] = useState('');
     const [isReplyToCommentClicked, setIsReplyToCommentClicked] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
@@ -81,6 +82,7 @@ const VideoPage = () => {
     const [musicLink, setMusicLink] = useState('');
     const [isEmbedPopupVisible, setIsEmbedPopupVisible] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [isFollowed, setUserIsFollowed] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
@@ -373,6 +375,7 @@ const VideoPage = () => {
                 });
                 const { data } = await fetchMediaResponse.json();
                 setCommenterName(data?.name);
+                setCommenterUsername(data?.username);
                 setCommenterAvatar(data?.avatar);
             } catch (error) {
                 console.log('🚀 ~ fetchMediaById ~ error:', error);
@@ -523,6 +526,12 @@ const VideoPage = () => {
         dispatch(openLoginPopup());
     };
 
+    const openUserPublicProfileHandler = async (username: string) => {
+        navigate(`/profile/${username}`);
+    };
+
+    // hooks
+
     useEffect(() => {
         loadUserProfile();
         fetchMediaById();
@@ -587,7 +596,7 @@ const VideoPage = () => {
         <Layout isScrollActive={false} paddingBottomProp={true}>
             <div
                 ref={subDivRef}
-                className="flex flex-row h-full overflow-y-auto justify-between pt-4 pl-8"
+                className="flex flex-row h-screen overflow-y-auto justify-between pt-4 pl-8"
             >
                 <div className="w-full">
                     <div className="relative">
@@ -757,7 +766,10 @@ const VideoPage = () => {
                         )}
                     </div>
                     <div className="p-3.5 bg-[#16182308] rounded-b-xl">
-                        <div className="flex flex-row items-center gap-2">
+                        <div
+                            onClick={() => openUserPublicProfileHandler(userName)}
+                            className="flex flex-row items-center gap-2"
+                        >
                             {/* avatar */}
                             {userAvatar && userAvatar != '' ? (
                                 <img
@@ -836,10 +848,10 @@ const VideoPage = () => {
                         <div className="flex flex-row items-start gap-3 mt-3">
                             {/* Commenter avatar */}
                             {isUserLoggedIn() && (
-                                <>
+                                <div onClick={() => openUserPublicProfileHandler(commenterUsername)}>
                                     {commenterAvatar && commenterAvatar !== '' ? (
                                         <img
-                                            className="w-12 h-12 object-contain rounded-full"
+                                            className="w-12 h-12 object-contain rounded-full cursor-pointer"
                                             src={commenterAvatar}
                                             alt=""
                                         />
@@ -850,7 +862,7 @@ const VideoPage = () => {
                                             </p>
                                         </div>
                                     )}
-                                </>
+                                </div>
                             )}
 
                             <div className="pb-6 border-b border-b-[#0000001f] cursor-pointer w-full flex flex-row items-center gap-2.5">
@@ -932,12 +944,18 @@ const VideoPage = () => {
                             >
                                 {comment?.user?.avatar ? (
                                     <img
-                                        className={`w-12 h-12 object-contain rounded-full`}
+                                        onClick={() =>
+                                            openUserPublicProfileHandler(comment?.user?.username)
+                                        }
+                                        className={`w-12 h-12 object-contain rounded-full cursor-pointer`}
                                         src={comment?.user?.avatar}
                                         alt=""
                                     />
                                 ) : (
                                     <div
+                                        onClick={() =>
+                                            openUserPublicProfileHandler(comment?.user?.username)
+                                        }
                                         className={`w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
                                     >
                                         <p className="text-lg text-white font-medium">
@@ -947,7 +965,14 @@ const VideoPage = () => {
                                 )}
                                 <div className="flex flex-row items-start justify-between gap-12 w-full">
                                     <div className="text-left w-full">
-                                        <p className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline">
+                                        <p
+                                            onClick={() =>
+                                                openUserPublicProfileHandler(
+                                                    comment?.user?.username
+                                                )
+                                            }
+                                            className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline"
+                                        >
                                             {comment?.user?.name}
                                         </p>
                                         <p className="font-normal text-[#161823] text-base cursor-pointer">
@@ -1131,13 +1156,23 @@ const VideoPage = () => {
                                                 >
                                                     {comment?.user?.avatar ? (
                                                         <img
-                                                            className={`w-6 h-6 object-contain rounded-full`}
-                                                            src={commenterAvatar}
+                                                            onClick={() =>
+                                                                openUserPublicProfileHandler(
+                                                                    comment_replies?.user?.username
+                                                                )
+                                                            }
+                                                            className={`w-6 h-6 object-contain rounded-full cursor-pointer`}
+                                                            src={comment_replies?.user?.avatar}
                                                             alt="comment-replyavatar"
                                                         />
                                                     ) : (
                                                         <div
-                                                            className={`w-6 h-6 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
+                                                            onClick={() =>
+                                                                openUserPublicProfileHandler(
+                                                                    comment_replies?.user?.username
+                                                                )
+                                                            }
+                                                            className={`w-6 h-6 object-cover rounded-full bg-gray-800 flex justify-center items-center cursor-pointer`}
                                                         >
                                                             <p className="text-lg text-white font-medium">
                                                                 {comment?.user?.name?.charAt(0)}
@@ -1146,7 +1181,13 @@ const VideoPage = () => {
                                                     )}
                                                     <div className="flex flex-row items-start justify-between gap-12 w-full">
                                                         <div className="text-left">
-                                                            <p className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline">
+                                                            <p 
+                                                             onClick={() =>
+                                                                openUserPublicProfileHandler(
+                                                                    comment_replies?.user?.username
+                                                                )
+                                                            }
+                                                            className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline cursor-pointer">
                                                                 {comment_replies?.user?.name}
                                                             </p>
                                                             <p className="font-normal text-[#161823] text-base cursor-pointer">
