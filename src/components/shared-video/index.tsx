@@ -1,6 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import moment from 'moment';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -38,6 +38,19 @@ import saveIcon from './svg-components/save-icon.svg';
 import savedIcon from './svg-components/saved-icon.svg';
 import shareIcon from './svg-components/share-icon.svg';
 import whiteHeartIcon from './svg-components/white-filled-heart-icon.svg';
+import pauseButton from './svg-components/pause.svg';
+import playButton from './svg-components/play.svg';
+import autoScrollOn from './svg-components/autoscroll-on.svg';
+import autoScrollOnff from './svg-components/autoscroll-off.svg';
+import floatingPlayer from './svg-components/floating-player.svg';
+import reportFlag from './svg-components/report-flag.svg';
+import keyboard from './svg-components/keyboard.svg';
+import volumeMute from './svg-components/volume-mute.svg';
+import volumeUnmute from './svg-components/volume-unmute.svg';
+import optionsMenuHorizontal from './svg-components/options-menu-horizontal.svg';
+import fullScreen from './svg-components/fullscreen.svg';
+
+// css
 import styles from './video-page.module.scss';
 
 const VideoPage = () => {
@@ -81,8 +94,10 @@ const VideoPage = () => {
     const [musicTitle, setMusicTitle] = useState('');
     const [musicLink, setMusicLink] = useState('');
     const [isEmbedPopupVisible, setIsEmbedPopupVisible] = useState(false);
+    const [isVideoLoaded, setIsVideoLoaded] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const hideTimeoutRef = useRef<any>(null);
 
     const [isFollowed, setUserIsFollowed] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
@@ -92,6 +107,16 @@ const VideoPage = () => {
     const subDivRef = useRef<any>(null);
     const [isDarkTheme, setIsDarkTheme] = useState(false);
 
+    // Custom controls
+    const videoRef = useRef<any>(null);
+    const seekbarRef = useRef<any>(null);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [muted, setMuted] = useState(false);
+    const [playbackRate, setPlaybackRate] = useState(1.0);
+    const [isDragging, setIsDragging] = useState(false);
+
     // hooks for comment replies
     const [isCommentReplyTooltipVisible, setCommentReplyIsTooltipVisible] = useState(false);
     const [isCommentReplyReportElipsisVisible, setCommentReplyIsReportElipsisVisible] =
@@ -99,6 +124,7 @@ const VideoPage = () => {
     const [toggleCommentReplyImage, setToggleCommentReplyImage] = useState(false);
     const [likedReplies, setLikedReplies] = useState<{ [key: string]: boolean }>({});
     const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
+    const [visibleReplies, setVisibleReplies] = useState<any>({});
 
     const videoData = {
         videoId: selectedVideoId ?? videoId,
@@ -257,8 +283,6 @@ const VideoPage = () => {
         }
     };
 
-    const [visibleReplies, setVisibleReplies] = useState<any>({});
-
     const toggleRepliesVisibility = (commentId: number) => {
         setVisibleReplies((prev: any) => ({
             ...prev,
@@ -280,6 +304,7 @@ const VideoPage = () => {
                 }
             );
             const { data } = await fetchMediaResponse.json();
+            setIsVideoLoaded(false);
             setUserId(data?.user?._id);
             setName(data?.user?.name);
             setUserName(data?.user?.username);
@@ -356,6 +381,9 @@ const VideoPage = () => {
     };
 
     const loadVideoFromYouMayLikeSection = (videoId: number) => {
+        setIsVideoLoaded(false);
+        setIsPlaying(true);
+        setPlaybackRate(1.0);
         setSelectedVideoId(videoId);
         setYouMayLikeVideos([]);
         fetchMediaById(videoId);
@@ -500,8 +528,6 @@ const VideoPage = () => {
         window.open(`https://www.linkedin.com/shareArticle?url=${window.location.href}`, '_blank');
     };
 
-    const hideTimeoutRef = useRef<any>(null);
-
     const showPopupHandler = () => {
         if (hideTimeoutRef.current) {
             clearTimeout(hideTimeoutRef.current);
@@ -528,6 +554,89 @@ const VideoPage = () => {
 
     const openUserPublicProfileHandler = async (username: string) => {
         navigate(`/profile/${username}`);
+    };
+
+    const handleScroll = useCallback(() => {
+        if (subDivRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = subDivRef.current;
+            if (scrollTop + clientHeight >= scrollHeight - 0.5) {
+                setPageNumber((prevPageNumber) => prevPageNumber + 1);
+            }
+        }
+    }, []);
+
+    // Handle drag over seekbar
+    const handleSeekStart = (e: any) => {
+        setIsDragging(true);
+        updateSeekbar(e); // Initial update when the drag starts
+    };
+
+    const handleSeekEnd = () => {
+        setIsDragging(false);
+    };
+
+    const handleSeekMove = (e: any) => {
+        if (isDragging) {
+            updateSeekbar(e); // Update while dragging
+        }
+    };
+
+    const updateSeekbar = (e: { clientX: number }) => {
+        const seekbar = seekbarRef.current;
+        const rect = seekbar.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const newTime = (offsetX / seekbar.offsetWidth) * duration;
+        videoRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+    };
+
+    // Toggle Play/Pause
+    const togglePlayPause = () => {
+        const video = videoRef.current;
+        if (isPlaying) {
+            video.pause();
+        } else {
+            video.play();
+        }
+        setIsPlaying(!isPlaying);
+    };
+
+    // Mute/Unmute Video
+    const handleMute = () => {
+        setMuted(!muted);
+        videoRef.current.muted = !muted;
+    };
+
+    // Speed Control
+    const handleSpeedChange = (speed: SetStateAction<number>) => {
+        setPlaybackRate(speed);
+        videoRef.current.playbackRate = speed;
+    };
+
+    // Convert time to mm:ss format
+    const formatTime = (time: number) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60)
+            .toString()
+            .padStart(2, '0');
+        return `${minutes}:${seconds}`;
+    };
+
+    // Handle full screen
+    const handleFullscreen = () => {
+        const video = videoRef.current;
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.mozRequestFullScreen) {
+            // Firefox
+            video.mozRequestFullScreen();
+        } else if (video.webkitRequestFullscreen) {
+            // Chrome, Safari, and Opera
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) {
+            // IE/Edge
+            video.msRequestFullscreen();
+        }
     };
 
     // hooks
@@ -567,15 +676,6 @@ const VideoPage = () => {
         getExplorePageData();
     }, [pageNumber]);
 
-    const handleScroll = useCallback(() => {
-        if (subDivRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = subDivRef.current;
-            if (scrollTop + clientHeight >= scrollHeight - 0.5) {
-                setPageNumber((prevPageNumber) => prevPageNumber + 1);
-            }
-        }
-    }, []);
-
     useEffect(() => {
         const mainDiv = subDivRef.current;
         if (mainDiv) {
@@ -592,6 +692,52 @@ const VideoPage = () => {
         }
     });
 
+    // Custom player controls
+    useEffect(() => {
+        const video = videoRef.current;
+        const handleTimeUpdate = () => setCurrentTime(video.currentTime);
+        const handleLoadedData = () => setDuration(video.duration);
+
+        video.addEventListener('timeupdate', handleTimeUpdate);
+        video.addEventListener('loadeddata', handleLoadedData);
+
+        return () => {
+            video.removeEventListener('timeupdate', handleTimeUpdate);
+            video.removeEventListener('loadeddata', handleLoadedData);
+        };
+    }, []);
+
+    // Event listeners for global mouse move and mouse up
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener('mousemove', handleSeekMove);
+            document.addEventListener('mouseup', handleSeekEnd);
+        } else {
+            document.removeEventListener('mousemove', handleSeekMove);
+            document.removeEventListener('mouseup', handleSeekEnd);
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleSeekMove);
+            document.removeEventListener('mouseup', handleSeekEnd);
+        };
+    }, [isDragging]);
+
+    useEffect(() => {
+        const videoElement = videoRef.current;
+
+        const handleLoadedData = () => {
+            setIsVideoLoaded(true);
+        };
+
+        if (videoElement) {
+            videoElement.addEventListener('loadeddata', handleLoadedData);
+            return () => {
+                videoElement.removeEventListener('loadeddata', handleLoadedData);
+            };
+        }
+    }, []);
+
     return (
         <Layout isScrollActive={false} paddingBottomProp={true}>
             <div
@@ -600,16 +746,149 @@ const VideoPage = () => {
             >
                 <div className="w-full">
                     <div className="relative">
-                        <video
-                            className="h-[31.875rem] w-full object-contain rounded-t-md bg-[#161823] cursor-pointer"
-                            loop={true}
-                            controls={true}
-                            autoPlay={true}
-                            width="300px"
-                            preload="auto"
-                            playsInline
-                            src={videoUrl}
-                        />
+                        <div className="video-player-container">
+                            <video
+                                onClick={togglePlayPause}
+                                ref={videoRef}
+                                className="h-[31.875rem] w-full object-contain rounded-t-md bg-[#161823] cursor-pointer"
+                                controls={false}
+                                autoPlay={true}
+                                width="300px"
+                                preload="auto"
+                                playsInline
+                                src={videoUrl}
+                            />
+                        </div>
+                        {/* Progress bar */}
+                        {!isVideoLoaded && (
+                            <div className="custom-spinner absolute flex flex-row justify-center items-center top-[50%] left-[50%]">
+                                <CircularProgress className="h-7 w-7 text-white" />
+                            </div>
+                        )}
+                        {/* Custom Controls */}
+                        <div className="absolute bottom-0 w-full group select-none">
+                            {/* Seekbar */}
+                            <div
+                                ref={seekbarRef}
+                                className="w-full h-1 bg-gray-600 rounded cursor-pointer relative group-hover:h-2"
+                                onMouseDown={handleSeekStart}
+                            >
+                                <div
+                                    className={`h-full bg-white group-hover:h-2}`} // Adjust height on hover
+                                    style={{ width: `${(currentTime / duration) * 100}%` }}
+                                >
+                                    {/* Rounded ball at the end */}
+                                    <div
+                                        className={`absolute bg-white w-4 h-4 rounded-full group-hover:block hidden m-auto`} // Ball visibility
+                                        style={{
+                                            left: `calc(${
+                                                (currentTime / duration) * 100
+                                            }% + 0.5rem)`,
+                                            bottom: '-0.25rem',
+                                            transform: 'translateX(-60%)', // Center the ball on the end
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+
+                            {/* Controls - Play/Pause, Mute, Speed, Fullscreen */}
+                            <div className="flex justify-between items-center text-gray-300 py-2.5 px-4">
+                                {/* Play/Pause Button */}
+                                <div className="flex flex-row items-center gap-1.5">
+                                    <div onClick={togglePlayPause}>
+                                        {isPlaying ? (
+                                            <img
+                                                className="h-8 w-8 object-contain cursor-pointer"
+                                                src={pauseButton}
+                                            />
+                                        ) : (
+                                            <img
+                                                className="h-8 w-8 object-contain cursor-pointer"
+                                                src={playButton}
+                                            />
+                                        )}
+                                    </div>
+                                    {/* Time display */}
+                                    <div className="flex justify-between items-center text-gray-300 text-sm">
+                                        <span>
+                                            {formatTime(currentTime)} / {formatTime(duration)}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-row items-center gap-4">
+                                    {/* Floating Player */}
+                                    <div>
+                                        <img
+                                            className="h-7 w-7 object-contain cursor-pointer"
+                                            src={floatingPlayer}
+                                        />
+                                    </div>
+
+                                    {/* Scroll auto on/off */}
+                                    <div>
+                                        <img
+                                            className="h-7 w-7 object-contain cursor-pointer"
+                                            src={autoScrollOnff}
+                                        />
+                                    </div>
+
+                                    {/* Speed Button */}
+                                    <div className="relative inline-block text-left cursor-pointer">
+                                        <div
+                                            onClick={() =>
+                                                handleSpeedChange(
+                                                    playbackRate === 0.75
+                                                        ? 1.0
+                                                        : playbackRate === 1.0
+                                                        ? 1.25
+                                                        : playbackRate === 1.25
+                                                        ? 1.5
+                                                        : playbackRate === 1.5
+                                                        ? 2.0
+                                                        : 0.75
+                                                )
+                                            }
+                                            className=" font-medium text-[#646464]"
+                                        >
+                                            {playbackRate}
+                                            {playbackRate == 1 || playbackRate == 2 ? '.0' : ''}x
+                                        </div>
+                                    </div>
+
+                                    {/* Mute/Unmute Button */}
+                                    <div onClick={handleMute}>
+                                        {muted ? (
+                                            <img
+                                                className="h-7 w-7 object-contain cursor-pointer"
+                                                src={volumeMute}
+                                            />
+                                        ) : (
+                                            <img
+                                                className="h-7 w-7 object-contain cursor-pointer"
+                                                src={volumeUnmute}
+                                            />
+                                        )}
+                                    </div>
+
+                                    {/* Fullscreen */}
+                                    <div onClick={handleFullscreen} className="cursor-pointer">
+                                        <img
+                                            className="h-7 w-7 object-contain cursor-pointer"
+                                            src={fullScreen}
+                                        />
+                                    </div>
+
+                                    {/* Horitontal Menu */}
+                                    <div onClick={handleFullscreen} className="cursor-pointer">
+                                        <img
+                                            className="h-7 w-7 object-contain cursor-pointer"
+                                            src={optionsMenuHorizontal}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="absolute flex flex-col justify-between items-center gap-2.5 bottom-20 right-8 w-10 text-white">
                             {/* Video next and previous */}
                             <div className="text-center flex flex-col justify-between items-center gap-3 mb-2 shadow rounded-full bg-[#5755556a] px-2 py-1">
@@ -848,7 +1127,9 @@ const VideoPage = () => {
                         <div className="flex flex-row items-start gap-3 mt-3">
                             {/* Commenter avatar */}
                             {isUserLoggedIn() && (
-                                <div onClick={() => openUserPublicProfileHandler(commenterUsername)}>
+                                <div
+                                    onClick={() => openUserPublicProfileHandler(commenterUsername)}
+                                >
                                     {commenterAvatar && commenterAvatar !== '' ? (
                                         <img
                                             className="w-12 h-12 object-contain rounded-full cursor-pointer"
@@ -1181,13 +1462,15 @@ const VideoPage = () => {
                                                     )}
                                                     <div className="flex flex-row items-start justify-between gap-12 w-full">
                                                         <div className="text-left">
-                                                            <p 
-                                                             onClick={() =>
-                                                                openUserPublicProfileHandler(
-                                                                    comment_replies?.user?.username
-                                                                )
-                                                            }
-                                                            className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline cursor-pointer">
+                                                            <p
+                                                                onClick={() =>
+                                                                    openUserPublicProfileHandler(
+                                                                        comment_replies?.user
+                                                                            ?.username
+                                                                    )
+                                                                }
+                                                                className="font-semibold text-sm text-[#161823] cursor-pointer hover:underline cursor-pointer"
+                                                            >
                                                                 {comment_replies?.user?.name}
                                                             </p>
                                                             <p className="font-normal text-[#161823] text-base cursor-pointer">

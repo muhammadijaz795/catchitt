@@ -158,13 +158,13 @@ video::-webkit-media-controls-overflow-button {
   background-image: url('./assets/crossIcon.svg');
 }
 
-.ant-modal-root  {
-    position: fixed  !important;
-    inset: 0;
-    z-index: 100000;
-    overflow: auto;
-    outline: 0;
-    -webkit-overflow-scrolling: touch;
+.ant-modal-root {
+  position: fixed !important;
+  inset: 0;
+  z-index: 100000;
+  overflow: auto;
+  outline: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Apply styles to the globally-scoped renamed class */
@@ -172,4 +172,55 @@ video::-webkit-media-controls-overflow-button {
   /* Add your custom styles here */
   position: fixed;
   z-index: 1600; /* Adjust the z-index value as needed */
+}
+
+/* Hide the video spinner */
+video::-webkit-media-controls-loading-spinner {
+  display: none; /* Chrome/Safari */
+}
+
+video::-moz-media-controls-loading-spinner {
+  display: none; /* Firefox */
+}
+
+video::-ms-media-controls-loading-spinner {
+  display: none; /* Internet Explorer */
+}
+
+/* Fallback */
+video {
+  background: none; /* Ensure no default background */
+}
+
+/* Add a custom spinner */
+video {
+  position: relative;
+}
+
+video::after {
+  content: ' ';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #000;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+  display: none; /* Initially hide custom spinner */
+}
+
+video.loading::after {
+  display: block; /* Show spinner when video is loading */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
