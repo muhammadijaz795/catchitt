@@ -8,6 +8,7 @@ import { useUpdateEffect } from 'react-use';
 import likesIcon from '../../../public/images/icons/Heart2.svg';
 import {
     cross,
+    avatar,
     embedShare,
     facebookShare,
     linkedInShare,
@@ -18,7 +19,7 @@ import { openLoginPopup } from '../../redux/reducers';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import Layout from '../../shared/layout';
 import { isUserLoggedIn } from '../../utils/common';
-import { BASE_URL_FRONTEND, showToast, showToastSuccess } from '../../utils/constants';
+import { BASE_URL_FRONTEND, showToast, showToastSuccess, STATUS_CODE } from '../../utils/constants';
 import PopupForReport from '../profile/popups/PopupForReport';
 import atTheRateOf from './svg-components/at-the-rate-of.svg';
 import chevronDownIconVideo from './svg-components/chevron-down-icon-video.svg';
@@ -43,8 +44,8 @@ import playButton from './svg-components/play.svg';
 import autoScrollOn from './svg-components/autoscroll-on.svg';
 import autoScrollOnff from './svg-components/autoscroll-off.svg';
 import floatingPlayer from './svg-components/floating-player.svg';
-import reportFlag from './svg-components/report-flag.svg';
-import keyboard from './svg-components/keyboard.svg';
+import reportFlagWhite from './svg-components/report-flag-white.svg';
+import keyboardWhite from './svg-components/keyboard-white.svg';
 import volumeMute from './svg-components/volume-mute.svg';
 import volumeUnmute from './svg-components/volume-unmute.svg';
 import optionsMenuHorizontal from './svg-components/options-menu-horizontal.svg';
@@ -80,9 +81,11 @@ const VideoPage = () => {
     const [videoDescription, setVideoDescription] = useState('');
     const [videoComments, setVideoComments] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isCommentsLoading, setIsCommentsLoading] = useState(false);
     const [youMayLikeVideos, setYouMayLikeVideos] = useState<any>([]);
     const [muteStates, setMuteStates] = useState<any>([]);
     const [pageNumber, setPageNumber] = useState<number>(1);
+    const [commentPageNumber, setCommentPageNumber] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(8);
     const [commenterName, setCommenterName] = useState('');
     const [commenterAvatar, setCommenterAvatar] = useState('');
@@ -95,9 +98,30 @@ const VideoPage = () => {
     const [musicLink, setMusicLink] = useState('');
     const [isEmbedPopupVisible, setIsEmbedPopupVisible] = useState(false);
     const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+    const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
+    const [filteredUsers, setFilteredUsers] = useState<any>([]);
+    const [isMentioning, setIsMentioning] = useState(false);
+
+    const dummyUsers = [
+        { id: 1, name: 'John Doe', username: 'johndoe', avatar: avatar },
+        { id: 2, name: 'Jane Smith', username: 'janesmith', avatar: avatar },
+        { id: 3, name: 'Bob Johnson', username: 'bobjohnson', avatar: avatar },
+        { id: 4, name: 'Alice Adams', username: 'alice', avatar },
+        { id: 5, name: 'Arnold Anderson', username: 'arnold', avatar },
+        { id: 6, name: 'Angela Avery', username: 'angela', avatar },
+        { id: 7, name: 'Andrew Armstrong', username: 'andrew', avatar },
+        { id: 8, name: 'Ava Allen', username: 'ava', avatar },
+        { id: 9, name: 'Aaron Abbott', username: 'aaron', avatar },
+        { id: 10, name: 'Amelia Addison', username: 'amelia', avatar },
+        { id: 11, name: 'Austin Alexander', username: 'austin', avatar },
+        { id: 12, name: 'Aiden Anderson', username: 'aiden', avatar },
+        { id: 13, name: 'Annie Anthony', username: 'annie', avatar },
+    ];
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const hideTimeoutRef = useRef<any>(null);
+    const hideOptionsMenuTimeoutRef = useRef<any>(null);
 
     const [isFollowed, setUserIsFollowed] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
@@ -106,6 +130,9 @@ const VideoPage = () => {
     const [isFirstRender, setIsFirstRender] = useState(false);
     const subDivRef = useRef<any>(null);
     const [isDarkTheme, setIsDarkTheme] = useState(false);
+    const [mentionIndex, setMentionIndex] = useState(0);
+    const popupRef = useRef<any>(null);
+    const inputRef = useRef<any>(null);
 
     // Custom controls
     const videoRef = useRef<any>(null);
@@ -116,6 +143,8 @@ const VideoPage = () => {
     const [muted, setMuted] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1.0);
     const [isDragging, setIsDragging] = useState(false);
+    const [isAutoScroll, setIsAutoScroll] = useState(false);
+    const [commentHasNextPage, setCommentHasNextPage] = useState(true);
 
     // hooks for comment replies
     const [isCommentReplyTooltipVisible, setCommentReplyIsTooltipVisible] = useState(false);
@@ -177,6 +206,8 @@ const VideoPage = () => {
     // functions related to comment
     const atRateHandler = () => {
         setComment((prev) => prev + '@');
+        setIsMentioning(true);
+        inputRef.current.focus(); // Focus back on input
     };
 
     const commentLikeToggler = async (commentId: number) => {
@@ -311,10 +342,11 @@ const VideoPage = () => {
             setUserAvatar(data?.user?.avatar);
             setUserIsFollowed(data?.user?.isFollowed);
             setVideoLikes(data?.likes);
+            setVideoSaves(data?.savesCount);
             setVideoShares(data?.shares);
             setVideoViews(data?.views);
             setVideoDescription(data?.description);
-            setVideoComments(data?.comments);
+            // loading comments from different API
             setVideoUrl(data?.reducedVideoUrl);
             setIsSaved(data?.isSaved);
             setIsLiked(data?.isLiked);
@@ -326,7 +358,8 @@ const VideoPage = () => {
         }
     };
 
-    const toggleFollow = async () => {
+    const toggleFollow = async (e: any) => {
+        e.stopPropagation();
         if (isUserLoggedIn()) {
             if (safetyCheck(userId)) {
                 setFollowToggleLoading(true);
@@ -380,6 +413,36 @@ const VideoPage = () => {
         }
     };
 
+    const paginateComments = async () => {
+        if (commentHasNextPage) {
+            setIsCommentsLoading(true);
+            try {
+                const response = await fetch(
+                    `${API_KEY}/media-content/videos/${
+                        selectedVideoId ?? videoId
+                    }/comments?page=${commentPageNumber}&pageSize=${pageSize}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                const { data } = await response.json();
+                setIsCommentsLoading(false);
+                setCommentHasNextPage(data?.hasNextPage);
+                // Append comments
+                if (data?.data && Array.isArray(data?.data)) {
+                    setVideoComments((prevComments) => prevComments.concat(data?.data));
+                }
+            } catch (error) {
+                setIsCommentsLoading(false);
+                console.log('Error fetching comments : ', error);
+            }
+        }
+    };
+
     const loadVideoFromYouMayLikeSection = (videoId: number) => {
         setIsVideoLoaded(false);
         setIsPlaying(true);
@@ -409,6 +472,7 @@ const VideoPage = () => {
                 console.log('🚀 ~ fetchMediaById ~ error:', error);
             }
         } else {
+            // A mendatory else is a good programming convention
         }
     };
 
@@ -425,6 +489,15 @@ const VideoPage = () => {
     const loadNextVideoHandler = () => {
         if (switchVideoIndex < youMayLikeVideos?.length - 1) {
             setSwitchVideoIndex((prev) => prev + 1);
+        }
+    };
+
+    // Trigger next video when the current one ends
+    const scrollToNextVideoHandler = () => {
+        if (isAutoScroll) {
+            if (switchVideoIndex < youMayLikeVideos?.length - 1) {
+                setSwitchVideoIndex((prev) => prev + 1);
+            }
         }
     };
 
@@ -561,6 +634,7 @@ const VideoPage = () => {
             const { scrollTop, scrollHeight, clientHeight } = subDivRef.current;
             if (scrollTop + clientHeight >= scrollHeight - 0.5) {
                 setPageNumber((prevPageNumber) => prevPageNumber + 1);
+                setCommentPageNumber((prevCommentPageNumber) => prevCommentPageNumber + 1);
             }
         }
     }, []);
@@ -639,9 +713,172 @@ const VideoPage = () => {
         }
     };
 
+    const loadAutoScrollPreference = async () => {
+        try {
+            const loadAutoScrollPreferenceResponse = await fetch(
+                `${API_KEY}/profile/general-settings`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const { data } = await loadAutoScrollPreferenceResponse.json();
+            setIsAutoScroll(data?.autoScroll);
+        } catch (error) {
+            console.log('🚀 ~ loadAutoScrollPreference ~ error:', error);
+        }
+    };
+
+    const toggleAutoScroll = () => {
+        setIsAutoScroll(!isAutoScroll);
+    };
+
+    const toggleAutoScrollPreference = async () => {
+        try {
+            const toggleAutoScrollPreferenceResponse = await fetch(
+                `${API_KEY}/profile/general-settings`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ autoScroll: isAutoScroll }),
+                }
+            );
+            const { status } = await toggleAutoScrollPreferenceResponse.json();
+            if (status !== STATUS_CODE.OK) setIsAutoScroll(!isAutoScroll);
+        } catch (error) {
+            console.log('🚀 ~ toggleAutoScrollPreference ~ error:', error);
+        }
+    };
+
+    const showOptionsMenuHandler = () => {
+        if (hideOptionsMenuTimeoutRef.current) {
+            clearTimeout(hideOptionsMenuTimeoutRef.current);
+        }
+        setIsOptionsMenuVisible(true);
+    };
+
+    const hideOptionsMenuHandler = () => {
+        hideOptionsMenuTimeoutRef.current = setTimeout(() => {
+            setIsOptionsMenuVisible(false);
+        }, 200);
+        // 0.3 second delay
+    };
+
+    const handleInputChange = (e: { target: { value: string } }) => {
+        const inputValue = e.target.value;
+        setComment(inputValue);
+
+        // Check if there's an @ symbol followed by text, but ignore if it's part of a selected mention
+        const mentionTrigger = inputValue.match(/@(\w*)$/);
+        if (mentionTrigger && mentionTrigger[1].length > 0) {
+            setIsMentioning(true);
+        } else {
+            setIsMentioning(false);
+        }
+    };
+
+    const handleKeyDown = (e: { currentTarget: any; key: string; preventDefault: () => void }) => {
+        if (!isMentioning) return;
+
+        // Navigate down
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setMentionIndex((prevIndex) => Math.min(prevIndex + 1, filteredUsers.length - 1));
+        }
+
+        // Navigate up
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setMentionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+        }
+
+        // Select user with Enter key
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleUserClick(filteredUsers[mentionIndex]);
+        }
+
+        // Remove user mention with backspace
+        if (e.key === 'Backspace') {
+            const cursorPosition = e.currentTarget.selectionStart || 0;
+            const beforeCursor = comment.slice(0, cursorPosition);
+            const afterCursor = comment.slice(cursorPosition);
+
+            // Regex to detect the last mention in the text
+            const mentionRegex = /@\w*$/;
+            const lastMentionMatch = beforeCursor.match(mentionRegex);
+
+            if (lastMentionMatch) {
+                // If the cursor is at the end of the mention, clear it
+                const mentionStart = beforeCursor.lastIndexOf('@');
+                if (cursorPosition <= mentionStart + lastMentionMatch[0].length) {
+                    const newComment = beforeCursor.slice(0, mentionStart) + afterCursor;
+                    setComment(newComment);
+                    setIsMentioning(false);
+                    e.preventDefault(); // Prevent default backspace action
+                    return;
+                }
+            }
+
+            // Existing logic to handle when the comment slice is very short
+            if (comment.slice(comment.lastIndexOf('@')).length <= 1) {
+                setIsMentioning(false);
+            }
+        }
+    };
+
+    const handleUserClick = (user: { username: string | any[] }) => {
+        setComment((prevComment) => {
+            const mentionTag = `@${user?.username}`;
+            const mentionStartIndex = prevComment.lastIndexOf('@');
+            return (
+                prevComment.slice(0, mentionStartIndex) +
+                mentionTag +
+                ' ' +
+                prevComment.slice(mentionStartIndex + user?.username?.length + 1)
+            );
+        });
+        setIsMentioning(false);
+        // Restore focus to input field
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    };
+
+    const handleUserSelect = (user: { username: any }) => {
+        setComment((prevComment) => {
+            const lastMentionStart = prevComment.lastIndexOf('@');
+            const newComment = `${prevComment.slice(0, lastMentionStart)}@${user.username} `;
+            return newComment;
+        });
+        setIsMentioning(false);
+    };
+
     // hooks
+    useEffect(() => {
+        const handleClickOutside = (e: { target: any }) => {
+            if (popupRef.current && !popupRef.current.contains(e.target)) {
+                setIsMentioning(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
+        if (isUserLoggedIn()) {
+            loadAutoScrollPreference();
+        }
+        paginateComments();
         loadUserProfile();
         fetchMediaById();
         getExplorePageData();
@@ -675,6 +912,10 @@ const VideoPage = () => {
     useUpdateEffect(() => {
         getExplorePageData();
     }, [pageNumber]);
+
+    useUpdateEffect(() => {
+        paginateComments();
+    }, [commentPageNumber]);
 
     useEffect(() => {
         const mainDiv = subDivRef.current;
@@ -738,6 +979,27 @@ const VideoPage = () => {
         }
     }, []);
 
+    useUpdateEffect(() => {
+        toggleAutoScrollPreference();
+    }, [isAutoScroll]);
+
+    useEffect(() => {
+        if (isMentioning) {
+            // Filter users based on the current input
+            const query = comment.slice(comment.lastIndexOf('@') + 1).toLowerCase();
+            if (query) {
+                const filtered = dummyUsers.filter((user) =>
+                    user.username.toLowerCase().includes(query)
+                );
+                setFilteredUsers(filtered.slice(0, 5)); // Limit to 5 users
+            } else {
+                setFilteredUsers([]);
+            }
+        } else {
+            setFilteredUsers([]);
+        }
+    }, [comment, isMentioning]);
+
     return (
         <Layout isScrollActive={false} paddingBottomProp={true}>
             <div
@@ -757,6 +1019,7 @@ const VideoPage = () => {
                                 preload="auto"
                                 playsInline
                                 src={videoUrl}
+                                onEnded={scrollToNextVideoHandler}
                             />
                         </div>
                         {/* Progress bar */}
@@ -818,18 +1081,22 @@ const VideoPage = () => {
 
                                 <div className="flex flex-row items-center gap-4">
                                     {/* Floating Player */}
-                                    <div>
+                                    <div title="Floating Player" className="cursor-pointer">
                                         <img
-                                            className="h-7 w-7 object-contain cursor-pointer"
+                                            className="h-7 w-7 object-contain"
                                             src={floatingPlayer}
                                         />
                                     </div>
 
                                     {/* Scroll auto on/off */}
-                                    <div>
+                                    <div
+                                        title={`Auto scroll is ${isAutoScroll ? 'on' : 'off'}`}
+                                        className="cursor-pointer"
+                                        onClick={toggleAutoScroll}
+                                    >
                                         <img
-                                            className="h-7 w-7 object-contain cursor-pointer"
-                                            src={autoScrollOnff}
+                                            className="h-7 w-7 object-contain"
+                                            src={isAutoScroll ? autoScrollOn : autoScrollOnff}
                                         />
                                     </div>
 
@@ -857,38 +1124,72 @@ const VideoPage = () => {
                                     </div>
 
                                     {/* Mute/Unmute Button */}
-                                    <div onClick={handleMute}>
+                                    <div className="cursor-pointer" onClick={handleMute}>
                                         {muted ? (
                                             <img
-                                                className="h-7 w-7 object-contain cursor-pointer"
+                                                className="h-7 w-7 object-contain"
                                                 src={volumeMute}
                                             />
                                         ) : (
                                             <img
-                                                className="h-7 w-7 object-contain cursor-pointer"
+                                                className="h-7 w-7 object-contain"
                                                 src={volumeUnmute}
                                             />
                                         )}
                                     </div>
 
                                     {/* Fullscreen */}
-                                    <div onClick={handleFullscreen} className="cursor-pointer">
-                                        <img
-                                            className="h-7 w-7 object-contain cursor-pointer"
-                                            src={fullScreen}
-                                        />
+                                    <div
+                                        title="Full screen"
+                                        onClick={handleFullscreen}
+                                        className="cursor-pointer"
+                                    >
+                                        <img className="h-7 w-7 object-contain" src={fullScreen} />
                                     </div>
 
                                     {/* Horitontal Menu */}
-                                    <div onClick={handleFullscreen} className="cursor-pointer">
+                                    <div
+                                        onMouseEnter={showOptionsMenuHandler}
+                                        onMouseLeave={hideOptionsMenuHandler}
+                                        onClick={handleFullscreen}
+                                        className="cursor-pointer"
+                                    >
                                         <img
-                                            className="h-7 w-7 object-contain cursor-pointer"
+                                            className="h-7 w-7 object-contain"
                                             src={optionsMenuHorizontal}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {isOptionsMenuVisible && (
+                            <div
+                                onMouseEnter={showOptionsMenuHandler}
+                                onMouseLeave={hideOptionsMenuHandler}
+                                className="absolute bottom-16 mb-1 h-24 w-48 bg-[#1b1b1b] right-6 p-3 rounded-xl z-10 shadow-md shadow-black"
+                            >
+                                <div
+                                    onClick={() => setReportPopup(true)}
+                                    className="flex flex-row justify-start items-center gap-2.5 cursor-pointer"
+                                >
+                                    <img
+                                        className="h-7 w-7 object-contain"
+                                        src={reportFlagWhite}
+                                        alt="report"
+                                    />
+                                    <p className="text-base font-medium text-white">Report</p>
+                                </div>
+                                <div className="w-[95%] h-[0.05px] bg-white mt-2.5 mx-auto" />
+                                <div className="flex flex-row justify-start items-center gap-2.5 mt-2 cursor-pointer">
+                                    <img
+                                        className="h-7 w-7 object-contain"
+                                        src={keyboardWhite}
+                                        alt="report"
+                                    />
+                                    <p className="text-base font-medium text-white">Keyboard</p>
+                                </div>
+                            </div>
+                        )}
                         <div className="absolute flex flex-col justify-between items-center gap-2.5 bottom-20 right-8 w-10 text-white">
                             {/* Video next and previous */}
                             <div className="text-center flex flex-col justify-between items-center gap-3 mb-2 shadow rounded-full bg-[#5755556a] px-2 py-1">
@@ -1075,7 +1376,7 @@ const VideoPage = () => {
                                     </p>
                                 </div>
                                 <div
-                                    onClick={toggleFollow}
+                                    onClick={(e) => toggleFollow(e)}
                                     className="rounded-sm h-full bg-[#ff3b5c] hover:bg-[#e93654] px-4 py-2 cursor-pointer w-fit"
                                     style={{
                                         width: '100px',
@@ -1145,17 +1446,18 @@ const VideoPage = () => {
                                     )}
                                 </div>
                             )}
-
-                            <div className="pb-6 border-b border-b-[#0000001f] cursor-pointer w-full flex flex-row items-center gap-2.5">
+                            <div className="pb-6 border-b border-b-[#0000001f] cursor-pointer w-full flex flex-row items-center gap-2.5 relative">
                                 <div
                                     className={`bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${
                                         isUserLoggedIn() ? 'focus-within:border-[#16182333]' : ''
                                     } rounded-lg cursor-text pr-2 pl-4 w-full`}
                                 >
                                     <input
+                                        ref={inputRef}
                                         onClick={loginToCommentHandler}
                                         value={comment}
-                                        onChange={(e) => setComment(e.target.value)}
+                                        onChange={handleInputChange}
+                                        onKeyDown={handleKeyDown}
                                         maxLength={150}
                                         placeholder={`${
                                             isUserLoggedIn()
@@ -1192,6 +1494,7 @@ const VideoPage = () => {
                                         </div>
                                     )}
                                 </div>
+
                                 {isUserLoggedIn() && (
                                     <div onClick={addCommentHandler} className="mr-1">
                                         <p
@@ -1203,6 +1506,56 @@ const VideoPage = () => {
                                         >
                                             Post
                                         </p>
+                                    </div>
+                                )}
+
+                                {isMentioning && (
+                                    <div
+                                        ref={popupRef}
+                                        className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-fit z-10"
+                                    >
+                                        {filteredUsers.length > 0 ? (
+                                            filteredUsers.map(
+                                                (
+                                                    user: {
+                                                        id?: any;
+                                                        avatar?: any;
+                                                        name?: any;
+                                                        username: any;
+                                                    },
+                                                    index: number
+                                                ) => (
+                                                    <div
+                                                        key={user.id}
+                                                        className={`flex flex-row justify-start items-center cursor-pointer px-2 pt-2 hover:bg-gray-800 gap-3 border-b border-gray-100 pb-2 ${
+                                                            index === mentionIndex
+                                                                ? 'bg-gray-700'
+                                                                : ''
+                                                        } ${index === 0 ? 'rounded-t-lg' : ''} ${
+                                                            filteredUsers.length - 1 === index
+                                                                ? 'rounded-b-lg'
+                                                                : ''
+                                                        }`}
+                                                        onClick={() => handleUserSelect(user)}
+                                                    >
+                                                        <img
+                                                            className="object-contain w-10 h-10 rounded-full"
+                                                            src={user.avatar}
+                                                        />
+                                                        <div className="text-left text-white">
+                                                            <p className="text-base font-medium">
+                                                                {user.name}
+                                                            </p>
+                                                            <p className="text-xs font-normal">
+                                                                {user.username}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            )
+                                        ) : (
+                                            <div className="px-4 py-2 text-white">No users found</div>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -1237,7 +1590,7 @@ const VideoPage = () => {
                                         onClick={() =>
                                             openUserPublicProfileHandler(comment?.user?.username)
                                         }
-                                        className={`w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center`}
+                                        className="w-12 h-12 object-cover rounded-full bg-gray-800 flex justify-center items-center p-4"
                                     >
                                         <p className="text-lg text-white font-medium">
                                             {comment?.user?.name?.charAt(0)}
@@ -1453,7 +1806,7 @@ const VideoPage = () => {
                                                                     comment_replies?.user?.username
                                                                 )
                                                             }
-                                                            className={`w-6 h-6 object-cover rounded-full bg-gray-800 flex justify-center items-center cursor-pointer`}
+                                                            className={`w-7 h-7 object-contain rounded-full bg-gray-800 flex justify-center items-center cursor-pointer p-2`}
                                                         >
                                                             <p className="text-lg text-white font-medium">
                                                                 {comment?.user?.name?.charAt(0)}
@@ -1677,6 +2030,19 @@ const VideoPage = () => {
                             </div>
                         </div>
                     ))}
+                    {isCommentsLoading && (
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                margin: '1rem',
+                                width: '100%',
+                            }}
+                        >
+                            <CircularProgress />
+                        </div>
+                    )}
                 </div>
                 <div className="text-start flex-1 px-4 min-w-[22.5rem]">
                     <p className="font-semibold text-lg mb-2.5 -mt-2">You May Like</p>
