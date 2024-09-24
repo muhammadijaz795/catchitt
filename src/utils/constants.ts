@@ -3,9 +3,9 @@ import { appleAuth, defaultAvatar, emailOrPhone, googleAuth, googleIcon } from '
 
 export const API_KEY = process.env.VITE_API_URL;
 
-export const BASE_URL_FRONTEND = "http://localhost:5173";
+// export const BASE_URL_FRONTEND = "http://localhost:5173";
 // export const BASE_URL_FRONTEND = "https://stagingweb.seezitt.com";
-// export const BASE_URL_FRONTEND = "https://web.seezitt.com";
+export const BASE_URL_FRONTEND = "https://web.seezitt.com";
 
 export const uploadCategories = [
     '📷 People and Blogs',
