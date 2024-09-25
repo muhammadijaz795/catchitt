@@ -131,6 +131,7 @@ function ForDesktop(props: any) {
         // Function to fetch data from your API
         const fetchVideos = async () => {
             //   setLoading(true);
+            console.log('loadingVideo',loadingVideo);
             try {
 
                 // const response = await fetch(
@@ -147,7 +148,9 @@ function ForDesktop(props: any) {
                 // dispatch(getHomeVideos({tab : 2, token})).then(() => setLoading(false));
                 // setVideos(prevVideos => [...prevVideos, ...newVideos]);
                 const token = localStorage.getItem('token');
+                // setLoadingVideo(true);
                 dispatch(addMoreVideos({ tab: activeTab, token, page: page }));
+                console.log('loadingVideo',loadingVideo);
                 // setHasMore(newVideos.length > 0);
             } catch (error) {
                 console.error('Error fetching videos:', error);
@@ -166,10 +169,11 @@ function ForDesktop(props: any) {
     const handleScroll = () => {
         if (scrollableDivRef.current) {
             const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef.current;
-            console.log("scroll position: ", scrollHeight, scrollTop, clientHeight);
-            if (scrollTop + clientHeight >= scrollHeight) {
-                setPage((prevPage) => prevPage + 1);
+            console.log("scroll position: ", scrollHeight, (scrollTop + clientHeight + 100), scrollTop, clientHeight);
+            if (scrollTop + clientHeight + 100 >= scrollHeight) {
                 setLoadingVideo(true);
+                setPage((prevPage) => prevPage + 1);
+               
             }
         }
     };
@@ -478,8 +482,9 @@ function ForDesktop(props: any) {
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
-                                    {loadingVideo && <CircularProgress />}
+                                    {loadingVideo && 
+                                    <CircularProgress />}
+                              
                                 </div>
                             );
                         })
