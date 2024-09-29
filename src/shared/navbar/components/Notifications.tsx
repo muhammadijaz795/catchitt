@@ -14,6 +14,7 @@ import { FavoriteBorder,AlternateEmail, ChatBubbleOutlineSharp } from '@mui/icon
 const options = ['View profile', 'Get Coins', 'Settings', 'Switch Account', 'Logout'];
 import { useEffect, useState } from 'react';
 import { get, post } from '../../../axios/axiosClient';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -28,6 +29,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     const [activeClass, setActiveClass] = useState(style.active);
     const [notifications, setNotifications] = useState([]);
     const [notification, setNotification] = useState<Notification[]>([]);
+    const navigate = useNavigate();
 
     const open = Boolean(anchorEl);
     const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
@@ -136,22 +138,35 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     }
     
     const handleFollowBack = async (userId:any) => {
-      
+    console.log("handleFollowBack", userId)
         try {
-            const res = await post(`/profile/follow/${userId}`);
-            if (res?.data) {
-                // const response = await fetch(
-                //     API_KEY + `/notification`, {
-                //         method: 'GET',
-                //         headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-                //     }
-                // );
-                // const responseData = await response.json();
-                let conversationId = '';
-                const res = await post(`/chat/request/accept/${conversationId}`);
+            const response = await fetch(
+                API_KEY + `/profile/${userId}`, {
+                    method: 'GET',
+                    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+                }
+            );
+            const responseData = await response.json();
+            if(responseData.isFollowed == false){
+                const res = await post(`/profile/follow/${userId}`);
+                console.log("handleFollowBack", res);
                 if (res?.data) {
+                    console.log("handleFollowBack", res?.data)
                 }
             }
+            const LoggedInUserId = localStorage.getItem('userId');
+            const result = await post(`/chat/messages`,{
+                type: 'application/json',
+                data: {
+                    from: LoggedInUserId,
+                    to: userId,
+                    message: "Hi",
+                },
+            });
+            if (result?.data) {
+                console.log("Message sent");
+            }
+            navigate(`/profile/${userId}`);
         } catch (error) {
             console.log(error);
         }
