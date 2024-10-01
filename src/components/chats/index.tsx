@@ -80,6 +80,7 @@ function ChatsSec() {
         showToast,
         handleScroll,
     } = hook();
+    console.log("[activeUser", activeUser);
 
     return (
         <Layout
@@ -106,6 +107,7 @@ function ChatsSec() {
                             isGroup={activeUser?.isGroup}
                             safeMsg={markTheMsgSafe}
                             name={activeUser?.userName}
+                            profilePic={activeUser?.avatar}
                             moreOptionH={() => {
                                 if (activeUser?.isGroup) {
                                     setGroupOptions(!groupOptions);

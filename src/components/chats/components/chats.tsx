@@ -30,9 +30,9 @@ function UserChats({ data, OnChatClick, id, onUsersInputChangeHandler }: any) {
       {/* <div className={style.chatSearch}>
         <Search onInputChangeHandler={onUsersInputChangeHandler} placeholder={'Search'} />
       </div> */}
-      <div className={style.chatBlankMessage}>
+      {/* <div className={style.chatBlankMessage}>
         No messages yet
-      </div>
+      </div> */}
       <div className={style.userChats}>
         {data?.map((chat: any, index: number) => {
           return <UserChat id={id} {...chat} OnChatClick={OnChatClick} />;
