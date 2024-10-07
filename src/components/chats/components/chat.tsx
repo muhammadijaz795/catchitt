@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,7 +26,8 @@ const ITEM_HEIGHT = 60;
 
 
     function UserChat(props: any) {
-        const { userName, lastMsg, ispined, lastSeen, unReadMsgs, OnChatClick, userId, id, isGroup, userImage} = props || {};
+        const { userName, lastMsg, ispined, lastSeen, unReadMsgs, OnChatClick, userId, id, isGroup, userImage, conversationId} = props || {};
+        console.log("user chat props ", props);
         const {
             moreOptions,
             setMoreOptions,
@@ -88,8 +90,11 @@ const ITEM_HEIGHT = 60;
             showToast,
             handleScroll,
         } = hook();
+        const API_KEY = process.env.VITE_API_URL;
+        const token = localStorage.getItem('token');
         const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
         const open = Boolean(anchorEl);
+        const [muteN, setmuteN] = useState(false);
         const handleClick = (event: React.MouseEvent<HTMLElement>) => {
             setAnchorEl(event.currentTarget);
         };
@@ -102,15 +107,58 @@ const ITEM_HEIGHT = 60;
                 // blockH(reportH)
                 setreportPopup(true);
             }else if(text == "Block"){
-                onBlock();
+                
+                    setdangetBtnText('Block');
+                    setDengerText(`Are you sure you want to block ${activeUser?.userName}?`);
+                    setblockPopup(true);
+                    handleBlockUserFromChat();
               
             }else if(text == "Pin to top"){
                 console.log("Pin to top")
                 userPinH(userId)
             }else if(text == "Mute"){
                 console.log("Mute")
+                setmuteN(!muteN);
+            }else if(text == "Delete"){
+                console.log("Delete")
+                handleDeleteUserFromChat();
             }
-        };   
+            
+        };  
+        
+        const handleDeleteUserFromChat = async() => {
+            try {
+                const response = await fetch(
+                    `${API_KEY}/chat/conversation=${conversationId}`,
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                const res = await response.json();
+            } catch (error) {
+                console.log('Error deleting message', error);
+            }
+        };
+        
+        const handleBlockUserFromChat = async() => {
+            try {
+                const response = await fetch(`${API_KEY}/profile/${userId}/block`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const res = await response.json();
+            } catch (error) {
+                console.log('error blocking user', error);
+            }
+        };
+        
     return (
         <div
             className={style.chat}
