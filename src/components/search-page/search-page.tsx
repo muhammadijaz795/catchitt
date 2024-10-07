@@ -214,8 +214,6 @@ export const SearchPage = () => {
                 const hashtagsData = hashtags.data;
                 const soundsData = sounds.data;
                 // Update the state with the extracted data
-                console.log(`the search results: `);
-                console.log(responseData.data);
                 if (page != 1) {
                     setSearchResults((prevResults) => ({
                         usersData: [...prevResults.usersData, ...usersData],

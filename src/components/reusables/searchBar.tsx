@@ -151,8 +151,6 @@ const SearchBar: React.FC<InputFieldProps> = ({ onChange, placeholder }, props: 
                 const first3Sounds = sounds.data.slice(0, 3);
                 // Update the state with the extracted data
                 setSearchResultsData({ first3Users, first3Videos, first3Sounds, first3Hashtags });
-                console.log(`the search results: `);
-                console.log(responseData.data);
                 setFetchComplete(true)
                 // handleFetchActivity;
             }

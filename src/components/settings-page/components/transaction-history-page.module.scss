@@ -57,7 +57,6 @@ h6 {
     align-items: flex-start;
     justify-content: space-between;
     border-radius: 8px;
-
 }
 
 .container {
@@ -69,7 +68,6 @@ h6 {
     padding-right: 199px;
     padding-top: 0px;
 }
-
 
 .suggestedContent {
     width: 100%;
@@ -84,8 +82,7 @@ h6 {
     line-height: 1;
     gap: 16px;
     // row-gap: 32px;
-    background: var(--default-white, #FFF);
-
+    background: var(--default-white, #fff);
 }
 
 .settingsWrapper {
@@ -178,7 +175,6 @@ h6 {
     align-self: flex-end;
 }
 
-
 .rechargeModalHeader {
     display: flex;
     align-items: center;
@@ -208,10 +204,9 @@ h6 {
     justify-content: space-between;
     gap: 28px;
     border-radius: 6px;
-    background: var(--foundation-primary-primary-50, #EEEDF7);
+    background: var(--foundation-primary-primary-50, #eeedf7);
     margin-top: 16px;
     margin-bottom: 16px;
-
 }
 
 .warningMsg p {
@@ -243,7 +238,7 @@ h6 {
 
 .giftCoinsAmountText {
     margin: 0;
-    color: var(--foundation-body-body-300, #6B6B6B);
+    color: var(--foundation-body-body-300, #6b6b6b);
     text-align: center;
 
     /* Base/Medium */
@@ -279,7 +274,7 @@ h6 {
 
 .rechargeBtn p {
     margin: 0;
-    color: var(--default-white, #FFF);
+    color: var(--default-white, #fff);
 
     /* Base/Semibold */
     font-family: Poppins;
@@ -294,7 +289,6 @@ h6 {
     display: flex;
     justify-content: flex-end;
 }
-
 
 .giftsBottomDiv2 {
     display: flex;
@@ -346,9 +340,8 @@ h6 {
     /* 19.2px */
 }
 
-
 .coinsPrice {
-    color: var(--foundation-body-body-300, #6B6B6B);
+    color: var(--foundation-body-body-300, #6b6b6b);
     text-align: center;
 
     /* Small/Medium */
@@ -366,8 +359,8 @@ h6 {
     height: 80px;
     // flex-shrink: 0;
     border-radius: 4px;
-    border: 1px solid var(--foundation-primary-primary-50, #EEEDF7);
-    background: var(--default-white, #FFF);
+    border: 1px solid var(--foundation-primary-primary-50, #eeedf7);
+    background: var(--default-white, #fff);
     align-items: center;
     justify-content: space-between;
     padding: 16px 0px;
@@ -376,12 +369,12 @@ h6 {
 
 .price:hover {
     border: 1px solid var(--foundation-primary-primary-500, rgb(255, 59, 92));
-    background: var(--default-white, #FFF);
+    background: var(--default-white, #fff);
 }
 
 .coinsPriceCustom {
     width: 173.67px;
-    color: var(--foundation-body-body-300, #6B6B6B);
+    color: var(--foundation-body-body-300, #6b6b6b);
     text-align: center;
     margin-top: 4px;
     /* Extra Small/Medium */
@@ -438,7 +431,6 @@ h6 {
     background-color: #fafafa;
 }
 
-
 .accountCards {
     width: 100%;
     display: flex;
@@ -448,7 +440,7 @@ h6 {
     cursor: pointer;
 
     border-radius: 4px;
-    background: var(--foundation-primary-primary-50, #EEEDF7);
+    background: var(--foundation-primary-primary-50, #eeedf7);
 
     display: inline-flex;
     padding: 16px 24px;
@@ -502,7 +494,7 @@ h6 {
     justify-content: space-between;
     border-radius: 8px 8px 0px 0px;
     border-bottom: 1px solid#DFDFDF;
-    background: #EEEDF7;
+    background: #eeedf7;
 }
 
 .tableHeader h4 {
@@ -523,7 +515,7 @@ h6 {
     height: 67px;
     padding: 24px 32px;
     justify-content: space-between;
-    background: #FFFFFF;
+    background: #ffffff;
 }
 
 .tableField h4 {
@@ -536,4 +528,30 @@ h6 {
     font-weight: 400;
     line-height: 150%;
     /* 21px */
+}
+
+div.darkTheme {
+    background: black !important;
+    color: white !important;
+}
+
+div.darkTheme > p > h1,
+h2,
+h3,
+h4 {
+    color: white !important;
+}
+
+div.darkTheme p {
+    color: white !important;
+    background-color: #ffffff14 !important;
+}
+
+div.darkTheme span {
+    color: white !important;
+}
+
+div.darkTheme input {
+    background: rgb(255, 255, 255) !important;
+    color: black !important;
 }
