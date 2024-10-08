@@ -114,7 +114,7 @@ function Actions(props: any) {
                                             >
                                                 {/* <img src={copyMsg} alt="" /> */}
                                                 <p color="#222" className={style.dropdText}>
-                                                    Report
+                                                    Copy
                                                 </p>
                                             </div>
                                         </>

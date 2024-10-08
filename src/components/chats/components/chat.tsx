@@ -14,11 +14,14 @@ import { avatar, groupDefaultIcon, pinChat,defaultAvatar } from '../../../icons'
 import style from './chat.module.scss';
 import hook from '../hook/useChat';
 
+import PopupForReport from '../../../components/profile/popups/PopupForReport';
+import BlockPopup from '../../../shared/popups/BlockPopup';
+
 const options = [
   { text: 'Mute', icon: <NotificationsOffOutlinedIcon /> },
   { text: 'Delete', icon: <DeleteOutlinedIcon /> },
   { text: 'Pin to top', icon: <PushPinOutlinedIcon /> },
-  { text: 'Report', icon: <OutlinedFlagIcon /> },
+//   { text: 'Report', icon: <OutlinedFlagIcon /> },
   { text: 'Block', icon: <BlockOutlinedIcon /> },
 ];
 
@@ -106,6 +109,14 @@ const ITEM_HEIGHT = 60;
                 console.log("Report");
                 // blockH(reportH)
                 setreportPopup(true);
+                
+                // reportH={() => setreportPopup(true)}
+                // staredModal={() => {
+                    setshowShortSidebar(true);[]
+                    setstaredmodal(true);[]
+                    setMoreOptions(false);
+                // }}
+                
             }else if(text == "Block"){
                 
                     setdangetBtnText('Block');
@@ -234,6 +245,17 @@ const ITEM_HEIGHT = 60;
                     <div></div>
                 )}
             </div>
+            {/* <PopupForReport
+                openReport={reportPopup}
+                onReportClose={() => setreportPopup(false)}
+            /> */}
+            <BlockPopup
+                onBlock={onBlock}
+                dangetBtnText={dangetBtnText}
+                DangerText={DangerText}
+                openBlock={blockPopup}
+                onBlockClose={() => setblockPopup(false)}
+            />
         </div>
     );
 }
