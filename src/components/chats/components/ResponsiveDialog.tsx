@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -22,9 +23,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export default function ResponsiveDialog() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const API_KEY = process.env.VITE_API_URL;
-  const [PrivacyValue, setPrivacyValue] = React.useState('Friends');
+  const [PrivacyValue, setPrivacyValue] = useState('Friends');
   const token = localStorage.getItem('token');
 
   const handleClickOpen = () => {
@@ -39,21 +40,43 @@ export default function ResponsiveDialog() {
     setPrivacyValue((event.target as HTMLInputElement).value);
   };
   
+  
+  useEffect(() => {
+    getChatPrivacySettings();
+  }, []);
+  
+  const getChatPrivacySettings = async() => {
+      try {
+          const response = await fetch(`${API_KEY}/profile/privacy-settings`, {
+                method: 'GET',
+              headers: {
+                  'Content-type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+              }
+          });
+          const res = await response.json();
+          setPrivacyValue(res.data.allowMessagesFrom);
+      } catch (error) {
+          console.log('error blocking user', error);
+      }
+  };
+  
   const handleUserChatSetting = async() => {
-    try {
-        const response = await fetch(`${API_KEY}/profile/privacy-settings`, {
-            method: 'PATCH',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ allowMessagesFrom: PrivacyValue }),
-        });
-        const res = await response.json();
-    } catch (error) {
-        console.log('error blocking user', error);
-    }
-};
+      try {
+          const response = await fetch(`${API_KEY}/profile/privacy-settings`, {
+              method: 'PATCH',
+              headers: {
+                  'Content-type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ allowMessagesFrom: PrivacyValue }),
+          });
+          const res = await response.json();
+      } catch (error) {
+          console.log('error blocking user', error);
+      }
+      setOpen(false);
+  };
 
   return (
     <React.Fragment>
@@ -102,7 +125,7 @@ export default function ResponsiveDialog() {
               >
                 <FormControlLabel
                   value="Friends"
-                  control={<Radio style={{ color: PrivacyValue === 'Friends' ? 'rgb(255, 59, 92)' : '' }} />}
+                  control={<Radio style={{ color: (PrivacyValue == 'Friends' || PrivacyValue == 'Everyone') ? 'rgb(255, 59, 92)' : '' }} />}
                   label="Friends"
                 />
                 <FormControlLabel
