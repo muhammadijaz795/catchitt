@@ -4,21 +4,38 @@ import InputEmoji from 'react-input-emoji'
 import style from './DoMsg.module.scss';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
+import { Modal, CircularProgress } from '@mui/material';
+import { getExtension, file_type } from '../../../utils/common';
 
 const DoMsg = ({ onSubmit, msg, setMessage, setMessageType }: any) => {
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
-    const [upload, setUpload] = useState<string>('');
+    const [uploadedFile, setUploadedFile] = useState<string>('');
+    const [openUploadPic, setOpenUploadPic] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [filePreview, setFilePreview] = useState<string>('');
     // const inputRef = useRef(null);
 
     const uploadfile = async(e:any) => {
         
         const file = e.target.files[0];
+        let fileType = getExtension(file.name);
         if (file == undefined) {
           return false;
         }
         const reader = new FileReader();
+        reader.onload = (e:any) => {
+          if (file_type(fileType) == "Image"){
+            setFilePreview(e.target.result); 
+            setUploadedFile("Image");
+            setMessageType("Image");
+          }else{
+            setMessageType("Video");
+            setUploadedFile("Video");
+          }
+        };
         reader.readAsDataURL(file);
+      
 
         let formData = new FormData();
         formData.append("file", file);
@@ -27,11 +44,18 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType }: any) => {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
-          }
+          },
+          onUploadProgress: (progressEvent:any) => {
+            const progress = Math.round(
+              (100 * progressEvent.loaded) / progressEvent.total
+            );
+            setUploadProgress(progress);
+          },
         };
         let messageURL = await axios
           .post(`${API_KEY}/util/file`, formData, config)
           .then((responce) => {
+            setUploadProgress(0);
             console.log(responce, "responseresp");
             let msgUrl = responce.data.data;
             // let msgUrlType = e.target.type;
@@ -54,13 +78,16 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType }: any) => {
           });
           
           setMessage(messageURL); 
-          let msgUrlType = e.target.type;
-          setMessageType(msgUrlType);
-          console.log("responseresp",  msg,"responseresp new", messageURL, msgUrlType)
+          // let msgUrlType = e.target.type;
+          // setMessageType(msgUrlType);
+          console.log("responseresp",  msg,"responseresp new", messageURL)
           console.log("end resp")
-          onSubmit(e);
+          // onSubmit(e);
+          setOpenUploadPic(true);
       };
-    
+
+      // const openUploadPic = () => { setOpenUploadPic(true); }
+      const closeUploadPic = () => { setOpenUploadPic(false); }
     
     return (
         <div className={style.doMsgContainer}>
@@ -77,7 +104,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType }: any) => {
                     Send
                 </p> */}
                 <input
-                    onChange={(e: any) => {setMessage(e.target.value), setMessageType(e.target.type)} }
+                    onChange={(e: any) => {setMessage(e.target.value), setMessageType('Text')} }
                     type="text"
                     placeholder="Write a message..."
                     value={msg}                   
@@ -95,6 +122,37 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType }: any) => {
                     <img src={mic} alt="" />
                 </div> */}
             </div>
+            <Modal open={openUploadPic}>
+            
+                <div onClick={(e) => e.stopPropagation()} className={style.popupbackground}>
+                    <h6>Upload File Preview</h6>
+                    <div>
+                    {uploadedFile == "Image" && <img src={filePreview}  alt="Preview"
+                    style={{ height: "150px", width: "350px" }} /> }
+                    {uploadProgress > 0 && (
+                      <div className="progress-bar-container text-center">
+                        <CircularProgress
+                          variant="determinate"
+                          value={uploadProgress}
+                          size={45}
+                          thickness={4}
+                        />
+                        <span className="progress-counter"> {uploadProgress}%</span>
+                      </div>
+                    )}
+                    <div style={{  }} >
+                       <center>
+                          <button onClick={(e)=>{onSubmit(e),closeUploadPic() }} className={style.btn}>
+                              Send
+                          </button>
+                          <button onClick={closeUploadPic} className={style.btn}>
+                              Cancel
+                          </button>
+                        </center>
+                      </div>
+                    </div>
+                </div>
+        </Modal>
         </div>
     );
 };

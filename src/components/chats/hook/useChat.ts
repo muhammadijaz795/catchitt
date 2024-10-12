@@ -417,7 +417,7 @@ function useChat() {
             to: loggedUserId != receiver ? receiver: sender,
             message: msg,
             from: loggedUserId == sender ? sender: sender,
-            type: 'Text',
+            type: msgType,
             accessToken:token,
         };
         // Get current time
@@ -542,6 +542,7 @@ function useChat() {
                             isrecevied: element?.receiverId?._id == loggedUserId ? false : true,
                             stared: element?.isStarred,
                             isRead: element?.isRead,
+                            type: element?.type,
                             replysms: element?.repliedMessage
                                 ? element?.repliedMessage?.message
                                 : false,
@@ -591,6 +592,7 @@ function useChat() {
                             isrecevied: element?.receiverId?._id == loggedUserId ? false : true,
                             stared: element?.isStarred,
                             isRead: element?.isRead,
+                            type: element?.type,
                             replysms: element?.repliedMessage
                                 ? element?.repliedMessage?.message
                                 : false,

@@ -141,6 +141,8 @@ function Actions(props: any) {
                                                 </div>
                                             </div>
                                         ) : (
+                                            <>
+                                            {item?.type == 'Text' &&
                                             <p
                                                 onClick={(e) => e.stopPropagation()}
                                                 className={`${
@@ -150,7 +152,12 @@ function Actions(props: any) {
                                                 }`}
                                             >
                                                 {item.msg}
-                                            </p>
+                                            </p>  }
+                                            
+                                            {item?.type == 'Image' &&
+                                                <img src={item.msg} />
+                                            }
+                                            </>
                                         )}
                                     </LongPressButton>
                                 </div>

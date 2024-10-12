@@ -65,3 +65,26 @@
   opacity:0;
   position:absolute;
 }
+
+.popupbackground{ 
+  display: flex;
+  padding: 32px;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  border-radius: 8px;
+  background: #fff;
+  width: 433px;
+  height: 360px;
+  outline: 0;
+  padding: 32px;
+  flex-direction: column;
+  margin:25vh auto;
+}
+
+.popupbackground > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}

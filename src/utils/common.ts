@@ -20,3 +20,62 @@ export const isUserLoggedInData = () => {
   }
   return "";
 };
+
+export const getExtension = (filename:any) => {
+  var parts = filename.split('.');
+  return parts[parts.length - 1];
+}
+
+export const file_type = (val:any) => {
+  let ext = getExtension(val);
+  let type = '';
+  switch (ext.toLowerCase()) {
+    case 'jpeg':
+    case 'jpg':
+    case 'png':
+    case 'tiff':
+    case 'webp':
+    case 'gif':
+    case 'bmp':
+    case 'ppm':
+    case 'pgm':
+    case 'pnm':
+    case 'pbm':
+    case 'svg':
+    type = 'Image';
+    break;
+    case 'mp4':
+    case 'qt':
+    case 'flv':
+    case 'mpeg':
+    case 'webm':
+    case 'avi':
+    case 'mkv':
+    case 'mov':
+    type = 'Video';
+    break;
+    // case 'mp3':
+    // case 'wav':
+    // type = 'audio';
+    // break;
+    // case 'pdf' : 
+    // type = 'pdf';
+    // break;
+    // case 'doc':
+    // case 'docx': 
+    // type = 'doc';
+    // break;
+    // case 'pptx': 
+    // case 'ppt': 
+    // type = 'ppt';
+    // break;
+    // case 'xlsx': 
+    // case 'csv': 
+    // type = 'xlsx';
+    // break;
+    // case 'txt': 
+    // type = 'txt';
+    // break;
+    }
+  return type;
+}
