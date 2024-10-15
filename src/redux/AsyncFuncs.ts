@@ -172,6 +172,23 @@ export const addMoreVideos: any = createAsyncThunk(
     }
 );
 
+export const videoNotInterestedHandle: any = createAsyncThunk(
+    'get/not-interested/video',
+    async (postMediaId: string) => {
+        try {
+            const res = await post(`media-content/mark-as-not-interested/${postMediaId}`);
+
+            if (res?.data) {
+                    return { id:postMediaId };
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
+
 export const getRandomUsers: any = createAsyncThunk('get/random/users', async () => {
     try {
         const response = await fetch(`${API_KEY}/profile/public/suggested-users?page=1`, {

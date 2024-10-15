@@ -139,6 +139,7 @@ function Action({
                     <MORE_MENU_HOME
                         url={post.originalUrl}
                         visibleReportPopup={visibleReportPopup}
+                        postMediaId={post?.mediaId }
                     />
                 )}
             </div>
@@ -149,7 +150,7 @@ function Action({
             ) : obj?.actionType === 'share' ? (
                 <p className={style.actionC}>{post.shares || 0}</p>
             ) : obj?.actionType === 'fvrt' ? (
-                <p className={style.actionC}>{post.mediaId ? 'Saved' : 'Save'}</p>
+                <p className={style.actionC}>{post.isSaved ? 'Saved' : 'Save'}</p>
             ) : obj?.actionType === 'more' ? (
                 <p className={style.actionC}>More</p>
             ) : null}

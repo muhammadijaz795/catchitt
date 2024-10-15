@@ -1,4 +1,5 @@
 import { alpha, styled } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
@@ -7,14 +8,21 @@ import * as React from 'react';
 import { copyLink, notAllowed, report, saveVideo, send } from '../../../icons';
 import style from './index.module.scss';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
+import {
+    showToastSuccess,
+} from '../../../utils/constants';
+import { videoNotInterestedHandle } from '../../../redux/AsyncFuncs';
 
-export default function MORE_MENU_HOME({ visibleReportPopup, url }: any) {
+export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const open = Boolean(anchorEl);
     const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+    const API_URL = process.env.VITE_API_URL;
+    const token = localStorage.getItem('token');
+    const dispatch = useDispatch();
 
     const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
         setSelectedIndex(index);
@@ -23,6 +31,12 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url }: any) {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+    
+    const notInterestedInVideo = async (postMediaId:any) => {
+        console.log(postMediaId);
+        showToastSuccess('Media marked as not interested successfully');
+        dispatch(videoNotInterestedHandle(postMediaId));
     };
 
     const StyledMenu = styled((props: MenuProps) => (
@@ -118,16 +132,18 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url }: any) {
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px', position: 'relative' }}>
                     <div className={style.menuItem} >
                         <img src={saveVideo} />
-                        <a download={true} style={{
+                        <a 
+                        // download={true} 
+                        target='_blank' style={{
                             width: '100%', height: '100%',position: 'absolute',
                             top: 0,
                             left: 0,
                             background: 'transparent !important'
-                        }} href={url}></a>
+                        }} href={url} download></a>
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Save video</p>
                     </div>
                 </MenuItem>
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                <MenuItem onClick={()=>{ notInterestedInVideo(postMediaId),handleClose() }} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
                         <img src={notAllowed} />
                         <p className={`${style.p} ${style.black_500}`}>Not interested</p>

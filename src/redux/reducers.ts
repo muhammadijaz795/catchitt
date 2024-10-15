@@ -11,6 +11,7 @@ import {
     videoLikehandle,
     videoSavehandle,
     addMoreVideos,
+    videoNotInterestedHandle,
 } from './AsyncFuncs';
 import loginSlice from './reducers/auth';
 import isuploading from './reducers/upload';
@@ -157,6 +158,24 @@ const homeVideos: any = createSlice({
         builder.addCase(addMoreVideos.fulfilled, (state: any, action: any) => {
             // @ts-ignore
             let filteredData =  [...state, ...action.payload]
+            return filteredData;
+        });
+        builder.addCase(videoNotInterestedHandle.fulfilled, (state: any, action: any) => {
+            // @ts-ignore
+            // let filteredData = state.map((element: any) => {
+            //     if (element.mediaId === action.payload.id) {
+            //         return {
+            //             ...element,
+            //             isLiked: !element.isLiked,
+            //             likes: !element.isLiked ? element.likes + 1 : element.likes - 1,
+            //         };
+            //     } else {
+            //         return element;
+            //     }
+            // });
+            let filteredData = state.filter(element =>
+                (element.mediaId  !== action.payload.id
+              ));
             return filteredData;
         });
     },
