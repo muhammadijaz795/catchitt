@@ -1,5 +1,6 @@
 import React from 'react'
 import style from './reasonOfReport.module.scss'
+import { Link } from 'react-router-dom';
 interface Props {
     onclose: any,
 }
@@ -13,7 +14,7 @@ function ThanksForReport({ onclose }: Props) {
             <p className={style.thankyou}>Thank you</p>
             <p className={style.desc}>Your report helps us provide a safe and supportive environment. </p>
             <button className={style.done} onClick={onclose}>Done</button>
-            <button className={style.view}>View your reports</button>
+            <Link to="/myreports" reloadDocument={false} style={{ textDecoration: 'none' }}><button className={style.view} >View your reports</button></Link>
         </div>
     )
 }
