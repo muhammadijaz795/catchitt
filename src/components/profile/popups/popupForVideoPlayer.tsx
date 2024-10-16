@@ -165,7 +165,7 @@ export default function PopupForVideoPlayer({
             setIsLiked(!isLiked);
             try {
                 const likeUnlikeVideo = await fetch(
-                    `${API_KEY}/media-content/like/${selectedVideoId ?? info?.mediaId}`,
+                    `${API_KEY}/media-content/like/${info?.mediaId}`,
                     {
                         method: 'POST',
                         headers: {
@@ -214,7 +214,7 @@ export default function PopupForVideoPlayer({
             setIsSaved(!isSaved);
             try {
                 const likeUnlikeVideo = await fetch(
-                    `${API_KEY}/media-content/collections/${selectedVideoId ?? info?.mediaId}`,
+                    `${API_KEY}/media-content/collections/${info?.mediaId}`,
                     {
                         method: 'POST',
                         headers: {
@@ -258,7 +258,7 @@ export default function PopupForVideoPlayer({
 
     const copyHandler = (msg: string) => {
         navigator.clipboard
-            .writeText(`${BASE_URL_FRONTEND}/${userName}/video/${selectedVideoId}`)
+            .writeText(`${BASE_URL_FRONTEND}/${userName}/video/${info?.mediaId}`)
             .then(() => {
                 showToast(msg);
                 // toast.success('Link Copied');
@@ -273,7 +273,7 @@ export default function PopupForVideoPlayer({
         setIsCommentsLoading(true);
         try {
             const response = await fetch(
-                `${API_KEY}/media-content/videos/${selectedVideoId ?? info?.mediaId
+                `${API_KEY}/media-content/videos/${info?.mediaId
                 }/comments?page=${commentPageNumber}&pageSize=${pageSize}`,
                 {
                     method: 'GET',
@@ -567,7 +567,7 @@ export default function PopupForVideoPlayer({
             if (addCommentLoading) return;
             setAddCommentLoading(true);
             const addCommentResponse = await fetch(
-                `${API_KEY}/media-content/comment/${selectedVideoId}`,
+                `${API_KEY}/media-content/comment/${info?.mediaId}`,
                 {
                     method: 'POST',
                     headers: {
@@ -580,7 +580,7 @@ export default function PopupForVideoPlayer({
             await addCommentResponse.json();
             setComment('');
             showToastSuccess('Comment posted');
-            fetchMediaById(selectedVideoId ?? info?.mediaId);
+            fetchMediaById(info?.mediaId);
             setAddCommentLoading(false);
             setVideoComments([]);
             paginateComments();
@@ -743,7 +743,7 @@ export default function PopupForVideoPlayer({
                                             </p>
                                         </div>
                                         {/* {info?.locationPlace != null && ( */}
-                                        <div className="flex flex-row items-center w-fit bg-[#252525] rounded-md py-1 px-1.5 mt-2.5 gap-2 cursor-pointer">
+                                        {/* <div className="flex flex-row items-center w-fit bg-[#252525] rounded-md py-1 px-1.5 mt-2.5 gap-2 cursor-pointer">
                                             <div className="rounded-sm bg-[#04c39b] p-[0.09rem] flex justify-center items-center">
                                                 <img
                                                     className="h-3 w-3 object-contain"
@@ -751,10 +751,10 @@ export default function PopupForVideoPlayer({
                                                     alt="location"
                                                 />
                                             </div>
-                                            {/* <p className="text-white font-normal text-xs">
+                                            <p className="text-white font-normal text-xs">
                                                 Karachi
-                                            </p> */}
-                                        </div>
+                                            </p>
+                                        </div> */}
                                         {/* )} */}
                                     </div>
                                     {/* Social icons */}
@@ -884,7 +884,7 @@ export default function PopupForVideoPlayer({
                                                 Comments ({videoComments?.length})
                                             </p>
                                         </div>
-                                        <div
+                                        {/* <div
                                             onClick={() => setCurrentTab(1)}
                                             style={{
                                                 borderBottom:
@@ -895,7 +895,7 @@ export default function PopupForVideoPlayer({
                                             <p className="text-white text-sm font-bold">
                                                 Creator videos
                                             </p>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     {/* All comments section */}
