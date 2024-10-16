@@ -269,7 +269,7 @@ function useChat() {
 
         (socketRef.current as any).on('connect', () => {
             setIsConnected(true);
-            console.log('Connected to socket server.');
+            console.log('Connected to socket server.', (socketRef.current as any));
             let addUserObject = {userId:sender, accessToken:token };
             (socketRef.current as any).emit('add-user', addUserObject);
         });
