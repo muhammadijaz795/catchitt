@@ -3,6 +3,7 @@ import style from './forwardUsers.module.scss';
 import { useEffect, useState } from 'react';
 import { avatar, duet, sendSvgPopup } from '../../../icons';
 import Search from '../../navbar/components/Search';
+import { get, post } from '../../../axios/axiosClient';
 
 function Forwardusers(props: any) {
     const { onOpen, onClose } = props || {};
@@ -44,7 +45,7 @@ function Forwardusers(props: any) {
         }
     };
     
-    const handleMessage = async (friendId, videoLink) => {
+    const handleMessage = async (friendId:any, videoLink:any) => {
         console.log("handleMessage", userId)
             try {
                     const result = await post(`/chat/messages`,{
