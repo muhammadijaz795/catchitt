@@ -39,6 +39,7 @@ import { defaultAvatar, linkedInShare, twitterShare } from '../../../icons';
 import { toast, ToastContainer } from 'react-toastify';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Forwardusers from '../../../shared/popups/shareTo/Forwardusers';
+import CountUp from 'react-countup';
 
 export default function PopupForVideoPlayer({
     videoModal,
@@ -58,7 +59,7 @@ export default function PopupForVideoPlayer({
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
+    // const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
     const [videoLikes, setVideoLikes] = useState<number>(0);
     const [videoComments, setVideoComments] = useState<any>([]);
     const [videoSaves, setVideoSaves] = useState<number>(0);
@@ -73,7 +74,7 @@ export default function PopupForVideoPlayer({
     const [currentTab, setCurrentTab] = useState(0);
     const [isCommentsLoading, setIsCommentsLoading] = useState<boolean>(false);
     const [isReportElipsisVisible, setIsReportElipsisVisible] = useState<boolean>(false);
-    const [totalComments, setTotalComments] = useState<boolean>(true);
+    const [totalComments, setTotalComments] = useState<any>(null);
     const [commentPageNumber, setCommentPageNumber] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(8);
     const [currentCommentIndex, setCurrentCommentIndex] = useState(-1);
@@ -113,7 +114,7 @@ export default function PopupForVideoPlayer({
     const [sendPopup, setSendPopup] = useState(false);
 
     const videoData = {
-        videoId: selectedVideoId,
+        videoId: info?.mediaId,
         username: userName,
         caption: videoDescription,
         tags: ['support', 'fypシ゚viral', 'foryou', 'viral'],
@@ -269,12 +270,12 @@ export default function PopupForVideoPlayer({
         dispatch(openLoginPopup());
     };
 
-    const paginateComments = async () => {
+    const paginateComments = async (fromStart = false) => {
         setIsCommentsLoading(true);
         try {
             const response = await fetch(
                 `${API_KEY}/media-content/videos/${info?.mediaId
-                }/comments?page=${commentPageNumber}&pageSize=${pageSize}`,
+                }/comments?page=${fromStart? 1 : commentPageNumber}&pageSize=${pageSize}`,
                 {
                     method: 'GET',
                     headers: {
@@ -284,19 +285,19 @@ export default function PopupForVideoPlayer({
                 }
             );
             const { data } = await response.json();
-            console.log('🚀 ~ paginateComments ~ data', data);
+            // console.log('🚀 ~ paginateComments ~ data', data);
             setIsCommentsLoading(false);
             setTotalComments(data?.totalItems);
 
             // check first next page is available or not
-            if (data?.hasNextPage && commentPageNumber !== data?.totalPages) {
+            if (data?.hasNextPage && commentPageNumber < data?.totalPages) {
                 setCommentPageNumber(commentPageNumber + 1);
             }
 
             // Append comments
             if (data?.data && Array.isArray(data?.data)) {
                 setVideoComments((prevComments: string | any[]) =>
-                    prevComments.concat(data?.data)
+                    fromStart? data?.data : prevComments.concat(data?.data)
                 );
             }
 
@@ -330,7 +331,7 @@ export default function PopupForVideoPlayer({
                     }
                 );
                 await addCommentResponse.json();
-                fetchMediaById(selectedVideoId);
+                fetchMediaById(info?.mediaId);
             } catch (error) {
                 console.log('🚀 ~ commentLikeToggler ~ error:', error);
             }
@@ -388,7 +389,7 @@ export default function PopupForVideoPlayer({
             setIsReplyToCommentClicked(true);
             try {
                 const addCommentResponse = await fetch(
-                    `${API_KEY}/media-content/comment/${selectedVideoId}`,
+                    `${API_KEY}/media-content/comment/${info?.mediaId}`,
                     {
                         method: 'POST',
                         headers: {
@@ -401,7 +402,7 @@ export default function PopupForVideoPlayer({
                 await addCommentResponse.json();
                 setCommentReply('');
                 showToastSuccess('Comment reply posted');
-                fetchMediaById(selectedVideoId);
+                fetchMediaById(info?.mediaId);
             } catch (error) {
                 console.log('🚀 ~ addCommentHandler ~ error:', error);
             }
@@ -430,7 +431,7 @@ export default function PopupForVideoPlayer({
                 }
             );
             await addCommentResponse.json();
-            fetchMediaById(selectedVideoId);
+            fetchMediaById(info?.mediaId);
         } catch (error) {
             console.log('🚀 ~ commentReplyLikeToggler ~ error:', error);
         }
@@ -582,8 +583,7 @@ export default function PopupForVideoPlayer({
             showToastSuccess('Comment posted');
             fetchMediaById(info?.mediaId);
             setAddCommentLoading(false);
-            setVideoComments([]);
-            paginateComments();
+            paginateComments(true);
         } catch (error) {
             console.log('🚀 ~ addCommentHandler ~ error:', error);
             setAddCommentLoading(false);
@@ -607,13 +607,42 @@ export default function PopupForVideoPlayer({
         setFollowLoading(false); // Set loading state back to false after API call
     };
 
+    const onCloseCleanUp = () => {
+        setSendPopup(false);
+        setReportPopup(false);
+        setComment('');
+        setCommentReply('');
+        setIsMentioning(false);
+        setIsReplyToCommentClicked(false);
+        setLikedComments({});
+        setLikedReplies({});
+        setVisibleReplies({});
+        setCurrentCommentIndex(-1);
+        setCurrentCommentReplyIndex(-1);
+        setMentionIndex(0);
+        setFilteredUsers([]);
+        setAddCommentLoading(false);
+        setCommentPageNumber(1);
+        setTotalComments(null);
+        setVideoComments([]);
+        setVideoLikes(0);
+        setVideoSaves(0);
+        setVideoShares(0);
+        setVideoViews(0);
+        setIsLiked(false);
+        setIsSaved(false);
+        setIsEmbedPopupVisible(false);
+        setIsCommentsLoading(false);
+        setIsReportElipsisVisible(false);
+        setIsTooltipVisible(false);
+        onclose();
+    };
+
+
     useEffect(() => {
-        setSelectedVideoId(info?.mediaId);
+        // setSelectedVideoId(info?.mediaId);
         setTextToCopy(`${BASE_URL_FRONTEND}/${userName}/video/${info?.mediaId}`);
-        return () => {
-            setSelectedVideoId(null);
-            setVideoComments([]);
-        }
+      
     }, [info]);
 
 
@@ -631,10 +660,6 @@ export default function PopupForVideoPlayer({
             paginateComments();
             loadUserProfile();
             fetchMediaById(info?.mediaId);
-        }
-        return () => {
-            setSelectedVideoId(null);
-            setVideoComments([]);
         }
     }, [videoModal]);
 
@@ -669,7 +694,7 @@ export default function PopupForVideoPlayer({
                                     ></div>
                                     <div className="absolute top-0 w-full p-3 ">
                                         <div
-                                            onClick={onclose}
+                                            onClick={onCloseCleanUp}
                                             className="w-10 h-10 bg-[#54545480] rounded-full cursor-pointer"
                                         >
                                             <img
@@ -771,7 +796,7 @@ export default function PopupForVideoPlayer({
                                                     />
                                                 </div>
                                                 <p className="font-medium text-sm text-white">
-                                                    {videoLikes}
+                                                <CountUp start={0} delay={0.1} duration={0.2} end={videoLikes} />
                                                 </p>
                                             </div>
                                             <div className="flex flex-row justify-center items-center gap-1.5 cursor-pointer">
@@ -783,7 +808,7 @@ export default function PopupForVideoPlayer({
                                                     />
                                                 </div>
                                                 <p className="font-medium text-sm text-white">
-                                                    {videoComments?.length}
+                                                    <CountUp start={0} delay={0.1} duration={0.2} end={videoComments?.length} />
                                                 </p>
                                             </div>
                                             <div className="flex flex-row justify-center items-center gap-1.5 cursor-pointer">
@@ -795,7 +820,7 @@ export default function PopupForVideoPlayer({
                                                     />
                                                 </div>
                                                 <p className="font-medium text-sm text-white">
-                                                    {videoSaves}
+                                                    <CountUp start={0} delay={0.1} duration={0.2} end={videoSaves} />
                                                 </p>
                                             </div>
                                         </div>
@@ -881,7 +906,7 @@ export default function PopupForVideoPlayer({
                                             className="flex justify-center items-center py-2 px-6 flex-1 cursor-pointer"
                                         >
                                             <p className="text-white text-sm font-bold">
-                                                Comments ({videoComments?.length})
+                                                Comments (<CountUp start={0} delay={0.1} duration={0.2} end={videoComments?.length} />)
                                             </p>
                                         </div>
                                         {/* <div
@@ -902,7 +927,7 @@ export default function PopupForVideoPlayer({
                                     <InfiniteScroll
                                         dataLength={videoComments.length}
                                         next={paginateComments}
-                                        hasMore={videoComments.length < totalComments}
+                                        hasMore={videoComments.length < totalComments || totalComments === null}
                                         loader={<div
                                             style={{
                                                 display: 'flex',
@@ -915,12 +940,12 @@ export default function PopupForVideoPlayer({
                                             <CircularProgress />
                                         </div>}
                                         className="mb-20"
-                                        scrollThreshold={0.6}
+                                        // scrollThreshold={0.6}
                                         scrollableTarget="scrollableDiv"
                                         endMessage={
                                             <div className="flex flex-row justify-center items-center mt-3">
                                                 <p className="text-white font-normal text-sm">
-                                                    No more comments
+                                                   {totalComments === 0? 'Be the first to comment' : 'No more comments'}
                                                 </p>
                                             </div>
                                         }
@@ -947,7 +972,7 @@ export default function PopupForVideoPlayer({
                                                                 )
                                                             }
                                                             className={`w-12 h-12 object-contain rounded-full cursor-pointer`}
-                                                            src={comment?.user?.avatar}
+                                                            src={comment?.user?.avatar || defaultAvatar}
                                                             alt=""
                                                         />
                                                     ) : (
