@@ -104,7 +104,7 @@ const ITEM_HEIGHT = 60;
         const handleClose = () => {
             setAnchorEl(null);
         }; 
-        const handleAction = (text:string) => {
+        const handleAction = (text:string, ispined:any) => {
             if(text == "Report"){
                 console.log("Report");
                 // blockH(reportH)
@@ -126,7 +126,7 @@ const ITEM_HEIGHT = 60;
                    
               
             }else if(text == "Pin to top"){
-                console.log("Pin to top")
+                console.log("Pin to top",text, ispined)
                 userPinH(userId);
                 // window.location.reload(); 
             }else if(text == "Mute"){
@@ -152,7 +152,7 @@ const ITEM_HEIGHT = 60;
                     }
                 );
                 const res = await response.json();
-                window.location.reload(); 
+                // window.location.reload(); 
             } catch (error) {
                 console.log('Error deleting message', error);
             }
@@ -168,7 +168,9 @@ const ITEM_HEIGHT = 60;
                     },
                 });
                 const res = await response.json();
-                window.location.reload(); 
+                if(res.OK){
+                    window.location.reload(); 
+                }
             } catch (error) {
                 console.log('error blocking user', error);
             }
@@ -232,7 +234,7 @@ const ITEM_HEIGHT = 60;
                         <div key={option.text}>
                             <MenuItem onClick={handleClose}>
                                 {option.icon}
-                                <span style={{ marginLeft: '8px',fontWeight:'bold' }} onClick={() => handleAction(option.text)}>{option.text}</span>
+                                <span style={{ marginLeft: '8px',fontWeight:'bold' }} onClick={() => handleAction(option.text, ispined)}>{option.text}</span>
                             </MenuItem>
                             {index < options.length - 1 && <Divider />}
                         </div>
