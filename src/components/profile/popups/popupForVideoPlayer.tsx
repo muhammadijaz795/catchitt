@@ -270,12 +270,12 @@ export default function PopupForVideoPlayer({
         dispatch(openLoginPopup());
     };
 
-    const paginateComments = async (fromStart = false) => {
+    const paginateComments = async () => {
         setIsCommentsLoading(true);
         try {
             const response = await fetch(
                 `${API_KEY}/media-content/videos/${info?.mediaId
-                }/comments?page=${fromStart? 1 : commentPageNumber}&pageSize=${pageSize}`,
+                }/comments?page=${commentPageNumber}&pageSize=${pageSize}`,
                 {
                     method: 'GET',
                     headers: {
@@ -291,13 +291,13 @@ export default function PopupForVideoPlayer({
 
             // check first next page is available or not
             if (data?.hasNextPage && commentPageNumber < data?.totalPages) {
-                setCommentPageNumber(commentPageNumber + 1);
+                setCommentPageNumber(prev => prev + 1);
             }
 
             // Append comments
             if (data?.data && Array.isArray(data?.data)) {
                 setVideoComments((prevComments: string | any[]) =>
-                    fromStart? data?.data : prevComments.concat(data?.data)
+                        prevComments.concat(data?.data)
                 );
             }
 
@@ -578,12 +578,14 @@ export default function PopupForVideoPlayer({
                     body: JSON.stringify({ comment }),
                 }
             );
-            await addCommentResponse.json();
+            const data = await addCommentResponse.json();
             setComment('');
             showToastSuccess('Comment posted');
-            fetchMediaById(info?.mediaId);
+            // fetchMediaById(info?.mediaId);
             setAddCommentLoading(false);
-            paginateComments(true);
+            setVideoComments((prevComments:[]) => [data?.data, ...prevComments]);
+            setTotalComments((prev:any) => prev===null? 1: prev + 1);
+            
         } catch (error) {
             console.log('🚀 ~ addCommentHandler ~ error:', error);
             setAddCommentLoading(false);
@@ -1048,7 +1050,7 @@ export default function PopupForVideoPlayer({
                                                             {comment_index === currentCommentIndex &&
                                                                 isReplyToCommentClicked && (
                                                                     <div className="cursor-pointer flex w-full flex-row items-center gap-2.5 mt-2">
-                                                                        <div className="bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full mr-1">
+                                                                        <div className="bg-[#FFFFFF1F] flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full mr-1">
                                                                             <input
                                                                                 value={commentReply}
                                                                                 onChange={(e) =>
@@ -1059,7 +1061,7 @@ export default function PopupForVideoPlayer({
                                                                                 maxLength={150}
                                                                                 placeholder="Add comment..."
                                                                                 type="text"
-                                                                                className="bg-transparent placeholder-[#4d4e58] text-black w-full"
+                                                                                className="bg-transparent placeholder-[#4d4e58 text-[#d5cbcb] w-full"
                                                                             />
                                                                             <div className="flex flex-row items-center">
                                                                                 <div
@@ -1099,7 +1101,7 @@ export default function PopupForVideoPlayer({
                                                                                 className={`${commentReply?.length >
                                                                                     0
                                                                                     ? 'text-[#fe2c55]'
-                                                                                    : 'text-[#16182357]'
+                                                                                    : 'text-[#FFFFFF57]'
                                                                                     } font-semibold text-base`}
                                                                             >
                                                                                 Post
