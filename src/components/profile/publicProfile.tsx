@@ -26,7 +26,7 @@ export const PublicProfile = (props: any) => {
     const [followModal, setFollowModal] = useState<null | string>(null);
     const [likesModal, setLikesModal] = useState(false);
     const [profileData, setProfileData] = useState<any>(null);
-    const [videosData, setVideosData] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
+    const [videosData, setVideosData] = useState<any>({ items: [], page: 1, pageSize: 5, taotalItems: null });
     const [loading, setLoading] = useState(false);
     const [videoModalInfo, setVideoModalInfo] = useState({});
     const [reportPopup, setReportPopup] = useState(false);
@@ -37,10 +37,7 @@ export const PublicProfile = (props: any) => {
     const [videoModal, setVideoModal] = useState(false);
     const [copyPopup, setcopyPopup] = useState(false);
 
-
     const MemoizedStoriesOnPublicProfile = memo(publicProfileStories);
-
-
 
     const fetchProfileData = async () => {
         try {
@@ -160,7 +157,7 @@ export const PublicProfile = (props: any) => {
                         </div>
                     </ClickAwayListener>
                 </Modal> */}
-                <div className={styles.middleSectionDiv}>
+                <div className={`${styles.middleSectionDiv} h-screen overflow-y-auto no-scrollbar`} id="scrollableDiv">
                     <PublicProfileHeader
                         profileData={profileData}
                         onFollowModalActive={onFollowModalActive}
@@ -195,7 +192,7 @@ export const PublicProfile = (props: any) => {
                             </div>
                         ))}
                     </div>
-                    <div className={`${styles.contentContainer} overflow-y-auto`}  style={{ minHeight: '300px' }}>
+                    <div className={`${styles.contentContainer}`}>
                         <p className={styles.title}>{activeTab}</p>
                         {activeTab === 'Videos' ? (
                             <VideoesMaping videos={videosData} fetchMore={fetchProfileVideos} openVideoModal={onVideoModal} />

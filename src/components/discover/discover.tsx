@@ -74,11 +74,9 @@ export default function Discover() {
     };
 
     const categoryHandler = (category: string) => {
+        setExploredVideos({ items: [], page: 1, pageSize: 15, totalItems: null });
         setSelectedCategory(category);
-        setExploredVideos([]);
     };
-
- 
 
     useEffect(() => {
         const fetchVedios = async () => {
@@ -90,7 +88,6 @@ export default function Discover() {
     }, []);
 
     useUpdateEffect(() => {
-        setExploredVideos({ items: [], page: 1, pageSize: 15, totalItems: null });
         getExplorePageData();
     }, [selectedCategory]);
 
