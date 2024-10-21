@@ -762,7 +762,7 @@ export default function PopupForVideoPlayer({
                                                 </p>
                                             </div>
                                         </div>
-                                        <p className="text-base font-normal text-white mt-2.5">
+                                        <p className="text-base font-normal text-white mt-2.5 break-words text-left">
                                             {info?.description}
                                         </p>
                                         <div className="flex flex-row items-center mt-2.5 gap-2.5">

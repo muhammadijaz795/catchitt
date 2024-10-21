@@ -56,7 +56,7 @@ import styles from './video-page.module.scss';
 
 const VideoPage = () => {
     // hooks
-    const { videoId } = useParams();
+    const { username, videoId } = useParams();
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [isMuted, setIsMuted] = useState(true);
     const [comment, setComment] = useState('');

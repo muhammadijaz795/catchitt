@@ -82,6 +82,7 @@ import style from './components/homePage/index.module.scss';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { setGeoData } from './redux/reducers/geoServices';
 import VideoPage from './components/shared-video';
+import PostPage from './components/shared-post';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -820,6 +821,7 @@ function App() {
                             <Route path="/discover" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
                             <Route path="/:username/video/:videoId" element={<VideoPage />} />
+                            <Route path="/:username/post/:postId" element={<PostPage />} />
                             <Route path="/upload" element={<UploadPage />} />
                             <Route path="/create-story" element={<CreateStoryPage />} />
                             <Route path="/golive" element={<GoLive />} />
