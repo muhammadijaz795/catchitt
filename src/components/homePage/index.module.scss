@@ -55,8 +55,9 @@
   height: 99%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 32px;
   padding-bottom: 1rem;
+  scroll-behavior: smooth;
   .videoParent {
     .videoHeader {
       // background: #000;

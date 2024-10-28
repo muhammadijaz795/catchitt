@@ -38,8 +38,8 @@ export const Profile = (props: any) => {
     const [likesModal, setLikesModal] = useState<any>(false);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
-    // const userId = localStorage.getItem('userId');
-    const userId = "6397aca6561d39d318d07297";
+    const userId = localStorage.getItem('userId');
+    // const userId = "6397aca6561d39d318d07297";
     const [videoModal, setVideoModal] = useState(false);
     const [userVideos, setUserVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
     const [userlikedVideos, setUserLikedVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });

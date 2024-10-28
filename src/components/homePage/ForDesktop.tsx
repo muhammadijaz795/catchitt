@@ -27,6 +27,7 @@ import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
 import { ToastContainer } from 'react-toastify';
 import { updateHomeVideos } from '../../redux/reducers';
+import VideoNavigation from '../../shared/navigation/VideoNavigation';
 // import { Toast } from 'react-toastify/dist/components';
 
 function ForDesktop(props: any) {
@@ -242,12 +243,12 @@ function ForDesktop(props: any) {
                         <p>Live</p>
                     </div> 
                 </div> */}
-                <div className={style.videoesParent} ref={scrollableDivRef}>
-                    <div style={{height:'8px'}} > </div>
+                <VideoNavigation videoListRef={scrollableDivRef} />
+                <div className={`${style.videoesParent} no-scrollbar mt-2`} ref={scrollableDivRef}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
                         videoes.map((post: any, number: number) => {
                             return (
-                                <div key={number} className={style.videoParent}
+                                <div key={number} id={post?.mediaId} className={style.videoParent}
                                     // ref={(el: HTMLLIElement | null) => itemsRef.current[number] = el} 
                                    
                                     // style={{

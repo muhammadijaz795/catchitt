@@ -114,6 +114,12 @@ export default function EditProfile({ onCancel, onSave }: Props) {
         setSelectImagePopup(false);
     };
 
+    const bioChangeHandler = (e: any) => {
+        if (e.target.value.length <= 80) {
+            setBio(e.target.value);
+        }
+    }
+
     useEffect(() => {
         loadProfile();
         loadCountries();
@@ -300,7 +306,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                         <textarea
                             className={styles.textarea}
                             value={bio}
-                            onChange={(e) => setBio(e.target.value)}
+                            onChange={bioChangeHandler}
                         />
                         <div className={styles['div-11']}>{bio.length}/80</div>
                         <div className={styles['div-12']}>Business Phone number</div>
@@ -403,7 +409,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                             <div onClick={onCancel} className={styles['div-28']}>
                                 Cancel
                             </div>
-                            <button type="submit" className="bg-[rgb(255, 59, 92)] text-white">
+                            <button type="submit" style={{ background: '#DE0C0C', color: 'white' }}>
                                 Save
                             </button>
                         </div>

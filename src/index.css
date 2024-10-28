@@ -32,6 +32,7 @@
   width: auto;
   max-width: none;
   height: auto;
+  scroll-behavior: smooth;
 }
 
 .a {

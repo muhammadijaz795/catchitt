@@ -389,8 +389,8 @@
   }
 }
 .profileBox {
-  width: 130px;
-  height: 130px;
+  width: 150px;
+  height: 150px;
   flex-shrink: 0;
   border-radius: 50%;
   position: relative;
@@ -403,6 +403,7 @@
     bottom: 0px;
     right: 12px;
     cursor: pointer;
+    background-color: transparent !important;
   }
   .img {
     width: 100%;
@@ -628,7 +629,16 @@ div.darkTheme span{
   color:white !important;
 }
 
-div.darkTheme input{
-  background: rgb(255, 255, 255) !important;
-  color:black !important;
+.darkTheme .div {
+  input,
+  textarea,
+  select {
+    background-color: rgb(18, 18, 18) !important;
+    color: white !important;
+  }
+  .div-16 {
+    color: var(--default-body, #fff) !important;
+  }
+  // background: rgb(255, 255, 255) !important;
+  // color:black !important;
 }

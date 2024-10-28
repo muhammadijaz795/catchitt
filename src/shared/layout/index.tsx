@@ -178,7 +178,7 @@ function Layout(props: any) {
 
                 <div
                     id="contentDiv"
-                    className={` ${darkThemeblack}`}
+                    className={` ${darkThemeblack} no-scrollbar`}
                     style={{
                         overflow: isScrollActive ? 'scroll' : 'auto',
                         height: 'auto',
