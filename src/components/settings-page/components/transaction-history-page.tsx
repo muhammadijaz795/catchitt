@@ -1,4 +1,5 @@
 import { IconButton } from '@mui/material';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
@@ -15,42 +16,12 @@ export interface TransactionHistoryPageProps {
 
 const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
     const API_KEY = process.env.VITE_API_URL;
-    const { login, balance } = useAuthStore();
-
-    const [response, setResponse] = useState(false);
-    const [responseResult, setResponseResult] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [loadingAnimation, setLoadingAnimation] = useState(false);
-
     const [revenueData, setRevenueData] = useState<any>([]);
-
     const { selectedIndex, setIndex, isLoggedIn, setSettingsDropdown } = useAuthStore();
+    const [transactions, setTransactions] = useState([]);
     const token = localStorage.getItem('token');
-    const email = useAuthStore((state) => state.email);
     const navigate = useNavigate();
-
-    const [openCalculatorModal, setOpenCalculatorModal] = useState(false);
-    const handleOpenCalculatorModal = () => {
-        setOpenCalculatorModal(true);
-    };
-    const handleCloseCalculatorModal = () => {
-        setOpenCalculatorModal(false);
-    };
-
-    const [openFaqsModal, setOpenFaqsModal] = useState(false);
-    const handleOpenFaqsModal = () => {
-        setOpenCalculatorModal(false);
-        setOpenFaqsModal(true);
-    };
-    const handleCloseFaqsModal = () => {
-        setOpenFaqsModal(false);
-    };
-
-    const handleEmailClick = () => {
-        const email = 'info@ogoul.com';
-        window.location.href = `mailto:${email}`;
-        setOpenFaqsModal(false);
-    };
+    const [darkTheme, setdarkTheme] = useState('');
 
     const handleGoBack = () => {
         navigate('/settings/account/balance'); // Navigate back to the previous page
@@ -82,15 +53,31 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
         }
     };
 
+    const getTransactionHistory = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/transactions`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const { data } = await response.json();
+            setTransactions(data?.transactions);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    };
+
     useEffect(() => {
         setIndex(4);
         handleFetchRevenueData();
+        getTransactionHistory();
     }, []);
 
-    
-    const [darkTheme, setdarkTheme] = useState('');
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
+
         if (themeColor == 'dark') {
             setdarkTheme(styles.darkTheme);
         }
@@ -113,34 +100,31 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
                             >
                                 <LeftArrow />
                             </IconButton>
-                            <h4 className={darkTheme !== ''?'text-white':'text-black'} >Transactions History</h4>
+                            <h4 className={darkTheme !== '' ? 'text-white' : 'text-black'} >Transactions History</h4>
                         </div>
                         <div className={styles.tableHeader}>
                             <h4 className={styles.sectionTitle}>Time & Date</h4>
                             <h4 className={styles.sectionTitle}>Type</h4>
                             <h4 className={styles.sectionTitle}>Amount</h4>
                         </div>
-                        {revenueData.userGiftsTransactions?.map(
+                        {transactions?.map(
                             (transaction: any, index: number) => {
-                                const formattedDate = new Date(
-                                    transaction.createdTime
-                                ).toLocaleDateString('en-GB');
-                                const formattedTime = new Date(
-                                    transaction.createdTime
-                                ).toLocaleTimeString('en-GB');
-
                                 return (
                                     <div>
                                         <div key={index} className={styles.tableField}>
                                             <h4
-                                                className={`${styles.sectionTitle} ${darkTheme !== ''? 'text-white':'text-black opacity-70'}`}
+                                                className={`${styles.sectionTitle} ${darkTheme !== '' ? 'text-white' : 'text-black opacity-70'}`}
                                                 style={{ textAlign: 'start' }}
-                                            >{`${formattedDate} ${formattedTime}`}</h4>
-                                            <h4 className={`${styles.sectionTitle} ${darkTheme !== ''? 'text-white':'text-black opacity-70'}`}>
+                                            >
+                                                {moment(transaction.createdTime).format(
+                                                    'DD-MM-YYYY'
+                                                )}
+                                            </h4>
+                                            <h4 className={`${styles.sectionTitle} ${darkTheme !== '' ? 'text-white' : 'text-black opacity-70'}`}>
                                                 {transaction.type}
                                             </h4>
                                             <h4
-                                                className={`${styles.sectionTitle} ${darkTheme !== ''? 'text-white':'text-black opacity-70'}`}
+                                                className={`${styles.sectionTitle} ${darkTheme !== '' ? 'text-white' : 'text-black opacity-70'}`}
                                                 style={{ textAlign: 'end' }}
                                             >
                                                 QAR {transaction.amount}
@@ -158,51 +142,3 @@ const TransactionHistoryPage = ({ className }: TransactionHistoryPageProps) => {
 };
 
 export default TransactionHistoryPage;
-
-const defModalStyle = {
-    bgcolor: 'background.paper',
-    border: 'none', // Remove the border
-    borderRadius: '8px',
-    minWidth: 420,
-    minHeight: 410,
-    maxWidth: '600px',
-    // maxHeight: '549px',
-    padding: '0',
-};
-
-const CustomCoinsModalStyle = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    border: 'none', // Remove the border
-    borderRadius: '8px',
-    minWidth: 420,
-    minHeight: 410,
-    // maxWidth: '600px',
-    // maxHeight: '549px',
-    padding: '16px',
-};
-
-const pricesBox = {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
-    marginBottom: '24px',
-    marginTop: '16px',
-    columnGap: '8px',
-    rowGap: '8px',
-};
-
-const faqsModal = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    border: 'none', // Remove the border
-    borderRadius: '8px',
-    minWidth: 420,
-    minHeight: 410,
-    padding: '24px',
-};

@@ -60,7 +60,6 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
     useEffect(() => {
         if (settingsDropdown === true) {
-            console.log('settings dropdown open');
             setDropdownOpen(true)
         }
     }, [])

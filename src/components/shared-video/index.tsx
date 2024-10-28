@@ -1207,7 +1207,7 @@ const VideoPage = () => {
                             <div className="text-center">
                                 <img
                                     onClick={likeVideoToggler}
-                                    className="h-7 w-7 object-contain cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:rotate-12"
+                                    className="h-7 w-7 object-contain cursor-pointer transform transition-transform duration-300 hover:scale-125"
                                     src={isLiked ? redHeartIcon : whiteHeartIcon}
                                 />
                                 <p className="font-bold text-sm mt-1.5 text-white">{videoLikes}</p>
@@ -1554,7 +1554,9 @@ const VideoPage = () => {
                                                 )
                                             )
                                         ) : (
-                                            <div className="px-4 py-2 text-white">No users found</div>
+                                            <div className="px-4 py-2 text-white">
+                                                No users found
+                                            </div>
                                         )}
                                     </div>
                                 )}
@@ -2136,6 +2138,24 @@ const VideoPage = () => {
                     embedCode={embedCode}
                     copyEmbedCodeHandler={copyEmbedCodeHandler}
                     setIsEmbedModalOpen={setIsEmbedPopupVisible}
+                    chevronUpIconVideo={chevronUpIconVideo}
+                    chevronDownIconVideo={chevronDownIconVideo}
+                    isLiked={isLiked}
+                    redHeartIcon={redHeartIcon}
+                    whiteHeartIcon={whiteHeartIcon}
+                    videoLikes={videoLikes}
+                    commentIcon={commentIcon}
+                    videoComments={videoComments}
+                    isSaved={isSaved}
+                    savedIcon={savedIcon}
+                    saveIcon={saveIcon}
+                    videoSaves={videoSaves}
+                    shareIcon={shareIcon}
+                    videoShares={videoShares}
+                    musicIcon={musicIcon}
+                    userName={userName}
+                    musicTitle={musicTitle}
+                    videoDescription={videoDescription}
                 />
             )}
         </Layout>
