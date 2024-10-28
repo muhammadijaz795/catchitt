@@ -30,7 +30,7 @@ export default function Discover() {
     // theme
     const [darkTheme, setdarkTheme] = useState('');
 
-    const getExplorePageData = async (signal: AbortSignal) => {
+    const getExplorePageData:any = async (signal: AbortSignal) => {
         let identifier = selectedCategory ? `/${selectedCategory}` : '';
         try {
             const response = await fetch(

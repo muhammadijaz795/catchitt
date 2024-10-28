@@ -1,0 +1,98 @@
+.chatHeader > div:nth-child(1) {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.chatHeader {
+  display: flex;
+  padding: 15px 24px;
+  justify-content: space-between;
+  border-bottom: 1px solid #dfdfdf;
+  .avatar {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 40px;
+    background: #eaeaea;
+  }
+}
+.chatWarner {
+  display: inline-flex;
+  padding: 16px;
+  align-items: center;
+  gap: 45px;
+  background: #eeedf7;
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .btns {
+    display: flex;
+    gap: 16px;
+  }
+
+  .desc {
+    color: var(--Foundation-Body-body-200, #999);
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    text-align: left;
+  }
+  .btns > button:nth-child(1):hover {
+    background: rgb(255, 59, 92);
+    color: #fff;
+  }
+  .btns > button:nth-child(2):hover {
+    background: #eeedf7;
+    border: 1px solid rgb(255, 59, 92);
+    color: rgb(255, 59, 92);
+  }
+  .btns > button:nth-child(1) {
+    border-radius: 4px;
+    border: 1px solid rgb(255, 59, 92);
+    background: #eeedf7;
+    display: flex;
+    width: 105px;
+    height: 32px;
+    padding: 0px 8px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    color: rgb(255, 59, 92);
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+  }
+  .btns > button:nth-child(2) {
+    border-radius: 4px;
+    background: rgb(255, 59, 92);
+    display: flex;
+    width: 105px;
+    height: 32px;
+    padding: 0px 8px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    color: #fff;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+  }
+}
+
+.name {
+  color: #222;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+}
