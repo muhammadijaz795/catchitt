@@ -10,88 +10,98 @@ function VideoNavigation(props: { videoListRef: any }) {
     const isNormalScroll = useRef(false);
     const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
     const scrollTimeoutOnScroll = useRef<NodeJS.Timeout | null>(null);
-    const scrollEventTimoutHandler = useRef<NodeJS.Timeout | null>(null);
-    
+
     const [isFirstVideo, setIsFirstVideo] = useState(true);
+
+    const scrolling = (direction: number) => {
+        const videoHeight = videoListRef.current.children[0].offsetHeight + 32;
+        videoListRef.current.scrollTo({
+            top: prevScrollTopRef.current + direction * videoHeight,
+            behavior: 'smooth'
+        });
+    }
 
     const scrollToVideo = (isNext = false) => {
         // Mark scroll as programmatic to prevent conflicts
         isProgrammaticScroll.current = true;
 
-        const videoHeight = videoListRef.current.children[0].offsetHeight + 32;
-        videoListRef.current.scrollTo({
-            top: prevScrollTopRef.current + (isNext ? videoHeight : -videoHeight),
-            behavior: 'smooth'
-        });
-
-        prevScrollTopRef.current = videoListRef.current.scrollTop;
+        scrolling(isNext? 1: -1);
 
         if (isFirstVideo) {
             setIsFirstVideo(false);
         }
         scrollTimeout.current = setTimeout(() => {
+            prevScrollTopRef.current = videoListRef.current.scrollTop;
             isProgrammaticScroll.current = false;
-        }, 300); 
+        }, 300);
     };
 
-    const scrollHandler = () => {
-        if (isProgrammaticScroll.current || isNormalScroll.current) return;
+    const scrollHandler = (isScrollingDown: boolean) => {
+        if (isNormalScroll.current) return;
+        console.log('scrolling happend 🚀🚀🚀😁')
         isNormalScroll.current = true;
-        const currentScroll = videoListRef.current.scrollTop;
-        const diff = Math.abs(currentScroll - prevScrollTopRef.current);
-        const videoHeight = videoListRef.current.children[0].offsetHeight + 32;
-        const isScrollingDown = currentScroll > prevScrollTopRef.current;
-        if (diff < videoHeight) {
-            videoListRef.current.scrollTo({
-                top: videoListRef.current.scrollTop + (isScrollingDown ? (videoHeight-diff) : -(videoHeight-diff)),
-                behavior: 'smooth'
-            });
-        }
-        else if (diff > videoHeight) {
-            const skipedVideos = Math.round(diff / videoHeight);
-            videoListRef.current.scrollTo({
-                top: prevScrollTopRef.current + (isScrollingDown ? videoHeight * skipedVideos : -videoHeight * skipedVideos),
-                behavior: 'smooth'
-            });
-        }
+
+        scrolling(isScrollingDown ? 1 : -1);
 
         prevScrollTopRef.current = videoListRef.current.scrollTop;
-        
+
         if (isFirstVideo) {
             setIsFirstVideo(false);
         }
 
-        scrollTimeoutOnScroll.current = setTimeout(() => {
-            isNormalScroll.current = false;
-        }, 300);
     };
 
     useEffect(() => {
         const videoList = videoListRef.current;
         if (videoList) {
-            const onScroll = () => {
-                if (scrollEventTimoutHandler.current) {
-                    clearTimeout(scrollEventTimoutHandler.current);
-                }
+            const onScroll = (event: Event) => {
+                if (isProgrammaticScroll.current) return;
+                const currentScroll = videoListRef.current.scrollTop;
 
-                scrollEventTimoutHandler.current = setTimeout(scrollHandler, 200);
+                scrolling(0)
+
+                const isScrollingDown = currentScroll > prevScrollTopRef.current;
+
+                if (scrollTimeoutOnScroll.current) clearTimeout(scrollTimeoutOnScroll.current);
+
+                scrollTimeoutOnScroll.current = setTimeout(() => {
+                    console.log('scrolling done', videoListRef.current, isNormalScroll.current);
+                    isNormalScroll.current = false;
+                }, 400);
+                scrollHandler(isScrollingDown);
             };
             videoList.addEventListener('scroll', onScroll);
             return () => {
                 videoList.removeEventListener('scroll', onScroll);
                 if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
                 if (scrollTimeoutOnScroll.current) clearTimeout(scrollTimeoutOnScroll.current);
-                if (scrollEventTimoutHandler.current) clearTimeout(scrollEventTimoutHandler.current);
             };
         }
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (isProgrammaticScroll.current) return;
+            event.preventDefault();
+            if (event.key === 'ArrowUp') {
+                scrollToVideo(false);
+            } else if (event.key === 'ArrowDown') {
+                scrollToVideo(true);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
     }, []);
 
     return (
         <div className={style.navigation}>
             {!isFirstVideo && <button id="prevVideoBtn" onClick={() => scrollToVideo(false)}>
-                <UpArrow  />
+                <UpArrow />
             </button>}
-            <button id="nextVideoBtn" onClick={() =>scrollToVideo(true)}>
+            <button id="nextVideoBtn" onClick={() => scrollToVideo(true)}>
                 <DownArrow />
             </button>
         </div>
