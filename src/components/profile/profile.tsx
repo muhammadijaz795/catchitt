@@ -13,7 +13,7 @@ import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 
-import { getFriends, getProfileData, getRandomUsers } from '../../redux/AsyncFuncs';
+import { getProfileData, getRandomUsers } from '../../redux/AsyncFuncs';
 import publicProfileStories from './popups/publicProfileStories';
 import styles from './profile.module.scss';
 import { Bookmark } from './svg-components/Bookmark';
@@ -39,9 +39,11 @@ export const Profile = (props: any) => {
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    // const userId = "670f5a3bf2e43d587fa69d1b";
     // const userId = "6397aca6561d39d318d07297";
     const [videoModal, setVideoModal] = useState(false);
     const [userVideos, setUserVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
+    const [privateVideos, setPrivateVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
     const [userlikedVideos, setUserLikedVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
     const [usertaggedVideos, setUserTaggedVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
     const [bookmarkVideos, setBookmarkVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
@@ -203,6 +205,34 @@ export const Profile = (props: any) => {
             );
         }
 
+        if (activeTab === 'Private' && false) {
+            promises.push(
+                fetch(
+                    `${API_KEY}/profile/${userId}/videos?page=${privateVideos.page}&pageSize=${privateVideos.pageSize}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        signal,
+                    }
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setPrivateVideos((prev: any) => ({
+                            ...prev,
+                            items: [...prev.items, ...data.data.data],
+                            totalItems: data.data.total,
+                        }));
+                    })
+                    .catch((err) =>{
+                        console.log(err)
+                        setPrivateVideos((prev: any) => ({...prev, totalItems: undefined}))
+                    })
+            );
+        }
+
         // Fetch Liked Videos
         if (activeTab === 'Liked Videos') {
             promises.push(
@@ -333,9 +363,7 @@ export const Profile = (props: any) => {
             .catch((err) => {
                 console.log(err);
             });
-
-        dispatch(getRandomUsers());
-        dispatch(getFriends());
+        // dispatch(getRandomUsers(1));
         await dispatch(getProfileData());
     };
 
@@ -444,6 +472,7 @@ export const Profile = (props: any) => {
                         <ClickAwayListener onClickAway={() => setFollowModal(null)}>
                             <div className={styles.likesModalContainer}>
                                 <FollowModal
+                                    openTab={followModal}
                                     isPublic={false}
                                     onClose={closeFollowModal}
                                     userId={userId}
@@ -495,7 +524,7 @@ export const Profile = (props: any) => {
                                     case 'Videos':
                                         return (<VideoesMaping videos={userVideos} fetchMore={()=>setUserVideos({...userVideos, page:userVideos.page+1})} openVideoModal={onVideoModal} />);
                                     case 'Private':
-                                        return (<VideoesMaping videos={userVideos} fetchMore={()=>setUserVideos({...userVideos, page:userVideos.page+1})} openVideoModal={onVideoModal} />);
+                                        return (<VideoesMaping videos={privateVideos} fetchMore={()=>setPrivateVideos({...privateVideos, page:privateVideos.page+1})} openVideoModal={onVideoModal} />);
                                     case 'Bookmarks':
                                         return (<VideoesMaping videos={bookmarkVideos} fetchMore={()=>setBookmarkVideos({...bookmarkVideos, page:bookmarkVideos.page+1})} openVideoModal={onVideoModal} />);
                                     case 'Liked Videos':

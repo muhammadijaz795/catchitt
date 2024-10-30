@@ -206,16 +206,16 @@ export const videoRepostHandle: any = createAsyncThunk(
     }
 );
 
-export const getRandomUsers: any = createAsyncThunk('get/random/users', async () => {
+export const getRandomUsers: any = createAsyncThunk('get/random/users', async (page) => {
     try {
-        const response = await fetch(`${API_KEY}/profile/public/suggested-users?page=1`, {
+        const response = await fetch(`${API_KEY}/profile/public/suggested-users?page=${page}`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json' },
         });
 
         if (response.ok) {
             const responseData = await response.json();
-            return responseData.data.data;
+            return responseData.data;
         } else {
             console.log(response);
         }
@@ -224,13 +224,13 @@ export const getRandomUsers: any = createAsyncThunk('get/random/users', async ()
     }
 });
 
-export const getFriends: any = createAsyncThunk('get/friends', async () => {
+export const getFriends: any = createAsyncThunk('get/friends', async (page:number) => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     if (token) {
         try {
             const response = await fetch(
-                `${API_KEY}/profile/${userId}/friends?page=1&pagesize=10`,
+                `${API_KEY}/profile/${userId}/friends?page=${page}&pagesize=10`,
                 {
                     method: 'GET',
                     headers: {
@@ -242,7 +242,7 @@ export const getFriends: any = createAsyncThunk('get/friends', async () => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                return responseData.data.data;
+                return responseData.data;
             } else {
                 console.log(response);
             }
@@ -252,12 +252,12 @@ export const getFriends: any = createAsyncThunk('get/friends', async () => {
     }
 });
 
-export const loadFollowers: any = createAsyncThunk('get/profileSlice/followers', async () => {
+export const loadFollowers: any = createAsyncThunk('get/profileSlice/followers', async (page:number) => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     if (token) {
         try {
-            const response = await fetch(`${API_KEY}/profile/${userId}/following`, {
+            const response = await fetch(`${API_KEY}/profile/${userId}/following?page=${page}&pageSize=10`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -267,7 +267,7 @@ export const loadFollowers: any = createAsyncThunk('get/profileSlice/followers',
 
             if (response.ok) {
                 const responseData = await response.json();
-                return responseData.data.data;
+                return responseData.data;
             } else {
                 console.log(response);
             }
@@ -302,12 +302,12 @@ export const loadLikes: any = createAsyncThunk('get/profile/likes', async () => 
     }
 });
 
-export const loadFollowing: any = createAsyncThunk('get/profileSlice/following', async () => {
+export const loadFollowing: any = createAsyncThunk('get/profileSlice/following', async (page:number) => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     if (token) {
         try {
-            const response = await fetch(`${API_KEY}/profile/${userId}/followers`, {
+            const response = await fetch(`${API_KEY}/profile/${userId}/followers?page=${page}&pageSize=10`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -317,7 +317,7 @@ export const loadFollowing: any = createAsyncThunk('get/profileSlice/following',
 
             if (response.ok) {
                 const responseData = await response.json();
-                return responseData.data.data;
+                return responseData.data;
             } else {
                 console.log(response);
             }

@@ -4,7 +4,6 @@ import { defaultAvatar } from '../../../icons';
 import UnfollowPopup from './unfollow-popup';
 import { Link } from 'react-router-dom';
 
-
 const API_KEY = process.env.VITE_API_URL;
 const User: React.FC<{
     user: any;

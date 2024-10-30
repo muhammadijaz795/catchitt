@@ -1,59 +1,69 @@
 import * as React from 'react';
 import styles from './followersTab.module.scss';
-  
+
 import FollowerUser from './follower-user';
 import PbulicFollowerUser from '../public-profile-components/follower-user';
-export default function FollowersTab({onClose, followers, isPublic,onScrollBottom}:any) {
-    
-    
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { CircularProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
+export default function FollowersTab({ onClose, followers, isPublic, onScrollBottom }: any) {
+
+    const followersTotal = useSelector((state: any) => state.reducers?.followers.total);
+
     console.log("followers")
     console.log(followers)
 
-    const handleScroll = (e: any) => {
-        // console.log("handle scroll");
-        // console.log(e.target.scrollHeight - e.target.scrollTop);
-        // console.log("height", e.target.clientHeight);
-
-        // Adjusted calculation with a small threshold
-        const threshold = 1;
-        const bottom = e.target.scrollHeight - e.target.scrollTop <= e.target.clientHeight + threshold;
-
-        if (bottom) {
-            onScrollBottom();
-        }
-    };
     return (
-        <>
-            <div  style={{
-           
-            overflowY:'scroll',
-        }}  className={styles.div} onScroll={handleScroll}>
+        <InfiniteScroll
+            dataLength={followers?.length}
+            next={onScrollBottom}
+            hasMore={followers.length < followersTotal || followersTotal === null}
+            loader={<div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: '1rem',
+                    width: 'inherit',
+                }}
+            >
+                <CircularProgress />
+            </div>}
+            className="mb-20"
+            // scrollThreshold={0.6}
+            scrollableTarget="ModalscrollableDiv"
+            endMessage={
+                <div className="flex flex-row justify-center items-center mt-3">
+                    <p className="font-normal text-xl">
+                        {(followersTotal === 0) ? 'No followers available.' : 'No more followers'}
+                    </p>
+                </div>
+            }
+        >
 
-                
-                {isPublic ?   followers?.map((follower: any) => (
+            {isPublic ? followers?.map((follower: any) => (
 
-                    
-                    <PbulicFollowerUser
-                        key={follower._id}
-                        user={follower}
-                        popupClose={onClose}
-                        onRemoveClick={() => {}}
-                    />
-                ))
+
+                <PbulicFollowerUser
+                    key={follower._id}
+                    user={follower}
+                    popupClose={onClose}
+                    onRemoveClick={() => { }}
+                />
+            ))
                 :
 
                 followers?.map((follower: any) => (
 
-                    
+
                     <FollowerUser
                         key={follower._id}
                         user={follower}
                         popupClose={onClose}
-                        onRemoveClick={() => {}}
+                        onRemoveClick={() => { }}
                     />
                 ))
-                }
-            </div>
-        </>
+            }
+        </InfiniteScroll>
     );
 }

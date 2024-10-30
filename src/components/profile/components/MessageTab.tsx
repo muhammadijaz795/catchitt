@@ -1,28 +1,66 @@
 import { useSelector } from 'react-redux';
 import styles from './messageTab.module.scss';
-function MessageTab() {
-
-
-    const friends = useSelector((state:any) => state?.reducers?.friends);
-    console.log("friends")
-    console.log(friends)
-    // const dispatch = useDispatch();
-
+import { CircularProgress } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { defaultAvatar } from '../../../icons';
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+function MessageTab({ friends, totalFriends, loadMoreFriends, onClose }: any) {
+    useEffect(() => {
+        console.log('🚀🚀🚀friends', friends, totalFriends);
+    }, [])
+    
     return (
-        <div className={styles.div}>
-            <div className={styles['div-18']}>
-                <div className={styles['div-19']}>
-                    <img
-                        loading="lazy"
-                        srcSet="https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/8f4b6b45-c38f-48b1-88e1-470d20791f7a?apiKey=8f7324cf1f4747198abbea6be25c359c&"
-                        className={styles['img-2']}
-                    />
-                    <div className={styles['div-20']}>Mohamed Farag</div>
+        <InfiniteScroll
+            dataLength={friends?.length}
+            next={loadMoreFriends}
+            hasMore={friends.length < totalFriends || totalFriends === null}
+            loader={<div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: '1rem',
+                    width: 'inherit',
+                }}
+            >
+                <CircularProgress />
+            </div>}
+            className="mb-20"
+            // scrollThreshold={0.6}
+            scrollableTarget="ModalscrollableDiv"
+            endMessage={
+                <div className="flex flex-row justify-center items-center mt-3">
+                    <p className="text-xl font-normal">
+                        {(totalFriends === 0) ? 'No friends available.' : 'No more friends'}
+                    </p>
                 </div>
-                <div className={styles['div-21']}>Message</div>
-            </div>
-                <div className={styles['div-border']} />
-        </div>
+            }
+        >
+            {friends?.map((friend: any) => (
+                <div key={friend._id} className={styles.div}>
+                    <div className={styles['div-18']}>
+                        <div className={styles['div-19']}>
+                            <img
+                                loading="lazy"
+                                srcSet={friend?.followed_userID?.avatar || defaultAvatar}
+                                className={styles['img-2']}
+                            />
+                            <Link
+                                onClick={() => {
+                                    console.log('afff');
+                                    onClose();
+                                }}
+                                to={'/profile/' + friend?.followed_userID?.username}
+                            >
+                                <div className={styles['div-20']}>{friend?.followed_userID?.name}</div>
+                            </Link>
+                        </div>
+                        <div className={styles['div-21']}>Message</div>
+                    </div>
+                    <div className={styles['div-border']} />
+                </div>))}
+        </InfiniteScroll>
     );
 }
 

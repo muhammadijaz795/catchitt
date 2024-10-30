@@ -65,14 +65,14 @@ const popupLogoutSlice: any = createSlice({
 const followers: any = createSlice({
     name: 'followings',
     initialState: {
-        total: 0,
+        total: null,
         data: [],
     },
     reducers: {},
     extraReducers: (builder: any) => {
         builder.addCase(loadFollowers.fulfilled, (state: any, action: any) => {
-            state.data = action.payload;
-            state.total = action.payload?.length;
+            state.data = [...state.data, ...action.payload.data]
+            state.total = action.payload?.total;
             return state;
         });
     },
@@ -191,6 +191,8 @@ type profileInitialState = {
     following: any[];
     friends: any[];
     likes: any[];
+    followingTotal: number | null;
+    friendsTotal: number | null;
 };
 
 const profileSlice = createSlice({
@@ -200,25 +202,36 @@ const profileSlice = createSlice({
         following: [],
         friends: [],
         likes: [],
+        followingTotal: null,
+        friendsTotal: null,
     } as profileInitialState,
     reducers: {},
     extraReducers: (builder: any) => {
         builder.addCase(loadFollowing.fulfilled, (state: profileInitialState, action: any) => {
-            state.following = action.payload;
+            state.following = [...state.following,...action.payload.data];
+            state.followingTotal = action.payload.total;
+            return state;
         });
         builder.addCase(getFriends.fulfilled, (state: profileInitialState, action: any) => {
-            state.friends = action.payload;
+            state.friends = [...state.friends,...action.payload.data];
+            state.friendsTotal = action.payload.total;
+            return state;
         });
     },
 });
 
 const suggestedAccounts: any = createSlice({
     name: 'suggestedAccounts',
-    initialState: [],
+    initialState: {
+        data: [],
+        total: null,
+    },
     reducers: {},
     extraReducers: (builder: any) => {
         builder.addCase(getRandomUsers.fulfilled, (_state: any, action: any) => {
-            return action.payload;
+            _state.data =  [..._state.data, ...action.payload.data];
+            _state.total = action.payload.total;
+            return _state;
         });
     },
 });

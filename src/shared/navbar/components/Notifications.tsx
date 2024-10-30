@@ -82,7 +82,8 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     }));
 
     const API_KEY = process.env.VITE_API_URL;
-    const token = useSelector((state: any) => state?.reducers?.profile?.token);
+    // const token = useSelector((state: any) => state?.reducers?.profile?.token);
+    const token = localStorage.getItem('token');
 
     // const handleGetNotifications = async () => {
     //     console.log("notifcation data");
@@ -242,6 +243,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                classes={{ paper: 'no-scrollbar' }}
                 MenuListProps={{
                     'aria-labelledby': 'lock-button',
                 }}

@@ -15,10 +15,10 @@ function useApp() {
                 dispatch(updateProfile(result));
                 dispatch(followingsMethod());
                 dispatch(getVideoCategories());
-                dispatch(getRandomUsers());
+                dispatch(getRandomUsers(1));
             });
         } else {
-            dispatch(getRandomUsers());
+            dispatch(getRandomUsers(1));
         }
     }, [token]);
     return {};
