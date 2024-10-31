@@ -158,7 +158,16 @@ const homeVideos: any = createSlice({
         });
         builder.addCase(addMoreVideos.fulfilled, (state: any, action: any) => {
             // @ts-ignore
-            let filteredData =  [...state, ...action.payload]
+            // let filteredData =  [...state, ...action.payload]
+            // return filteredData;
+             // Extract mediaIds from action.payload
+            const newMediaIds = action.payload.map((item: any) => item.mediaId);
+            // console.log("newMediaIds: ", newMediaIds);
+            // Filter out items in state that have a mediaId in newMediaIds
+            let filteredData = [
+                ...state.filter((item: any) => !newMediaIds.includes(item.mediaId)),
+                ...action.payload
+            ];
             return filteredData;
         });
         builder.addCase(videoNotInterestedHandle.fulfilled, (state: any, action: any) => {

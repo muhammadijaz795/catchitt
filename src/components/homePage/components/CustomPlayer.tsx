@@ -120,7 +120,9 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, controls, 
             ref={ref}
             className={`${style.mainContainer} video-container`}
         >
-            <div className={style.videoContainer} onClick={togglePlayPause}>
+            <div className={style.videoContainer}  style={{backgroundImage:
+                `url('https://dsntquwfcg5yv.cloudfront.net/output/videos/6710c3e84bee6249cb3a5571/thumbnail/6710c3e84bee6249cb3a5571-thumbnail.jpg')`
+            }} onClick={togglePlayPause}>
                 <video
                     disablePictureInPicture
                     controlsList="nodownload noplaybackrate"
@@ -131,7 +133,8 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, controls, 
                     src={src}
                     ref={videoRef}
                     className={style.video}
-                    preload={number==0? 'auto':'metadata'}
+                    // preload={number==0? 'auto':'metadata'}
+                    preload='none'
                     playsInline
                 />
                

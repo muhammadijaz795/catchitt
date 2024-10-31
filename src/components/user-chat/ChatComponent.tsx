@@ -111,26 +111,33 @@ const ChatComponent = () => {
         };
 
         (socketRef.current as any).on('receive-msg', (message: any) => {
-
-            setActiveChat((currentChat: any) => ({
-                ...currentChat,
-                chats: [
-                    ...currentChat?.chats,
-                    {
-                        msg:  message?.message,
-                        time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-                        emojis: false,
-                        dropdown: false,
-                        id: `${new Date().getTime()}`,
-                        isrecevied: true,
-                        receiverId: message?.receiverId?._id,
-                        stared: message?.isStarred,
-                        isRead: message?.isRead,
-                        type: message?.type,
-                        replysms: false
-                    },
-                ],
-            }));
+            console.log('receive-msg', message, message.senderId._id);
+            console.log('sender', sender);
+            console.log('message.senderId._id',  message.senderId._id);
+            console.log('activeUser?.userId', activeUser);
+            activeUser?.userId
+            // if(sender == message.senderId._id){
+                console.log('received', message);
+                setActiveChat((currentChat: any) => ({
+                    ...currentChat,
+                    chats: [
+                        ...currentChat?.chats,
+                        {
+                            msg:  message?.message,
+                            time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+                            emojis: false,
+                            dropdown: false,
+                            id: `${new Date().getTime()}`,
+                            isrecevied: true,
+                            receiverId: message?.receiverId?._id,
+                            stared: message?.isStarred,
+                            isRead: message?.isRead,
+                            type: message?.type,
+                            replysms: false
+                        },
+                    ],
+                }));
+            // }
         });
 
     }

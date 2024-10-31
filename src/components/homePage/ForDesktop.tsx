@@ -46,6 +46,7 @@ function ForDesktop(props: any) {
     const [showCopyPopup, setshowCopyPopup] = useState(false);
     const [darkTheme, setdarkTheme] = useState('');
     const [isDarkTheme, setIsDarkTheme] = useState(false);
+    const [countFlag, setCountFlag] = useState(true);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
     // @ts-ignore
@@ -151,12 +152,13 @@ function ForDesktop(props: any) {
                 const token = localStorage.getItem('token');
                 // setLoadingVideo(true);
                 dispatch(addMoreVideos({ tab: activeTab, token, page: page }));
-                console.log('loadingVideo',loadingVideo);
+                console.log('loadingVideo',loadingVideo, 'countFlag',countFlag);
+                setCountFlag(true);
                 // setHasMore(newVideos.length > 0);
             } catch (error) {
                 console.error('Error fetching videos:', error);
             }
-            const token = localStorage.getItem('token');
+            // const token = localStorage.getItem('token');
             // dispatch(getHomeVideos({tab : activeTab, token})).then(() => setLoading(false));
 
             setLoadingVideo(false);
@@ -171,9 +173,11 @@ function ForDesktop(props: any) {
         if (scrollableDivRef.current) {
             const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef.current;
             console.log("scroll position: ", scrollHeight, (scrollTop + clientHeight + 100), scrollTop, clientHeight);
-            if (scrollTop + clientHeight + 100 >= scrollHeight) {
+            if (scrollTop + clientHeight + 100 > scrollHeight && countFlag ==true) {
                 setLoadingVideo(true);
                 setPage((prevPage) => prevPage + 1);
+                setCountFlag(false);
+                console.log('countFlag',countFlag);
             }
         }
     };
