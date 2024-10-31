@@ -142,6 +142,7 @@ export const PublicProfile = (props: any) => {
                     <ClickAwayListener onClickAway={() => setFollowModal(null)}>
                         <div className={styles.likesModalContainer}>
                             <FollowModal
+                                openTab={followModal}
                                 isPublic={true}
                                 onClose={function (): void {
                                     setFollowModal(null);

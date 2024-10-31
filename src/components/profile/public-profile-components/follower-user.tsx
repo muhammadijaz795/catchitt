@@ -66,7 +66,7 @@ const PbulicFollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: 
                             className={styles['img-2']}
                         />
                         <Link onClick={popupClose} to={'/profile/' + user?.followed_userID?.username}>
-                            <div className={styles['div-20']}>{user?.followed_userID?.name}</div>
+                            <span className={styles['div-20']}>{user?.followed_userID?.name}</span>
                         </Link>
                     </div>
                     <div onClick={remove} style={button}>

@@ -53,7 +53,7 @@ function MessageTab({ friends, totalFriends, loadMoreFriends, onClose }: any) {
                                 }}
                                 to={'/profile/' + friend?.followed_userID?.username}
                             >
-                                <div className={styles['div-20']}>{friend?.followed_userID?.name}</div>
+                                <span className={styles['div-20']}>{friend?.followed_userID?.name}</span>
                             </Link>
                         </div>
                         <div className={styles['div-21']}>Message</div>

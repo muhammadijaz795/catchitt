@@ -64,7 +64,7 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any }>
                             className={styles['img-2']}
                         />
                         <Link onClick={popupClose} to={'/profile/' + user?._id}>
-                            <div className={styles['div-20']}>{user?.follower_userID?.name}</div>
+                            <span className={styles['div-20']}>{user?.follower_userID?.name}</span>
                         </Link>
                     </div>
                     <div onClick={remove} style={button}>

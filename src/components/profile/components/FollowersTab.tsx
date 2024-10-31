@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import styles from './followersTab.module.scss';
 
 import FollowerUser from './follower-user';
@@ -6,12 +6,11 @@ import PbulicFollowerUser from '../public-profile-components/follower-user';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';
-export default function FollowersTab({ onClose, followers, isPublic, onScrollBottom }: any) {
+export default function FollowersTab({ onClose, followers, isPublic, onScrollBottom, followersTotal }: any) {
 
-    const followersTotal = useSelector((state: any) => state.reducers?.followers.total);
-
-    console.log("followers")
-    console.log(followers)
+    useEffect(() => {
+        console.log('🚀🚀🚀followers', followers);
+    }, [followers])
 
     return (
         <InfiniteScroll

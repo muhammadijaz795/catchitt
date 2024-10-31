@@ -177,7 +177,7 @@ export const Profile = (props: any) => {
         const promises = [];
 
         // Fetch Videos
-        if (activeTab === 'Videos') {
+        if (activeTab === 'Videos' && (userVideos.totalItems === null || userVideos.totalItems > userVideos.items.length)) {
             promises.push(
                 fetch(
                     `${API_KEY}/profile/${userId}/videos?page=${userVideos.page}&pageSize=${userVideos.pageSize}`,
@@ -205,7 +205,7 @@ export const Profile = (props: any) => {
             );
         }
 
-        if (activeTab === 'Private' && false) {
+        if (activeTab === 'Private' && (privateVideos.totalItems === null || privateVideos.totalItems > privateVideos.items.length) && false) {
             promises.push(
                 fetch(
                     `${API_KEY}/profile/${userId}/videos?page=${privateVideos.page}&pageSize=${privateVideos.pageSize}`,
@@ -234,7 +234,7 @@ export const Profile = (props: any) => {
         }
 
         // Fetch Liked Videos
-        if (activeTab === 'Liked Videos') {
+        if (activeTab === 'Liked Videos' && (userlikedVideos.totalItems === null || userlikedVideos.totalItems > userlikedVideos.items.length)) {
             promises.push(
                 fetch(
                     `${API_KEY}/profile/${userId}/liked-videos?page=${userlikedVideos.page}&pageSize=${userlikedVideos.pageSize}`,
@@ -263,7 +263,7 @@ export const Profile = (props: any) => {
         }
 
         // Fetch Tagged Videos
-        if (activeTab === 'Tagged Posts') {
+        if (activeTab === 'Tagged Posts' && (usertaggedVideos.totalItems === null || usertaggedVideos.totalItems > usertaggedVideos.items.length)) {
             promises.push(
                 fetch(
                     `${API_KEY}/profile/tagged-videos?page=${usertaggedVideos.page}&pageSize=${usertaggedVideos.pageSize}`,
@@ -292,7 +292,7 @@ export const Profile = (props: any) => {
         }
 
         // Fetch Bookmark Videos
-        if (activeTab === 'Bookmarks') {
+        if (activeTab === 'Bookmarks' && (bookmarkVideos.totalItems === null || bookmarkVideos.totalItems > bookmarkVideos.items.length)) {
             promises.push(
                 fetch(
                     `${API_KEY}/profile/collection?page=${bookmarkVideos.page}&pageSize=${bookmarkVideos.pageSize}`,
@@ -321,7 +321,7 @@ export const Profile = (props: any) => {
         }
 
         // Fetch Repost Videos
-        if (activeTab === 'Reposts') {
+        if (activeTab === 'Reposts' && (repostVideos.totalItems === null || repostVideos.totalItems > repostVideos.items.length)) {
             promises.push(
                 fetch(
                     `${API_KEY}/media-content/reposts?page=${repostVideos.page}&pageSize=${repostVideos.pageSize}`,
@@ -368,7 +368,8 @@ export const Profile = (props: any) => {
     };
 
     const makeProfileViews = (data: any) => {
-        const newProfileViewsContent = data?.map(
+        const filteredArray = data?.filter((item: any)=> item?._id !== userId);
+        const newProfileViewsContent = filteredArray?.map(
             (viewItem: { avatar: any; name: any; isFollower: any; isFollowing: any }) => {
                 const viewerAvatar =
                     viewItem?.avatar !== '' && viewItem?.avatar

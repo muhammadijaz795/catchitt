@@ -114,8 +114,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, controls, 
             style={{
                 position: 'relative',
                 display: 'flex',
-                alignItems: 'center',
-                // height: '85vh',
+                alignItems: 'center'
             }}
             ref={ref}
             className={`${style.mainContainer} video-container`}
@@ -127,7 +126,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, controls, 
                     loop={true}
                     autoPlay={videoModal ? false : inView}
                     controls={false} //{controls}
-                    style={{  height: '85vh', position: 'relative', zIndex: 1, }}
+                    style={{  height: '100%', width: '100%', position: 'relative', zIndex: 1, }}
                     src={src}
                     ref={videoRef}
                     className={style.video}
