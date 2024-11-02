@@ -147,7 +147,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, controls, 
                     loop={true}
                     autoPlay={videoModal ? false : inView}
                     controls={false} //{controls}
-                    style={{ width: '100%', height: '100%', position: 'relative', zIndex: 1, }}
+                    style={{ height: '85vh', position: 'relative', zIndex: 1, }}
                     src={src}
                     ref={videoRef}
                     className={style.video}

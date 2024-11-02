@@ -5,8 +5,10 @@
   padding: 1rem;
 }
 .menuItem img {
-    width: 18px;
-    height: 24px;
+    // width: 18px;
+    width: 1.75rem;
+    // height: 24px;
+    height: 1.75rem;
 
 }
 .menuItem p {
@@ -14,7 +16,7 @@
   font-family: Poppins;
   font-size: 1rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 150%;
 }
 .menuItem:hover {
