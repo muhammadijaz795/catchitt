@@ -5,28 +5,37 @@ function LongPressButton({ onClick, onLongPress, children }: any) {
     const timeoutRef: any = useRef(null);
 
     const handleMouseDown = () => {
-        timeoutRef.current = setTimeout(() => {
+        // timeoutRef.current = setTimeout(() => {
             setPressing(false);
             onLongPress();
-        }, 1000); // Change 1000 to the duration you consider a long press
+        // }, 1000); // Change 1000 to the duration you consider a long press
 
         setPressing(true);
     };
 
     const handleMouseUp = () => {
-        clearTimeout(timeoutRef.current);
+        // clearTimeout(timeoutRef.current);
         if (pressing) {
             onClick();
         }
         setPressing(false);
     };
+    
+    // onMouseEnter={() => {
+    //         longPressH(item)
+    //       }}
+    //       onMouseLeave={() => {
+    //         longPressH(item)
+    //       }}
 
     return (
         <div
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleMouseDown}
-            onTouchEnd={handleMouseUp}
+            // onMouseDown={handleMouseDown}
+            // onMouseUp={handleMouseUp}
+            onMouseEnter={()=>onLongPress()}
+            onMouseLeave={()=>onClick()}
+            // onTouchStart={handleMouseDown}
+            // onTouchEnd={handleMouseUp}
         >
             {children}
         </div>

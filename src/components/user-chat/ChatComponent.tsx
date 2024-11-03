@@ -111,13 +111,10 @@ const ChatComponent = () => {
         };
 
         (socketRef.current as any).on('receive-msg', (message: any) => {
-            console.log('receive-msg', message, message.senderId._id);
-            console.log('sender', sender);
-            console.log('message.senderId._id',  message.senderId._id);
-            console.log('activeUser?.userId', activeUser);
+            let chatActiveUser = localStorage.getItem('chatActiveUser');
             activeUser?.userId
-            // if(sender == message.senderId._id){
-                console.log('received', message);
+            if(chatActiveUser == message.senderId._id){
+                console.log('received msg');
                 setActiveChat((currentChat: any) => ({
                     ...currentChat,
                     chats: [
@@ -137,7 +134,7 @@ const ChatComponent = () => {
                         },
                     ],
                 }));
-            // }
+            }
         });
 
     }
@@ -155,6 +152,7 @@ const ChatComponent = () => {
                 setConversationId(user?.conversationId);
                 loadChatMessages(user?.senderId, user?.receiverId, user?.conversationId, user);
                 setActiveUser(user);
+                localStorage.setItem('chatActiveUser', user?.userId);
                 markMessageAsSeen(user?.senderId, user?.conversationId);
             }
         });
@@ -513,6 +511,7 @@ const ChatComponent = () => {
                 chatSwitchH(valueReceived);
             } else {
                 setActiveUser(users[0]);
+                localStorage.setItem('chatActiveUser', users[0]?.userId);
             }
         }
     }, [users]);

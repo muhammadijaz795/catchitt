@@ -131,7 +131,14 @@ function Actions(props: any) {
                                     </div>
                                 )}
                                 <div style={{ position: 'relative', zIndex: 20 }}>
-                                    <LongPressButton onLongPress={() => longPressH(item)}>
+                                    <LongPressButton onLongPress={() => longPressH(item)} 
+                                                // onMouseEnter={() => {
+                                                //     longPressH(item)
+                                                //   }}
+                                                //   onMouseLeave={() => {
+                                                //     longPressH(item)
+                                                //   }}
+                                                  >
                                         {item?.replysms ? (
                                             <div
                                                 className={style.tempparent}
