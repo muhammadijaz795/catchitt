@@ -554,6 +554,165 @@ export const SearchPage = () => {
             </>
         );
     };
+    
+    const renderTopSearchResults = (videosData: Video[], usersData: User[], darkTheme: string, textColor: string) => {
+        
+            const categoryFilter = usersData.filter((user) => {
+                const isVerifiedMatch = usersFilter.category === 'verified' ? user.isVerified : true;
+                const isFollowedMatch = usersFilter.category === 'followed' ? user.isFollowed : true;
+
+                return isVerifiedMatch && isFollowedMatch;
+            });
+
+            const filteredUsersData = categoryFilter.filter((user) => {
+                let userLimit = usersFilter.limit;
+                if (usersFilter.limit == 0) return true;
+
+                let limit =
+                    user.numberOfFollowers <= userLimit &&
+                    user.numberOfFollowers > (userLimit == 1000 ? 0 : userLimit / 10);
+                return limit;
+            });
+
+        // Create a filteredVideosData array based on the selected checkboxes
+        const filteredVideosData = videosData.filter((video) => {
+            if (videosFilter.category === 'liked') {
+                return video.isLiked; // Display videos where isLiked is true for "Liked"
+            } else if (videosFilter.category === 'followed') {
+                return video.user.isFollowed; // Display videos where user is followed for "People you follow"
+            }
+            return true; // Default to true if no checkbox is selected
+        });
+        // Sort the filtered videos based on 'likes' in descending order when 'selectedLikeCountVideos' is true
+        if (videosFilter.count) {
+            filteredVideosData.sort((a, b) => b.likes - a.likes);
+        }
+
+        return (
+            <>
+                    {filteredUsersData.length === 0 ? (
+                        <div
+                            className={styles.usersList}
+                            style={{ alignItems: 'center', background: 'transparent', height: '200px' }}
+                        >
+                            <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                        </div>
+                    ) : (
+                        <div className={`${styles.usersList} ${darkTheme}`}>
+                            {filteredUsersData?.map((user, index) => (
+                                <div
+                                    className={styles.userFrame}
+                                    style={{ alignItems: 'center' }}
+                                    key={index}
+                                >
+                                    <img
+                                        src={user.avatar === '' ? profileIcon : user.avatar}
+                                        alt=""
+                                        className={styles.userImg}
+                                        onClick={() => navigate(`/profile/${user._id}`)}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            width: 'inherit',
+                                        }}
+                                    >
+                                        <div className={styles.userInfo}>
+                                            <p><h5 className={`${styles.userNameText} ${textColor}`}>{user.username}</h5></p>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    gap: '8px',
+                                                    alignItems: 'center !important',
+                                                    justifyContent: 'center !important',
+                                                }}
+                                            >
+                                                <p>{user.name}</p>
+                                                <p>.</p>
+                                                <p>
+                                                    <span style={{ fontWeight: '600' }}>
+                                                        {user.numberOfFollowers}
+                                                    </span>{' '}
+                                                    followers
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {/* <div className={styles.viewsDiv}>
+                                            <button
+                                                className={
+                                                    (followedUsersData.length > 0 &&
+                                                        followedUsersData.some(
+                                                            (user) =>
+                                                                user.followed_userID._id === user._id
+                                                        )) ||
+                                                    user.isFollowed
+                                                        ? styles.followingBtn
+                                                        : styles.followBtn
+                                                }
+                                                onClick={(event) => handleFollowClick(user._id)}
+                                            >
+                                                {followedUsersData.some(
+                                                    (user) => user.followed_userID._id === user._id
+                                                ) || user.isFollowed
+                                                    ? 'Following'
+                                                    : 'Follow'}
+                                            </button>
+                                        </div> */}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <br/>
+                    {filteredVideosData.length === 0 ? (
+                        <div
+                            className={styles.usersList}
+                            style={{ alignItems: 'center', background: 'transparent', height: '200px' }}
+                        >
+                            <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                        </div>
+                    ) : (
+                        <div className={styles.postsList}>
+                            {filteredVideosData.map((video: Video, index) => (
+                                <div className={styles.postCard} key={index}>
+                                    {/* Render your video card content here */}
+                                    <img
+                                        src={video?.thumbnail || video?.thumbnailUrl}
+                                        alt=""
+                                        style={{ objectFit: 'cover', cursor: 'pointer' }}
+                                        onClick={() => {
+                                            setVideoModalInfo(video);
+                                            setVideoModal(true);
+                                        }}
+                                    />
+                                    <p className={styles.videoDescription}>{video.description}</p>
+                                    <div className={styles.postInfo}>
+                                        <div className={styles.postCreatorInfo}>
+                                            <img
+                                                src={
+                                                    video.user.avatar === ''
+                                                        ? profileIcon
+                                                        : video.user.avatar
+                                                }
+                                                alt=""
+                                            />
+                                            <p>{video.user.name}</p>
+                                        </div>
+                                        <div className={styles.viewsDiv}>
+                                            <img src={playIcon} alt="" />
+                                            <p>{video.views}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+        
+            </>
+        );
+    };
 
     useEffect(() => {
         handleFetchSearch();
@@ -686,7 +845,7 @@ export const SearchPage = () => {
             case 'Hashtags':
                 return renderHashtagsSearchResults(hashtagsData);
             default:
-                return renderVideosSearchResults(videosData);
+                return renderTopSearchResults(videosData, usersData, darkTheme, textColor);
         }
     }, [searchQuery, selectedTab, applyFilter, searchResults, darkTheme]);
 
