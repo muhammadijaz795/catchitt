@@ -33,7 +33,7 @@ function LongPressButton({ onClick, onLongPress, children }: any) {
             // onMouseDown={handleMouseDown}
             // onMouseUp={handleMouseUp}
             onMouseEnter={()=>onLongPress()}
-            onMouseLeave={()=>onClick()}
+            onMouseLeave={()=>setPressing(false)}
             // onTouchStart={handleMouseDown}
             // onTouchEnd={handleMouseUp}
         >

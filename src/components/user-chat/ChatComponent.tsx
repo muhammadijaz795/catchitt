@@ -706,6 +706,7 @@ const ChatComponent = () => {
                                 activeUser={activeUser}
                                 longPressH={longPressH}
                                 autoScrolElem={autoScrolElem}
+                                scrollToBottom={scrollToBottom}
                                 activeChat={activeChat}
                                 copyH={copyH}
                                 showToast={showToast}
