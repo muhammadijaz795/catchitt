@@ -115,6 +115,7 @@ export default function PopupForVideoPlayer({
     const [currentCommentReplyIndex, setCurrentCommentReplyIndex] = useState(-1);
     const [sendPopup, setSendPopup] = useState(false);
     const [isPickerVisible, setPickerVisible] = useState(false);
+    const [commentEmojiIndex, setCommentEmojiIndex] = useState(-1);
 
     const videoData = {
         videoId: info?.mediaId,
@@ -193,11 +194,13 @@ export default function PopupForVideoPlayer({
         setComment((prevText) => prevText + emojiObject.emoji); // Append emoji to input text
     };
 
+    const onReplyEmojiClick = (emojiObject: any) => {
+        setCommentReply((prevText) => prevText + emojiObject.emoji); // Append emoji to input text
+    };
+
 
     const saveVideoToggler = async () => {
         if (isUserLoggedIn()) {
-            isSaved ? setVideoSaves(videoSaves - 1) : setVideoSaves(videoSaves + 1);
-            setIsSaved(!isSaved);
             try {
                 const likeUnlikeVideo = await fetch(
                     `${API_KEY}/media-content/collections/${info?.mediaId}`,
@@ -209,7 +212,11 @@ export default function PopupForVideoPlayer({
                         },
                     }
                 );
-                await likeUnlikeVideo.json();
+                const resp = await likeUnlikeVideo.json();
+                if (resp.message === "Success") {
+                    isSaved ? setVideoSaves(prev => prev - 1) : setVideoSaves(prev => prev + 1);
+                    setIsSaved(!isSaved);
+                }
                 // fetchMediaById(selectedVideoId);
             } catch (error) {
                 console.log('🚀 ~ saveVideoToggler ~ error:', error);
@@ -373,8 +380,12 @@ export default function PopupForVideoPlayer({
                 setCommentReply('');
                 showToastSuccess('Comment reply posted');
                 fetchMediaById(info?.mediaId);
+                setIsReplyToCommentClicked(false);
+                setCommentEmojiIndex(-1);
             } catch (error) {
                 console.log('🚀 ~ addCommentHandler ~ error:', error);
+                setIsReplyToCommentClicked(false);
+                setCommentEmojiIndex(-1);
             }
         } else {
             loginPopup();
@@ -555,15 +566,13 @@ export default function PopupForVideoPlayer({
             setAddCommentLoading(false);
             // setVideoComments((prevComments: []) => [data?.data, ...prevComments]);
             paginateComments(true);
-            setPickerVisible(false);
+            setCommentEmojiIndex(-1);
         } catch (error) {
             console.log('🚀 ~ addCommentHandler ~ error:', error);
             setAddCommentLoading(false);
-            setPickerVisible(false);
-
+            setCommentEmojiIndex(-1);
         }
     };
-
 
     const handleFollowClick = async () => {
         if (!userId) toast.error('Try again later');
@@ -607,17 +616,15 @@ export default function PopupForVideoPlayer({
         setIsCommentsLoading(false);
         setIsReportElipsisVisible(false);
         setIsTooltipVisible(false);
-        setPickerVisible(false);
+        setCommentEmojiIndex(-1);
         onclose();
     };
-
 
     useEffect(() => {
         // setSelectedVideoId(info?.mediaId);
         setTextToCopy(`${BASE_URL_FRONTEND}/${userName}/video/${info?.mediaId}`);
 
     }, [info]);
-
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -929,6 +936,7 @@ export default function PopupForVideoPlayer({
                                                         setIsReportElipsisVisible(true);
                                                         setCurrentCommentIndex(comment_index);
                                                         setIsReplyToCommentClicked(false);
+                                                        setCommentEmojiIndex(-1);
                                                     }}
                                                     onMouseLeave={() => {
                                                         setIsReportElipsisVisible(false);
@@ -1025,7 +1033,7 @@ export default function PopupForVideoPlayer({
                                                                                                     alt="at-the-rate-icon"
                                                                                                 />
                                                                                             </div>
-                                                                                            <div className="rounded-lg cursor-pointer hover:bg-[#1618230f] my-[0.438rem] mx-[0.188rem]">
+                                                                                            <div onClick={()=>setCommentEmojiIndex(comment_index)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] my-[0.438rem] mx-[0.188rem]">
                                                                                                 <img
                                                                                                     className={`w-5 h-5 object-contain rounded-full`}
                                                                                                     src={
@@ -1071,7 +1079,7 @@ export default function PopupForVideoPlayer({
                                                                                 </div>
                                                                             )}
                                                                     </div>
-                                                                    {/* <EmojiPicker className="mt-2" open={isPickerVisible} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} /> */}
+                                                                 <EmojiPicker className="mt-2" open={(commentEmojiIndex === comment_index)?true:false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onReplyEmojiClick} />
                                                                 </div>
 
                                                                 <div
@@ -1249,7 +1257,7 @@ export default function PopupForVideoPlayer({
                                                                                             ?.user?.name
                                                                                     }
                                                                                 </p>
-                                                                                <p className="font-normal text-[#252525] text-base cursor-pointer">
+                                                                                <p className="font-normal text-[#807a7a] text-base cursor-pointer">
                                                                                     {
                                                                                         comment_replies?.reply
                                                                                     }
@@ -1487,7 +1495,7 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     )} */}
                                     {/* Add comment section */}
-                                    <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]">
+                                    <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{zIndex:99}}>
                                         <div className="flex flex-row items-center">
                                             <div
                                                 className={`bg-[#FFFFFF1F] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn()
@@ -1496,6 +1504,8 @@ export default function PopupForVideoPlayer({
                                                     } rounded-lg cursor-text pr-2 pl-4 w-full`}
                                             >
                                                 <input
+                                                    onFocus={()=>{setIsReplyToCommentClicked(false);
+                                                        setCommentEmojiIndex(-1);}}
                                                     ref={inputRef}
                                                     onClick={loginToCommentHandler}
                                                     value={comment}
@@ -1526,7 +1536,7 @@ export default function PopupForVideoPlayer({
                                                                 alt="at-the-rate-icon"
                                                             />
                                                         </div>
-                                                        <div onClick={() => setPickerVisible(prev => !prev)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
+                                                        <div onClick={() =>setCommentEmojiIndex(prev => prev===-2? -1: -2)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
                                                             <img
                                                                 className={`w-5 h-5 object-contain rounded-full`}
                                                                 src={commentEmoji}
@@ -1557,7 +1567,7 @@ export default function PopupForVideoPlayer({
                                                 </div>
                                             )}
                                         </div>
-                                        <EmojiPicker className="mt-2" open={isPickerVisible} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} />
+                                        <EmojiPicker className="mt-2" open={commentEmojiIndex === -2? true: false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} />
 
                                         {isMentioning && (
                                             <div

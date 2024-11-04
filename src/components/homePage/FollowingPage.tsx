@@ -29,7 +29,7 @@ import style from './index.module.scss';
 
 function FollowingPage() {
     const isMobile = useMediaQuery('(max-width:700px)');
-    const { loading, videos, activeTab, setActiveTab, isFollowing } = useHome();
+    const { loading, videos, activeTab, setActiveTab, isFollowing } = useHome({ tabIndex: 1 });
     const [videoModalInfo, setVideoModalInfo] = useState<any>({});
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [reportPopup, setReportPopup] = useState(false);
@@ -343,6 +343,8 @@ function FollowingPage() {
     };
 
     useEffect(() => {
+        setActiveTab(1);
+
         fetchCountriesList();
     }, []);
 

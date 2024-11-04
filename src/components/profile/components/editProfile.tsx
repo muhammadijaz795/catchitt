@@ -1,5 +1,5 @@
 import { Avatar, CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defaultAvatar } from '../../../icons';
 import { getProfileData } from '../../../redux/AsyncFuncs';
@@ -14,6 +14,8 @@ interface Props {
 }
 
 export default function EditProfile({ onCancel, onSave }: Props) {
+
+    const [birthDate, setBirthDate] = useState('');
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
     const [avatar, setAvatar] = useState('');
@@ -23,10 +25,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     const [website, setWebsite] = useState('');
     const [category, setCategory] = useState('');
     const [country, setCountry] = useState('');
-    const [day, setDay] = useState('');
-    const [month, setMonth] = useState('');
     const API_KEY = process.env.VITE_API_URL;
-    const [year, setYear] = useState('');
     const [profileData, setProfileData] = useState<any>(null);
     const [mediaCategories, setMediaCategories] = useState<any>([]);
     const [countries, setCountries] = useState<any>([]);
@@ -45,6 +44,8 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     const [darkTheme, setdarkTheme] = useState('');
     const [lightTheme, setlightTheme] = useState('bg-custom-light');
 
+    const calenderRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
@@ -56,31 +57,33 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     const handleSubmit = (e: any) => {
         e.preventDefault();
         try {
-            let updatedProfileData: any = {
-                name,
-                bio,
-                birthday: `${month}-${day}-${year}`,
-                countries,
-                contactEmail: email,
-                website,
-                businessCategory: category,
-            };
 
-            // const formData = new FormData();
+            // let updatedProfileData:any = JSON.stringify({
+            //     "name": name,
+            //     "bio": bio,
+            //     "contactEmail": email,
+            //     "website": website,
+            //     "businessCategory": category,
+            //     "birthday": birthDate,
+            //     "country": country,
+            // });
+            const formData = new FormData();
 
             // // Append other fields to the FormData object
-            // formData.append('name', name);
-            // formData.append('bio', bio);
-            // formData.append('birthday', `${month}-${day}-${year}`);
-            // formData.append('countries', countries);
-            // formData.append('website', website);
-            // formData.append('businessCategory', category);
+            formData.append("avatar", fileObj);
+            formData.append("name", name);
+            formData.append("bio", bio);
+            formData.append('contactEmail', email);
+            formData.append('website', website);
+            formData.append('businessCategory', category);
+            formData.append('birthday', birthDate);
+            formData.append('country', country);
 
             // Send the PATCH request with FormData
             fetch(`${API_KEY}/profile/`, {
-                method: 'PATCH',
-                headers: { Authorization: `Bearer ${token}` },
-                body: JSON.stringify(updatedProfileData),
+                method: "PATCH",
+                body: formData,
+                headers: { 'Authorization': `Bearer ${token}` },
             })
                 .then((res) => res.json())
                 .then((res) => {
@@ -143,9 +146,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                     setEmail(response?.email);
                     setWebsite(response?.website);
                     setAvatar(response?.avatar);
-                    setYear(response?.dateOfBirth?.slice(0, 4));
-                    setMonth(response?.dateOfBirth?.slice(5, 7));
-                    setDay(response?.dateOfBirth?.slice(8, 10));
+                    setBirthDate(response?.dateOfBirth?.split('T')[0]);
                     setUserSelectedCategory(
                         response?.businessCategory !== null && response?.businessCategory !== ''
                             ? response?.businessCategory
@@ -232,15 +233,6 @@ export default function EditProfile({ onCancel, onSave }: Props) {
             case 'category':
                 setCategory('');
                 break;
-            case 'day':
-                setDay('');
-                break;
-            case 'month':
-                setMonth('');
-                break;
-            case 'year':
-                setYear('');
-                break;
             case 'countries':
                 setCountries([]);
                 break;
@@ -263,6 +255,13 @@ export default function EditProfile({ onCancel, onSave }: Props) {
             console.error('Error fetching base64 image:', error);
         }
     };
+
+    const showSiblingCalender = () => {
+        if (calenderRef.current) {
+            calenderRef.current.showPicker();
+        }
+    }
+
     return (
         <>
             <form onSubmit={handleSubmit} className={`${darkTheme}`}>
@@ -343,53 +342,17 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                             ))}
                         </select>
                         <div className={styles['div-17']}>Birth Date</div>
-                        <div className={styles['div-18']}>
-                            <div className={styles['div-19']}>
-                                <input
-                                    placeholder="DD"
-                                    className={styles['div-20']}
-                                    value={day}
-                                    onChange={(e) => setDay(e.target.value)}
-                                    maxLength={2}
-                                />
-                                <img
-                                    loading="lazy"
-                                    src="/images/icons/cross-icon.svg"
-                                    className={styles['img-5']}
-                                    onClick={() => onResetField('day')}
-                                />
-                            </div>
-                            <div className={styles['div-21']}>
-                                <input
-                                    placeholder="MM"
-                                    className={styles['div-22']}
-                                    value={month}
-                                    onChange={(e) => setMonth(e.target.value)}
-                                    maxLength={2}
-                                />
-                                <img
-                                    src="/images/icons/cross-icon.svg"
-                                    loading="lazy"
-                                    className={styles['img-6']}
-                                    onClick={() => onResetField('month')}
-                                />
-                            </div>
-                            <div className={styles['div-23']}>
-                                <input
-                                    placeholder="YYYY"
-                                    className={styles['div-24']}
-                                    value={year}
-                                    onChange={(e) => setYear(e.target.value)}
-                                    maxLength={4}
-                                />
-                                <img
-                                    src="/images/icons/cross-icon.svg"
-                                    loading="lazy"
-                                    className={styles['img-7']}
-                                    onClick={() => onResetField('year')}
-                                />
-                            </div>
+                        <div className={`${styles.dateInputWrapper} mt-3`}>
+                            <input
+                                className={`${styles['input-5']} w-full mt-0`}
+                                ref={calenderRef}
+                                type='date'
+                                value={birthDate}
+                                onChange={(e) => setBirthDate(e.target.value)}
+                            />
+                            <span onClick={showSiblingCalender} className={styles.customIcon}>📅</span>
                         </div>
+
                         <div className={styles['div-25']}>Country</div>
                         <select
                             className={styles.select}

@@ -13,7 +13,7 @@ interface Tab {
     content: JSX.Element;
 }
 
-const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: boolean; userId: any }> = ({
+const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPublic: boolean; userId: any }> = ({
     openTab,
     onClose,
     isPublic,
@@ -34,11 +34,11 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
     const friends = useSelector((state: any) => state?.reducers?.profileSlice?.friends);
 
     const [loading, setLoading] = useState(false);
-    const [publicFollowers, setPublicFollowers] = useState([]);
-    const [publicFollowing, setPublicFollowings] = useState([]);
+    const [publicFollowers, setPublicFollowers] = useState<any[]>([]);
+    const [publicFollowing, setPublicFollowings] = useState<any[]>([]);
 
-    const [totalFollowingPublic, setTotalFollowingPublic] = useState(0);
-    const [totalFollowersPublic, setTotalFollowersPublic] = useState(0);
+    const [totalFollowingPublic, setTotalFollowingPublic] = useState(null);
+    const [totalFollowersPublic, setTotalFollowersPublic] = useState(null);
 
     const token = localStorage.getItem('token');
 
@@ -67,7 +67,7 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
     };
 
     const [darkTheme, setdarkTheme] = useState<any>(null);
-    
+
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
@@ -85,10 +85,10 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
                     // console.log("publicFollowers")
                     // console.log(publicFollowers.length)
 
-                    if (followingPage == 1 || totalFollowersPublic > publicFollowers.length) {
+                    if (totalFollowersPublic === null ||totalFollowersPublic > publicFollowers.length) {
                         const followingResponse = await fetch(
                             // `${API_KEY}/profile/${userId}/following?page=${followingPage}&pageSize=10`,
-                            `${API_KEY}/profile/${userId}/following?page=${followingPage}&pageSize=10`,
+                            `${API_KEY}/profile/${userId}/followers?page=${followersPage}&pageSize=10`,
                             {
                                 method: 'GET',
                                 headers: {
@@ -99,14 +99,12 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
                         );
 
                         const followingData = await followingResponse.json();
-
-                        setPublicFollowers(publicFollowers.concat(followingData?.data?.data || []));
-                        if (followingPage == 1) {
-                            setTotalFollowersPublic(followingData?.data?.total || 0);
-                        }
+                        console.log('following data 🚀🚀🚀🚀', followingData.data);
+                        setPublicFollowers(prev => [...prev, ...followingData?.data?.data]);
+                        setTotalFollowersPublic(followingData?.data?.total || 0);
                     }
                 } else {
-                    dispatch(loadFollowing(followingPage));
+                    dispatch(loadFollowers(followersPage));
                 }
                 setLoading(false);
             } catch (error) {
@@ -116,15 +114,15 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
         };
 
         fetchData();
-    }, [isPublic, userId, followingPage]);
+    }, [isPublic, userId, followersPage]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 if (isPublic) {
-                    if (followersPage == 1 || totalFollowingPublic > publicFollowing.length) {
+                    if (totalFollowingPublic === null || totalFollowingPublic > publicFollowing.length) {
                         const followersResponse = await fetch(
-                            `${API_KEY}/profile/${userId}/followers?page=${followersPage}&pageSize=10`,
+                            `${API_KEY}/profile/${userId}/following?page=${followingPage}&pageSize=10`,
                             {
                                 method: 'GET',
                                 headers: {
@@ -146,18 +144,12 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
 
                         // console.log("ollowingData?.total")
                         // console.log(followingData?.total)
-
-                        setPublicFollowings(
-                            publicFollowing.concat(followingData?.data?.data || [])
-                        );
-                        if (followersPage == 1) {
-                            setTotalFollowingPublic(
-                                totalFollowingPublic + (followingData?.data?.total || 0)
-                            );
-                        }
+                        console.log('followers data 🚀🚀🚀🚀', followingData.data);
+                        setPublicFollowings(prev => [...prev, ...followingData?.data?.data]);
+                        setTotalFollowingPublic(followingData?.data?.total || 0);
                     }
                 } else {
-                    dispatch(loadFollowers(followersPage));
+                    dispatch(loadFollowing(followingPage));
                 }
                 setLoading(false);
             } catch (error) {
@@ -166,7 +158,12 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
             }
         };
         fetchData();
-    }, [isPublic, userId, followersPage]);
+    }, [isPublic, userId, followingPage]);
+
+    useEffect(() => {
+       console.log("opentab 🚀🚀🚀", openTab)
+    }, [openTab])
+    
 
     useEffect(() => {
         if (!isPublic) {
@@ -187,9 +184,9 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
                     <FollowingTab
                         onScrollBottom={loadMoreFollorwing}
                         isPublic={isPublic}
-                        following={isPublic ? publicFollowers : following}
+                        following={isPublic ? publicFollowing : following}
                         onClose={onClose}
-                        followingTotal={totalFollowing}
+                        followingTotal={isPublic? totalFollowingPublic :totalFollowing}
                     />
                 </>
             ),
@@ -199,10 +196,11 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
             content: (
                 <>
                     <FollowersTab
-                        onScrollBottom={loadMoreFollowers}
-                        isPublic={isPublic}
-                        followers={isPublic ? publicFollowing : followers}
                         onClose={onClose}
+                        followers={isPublic ? publicFollowers : followers}
+                        isPublic={isPublic}
+                        onScrollBottom={loadMoreFollowers}
+                        followersTotal={isPublic? totalFollowersPublic : totalFollowers}
                     />
                 </>
             ),
@@ -247,7 +245,7 @@ const FollowModal: React.FC<{ openTab: string, onClose: () => void; isPublic: bo
     return (
         <>
             <div className={`${styles.div} overflow-y-auto  no-scrollbar ${darkTheme}`} id="ModalscrollableDiv">
-                <span className={styles['div-2']}>{name} </span>
+                <span className={styles['div-2']}>{name}</span>
                 <div className={styles['div-3']}>
                     {tabs.map((tab, index) => (
                         <div

@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { avatar, downArrow, search } from '../../../icons';
 import CustomButton from '../../../shared/buttons/CustomButton';
@@ -11,6 +11,7 @@ import TagsInput from '../../../shared/input/TagsInput';
 import CustomModel from '../../../shared/popups/CustomModel';
 import CustomPopup from '../../../shared/popups/CustomPopup';
 import BasicSwitch from '../../../shared/switch/BasicSwitch';
+import { API_KEY } from '../../../utils/constants';
 
 function FormRightSide(props: any) {
     const {
@@ -38,6 +39,45 @@ function FormRightSide(props: any) {
     const categories = useSelector((store: any) => store?.reducers?.videoCategories) || [];
 
     const [postCategories, setPostCategories] = useState(categories);
+    const [countries, setCountries] = useState<any>([]);
+    const [loading, setLoading] = useState(true);
+    const token = localStorage.getItem('token');
+
+    const loadCountries = () => {
+        setLoading(true);
+        try {
+            fetch(`${API_KEY}/util/countries`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    let response = data?.data;
+                    const countriesList = response?.countries?.map(
+                        (country: { name: string; code: string }) => {
+                            const name = country?.name;
+                            const code = country?.code;
+                            return {
+                                name,
+                                code,
+                            };
+                        }
+                    );
+                    setCountries(countriesList);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // useEffect(() => {
+    //     loadCountries();
+    // }, []);
 
     const dropDownH = (e: any) => {
         const filteredCategories = categories.filter((item: any) => {

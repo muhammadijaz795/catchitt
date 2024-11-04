@@ -15,6 +15,7 @@ import {
 } from '../../../icons';
 import { BASE_URL_FRONTEND } from '../../../utils/constants';
 import style from './index.module.scss';
+import LinkIcon from '../../../components/shared-video/svg-components/link-icon.svg';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
 export default function COPY_AND_SEND_MENU_HOME({
@@ -167,13 +168,17 @@ export default function COPY_AND_SEND_MENU_HOME({
             >
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={popupHandler}>
-                        <img src={send} />
+                        <div className="h-7 w-7 flex items-center justify-center bg-white shadow-md rounded-full">
+                            <img src={send} style={{width:'1.1rem', height: '1.1rem'}} alt="Send" />
+                        </div>
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
                     </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={copyHandler}>
-                        <img src={copyLink} />
+                        <div className="h-7 w-7 flex items-center justify-center bg-red-500 rounded-full">
+                            <img src={LinkIcon} style={{width:'1.1rem', height: '1.1rem'}} alt="Copy Link" />
+                        </div>
                         <p className={`${style.p} ${style.black_500}`}>Copy link</p>
                     </div>
                 </MenuItem>

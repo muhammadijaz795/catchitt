@@ -24,7 +24,7 @@ import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 
 function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
-    const { loading, videos, activeTab, setActiveTab, isFollowing } = useHome();
+    const { loading, videos, activeTab, setActiveTab, isFollowing } = useHome({ tabIndex: 2 });
     const [videoModalInfo, setVideoModalInfo] = useState<any>({});
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [reportPopup, setReportPopup] = useState(false);

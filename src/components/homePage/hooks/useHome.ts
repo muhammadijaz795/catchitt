@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getHomeVideos } from '../../../redux/AsyncFuncs';
 import { updateHomeVideos } from '../../../redux/reducers';
 
-function useHome() {
+function useHome({ tabIndex }: any) {
     const isLoggedIn = localStorage.getItem('token');
     const [loading, setLoading] = useState<boolean>(false);
-    const [activeTab, setActiveTab] = useState<number>(2);
+    const [activeTab, setActiveTab] = useState<number>(tabIndex);
     const [isFollowing, setIsFollowing] = useState(false);
     const auth: any = useSelector((store: any) => store?.reducers?.profile);
     // @ts-ignore

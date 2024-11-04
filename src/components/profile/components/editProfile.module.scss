@@ -642,3 +642,23 @@ div.darkTheme span{
   // background: rgb(255, 255, 255) !important;
   // color:black !important;
 }
+
+.dateInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.customIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Allows clicks on the input */
+  font-size: 16px;
+  color: #555;
+}
+
+.div input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}

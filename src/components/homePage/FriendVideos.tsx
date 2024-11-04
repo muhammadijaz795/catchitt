@@ -50,7 +50,7 @@ function FriendVideos(props: any) {
     // @ts-ignore
     const isuploading = useSelector((store) => store?.reducers?.isuploading);
     // @ts-ignore
-    const suggestedUsers = useSelector((store) => store.reducers.suggestedAccounts);
+    const suggestedUsers = useSelector((store) => store.reducers.suggestedAccounts.data);
     const dispatch = useDispatch();
     const userActions: any = [
         { img: moreInHome, actionType: 'more' },

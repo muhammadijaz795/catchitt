@@ -64,7 +64,7 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
                             className={styles['img-2']}
                         />
                         <Link onClick={popupClose} to={'/profile/' + user?._id}>
-                            <div className={styles['div-20']}>{user?.name}</div>
+                            <span className={styles['div-20']}>{user?.name}</span>
                         </Link>
                     </div>
                     <div onClick={follow} style={button}>

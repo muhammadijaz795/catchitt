@@ -16,6 +16,7 @@ import CoverImagePopup from './cover-img-popup';
 import CreateStoryPopup from './createStoryPopup';
 import styles from './profileHeader.module.scss';
 import { BASE_URL_FRONTEND } from '../../../utils/constants';
+import defaultBanner from '../../../assets/postExample.png';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -49,7 +50,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
     const name = useSelector((state: any) => state?.reducers?.profile?.name);
     const userName = useSelector((state: any) => state?.reducers?.profile?.username);
     const coverImg = useSelector((state: any) => state?.reducers?.profile?.cover);
-    const [imgBase64, setImgBase64] = useState(coverImg);
+    const [imgBase64, setImgBase64] = useState(coverImg != ''? coverImg: defaultBanner);
     try {
         const profileFromStorage = localStorage.getItem('profile');
         if (profileFromStorage) {
@@ -201,13 +202,11 @@ const ProfileHeader: FunctionComponent<Props> = ({
                     <div onClick={chooseNewCoverImg} className={styles.banerIcon}>
                         <EditIcon />
                     </div>
-                    {imgBase64 != '' && (
-                        <img
-                            className={styles.bannerImg}
-                            src={imgBase64 != '' ? imgBase64 : coverImg}
-                            alt="Banner Img"
-                        />
-                    )}
+                    <img
+                        className={styles.bannerImg}
+                        src={imgBase64 != '' ? imgBase64 : coverImg}
+                        alt="Banner Img"
+                    />
                 </div>
                 <div className={styles.bottomContainer}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -252,7 +251,7 @@ const ProfileHeader: FunctionComponent<Props> = ({
                             onClick={() => onFollowModalActive('following')}
                             className={styles.statContainer}
                         >
-                            <p className={styles.boldText} onClick={()=>console.log(profileData)}>{profileData?.followingNumber ?? 0}</p>
+                            <p className={styles.boldText} onClick={() => console.log(profileData)}>{profileData?.followingNumber ?? 0}</p>
                             <p className={styles.text}>Following</p>
                         </div>
                         <div

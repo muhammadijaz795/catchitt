@@ -11,6 +11,7 @@ import styles from './profileHeader.module.scss';
 import { useAuthStore } from '../../../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { get, post } from '../../../axios/axiosClient';
+import defaultBanner from '../../../assets/postExample.png';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -39,7 +40,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
     const [messageBtn, setMessageBtn] = useState(false);
     const [conversationId, setconversationId] = useState("");
-    const [stories, setStories] = useState([1,2,3]);
+    const [stories, setStories] = useState([1, 2, 3]);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
@@ -62,54 +63,54 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
         //     .catch((err) => {
         //         console.log('collectons error', err);
         //     });
-        handleProfileData(params?.id); 
+        handleProfileData(params?.id);
     }, []);
-    
-    const handleProfileData = async (userId:any) => {
+
+    const handleProfileData = async (userId: any) => {
         console.log("handleProfileData", userId)
-            try {
-                const response = await fetch(
-                    API_KEY + `/profile/${userId}`, {
-                        method: 'GET',
-                        headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-                    }
-                );
-                const responseData = await response.json();
-                console.log('GET profile data',responseData);
-                if((responseData.data.isFollowed == true && responseData.data.isFollowingMe == true) ||
-                 (responseData.data.existingConversationId != null && responseData.data.existingConversationId != "")){
-                    setMessageBtn(true);
-                    setconversationId(responseData.data.existingConversationId);
-                }
-            } catch (error) {
-                console.log(error);
+        try {
+            const response = await fetch(
+                API_KEY + `/profile/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             }
-        };
-    
+            );
+            const responseData = await response.json();
+            console.log('GET profile data', responseData);
+            if ((responseData.data.isFollowed == true && responseData.data.isFollowingMe == true) ||
+                (responseData.data.existingConversationId != null && responseData.data.existingConversationId != "")) {
+                setMessageBtn(true);
+                setconversationId(responseData.data.existingConversationId);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleMessage = async () => {
         console.log("handleMessage", userId)
-            try {
-                if(conversationId == null || conversationId == ""){
-                    const LoggedInUserId = localStorage.getItem('userId');
-                    const result = await post(`/chat/messages`,{
-                        type: 'application/json',
-                        data: {
-                            from: LoggedInUserId,
-                            to: userId,
-                            message: "Hi",
-                        },
-                    });
-                    if (result?.data) {
-                        console.log("Message sent");
-                        navigate(`/chat`);
-                    }
-                }else{
+        try {
+            if (conversationId == null || conversationId == "") {
+                const LoggedInUserId = localStorage.getItem('userId');
+                const result = await post(`/chat/messages`, {
+                    type: 'application/json',
+                    data: {
+                        from: LoggedInUserId,
+                        to: userId,
+                        message: "Hi",
+                    },
+                });
+                if (result?.data) {
+                    console.log("Message sent");
                     navigate(`/chat`);
                 }
-            } catch (error) {
-                console.log(error);
+            } else {
+                navigate(`/chat`);
             }
-        };
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const manageFollowBtn = async () => {
         setfollowBtnLoading(true);
@@ -119,9 +120,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     return (
         <div className={styles.profileHeader}>
             <div className={styles.banner}>
-                {profileData?.cover && (
-                    <img className={styles.bannerImg} src={profileData?.cover} alt="Banner Img" />
-                )}
+                <img className={styles.bannerImg} src={profileData && profileData?.cover!= ''? profileData?.cover: defaultBanner} alt="Banner Img" />
             </div>
             <div className={styles.bottomContainer}>
                 <div
@@ -185,15 +184,15 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                 </div>
                 <p className={styles.about}>{profileData?.bio}</p>
                 <div className={styles.actions}>
-                    {messageBtn && 
+                    {messageBtn &&
                         <button style={{ width: 112 }} className={styles.button} onClick={handleMessage}>
                             Messages
                         </button>
                     }
                     {followings?.data?.length > 0 &&
-                    followings?.data?.some(
-                        (user: any) => user.followed_userID._id === params?.id
-                    ) ? (
+                        followings?.data?.some(
+                            (user: any) => user.followed_userID._id === params?.id
+                        ) ? (
                         <button
                             style={{ width: 116 }}
                             className={styles.button2}

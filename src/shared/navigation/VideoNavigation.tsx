@@ -40,7 +40,7 @@ function VideoNavigation(props: { videoListRef: any }) {
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            event.preventDefault();
+            // event.preventDefault();
             if (event.key === 'ArrowUp') {
                 scrollToVideo(false);
             } else if (event.key === 'ArrowDown') {

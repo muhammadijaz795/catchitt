@@ -1,5 +1,5 @@
 import styles from './privatePosts.module.scss'
-export const PrivatePosts = () => {
+export const PrivatePosts = ({ tab, name}: any) => {
     return (
         <div className={styles.privatepost}>
             <img
@@ -8,13 +8,13 @@ export const PrivatePosts = () => {
                 alt=""
             />
             <p style={{ marginTop: 15 }} className={styles.privatevideostext}>
-                This user's tagged posts are private
+                This user's {tab&&tab} {tab ==="Liked Videos" && 'posts'} are private
             </p>
             <p
                 style={{ marginBottom: 78 }}
                 className={styles.privatevideostext}
             >
-                Tagged posts of sarasaid171 are currently hidden
+                {tab&&tab} {tab ==="Liked Videos" && 'posts'} of {name&&name} are currently hidden
             </p>
         </div>
     )

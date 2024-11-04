@@ -141,7 +141,9 @@
     .mediaContainer {
       // background-color: #000;
       margin: auto;
-      max-width: 435px;
+      // max-width: 435px;
+      max-width: 48vh;
+      max-height: 85vh;
       position: relative;
       display: flex;
       justify-content: center;

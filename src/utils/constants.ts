@@ -137,7 +137,8 @@ export const STATUS_CODE = {
 };
 
 export const MENU_POPUP_OPTIONS = [
-    // { menuOption: 'English', imageUrl: '' },
+    { menuOption: 'Creator tools', imageUrl: '' },
+    { menuOption: 'English', imageUrl: '' },
     { menuOption: 'Feedback and help', imageUrl: '' },
     // { menuOption: 'Keyboard shortcuts', imageUrl: '' },
     { menuOption: 'Dark mode', imageUrl: '' },

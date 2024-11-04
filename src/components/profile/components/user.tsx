@@ -42,7 +42,7 @@ const User: React.FC<{
                             }}
                             to={'/profile/' + user?.followed_userID?.username}
                         >
-                            <div className={styles['div-20']}>{user?.followed_userID?.name}</div>
+                            <span className={styles['div-20']}>{user?.followed_userID?.name}</span>
                         </Link>
                     </div>
                     <div onClick={follow} className={styles['div-21']}>
