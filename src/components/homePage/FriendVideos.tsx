@@ -27,6 +27,7 @@ import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
 import { ToastContainer } from 'react-toastify';
 import { updateHomeVideos } from '../../redux/reducers';
+import VideoNavigation from '../../shared/navigation/VideoNavigation';
 // import { Toast } from 'react-toastify/dist/components';
 
 function FriendVideos(props: any) {
@@ -209,6 +210,7 @@ function FriendVideos(props: any) {
                         <p>Live</p>
                     </div> 
                 </div> */}
+                <VideoNavigation videoListRef={scrollableDivRef} />
                 <div className={style.videoesParent} ref={scrollableDivRef}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
                         videoes.map((post: any, number: number) => {
@@ -297,6 +299,7 @@ function FriendVideos(props: any) {
                                                         ? post?.reducedVideoHlsUrl
                                                         : post?.originalUrl
                                                 }
+                                                thumbnailImage={post?.thumbnailUrl}
                                                 controls={true}
                                                 post={post}
                                             />

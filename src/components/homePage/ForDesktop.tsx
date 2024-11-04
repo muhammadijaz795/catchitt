@@ -226,26 +226,7 @@ function ForDesktop(props: any) {
             paddingBottomProp={true}
         >
             <div className={`relative  ${style.parent} ${darkTheme}`}>
-                {/* <div className={style.tabs}>
-                     <div
-                        onClick={() => setActiveTab(1)}
-                        className={activeTab === 1 ? style.activeTab : style.tab}
-                    >
-                        <p>Following</p>
-                    </div>
-                    <div
-                        onClick={() => setActiveTab(2)}
-                        className={activeTab === 2 ? style.activeTab : style.tab}
-                    >
-                        <p>For You</p>
-                    </div>
-                    <div
-                        onClick={() => setActiveTab(3)}
-                        className={activeTab === 3 ? style.activeTab : style.tab}
-                    >
-                        <p>Live</p>
-                    </div> 
-                </div> */}
+               
                 <VideoNavigation videoListRef={scrollableDivRef} />
                 <div className={`${style.videoesParent} no-scrollbar mt-2`} ref={scrollableDivRef}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
@@ -253,69 +234,10 @@ function ForDesktop(props: any) {
                             return (
                                 <div key={number} id={post?.mediaId} className={style.videoParent}
                                     // ref={(el: HTMLLIElement | null) => itemsRef.current[number] = el} 
-                                   
                                     // style={{
                                         // backgroundColor: focusedIndex === number ? 'blue' : 'red',
                                     // }}
                                     >
-                                         
-                                    {/* <div className={style.videoHeader}>
-                                        <div className={style.videoHeaderSec1}>
-                                            <img
-                                                style={{
-                                                    borderRadius: '50%',
-                                                    width: '44px',
-                                                    height: '44px',
-                                                    cursor: 'pointer',
-                                                }}
-                                                src={post?.user?.avatar || defaultAvatar}
-                                                alt=""
-                                                onClick={() =>
-                                                    navigate(`/profile/${post?.user?._id}`)
-                                                }
-                                            />
-                                            <div>
-                                                <p className={style.name}>{post?.user?.name}</p>
-                                                <p className={style.userName}>
-                                                    {post?.user?.username}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <button
-                                            className={
-                                                followers?.data?.some(
-                                                    (user: any) =>
-                                                        user.followed_userID._id === post?.user?._id
-                                                )
-                                                    ? style.btn2
-                                                    : style.btn
-                                            }
-                                            onClick={() => follow_Unfollow_handler(post?.user?._id)}
-                                        >
-                                            {followBtnLoading &&
-                                            followimgbtnId === post?.user?._id ? (
-                                                <CircularProgress
-                                                    style={{ width: 20, height: 20 }}
-                                                />
-                                            ) : followers?.data?.some(
-                                                  (user: any) =>
-                                                      user.followed_userID._id === post?.user?._id
-                                              ) ? (
-                                                'Following'
-                                            ) : (
-                                                'Follow'
-                                            )}
-                                        </button>
-                                    </div> */}
-                                    {/* <div className={style.contentSec}>
-                                        <p>{post?.description}</p>
-                                        {post?.sound && (
-                                            <div>
-                                                <img src={music} alt="" />
-                                                <p>{post?.sound?.category?.name}</p>
-                                            </div>
-                                        )}
-                                    </div> */}
                                     <div className={style.mediaContainer} >
                                         <div
                                             style={{
@@ -348,31 +270,7 @@ function ForDesktop(props: any) {
                                                 number={number} 
                                             />
                                         </div>
-                                        {/* <div className={style.DivMediaCardBottom}>
-                                            <p
-                                                style={{
-                                                    textOverflow: 'ellipsis',
-                                                    overflow: 'hidden',
-                                                    whiteSpace: 'nowrap',
-                                                }}
-                                            >
-                                                {' '}
-                                                {post?.description}
-                                            </p>
-                                            {post?.sound && (
-                                                <p
-                                                    className="flex"
-                                                    style={{
-                                                        textOverflow: 'ellipsis',
-                                                        overflow: 'hidden',
-                                                        whiteSpace: 'nowrap',
-                                                    }}
-                                                >
-                                                    <img src={music} alt="" />{' '}
-                                                    {post?.sound?.category?.name}{' '}
-                                                </p>
-                                            )}
-                                        </div> */}
+                                    
                                         <div className={style.actions}>
                                             {isDarkTheme == true &&
                                                 userActions.map((obj: any, i: number) => {
