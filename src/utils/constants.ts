@@ -137,11 +137,11 @@ export const STATUS_CODE = {
 };
 
 export const MENU_POPUP_OPTIONS = [
-    { menuOption: 'Creator tools', imageUrl: '' },
-    { menuOption: 'English', imageUrl: '' },
-    { menuOption: 'Feedback and help', imageUrl: '' },
+    { menuOption: 'Creator tools', imageUrl: 'CreatorTools' },
+    { menuOption: 'English', imageUrl: 'Translation' },
+    { menuOption: 'Feedback and help', imageUrl: 'FeedHelp' },
     // { menuOption: 'Keyboard shortcuts', imageUrl: '' },
-    { menuOption: 'Dark mode', imageUrl: '' },
+    { menuOption: 'Dark mode', imageUrl: 'Dark' },
 ];
 
 export const DISCOVER_CATEGORIES = [

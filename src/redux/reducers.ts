@@ -66,6 +66,7 @@ const followers: any = createSlice({
     name: 'followings',
     initialState: {
         total: null,
+        page: 1,
         data: [],
     },
     reducers: {},
@@ -73,6 +74,7 @@ const followers: any = createSlice({
         builder.addCase(loadFollowers.fulfilled, (state: any, action: any) => {
             state.data = [...state.data, ...action.payload.data]
             state.total = action.payload?.total;
+            state.page = state.page + 1;
             return state;
         });
     },
@@ -192,7 +194,9 @@ type profileInitialState = {
     friends: any[];
     likes: any[];
     followingTotal: number | null;
+    followingPage: number;
     friendsTotal: number | null;
+    friendsPage: number;
 };
 
 const profileSlice = createSlice({
@@ -203,18 +207,22 @@ const profileSlice = createSlice({
         friends: [],
         likes: [],
         followingTotal: null,
+        followingPage: 1,
         friendsTotal: null,
+        friendsPage: 1,
     } as profileInitialState,
     reducers: {},
     extraReducers: (builder: any) => {
         builder.addCase(loadFollowing.fulfilled, (state: profileInitialState, action: any) => {
             state.following = [...state.following,...action.payload.data];
             state.followingTotal = action.payload.total;
+            state.followingPage = state.followingPage + 1;
             return state;
         });
         builder.addCase(getFriends.fulfilled, (state: profileInitialState, action: any) => {
             state.friends = [...state.friends,...action.payload.data];
             state.friendsTotal = action.payload.total;
+            state.friendsPage = state.friendsPage + 1;
             return state;
         });
     },
@@ -224,6 +232,7 @@ const suggestedAccounts: any = createSlice({
     name: 'suggestedAccounts',
     initialState: {
         data: [],
+        page: 1,
         total: null,
     },
     reducers: {},
@@ -231,6 +240,7 @@ const suggestedAccounts: any = createSlice({
         builder.addCase(getRandomUsers.fulfilled, (_state: any, action: any) => {
             _state.data =  [..._state.data, ...action.payload.data];
             _state.total = action.payload.total;
+            _state.page = _state.page + 1;
             return _state;
         });
     },

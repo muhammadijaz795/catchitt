@@ -1,11 +1,13 @@
 import React from 'react';
 import styles from './likesModal.module.scss';
-import { useSelector } from 'react-redux';
 
-interface LikesModalProps {}
+interface LikesModalProps { 
+    isPublic: boolean;
+    name: string;
+    totalLikes: number;
+}
 function LikesModal(props:LikesModalProps) {
-    const totalLikes = useSelector((state: any) => state?.reducers?.profile?.likesNum);
-    const name = useSelector((state: any) => state?.reducers?.profile?.name);
+    const { isPublic, name, totalLikes } = props;
 
     return (
         <>

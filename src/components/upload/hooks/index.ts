@@ -100,6 +100,7 @@ function useUpload() {
     }, [selectedFile]);
 
     const SubmitHandler = async () => {
+
         setIsPosting(true);
         let getLinks: any = {};
         let postPayload = new FormData();
@@ -121,13 +122,26 @@ function useUpload() {
         postPayload.append('allowDuet', `${state?.allowDuet || false}`);
         postPayload.append('allowDownload', `${state?.allowDownload || false}`);
         postPayload.append('place', state?.place || '');
-        // postPayload.append('taggedUsers', '');
+        // postPayload.append('taggedUsers', state?.taggedUsers || []);
         // postPayload.append('replyOnComment', '');
+
+        // const postPayload = JSON.stringify({
+        //     videoId: getLinks?.data?.data?.videoId,
+        //     videoUrl: getLinks?.data?.data?.videoUrl?.split('?')[0],
+        //     thumbnailUrl: getLinks?.data?.data?.thumbnailUrl?.split('?')[0],
+        //     category: state?.category?._id || '',
+        //     description: state?.description || '',
+        //     isOnlyMe: `${state?.isOnlyMe || false}`,
+        //     allowDuet: `${state?.allowDuet || false}`,
+        //     allowDownload: `${state?.allowDownload || false}`,
+        //     place: state?.place || '',
+        //     taggedUsers: state?.taggedUsers || []
+        // });
 
         // Do post request for send post data
         try {
             await fetch(UPLOAD_VIDEO_DETAILS, {
-                method: 'POST',
+                method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -200,7 +214,7 @@ function useUpload() {
                 };
                 console.log("video uploading", requestOptions, getLinks?.data?.data?.thumbnailUrl);
                 fetch(getLinks?.data?.data?.thumbnailUrl, requestOptions as any)
-                    .then(() => {})
+                    .then(() => { })
                     .catch((error) => {
                         dispatch(
                             updateUploadingStatus({

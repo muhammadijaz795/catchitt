@@ -5,12 +5,15 @@ import React from 'react';
 import SuggestedUser from './suggested-user';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CircularProgress } from '@mui/material';
+import { getRandomUsers } from '../../../redux/AsyncFuncs';
 
-function SuggestedTab({ loadMoreSuggestedAccount, onClose }: any) {
+function SuggestedTab({ onClose }: any) {
 
     const suggestedUsers = useSelector((state: any) => state?.reducers?.suggestedAccounts?.data);
+    const suggestedPage = useSelector((state: any) => state?.reducers?.suggestedAccounts?.page);
     const totalSuggestion = useSelector((state: any) => state?.reducers?.suggestedAccounts?.total);
     // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const onUnfollow = () => {
         console.log("on unfollow")
@@ -28,6 +31,10 @@ function SuggestedTab({ loadMoreSuggestedAccount, onClose }: any) {
         // setUnfollowPopup(false);
     };
 
+    const loadMoreSuggestedAccount = () => {
+        dispatch(getRandomUsers(suggestedPage));
+        // Fetch more data for the next page
+    };
 
     return (
         <div className={styles.div}>

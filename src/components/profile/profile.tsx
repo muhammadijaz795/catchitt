@@ -1,6 +1,6 @@
 import { ClickAwayListener, Modal } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../shared/layout';
 import Gifts from '../discover/popups/gifts';
@@ -13,7 +13,7 @@ import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 
-import { getProfileData, getRandomUsers } from '../../redux/AsyncFuncs';
+import { getFriends, getProfileData, getRandomUsers, loadFollowers, loadFollowing } from '../../redux/AsyncFuncs';
 import publicProfileStories from './popups/publicProfileStories';
 import styles from './profile.module.scss';
 import { Bookmark } from './svg-components/Bookmark';
@@ -205,10 +205,10 @@ export const Profile = (props: any) => {
             );
         }
 
-        if (activeTab === 'Private' && (privateVideos.totalItems === null || privateVideos.totalItems > privateVideos.items.length) && false) {
+        if (activeTab === 'Private' && (privateVideos.totalItems === null || privateVideos.totalItems > privateVideos.items.length)) {
             promises.push(
                 fetch(
-                    `${API_KEY}/profile/${userId}/videos?page=${privateVideos.page}&pageSize=${privateVideos.pageSize}`,
+                    `${API_KEY}/profile/private/videos?page=${privateVideos.page}&pageSize=${privateVideos.pageSize}`,
                     {
                         method: 'GET',
                         headers: {
@@ -364,6 +364,10 @@ export const Profile = (props: any) => {
                 console.log(err);
             });
         // dispatch(getRandomUsers(1));
+        // dispatch(getRandomUsers(1));
+        dispatch(loadFollowing(1));
+        dispatch(loadFollowers(1));
+        dispatch(getFriends(1));
         await dispatch(getProfileData());
     };
 
@@ -455,6 +459,9 @@ export const Profile = (props: any) => {
         }
     }, [userVideos.page, userlikedVideos.page, usertaggedVideos.page, bookmarkVideos.page, repostVideos.page]);
 
+    const name = useSelector((state: any) => state?.reducers?.profile?.name);
+    const totalLikes = useSelector((state: any) => state?.reducers?.profile?.likesNum);
+
     return (
         <Layout showCopyPopup={copyPopup}>
             <div
@@ -464,7 +471,7 @@ export const Profile = (props: any) => {
                 <Modal open={likesModal} className={styles.likesModal}>
                     <ClickAwayListener onClickAway={() => setLikesModal(false)}>
                         <div className={styles.likesModalContainer}>
-                            <LikesModal />
+                            <LikesModal isPublic={false} name={name} totalLikes={totalLikes} />
                         </div>
                     </ClickAwayListener>
                 </Modal>
