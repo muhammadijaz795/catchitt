@@ -29,7 +29,7 @@ import style from './index.module.scss';
 
 function FriendPage() {
     const isMobile = useMediaQuery('(max-width:700px)');
-    const { loading, videos, activeTab, setActiveTab, isFollowing } = useHome({ tabIndex: 1 });
+    const { loading, videos, activeTab, setActiveTab, isFollowing } = useHome({ tabIndex: 2 });
     const [videoModalInfo, setVideoModalInfo] = useState<any>({});
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [reportPopup, setReportPopup] = useState(false);
