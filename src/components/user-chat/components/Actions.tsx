@@ -30,19 +30,18 @@ function Actions(props: any) {
         copyH,
         showToast,
         handleScroll,
+        chatActiveUserId,
     } = props || {};
   
     const loggedInUserId = localStorage.getItem('userId');
     
    
-    console.log('activeChat',activeChat);
+    console.log('activeChat',activeChat, chatActiveUserId);
     useEffect(() => {
-        console.log('activeChat new 2', activeChat);
-        scrollToBottom()
-    }, [activeChat]);
-    useEffect(() => {
-        scrollToBottom()
-    }, []);
+        setTimeout(() => {
+            scrollToBottom()
+        }, 800); 
+    }, [chatActiveUserId]);
     
     return (
         <>
