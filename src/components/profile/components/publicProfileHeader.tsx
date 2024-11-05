@@ -11,7 +11,7 @@ import styles from './profileHeader.module.scss';
 import { useAuthStore } from '../../../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { get, post } from '../../../axios/axiosClient';
-import defaultBanner from '../../../assets/postExample.png';
+import defaultBanner from '../../../assets/default_banner.jpeg';
 
 interface Props {
     setProfileModal: (value: boolean) => void;

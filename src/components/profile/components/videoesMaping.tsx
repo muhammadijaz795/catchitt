@@ -39,12 +39,11 @@ export default function VideoesMaping({ videos, fetchMore, openVideoModal }: Typ
             // scrollThreshold={0.6}
             scrollableTarget="scrollableDiv"
             endMessage={
-                <div className={`flex justify-center items-center mt-8 `}>
-                    <p className="text-dark font-normal text-sm">
+                <div className={`flex justify-center items-center mt-8 m-auto`}>
+                    <p className="text-dark font-bold text-xl">
                         {(() => {
                             if (videos?.totalItems === 0) return 'No videos available in this category.';
-                            if (videos.totalItems) return 'No more videos';
-                            return 'Something went wrong. Please refresh the page.';
+                            if (videos.totalItems === undefined) return 'Something went wrong. Please refresh the page.';
                         })()}
                     </p>
                 </div>

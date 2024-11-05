@@ -31,8 +31,8 @@ function MessageTab({ friends, totalFriends, loadMoreFriends, onClose }: any) {
             scrollableTarget="ModalscrollableDiv"
             endMessage={
                 <div className="flex flex-row justify-center items-center mt-3">
-                    <p className="text-xl font-normal">
-                        {(totalFriends === 0) ? 'No friends available.' : 'No more friends'}
+                    <p className="text-xl font-bold">
+                        {(totalFriends === 0) && 'No friends available.'}
                     </p>
                 </div>
             }

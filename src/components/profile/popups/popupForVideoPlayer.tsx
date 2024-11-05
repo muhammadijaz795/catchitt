@@ -382,6 +382,7 @@ export default function PopupForVideoPlayer({
                 fetchMediaById(info?.mediaId);
                 setIsReplyToCommentClicked(false);
                 setCommentEmojiIndex(-1);
+                paginateComments(true);
             } catch (error) {
                 console.log('🚀 ~ addCommentHandler ~ error:', error);
                 setIsReplyToCommentClicked(false);
@@ -934,8 +935,8 @@ export default function PopupForVideoPlayer({
                                                 <div
                                                     onMouseEnter={() => {
                                                         setIsReportElipsisVisible(true);
-                                                        setCurrentCommentIndex(comment_index);
-                                                        setIsReplyToCommentClicked(false);
+                                                        // setCurrentCommentIndex(comment_index);
+                                                        // setIsReplyToCommentClicked(false);
                                                         setCommentEmojiIndex(-1);
                                                     }}
                                                     onMouseLeave={() => {
@@ -993,11 +994,7 @@ export default function PopupForVideoPlayer({
                                                                             ).format('D-MM')}
                                                                         </p>
                                                                         <p
-                                                                            onClick={() =>
-                                                                                setIsReplyToCommentClicked(
-                                                                                    true
-                                                                                )
-                                                                            }
+                                                                            onClick={() => {setCurrentCommentIndex(comment_index);setIsReplyToCommentClicked(true)}}
                                                                             className="text-[#FFFFFF80] font-normal text-[0.938rem] cursor-pointer"
                                                                         >
                                                                             Reply
@@ -1019,7 +1016,7 @@ export default function PopupForVideoPlayer({
                                                                                             className="bg-transparent placeholder-[#4d4e58 text-[#d5cbcb] w-full"
                                                                                         />
                                                                                         <div className="flex flex-row items-center">
-                                                                                            <div
+                                                                                            {/* <div
                                                                                                 onClick={
                                                                                                     atRateHandler
                                                                                                 }
@@ -1032,7 +1029,7 @@ export default function PopupForVideoPlayer({
                                                                                                     }
                                                                                                     alt="at-the-rate-icon"
                                                                                                 />
-                                                                                            </div>
+                                                                                            </div> */}
                                                                                             <div onClick={()=>setCommentEmojiIndex(comment_index)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] my-[0.438rem] mx-[0.188rem]">
                                                                                                 <img
                                                                                                     className={`w-5 h-5 object-contain rounded-full`}
@@ -1189,9 +1186,9 @@ export default function PopupForVideoPlayer({
                                                                             setCommentReplyIsReportElipsisVisible(
                                                                                 true
                                                                             );
-                                                                            setCurrentCommentIndex(
-                                                                                comment_index
-                                                                            );
+                                                                            // setCurrentCommentIndex(
+                                                                            //     comment_index
+                                                                            // );
                                                                             setCurrentCommentReplyIndex(
                                                                                 comment_reply_index
                                                                             );
@@ -1526,7 +1523,7 @@ export default function PopupForVideoPlayer({
                                                 {/* <EmojiInputPicker isPickerVisible={isPickerVisible} onEmojiSelect={onEmojiClick} inputRef={inputRef} /> */}
                                                 {isUserLoggedIn() && (
                                                     <div className="flex flex-row items-center">
-                                                        <div
+                                                        {/* <div
                                                             onClick={atRateHandler}
                                                             className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem] mr-1"
                                                         >
@@ -1535,7 +1532,7 @@ export default function PopupForVideoPlayer({
                                                                 src={atTheRateOf}
                                                                 alt="at-the-rate-icon"
                                                             />
-                                                        </div>
+                                                        </div> */}
                                                         <div onClick={() =>setCommentEmojiIndex(prev => prev===-2? -1: -2)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
                                                             <img
                                                                 className={`w-5 h-5 object-contain rounded-full`}

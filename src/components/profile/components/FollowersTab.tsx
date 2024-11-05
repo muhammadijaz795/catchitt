@@ -33,8 +33,8 @@ export default function FollowersTab({ onClose, followers, isPublic, onScrollBot
             scrollableTarget="ModalscrollableDiv"
             endMessage={
                 <div className="flex flex-row justify-center items-center mt-3">
-                    <p className="font-normal text-xl">
-                        {(followersTotal === 0) ? 'No followers available.' : 'No more followers'}
+                    <p className="font-bold text-xl">
+                        {(followersTotal === 0) && 'No followers available.'}
                     </p>
                 </div>
             }

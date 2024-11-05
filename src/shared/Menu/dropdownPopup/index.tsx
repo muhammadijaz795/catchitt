@@ -3,6 +3,10 @@ import { MENU_POPUP_OPTIONS } from '../../../utils/constants';
 import './switch.scss';
 import { useDispatch } from 'react-redux';
 import style from './index.module.scss';
+import CreatorTools from './svgComponents/creatorTools';
+import Translation from './svgComponents/Translation';
+import FeedHelp from './svgComponents/FeedHelp';
+import Dark from './svgComponents/Dark';
 
 const MenuDropdownPopup = ({
     menuPopupStatusToggler,
@@ -83,6 +87,15 @@ const MenuDropdownPopup = ({
                             >
                                 <div className="flex flex-row items-center gap-2 px-3">
                                     {/* <img className="h-2 w-2 object-contain" alt="menuOption" /> */}
+                                    {(() => {
+                                        switch(menuItem?.imageUrl){
+                                            case "CreatorTools": return (<CreatorTools isInDark={Boolean(darkTheme)} />);
+                                            case "Translation": return (<Translation isInDark={Boolean(darkTheme)} />);
+                                            case "FeedHelp": return (<FeedHelp isInDark={Boolean(darkTheme)} />);
+                                            case "Dark": return (<Dark isInDark={Boolean(darkTheme)} />);
+                                            default: return null;
+                                        }
+                                    })()}
                                     <li>
                                         <a
                                             href="https://help.seezitt.com" target="blank"

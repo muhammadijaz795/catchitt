@@ -16,7 +16,7 @@ import CoverImagePopup from './cover-img-popup';
 import CreateStoryPopup from './createStoryPopup';
 import styles from './profileHeader.module.scss';
 import { BASE_URL_FRONTEND } from '../../../utils/constants';
-import defaultBanner from '../../../assets/postExample.png';
+import defaultBanner from '../../../assets/default_banner.jpeg';
 
 interface Props {
     setProfileModal: (value: boolean) => void;

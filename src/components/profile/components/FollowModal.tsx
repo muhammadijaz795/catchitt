@@ -21,19 +21,18 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
 }) => {
     const name = useSelector((state: any) => state?.reducers?.profile?.name);
 
-    const totalFollowers = useSelector((state: any) => {
-        return state.reducers?.followers.total;
-    });
-
     const followers = useSelector((state: any) => state.reducers?.followers.data);
-
+    const followersPage = useSelector((state: any) => state?.reducers?.followers?.page);
+    const totalFollowers = useSelector((state: any) =>state.reducers?.followers.total);
+    
+    const following = useSelector((state: any) => state?.reducers?.profileSlice?.following);
+    const followingPage = useSelector((state: any) => state?.reducers?.profileSlice?.followingPage);
     const totalFollowing = useSelector((state: any) => state?.reducers?.profileSlice?.followingTotal);
+    
+    const friends = useSelector((state: any) => state?.reducers?.profileSlice?.friends);
+    const friendPage = useSelector((state: any) => state?.reducers?.profileSlice?.friendsPage);
     const totalFriends = useSelector((state: any) => state?.reducers?.profileSlice?.friendsTotal);
 
-    const following = useSelector((state: any) => state?.reducers?.profileSlice?.following);
-    const friends = useSelector((state: any) => state?.reducers?.profileSlice?.friends);
-
-    const [loading, setLoading] = useState(false);
     const [publicFollowers, setPublicFollowers] = useState<any[]>([]);
     const [publicFollowing, setPublicFollowings] = useState<any[]>([]);
 
@@ -44,25 +43,30 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
 
     const dispatch = useDispatch();
 
-    const [followingPage, setFollowingPage] = useState(1);
-    const [followersPage, setFollowersPage] = useState(1);
-    const [friendPage, setFriendPage] = useState(1);
-    const [suggestedPage, setSuggestedPage] = useState(1);
+    const [publicFollowingPage, setPublicFollowingPage] = useState(1);
+    const [publicFollowersPage, setPublicFollowersPage] = useState(1);
+    // const [publicFriendPage, setPublicFriendPage] = useState(1);
+
     const loadMoreFollorwing = () => {
         console.log('loadMoreFollorwing 💕💕💕💕💕');
-        setFollowingPage(followingPage + 1);
+        if (!isPublic) {
+            if (totalFollowing === null || following.length < totalFollowing) dispatch(loadFollowing(followingPage));
+        } else {
+            setPublicFollowingPage(publicFollowingPage + 1);
+        }
         // Fetch more data for the next page
     };
     const loadMoreFollowers = () => {
-        setFollowersPage(followersPage + 1);
+        if (!isPublic) {
+            if (totalFollowers === null || followers.length < totalFollowers) dispatch(loadFollowers(followersPage));
+        } else {
+            setPublicFollowersPage(publicFollowersPage + 1);
+        }
         // Fetch more data for the next page
     };
+
     const loadMoreFriends = () => {
-        setFriendPage(friendPage + 1);
-        // Fetch more data for the next page
-    };
-    const loadMoreSuggestedAccount = () => {
-        setSuggestedPage(suggestedPage + 1);
+        dispatch(getFriends(friendPage));
         // Fetch more data for the next page
     };
 
@@ -88,7 +92,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                     if (totalFollowersPublic === null ||totalFollowersPublic > publicFollowers.length) {
                         const followingResponse = await fetch(
                             // `${API_KEY}/profile/${userId}/following?page=${followingPage}&pageSize=10`,
-                            `${API_KEY}/profile/${userId}/followers?page=${followersPage}&pageSize=10`,
+                            `${API_KEY}/profile/${userId}/followers?page=${publicFollowersPage}&pageSize=10`,
                             {
                                 method: 'GET',
                                 headers: {
@@ -103,18 +107,14 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                         setPublicFollowers(prev => [...prev, ...followingData?.data?.data]);
                         setTotalFollowersPublic(followingData?.data?.total || 0);
                     }
-                } else {
-                    dispatch(loadFollowers(followersPage));
                 }
-                setLoading(false);
             } catch (error) {
                 console.log(error);
-                setLoading(false);
             }
         };
 
         fetchData();
-    }, [isPublic, userId, followersPage]);
+    }, [isPublic, userId, publicFollowersPage]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -122,7 +122,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                 if (isPublic) {
                     if (totalFollowingPublic === null || totalFollowingPublic > publicFollowing.length) {
                         const followersResponse = await fetch(
-                            `${API_KEY}/profile/${userId}/following?page=${followingPage}&pageSize=10`,
+                            `${API_KEY}/profile/${userId}/following?page=${publicFollowingPage}&pageSize=10`,
                             {
                                 method: 'GET',
                                 headers: {
@@ -148,33 +148,25 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                         setPublicFollowings(prev => [...prev, ...followingData?.data?.data]);
                         setTotalFollowingPublic(followingData?.data?.total || 0);
                     }
-                } else {
-                    dispatch(loadFollowing(followingPage));
                 }
-                setLoading(false);
             } catch (error) {
                 console.log(error);
-                setLoading(false);
             }
         };
         fetchData();
-    }, [isPublic, userId, followingPage]);
+    }, [isPublic, userId, publicFollowingPage]);
 
     useEffect(() => {
        console.log("opentab 🚀🚀🚀", openTab)
     }, [openTab])
     
-
     useEffect(() => {
-        if (!isPublic) {
-            dispatch(getFriends(friendPage));
-        }
-    }, [isPublic, friendPage])
-
-    useUpdateEffect(() => {
-        dispatch(getRandomUsers(suggestedPage));
-    }, [isPublic, suggestedPage])
-
+      return () => {
+        setPublicFollowers([]);
+        setPublicFollowings([]);
+      }
+    }, [])
+    
 
     const tabs: Tab[] = [
         {
@@ -228,7 +220,6 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
             content: (
                 <>
                     <SuggestedTab
-                        loadMoreSuggestedAccount={loadMoreSuggestedAccount}
                         onClose={onClose}
                     />
                 </>

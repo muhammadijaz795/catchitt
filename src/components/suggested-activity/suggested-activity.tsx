@@ -259,8 +259,7 @@ export const SuggestedActivity = memo(
 
         return (
             <div className={classNames(styles.root, className)}>
-                {pathname !== '/suggested-accounts'
-                    ? showSuggestedContent && (
+                {showSuggestedContent && (
                         //   <div className={styles.suggestedAccountsDiv}>
 
                             //   <div className={styles.suggestedHeader}>
@@ -353,8 +352,7 @@ export const SuggestedActivity = memo(
                                   </p>
                               {/* </div> */}
                            </div>
-                      )
-                    : null}
+                      )}
 
                 {/* {showActivity && isLoggedIn && (
                     <>

@@ -63,8 +63,8 @@ function FollowingTab({ onClose, following, isPublic, onScrollBottom, followingT
                 scrollableTarget="ModalscrollableDiv"
                 endMessage={
                     <div className="flex flex-row justify-center items-center mt-3">
-                        <p className=" font-normal text-xl">
-                            {(followingTotal === 0) ? 'No following available.' : 'No more following'}
+                        <p className=" font-bold text-xl">
+                            {(followingTotal === 0) && 'No following available.'}
                         </p>
                     </div>
                 }

@@ -448,7 +448,7 @@ function FollowingVideos(props: any) {
                                 </div>
                             );
                         })
-                    ) : videoes?.length === 0 && !loading && activeTab === 1 ? (
+                    ) : videoes?.length === 0 && !loading && activeTab === 1 && false ? (
                         <div className={style.suggestedUsersContainer}>
                             {suggestedUsers.map((suggestedUser: any, key: number) => {
                                 return (
