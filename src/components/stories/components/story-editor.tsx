@@ -14,6 +14,10 @@ import MutedIcon from '../icons/muted';
 import SpeakerIcon from '../icons/speaker';
 import StoryPreview from './sotry-preview';
 import BasicSwitch from '../../../shared/switch/BasicSwitch';
+import { ToastContainer } from 'react-toastify';
+import {
+    showToastSuccess,
+} from '../../../utils/constants';
 const API_KEY = process.env.VITE_API_URL;
 const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
@@ -169,6 +173,7 @@ const StoryEditor = ({ file }: any) => {
             .then((res) => res.json())
             .then((res) => {
                 setIsPosting(false);
+                showToastSuccess('Story posted successfully');
             })
             .catch((err) => {
                 console.log(err);
@@ -458,7 +463,7 @@ const StoryEditor = ({ file }: any) => {
                         Video downloads
                     </p>
                 </div>
-                <button className="py-2 bg-[rgb(255, 59, 92)] text-white" onClick={exportVideo}>
+                <button className="py-2 bg-[rgb(255, 59, 92)] text-" onClick={exportVideo}>
                     Done
                 </button>
             </div>
@@ -538,6 +543,7 @@ const StoryEditor = ({ file }: any) => {
             ) : (
                 ''
             )}
+             <ToastContainer />
         </div>
     );
 };
