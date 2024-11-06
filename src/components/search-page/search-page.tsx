@@ -709,7 +709,6 @@ export const SearchPage = () => {
                             ))}
                         </div>
                     )}
-        
             </>
         );
     };
