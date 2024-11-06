@@ -15,7 +15,9 @@ interface StateInterface {
     isOnlyMe?: boolean;
     place?: string;
     allowDuet?: boolean;
+    allowStitch?: boolean;
     allowDownload?: boolean;
+    allowAddStory?: boolean;
     taggedUsers?: any;
     replyOnComment?: boolean;
 }
@@ -33,9 +35,11 @@ function useUpload() {
         category: {},
         description: info?.description,
         allowDuet: info?.allowDuet,
+        allowStitch: info?.allowStitch,
         videoId: info?.mediaId,
         isOnlyMe: info?.privacyOptions?.isOnlyMe,
         allowDownload: info?.privacyOptions?.allowDownload,
+        allowAddStory: info?.privacyOptions?.allowAddStory,
     });
     const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -71,6 +75,7 @@ function useUpload() {
                 10,
                 VideoToFramesMethod.totalFrames
             );
+            console.log("videoCoverHandler", frames);
             setThumbnails(frames);
             updateState('thumbnailUrl', frames?.[0]);
         }

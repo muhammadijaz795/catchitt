@@ -12,6 +12,7 @@ import CustomModel from '../../../shared/popups/CustomModel';
 import CustomPopup from '../../../shared/popups/CustomPopup';
 import BasicSwitch from '../../../shared/switch/BasicSwitch';
 import { API_KEY } from '../../../utils/constants';
+import { createOpenDialog } from '../../../utils/helpers';
 
 function FormRightSide(props: any) {
     const {
@@ -141,6 +142,32 @@ function FormRightSide(props: any) {
                                 <CircularProgress style={{ display: 'block', margin: 'auto' }} />
                             </div>
                         )}
+                    </div>
+                    <div className="flex items-center justify-start">
+                        <CustomButton
+                            width="169px !important"
+                            textSize="16px "
+                            islight
+                            text="Upload from gallery"
+                            height="48px !important"
+                            onClick={() => {
+                                const imageInput = createOpenDialog();
+                                imageInput.onchange = (_) => {
+                                    const file = imageInput.files?.[0];
+                                    if (file) {
+                                        debugger;
+                                        imageInput.remove();
+                                        const reader = new FileReader();
+                                        reader.onload = (e: any) => {
+                                            const base64 = e.target.result;
+                                            updateState('thumbnailUrl', base64);
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
+                                };
+                                imageInput.click();
+                            }}
+                        />
                     </div>
                     <div className="w-[100%] flex flex-col gap-[1rem]">
                         <div className="flex justify-between w-[100%]">
@@ -274,6 +301,17 @@ function FormRightSide(props: any) {
                                     Duet
                                 </p>
                             </div>
+                            <div className="flex gap-2 items-center">
+                                <BasicCheckBox
+                                    onChange={(e: any) =>
+                                        updateState('allowStitch', e?.target?.checked)
+                                    }
+                                    checked={state?.allowStitch || false}
+                                />
+                                <p className="text-[1rem] font-medium text-custom-dark-222 leading-[1.1rem]">
+                                    Stitch
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div className="flex justify-start items-center gap-[1rem]">
@@ -294,19 +332,32 @@ function FormRightSide(props: any) {
                             onChange={(e: any) => updateState('isOnlyMe', e?.target?.checked)}
                         />
                     </div>
+                    <div className="flex flex-col items-start justify-between">
+                        <div className="flex justify-start items-center gap-[1rem]">
+                            <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
+                                Video downloads
+                            </p>
+                            <BasicSwitch
+                                checked={state?.allowDownload || false}
+                                onChange={(e: any) =>
+                                    updateState('allowDownload', e?.target?.checked)
+                                }
+                            />
+                        </div>
+                        <p className="text-[1rem] font-medium text-custom-color-999 leading-[1.1rem] text-start">
+                            Allow other people to download your videos and share to other platforms.
+                            If this setting is off, a link to your video can still be shared.
+                        </p>
+                    </div>
                     <div className="flex justify-start items-center gap-[1rem]">
                         <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
-                            Video downloads
+                            Allow Others to Add to Story
                         </p>
                         <BasicSwitch
-                            checked={state?.allowDownload || false}
-                            onChange={(e: any) => updateState('allowDownload', e?.target?.checked)}
+                            checked={state?.allowAddStory || false}
+                            onChange={(e: any) => updateState('allowAddStory', e?.target?.checked)}
                         />
                     </div>
-                    <p className="text-[1rem] font-medium text-custom-color-999 leading-[1.1rem] text-start">
-                        Allow other people to download your videos and share to other platforms. If
-                        this setting is off, a link to your video can still be shared.
-                    </p>
                     <div className="flex gap-[1rem]">
                         <CustomButton
                             width="169px !important"
@@ -320,7 +371,7 @@ function FormRightSide(props: any) {
                             textSize="16px "
                             width="169px !important"
                             height="48px !important"
-                            text="Post"    //{videoInfo ? 'Update' : 'Post'}
+                            text="Post" //{videoInfo ? 'Update' : 'Post'}
                             onClick={SubmitHandler}
                             loading={isPosting}
                         />
