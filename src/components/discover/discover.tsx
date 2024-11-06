@@ -12,8 +12,10 @@ import styles from './discover.module.scss';
 import Gifts from './popups/gifts';
 import { DISCOVER_CATEGORIES } from '../../utils/constants';
 import { useUpdateEffect } from 'react-use';
+import { useParams } from 'react-router-dom';
 
 export default function Discover() {
+    const { hashtag } = useParams();
     const API_KEY = process.env.VITE_API_URL;
     const [exploredVideos, setExploredVideos] = useState<any>({ items: [], page: 1, pageSize: 15, totalItems: null });
     const [videoModal, setVideoModal] = useState(false);
@@ -24,7 +26,7 @@ export default function Discover() {
     const [isLoading, setIsLoading] = useState(false);
     const [giftPopup, setGiftPopup] = useState(false);
     const [storyPopup, setStoryPopup] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(hashtag);
     const [muteStates, setMuteStates] = useState<any>([]);
 
     // theme

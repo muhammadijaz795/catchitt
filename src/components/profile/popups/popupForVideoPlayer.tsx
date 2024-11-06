@@ -43,6 +43,7 @@ import CountUp from 'react-countup';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { set } from 'lodash';
 import { copyLinkHandler, facebookShareHandler, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+import HashtagText from '../../../shared/hashTag/HashtagText';
 
 
 export default function PopupForVideoPlayer({
@@ -735,7 +736,7 @@ export default function PopupForVideoPlayer({
                                             </div>
                                         </div>
                                         <p className="text-base font-normal text-white mt-2.5 break-words text-left">
-                                            {info?.description}
+                                            <HashtagText text={info?.description} />
                                         </p>
                                         <div className="flex flex-row items-center mt-2.5 gap-2.5">
                                             <img

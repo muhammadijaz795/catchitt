@@ -8,6 +8,7 @@ import {
     volumeMute,
     volumeUnmute,
 } from '../../../icons';
+import HashtagText from '../../../shared/hashTag/HashtagText';
 
 function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailImage, controls, number }: any) {
     const [duration, setDuration] = useState<number>();
@@ -117,7 +118,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                         }}
                     >
                         {' '}
-                        {post?.description}
+                       <HashtagText text={post?.description} />
                     </p>
                     {post?.sound && (
                         <p

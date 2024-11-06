@@ -818,7 +818,7 @@ function App() {
                             <Route path="/about/community-guidelines" element={<CommunityPage />} />
                             <Route path="/about/privacy-policy" element={<PrivacyPage />} />
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />} />
-                            <Route path="/discover" element={<Discover />} />
+                            <Route path="/discover/:hashtag?" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
                             <Route path="/:username/video/:videoId" element={<VideoPage />} />
                             <Route path="/:username/post/:postId" element={<PostPage />} />
