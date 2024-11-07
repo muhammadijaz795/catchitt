@@ -72,7 +72,7 @@ export const PublicProfile = (props: any) => {
             });
             const videosResponse = await videosResponsePromise.json();
             if (Array.isArray(videosResponse?.data?.data)) {
-                setVideosData((prev: any) => ({ ...prev, items: fromStart? videosResponse?.data?.data : [...prev.items, ...videosResponse?.data?.data], totalItems: videosResponse?.data?.total, page: fromStart?2:prev.page }));
+                setVideosData((prev: any) => ({ ...prev, items: fromStart? videosResponse?.data?.data : [...prev.items, ...videosResponse?.data?.data], totalItems: videosResponse?.data?.total }));
             }
 
         } catch (error) {
@@ -81,11 +81,11 @@ export const PublicProfile = (props: any) => {
         }
     }
 
- 
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
         const initialFetch = async () => {
+            setVideosData((prev:any) => ({ ...prev, page: 1 }));
             const Id = await fetchProfileData();
             fetchProfileVideos(signal,true, Id);
         }
@@ -96,6 +96,7 @@ export const PublicProfile = (props: any) => {
     }, [params?.id]);
 
     useUpdateEffect(() => {
+        if (videosData.page === 1) return;
         const controller = new AbortController();
         const signal = controller.signal;
         fetchProfileVideos(signal,false);
