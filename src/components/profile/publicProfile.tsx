@@ -52,6 +52,7 @@ export const PublicProfile = (props: any) => {
             const profileData = await profileResponse.json();
             setProfileData(profileData.data);
             setLoading(false);
+            return profileData.data._id;
 
         } catch (error) {
             console.log(error);
@@ -59,9 +60,9 @@ export const PublicProfile = (props: any) => {
         }
     };
 
-    const fetchProfileVideos = async (signal:AbortSignal) => {
+    const fetchProfileVideos = async (signal:AbortSignal, fromStart: boolean, profileId = profileData._id) => {
         try {
-            const videosResponsePromise = await fetch(`${API_KEY}/profile/${profileData._id}/videos?page=${videosData.page}&pageSize=${videosData.pageSize}`, {
+            const videosResponsePromise = await fetch(`${API_KEY}/profile/${profileId}/videos?page=${fromStart?1:videosData.page}&pageSize=${videosData.pageSize}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -71,7 +72,7 @@ export const PublicProfile = (props: any) => {
             });
             const videosResponse = await videosResponsePromise.json();
             if (Array.isArray(videosResponse?.data?.data)) {
-                setVideosData((prev: any) => ({ ...prev, items: [...prev.items, ...videosResponse?.data?.data], totalItems: videosResponse?.data?.total }));
+                setVideosData((prev: any) => ({ ...prev, items: fromStart? videosResponse?.data?.data : [...prev.items, ...videosResponse?.data?.data], totalItems: videosResponse?.data?.total, page: fromStart?2:prev.page }));
             }
 
         } catch (error) {
@@ -80,18 +81,28 @@ export const PublicProfile = (props: any) => {
         }
     }
 
+ 
     useEffect(() => {
-        fetchProfileData();
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const initialFetch = async () => {
+            const Id = await fetchProfileData();
+            fetchProfileVideos(signal,true, Id);
+        }
+        initialFetch();
+        return () => {
+            controller.abort();
+        }
     }, [params?.id]);
 
     useUpdateEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
-        if (profileData) fetchProfileVideos(signal);
+        fetchProfileVideos(signal,false);
         return () => {
             controller.abort();
         }
-    }, [profileData, videosData.page]);
+    }, [videosData.page]);
 
     const tabs = [
         {

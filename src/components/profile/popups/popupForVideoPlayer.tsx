@@ -85,7 +85,7 @@ export default function PopupForVideoPlayer({
     const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
     const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
     const [comment, setComment] = useState('');
-    const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
+    // const [likedComments, setLikedComments] = useState<{ isLiked: boolean, likes: number }[]>([]);
     const [userId, setUserId] = useState(null);
     const [name, setName] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
@@ -269,7 +269,8 @@ export default function PopupForVideoPlayer({
 
             // Append comments
             if (data?.data && Array.isArray(data?.data)) {
-                 // check first next page is available or not
+                // setLikedComments((prev) => ([...prev, ...data?.data.map((comment:any) => ({ id: comment?.id, isLiked: comment?.isLiked, likes: comment?.likes }))]));
+                // check first next page is available or not
 
                 if (data?.hasNextPage) {
                     videoCommentsObj.currentPage = fromStart ? 2 : videoCommentsObj.currentPage + 1;
@@ -289,13 +290,8 @@ export default function PopupForVideoPlayer({
         navigate(`/profile/${username}`);
     };
 
-    const commentLikeToggler = async (commentId: number) => {
+    const commentLikeToggler = async (commentId: string) => {
         if (isUserLoggedIn()) {
-            setLikedComments((prev) => ({
-                ...prev,
-                [commentId]: !prev[commentId],
-            }));
-
             try {
                 const addCommentResponse = await fetch(
                     `${API_KEY}/media-content/like/comment/${commentId}`,
@@ -308,8 +304,15 @@ export default function PopupForVideoPlayer({
                         body: JSON.stringify({ comment }),
                     }
                 );
-                await addCommentResponse.json();
+                const resp = await addCommentResponse.json();
+                if (resp.message !== "Success") return;
+                const videoCommentsArr = [...videoComments.items];
+                const commentObj = videoCommentsArr.find((item: any) => item.id === commentId);
+                commentObj.likes = commentObj.isLiked ? commentObj.likes - 1 : commentObj.likes + 1;
+                commentObj.isLiked = !commentObj.isLiked;
+                setVideoComments({ ...videoComments, items: videoCommentsArr });
                 fetchMediaById(info?.mediaId);
+                // paginateComments(true);
             } catch (error) {
                 console.log('🚀 ~ commentLikeToggler ~ error:', error);
             }
@@ -395,11 +398,11 @@ export default function PopupForVideoPlayer({
     };
 
     // functions related to comment replies
-    const commentReplyLikeToggler = async (commentId: number, replyId: number) => {
-        setLikedReplies((prev) => ({
-            ...prev,
-            [replyId]: !prev[replyId],
-        }));
+    const commentReplyLikeToggler = async (commentId: string, replyId: string) => {
+        // setLikedReplies((prev) => ({
+        //     ...prev,
+        //     [replyId]: !prev[replyId],
+        // }));
 
         try {
             const addCommentResponse = await fetch(
@@ -413,7 +416,13 @@ export default function PopupForVideoPlayer({
                     body: JSON.stringify({ comment, replyId }),
                 }
             );
-            await addCommentResponse.json();
+            const resp = await addCommentResponse.json();
+            if (resp?.message !== "Success") return;
+            const videoCommentsArr = [...videoComments.items];
+            const replyObj = videoCommentsArr.find((item: any) => item.id === commentId).replies.find((reply: any) => reply.id === replyId);
+            replyObj.likes = replyObj.isLiked ? replyObj.likes - 1 : replyObj.likes + 1;
+            replyObj.isLiked = !replyObj.isLiked;
+            setVideoComments({ ...videoComments, items: videoCommentsArr });
             fetchMediaById(info?.mediaId);
         } catch (error) {
             console.log('🚀 ~ commentReplyLikeToggler ~ error:', error);
@@ -599,7 +608,7 @@ export default function PopupForVideoPlayer({
         setCommentReply('');
         setIsMentioning(false);
         setIsReplyToCommentClicked(false);
-        setLikedComments({});
+        // setLikedComments([]);
         setLikedReplies({});
         setVisibleReplies({});
         setCurrentCommentIndex(-1);
@@ -809,7 +818,7 @@ export default function PopupForVideoPlayer({
                                             <div className="flex flex-row justify-center items-center mt-3 px-3 gap-2">
                                                 <div className="flex justify-center items-center rounded-full cursor-pointer">
                                                     <img
-                                                        onClick={()=>shareToLinkedIn(userName, videoUrl, info?.description)}
+                                                        onClick={() => shareToLinkedIn(userName, videoUrl, info?.description)}
                                                         className="h-6 w-6 object-contain cursor-pointer"
                                                         src={linkedInShare}
                                                     />
@@ -823,7 +832,7 @@ export default function PopupForVideoPlayer({
                                                 </div> */}
                                                 <div className="flex justify-center items-center rounded-full cursor-pointer border">
                                                     <img
-                                                        onClick={() =>shareToTwitter(userName, videoUrl, info?.description)}
+                                                        onClick={() => shareToTwitter(userName, videoUrl, info?.description)}
                                                         className="h-6 w-6 object-contain cursor-pointer"
                                                         // src={sendToFriendsIcon}
                                                         src={twitterShare}
@@ -831,14 +840,14 @@ export default function PopupForVideoPlayer({
                                                 </div>
                                                 <div className="flex justify-center items-center rounded-full bg-[#24d366] p-1 cursor-pointer">
                                                     <img
-                                                        onClick={()=>whatsappShareHandler(userName, videoUrl)}
+                                                        onClick={() => whatsappShareHandler(userName, videoUrl)}
                                                         className="h-4 w-4 object-contain cursor-pointer"
                                                         src={whatsappShare}
                                                     />
                                                 </div>
                                                 <div className="flex justify-center items-center rounded-full bg-[#0075fb] p-1 cursor-pointer">
                                                     <img
-                                                        onClick={()=>facebookShareHandler(userName, videoUrl)}
+                                                        onClick={() => facebookShareHandler(userName, videoUrl)}
                                                         className="h-4 w-4 object-contain cursor-pointer"
                                                         src={facebookShare}
                                                     />
@@ -985,7 +994,7 @@ export default function PopupForVideoPlayer({
                                                             </p>
                                                             <div className="flex flex-row justify-between items-center">
                                                                 <div>
-                                                                    <p className="font-normal text-[#807a7a] text-base cursor-pointer w-[350px] " style={{overflowWrap:"break-word"}}>
+                                                                    <p className="font-normal text-[#807a7a] text-base cursor-pointer w-[350px] " style={{ overflowWrap: "break-word" }}>
                                                                         {comment?.comment}
                                                                     </p>
                                                                     <div className="flex flex-row items-center gap-2 mt-1">
@@ -995,7 +1004,7 @@ export default function PopupForVideoPlayer({
                                                                             ).format('D-MM')}
                                                                         </p>
                                                                         <p
-                                                                            onClick={() => {setCurrentCommentIndex(comment_index);setIsReplyToCommentClicked(true)}}
+                                                                            onClick={() => { setCurrentCommentIndex(comment_index); setIsReplyToCommentClicked(true) }}
                                                                             className="text-[#FFFFFF80] font-normal text-[0.938rem] cursor-pointer"
                                                                         >
                                                                             Reply
@@ -1031,7 +1040,7 @@ export default function PopupForVideoPlayer({
                                                                                                     alt="at-the-rate-icon"
                                                                                                 />
                                                                                             </div> */}
-                                                                                            <div onClick={()=>setCommentEmojiIndex(comment_index)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] my-[0.438rem] mx-[0.188rem]">
+                                                                                            <div onClick={() => setCommentEmojiIndex(comment_index)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] my-[0.438rem] mx-[0.188rem]">
                                                                                                 <img
                                                                                                     className={`w-5 h-5 object-contain rounded-full`}
                                                                                                     src={
@@ -1077,7 +1086,7 @@ export default function PopupForVideoPlayer({
                                                                                 </div>
                                                                             )}
                                                                     </div>
-                                                                 <EmojiPicker className="mt-2" open={(commentEmojiIndex === comment_index)?true:false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onReplyEmojiClick} />
+                                                                    <EmojiPicker className="mt-2" open={(commentEmojiIndex === comment_index) ? true : false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onReplyEmojiClick} />
                                                                 </div>
 
                                                                 <div
@@ -1089,14 +1098,14 @@ export default function PopupForVideoPlayer({
                                                                     <img
                                                                         className={`w-4 h-4 object-contain cursor-pointer`}
                                                                         src={
-                                                                            likedComments[comment?.id]
+                                                                            comment?.isLiked
                                                                                 ? redHeartIcon
                                                                                 : emptyHeartLightIcon
                                                                         }
                                                                         alt=""
                                                                     />
                                                                     <p className="text-[#FFFFFF80] font-normal text-sm">
-                                                                        {comment?.likes}
+                                                                        {comment?.likes ?? 0}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -1280,10 +1289,7 @@ export default function PopupForVideoPlayer({
                                                                                         <img
                                                                                             className={`w-4 h-4 object-contain cursor-pointer`}
                                                                                             src={
-                                                                                                likedReplies[
-                                                                                                    comment_replies
-                                                                                                        ?.id
-                                                                                                ]
+                                                                                                comment_replies?.isLiked
                                                                                                     ? redHeartIcon
                                                                                                     : emptyHeartLightIcon
                                                                                             }
@@ -1493,7 +1499,7 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     )} */}
                                     {/* Add comment section */}
-                                    <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{zIndex:99}}>
+                                    <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{ zIndex: 99 }}>
                                         <div className="flex flex-row items-center">
                                             <div
                                                 className={`bg-[#FFFFFF1F] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn()
@@ -1502,8 +1508,10 @@ export default function PopupForVideoPlayer({
                                                     } rounded-lg cursor-text pr-2 pl-4 w-full`}
                                             >
                                                 <input
-                                                    onFocus={()=>{setIsReplyToCommentClicked(false);
-                                                        setCommentEmojiIndex(-1);}}
+                                                    onFocus={() => {
+                                                        setIsReplyToCommentClicked(false);
+                                                        setCommentEmojiIndex(-1);
+                                                    }}
                                                     ref={inputRef}
                                                     onClick={loginToCommentHandler}
                                                     value={comment}
@@ -1534,7 +1542,7 @@ export default function PopupForVideoPlayer({
                                                                 alt="at-the-rate-icon"
                                                             />
                                                         </div>
-                                                        <div onClick={() =>setCommentEmojiIndex(prev => prev===-2? -1: -2)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
+                                                        <div onClick={() => setCommentEmojiIndex(prev => prev === -2 ? -1 : -2)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem]">
                                                             <img
                                                                 className={`w-5 h-5 object-contain rounded-full`}
                                                                 src={commentEmoji}
@@ -1565,7 +1573,7 @@ export default function PopupForVideoPlayer({
                                                 </div>
                                             )}
                                         </div>
-                                        <EmojiPicker className="mt-2" open={commentEmojiIndex === -2? true: false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} />
+                                        <EmojiPicker className="mt-2" open={commentEmojiIndex === -2 ? true : false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} />
 
                                         {isMentioning && (
                                             <div
