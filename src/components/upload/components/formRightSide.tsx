@@ -13,6 +13,12 @@ import CustomPopup from '../../../shared/popups/CustomPopup';
 import BasicSwitch from '../../../shared/switch/BasicSwitch';
 import { API_KEY } from '../../../utils/constants';
 import { createOpenDialog } from '../../../utils/helpers';
+import { Tab } from 'react-tabs';
+import styles from './index.module.scss';
+import { DndProvider } from 'react-dnd';
+import { MultiBackend } from 'react-dnd-multi-backend';
+import { HTML5toTouch } from 'rdndmb-html5-to-touch';
+import DndContainer from './DndContainer';
 
 function FormRightSide(props: any) {
     const {
@@ -43,6 +49,7 @@ function FormRightSide(props: any) {
     const [countries, setCountries] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('token');
+    const [coverTab, setCoverTab] = useState<string>('suggestion');
 
     const loadCountries = () => {
         setLoading(true);
@@ -89,6 +96,17 @@ function FormRightSide(props: any) {
         setPostCategories(filteredCategories);
     };
 
+    const updateThumbnail = (file: File | undefined) => {
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            const base64 = e.target.result;
+            updateState('thumbnailUrl', base64);
+        };
+        reader.readAsDataURL(file);
+    };
+
     return (
         <div className="flex-[1.7] flex flex-col mt-[8rem] items-start pl-[2.5rem] md:pl-0 pr-[2.5rem]">
             <div className="w-[100%]">
@@ -112,62 +130,84 @@ function FormRightSide(props: any) {
                             onChange={(e: any) => updateState('description', e?.target?.value)}
                         />
                     </div>
-                    <div className="w-[100%] flex flex-col gap-[1rem]">
-                        <div className="flex justify-between w-[100%]">
-                            <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
-                                Cover
-                            </p>
+                    <div className="w-[100%] flex flex-col gap-1.5">
+                        <div className="w-full flex items-center justify-start gap-2.5 no-underline list-none h-[46px] cursor-pointer">
+                            <Tab
+                                onClick={() => setCoverTab('suggestion')}
+                                className={`${styles.coverTab} 
+                                    ${
+                                        coverTab === 'suggestion'
+                                            ? `${styles.coverTabSelected} text-[var(--primary-color)]`
+                                            : 'text-custom-dark-222'
+                                    } 
+                                    leading-[1.7rem] text-[1.125rem] font-medium
+                                `}
+                            >
+                                Suggestions
+                            </Tab>
+                            <Tab
+                                onClick={() => setCoverTab('custom')}
+                                className={`${styles.coverTab}
+                                    ${
+                                        coverTab === 'custom'
+                                            ? `${styles.coverTabSelected} text-[var(--primary-color)]`
+                                            : 'text-custom-dark-222'
+                                    } 
+                                    leading-[1.7rem] text-[1.125rem] font-medium
+                                `}
+                            >
+                                Upload cover
+                            </Tab>
                         </div>
-                        {videoThumbnails?.length > 0 ? (
-                            <div className="flex  overflow-x-scroll border px-[10px] justify-start  rounded-[5px] border-gray-500 mt-[16px] border-solid left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
-                                {videoThumbnails?.map((imageUrl: any, index: number) => (
-                                    <img
-                                        key={index}
-                                        onClick={() => {
-                                            updateState('thumbnailUrl', imageUrl);
-                                            setSelectedThumb(index);
+                        {coverTab === 'suggestion' && (
+                            <>
+                                {videoThumbnails?.length > 0 ? (
+                                    <div className="flex  overflow-x-scroll px-[10px] justify-start  rounded-[5px] bg-[var(--secondaty-color)] left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
+                                        {videoThumbnails?.map((imageUrl: any, index: number) => (
+                                            <img
+                                                key={index}
+                                                onClick={() => {
+                                                    updateState('thumbnailUrl', imageUrl);
+                                                    setSelectedThumb(index);
+                                                }}
+                                                className={`ease-in-out duration-200 block ${
+                                                    imageUrl === selectedThumb ||
+                                                    index === selectedThumb
+                                                        ? 'h-[254px] opacity-100'
+                                                        : 'h-[224px] '
+                                                } w-[124px] pointer opacity-50 my-[auto] rounded-[5px]`}
+                                                src={imageUrl}
+                                                alt=""
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="flex  overflow-x-scroll border px-[10px] justify-center  rounded-[5px] border-gray-500 mt-[16px] border-solid left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
+                                        <CircularProgress
+                                            style={{ display: 'block', margin: 'auto' }}
+                                        />
+                                    </div>
+                                )}
+                            </>
+                        )}
+                        {coverTab === 'custom' && (
+                            <div className="w-full h-[285px]">
+                                <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+                                    <DndContainer
+                                        onDrop={(item: any) => {
+                                            updateThumbnail(item.files?.[0]);
                                         }}
-                                        className={`ease-in-out duration-200 block ${
-                                            imageUrl === selectedThumb || index === selectedThumb
-                                                ? 'h-[254px] opacity-100'
-                                                : 'h-[224px] '
-                                        } w-[124px] pointer opacity-50 my-[auto] rounded-[5px]`}
-                                        src={imageUrl}
-                                        alt=""
+                                        onClick={() => {
+                                            const imageInput = createOpenDialog();
+                                            imageInput.onchange = (_) => {
+                                                updateThumbnail(imageInput.files?.[0]);
+                                            };
+                                            imageInput.click();
+                                        }}
                                     />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex  overflow-x-scroll border px-[10px] justify-center  rounded-[5px] border-gray-500 mt-[16px] border-solid left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
-                                <CircularProgress style={{ display: 'block', margin: 'auto' }} />
+                                </DndProvider>
                             </div>
                         )}
-                    </div>
-                    <div className="flex items-center justify-start">
-                        <CustomButton
-                            width="169px !important"
-                            textSize="16px "
-                            islight
-                            text="Upload from gallery"
-                            height="48px !important"
-                            onClick={() => {
-                                const imageInput = createOpenDialog();
-                                imageInput.onchange = (_) => {
-                                    const file = imageInput.files?.[0];
-                                    if (file) {
-                                        debugger;
-                                        imageInput.remove();
-                                        const reader = new FileReader();
-                                        reader.onload = (e: any) => {
-                                            const base64 = e.target.result;
-                                            updateState('thumbnailUrl', base64);
-                                        };
-                                        reader.readAsDataURL(file);
-                                    }
-                                };
-                                imageInput.click();
-                            }}
-                        />
                     </div>
                     <div className="w-[100%] flex flex-col gap-[1rem]">
                         <div className="flex justify-between w-[100%]">
