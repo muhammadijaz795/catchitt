@@ -23,7 +23,7 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
-    const [darkTheme, setdarkTheme] = React.useState<any>(null);
+    const [isDarkTheme, setIsDarkTheme] = React.useState<boolean>(false);
 
     const loggedUserId = localStorage.getItem('userId');
     const open = Boolean(anchorEl);
@@ -41,12 +41,9 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
     };
 
     React.useEffect(() => {
-        var themeColor = window.localStorage.getItem('theme');
-
-        if (themeColor == 'dark') {
-            setdarkTheme(style.darkTheme);
-        }
-    });
+        const themeColor = window.localStorage.getItem('theme');
+        setIsDarkTheme(themeColor === 'dark');
+    }, []);
 
     const lightThemePalette = createTheme({
         palette: {
@@ -122,7 +119,7 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
                 // display:'flex'
             }}
         >
-            <ThemeProvider theme={darkTheme ? darkThemePalette : lightThemePalette}>
+            <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
 
                 <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
                     <ListItemButton
@@ -152,37 +149,37 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
                     }}
                 >
                     {/* <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem}>
+                    <div className={`${style.menuItem} ${isDarkTheme?'hover:bg-custom-dark-222':'hover:bg-slate-100'}`}>
                         <img src={send} />
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
                     </div>
                 </MenuItem> */}
                     <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={copyLinkHandler}>
+                        <div className={`${style.menuItem} ${isDarkTheme?'hover:bg-custom-dark-222':'hover:bg-slate-100'}`} onClick={copyLinkHandler}>
                             <img src={copyLink} />
                             <p className={`${style.p} ${style.black_500}`}>Copy link</p>
                         </div>
                     </MenuItem>
                     <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={() => shareProfileby.whatsapp(userName)}>
+                        <div className={`${style.menuItem} ${isDarkTheme?'hover:bg-custom-dark-222':'hover:bg-slate-100'}`} onClick={() => shareProfileby.whatsapp(userName)}>
                             <img src={whatsappShare} />
                             <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
                         </div>
                     </MenuItem>
                     <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={() => shareProfileby.facebook(userName)}>
+                        <div className={`${style.menuItem} ${isDarkTheme?'hover:bg-custom-dark-222':'hover:bg-slate-100'}`} onClick={() => shareProfileby.facebook(userName)}>
                             <img src={facebookShare} />
                             <p className={`${style.p} ${style.black_500}`}>Facebook</p>
                         </div>
                     </MenuItem>
                     <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={() => shareProfileby.twitter(userName)}>
+                        <div className={`${style.menuItem} ${isDarkTheme?'hover:bg-custom-dark-222':'hover:bg-slate-100'}`} onClick={() => shareProfileby.twitter(userName)}>
                             <img src={twitterShare} />
                             <p className={`${style.p} ${style.black_500}`}>Twitter</p>
                         </div>
                     </MenuItem>
                     <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={() => shareProfileby.linkedin(userName)}>
+                        <div className={`${style.menuItem} ${isDarkTheme?'hover:bg-custom-dark-222':'hover:bg-slate-100'}`} onClick={() => shareProfileby.linkedin(userName)}>
                             <img src={linkedInShare} />
                             <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
                         </div>
