@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, SvgIcon } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { avatar, downArrow, search } from '../../../icons';
@@ -14,13 +14,10 @@ import BasicSwitch from '../../../shared/switch/BasicSwitch';
 import { API_KEY } from '../../../utils/constants';
 import { loadFollowers } from '../../../redux/AsyncFuncs';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { createOpenDialog } from '../../../utils/helpers';
 import { Tab } from 'react-tabs';
 import styles from './index.module.scss';
-import { DndProvider } from 'react-dnd';
-import { MultiBackend } from 'react-dnd-multi-backend';
-import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import DndContainer from './DndContainer';
+import CloseIcon from '@mui/icons-material/Close';
 
 function FormRightSide(props: any) {
     const {
@@ -40,6 +37,7 @@ function FormRightSide(props: any) {
     const [postLocationsPopup, setPostLocationsPopup] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [taggedUsers, setTaggedUser] = useState<any[]>([]);
+    const [customCover, setCustomCover] = useState<string | null>(null);
     const [followersPage, setFollowersPage] = useState(1);
 
     const dispatch = useDispatch();
@@ -120,17 +118,6 @@ function FormRightSide(props: any) {
         setPostCategories(filteredCategories);
     };
 
-    const updateThumbnail = (file: File | undefined) => {
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-            const base64 = e.target.result;
-            updateState('thumbnailUrl', base64);
-        };
-        reader.readAsDataURL(file);
-    };
-
     return (
         <div className="flex-[1.7] flex flex-col mt-[8rem] items-start pl-[2.5rem] md:pl-0 pr-[2.5rem]">
             <div className="w-[100%]">
@@ -186,7 +173,7 @@ function FormRightSide(props: any) {
                         {coverTab === 'suggestion' && (
                             <>
                                 {videoThumbnails?.length > 0 ? (
-                                    <div className="flex  overflow-x-scroll px-[10px] justify-start  rounded-[5px] bg-[var(--secondaty-color)] left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
+                                    <div className="flex  overflow-x-auto px-[10px] justify-start  rounded-[5px] bg-[var(--secondaty-color)] left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
                                         {videoThumbnails?.map((imageUrl: any, index: number) => (
                                             <img
                                                 key={index}
@@ -214,22 +201,38 @@ function FormRightSide(props: any) {
                                 )}
                             </>
                         )}
-                        {coverTab === 'custom' && (
+                        {coverTab === 'custom' && !customCover && (
                             <div className="w-full h-[285px]">
-                                <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-                                    <DndContainer
-                                        onDrop={(item: any) => {
-                                            updateThumbnail(item.files?.[0]);
-                                        }}
-                                        onClick={() => {
-                                            const imageInput = createOpenDialog();
-                                            imageInput.onchange = (_) => {
-                                                updateThumbnail(imageInput.files?.[0]);
-                                            };
-                                            imageInput.click();
-                                        }}
+                                <DndContainer
+                                    aspect={62 / 127}
+                                    modalTitle="Crop cover"
+                                    onChangeImage={(base64: string) => {
+                                        setCustomCover(base64);
+                                        updateState('thumbnailUrl', base64);
+                                    }}
+                                />
+                            </div>
+                        )}
+                        {coverTab === 'custom' && customCover && (
+                            <div className="flex px-[10px] justify-start  rounded-[5px] bg-[var(--secondaty-color)] left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
+                                <div className="relative">
+                                    <img
+                                        className="ease-in-out duration-200 block h-[254px] w-[124px] pointer my-[auto] rounded-[5px]"
+                                        src={customCover}
+                                        alt=""
                                     />
-                                </DndProvider>
+                                    <button
+                                        className="h-[20px] w-[20px] p-0 flex items-center justify-center absolute top-1.5 right-1.5 rounded-full border border-solid !border-[var(--primary-color)]"
+                                        onClick={() => {
+                                            setCustomCover(null);
+                                            updateState('thumbnailUrl', videoThumbnails[0]);
+                                        }}
+                                    >
+                                        <SvgIcon fontSize="small">
+                                            <CloseIcon className="text-[10px] text-[var(--primary-color)]" />
+                                        </SvgIcon>
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -265,7 +268,7 @@ function FormRightSide(props: any) {
                                         className="flex max-h-[200px] overflow-y-scroll flex-col pt-[1rem] justify-start items-start"
                                         onClick={() => setdropDown(!dropDown)}
                                     >
-                                        {postCategories.map((category: any, i: number) => {
+                                        {postCategories?.map((category: any, i: number) => {
                                             return (
                                                 <p
                                                     className="h-[2.3rem] py-[1rem] gap-2 px-[0.63rem] w-[100%] flex items-center cursor-pointer text-custom-dark-222 text-[0.87rem] text-left font-normal hover:text-custom-primary hover:bg-custom-gray-300"
@@ -364,7 +367,7 @@ function FormRightSide(props: any) {
                                     Duet
                                 </p>
                             </div>
-                            <div className="flex gap-2 items-center">
+                            {/* <div className="flex gap-2 items-center">
                                 <BasicCheckBox
                                     onChange={(e: any) =>
                                         updateState('allowStitch', e?.target?.checked)
@@ -374,7 +377,7 @@ function FormRightSide(props: any) {
                                 <p className="text-[1rem] font-medium text-custom-dark-222 leading-[1.1rem]">
                                     Stitch
                                 </p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <div className="flex justify-start items-center gap-[1rem]">
@@ -412,7 +415,7 @@ function FormRightSide(props: any) {
                             If this setting is off, a link to your video can still be shared.
                         </p>
                     </div>
-                    <div className="flex justify-start items-center gap-[1rem]">
+                    {/* <div className="flex justify-start items-center gap-[1rem]">
                         <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
                             Allow Others to Add to Story
                         </p>
@@ -420,7 +423,7 @@ function FormRightSide(props: any) {
                             checked={state?.allowAddStory || false}
                             onChange={(e: any) => updateState('allowAddStory', e?.target?.checked)}
                         />
-                    </div>
+                    </div> */}
                     <div className="flex gap-[1rem]">
                         <CustomButton
                             width="169px !important"

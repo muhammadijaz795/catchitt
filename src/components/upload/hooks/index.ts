@@ -75,7 +75,7 @@ function useUpload() {
                 10,
                 VideoToFramesMethod.totalFrames
             );
-            console.log("videoCoverHandler", frames);
+            console.log('videoCoverHandler', frames);
             setThumbnails(frames);
             updateState('thumbnailUrl', frames?.[0]);
         }
@@ -143,6 +143,8 @@ function useUpload() {
         //     taggedUsers: state?.taggedUsers || []
         // });
 
+        console.log('thumbnailUrl', getLinks?.data?.data?.thumbnailUrl?.split('?')[0]);
+
         // Do post request for send post data
         try {
             await fetch(UPLOAD_VIDEO_DETAILS, {
@@ -178,7 +180,7 @@ function useUpload() {
                     body: selectedFile,
                     redirect: 'follow',
                 };
-                console.log("video uploading", requestOptions, getLinks?.data?.data?.videoUrl);
+                console.log('video uploading', requestOptions, getLinks?.data?.data?.videoUrl);
                 fetch(getLinks?.data?.data?.videoUrl, requestOptions as any)
                     .then(() => {
                         dispatch(
@@ -217,7 +219,7 @@ function useUpload() {
                     body: file,
                     redirect: 'follow',
                 };
-                console.log("video uploading", requestOptions, getLinks?.data?.data?.thumbnailUrl);
+                console.log('video uploading', requestOptions, getLinks?.data?.data?.thumbnailUrl);
                 fetch(getLinks?.data?.data?.thumbnailUrl, requestOptions as any)
                     .then(() => { })
                     .catch((error) => {
