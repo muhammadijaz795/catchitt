@@ -1,75 +1,75 @@
-import React, { useEffect, useRef } from 'react';
-import { useDrop } from 'react-dnd';
-import { NativeTypes } from 'react-dnd-html5-backend';
+import React from 'react';
 import BackupIcon from '@mui/icons-material/Backup';
+import type { UploadProps } from 'antd';
+import { message, Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
+
+const { Dragger } = Upload;
 import Styles from './index.module.scss';
 
-const DndContainer = (props: any) => {
-    const { onDrop, onClick } = props;
-    const dragHandle = useRef<any>(null);
+const DndContainer = ({
+    onChangeImage,
+    aspect = 1 / 1,
+    quality = 1,
+    shape = 'rect',
+    modalTitle = "Crop Image",
+}: any) => {
+    const [fileList, setFileList] = React.useState<any>([]);
 
-    const [{ canDrop, isOver }, drop] = useDrop(
-        () => ({
-            accept: [NativeTypes.FILE],
-            drop(item: any) {
-                if (onDrop) {
-                    onDrop(item);
-                }
-            },
-            canDrop(item) {
-                const includesUnsupportedFiles = item.files.some((file: any) => {
-                    return !file.type.includes('image');
-                });
-                return includesUnsupportedFiles ? false : true;
-            },
-            hover(item) {},
-            collect: (monitor) => {
-                const item = monitor.getItem();
-                if (item) {
-                }
-                return {
-                    isOver: monitor.isOver(),
-                    canDrop: monitor.canDrop(),
-                };
-            },
-        }),
-        [props]
-    );
+    const coverProps: UploadProps = {
+        name: 'file',
+        multiple: false,
+        listType: 'picture',
+        onDrop(e) {
+            console.log('Dropped files', e.dataTransfer.files);
+        },
+        onChange: ({ fileList: newFileList }: any) => {
+            setFileList(newFileList);
+        },
+        beforeUpload: (file) => {
+            const supportedFormats = /\.(jpg|jpeg|png|webp)$/i;
+            if (!supportedFormats.test(file.name)) {
+                message.error('You can only upload JPG/PNG/WEBP file!');
+            }
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+                onChangeImage(e.target.result);
+                setFileList((prev: any) => [...prev, { url: e.target.result }]);
+            };
+            reader.readAsDataURL(file);
 
-    useEffect(() => {
-        const onDragOver = (e: Event) => {
-            document.body.classList.add('user-is-dragging');
-            clearTimeout(dragHandle.current as any);
-            dragHandle.current = setTimeout(() => {
-                document.body.classList.remove('user-is-dragging');
-            }, 200);
-        };
-
-        document.body.addEventListener('dragover', onDragOver);
-
-        return () => {
-            document.body.removeEventListener('dragover', onDragOver);
-        };
-    }, []);
+            return false;
+        },
+        customRequest: (item) => {
+            console.log(item);
+        },
+    };
 
     return (
-        <div draggable={true} ref={drop} className={Styles.dndContainer} onClick={onClick}>
-            <div className="border-4 border-white border-dashed w-full h-full text-center flex flex-col items-center justify-center">
-                <BackupIcon className="text-[2.5rem] text-[var(--primary-color)]" />
-                <span className="text-lg font-semibold">
-                    {canDrop && isOver ? 'Release to drop' : 'Drag and drop a file here'}
-                </span>
-                {!canDrop && !isOver && (
+        <ImgCrop
+            quality={1}
+            rotationSlider
+            aspect={aspect}
+            cropShape={shape}
+            modalTitle={modalTitle}
+        >
+            <Dragger {...coverProps}>
+                <p className="ant-upload-drag-icon">
+                    <BackupIcon className="text-[2.5rem] text-[var(--primary-color)]" />
+                </p>
+                <p className="ant-upload-text flex flex-col items-center justify-center">
+                    {' '}
+                    <span className="text-lg font-semibold">Drag and drop a file here</span>
                     <span className="text-lg">
                         Or{' '}
                         <span className="text-[var(--primary-color)] font-normal">
                             Select a file
                         </span>
                     </span>
-                )}
-                <span className="text-slate-400 text-sm mt-2.5">Suported formats: JPG, JPEG, PNG, WEBP</span>
-            </div>
-        </div>
+                </p>
+                <p className="ant-upload-hint">Suported formats: JPG, JPEG, PNG, WEBP</p>
+            </Dragger>
+        </ImgCrop>
     );
 };
 
