@@ -118,8 +118,14 @@ import play from './assets/play.svg';
 import pause from './assets/pause.svg';
 import volumeMute from './assets/volume-mute.svg';
 import volumeUnmute from './assets/volume-unmute.svg';
+import block from './assets/block.svg';
+import whiteblock from './assets/whiteblock.svg'
+import trippleDotIcon from './assets/tripple-dot-icon.svg'
 
 export {
+    trippleDotIcon,
+    block,
+    whiteblock,
     duet,
     sendSvgPopup,
     saveVideo,

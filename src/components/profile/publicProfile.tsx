@@ -37,6 +37,7 @@ export const PublicProfile = (props: any) => {
     const token = localStorage.getItem('token');
     const [videoModal, setVideoModal] = useState(false);
     const [copyPopup, setcopyPopup] = useState(false);
+    const [darkTheme, setdarkTheme] = useState<any>('');
 
     const MemoizedStoriesOnPublicProfile = memo(publicProfileStories);
 
@@ -60,9 +61,9 @@ export const PublicProfile = (props: any) => {
         }
     };
 
-    const fetchProfileVideos = async (signal:AbortSignal, fromStart: boolean, profileId = profileData._id) => {
+    const fetchProfileVideos = async (signal: AbortSignal, fromStart: boolean, profileId = profileData._id) => {
         try {
-            const videosResponsePromise = await fetch(`${API_KEY}/profile/${profileId}/videos?page=${fromStart?1:videosData.page}&pageSize=${videosData.pageSize}`, {
+            const videosResponsePromise = await fetch(`${API_KEY}/profile/public/${profileId}/videos?page=${fromStart ? 1 : videosData.page}&pageSize=${videosData.pageSize}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -72,7 +73,7 @@ export const PublicProfile = (props: any) => {
             });
             const videosResponse = await videosResponsePromise.json();
             if (Array.isArray(videosResponse?.data?.data)) {
-                setVideosData((prev: any) => ({ ...prev, items: fromStart? videosResponse?.data?.data : [...prev.items, ...videosResponse?.data?.data], totalItems: videosResponse?.data?.total }));
+                setVideosData((prev: any) => ({ ...prev, items: fromStart ? videosResponse?.data?.data : [...prev.items, ...videosResponse?.data?.data], totalItems: videosResponse?.data?.total }));
             }
 
         } catch (error) {
@@ -85,9 +86,9 @@ export const PublicProfile = (props: any) => {
         const controller = new AbortController();
         const signal = controller.signal;
         const initialFetch = async () => {
-            setVideosData((prev:any) => ({ ...prev, page: 1 }));
+            setVideosData((prev: any) => ({ ...prev, page: 1 }));
             const Id = await fetchProfileData();
-            fetchProfileVideos(signal,true, Id);
+            fetchProfileVideos(signal, true, Id);
         }
         initialFetch();
         return () => {
@@ -99,7 +100,7 @@ export const PublicProfile = (props: any) => {
         if (videosData.page === 1) return;
         const controller = new AbortController();
         const signal = controller.signal;
-        fetchProfileVideos(signal,false);
+        fetchProfileVideos(signal, false);
         return () => {
             controller.abort();
         }
@@ -130,6 +131,36 @@ export const PublicProfile = (props: any) => {
     const onVideoModal = (video: any) => {
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
+        if (token) markVideoViewed(video?.mediaId);
+    };
+
+    const markVideoViewed = async (id: string) => {
+        const url = `${API_KEY}/media-content/mark-as-started-watching/${id}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            if (data.message === "Success") {
+                const videosDataArr = [...videosData.items];
+                const index = videosDataArr.findIndex((video: any) => video.mediaId === id);
+                videosDataArr[index].views++;
+                setVideosData({ ...videosData, items: videosDataArr });
+            }
+        } catch (error) {
+            console.error('Error making POST request:', error);
+        }
     };
 
     useEffect(() => {
@@ -139,6 +170,14 @@ export const PublicProfile = (props: any) => {
             }, 1000);
         }
     }, [copyPopup]);
+
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if (themeColor == 'dark') {
+            setdarkTheme(styles.darkTheme);
+        }
+    });
 
     return (
         <Layout showCopyPopup={copyPopup}>
@@ -190,6 +229,7 @@ export const PublicProfile = (props: any) => {
                             setVideoModalInfo(stories);
                         }}
                         copyHandler={() => setcopyPopup(true)}
+                        darktheme={darkTheme}
                     />
                     <div className={styles.tabs}>
                         {tabs.map((item) => (
@@ -209,7 +249,7 @@ export const PublicProfile = (props: any) => {
                     <div className={`${styles.contentContainer}`}>
                         <p className={styles.title}>{activeTab}</p>
                         {activeTab === 'Videos' ? (
-                            <VideoesMaping videos={videosData} fetchMore={() => setVideosData({...videosData, page: videosData.page+ 1})} openVideoModal={onVideoModal} />
+                            <VideoesMaping videos={videosData} fetchMore={() => setVideosData({ ...videosData, page: videosData.page + 1 })} openVideoModal={onVideoModal} />
                         ) : null}
                         {activeTab !== 'Videos' ? <PrivatePosts tab={activeTab} name={profileData.name} /> : null}
                     </div>

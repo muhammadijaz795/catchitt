@@ -9,11 +9,6 @@ export default function Dark({ isInDark }: { isInDark: boolean }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
-            <defs>
-                <clipPath id="clip0_10796_21363">
-                    <rect width="24" height="24" fill="white" />
-                </clipPath>
-            </defs>
         </svg>
 
     )

@@ -1,18 +1,18 @@
-import { alpha, styled } from '@mui/material';
+import { alpha, createTheme, styled, ThemeProvider } from '@mui/material';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
-import { 
+import {
     copyLink,
-    send, 
+    send,
     embedShare,
     whatsappShare,
     linkedInShare,
     twitterShare,
     facebookShare
- } from '../../../icons';
+} from '../../../icons';
 import style from './index.module.scss';
 import { shareProfileby } from '../../../utils/helpers';
 import { showToastError } from '../../../utils/constants';
@@ -23,6 +23,8 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [darkTheme, setdarkTheme] = React.useState<any>(null);
+
     const loggedUserId = localStorage.getItem('userId');
     const open = Boolean(anchorEl);
     const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
@@ -37,6 +39,26 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    React.useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+
+        if (themeColor == 'dark') {
+            setdarkTheme(style.darkTheme);
+        }
+    });
+
+    const lightThemePalette = createTheme({
+        palette: {
+            mode: 'light',
+        },
+    });
+
+    const darkThemePalette = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
 
     const StyledMenu = styled((props: MenuProps) => (
         <Menu
@@ -85,7 +107,7 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
 
     const copyLinkHandler = async () => {
         const isCopied = await shareProfileby.copyLink(userName);
-        isCopied ? copyHandler(): showToastError('Failed to copy link');
+        isCopied ? copyHandler() : showToastError('Failed to copy link');
     }
     return (
         <div
@@ -100,69 +122,73 @@ export default function COPY_AND_SEND_MENU({ copyHandler, BASE_URL_FRONTEND, pro
                 // display:'flex'
             }}
         >
-            <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
-                <ListItemButton
-                    id="lock-button"
-                    aria-haspopup="listbox"
-                    aria-controls="lock-menu"
-                    //   aria-label="when device is locked"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClickListItem}
-                    style={{ background: 'transparent' }}
-                ></ListItemButton>
-            </List>
-            <StyledMenu
-                id="lock-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'lock-button',
-                    // role: 'listbox',
-                }}
-                style={{
-                    top: 10,
-                    right: 100,
-                    // display:'flex !important'
-                }}
-            >
-                {/* <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+            <ThemeProvider theme={darkTheme ? darkThemePalette : lightThemePalette}>
+
+                <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
+                    <ListItemButton
+                        id="lock-button"
+                        aria-haspopup="listbox"
+                        aria-controls="lock-menu"
+                        //   aria-label="when device is locked"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClickListItem}
+                        style={{ background: 'transparent' }}
+                    ></ListItemButton>
+                </List>
+                <StyledMenu
+                    id="lock-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'lock-button',
+                        // role: 'listbox',
+                    }}
+                    style={{
+                        top: 10,
+                        right: 100,
+                        // backgroundColor: darkTheme ? '#1A1A1A' : 'white',
+                        // display:'flex !important'
+                    }}
+                >
+                    {/* <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
                         <img src={send} />
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
                     </div>
                 </MenuItem> */}
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem} onClick={copyLinkHandler}>
-                        <img src={copyLink} />
-                        <p className={`${style.p} ${style.black_500}`}>Copy link</p>
-                    </div>
-                </MenuItem>
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem} onClick={()=>shareProfileby.whatsapp(userName)}>
-                        <img src={whatsappShare} />
-                        <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
-                    </div>
-                </MenuItem>
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem} onClick={()=>shareProfileby.facebook(userName)}>
-                        <img src={facebookShare} />
-                        <p className={`${style.p} ${style.black_500}`}>Facebook</p>
-                    </div>
-                </MenuItem>
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem} onClick={()=>shareProfileby.twitter(userName)}>
-                        <img src={twitterShare} />
-                        <p className={`${style.p} ${style.black_500}`}>Twitter</p>
-                    </div>
-                </MenuItem>
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem} onClick={()=>shareProfileby.linkedin(userName)}>
-                        <img src={linkedInShare} />
-                        <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
-                    </div>
-                </MenuItem>
-            </StyledMenu>
+                    <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={copyLinkHandler}>
+                            <img src={copyLink} />
+                            <p className={`${style.p} ${style.black_500}`}>Copy link</p>
+                        </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={() => shareProfileby.whatsapp(userName)}>
+                            <img src={whatsappShare} />
+                            <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
+                        </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={() => shareProfileby.facebook(userName)}>
+                            <img src={facebookShare} />
+                            <p className={`${style.p} ${style.black_500}`}>Facebook</p>
+                        </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={() => shareProfileby.twitter(userName)}>
+                            <img src={twitterShare} />
+                            <p className={`${style.p} ${style.black_500}`}>Twitter</p>
+                        </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={() => shareProfileby.linkedin(userName)}>
+                            <img src={linkedInShare} />
+                            <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
+                        </div>
+                    </MenuItem>
+                </StyledMenu>
+            </ThemeProvider>
         </div>
     );
 }

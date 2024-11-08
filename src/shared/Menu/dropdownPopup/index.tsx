@@ -3,7 +3,7 @@ import { MENU_POPUP_OPTIONS } from '../../../utils/constants';
 import './switch.scss';
 import { useDispatch } from 'react-redux';
 import style from './index.module.scss';
-import CreatorTools from './svgComponents/creatorTools';
+import CreatorTools from './svgComponents/CreatorTools';
 import Translation from './svgComponents/Translation';
 import FeedHelp from './svgComponents/FeedHelp';
 import Dark from './svgComponents/Dark';

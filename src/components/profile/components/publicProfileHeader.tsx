@@ -12,6 +12,7 @@ import { useAuthStore } from '../../../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { get, post } from '../../../axios/axiosClient';
 import defaultBanner from '../../../assets/default_banner.jpeg';
+import { block, myReportWhite, report, trippleDotIcon, whiteblock } from '../../../icons';
 
 interface Props {
     setProfileModal: (value: boolean) => void;
@@ -24,6 +25,7 @@ interface Props {
     showStories: any;
     storyVideos: any;
     copyHandler: any;
+    darktheme: any;
 }
 
 const PublicProfileHeader: FunctionComponent<Props> = ({
@@ -34,6 +36,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
     openBlock,
     showStories,
     copyHandler,
+    darktheme,
 }) => {
     const params: any = useParams();
     const [dropdown, setDropdown] = useState(false);
@@ -225,17 +228,17 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                         className={styles['button3']}
                     >
                         <img
-                            src="../../../../public/images/icons/more-btn-publicprofile.svg"
+                            src={trippleDotIcon}
                             alt=""
                         />
                         {dropdown ? (
-                            <div className={styles['dropdown']}>
+                            <div className={`${styles['dropdown']} ${darktheme? 'bg-dark':''}`}>
                                 <div onClick={openReport}>
-                                    <img src="../../../../public/images/icons/report.svg" alt="" />
+                                    <img src={darktheme? myReportWhite: report} alt="" />
                                     <p className={styles['text5']}>Report</p>
                                 </div>
                                 <div onClick={openBlock}>
-                                    <img src="../../../../public/images/icons/block.svg" alt="" />
+                                    <img src={darktheme?whiteblock:block} alt="" />
                                     <p className={styles['text5']}>Block</p>
                                 </div>
                             </div>
