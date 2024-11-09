@@ -581,6 +581,7 @@ export const Profile = (props: any) => {
                         content={profileViewsContent}
                         handleOverlayClick={() => setViewsModal(false)}
                         viewItemClickHandler={viewItemClickHandler}
+                        darkTheme={!!darkTheme}
                     />
                 )}
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />

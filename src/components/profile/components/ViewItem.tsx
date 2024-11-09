@@ -1,3 +1,5 @@
+import style from './viewItem.module.scss';
+
 const ViewItem = ({
     viewerAvatar,
     viewerName,
@@ -17,28 +19,19 @@ const ViewItem = ({
                 <img className="h-12 w-12 object-cover rounded-full" src={viewerAvatar} alt="viewerAvatar" />
                 <p className="font-medium text-base text-custom-dark-222">{viewerName}</p>
             </div>
-            <div
-                onClick={() => viewItemClickHandler(index)}
-                className={`flex justify-center items-center cursor-pointer ${
-                    relationWithViewer === 'Follow'
+            <button onClick={() => viewItemClickHandler(index)} className={`${style.button} ${relationWithViewer === 'Follow'
                         ? 'bg-custom-primary'
                         : relationWithViewer === 'Requested'
-                        ? 'bg-custom-gray-100'
-                        : 'bg-white'
-                } px-4 rounded-md h-10 w-[7.25rem]`}
-            >
-                <p
-                    className={`font-semibold text-sm ${
-                        relationWithViewer === 'Friends' ||
+                            ? 'bg-custom-gray-100'
+                            : ''
+                    } ${relationWithViewer === 'Friends' ||
                         relationWithViewer === 'Requested' ||
                         relationWithViewer === 'Following'
-                            ? 'text-custom-primary'
-                            : 'text-white'
-                    }`}
-                >
-                    {relationWithViewer}
-                </p>
-            </div>
+                        ? 'text-custom-primary'
+                        : 'text-white'
+                    }`}>
+                {relationWithViewer}
+            </button>
         </div>
     );
 };
