@@ -58,7 +58,7 @@ function useUpload() {
     };
 
     const onChangeFileHandler = (e: any) => {
-        const file = e?.target?.files[0];
+        const file = Array.isArray(e?.target?.files) ? e.target.files[0] : e;
         if (file) {
             if (file?.name?.includes('.mp4')) {
                 setselectedFile(file);

@@ -18,6 +18,7 @@ import { Tab } from 'react-tabs';
 import styles from './index.module.scss';
 import DndContainer from './DndContainer';
 import CloseIcon from '@mui/icons-material/Close';
+import { message } from 'antd';
 
 function FormRightSide(props: any) {
     const {
@@ -98,16 +99,13 @@ function FormRightSide(props: any) {
     }, []);
 
     useEffect(() => {
-
         dispatch(loadFollowers(followersPage));
-
-    }, [followersPage])
+    }, [followersPage]);
 
     useEffect(() => {
         const taggedFollowers = taggedUsers.map((user: any) => user?._id);
         updateState('taggedUsers', taggedFollowers);
-    }, [taggedUsers])
-    
+    }, [taggedUsers]);
 
     const dropDownH = (e: any) => {
         const filteredCategories = categories.filter((item: any) => {
@@ -206,10 +204,20 @@ function FormRightSide(props: any) {
                                 <DndContainer
                                     aspect={62 / 127}
                                     modalTitle="Crop cover"
-                                    onChangeImage={(base64: string) => {
-                                        setCustomCover(base64);
-                                        updateState('thumbnailUrl', base64);
+                                    onChangeFile={(file: File) => {
+                                        if (!/\.(jpg|jpeg|png|webp)$/i.test(file.name)) {
+                                            message.error('You can only upload supported file!');
+                                            return;
+                                        }
+                                        const reader = new FileReader();
+                                        reader.onload = (e: any) => {
+                                            setCustomCover(e.target.result);
+                                            updateState('thumbnailUrl', e.target.result);
+                                        };
+                                        reader.readAsDataURL(file);
                                     }}
+                                    crop
+                                    subtitle="Suported formats: JPG, JPEG, PNG, WEBP"
                                 />
                             </div>
                         )}
@@ -251,8 +259,9 @@ function FormRightSide(props: any) {
                                     <img
                                         src={downArrow}
                                         alt=""
-                                        className={`cursor-pointer transition-all duration-200 transform ${dropDown ? 'rotate-180' : 'rotate-0'
-                                            }`}
+                                        className={`cursor-pointer transition-all duration-200 transform ${
+                                            dropDown ? 'rotate-180' : 'rotate-0'
+                                        }`}
                                     />
                                 }
                             />
@@ -477,11 +486,7 @@ function FormRightSide(props: any) {
                                         setPostLocationsPopup(false);
                                     }}
                                 >
-                                    <Text
-                                        fontWeight={400}
-                                        lineHeight="24px"
-                                        text={country?.name}
-                                    />
+                                    <Text fontWeight={400} lineHeight="24px" text={country?.name} />
                                     {/* <Text
                                         fontSize="12px"
                                         fontWeight={400}
@@ -507,34 +512,39 @@ function FormRightSide(props: any) {
                             placeholder="Search"
                         />
                     </div>
-                    <div className="flex flex-col h-[60vh] overflow-y-scroll no-scrollbar" id='taggedUsersScrollableDiv'>
+                    <div
+                        className="flex flex-col h-[60vh] overflow-y-scroll no-scrollbar"
+                        id="taggedUsersScrollableDiv"
+                    >
                         <InfiniteScroll
                             dataLength={followers?.length}
                             next={loadMoreFollowers}
                             hasMore={followers.length < totalFollowers || totalFollowers === null}
-                            loader={<div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    margin: '1rem',
-                                    width: 'inherit',
-                                }}
-                            >
-                                <CircularProgress />
-                            </div>}
+                            loader={
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        margin: '1rem',
+                                        width: 'inherit',
+                                    }}
+                                >
+                                    <CircularProgress />
+                                </div>
+                            }
                             className="mb-20"
                             // scrollThreshold={0.6}
                             scrollableTarget="taggedUsersScrollableDiv"
                             endMessage={
                                 <div className="flex flex-row justify-center items-center mt-3">
                                     <p className="font-bold text-xl">
-                                        {(totalFollowers === 0) && 'No followers available.'}
+                                        {totalFollowers === 0 && 'No followers available.'}
                                     </p>
                                 </div>
                             }
                         >
-                            {followers.map((follower:any, index: number) => {
+                            {followers.map((follower: any, index: number) => {
                                 return (
                                     <div
                                         key={index}
@@ -542,7 +552,11 @@ function FormRightSide(props: any) {
                                         onClick={() => {
                                             setTaggedUser([
                                                 ...taggedUsers,
-                                                { name: follower?.follower_userID?.name, _id: follower?.follower_userID?._id,  id: taggedUsers?.length || 0 },
+                                                {
+                                                    name: follower?.follower_userID?.name,
+                                                    _id: follower?.follower_userID?._id,
+                                                    id: taggedUsers?.length || 0,
+                                                },
                                             ]);
                                             setTagUsersPopup(false);
                                         }}
@@ -552,12 +566,15 @@ function FormRightSide(props: any) {
                                             src={follower?.follower_userID?.avatar || avatar}
                                             alt=""
                                         />
-                                        <Text fontWeight={500} lineHeight="20px" text={follower?.follower_userID?.name} />
+                                        <Text
+                                            fontWeight={500}
+                                            lineHeight="20px"
+                                            text={follower?.follower_userID?.name}
+                                        />
                                     </div>
                                 );
                             })}
                         </InfiniteScroll>
-
                     </div>
                 </div>
             </CustomModel>

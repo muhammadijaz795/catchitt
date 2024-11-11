@@ -38,7 +38,7 @@ function UploadPage() {
         <div className={`flex flex-col ${darkTheme}`}>
             <Navbar />
             {!selectedFile && !isEditMode ? (
-                <UploadFile selectFilesHandler={selectFilesHandler} />
+                <UploadFile changeFileHandler={onChangeFileHandler} />
             ) : (
                 <UploadForm
                     selectedVideoSrc={selectedVideoSrc}
@@ -52,13 +52,6 @@ function UploadPage() {
                     videoInfo={info}
                 />
             )}
-            <input
-                ref={inputElementRef}
-                onChange={onChangeFileHandler}
-                type="file"
-                className="hidden"
-                accept="video/*"
-            />
         </div>
     );
 }

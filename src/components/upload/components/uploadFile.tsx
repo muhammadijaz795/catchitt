@@ -1,103 +1,76 @@
-import { useState,useEffect } from 'react';
-import { goLive, uploadPrimaryIcon } from '../../../icons';
+import { useState, useEffect } from 'react';
 import CustomButton from '../../../shared/buttons/CustomButton';
 import style from '../index.module.scss';
+import DndContainer from './DndContainer';
+import {
+    VideocamOutlined,
+    VideoFileOutlined,
+    FourKOutlined,
+    CropOutlined,
+} from '@mui/icons-material';
 
-function UploadFile({ selectFilesHandler }: any) {
-    const [currentOptions, setCurrentOptions] = useState(0);
-
-    const toggleCurrentOptions = (option: number) => {
-        setCurrentOptions(option);
-    };
-
-    const proceedToGoLivePage = () => {
-        // navigate('/golive');
-    };
-
+function UploadFile({ changeFileHandler }: any) {
     const [darkTheme, setdarkTheme] = useState('');
     const [lightTheme, setlightTheme] = useState('bg-custom-light');
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
-        if(themeColor == "dark"){ 
+        if (themeColor == 'dark') {
             setdarkTheme(style.darkTheme);
             setlightTheme('');
-        }else{
+        } else {
             setlightTheme('bg-custom-light');
         }
     });
 
     return (
-        <div className={`w-[100%] h-[100vh]  flex justify-center items-center pt-[5rem] ${darkTheme}`}>
-            <div className={`min-w-[19rem] h-[auto] ${lightTheme} xl:w-[71.5rem] rounded-[0.5rem] p-[1.5rem] text-right`}>
-                <div
-                    className="flex flexrow items-center justify-between rounded-[0.5rem] px-[1rem] py-[4rem] gap-4"
+        <div className="w-full h-[100vh] flex flex-col items-center justify-center gap-2.5">
+            <div
+                className={`w-4/5 max-w-[950px] h-4/6 flex flex-col items-center px-[1rem] py-[1.5rem] gap-4 border justify-center cursor-pointer rounded-2xl`}
+            >
+                <DndContainer
+                    className="w-full h-full"
+                    text="Select a video file"
+                    orText="drag and drop it here"
+                    accept="video/*"
+                    onChangeFile={changeFileHandler}
                 >
-                    <div
-                        onClick={() => toggleCurrentOptions(0)}
-                        className={`flex flex-col items-center gap-[0.5rem flex-1 border cursor-pointer ${
-                            currentOptions === 0 ? '!border-liveSelected' : ''
-                        } h-[13.2rem] justify-center rounded-2xl`}
-                    >
-                        <div className="w-[71px] h-[71px] rounded-[50%] bg-custom-gray-100 flex justify-center items-center cursor-pointer select-none">
-                            <img className="w-[42px] h-[42px]" src={goLive} alt="" />
-                        </div>
-                        <p className="text-[20px] font-semibold leading-[24px] mt-[1rem]">
-                            Go LIVE
+                    <CustomButton
+                        text="Select video"
+                        width="16.938rem !important"
+                    />
+                </DndContainer>
+                <div className="w-full flex items-center justify-around">
+                    <div className="relative flex flex-col text-left gap-1.5 pl-10">
+                        <VideocamOutlined className="text-gray-300 absolute left-2.5 -top-0.5" />
+                        <p className="font-semibold text-sm">Size and duration</p>
+                        <p className="text-gray-500 text-xs">
+                            Maximum size 10GB, video duration 60 minutes
                         </p>
-                        {/* <p className="font-mediun text-custom-color-999">Drag and drop files</p>
-                        <p className="font-mediun text-custom-color-999">
-                            Long videos can be split into multiple parts to get more exposure
-                        </p>
-                        <p className="font-mediun text-custom-color-999 mt-[1rem]">
-                            Support mp4, avi, webm, and mov video formats
-                        </p>
-                        <p className="font-mediun text-custom-color-999">Up to 300 seconds</p>
-                        <p className="font-mediun text-custom-color-999">Less than 200 MB</p> */}
-                        {/* <p className="font-mediun text-custom-color-999 mb-[1rem]">
-                            Less than 30 videos
-                        </p> */}
-                        {/* <CustomButton
-                            onClick={selectFilesHandler}
-                            text="Select files"
-                            width="453px !important"
-                        /> */}
                     </div>
-                    <div
-                        onClick={() => toggleCurrentOptions(1)}
-                        className={`flex flex-col items-center gap-[0.5rem flex-1 border h-[13.2rem] justify-center cursor-pointer ${
-                            currentOptions === 1 ? '!border-liveSelected' : ''
-                        } rounded-2xl`}
-                    >
-                        <div className="w-[71px] h-[71px] rounded-[50%] bg-custom-gray-100 flex justify-center items-center cursor-pointer select-none">
-                            <img className="w-[42px] h-[42px]" src={uploadPrimaryIcon} alt="" />
-                        </div>
-                        <p className="text-[20px] font-semibold leading-[24px] mt-[1rem]">
-                            Select video to upload
+                    <div className="relative flex flex-col text-left gap-1.5 pl-10">
+                        <VideoFileOutlined className="text-gray-300 absolute left-2.5 -top-0.5" />
+                        <p className="font-semibold text-sm">File formats</p>
+                        <p className="text-gray-500 text-xs">
+                            Recomended: ".mp4" but other major formats are supported.
                         </p>
-                        {/* <p className="font-mediun text-custom-color-999">Drag and drop files</p>
-                        <p className="font-mediun text-custom-color-999">
-                            Long videos can be split into multiple parts to get more exposure
+                    </div>
+                    <div className="relative flex flex-col text-left gap-1.5 pl-10">
+                        <FourKOutlined className="text-gray-300 absolute left-2.5 -top-0.5"/>
+                        <p className="font-semibold text-sm">Video resolutions</p>
+                        <p className="text-gray-500 text-xs">
+                            Minimum resolution: 720p, 2K adn 4K supported
                         </p>
-                        <p className="font-mediun text-custom-color-999 mt-[1rem]">
-                            Support mp4, avi, webm, and mov video formats
+                    </div>
+                    <div className="relative flex flex-col text-left gap-1.5 pl-10">
+                        <CropOutlined className="text-gray-300 absolute left-2.5 -top-0.5" />
+                        <p className="font-semibold text-sm">Aspect Ratios</p>
+                        <p className="text-gray-500 text-xs">
+                            Recomended: 16:9 for landscape, 9:16 for vertical
                         </p>
-                        <p className="font-mediun text-custom-color-999">Up to 300 seconds</p>
-                        <p className="font-mediun text-custom-color-999">Less than 200 MB</p> */}
-                        {/* <p className="font-mediun text-custom-color-999 mb-[1rem]">
-                            Less than 30 videos
-                        </p> */}
                     </div>
                 </div>
-                <CustomButton
-                    onClick={() =>
-                        currentOptions === 0 ? proceedToGoLivePage() : selectFilesHandler()
-                    }
-                    text="Next"
-                    width="16.938rem !important"
-                    preference={currentOptions}
-                />
             </div>
         </div>
     );

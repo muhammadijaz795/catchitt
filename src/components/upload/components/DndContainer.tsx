@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import BackupIcon from '@mui/icons-material/Backup';
 import type { UploadProps } from 'antd';
-import { message, Upload } from 'antd';
+import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
 const { Dragger } = Upload;
 import Styles from './index.module.scss';
 
 const DndContainer = ({
-    onChangeImage,
+    onChangeFile,
     aspect = 1 / 1,
     quality = 1,
     shape = 'rect',
-    modalTitle = "Crop Image",
+    modalTitle = 'Crop Image',
+    className = '',
+    text = 'Drag and drop a file here',
+    orText = 'Select a file',
+    subtitle = '',
+    children,
+    crop = false,
+    accept = 'image/*',
 }: any) => {
     const [fileList, setFileList] = React.useState<any>([]);
 
@@ -20,6 +27,7 @@ const DndContainer = ({
         name: 'file',
         multiple: false,
         listType: 'picture',
+        accept: accept,
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
@@ -27,17 +35,7 @@ const DndContainer = ({
             setFileList(newFileList);
         },
         beforeUpload: (file) => {
-            const supportedFormats = /\.(jpg|jpeg|png|webp)$/i;
-            if (!supportedFormats.test(file.name)) {
-                message.error('You can only upload JPG/PNG/WEBP file!');
-            }
-            const reader = new FileReader();
-            reader.onload = (e: any) => {
-                onChangeImage(e.target.result);
-                setFileList((prev: any) => [...prev, { url: e.target.result }]);
-            };
-            reader.readAsDataURL(file);
-
+            onChangeFile(file);
             return false;
         },
         customRequest: (item) => {
@@ -45,7 +43,31 @@ const DndContainer = ({
         },
     };
 
-    return (
+    const DndComp = (
+        <Dragger {...coverProps} className={className}>
+            <p className="ant-upload-drag-icon">
+                <BackupIcon className="!text-[2.5rem] text-[var(--primary-color)]" />
+            </p>
+            {text && (
+                <p className="ant-upload-text flex flex-col items-center justify-center">
+                    {' '}
+                    <span className="text-lg font-semibold">{text}</span>
+                    {orText && (
+                        <span className="text-lg">
+                            Or{' '}
+                            <span className="text-[var(--primary-color)] font-normal">
+                                {orText}
+                            </span>
+                        </span>
+                    )}
+                </p>
+            )}
+            {subtitle && <p className="ant-upload-hint">{subtitle}</p>}
+            {children ? children : null}
+        </Dragger>
+    );
+
+    return crop ? (
         <ImgCrop
             quality={1}
             rotationSlider
@@ -53,23 +75,10 @@ const DndContainer = ({
             cropShape={shape}
             modalTitle={modalTitle}
         >
-            <Dragger {...coverProps}>
-                <p className="ant-upload-drag-icon">
-                    <BackupIcon className="text-[2.5rem] text-[var(--primary-color)]" />
-                </p>
-                <p className="ant-upload-text flex flex-col items-center justify-center">
-                    {' '}
-                    <span className="text-lg font-semibold">Drag and drop a file here</span>
-                    <span className="text-lg">
-                        Or{' '}
-                        <span className="text-[var(--primary-color)] font-normal">
-                            Select a file
-                        </span>
-                    </span>
-                </p>
-                <p className="ant-upload-hint">Suported formats: JPG, JPEG, PNG, WEBP</p>
-            </Dragger>
+            {DndComp}
         </ImgCrop>
+    ) : (
+        DndComp
     );
 };
 
