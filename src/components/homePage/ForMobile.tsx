@@ -42,6 +42,16 @@ function ForMobile(props: any) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [startY, setStartY] = useState(null);
     const sliderRef = useRef<any>(null);
+    const [isMuted, setIsMuted] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(true);
+
+    const toggleMute = () => {
+        setIsMuted((prevMuted) => !prevMuted);
+    };
+
+    const togglePlaying = () => {
+        setIsPlaying((prevPlaying) => !prevPlaying);
+    };
 
     const handleTouchStart = (event: any) => {
         setStartY(event.touches[0].clientY);
@@ -146,6 +156,10 @@ function ForMobile(props: any) {
                                                     : post?.originalUrl
                                             }
                                             post={post}
+                                            isMuted={isMuted}
+                                            onMuteToggle={toggleMute}
+                                            isPlaying={isPlaying}
+                                            togglePlayPause={togglePlaying}
                                         />
                                         {post && (
                                             <div
