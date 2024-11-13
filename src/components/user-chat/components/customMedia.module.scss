@@ -1,0 +1,39 @@
+.pickerModal {
+    position: absolute;
+    bottom: 70px;
+    left: 5px;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    z-index: 1000;
+    margin: 0.3rem;
+    max-width: 400px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modalHeader button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.activeTab {
+    font-weight: bold;
+    color: #ca0b0b;
+    border-bottom: 2px solid #ca0b0b;
+}
+
+.modalContent {
+    height: 350px;
+    padding: 5px;
+    overflow-y: scroll;
+}

@@ -176,7 +176,7 @@ function Actions(props: any) {
                                                             <TextHighlighter searchQuery={searchQuery} text={item.msg} />
                                                         </p>}
 
-                                                    {item?.type == 'Image' &&
+                                                    {['Image','Sticker','Gif'].some(type=>type===item?.type) &&
                                                         <img src={item.msg} />
                                                     }
 

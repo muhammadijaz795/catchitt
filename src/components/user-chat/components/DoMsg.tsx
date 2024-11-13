@@ -7,16 +7,26 @@ import axios from 'axios';
 import { Modal, CircularProgress } from '@mui/material';
 import { getExtension, file_type } from '../../../utils/common';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
+import { GiphyFetch } from '@giphy/js-fetch-api';
+import { Grid } from '@giphy/react-components';
+import CustomMediaPicker from './CustomMediaPicker';
 // import commentEmoji from '../../../icons/commentEmoji.svg';
 
 const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) => {
+
   const API_KEY = process.env.VITE_API_URL;
+  const GIPHY_KEY = process.env.VITE_GIPHY_API_KEY;
+  if (!GIPHY_KEY) {
+    throw new Error("GIPHY_KEY is not defined");
+  }
+  const giphyFetch = new GiphyFetch(GIPHY_KEY);
   const token = localStorage.getItem('token');
   const [uploadedFile, setUploadedFile] = useState<string>('');
   const [openUploadPic, setOpenUploadPic] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [filePreview, setFilePreview] = useState<string>('');
   const [isPickerVisible, setIsPickerVisible] = useState(false);
+
   // const inputRef = useRef(null);
 
   const uploadfile = async (e: any) => {
@@ -99,15 +109,10 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
     setOpenUploadPic(false);
   }
 
-  const onEmojiClick = (emojiObject: any) => {
-    setMessageType('Text');
-    setMessage((prevText: string) => prevText + emojiObject.emoji); // Append emoji to input text
-  };
-
   return (
     <>
-      <EmojiPicker className="mt-2" open={isPickerVisible} theme={isDarkTheme ? Theme.DARK : Theme.LIGHT} height={350} width="auto" onEmojiClick={onEmojiClick} />
-      <div className={`${style.doMsgContainer} ${isDarkTheme?'bg-[#282828]':'bg-white'}`}>
+      <CustomMediaPicker isDarkTheme={isDarkTheme} isPickerVisible={isPickerVisible} setIsPickerVisible={setIsPickerVisible} setMessageType={setMessageType} setMessage={setMessage} setUploadedFile={setUploadedFile} setOpenUploadPic={setOpenUploadPic} setFilePreview={setFilePreview} />
+      <div className={`${style.doMsgContainer} ${isDarkTheme ? 'bg-[#282828]' : 'bg-white'}`}>
         <form onSubmit={onSubmit} style={{ padding: '0px' }}>
           {/* <InputEmoji 
                     onChange={onChange}
@@ -148,14 +153,14 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
         </div>
         <Modal open={openUploadPic}>
 
-          <div onClick={(e) => e.stopPropagation()} className={style.popupbackground}>
-            <h6>Upload File Preview</h6>
+          <div onClick={(e) => e.stopPropagation()} className={style.popupbackground} style={{background:isDarkTheme?'#181818':'#fff'}}>
+            <span className={isDarkTheme?'text-white':'text-dark'}>Upload File Preview</span>
             <div>
               {uploadedFile == "Image" && <img src={filePreview} alt="Preview"
                 style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />}
 
               {uploadedFile == "Video" &&
-                // <img src={filePreview}  alt="Preview"
+                // <img src={filePreview}  alt</button>="Preview"
                 // style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />
                 <video
                   disablePictureInPicture
@@ -178,10 +183,10 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
               )}
               <div style={{}} >
                 <center>
-                  <button onClick={(e) => { onSubmit(e), closeUploadPic() }} className={style.btn}>
+                  <button onClick={(e) => { onSubmit(e), closeUploadPic() }} style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)' }}>
                     Send
                   </button>
-                  <button onClick={closeUploadPic} className={style.btn}>
+                  <button style={{ color: isDarkTheme ? '#fff' : 'rgb(22, 24, 35)', backgroundColor: isDarkTheme ? '#282828' : '', borderColor: 'rgba(22, 24, 35, 0.12)' }} onClick={closeUploadPic} className="mx-2" >
                     Cancel
                   </button>
                 </center>
