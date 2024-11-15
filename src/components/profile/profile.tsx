@@ -576,6 +576,7 @@ export const Profile = (props: any) => {
                     openBlock={deleteVideoPopup}
                     onBlockClose={() => setDeleteVideoPopup(false)}
                     info={videoModalInfo}
+                    darkTheme={!!darkTheme}
                     // @ts-ignore
                     userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />

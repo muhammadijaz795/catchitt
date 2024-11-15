@@ -45,6 +45,7 @@ import { set } from 'lodash';
 import { copyLinkHandler, facebookShareHandler, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import PopupForPrivacySettings from './popupForPrivacySettings';
+import PopupForDeleteMedia from './popupForDeleteMedia';
 
 
 export default function PopupForVideoPlayer({
@@ -672,9 +673,10 @@ export default function PopupForVideoPlayer({
             mode: 'dark',
         },
     });
+
     return (
         <ThemeProvider theme={darkThemePalette}>
-        <PopupForPrivacySettings isPrivacyModalOpened={isPrivacyModalOpened} setIsPrivacyModalOpened={setIsPrivacyModalOpened} />
+        <PopupForPrivacySettings isPrivacyModalOpened={isPrivacyModalOpened} setIsPrivacyModalOpened={setIsPrivacyModalOpened} mediaId={info?.mediaId} />
         <div className={style.parent}>
             <Modal open={videoModal}>
                 <ClickAwayListener onClickAway={() => console.log('abc')}>
@@ -820,7 +822,7 @@ export default function PopupForVideoPlayer({
                                                 >
                                                     <MenuItem onClick={()=>{setIsPrivacyModalOpened(true);setAnchorEl(null)}}><span className='font-bold' style={{color:'rgb(255,59,92)'}}>Privacy settings</span></MenuItem>
                                                     <Divider />
-                                                    <MenuItem><span className='font-bold'>Delete</span></MenuItem>
+                                                    <MenuItem onClick={deleteVideoPopup}><span className='font-bold'>Delete</span></MenuItem>
                                                 </Menu>
                                             </div>
                                             )}

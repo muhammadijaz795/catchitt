@@ -1,7 +1,6 @@
 .parent {
     width: 359px;
     border-radius: 8px;
-    background: #FFF;
     padding: 24px;
 }
 
@@ -109,7 +108,7 @@
     height: 419px;
     padding: 32px;
     border-radius: 8px;
-    background-color: #FFF;
+    // background-color: #FFF;
 }
 
 .parent3 img {
@@ -127,3 +126,21 @@
     justify-content: center;
     align-items: center;
 }
+
+.darkTheme div {
+    // background: rgb(18, 18, 18) !important;
+    color:white !important;
+    
+  }
+  
+  div.darkTheme > p > h1, h2, h3, h4  {
+    color:white !important;
+  }
+  
+  div.darkTheme p{
+    color:white !important;
+  }
+  
+  div.darkTheme span{
+    color:white !important;
+  }
