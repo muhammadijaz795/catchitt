@@ -127,9 +127,15 @@ function Action({
                                 post?.reducedVideoUrl,
                                 post?.mediaId,
                                 post?.user?.username,
+                                post?.user?._id,
+                                post?.user?.avatar,
                                 post?.description,
                                 post?.sound?.title,
-                                post?.sound?.url
+                                post?.sound?.url,
+                                post?.isLiked,
+                                post?.likes,
+                                post?.commentsCount,
+                                post?.shares,
                             )
                         }
                         popupHandler={popupHandler}

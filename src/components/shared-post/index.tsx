@@ -269,7 +269,7 @@ export default function PostPage() {
         setIsCommentsLoading(true);
         try {
             const response = await fetch(
-                `${API_KEY}/media-content/videos/${postId
+                `${API_KEY}/media-content${token?'':'/public'}/videos/${postId
                 }/comments?page=${fromStart ? 1 : videoComments.currentPage}&pageSize=${videoComments.pageSize}`,
                 {
                     method: 'GET',

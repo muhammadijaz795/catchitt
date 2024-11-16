@@ -1,6 +1,6 @@
 import style from './blockUser.module.scss';
 
-function DeleteVideo({ onclose, popupH, userId, info }: any) {
+function DeleteVideo({ onclose, popupH, userId, info, darkTheme }: any) {
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
 
@@ -16,7 +16,7 @@ function DeleteVideo({ onclose, popupH, userId, info }: any) {
         }
     };
     return (
-        <div className={style.parent}>
+        <div className={`${style.parent} ${darkTheme?style.darkTheme:''} ${darkTheme?'bg-[#181818]':'bg-white'}`}>
             <p className={style.title}>{`Delete video ?`}</p>
             <p className={style.desc}>Your video will be permanently deleted.</p>
             <button onClick={deleteVideo} className={style.block}>

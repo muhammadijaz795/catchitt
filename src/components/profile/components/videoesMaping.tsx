@@ -4,14 +4,17 @@ import muteIcon from '../svg-components/volume-mute.svg';
 import unmuteIcon from '../svg-components/volume-unmute.svg';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CircularProgress } from '@mui/material';
+import { editIcon, editVideoIcon } from '../../../icons';
 
 interface Type {
     videos: any;
     fetchMore: any;
     openVideoModal: any;
+    setEditVideo: any;
+    isOwnVideo: any;
 }
 
-export default function VideoesMaping({ videos, fetchMore, openVideoModal }: Type) {
+export default function VideoesMaping({ videos, fetchMore, openVideoModal, setEditVideo, isOwnVideo }: Type) {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [isMuted, setIsMuted] = useState(true);
 
@@ -81,6 +84,7 @@ export default function VideoesMaping({ videos, fetchMore, openVideoModal }: Typ
                         <img src="../../../../public/images/icons/views.svg" alt="" />
                         <p className={styles.viewsText}>{item.views}</p>
                     </div>
+                    {/* {isOwnVideo && <img onClick={(e:any)=>{ e.stopPropagation();setEditVideo(item)}} className={styles.editVideoIcon} src={editVideoIcon} alt="editVideo" />} */}
                     {/* Commented until given advise */}
                     {/* <img
                             onClick={unmuteHandler}

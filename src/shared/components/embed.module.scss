@@ -1,0 +1,83 @@
+.DivAvatarActionItemContainer {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .AvatarDivContainer{
+    position: relative;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+  }
+
+  .SpanAvatarContainer {
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    font-feature-settings: "tnum";
+    position: relative;
+    overflow: hidden;
+    color: rgb(255, 255, 255);
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 32px;
+    border-radius: 50%;
+    border-color: rgba(255, 255, 255, 0.12);
+    border-width: 0.5px;
+    cursor: pointer;
+    background-color: rgba(136, 136, 136, 0.5);
+  }
+
+  .AvatarFollowButton {
+    box-sizing: border-box;
+    appearance: none;
+    display: inline-flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    border-style: solid;
+    border-width: 1px;
+    font-family: var(--tux-fontFamilyParagraph);
+    font-weight: var(--tux-fontWeightSemibold);
+    text-decoration: none;
+    cursor: pointer;
+    background-clip: padding-box;
+    font-size: var(--tux-fontSizeP4);
+    padding-inline: 11px;
+    color: white;
+    background-color: rgb(255, 59, 92);
+    border-color: rgb(255, 59, 92);
+    width: 15px;
+    height: 15px;
+    min-width: unset;
+    padding: 0px;
+    border-radius: 24px;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+
+  .ColorButtonContent {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    opacity: 1;
+    overflow: hidden;
+    gap: 4px;
+  }
+
+
+
+
+
+

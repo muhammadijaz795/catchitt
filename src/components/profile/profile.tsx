@@ -13,7 +13,7 @@ import PopupForReport from './popups/PopupForReport';
 import PopupForBlock from './popups/popupForBlock';
 import PopupForVideoPlayer from './popups/popupForVideoPlayer';
 
-import { getFriends, getProfileData, getRandomUsers, loadFollowers, loadFollowing } from '../../redux/AsyncFuncs';
+import { getProfileData } from '../../redux/AsyncFuncs';
 import publicProfileStories from './popups/publicProfileStories';
 import styles from './profile.module.scss';
 import { Bookmark } from './svg-components/Bookmark';
@@ -29,6 +29,7 @@ import style from './profile.module.scss';
 import { useUpdateEffect } from 'react-use';
 import PopupForDeleteVideo from './popups/popupForDeleteVideo';
 import { Repost } from './svg-components/Repost';
+import PopupForEditVideo from './popups/popupForEditVideo';
 
 export const Profile = (props: any) => {
     const [activeTab, setActiveTab] = useState('Videos');
@@ -57,7 +58,7 @@ export const Profile = (props: any) => {
     const [viewsModal, setViewsModal] = useState(false);
     const [profileViewsContent, setProfileViewsContent] = useState<any>([]);
     const [darkTheme, setdarkTheme] = useState<any>('');
-
+    const [editVideo, setEditVideo] = useState(false);
     // @ts-ignore
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -363,11 +364,7 @@ export const Profile = (props: any) => {
             .catch((err) => {
                 console.log(err);
             });
-        // dispatch(getRandomUsers(1));
-        // dispatch(getRandomUsers(1));
-        dispatch(loadFollowing(1));
-        dispatch(loadFollowers(1));
-        dispatch(getFriends(1));
+     
         await dispatch(getProfileData());
     };
 
@@ -530,17 +527,17 @@ export const Profile = (props: any) => {
                             {(() => {
                                 switch (activeTab) {
                                     case 'Videos':
-                                        return (<VideoesMaping videos={userVideos} fetchMore={()=>setUserVideos({...userVideos, page:userVideos.page+1})} openVideoModal={onVideoModal} />);
+                                        return (<VideoesMaping videos={userVideos} fetchMore={()=>setUserVideos({...userVideos, page:userVideos.page+1})} openVideoModal={onVideoModal} isOwnVideo={!!token} setEditVideo={setEditVideo} />);
                                     case 'Private':
-                                        return (<VideoesMaping videos={privateVideos} fetchMore={()=>setPrivateVideos({...privateVideos, page:privateVideos.page+1})} openVideoModal={onVideoModal} />);
+                                        return (<VideoesMaping videos={privateVideos} fetchMore={()=>setPrivateVideos({...privateVideos, page:privateVideos.page+1})} openVideoModal={onVideoModal} isOwnVideo={!!token} setEditVideo={setEditVideo} />);
                                     case 'Bookmarks':
-                                        return (<VideoesMaping videos={bookmarkVideos} fetchMore={()=>setBookmarkVideos({...bookmarkVideos, page:bookmarkVideos.page+1})} openVideoModal={onVideoModal} />);
+                                        return (<VideoesMaping videos={bookmarkVideos} fetchMore={()=>setBookmarkVideos({...bookmarkVideos, page:bookmarkVideos.page+1})} openVideoModal={onVideoModal} isOwnVideo={!!token} setEditVideo={setEditVideo} />);
                                     case 'Liked Videos':
-                                        return (<VideoesMaping videos={userlikedVideos} fetchMore={()=>setUserLikedVideos({...userlikedVideos, page:userlikedVideos.page+1})} openVideoModal={onVideoModal} />);
+                                        return (<VideoesMaping videos={userlikedVideos} fetchMore={()=>setUserLikedVideos({...userlikedVideos, page:userlikedVideos.page+1})} openVideoModal={onVideoModal} isOwnVideo={!!token} setEditVideo={setEditVideo} />);
                                     case 'Tagged Posts':
-                                        return (<VideoesMaping videos={usertaggedVideos} fetchMore={()=>setUserTaggedVideos({...usertaggedVideos, page:usertaggedVideos.page+1})} openVideoModal={onVideoModal} />);
+                                        return (<VideoesMaping videos={usertaggedVideos} fetchMore={()=>setUserTaggedVideos({...usertaggedVideos, page:usertaggedVideos.page+1})} openVideoModal={onVideoModal} isOwnVideo={!!token} setEditVideo={setEditVideo} />);
                                     case 'Reposts':
-                                        return (<VideoesMaping videos={repostVideos} fetchMore={()=>setRepostsVideos({...repostVideos, page:repostVideos.page+1})} openVideoModal={onVideoModal} />);
+                                        return (<VideoesMaping videos={repostVideos} fetchMore={()=>setRepostsVideos({...repostVideos, page:repostVideos.page+1})} openVideoModal={onVideoModal} isOwnVideo={!!token} setEditVideo={setEditVideo} />);
                                     default:
                                         return null;
                                 }
@@ -548,6 +545,8 @@ export const Profile = (props: any) => {
                         </div>
                     </div>
                 </div>
+
+                {/* <PopupForEditVideo isDarkTheme={darkTheme} open={!!editVideo} targetVideo={editVideo} handleClose={()=>setEditVideo(false)} /> */}
 
                 <PopupForVideoPlayer
                     gifts={() => setGiftsPopup(true)}
@@ -577,6 +576,7 @@ export const Profile = (props: any) => {
                     openBlock={deleteVideoPopup}
                     onBlockClose={() => setDeleteVideoPopup(false)}
                     info={videoModalInfo}
+                    darkTheme={!!darkTheme}
                     // @ts-ignore
                     userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />
@@ -585,6 +585,7 @@ export const Profile = (props: any) => {
                         content={profileViewsContent}
                         handleOverlayClick={() => setViewsModal(false)}
                         viewItemClickHandler={viewItemClickHandler}
+                        darkTheme={!!darkTheme}
                     />
                 )}
                 <Gifts openGifts={giftsPopup} onGiftsClose={() => setGiftsPopup(false)} />

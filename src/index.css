@@ -253,3 +253,20 @@ video.loading::after {
 .infinite-scroll-component__outerdiv{
   width: 100%;
 }
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color, #f0f0f0); 
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color, #a0a0a0);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}

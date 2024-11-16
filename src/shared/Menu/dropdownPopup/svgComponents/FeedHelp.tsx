@@ -23,11 +23,6 @@ export default function FeedHelp({ isInDark }: { isInDark: boolean }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
-            <defs>
-                <clipPath id="clip0_10796_21357">
-                    <rect width="24" height="24" fill="white" />
-                </clipPath>
-            </defs>
         </svg>
 
     )

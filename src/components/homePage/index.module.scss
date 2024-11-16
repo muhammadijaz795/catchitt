@@ -9,6 +9,7 @@
   gap: 1rem;
   justify-content: center;
   margin: 40px auto;
+
   .tab {
     width: 190px;
     height: 46px;
@@ -28,6 +29,7 @@
     color: #848484;
     user-select: none;
   }
+
   .activeTab {
     user-select: none;
     background: rgb(255, 59, 92);
@@ -58,9 +60,11 @@
   gap: 32px;
   padding-bottom: 1rem;
   scroll-snap-type: y mandatory;
+
   .videoParent {
     scroll-snap-align: start;
     scroll-snap-stop: always;
+
     .videoHeader {
       // background: #000;
       max-width: 435px;
@@ -68,14 +72,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .videoHeaderSec1 > div {
+
+      .videoHeaderSec1>div {
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
       }
+
       .videoHeaderSec1 {
         display: flex;
         gap: 1rem;
+
         .name {
           font-family: Poppins;
           font-size: 16px;
@@ -86,6 +93,7 @@
           width: auto;
           word-break: break-all;
         }
+
         .userName {
           font-family: Poppins;
           font-size: 14px;
@@ -95,6 +103,7 @@
           text-align: left;
         }
       }
+
       .btn {
         width: 85px;
         height: 32px;
@@ -106,6 +115,7 @@
         justify-content: center;
         align-items: center;
       }
+
       .btn2 {
         width: 106px;
         height: 32px;
@@ -117,6 +127,7 @@
         align-items: center;
       }
     }
+
     .contentSec {
       max-width: 435px;
       margin: auto;
@@ -125,10 +136,12 @@
       gap: 10px;
       padding: 20px 0px;
     }
+
     .contentSec div {
       display: flex;
       gap: 10px;
     }
+
     .contentSec p {
       font-family: Poppins;
       font-size: 16px;
@@ -138,6 +151,7 @@
       letter-spacing: 0em;
       text-align: left;
     }
+
     .mediaContainer {
       // background-color: #000;
       margin: auto;
@@ -147,6 +161,7 @@
       position: relative;
       display: flex;
       justify-content: center;
+
       .actions {
         position: absolute;
         width: 40px;
@@ -155,9 +170,11 @@
         gap: 1rem;
         height: 100%;
         right: -74px;
+
         .useractions {
           display: flex;
           flex-direction: column;
+
           .actionC {
             font-family: Poppins;
             font-size: 12px;
@@ -170,6 +187,7 @@
           }
         }
       }
+
       //   align-items: center;
     }
   }
@@ -189,6 +207,7 @@
   gap: 1rem;
   padding-bottom: 0.8rem;
 }
+
 .mainContainer {
   // background: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
@@ -229,49 +248,55 @@
 
 .darkTheme {
   background: black !important;
-  color:white !important;
+  color: white !important;
 }
 
 .lightdarkTheme {
   background: rgb(18, 18, 18) !important;
-  color:white !important;
+  color: white !important;
 }
 
 .darkTheme input {
-  color:black !important;
+  color: black !important;
 }
 
 .lightdarkTheme input {
-  color:black !important;
+  color: black !important;
 }
 
-div.darkTheme > p > h1, h2, h3, h4  {
-  color:white !important;
+div.darkTheme>p>h1,
+h2,
+h3,
+h4 {
+  color: white !important;
 }
 
-div.darkTheme >  h1, h2, h3, h4  {
-  color:white !important;
+div.darkTheme>h1,
+h2,
+h3,
+h4 {
+  color: white !important;
 }
 
-div.darkTheme p{
-  color:white !important;
+div.darkTheme p {
+  color: white !important;
 }
 
-div.darkTheme .black_text{
-  color:black !important;
+div.darkTheme .black_text {
+  color: black !important;
 }
 
-div.popupdiv :hover{
-  color:black !important;
+div.popupdiv :hover {
+  color: black !important;
 }
 
-div.darkTheme div.darkWhiteTheme :hover{
+div.darkTheme div.darkWhiteTheme :hover {
   background: white !important;
-  color:black !important;
+  color: black !important;
 }
 
 
-.SpanAvatarContainer{
+.SpanAvatarContainer {
   display: inline-block;
   box-sizing: border-box;
   margin: 0px;
@@ -291,7 +316,7 @@ div.darkTheme div.darkWhiteTheme :hover{
   background-color: rgba(136, 136, 136, 0.5);
 }
 
-.AvatarDivContainer{
+.AvatarDivContainer {
   position: relative;
   display: flex;
   -webkit-box-align: center;
@@ -319,7 +344,7 @@ div.darkTheme div.darkWhiteTheme :hover{
   padding-inline: 11px;
   color: white;
   background-color: rgb(255, 59, 92);
-  border-color:rgb(255, 59, 92);
+  border-color: rgb(255, 59, 92);
   width: 24px;
   height: 24px;
   min-width: unset;
@@ -401,7 +426,7 @@ div.darkTheme div.darkWhiteTheme :hover{
   text-align: left;
 }
 
-.mediaContainer:hover .DivMediaCardBottom{
+.mediaContainer:hover .DivMediaCardBottom {
   background-color: transparent !important;
   margin-bottom: 80px;
 }

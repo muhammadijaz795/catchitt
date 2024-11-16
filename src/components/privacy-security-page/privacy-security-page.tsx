@@ -32,6 +32,7 @@ interface PrivacySettings {
     messages: boolean;
     activityStatus: boolean;
     viewProfileVisits: boolean;
+    disallowScreenshot: boolean;
 }
 
 interface BlockedUser {
@@ -58,6 +59,7 @@ export const PrivacySecurityPage = () => {
         messages: true,
         activityStatus: true,
         viewProfileVisits: true,
+        disallowScreenshot: true,
     });
     const API_KEY = process.env.VITE_API_URL;
     const navigate = useNavigate();
@@ -144,6 +146,7 @@ export const PrivacySecurityPage = () => {
                 messages: privacySettingsData.messages,
                 activityStatus: privacySettingsData.activityStatus,
                 viewProfileVisits: privacySettingsData.viewProfileVisits,
+                disallowScreenshot: privacySettingsData.disallowScreenshot,
             });
         }
     }, [privacySettingsData]);
@@ -273,7 +276,7 @@ export const PrivacySecurityPage = () => {
                         </div>
                     </div>
                     <div className={styles.suggestedContent}>
-                        <h4 className={darkTheme? 'text-white': 'text-black'}>Allow users to</h4>
+                        <h4 className={darkTheme ? 'text-white' : 'text-black'}>Allow users to</h4>
                         <div className={styles.cards}>
                             <FormGroup
                                 sx={{
@@ -364,6 +367,89 @@ export const PrivacySecurityPage = () => {
                                         }
                                     />
                                 </div>
+                                <div className={styles.card}>
+                                    <p>Allow Comments</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'isCommentsAllowed')
+                                                }
+                                            />
+                                        }
+                                    />
+                                </div>
+                                <div className={styles.card}>
+                                    <p>Mention and Tags</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'mentionAndTags')
+                                                }
+                                            />
+                                        }
+                                    />
+                                </div>
+
+                                {/* disallowScreenshot */}
+                                <div className={styles.card}>
+                                    <p>Disallow Screenshot</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={settings?.disallowScreenshot || false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'disallowScreenshot')
+                                                }
+                                            />
+                                        }
+                                    />
+                                </div>
+
+                                {/* Allow Story */}
+                                <div className={styles.card}>
+                                    <p>Allow Story</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={false}
+                                                onChange={(e) => handleSwitchChange(e, 'allowStory')}
+                                            />
+                                        }
+                                    />
+                                </div>
+
+                                {/* Allow Duet */}
+                                <div className={styles.card}>
+                                    <p>Allow Duet</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={false}
+                                                onChange={(e) => handleSwitchChange(e, 'allowDuet')}
+                                            />
+                                        }
+                                    />
+                                </div>
+
                             </FormGroup>
                         </div>
                         <div className={styles.accountCards} onClick={handleOpenBlockedModal}>
@@ -389,7 +475,7 @@ export const PrivacySecurityPage = () => {
                     </div>
 
                     {openBlockedListModal && (
-                        <ThemeProvider theme={darkTheme ? darkThemePalette : lightThemePalette }>
+                        <ThemeProvider theme={darkTheme ? darkThemePalette : lightThemePalette}>
                             <Modal
                                 open={openBlockedListModal}
                                 onClose={handleCloseBlockedModal}
@@ -399,7 +485,7 @@ export const PrivacySecurityPage = () => {
                             >
                                 <Box sx={mainModalstyle}>
                                     <div className={styles.contentPrefHeader}>
-                                        <h4 className={`${styles.contentPrefModalHeader} ${darkTheme? 'text-white':'text-black'}`}>
+                                        <h4 className={`${styles.contentPrefModalHeader} ${darkTheme ? 'text-white' : 'text-black'}`}>
                                             Blocked accounts
                                         </h4>
                                     </div>
@@ -414,7 +500,7 @@ export const PrivacySecurityPage = () => {
                                     >
                                         {blockedAccountsData.length === 0 ? (
                                             <div style={{ textAlign: 'center', width: '100%' }}>
-                                                <h4 className={darkTheme? 'text-white':'text-black'} style={{ fontSize: '18px' }}>
+                                                <h4 className={darkTheme ? 'text-white' : 'text-black'} style={{ fontSize: '18px' }}>
                                                     No blocked accounts yet
                                                 </h4>
                                             </div>
@@ -449,10 +535,10 @@ export const PrivacySecurityPage = () => {
                                                                             styles.profileImg
                                                                         }
                                                                     />
-                                                                    <p className={darkTheme? 'text-white':'text-black'}>{account?.name}</p>
+                                                                    <p className={darkTheme ? 'text-white' : 'text-black'}>{account?.name}</p>
                                                                 </div>
                                                                 <button
-                                                                    className={`${styles.unblockBtn} ${darkTheme? 'bg-black':'bg-white'}`}
+                                                                    className={`${styles.unblockBtn} ${darkTheme ? 'bg-black' : 'bg-white'}`}
                                                                     onClick={() => {
                                                                         handleBlockAccount(
                                                                             account._id

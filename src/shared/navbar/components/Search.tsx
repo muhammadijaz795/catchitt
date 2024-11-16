@@ -10,6 +10,7 @@ function Search({
     showClose = false,
     searchMsgBar,
     handleSearchChange,
+    selectFirstSearch = false,
 }: any) {
     const { pathname } = useLocation();
 
@@ -17,7 +18,8 @@ function Search({
     const submitH = (e: any) => {
         e.preventDefault(); // navigate(`/searchPage/${searchText}/All`);
         setSearch('');
-        submitHandler(Search);
+        onInputChangeHandler(Search);
+        // submitHandler(Search);
         // handleSearchChange(Search)
         // navigate(`/searchPage/${Search}/All`);
     };
@@ -35,49 +37,50 @@ function Search({
         }
     });
 
-    return (
-        // <div
-        //     style={{
-        //         flex: 1,
-        //         height: 40,
-        //         background: '#F8F8F8',
-        //         borderRadius: '92px',//showClose ? 0 : 4,
-        //         display: 'flex',
-        //         alignItems: 'center',
-        //         gap: 8,
-        //         padding: '0px 16px',
-        //         width:'516px',
-        //         visibility: pathname.includes('/searchPage/') ? 'hidden' : 'visible',
-        //     }}
-        // >
-        //     <img src={search} style={{ width: 20, height: 20 }} alt="" />
-        //     <form onSubmit={submitH} style={{ flex: 1 }}>
-        //         <input
-        //             style={{
-        //                 width: '100%',
-        //                 height: 20,
-        //                 outline: 0,
-        //                 border: 0,
-        //                 background: 'transparent',
-        //                 color: '#A9A9A9',
-        //                 fontSize: 14,
-        //                 fontWeight: 400,
-        //             }}
-        //             type="search"
-        //             placeholder={placeholder}
-        //             onChange={(e) => {
-        //                 if (onInputChangeHandler) {
-        //                     onInputChangeHandler(e.target.value);
-        //                 }
-        //                 setSearch(e.target.value);
-        //             }}
-        //             value={Search}
-        //         />
-        //     </form>
-        //     {showClose && (
-        //         <img onClick={searchMsgBar} style={{ cursor: 'pointer' }} src={cross} alt="" />
-        //     )}
-        // </div>
+    return ( selectFirstSearch ?
+        <div
+            style={{
+                margin: '5px 6px',
+                flex: 1,
+                height: 40,
+                background: textColor ==='black'?'#F8F8F8':'#282828',
+                borderRadius: '92px',//showClose ? 0 : 4,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '0px 16px',
+                width:'516px',
+                visibility: pathname.includes('/searchPage/') ? 'hidden' : 'visible',
+            }}
+        >
+            <img src={search} style={{ width: 20, height: 20 }} alt="" />
+            <form onSubmit={submitH} style={{ flex: 1 }}>
+                <input
+                    style={{
+                        width: '100%',
+                        height: 20,
+                        outline: 0,
+                        border: 0,
+                        background: 'transparent',
+                        color: '#A9A9A9',
+                        fontSize: 14,
+                        fontWeight: 400,
+                    }}
+                    type="search"
+                    placeholder={placeholder}
+                    onChange={(e) => {
+                        if (onInputChangeHandler) {
+                            onInputChangeHandler(e.target.value);
+                        }
+                        setSearch(e.target.value);
+                    }}
+                    value={Search}
+                />
+            </form>
+            {showClose && (
+                <img onClick={searchMsgBar} style={{ cursor: 'pointer' }} src={cross} alt="" />
+            )}
+        </div> :
         <div className={style.DivHeaderCenterContainer}>
             <div className={style.DivSearchFormContainer}>
                 <form data-e2e="search-box" className={style.SearchFormElement} onSubmit={submitH} >

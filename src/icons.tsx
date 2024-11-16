@@ -12,12 +12,14 @@ import deleteMsg from './assets/delete.svg';
 import addChat from './assets/addChat.svg';
 import pinChat from './assets/pinChat.svg';
 import more from './assets/more.svg';
+import moreInWhite from './assets/moreInWhite.svg';
 import mic from './assets/mic.svg';
 import paperClip from './assets/paperClip.svg';
 import rightArrow from './assets/rightArrow.svg';
 import emoji from './assets/emoji.svg';
 import tagMsg from './assets/tagMsg.svg';
 import moreInMsg from './assets/moreInMsg.svg';
+import moreInMsgWhite from './assets/moreInMsgWhite.svg';
 import seenMsgSvg from './assets/seen.svg';
 import friendsChatWelcomeSvg from './assets/friendsChatWelcome.svg';
 import notfriendsChatWelcome from './assets/notfriendsChatWelcome.svg';
@@ -26,6 +28,7 @@ import groupMembers from './assets/groupMembers.svg';
 import groupWelcome from './assets/groupWelcome.svg';
 import editGroupName from './assets/editGroupName.svg';
 import comment from './assets/comment.svg';
+import commentWhite from './assets/commentWhite.svg';
 import moreinfouser from './assets/moreinfouser.svg';
 import settingsTab from './assets/settingsTab.svg';
 import forthTab from './assets/forthTab.svg';
@@ -50,9 +53,11 @@ import logoutSvg from './assets/logout.svg';
 import settingsDark from './assets/settingsDark.svg';
 import switchAcount from './assets/switchAcount.svg';
 import music from './assets/musicSvg.svg';
+import musicBlack from './assets/musicSvgInBlack.svg';
 import like from './assets/like.svg';
 import commentInHome from './assets/commentInHome.svg';
 import shareInHome from './assets/shareInHome.svg';
+import shareWhite from './assets/shareWhite.svg';
 import fvrt from './assets/fvrt.svg';
 import moreInHome from './assets/moreInHome.svg';
 import activeLike from './assets/activeLike.svg';
@@ -100,6 +105,7 @@ import termsConditionsIconWhite from './assets/termsConditionsIcon-white.svg';
 import closeSquare from './assets/closeSquare.svg';
 import commentBlack from './assets/commentBlack.svg';
 import likeBlack from './assets/likeBlack.svg';
+import likeWhite from './assets/likeWhite.svg';
 import shareBlack from './assets/shareBlack.svg';
 import moreBlack from './assets/moreBlack.svg';
 import savedBlack from './assets/savedBlack.svg';
@@ -118,8 +124,22 @@ import play from './assets/play.svg';
 import pause from './assets/pause.svg';
 import volumeMute from './assets/volume-mute.svg';
 import volumeUnmute from './assets/volume-unmute.svg';
+import block from './assets/block.svg';
+import whiteblock from './assets/whiteblock.svg'
+import trippleDotIcon from './assets/tripple-dot-icon.svg'
+import editVideoIcon from './assets/editVideoIcon.svg'
 
 export {
+    shareWhite,
+    commentWhite,
+    likeWhite,
+    musicBlack,
+    editVideoIcon,
+    moreInMsgWhite,
+    moreInWhite,
+    trippleDotIcon,
+    block,
+    whiteblock,
     duet,
     sendSvgPopup,
     saveVideo,

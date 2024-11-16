@@ -105,7 +105,7 @@ const InitialRouteHandler = () => {
 };
 
 function App() {
-    const {} = useApp();
+    const { } = useApp();
     const [appLanguage, setAppLanguage] = useState(
         (window.localStorage.getItem('lang') as string) || 'en'
     );
@@ -695,7 +695,7 @@ function App() {
         // console.log(dob);
     };
 
-    
+
     const closeLogoutPopupHandler = () => {
         dispatch(closeLogoutPopup());
     };
@@ -724,15 +724,20 @@ function App() {
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
+        const rootStyle = document.documentElement.style;
 
         if (themeColor == 'dark') {
             setdarkTheme(style.darkTheme);
             setlightDarkTheme(style.lightdarkTheme);
             setDarkWhiteTheme('');
             setTextColor('text-white');
+            rootStyle.setProperty("--scrollbar-track-color", "#2c2c2c");
+            rootStyle.setProperty("--scrollbar-thumb-color", "#505050");
         } else {
             setDarkWhiteTheme('hover:bg-slate-100');
             setTextColor('text-black');
+            rootStyle.setProperty("--scrollbar-track-color", "#f0f0f0");
+            rootStyle.setProperty("--scrollbar-thumb-color", "#a0a0a0");
         }
     });
 
@@ -774,7 +779,7 @@ function App() {
                             <Route
                                 path="/auth"
                                 element={<Login />}
-                                // element={<Login setLanguage={setLanguage} language={appLanguage} />}
+                            // element={<Login setLanguage={setLanguage} language={appLanguage} />}
                             />
                             <Route path="/login/phone-or-email" element={<PhoneOrEmail />} />
                             <Route path="/login/forget-password" element={<ForgetPassword />} />
@@ -818,7 +823,7 @@ function App() {
                             <Route path="/about/community-guidelines" element={<CommunityPage />} />
                             <Route path="/about/privacy-policy" element={<PrivacyPage />} />
                             <Route path="/SearchPage/:query/:tab" element={<SearchPage />} />
-                            <Route path="/discover" element={<Discover />} />
+                            <Route path="/discover/:hashtag?" element={<Discover />} />
                             <Route path="/videos/:id" element={<AllVideos />} />
                             <Route path="/:username/video/:videoId" element={<VideoPage />} />
                             <Route path="/:username/post/:postId" element={<PostPage />} />
@@ -853,8 +858,8 @@ function App() {
                                                     {isMainLoginOption
                                                         ? 'Log in to Seezitt'
                                                         : isForgotPasswordScenario
-                                                        ? 'Reset Password'
-                                                        : 'Log in'}
+                                                            ? 'Reset Password'
+                                                            : 'Log in'}
                                                 </h2>
                                                 {isMainLoginOption ? (
                                                     <>
@@ -901,30 +906,30 @@ function App() {
                                                         <div className="flex flex-row justify-between items-center mt-3.5">
                                                             <p className="font-medium text-[0.938rem]">
                                                                 {loginWithPhone &&
-                                                                !isForgotPasswordScenario
+                                                                    !isForgotPasswordScenario
                                                                     ? 'Phone'
                                                                     : isForgotPasswordScenario &&
-                                                                      loginWithPhone
-                                                                    ? 'Enter phone number'
-                                                                    : isForgotPasswordScenario &&
-                                                                      !loginWithPhone
-                                                                    ? 'Enter email address'
-                                                                    : 'Email or username'}
+                                                                        loginWithPhone
+                                                                        ? 'Enter phone number'
+                                                                        : isForgotPasswordScenario &&
+                                                                            !loginWithPhone
+                                                                            ? 'Enter email address'
+                                                                            : 'Email or username'}
                                                             </p>
                                                             <p
                                                                 onClick={toggleLoginMethod}
                                                                 className="font-medium text-xs text-gray-600 cursor-pointer hover:underline"
                                                             >
                                                                 {loginWithPhone &&
-                                                                !isForgotPasswordScenario
+                                                                    !isForgotPasswordScenario
                                                                     ? 'Log in with email or username'
                                                                     : isForgotPasswordScenario &&
-                                                                      !loginWithPhone
-                                                                    ? 'Reset with phone number'
-                                                                    : isForgotPasswordScenario &&
-                                                                      loginWithPhone
-                                                                    ? 'Reset with email'
-                                                                    : 'Log in with phone'}
+                                                                        !loginWithPhone
+                                                                        ? 'Reset with phone number'
+                                                                        : isForgotPasswordScenario &&
+                                                                            loginWithPhone
+                                                                            ? 'Reset with email'
+                                                                            : 'Log in with phone'}
                                                             </p>
                                                         </div>
                                                         {loginWithPhone ? (
@@ -942,11 +947,10 @@ function App() {
                                                                                 countryCode}
                                                                         </p>
                                                                         <img
-                                                                            className={`object-contain h-2.5 w-2.5 chevron ${
-                                                                                countryModelOpened
+                                                                            className={`object-contain h-2.5 w-2.5 chevron ${countryModelOpened
                                                                                     ? 'rotate'
                                                                                     : ''
-                                                                            }`}
+                                                                                }`}
                                                                             src={chevronDown}
                                                                         />
                                                                         <p className="text-gray-400 ">
@@ -958,12 +962,11 @@ function App() {
                                                                                 onClick={
                                                                                     modelClickHandler
                                                                                 }
-                                                                                className={`absolute ${
-                                                                                    filteredCountryCodes.length ===
-                                                                                    0
+                                                                                className={`absolute ${filteredCountryCodes.length ===
+                                                                                        0
                                                                                         ? 'h-fit'
                                                                                         : 'h-80'
-                                                                                }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
+                                                                                    }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
                                                                             >
                                                                                 <div className="flex flex-row items-center p-2 gap-2">
                                                                                     <img
@@ -984,12 +987,11 @@ function App() {
                                                                                 </div>
                                                                                 <div className="w-full h-[1px] bg-gray-300" />
                                                                                 <div
-                                                                                    className={`overflow-y-auto ${
-                                                                                        filteredCountryCodes.length ===
-                                                                                        0
+                                                                                    className={`overflow-y-auto ${filteredCountryCodes.length ===
+                                                                                            0
                                                                                             ? 'h-fit'
                                                                                             : 'max-h-[17.188rem]'
-                                                                                    } `}
+                                                                                        } `}
                                                                                 >
                                                                                     {filteredCountryCodes.map(
                                                                                         (
@@ -1006,12 +1008,11 @@ function App() {
                                                                                                 key={
                                                                                                     index
                                                                                                 }
-                                                                                                className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${
-                                                                                                    selectedCountryIndex ===
-                                                                                                    index
+                                                                                                className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${selectedCountryIndex ===
+                                                                                                        index
                                                                                                         ? 'bg-gray-50'
                                                                                                         : ''
-                                                                                                }`}
+                                                                                                    }`}
                                                                                             >
                                                                                                 <p
                                                                                                     className={`font-normal text-black text-left text-xs hover:bg-gray-50`}
@@ -1022,25 +1023,25 @@ function App() {
                                                                                                 </p>
                                                                                                 {selectedCountryIndex ===
                                                                                                     index && (
-                                                                                                    <img
-                                                                                                        className="h-4 w-4 object-contain"
-                                                                                                        alt="check-mark"
-                                                                                                        src={
-                                                                                                            checkCountryCode
-                                                                                                        }
-                                                                                                    />
-                                                                                                )}
+                                                                                                        <img
+                                                                                                            className="h-4 w-4 object-contain"
+                                                                                                            alt="check-mark"
+                                                                                                            src={
+                                                                                                                checkCountryCode
+                                                                                                            }
+                                                                                                        />
+                                                                                                    )}
                                                                                             </div>
                                                                                         )
                                                                                     )}
                                                                                     {filteredCountryCodes.length ===
                                                                                         0 && (
-                                                                                        <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
-                                                                                            {
-                                                                                                APP_TEXTS.NO_RESULT_FOUND
-                                                                                            }
-                                                                                        </p>
-                                                                                    )}
+                                                                                            <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
+                                                                                                {
+                                                                                                    APP_TEXTS.NO_RESULT_FOUND
+                                                                                                }
+                                                                                            </p>
+                                                                                        )}
                                                                                 </div>
                                                                             </div>
                                                                         )}
@@ -1071,13 +1072,12 @@ function App() {
                                                                                 }
                                                                             />
                                                                             <div
-                                                                                className={`flex flex-row justify-center items-center gap-2 flex-1 ${
-                                                                                    phoneNumber?.length >
+                                                                                className={`flex flex-row justify-center items-center gap-2 flex-1 ${phoneNumber?.length >
                                                                                         0 ||
-                                                                                    email.length > 0
+                                                                                        email.length > 0
                                                                                         ? 'cursor-pointer'
                                                                                         : 'cursor-not-allowed'
-                                                                                }`}
+                                                                                    }`}
                                                                             >
                                                                                 <p className="text-gray-400 ">
                                                                                     {' '}
@@ -1087,14 +1087,13 @@ function App() {
                                                                                     onClick={
                                                                                         sendOTP
                                                                                     }
-                                                                                    className={`text-sm ${
-                                                                                        phoneNumber?.length >
+                                                                                    className={`text-sm ${phoneNumber?.length >
                                                                                             0 ||
-                                                                                        email.length >
+                                                                                            email.length >
                                                                                             0
                                                                                             ? textColor
                                                                                             : 'text-gray-400'
-                                                                                    }`}
+                                                                                        }`}
                                                                                 >
                                                                                     {
                                                                                         APP_TEXTS.SEND_CODE
@@ -1151,11 +1150,10 @@ function App() {
                                                                     <input
                                                                         className="w-2/3 bg-login-btn"
                                                                         type="text"
-                                                                        placeholder={`${
-                                                                            isForgotPasswordScenario
+                                                                        placeholder={`${isForgotPasswordScenario
                                                                                 ? 'Email address'
                                                                                 : 'Email or username'
-                                                                        }`}
+                                                                            }`}
                                                                         value={email}
                                                                         onChange={(e) =>
                                                                             setEmail(e.target.value)
@@ -1176,13 +1174,12 @@ function App() {
                                                                                 }
                                                                             />
                                                                             <div
-                                                                                className={`flex flex-row justify-center items-center gap-2 flex-1 ${
-                                                                                    phoneNumber?.length >
+                                                                                className={`flex flex-row justify-center items-center gap-2 flex-1 ${phoneNumber?.length >
                                                                                         0 ||
-                                                                                    email.length > 0
+                                                                                        email.length > 0
                                                                                         ? 'cursor-pointer'
                                                                                         : 'cursor-not-allowed'
-                                                                                }`}
+                                                                                    }`}
                                                                             >
                                                                                 <p className="text-gray-400 ">
                                                                                     {' '}
@@ -1192,14 +1189,13 @@ function App() {
                                                                                     onClick={
                                                                                         sendOTP
                                                                                     }
-                                                                                    className={`text-sm ${
-                                                                                        phoneNumber?.length >
+                                                                                    className={`text-sm ${phoneNumber?.length >
                                                                                             0 ||
-                                                                                        email.length >
+                                                                                            email.length >
                                                                                             0
                                                                                             ? textColor
                                                                                             : 'text-gray-400'
-                                                                                    }`}
+                                                                                        }`}
                                                                                 >
                                                                                     {
                                                                                         APP_TEXTS.SEND_CODE
@@ -1255,11 +1251,10 @@ function App() {
                                                         )}
                                                         <p
                                                             onClick={loginOrForgetPasswordHandler}
-                                                            className={`font-medium text-left text-xs text-gray-600 mt-2.5 ${
-                                                                loginWithPhone && !loginWithPassword
+                                                            className={`font-medium text-left text-xs text-gray-600 mt-2.5 ${loginWithPhone && !loginWithPassword
                                                                     ? 'hover:underline cursor-pointer'
                                                                     : ''
-                                                            } `}
+                                                                } `}
                                                         >
                                                             {isError && (
                                                                 <p
@@ -1281,24 +1276,22 @@ function App() {
                                                         {isForgotPasswordScenario ? (
                                                             <div
                                                                 onClick={loginHandler}
-                                                                className={`flex flex-row items-center ${
-                                                                    (phoneNumber?.length > 0 ||
+                                                                className={`flex flex-row items-center ${(phoneNumber?.length > 0 ||
                                                                         email.length > 0) &&
-                                                                    code?.length > 0 &&
-                                                                    password?.length > 0
-                                                                        ? 'bg-red-500'
-                                                                        : 'bg-login-btn'
-                                                                } mt-4 rounded-md py-2.5 px-3 cursor-pointer h-11`}
-                                                            >
-                                                                <div
-                                                                    className={`${
-                                                                        (phoneNumber?.length > 0 ||
-                                                                            email.length > 0) &&
                                                                         code?.length > 0 &&
                                                                         password?.length > 0
+                                                                        ? 'bg-red-500'
+                                                                        : 'bg-login-btn'
+                                                                    } mt-4 rounded-md py-2.5 px-3 cursor-pointer h-11`}
+                                                            >
+                                                                <div
+                                                                    className={`${(phoneNumber?.length > 0 ||
+                                                                            email.length > 0) &&
+                                                                            code?.length > 0 &&
+                                                                            password?.length > 0
                                                                             ? 'text-white'
                                                                             : textColor
-                                                                    } flex flex-row justify-center items-center gap-2 flex-1`}
+                                                                        } flex flex-row justify-center items-center gap-2 flex-1`}
                                                                 >
                                                                     <p>
                                                                         {loadingLogin ? (
@@ -1725,11 +1718,10 @@ function App() {
                                                                                         countryCode}
                                                                                 </p>
                                                                                 <img
-                                                                                    className={`object-contain h-2.5 w-2.5 chevron ${
-                                                                                        countryModelOpened
+                                                                                    className={`object-contain h-2.5 w-2.5 chevron ${countryModelOpened
                                                                                             ? 'rotate'
                                                                                             : ''
-                                                                                    }`}
+                                                                                        }`}
                                                                                     src={
                                                                                         chevronDown
                                                                                     }
@@ -1743,12 +1735,11 @@ function App() {
                                                                                         onClick={
                                                                                             modelClickHandler
                                                                                         }
-                                                                                        className={`absolute ${
-                                                                                            filteredCountryCodes.length ===
-                                                                                            0
+                                                                                        className={`absolute ${filteredCountryCodes.length ===
+                                                                                                0
                                                                                                 ? 'h-fit'
                                                                                                 : 'h-80'
-                                                                                        }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
+                                                                                            }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
                                                                                     >
                                                                                         <div className="flex flex-row items-center p-2 gap-2">
                                                                                             <img
@@ -1771,12 +1762,11 @@ function App() {
                                                                                         </div>
                                                                                         <div className="w-full h-[1px] bg-gray-300" />
                                                                                         <div
-                                                                                            className={`overflow-y-auto ${
-                                                                                                filteredCountryCodes.length ===
-                                                                                                0
+                                                                                            className={`overflow-y-auto ${filteredCountryCodes.length ===
+                                                                                                    0
                                                                                                     ? 'h-fit'
                                                                                                     : 'max-h-[17.188rem]'
-                                                                                            } `}
+                                                                                                } `}
                                                                                         >
                                                                                             {filteredCountryCodes.map(
                                                                                                 (
@@ -1793,12 +1783,11 @@ function App() {
                                                                                                         key={
                                                                                                             index
                                                                                                         }
-                                                                                                        className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${
-                                                                                                            selectedCountryIndex ===
-                                                                                                            index
+                                                                                                        className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${selectedCountryIndex ===
+                                                                                                                index
                                                                                                                 ? 'bg-gray-50'
                                                                                                                 : ''
-                                                                                                        }`}
+                                                                                                            }`}
                                                                                                     >
                                                                                                         <p
                                                                                                             className={`font-normal text-black text-left text-xs hover:bg-gray-50`}
@@ -1809,25 +1798,25 @@ function App() {
                                                                                                         </p>
                                                                                                         {selectedCountryIndex ===
                                                                                                             index && (
-                                                                                                            <img
-                                                                                                                className="h-4 w-4 object-contain"
-                                                                                                                alt="check-mark"
-                                                                                                                src={
-                                                                                                                    checkCountryCode
-                                                                                                                }
-                                                                                                            />
-                                                                                                        )}
+                                                                                                                <img
+                                                                                                                    className="h-4 w-4 object-contain"
+                                                                                                                    alt="check-mark"
+                                                                                                                    src={
+                                                                                                                        checkCountryCode
+                                                                                                                    }
+                                                                                                                />
+                                                                                                            )}
                                                                                                     </div>
                                                                                                 )
                                                                                             )}
                                                                                             {filteredCountryCodes.length ===
                                                                                                 0 && (
-                                                                                                <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
-                                                                                                    {
-                                                                                                        APP_TEXTS.NO_RESULT_FOUND
-                                                                                                    }
-                                                                                                </p>
-                                                                                            )}
+                                                                                                    <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
+                                                                                                        {
+                                                                                                            APP_TEXTS.NO_RESULT_FOUND
+                                                                                                        }
+                                                                                                    </p>
+                                                                                                )}
                                                                                         </div>
                                                                                     </div>
                                                                                 )}
@@ -2084,7 +2073,7 @@ function App() {
                         )}
 
                         {isLogoutPopup && (
-                           
+
                             <div className="w-full z-50 h-full bg-black/50 fixed top-0 flex justify-center items-center">
                                 <div
                                     className={`w-[25.688rem] mx-auto mt-3 bg-white rounded-lg relative h-[14rem]  ${lightDarkTheme} `}
@@ -2097,8 +2086,8 @@ function App() {
                                                 Are you sure you want to log out?
                                             </h2>
                                             <div className={styles.DivButtonWrapper}>
-                                            <button type="button" className={`${styles.StyledLogoutCancelButton}`} onClick={closeLogoutPopupHandler}>Cancel</button>{' '}
-                                            <button type="button" className={`${styles.StyledLogoutButton}`} onClick={() => logoutAccount()}>Log out</button>
+                                                <button type="button" className={`${styles.StyledLogoutCancelButton}`} onClick={closeLogoutPopupHandler}>Cancel</button>{' '}
+                                                <button type="button" className={`${styles.StyledLogoutButton}`} onClick={() => logoutAccount()}>Log out</button>
                                             </div>
                                         </div>
                                     </>

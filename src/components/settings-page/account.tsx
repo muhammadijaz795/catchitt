@@ -423,14 +423,9 @@ const Account = ({ className, openModal }: AccountProps) => {
         if (selectedCategories.includes(category._id)) {
             // If it is selected, remove it
             setSelectedCategories(selectedCategories.filter((item) => item !== category._id));
-        } else {
+        } else if (selectedCategories.length < MAX_CHOICES) {
             // If it is not selected, check if the maximum limit is reached
-            if (selectedCategories.length > MAX_CHOICES + 1) {
-                // setNotAcceptable(true)
-            } else {
-                // setNotAcceptable(false)
-                setSelectedCategories([...selectedCategories, category._id]);
-            }
+            setSelectedCategories([...selectedCategories, category._id]);
         }
     };
 
@@ -1506,7 +1501,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     Tell us your problem
                                 </p>
                                 <textarea
-                                    className={`w-[478px] h-[214px] border border-gray-300 rounded-lg p-3 mb-4 resize-none ${darkTheme!=='' ? 'bg-black' : 'bg-white'}`}
+                                    className={`w-[478px] h-[214px] border border-gray-300 rounded-lg p-3 mb-4 resize-none ${darkTheme !== '' ? 'bg-black' : 'bg-white'}`}
                                     placeholder="Please provide as much detail as possible"
                                     value={reportMessage}
                                     onChange={(e) => setReportMessage(e.target.value)}

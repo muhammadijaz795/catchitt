@@ -5,7 +5,7 @@ import DeleteVideo from '../components/deleteVideo';
 import VideoDeleteSuccess from '../components/videoDeleteSuccess';
 import style from './popupForBlock.module.scss';
 
-export default function PopupForDeleteVideo({ openBlock, onBlockClose, userId, info }: any) {
+export default function PopupForDeleteVideo({ openBlock, onBlockClose, userId, info, darkTheme }: any) {
     const [inErrorCase, setInErrorCase] = useState(false);
     const [inSuceedCase, setInSuceedCase] = useState(false);
 
@@ -32,6 +32,7 @@ export default function PopupForDeleteVideo({ openBlock, onBlockClose, userId, i
                             userId={userId}
                             onclose={onBlockClose}
                             popupH={managePopup}
+                            darkTheme={darkTheme}
                         />
                     </div>
                 </ClickAwayListener>
@@ -43,7 +44,7 @@ export default function PopupForDeleteVideo({ openBlock, onBlockClose, userId, i
                     }}
                 >
                     <div>
-                        <BlockMsgOnError onclose={() => setInErrorCase(false)} />
+                        <BlockMsgOnError darkTheme={darkTheme} onclose={() => setInErrorCase(false)} />
                     </div>
                 </ClickAwayListener>
             </Modal>
@@ -55,6 +56,7 @@ export default function PopupForDeleteVideo({ openBlock, onBlockClose, userId, i
                 >
                     <div>
                         <VideoDeleteSuccess
+                            darkTheme={darkTheme}
                             onclose={onCloseHandler}
                         />
                     </div>

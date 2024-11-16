@@ -161,6 +161,9 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
     }, [openTab])
     
     useEffect(() => {
+        if (totalFollowing === null) dispatch(loadFollowing(1));
+        if (totalFollowers === null) dispatch(loadFollowers(1));
+        if (totalFriends === null) dispatch(getFriends(1));
       return () => {
         setPublicFollowers([]);
         setPublicFollowings([]);

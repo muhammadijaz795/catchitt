@@ -1,6 +1,6 @@
 import Search from '../../../shared/navbar/components/Search';
 
-import { avatar, groupDefaultIcon, more, cross } from '../../../icons';
+import { avatar, groupDefaultIcon, more, cross, moreInWhite } from '../../../icons';
 import chatHeader from './ChatHeader.module.scss';
 function ChatHeader(props: any) {
     const {
@@ -14,6 +14,7 @@ function ChatHeader(props: any) {
         searchMessagesHandler,
         searchMessage,
         searchMsgBar,
+        isDarkTheme,
     } = props || {};
 
     // const [mark, setmark] = useState(false);
@@ -37,7 +38,7 @@ function ChatHeader(props: any) {
                         {/* <p className={chatHeader.userMention}>{name}</p> */}
                     </div>
                 </div>
-                {/* <img onClick={moreOptionH} chatHeader={{ cursor: 'pointer' }} src={more} alt="" /> */}
+                <img onClick={moreOptionH} style={{ cursor: 'pointer' }} src={isDarkTheme?moreInWhite:more} alt="" />
             </div>
             {/* {!safeMsg && (
                 <div className={chatHeader.chatWarner}>
@@ -56,16 +57,17 @@ function ChatHeader(props: any) {
                     </div>
                 </div>
             )} */}
-            {/* {searchMessage && (
+            {searchMessage && (
                 <div className="flex flex-row items-center justify-between">
                     <Search
                         onInputChangeHandler={searchMessagesHandler}
                         placeholder={'Search'}
                         showClose={true}
                         searchMsgBar={searchMsgBar}
+                        selectFirstSearch={true}
                     />
                 </div>
-            )} */}
+            )}
         </div>
     );
 }

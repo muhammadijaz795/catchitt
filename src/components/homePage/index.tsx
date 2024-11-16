@@ -21,6 +21,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
 import style from './index.module.scss';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
+import { activeLike, commentWhite, like, likeWhite, musicBlack, shareWhite } from '../../icons';
 
 function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
@@ -74,11 +75,16 @@ function HomePage() {
     const [videoUrl, setVideoUrl] = useState<string>('');
     const [mediaId, setMediaId] = useState<string>('');
     const [videoOwner, setVideoOwner] = useState('');
+    const [videoOwnerId, setVideoOwnerId] = useState('');
+    const [videoOwnerAvatar, setVideoOwnerAvatar] = useState('');
     const [description, setDescription] = useState('');
     const [videoTags, setVideoTags] = useState('');
     const [musicTitle, setMusicTitle] = useState('');
     const [musicLink, setMusicLink] = useState('');
-
+    const [isLiked, setIsLiked] = useState(false);
+    const [likesCount, setLikesCount] = useState(0);
+    const [commentCount, setCommentCount] = useState(0);
+    const [shareCount, setShareCount] = useState(0);
     const videoData = {
         videoId: mediaId,
         username: videoOwner,
@@ -450,17 +456,29 @@ function HomePage() {
         videoUrl: string,
         mediaId: string,
         videoOwner: string,
+        videoOwnerId: string,
+        videoOwnerAvatar: string,
         videoDescription: string,
         musicTitle: string,
-        musicLink: string
+        musicLink: string,
+        isLiked: boolean,
+        videoLikes: any,
+        commentCount: any,
+        shareCount:any
     ) => {
         setVideoUrl(videoUrl);
         setMediaId(mediaId);
         setVideoOwner(videoOwner);
+        setVideoOwnerId(videoOwnerId);
+        setVideoOwnerAvatar(videoOwnerAvatar);
         setDescription(videoDescription);
         setMusicTitle(musicTitle);
         setMusicLink(musicLink);
+        setIsLiked(isLiked);
         setIsEmbedModalOpen(true);
+        setLikesCount(videoLikes);
+        setCommentCount(commentCount);
+        setShareCount(shareCount);
     };
 
     useEffect(() => {
@@ -533,6 +551,20 @@ function HomePage() {
                     embedCode={embedCode}
                     copyEmbedCodeHandler={copyEmbedCodeHandler}
                     setIsEmbedModalOpen={setIsEmbedModalOpen}
+                    videoOwner={videoOwner}
+                    videoOwnerId={videoOwnerId}
+                    videoOwnerAvatar={videoOwnerAvatar}
+                    videoDescription={description}
+                    musicTitle={musicTitle}
+                    isLiked={isLiked}
+                    whiteHeartIcon={likeWhite}
+                    redHeartIcon={activeLike}
+                    musicIcon={musicBlack}
+                    videoLikes={likesCount}
+                    commentIcon={commentWhite}
+                    videoComments={commentCount}
+                    shareIcon={shareWhite}
+                    videoShares={shareCount}
                 />
             )}
             <Gifts

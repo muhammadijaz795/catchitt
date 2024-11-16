@@ -5,11 +5,11 @@ import { search } from '../../../icons';
 import { useState } from 'react';
 
 function DropDown(props: any) {
-    const { blockH, reportH, pinUserH, activeUser, staredModal, numberOfMessages,searchMsgBar } = props || {};
+    const { blockH, reportH, pinUserH, activeUser, staredModal, numberOfMessages, searchMsgBar, isDarkTheme} = props || {};
     const [muteN, setmuteN] = useState(false);
     return (
-        <div onClick={(e) => e.stopPropagation()} className={style.dropdownMenu}>
-            <div className={style.dropdownRow}>
+        <div onClick={(e) => e.stopPropagation()} className={`${style.dropdownMenu} ${isDarkTheme?'bg-[#282828]':'bg-white'}` }>
+            {/* <div className={style.dropdownRow}>
                 <p>Mute notifications</p>
                 <Switch
                     onChange={() => setmuteN(!muteN)}
@@ -33,14 +33,14 @@ function DropDown(props: any) {
                     <p> {numberOfMessages === 0 ? 'None' : numberOfMessages}</p>
                     <img className={style.arrowRight} src={arrow} alt="arrow right" />
                 </div>
-            </div>
+            </div> */}
             <div onClick={searchMsgBar} className={style.dropdownRow}>
                 <p>Search Messages</p>
                 <div className={style.starredMessagesRow}>
                     <img src={search} style={{ width: 20, height: 20 }} alt="" />
                 </div>
             </div>
-            <div onClick={blockH} className={style.dropdownRow}>
+            {/* <div onClick={blockH} className={style.dropdownRow}>
                 <p className={style.warningMenuItem}>
                     {activeUser?.isBlocked ? 'UnBlock' : 'Block'}
                 </p>
@@ -55,7 +55,7 @@ function DropDown(props: any) {
                     <p className={style.warningMenuItem}>None</p>
                     <img className={style.arrowRight} src={arrow} alt="arrow right" />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
