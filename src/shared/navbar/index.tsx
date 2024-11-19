@@ -116,7 +116,7 @@ function Navbar() {
                                     />
                                     {/* </div> */}
                                 </div>
-                                <p className={style.name}>{profile?.name?.split(' ')[0]}</p>
+                                <p className={style.name} style={{whiteSpace:'nowrap'}}>{profile?.name?.length>12?profile?.name?.substring(0,12)+'...':profile?.name}</p>
 
                             </div>
                             {/* <MenuDropdownPopup

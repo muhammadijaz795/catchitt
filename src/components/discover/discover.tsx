@@ -48,7 +48,8 @@ export default function Discover() {
             );
             const { data } = await response.json();
             console.log('DATA >>>>>>> ', data?.data);
-            if (data?.data.length === 0 && data?.hasNextPage) return getExplorePageData(signal);
+            // if (data?.data.length === 0 && data?.hasNextPage) return getExplorePageData(signal);
+            if (data?.data.length === 0) return setExploredVideos({ items: [], page: 1, pageSize: 15, totalItems: 0 });
             if (Array.isArray(data?.data)) {
                 const exploredVideosObj = { ...exploredVideos };
                 exploredVideosObj.items = [...exploredVideosObj.items, ...data?.data];
@@ -59,7 +60,7 @@ export default function Discover() {
                 // setExploredVideos((prev: any) => [...prev, ...data?.data]);
                 setMuteStates((prevMuteStates: any) => [
                     ...prevMuteStates,
-                    ...Array(data?.data?.length).fill(true),
+                    ...Array(data?.data?.length)  .fill(true),
                 ]);
             }
         } catch (error) {

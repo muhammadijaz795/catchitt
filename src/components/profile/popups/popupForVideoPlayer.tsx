@@ -224,8 +224,7 @@ export default function PopupForVideoPlayer({
                 );
                 const resp = await likeUnlikeVideo.json();
                 if (resp.message === "Success") {
-                    isSaved ? setVideoSaves(prev => prev - 1) : setVideoSaves(prev => prev + 1);
-                    setIsSaved(!isSaved);
+                    fetchMediaById(info?.mediaId);
                 }
                 // fetchMediaById(selectedVideoId);
             } catch (error) {
