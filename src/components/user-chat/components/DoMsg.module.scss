@@ -89,3 +89,14 @@
   gap: 24px;
   width: 100%;
 }
+
+.sendBtn{
+  color: #fff;
+  background-color:rgb(255, 59, 92);
+}
+
+.sendBtn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}

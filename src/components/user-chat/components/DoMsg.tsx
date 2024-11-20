@@ -36,6 +36,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
     if (file == undefined) {
       return false;
     }
+    setUploadProgress(1);
     const reader = new FileReader();
     reader.onload = (e: any) => {
       if (file_type(fileType) == "Image") {
@@ -111,7 +112,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
 
   const isMediaUploaded = () => {
     const mediaFormats = ["Image", "Video"];
-    if (mediaFormats.includes(uploadedFile) && uploadProgress < 100) {
+    if (mediaFormats.includes(uploadedFile) && uploadProgress !== 0 ) {
       return true;
     }
     return false;
@@ -191,7 +192,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
               )}
               <div style={{}} >
                 <center>
-                  <button disabled={isMediaUploaded()} onClick={(e) => { onSubmit(e), closeUploadPic() }} style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)' }}>
+                  <button className={style.sendBtn} disabled={isMediaUploaded()} onClick={(e) => { onSubmit(e), closeUploadPic() }} >
                     Send
                   </button>
                   <button style={{ color: isDarkTheme ? '#fff' : 'rgb(22, 24, 35)', backgroundColor: isDarkTheme ? '#282828' : '', borderColor: 'rgba(22, 24, 35, 0.12)' }} onClick={closeUploadPic} className="mx-2" >
