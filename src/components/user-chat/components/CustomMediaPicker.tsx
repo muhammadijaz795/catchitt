@@ -24,7 +24,7 @@ function CustomMediaPicker({ isPickerVisible, setIsPickerVisible, isDarkTheme, s
 
     const sendGif = (gif: any) => {
         setMessageType('Gif');
-        setUploadedFile('Image');
+        setUploadedFile('Gif');
         setMessage(gif.images.fixed_height.url);
         setFilePreview(gif.images.fixed_height.url);
         setIsPickerVisible(false);
@@ -33,7 +33,7 @@ function CustomMediaPicker({ isPickerVisible, setIsPickerVisible, isDarkTheme, s
 
     const sendSticker = (sticker: any) => {
         setMessageType('Sticker');
-        setUploadedFile('Image');
+        setUploadedFile('Sticker');
         setMessage(sticker.images.fixed_height.url);
         setFilePreview(sticker.images.fixed_height.url);
         setIsPickerVisible(false);

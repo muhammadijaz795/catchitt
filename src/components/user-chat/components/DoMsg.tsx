@@ -109,6 +109,14 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
     setOpenUploadPic(false);
   }
 
+  const isMediaUploaded = () => {
+    const mediaFormats = ["Image", "Video"];
+    if (mediaFormats.includes(uploadedFile) && uploadProgress < 100) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <>
       <CustomMediaPicker isDarkTheme={isDarkTheme} isPickerVisible={isPickerVisible} setIsPickerVisible={setIsPickerVisible} setMessageType={setMessageType} setMessage={setMessage} setUploadedFile={setUploadedFile} setOpenUploadPic={setOpenUploadPic} setFilePreview={setFilePreview} />
@@ -156,7 +164,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
           <div onClick={(e) => e.stopPropagation()} className={style.popupbackground} style={{background:isDarkTheme?'#181818':'#fff'}}>
             <span className={isDarkTheme?'text-white':'text-dark'}>Upload File Preview</span>
             <div>
-              {uploadedFile == "Image" && <img src={filePreview} alt="Preview"
+              {['Image','Gif','Sticker'].includes(uploadedFile) && <img src={filePreview} alt="Preview"
                 style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />}
 
               {uploadedFile == "Video" &&
@@ -183,7 +191,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
               )}
               <div style={{}} >
                 <center>
-                  <button onClick={(e) => { onSubmit(e), closeUploadPic() }} style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)' }}>
+                  <button disabled={isMediaUploaded()} onClick={(e) => { onSubmit(e), closeUploadPic() }} style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)' }}>
                     Send
                   </button>
                   <button style={{ color: isDarkTheme ? '#fff' : 'rgb(22, 24, 35)', backgroundColor: isDarkTheme ? '#282828' : '', borderColor: 'rgba(22, 24, 35, 0.12)' }} onClick={closeUploadPic} className="mx-2" >

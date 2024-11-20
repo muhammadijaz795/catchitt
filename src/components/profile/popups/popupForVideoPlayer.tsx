@@ -1095,6 +1095,7 @@ export default function PopupForVideoPlayer({
                                                                             isReplyToCommentClicked && (
                                                                                 <div className="cursor-pointer flex w-full flex-row items-center gap-2.5 mt-2">
                                                                                     <div className="bg-[#FFFFFF1F] flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full mr-1">
+                                                                                        <form onSubmit={(e)=>{e.preventDefault();replyToCommentHandler(comment?.id);}}>
                                                                                         <input
                                                                                             value={commentReply}
                                                                                             onChange={(e) =>
@@ -1106,9 +1107,12 @@ export default function PopupForVideoPlayer({
                                                                                             placeholder="Add comment..."
                                                                                             type="text"
                                                                                             className="bg-transparent placeholder-[#4d4e58 text-[#d5cbcb] w-full"
+                                                                                            required
                                                                                         />
+                                                                                        </form>
+
                                                                                         <div className="flex flex-row items-center">
-                                                                                            {/* <div
+                                                                                            <div
                                                                                                 onClick={
                                                                                                     atRateHandler
                                                                                                 }
@@ -1121,7 +1125,7 @@ export default function PopupForVideoPlayer({
                                                                                                     }
                                                                                                     alt="at-the-rate-icon"
                                                                                                 />
-                                                                                            </div> */}
+                                                                                            </div> 
                                                                                             <div onClick={() => setCommentEmojiIndex(comment_index)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] my-[0.438rem] mx-[0.188rem]">
                                                                                                 <img
                                                                                                     className={`w-5 h-5 object-contain rounded-full`}
@@ -1589,6 +1593,8 @@ export default function PopupForVideoPlayer({
                                                     : ''
                                                     } rounded-lg cursor-text pr-2 pl-4 w-full`}
                                             >
+                                                <form onSubmit={(e)=>{e.preventDefault();addCommentHandler();}}>
+
                                                 <input
                                                     onFocus={() => {
                                                         setIsReplyToCommentClicked(false);
@@ -1610,7 +1616,9 @@ export default function PopupForVideoPlayer({
                                                         ? 'my-[0.438rem] p-[0.313rem] cursor-pointer placeholder-[#ff3b5c] font-medium'
                                                         : 'placeholder-[#FFFFFFBC]'
                                                         }`}
+                                                required
                                                 />
+                                                </form>
                                                 {/* <EmojiInputPicker isPickerVisible={isPickerVisible} onEmojiSelect={onEmojiClick} inputRef={inputRef} /> */}
                                                 {isUserLoggedIn() && (
                                                     <div className="flex flex-row items-center">
