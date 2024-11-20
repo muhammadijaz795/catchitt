@@ -146,9 +146,9 @@ function Action({
                 )}
                 { isUserLoggedIn() && obj.actionType === 'more' && (
                     <MORE_MENU_HOME
+                        visibleReportPopup={visibleReportPopup}
                         url={ post?.reducedVideoUrl
                             ? post?.reducedVideoUrl : post.originalUrl}
-                        visibleReportPopup={visibleReportPopup}
                         postMediaId={post?.mediaId }
                     />
                 )}

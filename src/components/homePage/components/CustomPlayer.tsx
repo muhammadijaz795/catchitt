@@ -9,6 +9,7 @@ import {
     volumeUnmute,
 } from '../../../icons';
 import HashtagText from '../../../shared/hashTag/HashtagText';
+import { isUserLoggedIn } from '../../../utils/common';
 
 function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailImage, controls, number }: any) {
     const [duration, setDuration] = useState<number>();
@@ -118,6 +119,16 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                         }}
                     >
                         {' '}
+                        {post?.user?.username}
+                    </p>
+                    <p
+                        style={{
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        {' '}
                        <HashtagText text={post?.description} />
                     </p>
                     {post?.sound && (
@@ -129,8 +140,9 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                                 whiteSpace: 'nowrap',
                             }}
                         >
-                            <img src={music} alt="" />{' '}
-                            {post?.sound?.category?.name}
+                            <img src={music} alt="" />
+                            {isUserLoggedIn() ?
+                            (post?.sound?.category): (post?.sound?.category.name) }
                         </p>
                     )}
                 </div>

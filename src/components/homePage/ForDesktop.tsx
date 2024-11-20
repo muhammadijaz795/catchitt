@@ -36,8 +36,15 @@ function ForDesktop(props: any) {
         title: string;
         // Add more fields as per your API response
     }
-    const { videoes, activeTab, setActiveTab, showVideoModal, videoModal, setSendPopup, generateEmbedCodeHandler } =
-        props || {};
+    const {
+        videoes,
+        activeTab,
+        setActiveTab,
+        showVideoModal,
+        videoModal,
+        setSendPopup,
+        generateEmbedCodeHandler,
+    } = props || {};
 
     const [reportPopup, setreportPopup] = useState(false);
     const [followBtnLoading, setfollowBtnLoading] = useState(false);
@@ -78,18 +85,18 @@ function ForDesktop(props: any) {
     const scrollableDivRef = useRef<HTMLDivElement>(null);
     const currentVideo = useRef<HTMLDivElement>(null);
     const APP_URL = process.env.VITE_API_URL;
-    const [isMuted, setIsMuted] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
     const [isPlaying, setIsPlaying] = useState(true);
     const [focusedIndex, setFocusedIndex] = useState(0);
     const itemsRef = useRef<(HTMLLIElement | null)[]>([]);
-  
+
     const toggleMute = () => {
-      setIsMuted(prevMuted => !prevMuted);
+        setIsMuted((prevMuted) => !prevMuted);
     };
 
     const togglePlaying = () => {
-        setIsPlaying(prevPlaying => !prevPlaying);
-      };
+        setIsPlaying((prevPlaying) => !prevPlaying);
+    };
 
     const navigate: any = useNavigate();
 
@@ -133,9 +140,8 @@ function ForDesktop(props: any) {
         // Function to fetch data from your API
         const fetchVideos = async () => {
             //   setLoading(true);
-            console.log('loadingVideo',loadingVideo);
+            console.log('loadingVideo', loadingVideo);
             try {
-
                 // const response = await fetch(
                 //     APP_URL + `/media-content/public/videos/feed/upgraded?page=${page}&pageSize=5`
                 // );
@@ -152,7 +158,7 @@ function ForDesktop(props: any) {
                 const token = localStorage.getItem('token');
                 // setLoadingVideo(true);
                 dispatch(addMoreVideos({ tab: activeTab, token, page: page }));
-                console.log('loadingVideo',loadingVideo, 'countFlag',countFlag);
+                console.log('loadingVideo', loadingVideo, 'countFlag', countFlag);
                 setCountFlag(true);
                 // setHasMore(newVideos.length > 0);
             } catch (error) {
@@ -172,12 +178,18 @@ function ForDesktop(props: any) {
     const handleScroll = () => {
         if (scrollableDivRef.current) {
             const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef.current;
-            console.log("scroll position: ", scrollHeight, (scrollTop + clientHeight + 100), scrollTop, clientHeight);
-            if (scrollTop + clientHeight + 100 > scrollHeight && countFlag ==true) {
+            console.log(
+                'scroll position: ',
+                scrollHeight,
+                scrollTop + clientHeight + 100,
+                scrollTop,
+                clientHeight
+            );
+            if (scrollTop + clientHeight + 100 > scrollHeight && countFlag == true) {
                 setLoadingVideo(true);
                 setPage((prevPage) => prevPage + 1);
                 setCountFlag(false);
-                console.log('countFlag',countFlag);
+                console.log('countFlag', countFlag);
             }
         }
     };
@@ -206,11 +218,11 @@ function ForDesktop(props: any) {
     //     }, {
     //       threshold: 0.5
     //     });
-    
+
     //     itemsRef.current.forEach((item) => {
     //       if (item) observer.observe(item);
     //     });
-    
+
     //     return () => {
     //       itemsRef.current.forEach((item) => {
     //         if (item) observer.unobserve(item);
@@ -226,19 +238,21 @@ function ForDesktop(props: any) {
             paddingBottomProp={true}
         >
             <div className={`relative  ${style.parent} ${darkTheme}`}>
-               
                 <VideoNavigation videoListRef={scrollableDivRef} />
                 <div className={`${style.videoesParent} no-scrollbar mt-2`} ref={scrollableDivRef}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
                         videoes.map((post: any, number: number) => {
                             return (
-                                <div key={number} id={post?.mediaId} className={style.videoParent}
-                                    // ref={(el: HTMLLIElement | null) => itemsRef.current[number] = el} 
+                                <div
+                                    key={number}
+                                    id={post?.mediaId}
+                                    className={style.videoParent}
+                                    // ref={(el: HTMLLIElement | null) => itemsRef.current[number] = el}
                                     // style={{
-                                        // backgroundColor: focusedIndex === number ? 'blue' : 'red',
+                                    // backgroundColor: focusedIndex === number ? 'blue' : 'red',
                                     // }}
-                                    >
-                                    <div className={style.mediaContainer} >
+                                >
+                                    <div className={style.mediaContainer}>
                                         <div
                                             style={{
                                                 // width: '100%',
@@ -252,7 +266,7 @@ function ForDesktop(props: any) {
                                             className={style.mainContainer}
                                         >
                                             <CustomPlayer
-                                                isMuted={isMuted} 
+                                                isMuted={isMuted}
                                                 onMuteToggle={toggleMute}
                                                 isPlaying={isPlaying}
                                                 togglePlayPause={togglePlaying}
@@ -267,10 +281,10 @@ function ForDesktop(props: any) {
                                                 thumbnailImage={post?.thumbnailUrl}
                                                 controls={true}
                                                 post={post}
-                                                number={number} 
+                                                number={number}
                                             />
                                         </div>
-                                    
+
                                         <div className={style.actions}>
                                             {isDarkTheme == true &&
                                                 userActions.map((obj: any, i: number) => {
@@ -385,9 +399,7 @@ function ForDesktop(props: any) {
                                             </div>
                                         </div>
                                     </div>
-                                    {loadingVideo && 
-                                    <CircularProgress />}
-                              
+                                    {loadingVideo && <CircularProgress />}
                                 </div>
                             );
                         })
@@ -423,7 +435,10 @@ function ForDesktop(props: any) {
                 </div>
                 {toastOfUploading && (
                     <div className="w-[393px] h-[62px] rounded-[8px] bg-custom-gray-100 absolute right-[2rem] bottom-[2rem] z-[2] flex justify-between items-center px-[1rem]">
-                        <p className="text-custom-dark-222 font-medium"> We are uploading your video. Please wait..{/*Uploading 1 of 1 */}</p>
+                        <p className="text-custom-dark-222 font-medium">
+                            {' '}
+                            We are uploading your video. Please wait..{/*Uploading 1 of 1 */}
+                        </p>
                         <p
                             className="text-custom-primary font-medium cursor-pointer"
                             onClick={() => settoastOfUploading(false)}

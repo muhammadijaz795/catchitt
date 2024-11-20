@@ -15,7 +15,9 @@ interface StateInterface {
     isOnlyMe?: boolean;
     place?: string;
     allowDuet?: boolean;
+    allowStitch?: boolean;
     allowDownload?: boolean;
+    allowAddStory?: boolean;
     taggedUsers?: any;
     replyOnComment?: boolean;
 }
@@ -33,9 +35,11 @@ function useUpload() {
         category: {},
         description: info?.description,
         allowDuet: info?.allowDuet,
+        allowStitch: info?.allowStitch,
         videoId: info?.mediaId,
         isOnlyMe: info?.privacyOptions?.isOnlyMe,
         allowDownload: info?.privacyOptions?.allowDownload,
+        allowAddStory: info?.privacyOptions?.allowAddStory,
     });
     const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -54,7 +58,7 @@ function useUpload() {
     };
 
     const onChangeFileHandler = (e: any) => {
-        const file = e?.target?.files[0];
+        const file = Array.isArray(e?.target?.files) ? e.target.files[0] : e;
         if (file) {
             if (file?.name?.includes('.mp4')) {
                 setselectedFile(file);
@@ -71,6 +75,7 @@ function useUpload() {
                 10,
                 VideoToFramesMethod.totalFrames
             );
+            console.log('videoCoverHandler', frames);
             setThumbnails(frames);
             updateState('thumbnailUrl', frames?.[0]);
         }
@@ -138,6 +143,8 @@ function useUpload() {
         //     taggedUsers: state?.taggedUsers || []
         // });
 
+        console.log('thumbnailUrl', getLinks?.data?.data?.thumbnailUrl?.split('?')[0]);
+
         // Do post request for send post data
         try {
             await fetch(UPLOAD_VIDEO_DETAILS, {
@@ -173,7 +180,7 @@ function useUpload() {
                     body: selectedFile,
                     redirect: 'follow',
                 };
-                console.log("video uploading", requestOptions, getLinks?.data?.data?.videoUrl);
+                console.log('video uploading', requestOptions, getLinks?.data?.data?.videoUrl);
                 fetch(getLinks?.data?.data?.videoUrl, requestOptions as any)
                     .then(() => {
                         dispatch(
@@ -212,7 +219,7 @@ function useUpload() {
                     body: file,
                     redirect: 'follow',
                 };
-                console.log("video uploading", requestOptions, getLinks?.data?.data?.thumbnailUrl);
+                console.log('video uploading', requestOptions, getLinks?.data?.data?.thumbnailUrl);
                 fetch(getLinks?.data?.data?.thumbnailUrl, requestOptions as any)
                     .then(() => { })
                     .catch((error) => {

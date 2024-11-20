@@ -8,7 +8,7 @@ const HashtagText = ({ text }: { text: string }) => {
   };
 
   const parseTextWithHashtags = (text:string) => {
-    return text.split(/(\#[a-zA-Z0-9_]+)/g).map((part, index) => {
+    return text?.split(/(\#[a-zA-Z0-9_]+)/g).map((part, index) => {
       if (part.startsWith('#')) {
         return (
           <span

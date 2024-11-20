@@ -76,3 +76,15 @@ export const shareProfileby= {
         }
     }
 }
+
+export const createOpenDialog = (type: string | string[] = 'image', mode: string = 'file', multiple: boolean = false) => {
+    let input = document.createElement('input');
+    input.type = mode;
+    if (type instanceof Array) {
+        input.accept = type.map((t) => `${t}/*`).join(',');
+    } else {
+        input.accept = `${type}/*`;
+    }
+    input.multiple = multiple;
+    return input;
+};

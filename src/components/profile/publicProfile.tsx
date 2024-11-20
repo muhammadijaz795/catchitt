@@ -249,7 +249,7 @@ export const PublicProfile = (props: any) => {
                     <div className={`${styles.contentContainer}`}>
                         <p className={styles.title}>{activeTab}</p>
                         {activeTab === 'Videos' ? (
-                            <VideoesMaping videos={videosData} fetchMore={() => setVideosData({ ...videosData, page: videosData.page + 1 })} openVideoModal={onVideoModal} />
+                            <VideoesMaping videos={videosData} fetchMore={() => setVideosData({ ...videosData, page: videosData.page + 1 })} openVideoModal={onVideoModal} setEditVideo={undefined} isOwnVideo={undefined} />
                         ) : null}
                         {activeTab !== 'Videos' ? <PrivatePosts tab={activeTab} name={profileData.name} /> : null}
                     </div>

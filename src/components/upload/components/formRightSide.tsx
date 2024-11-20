@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, SvgIcon } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { avatar, downArrow, search } from '../../../icons';
@@ -14,6 +14,11 @@ import BasicSwitch from '../../../shared/switch/BasicSwitch';
 import { API_KEY } from '../../../utils/constants';
 import { loadFollowers } from '../../../redux/AsyncFuncs';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Tab } from 'react-tabs';
+import styles from './index.module.scss';
+import DndContainer from './DndContainer';
+import CloseIcon from '@mui/icons-material/Close';
+import { message } from 'antd';
 
 function FormRightSide(props: any) {
     const {
@@ -33,6 +38,7 @@ function FormRightSide(props: any) {
     const [postLocationsPopup, setPostLocationsPopup] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [taggedUsers, setTaggedUser] = useState<any[]>([]);
+    const [customCover, setCustomCover] = useState<string | null>(null);
     const [followersPage, setFollowersPage] = useState(1);
 
     const dispatch = useDispatch();
@@ -54,6 +60,7 @@ function FormRightSide(props: any) {
     const [countries, setCountries] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('token');
+    const [coverTab, setCoverTab] = useState<string>('suggestion');
 
     const loadCountries = () => {
         setLoading(true);
@@ -92,16 +99,13 @@ function FormRightSide(props: any) {
     }, []);
 
     useEffect(() => {
-
         dispatch(loadFollowers(followersPage));
-
-    }, [followersPage])
+    }, [followersPage]);
 
     useEffect(() => {
         const taggedFollowers = taggedUsers.map((user: any) => user?._id);
         updateState('taggedUsers', taggedFollowers);
-    }, [taggedUsers])
-    
+    }, [taggedUsers]);
 
     const dropDownH = (e: any) => {
         const filteredCategories = categories.filter((item: any) => {
@@ -135,33 +139,108 @@ function FormRightSide(props: any) {
                             onChange={(e: any) => updateState('description', e?.target?.value)}
                         />
                     </div>
-                    <div className="w-[100%] flex flex-col gap-[1rem]">
-                        <div className="flex justify-between w-[100%]">
-                            <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
-                                Cover
-                            </p>
+                    <div className="w-[100%] flex flex-col gap-1.5">
+                        <div className="w-full flex items-center justify-start gap-2.5 no-underline list-none h-[46px] cursor-pointer">
+                            <Tab
+                                onClick={() => setCoverTab('suggestion')}
+                                className={`${styles.coverTab} 
+                                    ${
+                                        coverTab === 'suggestion'
+                                            ? `${styles.coverTabSelected} text-[var(--primary-color)]`
+                                            : 'text-custom-dark-222'
+                                    } 
+                                    leading-[1.7rem] text-[1.125rem] font-medium
+                                `}
+                            >
+                                Suggestions
+                            </Tab>
+                            <Tab
+                                onClick={() => setCoverTab('custom')}
+                                className={`${styles.coverTab}
+                                    ${
+                                        coverTab === 'custom'
+                                            ? `${styles.coverTabSelected} text-[var(--primary-color)]`
+                                            : 'text-custom-dark-222'
+                                    } 
+                                    leading-[1.7rem] text-[1.125rem] font-medium
+                                `}
+                            >
+                                Upload cover
+                            </Tab>
                         </div>
-                        {videoThumbnails?.length > 0 ? (
-                            <div className="flex  overflow-x-scroll border px-[10px] justify-start  rounded-[5px] border-gray-500 mt-[16px] border-solid left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
-                                {videoThumbnails?.map((imageUrl: any, index: number) => (
+                        {coverTab === 'suggestion' && (
+                            <>
+                                {videoThumbnails?.length > 0 ? (
+                                    <div className="flex  overflow-x-auto px-[10px] justify-start  rounded-[5px] bg-[var(--secondaty-color)] left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
+                                        {videoThumbnails?.map((imageUrl: any, index: number) => (
+                                            <img
+                                                key={index}
+                                                onClick={() => {
+                                                    updateState('thumbnailUrl', imageUrl);
+                                                    setSelectedThumb(index);
+                                                }}
+                                                className={`ease-in-out duration-200 block ${
+                                                    imageUrl === selectedThumb ||
+                                                    index === selectedThumb
+                                                        ? 'h-[254px] opacity-100'
+                                                        : 'h-[224px] '
+                                                } w-[124px] pointer opacity-50 my-[auto] rounded-[5px]`}
+                                                src={imageUrl}
+                                                alt=""
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="flex  overflow-x-scroll border px-[10px] justify-center  rounded-[5px] border-gray-500 mt-[16px] border-solid left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
+                                        <CircularProgress
+                                            style={{ display: 'block', margin: 'auto' }}
+                                        />
+                                    </div>
+                                )}
+                            </>
+                        )}
+                        {coverTab === 'custom' && !customCover && (
+                            <div className="w-full h-[285px]">
+                                <DndContainer
+                                    aspect={62 / 127}
+                                    modalTitle="Crop cover"
+                                    onChangeFile={(file: File) => {
+                                        if (!/\.(jpg|jpeg|png|webp)$/i.test(file.name)) {
+                                            message.error('You can only upload supported file!');
+                                            return;
+                                        }
+                                        const reader = new FileReader();
+                                        reader.onload = (e: any) => {
+                                            setCustomCover(e.target.result);
+                                            updateState('thumbnailUrl', e.target.result);
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }}
+                                    crop
+                                    subtitle="Suported formats: JPG, JPEG, PNG, WEBP"
+                                />
+                            </div>
+                        )}
+                        {coverTab === 'custom' && customCover && (
+                            <div className="flex px-[10px] justify-start  rounded-[5px] bg-[var(--secondaty-color)] left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
+                                <div className="relative">
                                     <img
-                                        key={index}
-                                        onClick={() => {
-                                            updateState('thumbnailUrl', imageUrl);
-                                            setSelectedThumb(index);
-                                        }}
-                                        className={`ease-in-out duration-200 block ${imageUrl === selectedThumb || index === selectedThumb
-                                                ? 'h-[254px] opacity-100'
-                                                : 'h-[224px] '
-                                            } w-[124px] pointer opacity-50 my-[auto] rounded-[5px]`}
-                                        src={imageUrl}
+                                        className="ease-in-out duration-200 block h-[254px] w-[124px] pointer my-[auto] rounded-[5px]"
+                                        src={customCover}
                                         alt=""
                                     />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex  overflow-x-scroll border px-[10px] justify-center  rounded-[5px] border-gray-500 mt-[16px] border-solid left-0 gap-[1px] h-[285px] pt-[10px] slider-container">
-                                <CircularProgress style={{ display: 'block', margin: 'auto' }} />
+                                    <button
+                                        className="h-[20px] w-[20px] p-0 flex items-center justify-center absolute top-1.5 right-1.5 rounded-full border border-solid !border-[var(--primary-color)]"
+                                        onClick={() => {
+                                            setCustomCover(null);
+                                            updateState('thumbnailUrl', videoThumbnails[0]);
+                                        }}
+                                    >
+                                        <SvgIcon fontSize="small">
+                                            <CloseIcon className="text-[10px] text-[var(--primary-color)]" />
+                                        </SvgIcon>
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -180,8 +259,9 @@ function FormRightSide(props: any) {
                                     <img
                                         src={downArrow}
                                         alt=""
-                                        className={`cursor-pointer transition-all duration-200 transform ${dropDown ? 'rotate-180' : 'rotate-0'
-                                            }`}
+                                        className={`cursor-pointer transition-all duration-200 transform ${
+                                            dropDown ? 'rotate-180' : 'rotate-0'
+                                        }`}
                                     />
                                 }
                             />
@@ -197,7 +277,7 @@ function FormRightSide(props: any) {
                                         className="flex max-h-[200px] overflow-y-scroll flex-col pt-[1rem] justify-start items-start"
                                         onClick={() => setdropDown(!dropDown)}
                                     >
-                                        {postCategories.map((category: any, i: number) => {
+                                        {postCategories?.map((category: any, i: number) => {
                                             return (
                                                 <p
                                                     className="h-[2.3rem] py-[1rem] gap-2 px-[0.63rem] w-[100%] flex items-center cursor-pointer text-custom-dark-222 text-[0.87rem] text-left font-normal hover:text-custom-primary hover:bg-custom-gray-300"
@@ -296,6 +376,17 @@ function FormRightSide(props: any) {
                                     Duet
                                 </p>
                             </div>
+                            {/* <div className="flex gap-2 items-center">
+                                <BasicCheckBox
+                                    onChange={(e: any) =>
+                                        updateState('allowStitch', e?.target?.checked)
+                                    }
+                                    checked={state?.allowStitch || false}
+                                />
+                                <p className="text-[1rem] font-medium text-custom-dark-222 leading-[1.1rem]">
+                                    Stitch
+                                </p>
+                            </div> */}
                         </div>
                     </div>
                     <div className="flex justify-start items-center gap-[1rem]">
@@ -316,19 +407,32 @@ function FormRightSide(props: any) {
                             onChange={(e: any) => updateState('isOnlyMe', e?.target?.checked)}
                         />
                     </div>
-                    <div className="flex justify-start items-center gap-[1rem]">
+                    <div className="flex flex-col items-start justify-between">
+                        <div className="flex justify-start items-center gap-[1rem]">
+                            <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
+                                Video downloads
+                            </p>
+                            <BasicSwitch
+                                checked={state?.allowDownload || false}
+                                onChange={(e: any) =>
+                                    updateState('allowDownload', e?.target?.checked)
+                                }
+                            />
+                        </div>
+                        <p className="text-[1rem] font-medium text-custom-color-999 leading-[1.1rem] text-start">
+                            Allow other people to download your videos and share to other platforms.
+                            If this setting is off, a link to your video can still be shared.
+                        </p>
+                    </div>
+                    {/* <div className="flex justify-start items-center gap-[1rem]">
                         <p className="text-[1.125rem] font-medium text-custom-dark-222 leading-[1.7rem]">
-                            Video downloads
+                            Allow Others to Add to Story
                         </p>
                         <BasicSwitch
-                            checked={state?.allowDownload || false}
-                            onChange={(e: any) => updateState('allowDownload', e?.target?.checked)}
+                            checked={state?.allowAddStory || false}
+                            onChange={(e: any) => updateState('allowAddStory', e?.target?.checked)}
                         />
-                    </div>
-                    <p className="text-[1rem] font-medium text-custom-color-999 leading-[1.1rem] text-start">
-                        Allow other people to download your videos and share to other platforms. If
-                        this setting is off, a link to your video can still be shared.
-                    </p>
+                    </div> */}
                     <div className="flex gap-[1rem]">
                         <CustomButton
                             width="169px !important"
@@ -342,7 +446,7 @@ function FormRightSide(props: any) {
                             textSize="16px "
                             width="169px !important"
                             height="48px !important"
-                            text="Post"    //{videoInfo ? 'Update' : 'Post'}
+                            text="Post" //{videoInfo ? 'Update' : 'Post'}
                             onClick={SubmitHandler}
                             loading={isPosting}
                         />
@@ -382,11 +486,7 @@ function FormRightSide(props: any) {
                                         setPostLocationsPopup(false);
                                     }}
                                 >
-                                    <Text
-                                        fontWeight={400}
-                                        lineHeight="24px"
-                                        text={country?.name}
-                                    />
+                                    <Text fontWeight={400} lineHeight="24px" text={country?.name} />
                                     {/* <Text
                                         fontSize="12px"
                                         fontWeight={400}
@@ -412,34 +512,39 @@ function FormRightSide(props: any) {
                             placeholder="Search"
                         />
                     </div>
-                    <div className="flex flex-col h-[60vh] overflow-y-scroll no-scrollbar" id='taggedUsersScrollableDiv'>
+                    <div
+                        className="flex flex-col h-[60vh] overflow-y-scroll no-scrollbar"
+                        id="taggedUsersScrollableDiv"
+                    >
                         <InfiniteScroll
                             dataLength={followers?.length}
                             next={loadMoreFollowers}
                             hasMore={followers.length < totalFollowers || totalFollowers === null}
-                            loader={<div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    margin: '1rem',
-                                    width: 'inherit',
-                                }}
-                            >
-                                <CircularProgress />
-                            </div>}
+                            loader={
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        margin: '1rem',
+                                        width: 'inherit',
+                                    }}
+                                >
+                                    <CircularProgress />
+                                </div>
+                            }
                             className="mb-20"
                             // scrollThreshold={0.6}
                             scrollableTarget="taggedUsersScrollableDiv"
                             endMessage={
                                 <div className="flex flex-row justify-center items-center mt-3">
                                     <p className="font-bold text-xl">
-                                        {(totalFollowers === 0) && 'No followers available.'}
+                                        {totalFollowers === 0 && 'No followers available.'}
                                     </p>
                                 </div>
                             }
                         >
-                            {followers.map((follower:any, index: number) => {
+                            {followers.map((follower: any, index: number) => {
                                 return (
                                     <div
                                         key={index}
@@ -447,7 +552,11 @@ function FormRightSide(props: any) {
                                         onClick={() => {
                                             setTaggedUser([
                                                 ...taggedUsers,
-                                                { name: follower?.follower_userID?.name, _id: follower?.follower_userID?._id,  id: taggedUsers?.length || 0 },
+                                                {
+                                                    name: follower?.follower_userID?.name,
+                                                    _id: follower?.follower_userID?._id,
+                                                    id: taggedUsers?.length || 0,
+                                                },
                                             ]);
                                             setTagUsersPopup(false);
                                         }}
@@ -457,12 +566,15 @@ function FormRightSide(props: any) {
                                             src={follower?.follower_userID?.avatar || avatar}
                                             alt=""
                                         />
-                                        <Text fontWeight={500} lineHeight="20px" text={follower?.follower_userID?.name} />
+                                        <Text
+                                            fontWeight={500}
+                                            lineHeight="20px"
+                                            text={follower?.follower_userID?.name}
+                                        />
                                     </div>
                                 );
                             })}
                         </InfiniteScroll>
-
                     </div>
                 </div>
             </CustomModel>

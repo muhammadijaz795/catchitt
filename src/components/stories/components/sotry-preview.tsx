@@ -39,7 +39,7 @@ const StoryPreview = ({ open, onCancel, onPost, url, isPosting }: any) => {
                         )}
 
                         {isPosting ? (
-                            <div className="w-[330px] h-[560px] flex  justify-center items-center text-white absolute top-0 left-0 bg-[rgb(255, 59, 92)99]">
+                            <div className="w-[330px] h-[560px] flex  justify-center items-center text-white absolute top-0 left-0 bg-[rgb(255, 59, 92)]">
                                 Posting...
                             </div>
                         ) : (

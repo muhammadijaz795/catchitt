@@ -57,6 +57,8 @@ const ChatComponent = () => {
     const [receiver, setReceiver] = useState('');
     const [chats, setchats] = useState<any[]>([]);
     const [conversationId, setConversationId] = useState('');
+    const [chatActiveUserId, setChatActiveUserId] = useState('');
+    
     const [messages, setMessages] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
     const token = localStorage.getItem('token');
@@ -163,6 +165,7 @@ const ChatComponent = () => {
                 loadChatMessages(user?.senderId, user?.receiverId, user?.conversationId, user);
                 setActiveUser(user);
                 localStorage.setItem('chatActiveUser', user?.userId);
+                setChatActiveUserId(user?.userId)
                 markMessageAsSeen(user?.senderId, user?.conversationId);
             }
         });
@@ -502,6 +505,9 @@ const ChatComponent = () => {
     };
 
     const scrollToBottom = () => {
+        console.log(
+            "scrollToBottom", autoScrolElem.current, autoScrolElem.current.scrollTop, autoScrolElem.current.scrollHeight
+        )
         if (autoScrolElem.current) {
             autoScrolElem.current.scrollTop = autoScrolElem.current.scrollHeight + 300;
         }
@@ -522,6 +528,7 @@ const ChatComponent = () => {
             } else {
                 setActiveUser(users[0]);
                 localStorage.setItem('chatActiveUser', users[0]?.userId);
+                setChatActiveUserId(users[0]?.userId)
             }
         }
     }, [users]);

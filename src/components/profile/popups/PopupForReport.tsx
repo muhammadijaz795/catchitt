@@ -43,7 +43,7 @@ export default function PopupForReport({ openReport, onReportClose, info }: any)
                     }}
                 >
                     <div>
-                        <BlockMsgOnError onclose={() => setInErrorCase(false)} />
+                        <BlockMsgOnError onclose={() => setInErrorCase(false)} darkTheme={false} />
                     </div>
                 </ClickAwayListener>
             </Modal>

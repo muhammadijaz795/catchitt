@@ -26,7 +26,7 @@ export default function PopupForBlock({ openBlock, onBlockClose , userId }: any)
       <Modal open={inErrorCase} className={style.inErrorCase}>
         <ClickAwayListener onClickAway={() => { setInErrorCase(false) }}>
           <div>
-            <BlockMsgOnError onclose={() => setInErrorCase(false)} />
+            <BlockMsgOnError onclose={() => setInErrorCase(false)} darkTheme={false} />
           </div>
         </ClickAwayListener>
       </Modal>
