@@ -4,12 +4,14 @@ import InputEmoji from 'react-input-emoji'
 import style from './DoMsg.module.scss';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
-import { Modal, CircularProgress } from '@mui/material';
+import { Modal, CircularProgress, CircularProgressProps, Box, Typography, ThemeProvider, createTheme } from '@mui/material';
 import { getExtension, file_type } from '../../../utils/common';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { GiphyFetch } from '@giphy/js-fetch-api';
 import { Grid } from '@giphy/react-components';
 import CustomMediaPicker from './CustomMediaPicker';
+import createPalette from '@mui/material/styles/createPalette';
+import CircularProgressWithLabel from '../../../shared/components/CircularProgressWithLabel';
 // import commentEmoji from '../../../icons/commentEmoji.svg';
 
 const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) => {
@@ -27,7 +29,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
   const [filePreview, setFilePreview] = useState<string>('');
   const [isPickerVisible, setIsPickerVisible] = useState(false);
 
-  // const inputRef = useRef(null);
+  const abortController = useRef<AbortController | null>(null);
 
   const uploadfile = async (e: any) => {
     setFilePreview("");
@@ -54,11 +56,15 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
     let formData = new FormData();
     formData.append("file", file);
     setOpenUploadPic(true);
+
+    const controller = new AbortController();
+    abortController.current = controller;
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
+      signal: controller.signal,
       onUploadProgress: (progressEvent: any) => {
         const progress = Math.round(
           (100 * progressEvent.loaded) / progressEvent.total
@@ -66,40 +72,48 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
         setUploadProgress(progress);
       },
     };
-    let messageURL = await axios
-      .post(`${API_KEY}/util/file`, formData, config)
-      .then((responce) => {
-        setUploadProgress(0);
-        console.log(responce, "responseresp");
-        let msgUrl = responce.data.data;
-        if (file_type(fileType) == "Video") {
-          setFilePreview(msgUrl);
-        }
-        // let msgUrlType = e.target.type;
-        return msgUrl;
-        // setMessage(msgUrl); 
-        // setMessageType(msgUrlType);
-        // console.log("responseresp", responce.data.data, msg,"responseresp new", msgUrl, msgUrlType)
-        // setUpload("upload");
-        // console.log("responseresp", msg)
-        // setTimeout(() => {
-        //     onSubmit(e)
-        //   }, 5000);
+    try {
+      let messageURL = await axios
+        .post(`${API_KEY}/util/file`, formData, config)
+        .then((responce) => {
+          setUploadProgress(0);
+          console.log(responce, "responseresp");
+          let msgUrl = responce.data.data;
+          if (file_type(fileType) == "Video") {
+            setFilePreview(msgUrl);
+          }
+          // let msgUrlType = e.target.type;
+          return msgUrl;
+          // setMessage(msgUrl); 
+          // setMessageType(msgUrlType);
+          // console.log("responseresp", responce.data.data, msg,"responseresp new", msgUrl, msgUrlType)
+          // setUpload("upload");
+          // console.log("responseresp", msg)
+          // setTimeout(() => {
+          //     onSubmit(e)
+          //   }, 5000);
 
-        // onSubmit(e);
-        // onSubmit.click();
-        // document.getElementById('btnSearch').click();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+          // onSubmit(e);
+          // onSubmit.click();
+          // document.getElementById('btnSearch').click();
+        })
 
-    setMessage(messageURL);
-    // let msgUrlType = e.target.type;
-    // setMessageType(msgUrlType);
-    console.log("responseresp", msg, "responseresp new", messageURL)
-    console.log("end resp")
-    // onSubmit(e);
+
+      setMessage(messageURL);
+      // let msgUrlType = e.target.type;
+      // setMessageType(msgUrlType);
+      console.log("responseresp", msg, "responseresp new", messageURL)
+      console.log("end resp")
+      // onSubmit(e);
+    } catch (error: any) {
+      if (axios.isCancel(error)) {
+        console.log("Upload canceled");
+      } else {
+        console.log("Error during upload:", error);
+      }
+    } finally {
+      abortController.current = null;
+    }
 
   };
 
@@ -107,16 +121,28 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
   const closeUploadPic = () => {
     setMessage("");
     setFilePreview("");
+    setUploadedFile("");
     setOpenUploadPic(false);
+    if (abortController.current) {
+      abortController.current.abort();
+      setUploadProgress(0);
+      abortController.current = null;
+    }
   }
 
   const isMediaUploaded = () => {
     const mediaFormats = ["Image", "Video"];
-    if (mediaFormats.includes(uploadedFile) && uploadProgress !== 0 ) {
-      return true;
-    }
-    return false;
+    return mediaFormats.includes(uploadedFile) && uploadProgress !== 0;
   }
+
+  useEffect(() => {
+    return () => {
+      if (abortController.current) {
+        abortController.current.abort();
+      }
+    }
+  }, [])
+  
 
   return (
     <>
@@ -145,7 +171,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
             onChange={(e: any) => { setMessage(e.target.value), setMessageType('Text') }}
             type="text"
             placeholder="Write a message..."
-            value={msg}
+            value={!!uploadedFile ? '' : msg}
             style={{ width: '-webkit-fill-available', padding: '0.5rem' }}
           />
           <SendIcon className={style.sendIcon} onClick={onSubmit} style={{ fontSize: '23px', }} />
@@ -162,10 +188,10 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
         </div>
         <Modal open={openUploadPic}>
 
-          <div onClick={(e) => e.stopPropagation()} className={style.popupbackground} style={{background:isDarkTheme?'#181818':'#fff'}}>
-            <span className={isDarkTheme?'text-white':'text-dark'}>Upload File Preview</span>
+          <div onClick={(e) => e.stopPropagation()} className={style.popupbackground} style={{ background: isDarkTheme ? '#181818' : '#fff' }}>
+            <span className={isDarkTheme ? 'text-white' : 'text-dark'}>Upload File Preview</span>
             <div>
-              {['Image','Gif','Sticker'].includes(uploadedFile) && <img src={filePreview} alt="Preview"
+              {['Image', 'Gif', 'Sticker'].includes(uploadedFile) && <img src={filePreview} alt="Preview"
                 style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />}
 
               {uploadedFile == "Video" &&
@@ -181,13 +207,14 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
 
               {uploadProgress > 0 && (
                 <div className="progress-bar-container text-center">
-                  <CircularProgress
+                  <CircularProgressWithLabel
                     variant="determinate"
                     value={uploadProgress}
                     size={45}
                     thickness={4}
+                    isDarkTheme={isDarkTheme}
                   />
-                  <span className="progress-counter"> {uploadProgress}%</span>
+                  {/* <span className={isDarkTheme?'text-white':'text-custom-dark-222'}> {uploadProgress}%</span> */}
                 </div>
               )}
               <div style={{}} >

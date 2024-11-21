@@ -27,6 +27,19 @@ import ForGroups from './components/welcomeScreens/ForGroups';
 const ChatComponent = () => {
     // const socket = useSocket();
 
+    // const MessageType = {
+    //     TEXT: 'Text',
+    //     IMAGE: 'Image',
+    //     VIDEO: 'Video',
+    //     FILE: 'File',
+    //     GIF: 'Gif',
+    //     STICKER: 'Sticker',
+    //     EMOJI: 'Emoji',
+    //     SEEZITT_VIDEO: 'SeezittVideo',
+    //     SEEZITT_VOICE_MESSAGE: 'SeezittVoiceNote',
+    //     SEEZITT_LIVE_STREAM: 'SeezittLiveStream',
+    // };
+
     const API_KEY = process.env.VITE_API_URL;
     const [moreOptions, setMoreOptions] = useState<boolean>(false);
     const [reportPopup, setreportPopup] = useState<boolean>(false);
@@ -58,7 +71,7 @@ const ChatComponent = () => {
     const [chats, setchats] = useState<any[]>([]);
     const [conversationId, setConversationId] = useState('');
     const [chatActiveUserId, setChatActiveUserId] = useState('');
-    
+
     const [messages, setMessages] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
     const token = localStorage.getItem('token');
@@ -656,7 +669,7 @@ const ChatComponent = () => {
     };
 
     const searchChatMessages = async (
-        query: String | Number, 
+        query: String | Number,
         // receiverId: String | Number,
         conversationId: String | Number
     ) => {
@@ -679,23 +692,23 @@ const ChatComponent = () => {
 
                 // Format the date using moment.js
                 const messageTimeStamp = moment(date).format('h:mm A');
-                
+
                 tempArr.push({
-                        msg: element?.message,
-                        time: messageTimeStamp,
-                        emojis: false,
-                        dropdown: false,
-                        id: element?._id,
-                        isrecevied: element?.receiverId?._id == loggedUserId ? false : true,
-                        receiverId: element?.receiverId?._id,
-                        stared: element?.isStarred,
-                        isRead: element?.isRead,
-                        type: element?.type,
-                        replysms: element?.repliedMessage
-                            ? element?.repliedMessage?.message
-                            : false,
-                    });
-               
+                    msg: element?.message,
+                    time: messageTimeStamp,
+                    emojis: false,
+                    dropdown: false,
+                    id: element?._id,
+                    isrecevied: element?.receiverId?._id == loggedUserId ? false : true,
+                    receiverId: element?.receiverId?._id,
+                    stared: element?.isStarred,
+                    isRead: element?.isRead,
+                    type: element?.type,
+                    replysms: element?.repliedMessage
+                        ? element?.repliedMessage?.message
+                        : false,
+                });
+
             });
 
             setActiveChat((currentChat: any) => ({
@@ -851,7 +864,7 @@ const ChatComponent = () => {
                             searchQuery={searchQuery}
                             isDarkTheme={!!isDarkTheme}
                         />
-                         {/* )}  */}
+                        {/* )}  */}
                     </div>
                     {/* {replySms && (
                         <div className={style.replyC}>

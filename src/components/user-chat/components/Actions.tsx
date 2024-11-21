@@ -184,7 +184,7 @@ function Actions(props: any) {
                                                             disablePictureInPicture
                                                             controlsList="nodownload noplaybackrate"
                                                             controls={true}
-                                                            style={{ height: "60%", width: "60%" }}
+                                                            style={{ height: "60%", width: "60%", margin: item.receiverId == loggedInUserId? '0 auto 0 0':'0 0 0 auto' }}
                                                             src={item.msg}
                                                         />
                                                     }
