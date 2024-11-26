@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import style from './popupForEditVideo.module.scss';
 import { EDIT_VIDEO_ACTIONS } from '../../../utils/constants';
 import SoundGallery from '../components/soundGallery';
-import { leftArrowCurved, leftArrowCurvedinWhite, pause, play, rightArrowCurved, rightArrowCurvedinWhite } from '../../../icons';
+import { addIcon, addInWhite, leftArrowCurved, leftArrowCurvedinWhite, minusIcon, minusInwhite, pause, play, rightArrowCurved, rightArrowCurvedinWhite } from '../../../icons';
 import ReactSlider from "react-slider";
+import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -24,6 +25,8 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
   const [audioTabSelected, setAudioTabSelected] = useState('Recommended');
   const [videoDuration, setVideoDuration] = useState(0);
+  const [thumbnails, setThumbnails] = useState<any>([]);
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const lightThemePalette = createTheme({
@@ -49,7 +52,10 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   }
 
   const getMediaInfo = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    setVideoDuration((event.target as HTMLVideoElement).duration || 0);
+    const videoElement = (event.target as HTMLVideoElement);
+    videoElement.volume = volume / 100;
+    setVideoDuration(videoElement.duration || 0);
+    videoCoverHandler(videoElement.duration);
   }
 
   const getCurrentTime = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
@@ -67,11 +73,37 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
     }
   }
 
+  const handleVolumeChange = (value: number) => {
+    if (value < 0) value = 0;
+    if (value > 100) value = 100;
+    setVolume(value);
+    if (videoRef.current) {
+      videoRef.current.volume = value / 100;
+    }
+  };
+
+  const videoCoverHandler = async (duration:number) => {
+    setThumbnails([]);
+    const numberOfFrames = duration/2;
+    const frames = await VideoToFrames.getFrames(
+      targetVideo,
+      numberOfFrames,
+      VideoToFramesMethod.totalFrames
+    );
+    console.log('videoCoverHandler', frames);
+    setThumbnails(frames);
+  };
+
   useEffect(() => {
     console.log('PopupForEditVideo mounted', targetVideo);
     // targetVideo is in blob format and needs to get duration and currentTime
-
+    // if (targetVideo) videoCoverHandler();
   }, [targetVideo])
+
+  useEffect(() => {
+    console.log('thumbnails💖💖💖💖', thumbnails);
+  }, [thumbnails])
+  
 
   return (
     <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
@@ -114,10 +146,11 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
               </div>
               {/* RIGHT VIDEO CONTAINER */}
               <div className={style.videoContainer}>
-                <video ref={videoRef} onLoadedMetadata={getMediaInfo} onTimeUpdate={getCurrentTime} controls src={targetVideo} style={{ width: '200px', height: '355px' }} />
+                <video ref={videoRef} onLoadedMetadata={getMediaInfo} onTimeUpdate={getCurrentTime} src={targetVideo} style={{ width: '200px', height: '355px' }} />
               </div>
 
             </div>
+            {/* bottom controls bar */}
             <div className={style.videoControlBar}>
               <div className={style.prevNextArrows}>
                 <img src={isDarkTheme ? leftArrowCurvedinWhite : leftArrowCurved} alt="left-arrow-curved" />
@@ -128,30 +161,47 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
                 <span>{formatTime(videoCurrentTime)}</span> &nbsp; / &nbsp;<span>{formatTime(videoDuration)}</span>
               </div>
               <div className="flex items-center">
-                {/* <input
-                  id="volume-slider"
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={50}
-                  // onChange={handleVolumeChange}
-                  className="w-64 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                /> */}
-                <div className="flex flex-col items-center justify-center">
-                  {/* <label className="mb-4 text-lg font-medium text-gray-700">
-                    Volume: <span className="font-bold">{volume}</span>%
-                  </label> */}
-                  <ReactSlider
-                    className="w-64 h-2 bg-gray-200 rounded-lg"
-                    thumbClassName="h-4 w-4 bg-blue-500 rounded-full cursor-pointer focus:outline-none"
-                    trackClassName="bg-blue-200"
-                    value={volume}
-                    onChange={(value) => setVolume(value)}
-                    min={0}
-                    max={100}
-                  />
-                </div>
+                <img onClick={() => handleVolumeChange(volume - 5)} className='mx-2 cursor-pointer' src={isDarkTheme ? minusInwhite : minusIcon} alt="dec-vol" />
+                <ReactSlider
+                  className={`w-28 h-3 rounded-lg`}
+                  thumbClassName="h-3 w-3 bg-gray-700 rounded-full cursor-pointer focus:outline-none"
+                  trackClassName="react-slider-track"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  min={0}
+                  max={100}
+                  renderTrack={(props, state) => (
+                    <div
+                      {...props}
+                      className={`h-3 rounded-lg ${state.index === 0 ? "bg-gray-500" : "bg-gray-400"
+                        }`}
+                    />
+                  )}
+                />
+                <img onClick={() => handleVolumeChange(volume + 5)} className='mx-2 cursor-pointer' src={isDarkTheme ? addInWhite : addIcon} alt="inc-vol" />
               </div>
+            </div>
+            {/* video playback track */}
+            <div style={{ display: "flex", overflowX: "auto", marginTop: "20px" }}>
+              {thumbnails.map((thumb:any, index:number) => (
+                <img
+                  key={index}
+                  src={thumb}
+                  alt={`Thumbnail ${index}`}
+                  style={{
+                    width: "120px",
+                    height: "90px",
+                    marginRight: "5px",
+                    cursor: "pointer",
+                    border: videoCurrentTime >= index * 2 && videoCurrentTime < (index + 1) * 2 ? "2px solid blue" : "none",
+                  }}
+                  onClick={() => {
+                    if (videoRef.current) {
+                      videoRef.current.currentTime = index * 2;
+                    }
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>

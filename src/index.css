@@ -270,3 +270,15 @@ video.loading::after {
   border: 2px solid transparent;
   background-clip: content-box;
 }
+
+.track-0 {
+  background-color: #f50057;
+}
+
+.thumb-0 {
+  background-color: #a0a0a0;
+}
+
+.track-1 {
+  background-color: #f0f0f0;
+}

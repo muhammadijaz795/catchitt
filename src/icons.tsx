@@ -41,6 +41,8 @@ import werfie from './assets/werfie.svg';
 import wn from './assets/wn.svg';
 import search from './assets/inputSearchIcon.svg';
 import createIcon from './assets/plusIcon.png';
+import addIcon from "./assets/add.svg";
+import addInWhite from "./assets/addInWhite.svg";
 import threeDotsInChatModalPopup from './assets/threeDotsForPopup.svg';
 import addimage from './assets/addimage.svg';
 import editInStaredMsg from './assets/editInStaredMsg.svg';
@@ -133,8 +135,13 @@ import leftArrowCurved from './assets/leftArrowCurved.svg'
 import leftArrowCurvedinWhite from './assets/leftArrowCurvedInWhite.svg'
 import rightArrowCurved from './assets/rightArrowCurved.svg'
 import rightArrowCurvedinWhite from './assets/rightArrowCurvedinWhite.svg'
-
+import minusIcon from './assets/minus.svg'
+import minusInwhite from './assets/minusInWhite.svg'
 export {
+    minusIcon,
+    minusInwhite,
+    addIcon,
+    addInWhite,
     leftArrowCurved,
     rightArrowCurved,
     rightArrowCurvedinWhite,
