@@ -3,6 +3,7 @@ import { API_KEY } from "../../../utils/constants";
 import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { CircularProgress } from '@mui/material';
+import { defaultAvatar } from "../../../icons";
 
 function SoundGallery() {
     const abortController = useRef<AbortController | null>(null);
@@ -79,6 +80,7 @@ function SoundGallery() {
                             }`}
                         onClick={() => setSelectedAudio(audio.url)}
                     >
+                        <img className="w-10 h-10 bg-gray-200 mr-2" src={defaultAvatar} alt="soundImg" />
                         <div>
                             <span className="font-medium">{audio.name}</span>
                             <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span>

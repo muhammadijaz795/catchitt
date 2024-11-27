@@ -255,3 +255,6 @@ export const EDIT_VIDEO_ACTIONS = [
     { action: 'SOUND', icon: musicBlack, title: 'Sounds' },
     { action: 'TEMPLATE', icon: templates, title: 'Templates' },
 ];
+
+export const TRACKSLOTPERIODS = 8;
+export const TRACKSLOTDIFF = 4;
