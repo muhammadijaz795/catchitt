@@ -4,9 +4,9 @@ import styles from './payment-method.module.scss';
 const PaymentMethod = ({ darkTheme, method, isSelected, onSelect }:any) => {
   return (
     <div
-      className={styles.paymentMethod}
+      className={`${styles.paymentMethod} ${method.isAvailable?'':'opacity-30'}`}
       style={{ border: isSelected ? '1px solid rgb(255, 59, 92)' : '' }}
-      onClick={() => onSelect(method.name)}
+      onClick={() => method.isAvailable&&onSelect(method.name)}
     >
       <span className={styles.radio}>{isSelected && <span></span>}</span>
       <div className={styles.paymentMethodLogo}>

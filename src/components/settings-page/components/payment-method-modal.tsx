@@ -25,10 +25,10 @@ const PaymentMethodModal = ({ darkTheme, palette, openPaymentModal, onClosePayme
     }
 
     const paymentMethods = [
-        { name: 'PayPal', icon: paypal },
-        { name: 'Square', icon: squarePay },
-        { name: 'Credit Card', icon: cc },
-        { name: 'Stripe', icon: stripe },
+        { name: 'PayPal', icon: paypal, isAvailable: true },
+        { name: 'Square', icon: squarePay, isAvailable:false },
+        { name: 'Credit Card', icon: cc, isAvailable:false },
+        { name: 'Stripe', icon: stripe, isAvailable:false },
         // Add more payment methods as needed
     ];
 
@@ -65,7 +65,6 @@ const PaymentMethodModal = ({ darkTheme, palette, openPaymentModal, onClosePayme
                             on the next page.</p>
                     </div>
 
-
                     <div className={styles.paymentMethods}>
                         {paymentMethods.map((method) => {
                             return (
@@ -78,8 +77,6 @@ const PaymentMethodModal = ({ darkTheme, palette, openPaymentModal, onClosePayme
                                 />
                             );
                         })}
-
-
                     </div>
                 </div>
                 {/* footer */}

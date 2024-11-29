@@ -167,6 +167,24 @@ const BalancePage = ({ className }: BalancePageProps) => {
         }
     };
 
+    const buyCoin = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/payment/web/coins/${selectedCoinsAmount.coinsAmount}`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            setRevenueData(data.data.totalGiftRevenue);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    };
+
+
+
     useEffect(() => {
         setIndex(4);
         handleFetchRevenueData();
