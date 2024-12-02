@@ -12,6 +12,13 @@ import { Grid } from '@giphy/react-components';
 import CustomMediaPicker from './CustomMediaPicker';
 import createPalette from '@mui/material/styles/createPalette';
 import CircularProgressWithLabel from '../../../shared/components/CircularProgressWithLabel';
+import { toast } from 'react-toastify';
+import pdfLabel from '../../../assets/pdf.png';
+import docLabel from '../../../assets/docs.png';
+import pptLabel from '../../../assets/ppt.png';
+import xlsxLabel from '../../../assets/xlsx.png';
+import fileLabel from '../../../assets/files.png';
+import musicLabel from '../../../assets/music_file.png';
 // import commentEmoji from '../../../icons/commentEmoji.svg';
 
 const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) => {
@@ -34,17 +41,38 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
     if (file == undefined) {
       return false;
     }
+    const identifiedFileType = file_type(fileType);
     setUploadProgress(1);
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      if (file_type(fileType) == "Image") {
+      if (identifiedFileType == "Image") {
         setFilePreview(e.target.result);
         setUploadedFile("Image");
         setMessageType("Image");
-      } else {
+      } else if (identifiedFileType == "Video") {
         setMessageType("Video");
         setUploadedFile("Video");
+      } else if (identifiedFileType == "Audio") {
+        setFilePreview(e.target.result);
+        setMessageType("File");
+        setUploadedFile("Audio");
+      } else if (identifiedFileType == "Pdf") {
+        setMessageType("File");
+        setUploadedFile("Pdf");
+      } else if (identifiedFileType == "Doc") {
+        setMessageType("File");
+        setUploadedFile("Doc");
+      } else if (identifiedFileType == "Ppt") {
+        setMessageType("File");
+        setUploadedFile("Ppt");
+      } else if (identifiedFileType == "Xlsx") {
+        setMessageType("File");
+        setUploadedFile("Xlsx");
+      } else {
+        setMessageType("File");
+        setUploadedFile("File");
       }
+
     };
     reader.readAsDataURL(file);
 
@@ -75,7 +103,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
           setUploadProgress(0);
           console.log(responce, "responseresp");
           let msgUrl = responce.data.data;
-          if (file_type(fileType) == "Video") {
+          if (identifiedFileType == "Video") {
             setFilePreview(msgUrl);
           }
           // let msgUrlType = e.target.type;
@@ -106,6 +134,9 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
         console.log("Upload canceled");
       } else {
         console.log("Error during upload:", error);
+        setUploadProgress(0);
+        closeUploadPic();
+        toast.error("Error during upload", { autoClose: 2000 });
       }
     } finally {
       abortController.current = null;
@@ -200,6 +231,20 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme }: any) 
                   style={{ height: "60%", width: "60%", objectFit: "cover", alignSelf: "center" }}
                   src={filePreview}
                 />}
+
+              {uploadedFile == "Audio" && <>
+                <img src={musicLabel} alt="Preview" style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />
+                <audio
+                  controls
+                  style={{ height: "60%", width: "60%", objectFit: "cover", alignSelf: "center" }}
+                  src={filePreview}
+                />
+              </>}
+              {uploadedFile == "Pdf" && <img src={pdfLabel} alt="Preview" style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />}
+              {uploadedFile == "Doc" && <img src={docLabel} alt="Preview" style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />} 
+              {uploadedFile == "Ppt" && <img src={pptLabel} alt="Preview" style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />}
+              {uploadedFile == "Xlsx" && <img src={xlsxLabel} alt="Preview" style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />}
+              {uploadedFile == "File" && <img src={fileLabel} alt="Preview" style={{ height: "50%", width: "50%", objectFit: "cover", alignSelf: "center" }} />}
 
               {uploadProgress > 0 && (
                 <div className="progress-bar-container text-center">

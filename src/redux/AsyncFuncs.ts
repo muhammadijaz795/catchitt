@@ -150,6 +150,23 @@ export const addMoreVideos: any = createAsyncThunk(
     }
 );
 
+export const getUpdatedVideoState: any = createAsyncThunk(
+    'get/updated/video/state',
+    async ({id, isAuthentic}:{id:string,isAuthentic:boolean}) => {
+        try {
+            let identifier = isAuthentic ? 'videos' : 'public/videos';
+            const res = await get(`/media-content/${identifier}/${id}`);
+            if (res?.data?.data) {
+                return res?.data?.data;
+            } else {
+                return {};
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
+
 export const videoNotInterestedHandle: any = createAsyncThunk(
     'get/not-interested/video',
     async (postMediaId: string) => {

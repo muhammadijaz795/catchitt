@@ -13,6 +13,7 @@ import {
     addMoreVideos,
     videoNotInterestedHandle,
     videoRepostHandle,
+    getUpdatedVideoState,
 } from './AsyncFuncs';
 import loginSlice from './reducers/auth';
 import isuploading from './reducers/upload';
@@ -193,6 +194,26 @@ const homeVideos: any = createSlice({
         builder.addCase(videoRepostHandle.fulfilled, (state: any, action: any) => {
             console.log(' 🚀 >>>>>> action.payload 🚀', action.payload);
             return state;
+        });
+        builder.addCase(getUpdatedVideoState.fulfilled, (state: any, action: any) => {
+            // first get the index of the video in the state
+            const mutateState = state.map((video: any) => ({ ...video }));
+
+            const index = mutateState.findIndex((video: any) => video.mediaId === action.payload.mediaId);
+
+            if (index === -1) return state; // index validation
+                // update the video in the state
+            mutateState[index].commentsCount = action.payload.comments.length;
+            mutateState[index].comments = action.payload.comments;
+            mutateState[index].likes = action.payload.likes;
+            mutateState[index].isLiked = action.payload.isLiked;
+            mutateState[index].isSaved = action.payload.isSaved;
+            mutateState[index].isReposted = action.payload.isReposted;
+            mutateState[index].views = action.payload.views;
+            mutateState[index].shares = action.payload.shares;
+            mutateState[index].savesCount = action.payload.savesCount;
+
+            return mutateState;
         });
     },
 });

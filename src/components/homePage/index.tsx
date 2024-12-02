@@ -22,10 +22,12 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import style from './index.module.scss';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import { activeLike, commentWhite, like, likeWhite, musicBlack, shareWhite } from '../../icons';
+import { getUpdatedVideoState } from '../../redux/AsyncFuncs';
 
 function HomePage() {
     const isMobile = useMediaQuery('(max-width:700px)');
     const { loading, videos, activeTab, setActiveTab, isFollowing } = useHome({ tabIndex: 2 });
+
     const [videoModalInfo, setVideoModalInfo] = useState<any>({});
     const [giftsPopup, setGiftsPopup] = useState(false);
     const [reportPopup, setReportPopup] = useState(false);
@@ -48,6 +50,7 @@ function HomePage() {
     const [countryCodes, setCountryCodes] = useState([]);
     const [selectedCountryIndex, setSelectedCountryIndex] = useState<number>(-1);
     const API_KEY = process.env.VITE_API_URL;
+    const token = localStorage.getItem('token');
 
     // Input Values
     const [phoneNumber, setPhoneNumber] = useState<any>(null);
@@ -481,6 +484,37 @@ function HomePage() {
         setShareCount(shareCount);
     };
 
+    // const fetchMediaById = async (videoIdPassed?: number) => {
+    //     let identifier = token ? 'videos' : 'public/videos';
+    //     try {
+    //         const fetchMediaResponse = await fetch(
+    //             `${API_KEY}/media-content/${identifier}/${videoModalInfo?.mediaId}`,
+    //             {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     'Content-type': 'application/json',
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             }
+    //         );
+    //         const { data } = await fetchMediaResponse.json();
+    //        console.log('🚀 ~ fetchMediaById ~ res:',data);
+    //        const videoData = data?.data;
+    //        const videoIndex = videoSet.findIndex((video: any) => video.mediaId === videoData?.mediaId);
+    //        const updatedVideoSet = [...videoSet];
+    //         updatedVideoSet[videoIndex] = videoData;
+    //         setVideoSet(updatedVideoSet);
+
+    //     } catch (error) {
+    //         console.log('🚀 ~ fetchMediaById ~ error:', error);
+    //     }
+    // };
+
+    useEffect(() => {
+      if (videoModal) return;
+      videoModalInfo?.mediaId && dispatch(getUpdatedVideoState({id:videoModalInfo.mediaId, isAuthentic:Boolean(token)}));
+    }, [videoModal,videoModalInfo])
+    
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
@@ -492,6 +526,7 @@ function HomePage() {
             setDarkWhiteTheme('hover:bg-slate-100');
         }
     });
+
 
     return (
         <div>

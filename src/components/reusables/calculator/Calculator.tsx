@@ -64,7 +64,6 @@ export default function Calculator({isDarkTheme, setCustomCoin}:{isDarkTheme:boo
         }
     }, [result])
     
-
     return (
         <div className="container">
             <form>

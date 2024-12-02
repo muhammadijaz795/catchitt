@@ -250,7 +250,6 @@ export default function PopupForVideoPlayer({
 
     const sharePopupHandler = () => { setSendPopup(true) };
 
-
     const loginPopup = () => {
         dispatch(openLoginPopup());
     };

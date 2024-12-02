@@ -282,3 +282,7 @@ video.loading::after {
 .track-1 {
   background-color: #f0f0f0;
 }
+
+.Toastify__toast-body div {
+  color: #000 !important;
+}

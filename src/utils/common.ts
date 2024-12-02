@@ -54,25 +54,25 @@ export const file_type = (val:any) => {
     case 'mov':
     type = 'Video';
     break;
-    // case 'mp3':
-    // case 'wav':
-    // type = 'audio';
-    // break;
-    // case 'pdf' : 
-    // type = 'pdf';
-    // break;
-    // case 'doc':
-    // case 'docx': 
-    // type = 'doc';
-    // break;
-    // case 'pptx': 
-    // case 'ppt': 
-    // type = 'ppt';
-    // break;
-    // case 'xlsx': 
-    // case 'csv': 
-    // type = 'xlsx';
-    // break;
+    case 'mp3':
+    case 'wav':
+    type = 'Audio';
+    break;
+    case 'pdf' : 
+    type = 'Pdf';
+    break;
+    case 'doc':
+    case 'docx': 
+    type = 'Doc';
+    break;
+    case 'pptx': 
+    case 'ppt': 
+    type = 'Ppt';
+    break;
+    case 'xlsx': 
+    case 'csv': 
+    type = 'Xlsx';
+    break;
     // case 'txt': 
     // type = 'txt';
     // break;

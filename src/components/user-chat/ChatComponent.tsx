@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 // import { useSocket } from '../reusables/SocketContext';
 import moment from 'moment';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { io } from 'socket.io-client';
 import { useLocation } from 'react-router-dom';
@@ -983,10 +983,10 @@ const ChatComponent = () => {
                 onClose={() => setEditGroupNameModal(false)}
                 onSaveChanges={onSaveChanges}
             />
-            <Forwardusers onOpen={forwardModal} onClose={() => setforwardModal(false)} />
+            <Forwardusers onOpen={forwardModal} onClose={() => setforwardModal(false)} />*/}
             <div>
-                <ToastContainer />
-            </div> */}
+                <ToastContainer/>
+            </div> 
         </Layout>
     );
 };

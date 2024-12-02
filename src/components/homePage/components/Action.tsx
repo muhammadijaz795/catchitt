@@ -61,7 +61,7 @@ function Action({
     const shouldDisplayActiveImage = () => {
         switch (obj.actionType) {
             case 'like':
-                return post.likes > 0;
+                return post.isLiked;
             case 'comment':
                 return post.comments?.length > 0;
             case 'share':
