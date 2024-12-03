@@ -286,3 +286,80 @@ video.loading::after {
 .Toastify__toast-body div {
   color: #000 !important;
 }
+
+/* chat module play video btn css start  */
+
+a.customPlayBtn {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background-color: #e1434b;
+  border-radius: 100%;
+  border: #fff solid 1px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: shadowPulse 1s infinite linear;
+}
+
+a.customPlayBtn::before {
+  position: absolute;
+  content: '';
+  border-top: transparent 5.625px solid;
+  border-bottom: transparent 5.625px solid;
+  border-left: #fff 9.375px solid;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+}
+
+a.customPlayBtn::after {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* border: #fff solid 2px; */
+  border-radius: 100%;
+  animation: ringPulse 1s infinite linear;
+}
+
+@keyframes ringPulse {
+  0% {
+      opacity: 0;
+      transform: scale(0.95);
+  }
+
+  10% {
+      opacity: 1;
+  }
+
+  80%, 100% {
+      opacity: 0;
+      transform: scale(2);
+  }
+}
+
+@keyframes shadowPulse {
+  0% {
+      box-shadow: 0 0 3px 2.25px transparent,
+                  0 0 0 0 transparent,
+                  0 0 0 0 transparent;
+  }
+
+  10% {
+      box-shadow: 0 0 3px 2.25px #e1434b,
+                  0 0 4.5px 3.75px transparent,
+                  0 0 4.5px 1.875px #e1434b;
+  }
+
+  80%, 100% {
+      box-shadow: 0 0 3px 2.25px transparent,
+                  0 0 0 15px transparent,
+                  0 0 0 15px transparent;
+  }
+}
+
+/* chat module play video btn css end  */

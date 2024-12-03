@@ -50,8 +50,10 @@ import forwardMsg from './assets/forwardMsg.svg';
 import send from './assets/send.svg';
 import copyLink from './assets/copyLink.svg';
 import viewProfile from './assets/viewProfile.svg';
+import viewProfileInWhite from './assets/viewProfileInWhite.svg';
 import goldCoin from './assets/goldCoin.svg';
 import logoutSvg from './assets/logout.svg';
+import setting from './assets/setting.svg';
 import settingsDark from './assets/settingsDark.svg';
 import switchAcount from './assets/switchAcount.svg';
 import music from './assets/musicSvg.svg';
@@ -137,7 +139,12 @@ import rightArrowCurved from './assets/rightArrowCurved.svg'
 import rightArrowCurvedinWhite from './assets/rightArrowCurvedinWhite.svg'
 import minusIcon from './assets/minus.svg'
 import minusInwhite from './assets/minusInWhite.svg'
+import videoDuration from './assets/video-duration.svg';
+
 export {
+    setting,
+    viewProfileInWhite,
+    videoDuration,
     minusIcon,
     minusInwhite,
     addIcon,

@@ -35,7 +35,7 @@
 }
 
 .black_500 {
-  color: var(--Foundation-Body-body-500, #222);
+  // color: var(--Foundation-Body-body-500, #222);
   font-family: Poppins;
   font-size: 0.875rem;
   font-style: normal;
@@ -59,7 +59,7 @@
     padding: 1rem;
 }
 .menuItemParent:hover {
-    background: #EAEAEA;
+    background: #eaeaea38;
 }
 
 .darkTheme {

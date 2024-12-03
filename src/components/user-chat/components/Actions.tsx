@@ -11,12 +11,14 @@ import {
     unStarMsg,
     defaultAvatar,
     moreInMsgWhite,
+    videoDuration,
 } from '../../../icons';
 import style from './Actions.module.scss';
 import LongPressButton from './LongPressEvent';
 import { io } from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import TextHighlighter from './TextHighlighter';
+import VideoModal from './VideoModal';
 
 function Actions(props: any) {
     const {
@@ -37,19 +39,44 @@ function Actions(props: any) {
     } = props || {};
 
     const loggedInUserId = localStorage.getItem('userId');
-    
-   
-    console.log('activeChat',activeChat, chatActiveUserId);
+    const [playingVideo, setPlayingVideo] = useState('');
+
+    const getMediaInfo = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+        const videoElement = (event.target as HTMLVideoElement);
+        const prevSibling = videoElement.previousElementSibling as HTMLDivElement;
+        // find p tag in div
+        const pTag = prevSibling.querySelector('p');
+        const duration = videoElement.duration;
+        if (duration < 60) {
+            if (pTag) pTag.innerText = `0:${Math.floor(duration)}`;
+        } else if (duration >= 60 && duration < 3600) {
+            const minutes = Math.floor(duration / 60);
+            const seconds = Math.floor(duration % 60);
+            if (pTag) pTag.innerText = `${minutes}:${seconds}`;
+        } else {
+            const hours = Math.floor(duration / 3600);
+            const minutes = Math.floor((duration % 3600) / 60);
+            const seconds = Math.floor(duration % 60);
+            if (pTag) pTag.innerText = `${hours}:${minutes}:${seconds}`;
+        }
+    }
+
+    const closeVideoModal = () => {
+        setPlayingVideo('');
+    }
+
+    console.log('activeChat', activeChat, chatActiveUserId);
     useEffect(() => {
         setTimeout(() => {
             scrollToBottom()
-        }, 800); 
+        }, 800);
     }, [chatActiveUserId]);
-    
+
     return (
         <>
 
             <div ref={autoScrolElem} className={style.msgsContainer} onScroll={handleScroll}>
+                {playingVideo && <VideoModal src={playingVideo} close={closeVideoModal} parentRef={autoScrolElem} />}
                 {activeChat?.userId &&
                     activeChat?.chats?.map((item: any, index: number) => {
                         return (
@@ -168,26 +195,33 @@ function Actions(props: any) {
                                                         <p
                                                             onClick={(e) => e.stopPropagation()}
                                                             className={`${item.receiverId == loggedInUserId
-                                                                    ? style.receivedMsg
-                                                                    : style.sendedMsg
+                                                                ? style.receivedMsg
+                                                                : style.sendedMsg
                                                                 }`}
                                                         >
                                                             <TextHighlighter searchQuery={searchQuery} text={item.msg} />
                                                         </p>}
 
-                                                    {['Image','Sticker','Gif'].some(type=>type===item?.type) &&
+                                                    {['Image', 'Sticker', 'Gif'].some(type => type === item?.type) &&
                                                         <img src={item.msg} />
                                                     }
 
-                                                    {item?.type == 'Video' &&
-                                                        <video
-                                                            disablePictureInPicture
-                                                            controlsList="nodownload noplaybackrate"
-                                                            controls={true}
-                                                            style={{ height: "60%", width: "60%", margin: item.receiverId == loggedInUserId? '0 auto 0 0':'0 0 0 auto' }}
-                                                            src={item.msg}
-                                                        />
-                                                    }
+                                                    {item?.type == 'Video' && 
+                                                    <div onClick={()=>setPlayingVideo(item.msg)} className={`absolute top-0 ${item.receiverId == loggedInUserId ? 'left-0' : 'right-0'} h-full z-10 bg-black bg-opacity-50`} style={{ width: "60%" }}>
+                                                        <a href="#" className="customPlayBtn"></a>
+                                                        <div className="flex absolute bottom-0 left-1">
+                                                            <img src={videoDuration} alt="duration" />
+                                                            <p className="text-white text-xs ml-1 opacity-60">0</p>
+                                                        </div>
+                                                    </div> }
+                                                    {item?.type == 'Video' &&  <video
+                                                        onLoadedMetadata={getMediaInfo}
+                                                        disablePictureInPicture
+                                                        controlsList="nodownload noplaybackrate"
+                                                        // controls={true}
+                                                        style={{ height: "60%", width: "60%", margin: item.receiverId == loggedInUserId ? '0 auto 0 0' : '0 0 0 auto' }}
+                                                        src={item.msg}
+                                                    />}
                                                 </>
                                             )}
                                         </LongPressButton>
@@ -230,7 +264,7 @@ function Actions(props: any) {
                                                 onClick={() => {
                                                     valuesH(item, 'dropdown');
                                                 }}
-                                                src={isDarkTheme?moreInMsgWhite:moreInMsg}
+                                                src={isDarkTheme ? moreInMsgWhite : moreInMsg}
                                                 alt=""
                                             />
                                             {/* {item.showEmogis && (

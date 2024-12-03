@@ -8,7 +8,7 @@
 
 .inboxTitle {
   font-size: 24px;
-  color: #1a1a1a !important;
+  // color: #1a1a1a !important;
   font-weight: bold;
 }
 
@@ -59,21 +59,22 @@
   font-family: inherit;
   background-color: transparent;
   cursor: pointer;
-  color: #1a1a1a;
+  // color: #1a1a1a;
   border-radius: 50px;
   margin: 10px 10px 10px 0px;
 }
 
 .buttontab.active {
-  color: #fff;
-  background-color: #1a1a1a;
+  color: rgb(255, 59, 92);
   padding: .25em 1em;
+  border: 1px solid rgb(255, 59, 92);
 }
 
 .buttontab.activeBlack {
-  color: #1a1a1a;
-  background-color:  #fff;
+  color: rgb(255, 59, 92);
+  // background-color:  #ad9e9e;
   padding: .25em 1em;
+  border: 1px solid rgb(255, 59, 92);
 }
 
 .avatar {

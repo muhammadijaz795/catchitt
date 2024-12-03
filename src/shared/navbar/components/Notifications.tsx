@@ -1,4 +1,4 @@
-import { alpha, styled } from '@mui/material';
+import { alpha, createTheme, styled, ThemeProvider } from '@mui/material';
 import defaultProfileIcon from '../../../assets/defaultProfileIcon.png';
 import thumbnail from '../../../assets/thumbnail.png'
 import List from '@mui/material/List';
@@ -10,7 +10,7 @@ import { defaultAvatar, goldCoin, logoutSvg, settingsDark, switchAcount, viewPro
 import style from './notifications.module.scss';
 import { useAuthStore } from '../../../store/authStore';
 import { useSelector } from 'react-redux';
-import { FavoriteBorder,AlternateEmail, ChatBubbleOutlineSharp } from '@mui/icons-material';
+import { FavoriteBorder, AlternateEmail, ChatBubbleOutlineSharp } from '@mui/icons-material';
 const options = ['View profile', 'Get Coins', 'Settings', 'Switch Account', 'Logout'];
 import { useEffect, useState } from 'react';
 import { get, post } from '../../../axios/axiosClient';
@@ -36,7 +36,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         };
         message?: string;
     };
-    
+
     const [notification, setNotification] = useState<Notification[]>([]);
     // const [notification, setNotification] = useState<Notification[]>([{type: 'like', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Comment', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." }, {type: 'Follow', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Tag', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Unknown Device Signin', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}]);
     const navigate = useNavigate();
@@ -68,7 +68,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
             borderRadius: 8,
             marginTop: theme.spacing(1),
             minWidth: 380,
-            boxShadow:'rgba(0, 0, 0, 0.12) 0px -4px 32px',
+            boxShadow: 'rgba(0, 0, 0, 0.12) 0px -4px 32px',
             left: '1320px',
             transform: 'translate(65px, 0px) !important',
             color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
@@ -147,18 +147,18 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         setCommentSection(false);
         setTagSection(false);
     }
-    
-    const handleFollowBack = async (userId:any) => {
-    console.log("handleFollowBack", userId)
+
+    const handleFollowBack = async (userId: any) => {
+        console.log("handleFollowBack", userId)
         try {
             const response = await fetch(
                 API_KEY + `/profile/${userId}`, {
-                    method: 'GET',
-                    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-                }
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            }
             );
             const responseData = await response.json();
-            if(responseData.isFollowed == false){
+            if (responseData.isFollowed == false) {
                 const res = await post(`/profile/follow/${userId}`);
                 console.log("handleFollowBack", res);
                 if (res?.data) {
@@ -166,7 +166,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                 }
             }
             const LoggedInUserId = localStorage.getItem('userId');
-            const result = await post(`/chat/messages`,{
+            const result = await post(`/chat/messages`, {
                 type: 'application/json',
                 data: {
                     from: LoggedInUserId,
@@ -191,21 +191,21 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
             try {
                 const response = await fetch(
                     API_KEY + `/notification`, {
-                        method: 'GET',
-                        headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-                    }
+                    method: 'GET',
+                    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+                }
                 );
                 const responseData = await response.json();
                 const newNotificationList = Array.isArray(responseData.data.data)
                     ? (responseData.data.data as Notification[])
                     : [];
-    
+
                 setNotification(responseData.data.data);
             } catch (error) {
                 console.error('Error fetching videos:', error);
             }
         };
-        
+
         handleGetNotifications();
         if (themeColor == "dark") {
             // setdarkThemeWhite(style.darkThemeWhite);
@@ -225,245 +225,259 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
 
     }, []);
 
+    
+    const lightThemePalette = createTheme({
+        palette: {
+            mode: 'light',
+        },
+    });
+
+    const darkThemePalette = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
+
     return (
-        <div
-            style={{
-                position: 'absolute',
-                right: 0,
-                top: '0%',
-                zIndex: 200,
-                width: '100%',
-                height: '100%',
-                background: 'transparent',
-            }}
-        >
-            <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
-                <ListItemButton
-                    id="lock-button"
-                    aria-haspopup="listbox"
-                    aria-controls="lock-menu"
-                    //   aria-label="when device is locked"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClickListItem}
-                    style={{ background: 'transparent' }}
-                ></ListItemButton>
-            </List>
-            <StyledMenu
-                id="lock-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                classes={{ paper: 'no-scrollbar' }}
-                MenuListProps={{
-                    'aria-labelledby': 'lock-button',
-                }}
+        <ThemeProvider theme={darkTheme==='' ? lightThemePalette: darkThemePalette}>
+            <div
                 style={{
-                    top: 10,
+                    position: 'absolute',
                     right: 0,
-                    width: 200,
+                    top: '0%',
+                    zIndex: 200,
+                    width: '100%',
+                    height: '100%',
+                    background: 'transparent',
                 }}
             >
-                <div className={`${style.notificationsContainer}`}>
-                    <h2 className={`${style.inboxTitle}`}>Notifications</h2>
-                    <div className={`${style.inboxTabs}`}>
-                        <button className={`${style.buttontab} ${allSection? activeClass:''} `} onClick={handleAllSection}>All activity</button>
-                        <button className={`${style.buttontab} ${likeSection? activeClass:''} `} onClick={handleLike}>Likes</button>
-                        <button className={`${style.buttontab} ${commentSection? activeClass:''} `} onClick={handleComment}>Comments</button>
-                        <button className={`${style.buttontab} ${tagSection? activeClass:''} `} onClick={handleTag}>Mentions and tags</button>
-                        <button className={`${style.buttontab} ${followerSection? activeClass:''}`} onClick={handlefollower}>Followers</button>
-                    </div>
+                <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
+                    <ListItemButton
+                        id="lock-button"
+                        aria-haspopup="listbox"
+                        aria-controls="lock-menu"
+                        //   aria-label="when device is locked"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClickListItem}
+                        style={{ background: 'transparent' }}
+                    ></ListItemButton>
+                </List>
+                <StyledMenu
+                    id="lock-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    classes={{ paper: 'no-scrollbar' }}
+                    MenuListProps={{
+                        'aria-labelledby': 'lock-button',
+                    }}
+                    style={{
+                        top: 10,
+                        right: 0,
+                        width: 200,
+                    }}
+                >
+                    <div className={`${style.notificationsContainer}`}>
+                        <span className={`${style.inboxTitle}`}>Notifications</span>
+                        <div className={`${style.inboxTabs}`}>
+                            <button className={`${style.buttontab} ${allSection ? activeClass : ''} `} onClick={handleAllSection}>All activity</button>
+                            <button className={`${style.buttontab} ${likeSection ? activeClass : ''} `} onClick={handleLike}>Likes</button>
+                            <button className={`${style.buttontab} ${commentSection ? activeClass : ''} `} onClick={handleComment}>Comments</button>
+                            <button className={`${style.buttontab} ${tagSection ? activeClass : ''} `} onClick={handleTag}>Mentions and tags</button>
+                            <button className={`${style.buttontab} ${followerSection ? activeClass : ''}`} onClick={handlefollower}>Followers</button>
+                        </div>
 
-                    <div className={`${style.inboxList} no-scrollbar`}>
+                        <div className={`${style.inboxList} no-scrollbar`}>
                             {likeSection ?
-                            (
-                                <div className={`${style.inboxNoLikes}`}>
-                                    <div className={`${style.inboxNoLikesInner}`}>
-                                        <FavoriteBorder style={{ fontSize: 60 }}/>
-                                        <p className={`${style.inboxBoldText}`}>Likes on your videos</p>
-                                        <p>When someone likes one of your videos, you'll see it here</p>
-                                    </div>
-                                </div>):
+                                (
+                                    <div className={`${style.inboxNoLikes}`}>
+                                        <div className={`${style.inboxNoLikesInner}`}>
+                                            <FavoriteBorder style={{ fontSize: 60 }} />
+                                            <p className={`${style.inboxBoldText}`}>Likes on your videos</p>
+                                            <p>When someone likes one of your videos, you'll see it here</p>
+                                        </div>
+                                    </div>) :
                                 (<><div></div></>)
-                            }   
+                            }
 
                             {commentSection ?
-                            (<div className={`${style.inboxNoComments}`}>
+                                (<div className={`${style.inboxNoComments}`}>
                                     <div className={`${style.inboxNoCommentsInner}`}>
-                                        <ChatBubbleOutlineSharp style={{ fontSize: 60 }}/>
+                                        <ChatBubbleOutlineSharp style={{ fontSize: 60 }} />
                                         <p className={`${style.inboxBoldText}`}>Comments on your videos</p>
                                         <p>When someone likes one of your comments, you'll see it here</p>
                                     </div>
-                                </div>):
+                                </div>) :
                                 (<><div></div></>)
-                            }     
-                                
+                            }
+
                             {tagSection ?
-                            (<div className={`${style.inboxNoMentions}`}>
+                                (<div className={`${style.inboxNoMentions}`}>
                                     <div className={`${style.inboxNoMentionsInner}`}>
-                                        <AlternateEmail style={{ fontSize: 60 }}/>
+                                        <AlternateEmail style={{ fontSize: 60 }} />
                                         <p className={`${style.inboxBoldText}`}>Mentions of you</p>
                                         <p>When someone mentions you, you'll see it here</p>
                                     </div>
                                 </div>
-                                ):
+                                ) :
                                 (<><div></div></>)
-                            }  
+                            }
 
                             {followerSection ?
-                            (<div className={`${style.inboxNoMentions}`}>
+                                (<div className={`${style.inboxNoMentions}`}>
                                     <div className={`${style.inboxNoMentionsInner}`}>
-                                        <AlternateEmail style={{ fontSize: 60 }}/>
+                                        <AlternateEmail style={{ fontSize: 60 }} />
                                         <p className={`${style.inboxBoldText}`}>Follow of you</p>
                                         <p>When someone follows you, you'll see it here</p>
                                     </div>
                                 </div>
-                                ):
+                                ) :
                                 (<><div></div></>)
-                            }   
-                    </div>
+                            }
+                        </div>
 
 
-                    
-                        {allSection && notification?.length > 0  ? (
+                        {allSection && notification?.length > 0 ? (
                             notification.map((noti: any, number: number) => {
                                 return (
-                       
+
                                     <div key={number}>
-                                    <div className={`${style.inboxList} no-scrollbar`}>
-                                    {/* <p className={`${style.inboxListDuration}`}>Today</p> */}
-                                    {(noti.type == "like") ? 
-                                        (
-                                            
-                                                <div className={`${style.notificationList}`}>
-                                                <div className={`${style.inboxListItem}`}>
-                                                    <div className={`${style.inboxListInner}`}>
-                                                        <div className={`${style.avatar}`}>
-                                                            <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar:defaultProfileIcon} alt="Profile image" />
+                                        <div className={`${style.inboxList} no-scrollbar`}>
+                                            {/* <p className={`${style.inboxListDuration}`}>Today</p> */}
+                                            {(noti.type == "like") ?
+                                                (
+
+                                                    <div className={`${style.notificationList}`}>
+                                                        <div className={`${style.inboxListItem}`}>
+                                                            <div className={`${style.inboxListInner}`}>
+                                                                <div className={`${style.avatar}`}>
+                                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                                                </div>
+                                                                <div className={`${style.gridLine}`}>
+                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    <p className={`${style.notificationContent}`}>liked your video.</p>
+                                                                </div>
+                                                            </div>
+                                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
                                                         </div>
-                                                        <div className={`${style.gridLine}`}>
-                                                        <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
-                                                        <p className={`${style.notificationContent}`}>liked your video.</p>
                                                     </div>
-                                                </div>
-                                                    {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                                </div>
-                                                </div>
-                                            
-                                        ):null}
-                                    
 
-                                    {(noti.type == "Comment") ? 
-                                        (
-                                        // <>
-                                        //     <p className={`${style.inboxListDuration}`}>Today</p>
-                                            <div className={`${style.notificationList}`}>
-                                            <div className={`${style.inboxListItem}`}>
-                                                <div className={`${style.inboxListInner}`}>
-                                                    <div className={`${style.avatar}`}>
-                                                        <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar:defaultProfileIcon} alt="Profile image" />
-                                                    </div>
-                                                    <div className={`${style.gridLine}`}>
-                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
-                                                    <p className={`${style.notificationContent}`}>commented on your video.</p>
-                                                </div>
-                                            </div>
-                                                {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                            </div>
-                                         </div>
-                                        // </>
-                                        ):null}
-                       
-                                    {(noti.type == "Follow") ? 
-                                        (
-                                        // <>
-                                        //     <p className={`${style.inboxListDuration}`}>Today</p>
-                                            <div className={`${style.notificationList}`}>
-                                            <div className={`${style.inboxListItem}`}>
-                                                <div className={`${style.inboxListInner}`}>
-                                                    <div className={`${style.avatar}`}>
-                                                        <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar:defaultProfileIcon} alt="Profile image" />
-                                                    </div>
-                                                    <div className={`${style.gridLine}`}>
-                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
-                                                    <p className={`${style.notificationContent}`}>Follows you.</p>
-                                                </div>
-                                            </div>
-                                                <button className={`${style.inboxFollow}`} onClick={() => {handleFollowBack(noti?.triggeredUser?._id) }}>Follow back</button>
-                                            </div>
-                                            </div>
-                                        // </>
-                                        ):null}
-
-                                {(noti.type == "Tag") ? 
-                                        (
-                                        // <>
-                                        //     <p className={`${style.inboxListDuration}`}>Today</p>
-                                            <div className={`${style.notificationList}`}>
-                                            <div className={`${style.inboxListItem}`}>
-                                                <div className={`${style.inboxListInner}`}>
-                                                    <div className={`${style.avatar}`}>
-                                                        <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar:defaultProfileIcon} alt="Profile image" />
-                                                    </div>
-                                                    <div className={`${style.gridLine}`}>
-                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
-                                                    <p className={`${style.notificationContent}`}>mention you.</p>
-                                                </div>
-                                            </div>
-                                                {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                            </div>
-                                            </div>
-                                        // </>
-                                        ):null}
+                                                ) : null}
 
 
-                                    {(noti.type == "Unknown Device Signin") ? 
-                                        (
-                                        // <>
-                                        //     <p className={`${style.inboxListDuration}`}>Today</p>
-                                            <div className={`${style.notificationList}`}>
-                                            <div className={`${style.inboxListItem}`}>
-                                                <div className={`${style.inboxListInner}`}>
-                                                    <div className={`${style.avatar}`}>
-                                                        <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar:defaultProfileIcon} alt="Profile image" />
+                                            {(noti.type == "Comment") ?
+                                                (
+                                                    // <>
+                                                    //     <p className={`${style.inboxListDuration}`}>Today</p>
+                                                    <div className={`${style.notificationList}`}>
+                                                        <div className={`${style.inboxListItem}`}>
+                                                            <div className={`${style.inboxListInner}`}>
+                                                                <div className={`${style.avatar}`}>
+                                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                                                </div>
+                                                                <div className={`${style.gridLine}`}>
+                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    <p className={`${style.notificationContent}`}>commented on your video.</p>
+                                                                </div>
+                                                            </div>
+                                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                                        </div>
                                                     </div>
-                                                    <div className={`${style.gridLine}`}>
-                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
-                                                    <p className={`${style.notificationContent}`}>Unknown device Signin.</p>
-                                                </div>
-                                            </div>
-                                                {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                            </div>
-                                            </div>
-                                        // </>
-                                        ):null}
+                                                    // </>
+                                                ) : null}
 
-                                {(noti.type != "Unknown Device Signin" && noti.type != "Tag" && noti.type != "Follow" && noti.type != "Comment" && noti.type != "Like") ? 
-                                        (
-                                        // <>
-                                        //     <p className={`${style.inboxListDuration}`}>Today</p>
-                                            <div className={`${style.notificationList}`}>
-                                            <div className={`${style.inboxListItem}`}>
-                                                <div className={`${style.inboxListInner}`}>
-                                                    <div className={`${style.avatar}`}>
-                                                        <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar:defaultProfileIcon} alt="Profile image" />
+                                            {(noti.type == "Follow") ?
+                                                (
+                                                    // <>
+                                                    //     <p className={`${style.inboxListDuration}`}>Today</p>
+                                                    <div className={`${style.notificationList}`}>
+                                                        <div className={`${style.inboxListItem}`}>
+                                                            <div className={`${style.inboxListInner}`}>
+                                                                <div className={`${style.avatar}`}>
+                                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                                                </div>
+                                                                <div className={`${style.gridLine}`}>
+                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    <p className={`${style.notificationContent}`}>Follows you.</p>
+                                                                </div>
+                                                            </div>
+                                                            <button className={`${style.inboxFollow}`} onClick={() => { handleFollowBack(noti?.triggeredUser?._id) }}>Follow back</button>
+                                                        </div>
                                                     </div>
-                                                    <div className={`${style.gridLine}`}>
-                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
-                                                    <p className={`${style.notificationContent}`}>{noti?.message}</p>
-                                                </div>
-                                            </div>
-                                                {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                            </div>
-                                            </div>
-                                        // </>
-                                        ):null}
-                                </div>
-                            </div>
-           
-                            )})):null}
-                            
+                                                    // </>
+                                                ) : null}
 
-                    {/* <div className={`${style.inboxList}`}>
+                                            {(noti.type == "Tag") ?
+                                                (
+                                                    // <>
+                                                    //     <p className={`${style.inboxListDuration}`}>Today</p>
+                                                    <div className={`${style.notificationList}`}>
+                                                        <div className={`${style.inboxListItem}`}>
+                                                            <div className={`${style.inboxListInner}`}>
+                                                                <div className={`${style.avatar}`}>
+                                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                                                </div>
+                                                                <div className={`${style.gridLine}`}>
+                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    <p className={`${style.notificationContent}`}>mention you.</p>
+                                                                </div>
+                                                            </div>
+                                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                                        </div>
+                                                    </div>
+                                                    // </>
+                                                ) : null}
+
+
+                                            {(noti.type == "Unknown Device Signin") ?
+                                                (
+                                                    // <>
+                                                    //     <p className={`${style.inboxListDuration}`}>Today</p>
+                                                    <div className={`${style.notificationList}`}>
+                                                        <div className={`${style.inboxListItem}`}>
+                                                            <div className={`${style.inboxListInner}`}>
+                                                                <div className={`${style.avatar}`}>
+                                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                                                </div>
+                                                                <div className={`${style.gridLine}`}>
+                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    <p className={`${style.notificationContent}`}>Unknown device Signin.</p>
+                                                                </div>
+                                                            </div>
+                                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                                        </div>
+                                                    </div>
+                                                    // </>
+                                                ) : null}
+
+                                            {(noti.type != "Unknown Device Signin" && noti.type != "Tag" && noti.type != "Follow" && noti.type != "Comment" && noti.type != "Like") ?
+                                                (
+                                                    // <>
+                                                    //     <p className={`${style.inboxListDuration}`}>Today</p>
+                                                    <div className={`${style.notificationList}`}>
+                                                        <div className={`${style.inboxListItem}`}>
+                                                            <div className={`${style.inboxListInner}`}>
+                                                                <div className={`${style.avatar}`}>
+                                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                                                </div>
+                                                                <div className={`${style.gridLine}`}>
+                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    <p className={`${style.notificationContent}`}>{noti?.message}</p>
+                                                                </div>
+                                                            </div>
+                                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                                        </div>
+                                                    </div>
+                                                    // </>
+                                                ) : null}
+                                        </div>
+                                    </div>
+
+                                )
+                            })) : null}
+
+
+                        {/* <div className={`${style.inboxList}`}>
                         <p className={`${style.inboxListDuration}`}>Today</p>
                         <div className={`${style.notificationList}`}>
                             <div className={`${style.inboxListItem}`}>
@@ -582,8 +596,9 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                             </div>
                         </div>
                     </div> */}
-                </div>
-            </StyledMenu>
-        </div>
+                    </div>
+                </StyledMenu>
+            </div>
+        </ThemeProvider>
     );
 }
