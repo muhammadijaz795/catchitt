@@ -156,37 +156,3 @@ function OverviewTab({ analyticsData }: any) {
 }
 
 export default OverviewTab
-
-
-// return (<div className="p-6 bg-gray-100 min-h-screen">
-//     {/* Top Metrics Section */}
-//     <div className="grid grid-cols-5 gap-4 mb-6">
-//         <div className="bg-white shadow rounded p-4 text-center">
-//             <p className="text-gray-600 text-sm">Video views</p>
-//             <p className="text-2xl font-bold">0</p>
-//             <p className="text-gray-400 text-sm">0 (--)</p>
-//         </div>
-//         <div className="bg-white shadow rounded p-4 text-center">
-//             <p className="text-gray-600 text-sm">Profile views</p>
-//             <p className="text-2xl font-bold">0</p>
-//             <p className="text-gray-400 text-sm">0 (--)</p>
-//         </div>
-//         <div className="bg-white shadow rounded p-4 text-center">
-//             <p className="text-gray-600 text-sm">Likes</p>
-//             <p className="text-2xl font-bold">0</p>
-//             <p className="text-gray-400 text-sm">0 (--)</p>
-//         </div>
-//         <div className="bg-white shadow rounded p-4 text-center">
-//             <p className="text-gray-600 text-sm">Comments</p>
-//             <p className="text-2xl font-bold">--</p>
-//             <p className="text-gray-400 text-sm">0 (--)</p>
-//         </div>
-//         <div className="bg-white shadow rounded p-4 text-center">
-//             <p className="text-gray-600 text-sm">Shares</p>
-//             <p className="text-2xl font-bold">0</p>
-//             <p className="text-gray-400 text-sm">0 (--)</p>
-//         </div>
-//     </div>
-
-// </div>
-// )     

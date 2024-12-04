@@ -1648,7 +1648,7 @@ export const Post: React.FC<PostProps> = memo(
                                             </div>
                                         </div>
                                         <Box sx={{ marginBottom: '32px' }}>
-                                            <Calculator />
+                                            <Calculator isDarkTheme={false} setCustomCoin={()=>{}} />
                                         </Box>
                                         <div
                                             className={styles.giftsBottomDiv2}
@@ -1702,7 +1702,7 @@ export const Post: React.FC<PostProps> = memo(
                                             </div>
                                         </div>
                                         <div className={styles.faqsContainer}>
-                                            <FaqContainer />
+                                            <FaqContainer isDarkTheme={false} />
                                         </div>
                                         <div>
                                             <button
