@@ -2,24 +2,29 @@ import { useEffect, useState } from 'react';
 import Layout from '../../shared/layout';
 import whiteRightArrow from './svg-components/whiteRightArrow.svg';
 import { useNavigate } from 'react-router-dom';
+import { ANALYTICSTABS } from '../../utils/constants';
+import OverviewTab from './OverviewTab';
+import ContentTab from './ContentTab';
+import ViewersTab from './ViewersTab';
+import FollowersTab from './FollowersTab';
+
 // import styles from './style.module.scss'
 const Analytics = () => {
-    const [currentTab, setCurrentTab] = useState(0);
+    const [currentTab, setCurrentTab] = useState(ANALYTICSTABS.OVERVIEW);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
-    const [startDate, setStartDate] = useState('02-1-2024');
-    const [endDate, setEndDate] = useState('03-18-2024');
-    const [videoViews, setVideoViews] = useState(0);
-    const [profileViews, setProfileViews] = useState(0);
-    const [likes, setLikes] = useState(0);
-    const [comments, setComments] = useState(0);
-    const [shares, setShares] = useState(0);
+    // const [startDate, setStartDate] = useState('02-1-2024');
+    // const [endDate, setEndDate] = useState('03-18-2024');
+    const [analyticsData, setAnalyticsData] = useState<any>('');
     const navigate = useNavigate();
 
-    const currentTabToggler = () => {
-        if (currentTab === 0) setCurrentTab(1);
-        else setCurrentTab(0);
-    };
+    const switchTab = (event:React.MouseEvent<HTMLAnchorElement>) => {
+        setCurrentTab(Number(event.currentTarget.id));
+    }
+
+    const today = new Date();
+    const startDate = `${today.getFullYear()}-${String(today.getMonth()).padStart(2, '0')}-01`;
+    const endDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     const getUserAnalytics = async () => {
         try {
@@ -35,12 +40,7 @@ const Analytics = () => {
             );
             const res = await response.json();
             const data = res?.data;
-
-            setVideoViews(data?.videoViews);
-            setProfileViews(data?.profileViews);
-            setLikes(data?.likes);
-            setComments(data?.comments);
-            setShares(data?.shares);
+            setAnalyticsData(data);
         } catch (error) {
             console.log('error trendinghashtags', error);
         }
@@ -60,140 +60,201 @@ const Analytics = () => {
 
     return (
         <Layout>
-            <div className="p-4">
-                <div
-                    onClick={currentTabToggler}
-                    className="flex flex-row justify-between items-center mt-8 gap-5 px-4"
-                >
-                    <div className="flex justify-center items-center flex-col flex-1 cursor-pointer">
-                        <p className="flex-1 text-pink-400 text-xl">Overview</p>
-                        {currentTab === 0 && (
-                            <div className="h-1 w-full bg-pink-500 mt-3 rounded" />
-                        )}
-                    </div>
-                    <div className="flex justify-center items-center flex-col flex-1 cursor-pointer">
-                        <p className="flex-1 text-pink-400 text-xl">Content</p>
-                        {currentTab === 1 && (
-                            <div className="h-1 w-full bg-pink-500 mt-3 rounded" />
-                        )}
+            <header className="text-gray-600 body-font bg-white border-b px-4">
+                <div className="flex flex-wrap flex-col md:flex-row items-center justify-between">
+                    <nav className="flex flex-wrap items-center text-base text-gray-400">
+                        <a onClick={switchTab} className={`${currentTab===ANALYTICSTABS.OVERVIEW?'text-gray-600 border-b border-gray-800':''} py-3 mr-5 hover:text-gray-900 cursor-pointer`} id={ANALYTICSTABS.OVERVIEW.toString()}>Overview</a>
+                        <a onClick={switchTab} className={`${currentTab===ANALYTICSTABS.CONTENT?'text-gray-600 border-b border-gray-800':''} py-3 mr-5 hover:text-gray-900 cursor-pointer`} id={ANALYTICSTABS.CONTENT.toString()}>Content</a>
+                        <a onClick={switchTab} className={`${currentTab===ANALYTICSTABS.VIEWERS?'text-gray-600 border-b border-gray-800':''} py-3 mr-5 hover:text-gray-900 cursor-pointer`} id={ANALYTICSTABS.VIEWERS.toString()}>Viewers</a>
+                        <a onClick={switchTab} className={`${currentTab===ANALYTICSTABS.FOLLOWERS?'text-gray-600 border-b border-gray-800':''} py-3 hover:text-gray-900 cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a>
+                    </nav>
+                    <div className="inline-flex lg:justify-end ml-5 lg:ml-0 my-2">
+                        <button className="inline-flex mx-2 items-center bg-gray-100  border-0 py-2 px-3 focus:outline-none hover:bg-gray-200 rounded-full text-sm">Last 7 Days &#129087;</button>
+                        <button className="inline-flex gap-1 items-center bg-gray-100  border-0 py-2 px-3 focus:outline-none hover:bg-gray-200 rounded-full text-sm">
+                            <svg
+                                fill="#000000"
+                                version="1.1"
+                                id="Capa_1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                viewBox="0 0 537.794 537.795"
+                                xmlSpace="preserve"
+                                width={15}
+                                height={15}
+                            >
+                                <g id="SVGRepo_bgCarrier" strokeWidth={0} />
+                                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
+                                <g id="SVGRepo_iconCarrier">
+                                    {" "}
+                                    <g>
+                                        {" "}
+                                        <g>
+                                            {" "}
+                                            <path d="M463.091,466.114H74.854c-11.857,0-21.497,9.716-21.497,21.497v28.688c0,11.857,9.716,21.496,21.497,21.496h388.084 c11.857,0,21.496-9.716,21.496-21.496v-28.688C484.665,475.677,474.949,466.114,463.091,466.114z" />{" "}
+                                            <path d="M253.94,427.635c4.208,4.208,9.716,6.35,15.147,6.35c5.508,0,11.016-2.142,15.147-6.35l147.033-147.033 c8.339-8.338,8.339-21.955,0-30.447l-20.349-20.349c-8.339-8.339-21.956-8.339-30.447,0l-75.582,75.659V21.497 C304.889,9.639,295.173,0,283.393,0h-28.688c-11.857,0-21.497,9.562-21.497,21.497v284.044l-75.658-75.659 c-8.339-8.338-22.032-8.338-30.447,0l-20.349,20.349c-8.338,8.338-8.338,22.032,0,30.447L253.94,427.635z" />{" "}
+                                        </g>{" "}
+                                    </g>{" "}
+                                </g>
+                            </svg>
+                            Download data
+                        </button>
                     </div>
                 </div>
-                {currentTab === 0 ? (
-                    <>
-                        <div className="flex flex-row justify-between items-center mt-10 ml-1">
-                            <p className="flex-1 font-bold text-lg text-left">May 06 - May 13</p>
-                            <div className="border border-pink-400 flex-1 rounded">
-                                <p className="p-1 text-pink-400">Last 7 days</p>
-                            </div>
-                        </div>
-                        <div className="text-left mt-3 flex flex-row items-center w-fit gap-2 ml-1">
-                            <span className="font-bold text-lg">Key Metrics</span>
-                            <div className="p-2 h-3 w-3 rounded-full border border-pink-400 flex justify-center items-center">
-                                <p className="text-sm font-normal text-pink-500">i</p>
-                            </div>
-                        </div>
-                        <div className="flex flex-row justify-between items-center mt-2 gap-4 cursor-pointer">
-                            <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
-                                <p className="text-white font-medium text-2xl">Video Views</p>
-                                <p className="text-white font-bold text-xl mt-2">{videoViews}</p>
-                            </div>
-                            <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
-                                <p className="text-white font-medium text-2xl">Profile Views</p>
-                                <p className="text-white font-bold text-xl mt-2">{profileViews}</p>
-                            </div>
-                        </div>
-                        <div className="flex flex-row justify-between items-center mt-4 gap-4 cursor-pointer">
-                            <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
-                                <p className="text-white font-medium text-2xl">Likes</p>
-                                <p className="text-white font-bold text-xl mt-2">{likes}</p>
-                            </div>
-                            <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
-                                <p className="text-white font-medium text-2xl">Comments</p>
-                                <p className="text-white font-bold text-xl mt-2">{comments}</p>
-                            </div>
-                        </div>
-                        <div className="flex flex-row justify-between items-center mt-4 mr-4 cursor-pointer">
-                            <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
-                                <p className="text-white font-medium text-2xl">Shares</p>
-                                <p className="text-white font-bold text-xl mt-2">{shares}</p>
-                            </div>
-                        </div>
-                        <div className="text-left mt-2 flex flex-row items-center w-fit gap-2 ">
-                            <span className="font-medium text-xl mt-3">Video Views</span>
-                        </div>
-                        <div className="mt-2 flex flex-row items-end justify-end">
-                            <p className="font-medium text-xl mt-3">1</p>
-                        </div>
-                        <div className="mt-2 flex flex-row items-center justify-between gap-2">
-                            <p className="flex-1">
-                                ------------------------------------------------------------------------------------------------------------
-                            </p>
-                            <p className="font-medium text-xl">0.5</p>
-                        </div>
-                        <div className="mt-2 flex flex-row items-center justify-between gap-2">
-                            <p className="flex-1">
-                                ------------------------------------------------------------------------------------------------------------
-                            </p>
-                            <p className="font-medium text-xl">0</p>
-                        </div>
-                        <div className="mt-2 flex flex-row items-center justify-between gap-2">
-                            <p className="flex-1">
-                                ------------------------------------------------------------------------------------------------------------
-                            </p>
-                            <p className="font-medium text-xl">-0.5</p>
-                        </div>
-                        <div className="mt-2 flex flex-row items-center justify-between gap-2">
-                            <p className="font-medium text-xl">0</p>
-                            <p className="font-medium text-xl">-1</p>
-                        </div>
-                        <div className="flex flex-row justify-between items-center mt-3">
-                            <p className="font-medium text-xl ">For your inspiration</p>
-                            <div className="flex flex-row items-center gap-1">
-                                <p className="font-medium text-pink-500">View All</p>
-                                <img
-                                    className="text-pink-500 h-4 w-4"
-                                    src={whiteRightArrow}
-                                    alt=""
-                                />
-                            </div>
-                        </div>
-                        <p className="font-medium text-base text-left mt-2 text-gray-400">
-                            Discover Trending videos similar to yours
-                        </p>
-                    </>
-                ) : (
-                    <>
-                        <div className="mt-12">
-                            <div className="text-left flex flex-row items-center w-fit gap-2 mt-4">
-                                <p className="font-bold text-xl">Video posts</p>
-                                <div className="p-2 h-3 w-3 rounded-full border border-pink-400 flex justify-center items-center">
-                                    <p className="text-sm font-normal text-pink-500">i</p>
-                                </div>
-                            </div>
-                            <p className="font-medium text-lg text-left mt-3 text-gray-400">
-                                You created 0 new posts in the last 7 days.
-                            </p>
-                            <div className="rounded-xl flex justify-center items-center bg-pink-500 w-fit py-2 px-3 mt-3 cursor-pointer" onClick={() => navigate('/upload')}>
-                                <p className="text-white text-lg font-normal">Create post</p>
-                            </div>
-                        </div>
-                        <div className="w-full bg-gray-400 h-[1px] rounded mt-6" />
-                        <div className="mt-4">
-                            <div className="text-left flex flex-row items-center w-fit gap-2 mt-4">
-                                <p className="font-bold text-xl">Trending videos</p>
-                                <div className="p-2 h-3 w-3 rounded-full border border-pink-400 flex justify-center items-center">
-                                    <p className="text-sm font-normal text-pink-500">i</p>
-                                </div>
-                            </div>
-                            <p className="font-medium text-lg text-left mt-3 text-gray-400">
-                                Last 7 days
-                            </p>
-                        </div>
-                    </>
-                )}
-            </div>
+            </header>
+
+            {(()=>{
+                switch(currentTab){
+                    case ANALYTICSTABS.OVERVIEW:
+                        return <OverviewTab analyticsData={analyticsData} />    
+                    case ANALYTICSTABS.CONTENT:
+                        return <ContentTab />
+                    case ANALYTICSTABS.VIEWERS:
+                        return <ViewersTab />
+                    case ANALYTICSTABS.FOLLOWERS:
+                        return <FollowersTab />
+                    default:
+                        return <OverviewTab analyticsData={analyticsData} />
+                }
+            })()}
         </Layout>
-    );
+    )
+
+    // return (
+    //     <Layout>
+    //         <div className="p-4">
+    //             <div
+    //                 onClick={currentTabToggler}
+    //                 className="flex flex-row justify-between items-center mt-8 gap-5 px-4"
+    //             >
+    //                 <div className="flex justify-center items-center flex-col flex-1 cursor-pointer">
+    //                     <p className="flex-1 text-pink-400 text-xl">Overview</p>
+    //                     {currentTab === 0 && (
+    //                         <div className="h-1 w-full bg-pink-500 mt-3 rounded" />
+    //                     )}
+    //                 </div>
+    //                 <div className="flex justify-center items-center flex-col flex-1 cursor-pointer">
+    //                     <p className="flex-1 text-pink-400 text-xl">Content</p>
+    //                     {currentTab === 1 && (
+    //                         <div className="h-1 w-full bg-pink-500 mt-3 rounded" />
+    //                     )}
+    //                 </div>
+    //             </div>
+    //             {currentTab === 0 ? (
+    //                 <>
+    //                     <div className="flex flex-row justify-between items-center mt-10 ml-1">
+    //                         <p className="flex-1 font-bold text-lg text-left">May 06 - May 13</p>
+    //                         <div className="border border-pink-400 flex-1 rounded">
+    //                             <p className="p-1 text-pink-400">Last 7 days</p>
+    //                         </div>
+    //                     </div>
+    //                     <div className="text-left mt-3 flex flex-row items-center w-fit gap-2 ml-1">
+    //                         <span className="font-bold text-lg">Key Metrics</span>
+    //                         <div className="p-2 h-3 w-3 rounded-full border border-pink-400 flex justify-center items-center">
+    //                             <p className="text-sm font-normal text-pink-500">i</p>
+    //                         </div>
+    //                     </div>
+    //                     <div className="flex flex-row justify-between items-center mt-2 gap-4 cursor-pointer">
+    //                         <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
+    //                             <p className="text-white font-medium text-2xl">Video Views</p>
+    //                             <p className="text-white font-bold text-xl mt-2">{analyticsData.videoViews}</p>
+    //                         </div>
+    //                         <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
+    //                             <p className="text-white font-medium text-2xl">Profile Views</p>
+    //                             <p className="text-white font-bold text-xl mt-2">{analyticsData.profileViews}</p>
+    //                         </div>
+    //                     </div>
+    //                     <div className="flex flex-row justify-between items-center mt-4 gap-4 cursor-pointer">
+    //                         <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
+    //                             <p className="text-white font-medium text-2xl">Likes</p>
+    //                             <p className="text-white font-bold text-xl mt-2">{analyticsData.likes}</p>
+    //                         </div>
+    //                         <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
+    //                             <p className="text-white font-medium text-2xl">Comments</p>
+    //                             <p className="text-white font-bold text-xl mt-2">{analyticsData.comments}</p>
+    //                         </div>
+    //                     </div>
+    //                     <div className="flex flex-row justify-between items-center mt-4 mr-4 cursor-pointer">
+    //                         <div className="h-56 w-1/2 bg-pink-500 rounded border border-gray-50 flex flex-col justify-center items-start p-4">
+    //                             <p className="text-white font-medium text-2xl">Shares</p>
+    //                             <p className="text-white font-bold text-xl mt-2">{analyticsData.shares}</p>
+    //                         </div>
+    //                     </div>
+    //                     <div className="text-left mt-2 flex flex-row items-center w-fit gap-2 ">
+    //                         <span className="font-medium text-xl mt-3">Video Views</span>
+    //                     </div>
+    //                     <div className="mt-2 flex flex-row items-end justify-end">
+    //                         <p className="font-medium text-xl mt-3">1</p>
+    //                     </div>
+    //                     <div className="mt-2 flex flex-row items-center justify-between gap-2">
+    //                         <p className="flex-1">
+    //                             ------------------------------------------------------------------------------------------------------------
+    //                         </p>
+    //                         <p className="font-medium text-xl">0.5</p>
+    //                     </div>
+    //                     <div className="mt-2 flex flex-row items-center justify-between gap-2">
+    //                         <p className="flex-1">
+    //                             ------------------------------------------------------------------------------------------------------------
+    //                         </p>
+    //                         <p className="font-medium text-xl">0</p>
+    //                     </div>
+    //                     <div className="mt-2 flex flex-row items-center justify-between gap-2">
+    //                         <p className="flex-1">
+    //                             ------------------------------------------------------------------------------------------------------------
+    //                         </p>
+    //                         <p className="font-medium text-xl">-0.5</p>
+    //                     </div>
+    //                     <div className="mt-2 flex flex-row items-center justify-between gap-2">
+    //                         <p className="font-medium text-xl">0</p>
+    //                         <p className="font-medium text-xl">-1</p>
+    //                     </div>
+    //                     <div className="flex flex-row justify-between items-center mt-3">
+    //                         <p className="font-medium text-xl ">For your inspiration</p>
+    //                         <div className="flex flex-row items-center gap-1">
+    //                             <p className="font-medium text-pink-500">View All</p>
+    //                             <img
+    //                                 className="text-pink-500 h-4 w-4"
+    //                                 src={whiteRightArrow}
+    //                                 alt=""
+    //                             />
+    //                         </div>
+    //                     </div>
+    //                     <p className="font-medium text-base text-left mt-2 text-gray-400">
+    //                         Discover Trending videos similar to yours
+    //                     </p>
+    //                 </>
+    //             ) : (
+    //                 <>
+    //                     <div className="mt-12">
+    //                         <div className="text-left flex flex-row items-center w-fit gap-2 mt-4">
+    //                             <p className="font-bold text-xl">Video posts</p>
+    //                             <div className="p-2 h-3 w-3 rounded-full border border-pink-400 flex justify-center items-center">
+    //                                 <p className="text-sm font-normal text-pink-500">i</p>
+    //                             </div>
+    //                         </div>
+    //                         <p className="font-medium text-lg text-left mt-3 text-gray-400">
+    //                             You created 0 new posts in the last 7 days.
+    //                         </p>
+    //                         <div className="rounded-xl flex justify-center items-center bg-pink-500 w-fit py-2 px-3 mt-3 cursor-pointer" onClick={() => navigate('/upload')}>
+    //                             <p className="text-white text-lg font-normal">Create post</p>
+    //                         </div>
+    //                     </div>
+    //                     <div className="w-full bg-gray-400 h-[1px] rounded mt-6" />
+    //                     <div className="mt-4">
+    //                         <div className="text-left flex flex-row items-center w-fit gap-2 mt-4">
+    //                             <p className="font-bold text-xl">Trending videos</p>
+    //                             <div className="p-2 h-3 w-3 rounded-full border border-pink-400 flex justify-center items-center">
+    //                                 <p className="text-sm font-normal text-pink-500">i</p>
+    //                             </div>
+    //                         </div>
+    //                         <p className="font-medium text-lg text-left mt-3 text-gray-400">
+    //                             Last 7 days
+    //                         </p>
+    //                     </div>
+    //                 </>
+    //             )}
+    //         </div>
+    //     </Layout>
+    // );
 };
 
 export default Analytics;

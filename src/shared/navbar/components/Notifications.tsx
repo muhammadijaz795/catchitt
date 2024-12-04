@@ -37,7 +37,16 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         message?: string;
     };
 
-    const [notification, setNotification] = useState<Notification[]>([]);
+    type Notify = {
+        all: Notification[],
+        like: Notification[],
+        comment: Notification[],
+        tag: Notification[],
+        follow: Notification[],
+        unknown: Notification[]
+    }
+
+    const [notification, setNotification] = useState<Notify>({ all: [], like: [], comment: [], tag: [], follow: [], unknown: [] });
     // const [notification, setNotification] = useState<Notification[]>([{type: 'like', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Comment', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." }, {type: 'Follow', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Tag', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Unknown Device Signin', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}]);
     const navigate = useNavigate();
 
@@ -199,8 +208,16 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                 const newNotificationList = Array.isArray(responseData.data.data)
                     ? (responseData.data.data as Notification[])
                     : [];
-
-                setNotification(responseData.data.data);
+                // setNotification(responseData.data.data);
+                const likeNotifications = newNotificationList.filter((noti:any) => noti.type === 'like');
+                const commentNotifications = newNotificationList.filter((noti:any) => noti.type === 'Comment');
+                const tagNotifications = newNotificationList.filter((noti:any) => noti.type === 'Tag');
+                const followNotifications = newNotificationList.filter((noti:any) => noti.type === 'Follow');
+                const unknownNotifications = newNotificationList.filter((noti:any) => noti.type === 'Unknown Device Signin');
+                setNotification({
+                    all: newNotificationList, like: likeNotifications, comment: commentNotifications, tag: tagNotifications, follow: followNotifications, unknown: unknownNotifications
+                });
+                console.log("notification", notification);
             } catch (error) {
                 console.error('Error fetching videos:', error);
             }
@@ -220,12 +237,17 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         }
 
         return () => {
-            setNotification([]);
+            setNotification({ all: [], like: [], comment: [], tag: [], follow: [], unknown: [] });
         };
 
     }, []);
 
+    useEffect(() => {
+        console.log("notification", notification);
+    }, [notification])
     
+
+
     const lightThemePalette = createTheme({
         palette: {
             mode: 'light',
@@ -239,7 +261,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     });
 
     return (
-        <ThemeProvider theme={darkTheme==='' ? lightThemePalette: darkThemePalette}>
+        <ThemeProvider theme={darkTheme === '' ? lightThemePalette : darkThemePalette}>
             <div
                 style={{
                     position: 'absolute',
@@ -288,30 +310,69 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                         </div>
 
                         <div className={`${style.inboxList} no-scrollbar`}>
-                            {likeSection ?
-                                (
-                                    <div className={`${style.inboxNoLikes}`}>
-                                        <div className={`${style.inboxNoLikesInner}`}>
-                                            <FavoriteBorder style={{ fontSize: 60 }} />
-                                            <p className={`${style.inboxBoldText}`}>Likes on your videos</p>
-                                            <p>When someone likes one of your videos, you'll see it here</p>
+                            {likeSection && (notification.like?.length > 0 ?
+                                notification.like.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                    <div className={`${style.inboxListItem}`}>
+                                        <div className={`${style.inboxListInner}`}>
+                                            <div className={`${style.avatar}`}>
+                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                            </div>
+                                            <div className={`${style.gridLine}`}>
+                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                <p className={`${style.notificationContent}`}>liked your video.</p>
+                                            </div>
                                         </div>
-                                    </div>) :
-                                (<><div></div></>)
+                                        {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                    </div>
+                                </div>)) :
+                                (<div className={`${style.inboxNoLikes}`}>
+                                    <div className={`${style.inboxNoLikesInner}`}>
+                                        <FavoriteBorder style={{ fontSize: 60 }} />
+                                        <p className={`${style.inboxBoldText}`}>Likes on your videos</p>
+                                        <p>When someone likes one of your videos, you'll see it here</p>
+                                    </div>
+                                </div>))
                             }
 
-                            {commentSection ?
+                            {commentSection && (notification.comment?.length > 0 ?
+                                notification.comment.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                    <div className={`${style.inboxListItem}`}>
+                                        <div className={`${style.inboxListInner}`}>
+                                            <div className={`${style.avatar}`}>
+                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                            </div>
+                                            <div className={`${style.gridLine}`}>
+                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                <p className={`${style.notificationContent}`}>commented on your video.</p>
+                                            </div>
+                                        </div>
+                                        {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                    </div>
+                                </div>)) :
                                 (<div className={`${style.inboxNoComments}`}>
                                     <div className={`${style.inboxNoCommentsInner}`}>
                                         <ChatBubbleOutlineSharp style={{ fontSize: 60 }} />
                                         <p className={`${style.inboxBoldText}`}>Comments on your videos</p>
                                         <p>When someone likes one of your comments, you'll see it here</p>
                                     </div>
-                                </div>) :
-                                (<><div></div></>)
+                                </div>))
                             }
 
-                            {tagSection ?
+                            {tagSection && (notification.tag?.length > 0 ?
+                                notification.tag.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                    <div className={`${style.inboxListItem}`}>
+                                        <div className={`${style.inboxListInner}`}>
+                                            <div className={`${style.avatar}`}>
+                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                            </div>
+                                            <div className={`${style.gridLine}`}>
+                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                <p className={`${style.notificationContent}`}>mention you.</p>
+                                            </div>
+                                        </div>
+                                        {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                    </div>
+                                </div> )) :
                                 (<div className={`${style.inboxNoMentions}`}>
                                     <div className={`${style.inboxNoMentionsInner}`}>
                                         <AlternateEmail style={{ fontSize: 60 }} />
@@ -319,11 +380,24 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                         <p>When someone mentions you, you'll see it here</p>
                                     </div>
                                 </div>
-                                ) :
-                                (<><div></div></>)
+                                ))
                             }
 
-                            {followerSection ?
+                            {followerSection && (notification.follow?.length > 0 ?
+                                notification.follow.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                    <div className={`${style.inboxListItem}`}>
+                                        <div className={`${style.inboxListInner}`}>
+                                            <div className={`${style.avatar}`}>
+                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
+                                            </div>
+                                            <div className={`${style.gridLine}`}>
+                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                <p className={`${style.notificationContent}`}>Follows you.</p>
+                                            </div>
+                                        </div>
+                                        <button className={`${style.inboxFollow}`} onClick={() => { handleFollowBack(noti?.triggeredUser?._id) }}>Follow back</button>
+                                    </div>
+                                </div> )) :
                                 (<div className={`${style.inboxNoMentions}`}>
                                     <div className={`${style.inboxNoMentionsInner}`}>
                                         <AlternateEmail style={{ fontSize: 60 }} />
@@ -331,14 +405,13 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                         <p>When someone follows you, you'll see it here</p>
                                     </div>
                                 </div>
-                                ) :
-                                (<><div></div></>)
+                                ))
                             }
                         </div>
 
 
-                        {allSection && notification?.length > 0 ? (
-                            notification.map((noti: any, number: number) => {
+                        {allSection && notification.all?.length > 0 ? (
+                            notification.all.map((noti: any, number: number) => {
                                 return (
 
                                     <div key={number}>

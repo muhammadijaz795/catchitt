@@ -258,3 +258,18 @@ export const EDIT_VIDEO_ACTIONS = [
 
 export const TRACKSLOTPERIODS = 8;
 export const TRACKSLOTDIFF = 4;
+
+export enum ANALYTICSTABS {
+    OVERVIEW,
+    CONTENT,
+    VIEWERS,
+    FOLLOWERS
+};
+
+export enum STATISTICSTABS {
+    VIDEO_VIEWS,
+    PROFILE_VIEWS,
+    LIKES,
+    COMMENTS,
+    SHARES
+}

@@ -28,6 +28,7 @@ import FollowingVideos from './FollowingVideos';
 import style from './index.module.scss';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import { activeLike, commentWhite, likeWhite, musicBlack, shareWhite } from '../../icons';
+import { getUpdatedVideoState } from '../../redux/AsyncFuncs';
 
 function FollowingPage() {
     const isMobile = useMediaQuery('(max-width:700px)');
@@ -54,6 +55,7 @@ function FollowingPage() {
     const [countryCodes, setCountryCodes] = useState([]);
     const [selectedCountryIndex, setSelectedCountryIndex] = useState<number>(-1);
     const API_KEY = process.env.VITE_API_URL;
+    const token = localStorage.getItem('token');
 
     // Input Values
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -488,6 +490,11 @@ function FollowingPage() {
         setCommentCount(commentCount);
         setShareCount(shareCount);
     };
+
+    useEffect(() => {
+        if (videoModal) return;
+        videoModalInfo?.mediaId && dispatch(getUpdatedVideoState({id:videoModalInfo.mediaId, isAuthentic:Boolean(token)}));
+      }, [videoModal,videoModalInfo])
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
