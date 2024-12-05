@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { STATISTICSTABS } from '../../../../utils/constants';
+import { POSTSTATISTICSTABS } from '../../../../utils/constants';
+import { commentOutline, commentOutlineWhite, filledComment, filledCommentWhite, filledHeart, filledHeartWhite, filledSave, filledSaveWhite, filledShare, filledShareWhite, heartOutline, heartOutlineWhite, play, playOutline, playOutlineWhite } from '../../../../icons';
 
 // {
 //     "status": 200,
@@ -23,16 +24,16 @@ import { STATISTICSTABS } from '../../../../utils/constants';
 //     }
 //   }
 
-function OverviewTab({ postAnalytics }: any) {
+function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
 
-    const [activeTab, setActiveTab] = useState(STATISTICSTABS.VIDEO_VIEWS)
+    const [activeTab, setActiveTab] = useState(POSTSTATISTICSTABS.VIDEO_VIEWS);
     const [chartData, setChartData] = useState<any>([])
 
     const switchTab = (event: React.MouseEvent<HTMLDivElement>) => {
         setActiveTab(Number(event.currentTarget.id));
     }
 
-    const possibleGraphs = [ 'viewsGraph', 'profileViewsGraph', 'likesGraph', 'commentsGraph', 'sharesGraph' ]
+    const possibleGraphs = ['viewsGraph', 'playtimeGraph', 'watchtimeGraph', 'fullwatchedGraph', 'newfollowersGraph']
 
     const prepareData = (data: any) => {
         // data in format like { 5: 1, 20: 6, 29: 1} { date: value }
@@ -40,7 +41,7 @@ function OverviewTab({ postAnalytics }: any) {
         if (dataArr.length === 0) return []
         const yAxisLabel = possibleGraphs[activeTab].replace('Graph', '')
         const result = dataArr.map(([key, value]) => {
-            const obj: { date: string; [key: string]: any } = { date: key }
+            const obj: { date: string;[key: string]: any } = { date: key }
             obj[yAxisLabel as string] = value;
             return obj
         })
@@ -48,24 +49,49 @@ function OverviewTab({ postAnalytics }: any) {
         return result
     }
 
+    const formatDate = (date: number) => {
+        if (!date) return '';
+        const d = new Date(date);
+        return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`
+    }
+
     useEffect(() => {
-        if(postAnalytics && activeTab) setChartData(prepareData(postAnalytics[possibleGraphs[activeTab]]));
+        // if(postAnalytics && activeTab) setChartData(prepareData(postAnalytics[possibleGraphs[activeTab]]));
     }, [activeTab])
 
     return (
         <div className='max-w-5xl mx-auto mt-8  overflow-hidden'>
+            {/* post data card  */}
+            <div className="bg-white rounded shadow-sm flex items-center justify-between p-3 mb-4">
+                <div className='flex items-center space-x-4'>
+                    <div className="w-14 h-24 bg-gray-200 rounded overflow-hidden">
+                        <img src={post?.thumbnailUrl} className='w-full h-full' alt="post-thumbnail" />
+                    </div>
+                    <div>
+                        <span>{post?.description?.length > 30 ? post?.description?.slice(0, 30) + '...' : ''}</span>
+                        <div className="text-gray-400 text-sm">{formatDate(post?.createdTime)} </div>
+                    </div>
+                </div>
+                <div className='flex gap-12 mr-3'>
+                    <div className="text-gray-400 flex-col"><img className='w-6' src={isDarkTheme ? playOutlineWhite : play} alt="like" /> <span>{postAnalytics?.views || 0}</span></div>
+                    <div className="text-gray-400 flex-col"><img className='w-6' src={isDarkTheme ? filledHeartWhite : filledHeart} alt="like" /> <span>{postAnalytics?.likes || 0}</span></div>
+                    <div className="text-gray-400 flex-col"><img className='w-6' src={isDarkTheme ? filledCommentWhite : filledComment} alt="like" /> <span>{postAnalytics?.comments || 0}</span></div>
+                    <div className="text-gray-400 flex-col"><img className='w-6' src={isDarkTheme ? filledShareWhite : filledShare} alt="like" /> <span>{postAnalytics?.shares || 0}</span></div>
+                    <div className="text-gray-400 flex-col"><img className='w-6' src={isDarkTheme ? filledSaveWhite : filledSave} alt="like" /> <span>{postAnalytics?.saves || 0}</span></div>
+                </div>
+            </div>
             {/* statistics card */}
             <div className='bg-white rounded shadow-sm'>
                 <div className='inline-flex w-full ' >
-                    <div onClick={switchTab} id={STATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.VIDEO_VIEWS ? 'border-t-red-500 border-t-4' : 'border-t border-b'} rounded-tl-md`}>Video views <br /><span className='text-2xl font-semibold'>{postAnalytics.videoViews || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.PROFILE_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.PROFILE_VIEWS ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Profile views <br /> <span className='text-2xl font-semibold'>{postAnalytics.profileViews || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.LIKES.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.LIKES ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Likes <br /> <span className='text-2xl font-semibold'>{postAnalytics.likes || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.COMMENTS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.COMMENTS ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Comments <br /> <span className='text-2xl font-semibold'>{postAnalytics.comments || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.SHARES.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.SHARES ? 'border-t-red-500 border-t-4' : 'border-t border-b'} rounded-tr-md`}>Shares <br /> <span className='text-2xl font-semibold'>{postAnalytics.shares || 0}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'border-t-red-500 border-t-4' : 'border-t border-b'} rounded-tl-md`}>Video views <br /><span className='text-2xl font-semibold'>{postAnalytics?.views || 0}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.TOTAL_PLAY_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Total play time <br /> <span className='text-2xl font-semibold'>{postAnalytics?.profileViews || 0}s</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.AVERAGE_WATCH_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Average watch time <br /> <span className='text-2xl font-semibold'>{postAnalytics?.likes || 0}s</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Watched full video <br /> <span className='text-2xl font-semibold'>{postAnalytics?.watchedFullVideo?.percentage || 0}%</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.NEW_FOLLOWERS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'border-t-red-500 border-t-4' : 'border-t border-b'} rounded-tr-md`}>New followers <br /> <span className='text-2xl font-semibold'>{postAnalytics?.reachedAudience?.count || 0}</span></div>
                 </div>
                 {/* Chart Section */}
                 <div className="m-4 border-t pt-6 mb-6 ">
-                    <div className={`${chartData.length?'h-64':'h-32'} flex items-center justify-center text-gray-400`}>
+                    <div className={`${chartData.length ? 'h-64' : 'h-32'} flex items-center justify-center text-gray-400`}>
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart
                                 data={chartData}
@@ -81,18 +107,18 @@ function OverviewTab({ postAnalytics }: any) {
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                {(()=>{
-                                    switch(activeTab) {
-                                        case STATISTICSTABS.VIDEO_VIEWS:
+                                {(() => {
+                                    switch (activeTab) {
+                                        case POSTSTATISTICSTABS.VIDEO_VIEWS:
                                             return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.PROFILE_VIEWS:
-                                            return <Line type="monotone" dataKey="profileViews" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.LIKES:
-                                            return <Line type="monotone" dataKey="likes" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.COMMENTS:
-                                            return <Line type="monotone" dataKey="comments" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.SHARES:
-                                            return <Line type="monotone" dataKey="shares" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                                        case POSTSTATISTICSTABS.TOTAL_PLAY_TIME:
+                                            return <Line type="monotone" dataKey="playtime" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                                        case POSTSTATISTICSTABS.AVERAGE_WATCH_TIME:
+                                            return <Line type="monotone" dataKey="watchtime" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                                        case POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE:
+                                            return <Line type="monotone" dataKey="fullwatched" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                                        case POSTSTATISTICSTABS.NEW_FOLLOWERS:
+                                            return <Line type="monotone" dataKey="newfollowers" stroke="#82ca9d" activeDot={{ r: 8 }} />
                                         default:
                                             return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
                                     }
@@ -107,11 +133,10 @@ function OverviewTab({ postAnalytics }: any) {
             <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white shadow-sm rounded">
                     <div className='py-2 px-4 border-b mb-4 text-left'>
-                        <span className="text-gray-600 text-sm">Traffic source</span>
+                        <span className="text-gray-600 text-sm">Retention rate</span>
                     </div>
                     <p className="text-gray-400 text-sm">
-                        You'll be able to see this information once there’s enough data for
-                        analysis.
+                        Most viewers stopped watching at 0:04. play the video below to see when they lost interest.
                     </p>
                     <ul className="mt-4 space-y-2 px-4 pb-4">
                         <li className="flex justify-between text-gray-400 text-sm">
@@ -138,11 +163,10 @@ function OverviewTab({ postAnalytics }: any) {
                 </div>
                 <div className="bg-white shadow-sm rounded">
                     <div className='py-2 px-3 border-b mb-4 text-left'>
-                        <span className="text-gray-600 text-sm mb-2">Search queries</span>
+                        <span className="text-gray-600 text-sm mb-2">Traffic source</span>
                     </div>
                     <p className="text-gray-400 text-sm">
-                        You'll be able to see this information once there’s enough data for
-                        analysis.
+                        Data will show when video views reach 100
                     </p>
                     <ul className="mt-4 space-y-2 px-4 pb-4">
                         <li className="flex justify-between text-gray-400 text-sm">

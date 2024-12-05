@@ -43,7 +43,7 @@ function ContentTab({ isDarkTheme }: any) {
       const controller = new AbortController();
       abortController.current = controller;
       const response = await fetch(
-        `${API_KEY}/profile/${userId}/videos?page=${posts.page}&pageSize=${posts.pageSize}`,
+        `${API_KEY}/profile/${'6397aca6561d39d318d07297'}/videos?page=${posts.page}&pageSize=${posts.pageSize}`,
         {
           method: 'GET',
           headers: {

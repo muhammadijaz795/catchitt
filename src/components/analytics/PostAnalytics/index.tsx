@@ -15,6 +15,7 @@ const PostAnalytics = () => {
     const token = localStorage.getItem('token');
 
     const [postAnalytics, setPostAnalytics] = useState<any>('');
+    const [postData, setPostData] = useState();
 
     const navigate = useNavigate();
     const { postId } = useParams();
@@ -44,9 +45,26 @@ const PostAnalytics = () => {
         }
     };
 
+    
+    const fetchPost = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/media-content/videos/${postId}`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (response.ok) {
+                const responseData = await response.json();
+                setPostData(responseData.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         if (!isValidDocId(postId)) navigate('/');
         getPostAnalytics();
+        fetchPost();
     }, [postId]);
 
     const [darkTheme, setdarkTheme] = useState<any>('');
@@ -79,7 +97,7 @@ const PostAnalytics = () => {
             {(()=>{
                 switch(currentTab){
                     case POSTANALYTICSTABS.OVERVIEW:
-                        return <OverviewTab postAnalytics={postAnalytics} />    
+                        return <OverviewTab postAnalytics={postAnalytics} post={postData} isDarkTheme={darkTheme} />    
                     case POSTANALYTICSTABS.VIEWERS:
                         return <ViewersTab />
                     case POSTANALYTICSTABS.ENGAGEMENT:

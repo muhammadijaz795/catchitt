@@ -152,8 +152,24 @@ import analyticsOutline from './assets/analytics_outline.svg';
 import analyticsOutlineWhite from './assets/analytics_outline_white.svg';
 import pencilOutline from './assets/pencil_outline.svg';
 import pencilOutlineWhite from './assets/pencil_outline_white.svg';
+import filledHeart from './assets/heart_filled.svg';
+import filledHeartWhite from './assets/heart_filled_white.svg';
+import filledComment from './assets/comment_filled.svg';
+import filledCommentWhite from './assets/comment_filled_white.svg';
+import filledShare from './assets/share_filled.svg';
+import filledShareWhite from './assets/share_filled_white.svg';
+import filledSave from './assets/save_filled.svg';
+import filledSaveWhite from './assets/save_filled_white.svg';
 
 export {
+    filledSave,
+    filledSaveWhite,
+    filledShare,
+    filledShareWhite,
+    filledComment,
+    filledCommentWhite,
+    filledHeart,
+    filledHeartWhite,
     commentOutlineDark,
     pencilOutlineWhite,
     pencilOutline,
