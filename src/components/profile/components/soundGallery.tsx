@@ -5,10 +5,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { CircularProgress } from '@mui/material';
 import { defaultAvatar } from "../../../icons";
 
-function SoundGallery() {
+function SoundGallery({ selectedAudio, setSelectedAudio }: any) {
     const abortController = useRef<AbortController | null>(null);
     const token = localStorage.getItem('token');
-    const [selectedAudio, setSelectedAudio] = useState<string | null>(null);
     const [gallery, setGallery] = useState<any>({ items: [], page: 1, pageSize: 10, isNextpage: true });
 
     const fetchPaginatedSounds = async () => {

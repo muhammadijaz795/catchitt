@@ -8,6 +8,8 @@ import { addIcon, addInWhite, leftArrowCurved, leftArrowCurvedinWhite, minusIcon
 import ReactSlider from "react-slider";
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 import { CircularProgress } from '@mui/material';
+import { addAudioToVideo } from '../../../utils/helpers';
+import AudioWaveForm from './AudioWaveForm';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -116,7 +118,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
       const container = playbackTrack.current;
       const containerRect = container.getBoundingClientRect();
       const cursorRect = cursorRef.current.getBoundingClientRect();
-  
+
       if (cursorRect.right + 80 > containerRect.right) {
         // Cursor is out of view on the right side, scroll forward
         container.scrollLeft += cursorRect.right - containerRect.right + 10 + 80; // Add padding for smoothness
@@ -124,8 +126,8 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
         // Cursor is out of view on the left side, scroll backward
         container.scrollLeft -= containerRect.left - cursorRect.left + 10; // Add padding for smoothness
       }
-    }  
-    
+    }
+
     return `${cursorPosition}px`;
   };
 
@@ -139,7 +141,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
       const offsetX = Math.min(Math.max(0, e.clientX - trackRect.left), trackWidth);
       const cursorPosition = playbackTrack.current.scrollLeft + offsetX;
       const boundedCursorPosition = Math.min(Math.max(0, cursorPosition), trackScrollWidth);
-      const newTime = ( boundedCursorPosition/ trackScrollWidth) * videoDuration;
+      const newTime = (boundedCursorPosition / trackScrollWidth) * videoDuration;
       setVideoCurrentTime(newTime);
       videoRef.current.currentTime = newTime;
       cursorRef.current.style.left = `${boundedCursorPosition}px`;
@@ -155,6 +157,23 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   useEffect(() => {
     console.log('thumbnails💖💖💖💖', thumbnails);
   }, [thumbnails])
+
+  const handleAudioManipulation = async () => {
+    try {
+      if (!selectedAudio) return;
+      const newVideo = await addAudioToVideo(targetVideo, selectedAudio);
+      console.log('newVideo', newVideo);
+      targetVideo = newVideo;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    if (!selectedAudio) return;
+    handleAudioManipulation();
+  }, [selectedAudio])
+
 
 
   return (
@@ -194,7 +213,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
                   <span onClick={switchAudioTab} id='Recommended' className={`${style.audioTab} ${audioTabSelected === 'Recommended' ? style.audioTabSelected : ''} font-medium`}>Recommended</span>
                   <span onClick={switchAudioTab} id='Favorites' className={`${style.audioTab} ${audioTabSelected === 'Favorites' ? style.audioTabSelected : ''} font-medium`}>Favorites</span>
                 </div>
-                <SoundGallery />
+                <SoundGallery selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio} />
               </div>
               {/* RIGHT VIDEO CONTAINER */}
               <div className={style.videoContainer}>
@@ -235,7 +254,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
             </div>
 
             {/* video playback track */}
-            {thumbnails.length?<div ref={playbackTrack} className="overflow-x-auto mb-3 relative" style={{ margin: '0 16px' }}>
+            {thumbnails.length ? <div ref={playbackTrack} className="overflow-x-auto mb-3 relative" style={{ margin: '0 16px' }}>
               {/* time label track */}
               <div className='flex'>
                 {thumbnails.map((_: any, index: number) => {
@@ -270,7 +289,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
                 style={{
                   position: "absolute",
                   top: "0",
-                  left:  getCursorPosition(),
+                  left: getCursorPosition(),
                   width: "2px",
                   height: "100%",
                   backgroundColor: "red",
@@ -287,20 +306,21 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
                 <div className='absolute -top-[5px] -left-[5px] w-[12px] h-[12px] bg-red-600 rounded-full cursor-pointer'></div>
               </div>
               {/* Sound container */}
-              <div className='w-full my-3 bg-gray-400 p-3 rounded'>
+              {selectedAudio ? <AudioWaveForm audioUrl={selectedAudio} /> : <div className='w-full my-3 bg-gray-400 p-3 rounded'>
+
                 <div className='flex gap-3'>
-                  <img src={isDarkTheme? music:musicBlack} alt="audio" />
-                  <span className={`text-lg font-semibold ${isDarkTheme?'text-gray-500':''}`}>Add sound</span>
+                  <img src={isDarkTheme ? music : musicBlack} alt="audio" />
+                  <span className={`text-lg font-semibold ${isDarkTheme ? 'text-gray-500' : ''}`}>Add sound</span>
                 </div>
-              </div>
-            </div>:
-            <div className='flex justify-center items-center h-40'>
-                  <CircularProgress style={{color:'red',height: '35px', width:'35px'}} />
-            </div>}
+              </div>}
+            </div> :
+              <div className='flex justify-center items-center h-40'>
+                <CircularProgress style={{ color: 'red', height: '35px', width: '35px' }} />
+              </div>}
             {/* footer section */}
             <div className="float-right px-3 mb-3">
-            <button className='mx-1' style={{ color: isDarkTheme?'#fff':'rgb(22, 24, 35)', backgroundColor: isDarkTheme?'#282828':'', borderColor: 'rgba(22, 24, 35, 0.12)', minWidth: '120px', }} onClick={handleClose}>Cancel</button>
-            <button className='mx-1' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '120px' }} autoFocus>Save edit</button>
+              <button className='mx-1' style={{ color: isDarkTheme ? '#fff' : 'rgb(22, 24, 35)', backgroundColor: isDarkTheme ? '#282828' : '', borderColor: 'rgba(22, 24, 35, 0.12)', minWidth: '120px', }} onClick={handleClose}>Cancel</button>
+              <button className='mx-1' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '120px' }} autoFocus>Save edit</button>
             </div>
           </div>
         </div>

@@ -1,5 +1,7 @@
 import { useSelector } from 'react-redux';
 import { BASE_URL_FRONTEND, showToast } from './constants';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile, toBlobURL } from '@ffmpeg/util'
 
 export const getProfile = () => {
     const token = useSelector((store: any) => store?.reducers?.profile);
@@ -101,3 +103,62 @@ export const formatCustomDate = (milliseconds:number) => {
     const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
     return `${month} ${day}, ${year}, ${formattedHours}:${formattedMinutes} ${ampm}`;
 }
+
+
+
+export const addAudioToVideo = async (videoBlob:Blob, audioFile: string) => {
+    try {
+
+        console.log('inside addAudioToVideo');
+        const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm'
+        const ffmpeg = new FFmpeg();
+        
+        // ffmpeg.on("log", ({ type, message }) => {
+        //     console.log(`${type}: ${message}`);
+        // });
+        
+        // ffmpeg.on("progress", ({ progress, time }) => {
+        //     console.log(`Processing: ${progress}% done`);
+        // });
+        
+        await ffmpeg.load({
+            coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+            wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+            workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
+        });
+        
+        console.log('inside addAudioToVideo 1');
+       
+        console.log('inside addAudioToVideo 2', status);
+    // Fetch video file from the URL and read it into FFmpeg
+        // const videoArrayBuffer = await videoBlob.arrayBuffer();
+
+    //   await ffmpeg.writeFile('input.mp4', new Uint8Array(videoArrayBuffer));
+    //   await ffmpeg.writeFile('input.mp3', await fetchFile(audioFile));
+        await ffmpeg.writeFile('input.mp4', await fetchFile(videoBlob));
+        await ffmpeg.writeFile('input.mp3', await fetchFile(audioFile));
+
+        await ffmpeg.exec(['-i', 'input.mp4', '-i', 'input.mp3', '-c:v', 'copy', '-c:a', 'aac', 'output.mp4']);
+         
+        const data = await ffmpeg.readFile('output.mp4');
+        console.log(data);
+        // @ts-ignore
+        return URL.createObjectURL(new Blob([data.buffer], {type: 'video/mp4'}));
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+// const addAudioToVideoURL = async (videoURL, audioURL) => {
+//     const ffmpeg = new FFmpeg();
+//     await ffmpeg.load();
+  
+//     await ffmpeg.writeFile('input.mp4', await fetchFile(videoURL));
+//     await ffmpeg.writeFile('input.mp3', await fetchFile(audioURL));
+  
+//     await ffmpeg.exec(['-i', 'input.mp4', '-i', 'input.mp3', '-c:v', 'copy', '-c:a', 'aac', 'output.mp4']);
+  
+//     const data = await ffmpeg.readFile('output.mp4');
+//     return URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+//   };
