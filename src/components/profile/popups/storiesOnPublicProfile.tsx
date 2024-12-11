@@ -4,8 +4,8 @@ import Slider from "react-slick";
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../../../store/authStore";
 import VideoPlayer from "./storyVideo";
-import { useParams } from "react-router-dom";
-import { deleteVideoIcon } from "../../../icons";
+import { useNavigate, useParams } from "react-router-dom";
+import { avgIcon, backArrow, crossClose, defaultAvatar, deleteVideoIcon, moreInWhite, nextArrow, pauseWhite, playWhite, prevArrow, report, storyHeart, storySend, volumeOff, volumeUp } from "../../../icons";
 const API_KEY = process.env.VITE_API_URL;
 
 function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
@@ -13,6 +13,8 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
     // const token = localStorage.getItem('token');
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+
+    const navigate = useNavigate();
 
     const auth = useAuthStore((state) => state._id);
     const [sliderIndex, setSliderIndex] = useState<any>(0)
@@ -25,7 +27,6 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
 
     const [beforeItems, setBeforeItems] = useState<any>([]);
     const [afterItems, setAfterItems] = useState<any>([]);
-
 
 
     const storiesData = [
@@ -109,18 +110,30 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
         if (!story.length) return;
         setStories(story);
     }, [story])
-    
 
+    const CustomPrevArrow = ({ onClick }: any) => (
+        <button className="custom-prev" onClick={onClick}>
+            <img src={prevArrow} alt="" />
+        </button>
+    );
+
+    const CustomNextArrow = ({ onClick }: any) => (
+        <button className="custom-next" onClick={onClick}>
+            <img src={nextArrow} alt="" />
+        </button>
+    );
 
     const settings = {
         dots: true,
         infinite: false,
-        arrows: true,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
         beforeChange: (oldIndex: any, newIndex: any) => handleBeforeChange(oldIndex, newIndex),
+        prevArrow: <CustomPrevArrow />, // Custom Previous Button
+        nextArrow: <CustomNextArrow />  // Custom Next Button
     };
+
     const handleBeforeChange = (oldIndex: any, newIndex: any) => {
         // Pause the video in the old slide before changing to the new slide
         const oldVideo: any = document.getElementById(`video-${oldIndex}`);
@@ -128,14 +141,18 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
             oldVideo.pause();
         }
     };
-    const handleVideoTimeUpdate = (event: any) => {
-        const video = event.target;
-        console.log("time updating")
-        const currentProgress = (video.currentTime / video.duration) * 100;
 
-        // setProgress(currentProgress);
+    const handleVideoTimeUpdate = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+        const video = (event.target as HTMLVideoElement);
+        console.dir(video);
+        const currentProgress = (video.currentTime / video.duration || 0) * 100;
+        setProgress(currentProgress);
     };
 
+    const handleLoadedMetadata = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+        const video = event.target as HTMLVideoElement;
+        console.log('Video duration:', video.duration);
+    };
 
     const handleAfterChange = (currentSlide: any) => {
         // Play the video in the new slide
@@ -147,6 +164,7 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
             // newVideo.addEventListener('timeupdate', updateProgress);
         }
     };
+
     const handlepause = () => {
         // const updateProgress = (event: any) => handleVideoTimeUpdate(event);
         const Video: any = document.getElementById(`video-${sliderIndex}`);
@@ -158,6 +176,7 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
             Video.play()
         }
     };
+
     const handlemute = () => {
         // const updateProgress = (event: any) => handleVideoTimeUpdate(event);
         const Video: any = document.getElementById(`video-${sliderIndex}`);
@@ -169,9 +188,6 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
             Video.muted = false
         }
     };
-
-
-
 
     const handleVideoEnded = () => {
         // Move to the next slide when the current video ends
@@ -193,6 +209,20 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
     //     }
     // }, [sliderIndex])
 
+    const getformattedHours = (createdTimeStamp: number) => {
+        if (!createdTimeStamp) return;
+        const diff = new Date().getTime() - new Date(createdTimeStamp).getTime();
+        const hours = Math.floor(diff / 1000 / 60 / 60);
+        if (hours >= 1) {
+            return `${hours}hr${hours > 9 ? 's' : ''} ago`;
+        }
+        const minutes = Math.floor(diff / 1000 / 60);
+        if (minutes >= 1) {
+            return `${minutes}min${minutes > 9 ? 's' : ''} ago`;
+        }
+        return 'Just now';
+    }
+
     return (
         <div className={style.popup}>
             <Modal open={Boolean(story?.length)}>
@@ -204,16 +234,16 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
                         <img onClick={() => {
                             onclose()
                             setSliderIndex(0)
-                        }} src="../../../../public/images/icons/storiesSec/close 1 (1).svg" alt="" />
+                        }} src={crossClose} alt="" />
 
                         <div className={style.storySideItems} style={{ justifyContent: 'flex-end' }}>
                             {beforeItems.map((item: any, index: number) => (
                                 <div className={style.sideItem} key={index}>
                                     {item && (
                                         <>
-                                            <img className={style.bgImage} src={item.thumbnailUrl} alt="" />
+                                            <img className={style.bgImage} src={item.thumbnailUrl || 'https://placehold.co/150x280'} alt="" />
                                             <div className={style.overlay}>
-                                                <img className={style.avatar} src={item.user?.avatar} alt="" />
+                                                <img onClick={() => navigate(`/profile/${item.user.username}`)} className={`${style.avatar} cursor-pointer`} src={item.user?.avatar || defaultAvatar} alt="" />
                                                 <h6 className={style.username}>@{item.user?.username}</h6>
                                             </div>
                                         </>
@@ -228,11 +258,13 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
                                     return (
                                         <div className={style.story} key={i}>
                                             <VideoPlayer
-                                                videoPath={story?.reducedVideoUrl?.length > 0 ? story?.reducedVideoUrl: story?.originalUrl}
+                                                videoPath={story?.reducedVideoUrl?.length > 0 ? story?.reducedVideoUrl : story?.originalUrl}
                                                 index={i}
                                                 onEnded={handleVideoEnded}
                                                 autoplay={i === sliderIndex}
                                                 onTimeUpdate={handleVideoTimeUpdate}
+                                                onLoadedMetadata={handleLoadedMetadata}
+                                                thumbnailUrl={story?.thumbnailUrl ? story?.thumbnailUrl : 'https://placehold.co/150x280/DDDDDD/DDDDDD/png'}
                                             />
                                             <div className={style.videoHeaders}>
                                                 <div className={style.inputsParent}>
@@ -246,32 +278,32 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
                                                     }
                                                 </div>
                                                 <div className={style.userData}>
-                                                    <img width={25} height={25} src={story?.user?.avatar} alt="" />
+                                                    <img className="cursor-pointer" onClick={() => navigate(`/profile/${story.user.username}`)} width={25} height={25} src={story?.user?.avatar || defaultAvatar} alt="avatar" />
                                                     <div>
                                                         <p>{story?.user?.name}</p>
-                                                        <p><img src="../../../../public/images/avg.svg" alt="" />{story?.user?.username}</p>
+                                                        <p><img src={avgIcon} alt="" />{story?.user?.username}</p>
                                                     </div>
-                                                    <p className={style.time}>2 hrs</p>
+                                                    <p className={style.time}>{getformattedHours(story?.createdTime)}</p>
                                                     {
                                                         isplaying ?
-                                                            <img onClick={handlepause} src="../../../../public/images/icons/storiesSec/Group (11).svg" alt="" />
+                                                            <img onClick={handlepause} src={pauseWhite} alt="" />
                                                             :
-                                                            <img onClick={handlepause} src="../../../../public/images/icons/storiesSec/pause.svg" alt="" />
+                                                            <img onClick={handlepause} src={playWhite} alt="" />
                                                     }
                                                     {
                                                         ismute ?
-                                                            <img onClick={handlemute} src="../../../../public/images/icons/storiesSec/Volume Up.svg" alt="" />
+                                                            <img onClick={handlemute} src={volumeUp} alt="" />
                                                             :
-                                                            <img onClick={handlemute} src="../../../../public/images/icons/storiesSec/Volume Off.svg" alt="" />
+                                                            <img onClick={handlemute} src={volumeOff} alt="" />
 
                                                     }
                                                     <img onClick={() => {
                                                         setDropdown(!dropdown)
-                                                    }} src="../../../../public/images/icons/storiesSec/Group (12).svg" alt="" />
+                                                    }} src={moreInWhite} alt="" />
                                                     {
                                                         dropdown ? <div className={style.dropdown}>
-                                                            <p onClick={() => {openReport()}} className="py-1"> <img src="../../../../public/images/icons/report.svg" alt="" />Report</p>
-                                                            {story?.user?._id===userId&&<p className="py-1"> <img src={deleteVideoIcon} alt="" />Delete</p>}
+                                                            <p onClick={() => { openReport() }} className="py-1"> <img src={report} alt="" />Report</p>
+                                                            {story?.user?._id === userId && <p className="py-1"> <img src={deleteVideoIcon} alt="" />Delete</p>}
                                                         </div> : null
                                                     }
 
@@ -279,8 +311,8 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
                                             </div>
                                             <div className={style.bottomSide}>
                                                 <input placeholder="Send message" type="text" />
-                                                <img src="../../../../public/images/icons/storiesSec/Heart.svg" alt="" />
-                                                <img src="../../../../public/images/icons/storiesSec/Send.svg" alt="" />
+                                                <img className="cursor-pointer" src={storyHeart} alt="" />
+                                                <img className="cursor-pointer" src={storySend} alt="" />
                                             </div>
                                         </div>
                                     )
@@ -293,9 +325,9 @@ function StoriesOnPublicProfile({ story, onclose, openReport }: any) {
                                 <div className={style.sideItem} key={index}>
                                     {item && (
                                         <>
-                                            <img className={style.bgImage} src={item.thumbnailUrl} alt="" />
+                                            <img className={style.bgImage} src={item.thumbnailUrl || 'https://placehold.co/150x280'} alt="" />
                                             <div className={style.overlay}>
-                                                <img className={style.avatar} src={item.user?.avatar} alt="" />
+                                                <img onClick={() => navigate(`/profile/${item.user.username}`)} className={`${style.avatar} cursor-pointer`} src={item.user?.avatar || defaultAvatar} alt="" />
                                                 <h6 className={style.username}>@{item.user?.username}</h6>
                                             </div>
                                         </>

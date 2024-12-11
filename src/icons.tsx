@@ -126,7 +126,9 @@ import google_play_Store from './assets/google_play_store.png';
 import apple_play_store from './assets/apple_play_store.png';
 import thumbnail from './assets/thumbnail.png'
 import play from './assets/play.svg';
+import playWhite from './assets/play_white.svg';
 import pause from './assets/pause.svg';
+import pauseWhite from './assets/pause_white.svg';
 import volumeMute from './assets/volume-mute.svg';
 import volumeUnmute from './assets/volume-unmute.svg';
 import block from './assets/block.svg';
@@ -161,8 +163,25 @@ import filledShare from './assets/share_filled.svg';
 import filledShareWhite from './assets/share_filled_white.svg';
 import filledSave from './assets/save_filled.svg';
 import filledSaveWhite from './assets/save_filled_white.svg';
-
+import crossClose from './assets/cross_close.svg';
+import avgIcon from './assets/avg.svg';
+import volumeUp from './assets/volume_up.svg';
+import volumeOff from './assets/volume_off.svg';
+import storyHeart from './assets/story_heart.svg';
+import storySend from './assets/story_send.svg';
+import prevArrow from './assets/prev_icon.svg';
+import nextArrow from './assets/next_icon.svg';
 export {
+    nextArrow,
+    prevArrow,
+    storySend,
+    storyHeart,
+    volumeOff,
+    volumeUp,
+    pauseWhite,
+    playWhite,
+    avgIcon,
+    crossClose,
     filledSave,
     filledSaveWhite,
     filledShare,

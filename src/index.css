@@ -363,3 +363,37 @@ a.customPlayBtn::after {
 }
 
 /* chat module play video btn css end  */
+
+
+.slider-container {
+  position: relative;
+  width: 80%;
+  margin: auto;
+}
+
+.custom-prev,
+.custom-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #e1434b;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.custom-prev {
+  left: -50px;
+}
+
+.custom-next {
+  right: -50px;
+}
+
+.custom-prev:hover,
+.custom-next:hover {
+  background-color: #bb2c2c;
+}
