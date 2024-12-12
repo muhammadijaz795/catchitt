@@ -87,7 +87,7 @@ export default function Discover() {
         const signal = controller.signal;
         const fetchVedios = async () => {
             setIsLoading(true);
-            // await getExplorePageData(signal);
+            await getExplorePageData(signal);
             setIsLoading(false);
         };
         fetchVedios();

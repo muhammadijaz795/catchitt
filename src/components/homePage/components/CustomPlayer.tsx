@@ -76,6 +76,27 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
         onMuteToggle();
     };
 
+    
+    useLayoutEffect(() => {
+
+        const adjustVideoSize = () => {
+            console.log('adjusting video size');
+            if (!window) return;
+            const { innerWidth, innerHeight } = window;
+            if (innerWidth < 700) return;
+            const aspectRatio = 16 / 9;
+            const videoWidth = innerHeight / aspectRatio;
+            const videoHeight = innerHeight - 80;
+            setVideoSize({ width: `${videoWidth}px`, height: `${videoHeight}px` });
+        }
+
+        window.addEventListener('resize', adjustVideoSize);
+        
+        return () => {
+            window.removeEventListener('resize', adjustVideoSize);
+        };
+    }, [])
+
     return (
         <div
             style={{
