@@ -276,7 +276,7 @@ function StoriesOnPublicProfile({ story, onclose, openReport, isDarkTheme }: any
                             {
                                 stories?.map((story: any, i: any) => {
                                     return (
-                                        <div className={style.story} key={i}>
+                                        <div className={`${style.story}`} key={i}>
                                             <VideoPlayer
                                                 videoPath={story?.reducedVideoUrl?.length > 0 ? story?.reducedVideoUrl : story?.originalUrl}
                                                 index={i}
