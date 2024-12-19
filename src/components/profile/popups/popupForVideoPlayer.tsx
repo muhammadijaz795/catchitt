@@ -124,6 +124,7 @@ export default function PopupForVideoPlayer({
     const [isPickerVisible, setPickerVisible] = useState(false);
     const [commentEmojiIndex, setCommentEmojiIndex] = useState(-1);
     const [isPrivacyModalOpened, setIsPrivacyModalOpened] = useState(false)
+    const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -360,6 +361,15 @@ export default function PopupForVideoPlayer({
             setMusicTitle(data?.sound?.title);
             setMusicLink(data?.sound?.url);
 
+            setPrivacyPrivilege({
+                allow_duet: data.allowDuet,
+                privacyOptions: {
+                    allowComments: data.privacyOptions.allowComments,
+                    allowDownload: data.privacyOptions.allowDownload,
+                    isOnlyMe: data.privacyOptions.isOnlyMe,
+                    isShareable: data.privacyOptions.isShareable,
+                },
+            })
         } catch (error) {
             console.log('🚀 ~ fetchMediaById ~ error:', error);
         }
@@ -635,6 +645,7 @@ export default function PopupForVideoPlayer({
         setIsReportElipsisVisible(false);
         setIsTooltipVisible(false);
         setCommentEmojiIndex(-1);
+        setPrivacyPrivilege(null);
         onclose();
     };
 
@@ -654,11 +665,16 @@ export default function PopupForVideoPlayer({
 
     useLayoutEffect(() => {
         if (videoModal) {
-            paginateComments();
+            // paginateComments();
             loadUserProfile();
             fetchMediaById(info?.mediaId);
         }
     }, [videoModal]);
+
+    useEffect(() => {
+      if (privacyPrivilege?.privacyOptions?.allowComments) paginateComments();
+    }, [privacyPrivilege])
+    
 
     const lightThemePalette = createTheme({
         palette: {
@@ -995,7 +1011,7 @@ export default function PopupForVideoPlayer({
                                     </div>
 
                                     {/* All comments section */}
-                                    <InfiniteScroll
+                                    {Boolean(privacyPrivilege)? privacyPrivilege?.privacyOptions?.allowComments?<InfiniteScroll
                                         dataLength={videoComments?.items?.length}
                                         next={paginateComments}
                                         hasMore={videoComments.items.length < videoComments?.totalItems || videoComments?.totalItems === null}
@@ -1568,7 +1584,11 @@ export default function PopupForVideoPlayer({
                                                 </div>
                                             </div>
                                         ))}
-                                    </InfiniteScroll>
+                                    </InfiniteScroll>:<div className="flex flex-row justify-center items-center mt-3">
+                                <p className="font-bold text-xl text-white">
+                                    Comments are disabled
+                                </p>
+                            </div>:''}
 
                                     {/* {isCommentsLoading && (
                                         <div
@@ -1584,8 +1604,8 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     )} */}
                                     {/* Add comment section */}
-                                    <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{ zIndex: 99 }}>
-                                        <div className="flex flex-row items-center">
+                                    {privacyPrivilege?.privacyOptions?.allowComments && <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{ zIndex: 99 }}>
+                                         <div className="flex flex-row items-center">
                                             <div
                                                 className={`bg-[#FFFFFF1F] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn()
                                                     ? 'focus-within:border-[#16182333]'
@@ -1719,7 +1739,7 @@ export default function PopupForVideoPlayer({
                                                 )}
                                             </div>
                                         )}
-                                    </div>
+                                    </div>}
                                 </div>
                             </div>
                         </div>

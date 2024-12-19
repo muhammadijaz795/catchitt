@@ -101,6 +101,7 @@ const VideoPage = () => {
     const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
     const [filteredUsers, setFilteredUsers] = useState<any>([]);
     const [isMentioning, setIsMentioning] = useState(false);
+    const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
 
     const dummyUsers = [
         { id: 1, name: 'John Doe', username: 'johndoe', avatar: avatar },
@@ -350,7 +351,19 @@ const VideoPage = () => {
             setIsLiked(data?.isLiked);
             setMusicTitle(data?.sound?.title);
             setMusicLink(data?.sound?.url);
+
+            setPrivacyPrivilege({
+                allow_duet: data.allowDuet,
+                privacyOptions: {
+                    allowComments: data.privacyOptions.allowComments,
+                    allowDownload: data.privacyOptions.allowDownload,
+                    isOnlyMe: data.privacyOptions.isOnlyMe,
+                    isShareable: data.privacyOptions.isShareable,
+                },
+            })
+
             setIsFirstRender(true);
+
         } catch (error) {
             console.log('🚀 ~ fetchMediaById ~ error:', error);
         }
@@ -415,7 +428,7 @@ const VideoPage = () => {
         setIsCommentsLoading(true);
         try {
             const response = await fetch(
-                `${API_KEY}/media-content${token?'':'/public'}/videos/${selectedVideoId ?? videoId
+                `${API_KEY}/media-content${token ? '' : '/public'}/videos/${selectedVideoId ?? videoId
                 }/comments?page=${fromStart ? 1 : videoComments.currentPage}&pageSize=${videoComments.pageSize}`,
                 {
                     method: 'GET',
@@ -432,7 +445,7 @@ const VideoPage = () => {
 
             // Append comments
             if (data?.data && Array.isArray(data?.data)) {
-                 // check first next page is available or not
+                // check first next page is available or not
                 if (data?.hasNextPage) {
                     videoCommentsObj.currentPage = fromStart ? 2 : videoCommentsObj.currentPage + 1;
                 }
@@ -881,11 +894,15 @@ const VideoPage = () => {
         if (isUserLoggedIn()) {
             loadAutoScrollPreference();
         }
-        paginateComments();
+        // paginateComments();
         loadUserProfile();
         fetchMediaById();
         getExplorePageData();
     }, []);
+
+    useEffect(() => {
+        if (privacyPrivilege?.privacyOptions?.allowComments) paginateComments();
+    }, [privacyPrivilege]);
 
     useUpdateEffect(() => {
         loadVideosOnArrowClicks();
@@ -1423,7 +1440,7 @@ const VideoPage = () => {
                             {videoComments?.totalItems ?? 0}{' '}
                             {videoComments?.totalItems ? 'comment' : 'comments'}
                         </p>
-                        <div className="flex flex-row items-start gap-3 mt-3">
+                        {privacyPrivilege?.privacyOptions?.allowComments && <div className="flex flex-row items-start gap-3 mt-3">
                             {/* Commenter avatar */}
                             {isUserLoggedIn() && (
                                 <div
@@ -1553,10 +1570,10 @@ const VideoPage = () => {
                                     </div>
                                 )}
                             </div>
-                        </div>
+                        </div>}
                     </div>
                     {/* All comments section */}
-                    <InfiniteScroll
+                    {Boolean(privacyPrivilege)?privacyPrivilege?.privacyOptions?.allowComments ? <InfiniteScroll
                         dataLength={videoComments?.items?.length}
                         next={paginateComments}
                         hasMore={videoComments.items.length < videoComments?.totalItems || videoComments?.totalItems === null}
@@ -2049,7 +2066,11 @@ const VideoPage = () => {
                                 </div>
                             </div>
                         ))}
-                    </InfiniteScroll>
+                    </InfiniteScroll> : <div className="flex flex-row justify-center items-center mt-3">
+                        <p className="font-bold text-xl">
+                            Comments are disabled
+                        </p>
+                    </div>:''}
                     {isCommentsLoading && (
                         <div
                             style={{
