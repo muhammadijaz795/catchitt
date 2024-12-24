@@ -40,13 +40,10 @@ function OverviewTab({ analyticsData, isDarkTheme }: any) {
         const yAxisLabel = possibleGraphs[activeTab].replace('Graph', '')
         const result = data.map((item: any) => {
 
-            // const obj = { date: item.date, [yAxisLabel]: item.count } 
-            // convert date in this format 12 Jan 2021 in above line
             const obj = { date: convertDateFormat(item.date), [yAxisLabel]: item.count }
 
             return obj
         })
-        console.log('result🤖🤖🤖', result)
         return result
     }
 
