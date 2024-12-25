@@ -311,7 +311,7 @@ export const SuggestedActivity = memo(
                                                           maxWidth: '150px',
                                                       }}
                                                      
-                                                  >{`${account.name} asdz`}</p>
+                                                  >{`${account.name}`}</p>
                                                   <h6
                                                       style={{
                                                           color: textColor,
