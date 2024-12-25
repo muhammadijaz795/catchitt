@@ -179,9 +179,10 @@ const StoryEditor = ({ file }: any) => {
             .then((res) => {
                 setIsPosting(false);
                 showToastSuccess('Story posted successfully');
-                setTimeout(() => {
-                    navigate('/profile');
-                }, 2000);
+                // setTimeout(() => {
+                //     navigate('/profile');
+                // }, 2000);
+                navigate('/profile');
             })
             .catch((err) => {
                 console.log(err);

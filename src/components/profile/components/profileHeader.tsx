@@ -157,13 +157,15 @@ const ProfileHeader: FunctionComponent<Props> = ({
     };
 
     // useEffect(() => {
-    //     loadProfile();
+    //     // loadProfile();
+    //     console.log("loadProfile 2",API_KEY);
     //     fetch(`${API_KEY}/media-content/stories/feed`, {
     //         method: 'GET',
     //         headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
     //     })
     //         .then((res) => res.json())
     //         .then((data) => {
+    //             console.log(data.data[0]);
     //             setStories(data.data[0].stories);
     //         })
     //         .catch((err) => {
