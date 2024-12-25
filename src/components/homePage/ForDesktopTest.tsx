@@ -54,7 +54,6 @@ function ForDesktopTest(props: any) {
     const [showCopyPopup, setshowCopyPopup] = useState(false);
     const [darkTheme, setdarkTheme] = useState('');
     const [isDarkTheme, setIsDarkTheme] = useState(false);
-    const [countFlag, setCountFlag] = useState(true);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
     // @ts-ignore
@@ -140,7 +139,7 @@ function ForDesktopTest(props: any) {
         }
     });
 
-    useEffect(() => {
+    useUpdateEffect(() => {
         // Function to fetch data from your API
         const fetchVideos = async () => {
             //   setLoading(true);
@@ -162,8 +161,7 @@ function ForDesktopTest(props: any) {
                 const token = localStorage.getItem('token');
                 // setLoadingVideo(true);
                 dispatch(addMoreVideos({ tab: activeTab, token, page: page }));
-                console.log('loadingVideo', loadingVideo, 'countFlag', countFlag);
-                setCountFlag(true);
+                console.log('loadingVideo', loadingVideo);
                 // setHasMore(newVideos.length > 0);
             } catch (error) {
                 console.error('Error fetching videos:', error);
@@ -198,8 +196,6 @@ function ForDesktopTest(props: any) {
                 canFetchVideos.current = false;
                 setLoadingVideo(true);
                 setPage((prevPage) => prevPage + 1);
-                setCountFlag(false);
-                console.log('countFlag', countFlag);
             }
         }
     };

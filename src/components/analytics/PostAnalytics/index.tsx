@@ -82,8 +82,8 @@ const PostAnalytics = () => {
                 <div className="flex flex-wrap flex-col md:flex-row items-center justify-between">
                     <nav className="flex flex-wrap items-center text-base text-gray-400">
                         <a onClick={switchTab} className={`${currentTab===POSTANALYTICSTABS.OVERVIEW?'text-gray-500 font-semibold border-b border-gray-800':''} py-3 mr-5 ${darkTheme===''?'hover:text-gray-900':'hover:text-white'} cursor-pointer`} id={POSTANALYTICSTABS.OVERVIEW.toString()}>Overview</a>
-                        <a onClick={switchTab} className={`${currentTab===POSTANALYTICSTABS.VIEWERS?'text-gray-500 font-semibold border-b border-gray-800':''} py-3 mr-5 ${darkTheme===''?'hover:text-gray-900':'hover:text-white'} cursor-pointer`} id={POSTANALYTICSTABS.VIEWERS.toString()}>Viewers</a>
-                        <a onClick={switchTab} className={`${currentTab===POSTANALYTICSTABS.ENGAGEMENT?'text-gray-500 font-semibold border-b border-gray-800':''} py-3 ${darkTheme===''?'hover:text-gray-900':'hover:text-white'} cursor-pointer`} id={POSTANALYTICSTABS.ENGAGEMENT.toString()}>Engagement</a>
+                        {/* <a onClick={switchTab} className={`${currentTab===POSTANALYTICSTABS.VIEWERS?'text-gray-500 font-semibold border-b border-gray-800':''} py-3 mr-5 ${darkTheme===''?'hover:text-gray-900':'hover:text-white'} cursor-pointer`} id={POSTANALYTICSTABS.VIEWERS.toString()}>Viewers</a> */}
+                        {/* <a onClick={switchTab} className={`${currentTab===POSTANALYTICSTABS.ENGAGEMENT?'text-gray-500 font-semibold border-b border-gray-800':''} py-3 ${darkTheme===''?'hover:text-gray-900':'hover:text-white'} cursor-pointer`} id={POSTANALYTICSTABS.ENGAGEMENT.toString()}>Engagement</a> */}
                     </nav>
                     <div className="inline-flex lg:justify-end ml-5 lg:ml-0 my-2">
                         {/* <button className="inline-flex mx-2 items-center bg-gray-100  border-0 py-2 px-3 focus:outline-none hover:bg-gray-200 rounded-full text-sm">Last 7 Days &#129087;</button> */}

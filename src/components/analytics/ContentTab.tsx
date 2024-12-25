@@ -72,21 +72,19 @@ function ContentTab({ isDarkTheme }: any) {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Manage your posts</h1>
-        <input
+        {/* <input
           type="text"
           placeholder="Search for post description"
           className={`border border-gray-300 rounded-lg p-2 w-64 ${isDarkTheme?'':'bg-white'}`}
-        />
+        /> */}
       </div>
       {/* Filters */}
-      <div className="flex space-x-4 mb-4">
+      {/* <div className="flex space-x-4 mb-4">
         <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
           <option>Sort by</option>
-          {/* Add sorting options */}
         </select>
         <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
           <option>All video views</option>
-          {/* Add filtering options */}
         </select>
         <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
           <option>All comments</option>
@@ -97,7 +95,7 @@ function ContentTab({ isDarkTheme }: any) {
         <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
           <option>All privacy</option>
         </select>
-      </div>
+      </div> */}
       {/* Posts Table */}
       <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} shadow rounded-lg`}>
         <table className="w-full text-left">

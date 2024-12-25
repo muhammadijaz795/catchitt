@@ -93,18 +93,18 @@ function CommentAnalytics() {
                             </div>
                             <p className="text-sm text-gray-500 text-left">11/3</p>
                             {/* Comment Input */}
-                            <textarea
+                            {/* <textarea
                                 className={`float-left w-4/5 ${isDarkTheme?'':'bg-gray-50'} p-3 border rounded focus:outline-none mt-4`}
                                 rows={3}
                                 placeholder="Reply to comment"
                                 defaultValue={""}
-                            />
+                            /> */}
                         </div>
                     </div>
 
                     
                     {/* Filters */}
-                    <div className="flex flex-wrap gap-4 mb-4">
+                    {/* <div className="flex flex-wrap gap-4 mb-4">
                         <input
                             type="text"
                             placeholder="Search for comment or username"
@@ -127,7 +127,7 @@ function CommentAnalytics() {
                             <option>Less than 100</option>
                             <option>100+</option>
                         </select>
-                    </div>
+                    </div> */}
                     {/* Date Filter */}
                     <div className="flex items-center mb-4 justify-end">
                         <label htmlFor="date-filter" className="mr-2 text-sm text-gray-500">

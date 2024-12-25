@@ -92,8 +92,8 @@ const Analytics = () => {
                         <nav className="flex flex-wrap items-center text-base text-gray-400">
                             <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.OVERVIEW ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.OVERVIEW.toString()}>Overview</a>
                             <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.CONTENT ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.CONTENT.toString()}>Content</a>
-                            <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.VIEWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.VIEWERS.toString()}>Viewers</a>
-                            <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a>
+                            {/* <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.VIEWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.VIEWERS.toString()}>Viewers</a> */}
+                            {/* <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a> */}
                         </nav>
                         <div className="inline-flex lg:justify-end ml-5 lg:ml-0 my-2">
                             <button

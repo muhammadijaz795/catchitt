@@ -54,6 +54,7 @@ import fullScreen from './svg-components/fullscreen.svg';
 // css
 import styles from './video-page.module.scss';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import HashtagText from '../../shared/hashTag/HashtagText';
 
 const VideoPage = () => {
     // hooks
@@ -1419,7 +1420,7 @@ const VideoPage = () => {
                         </div>
                         <div className="text-left mt-3 flex flex-row items-center justify-center w-fit gap-1">
                             <span className="font-semibold text-[0.938rem] text-[#2B5DB9] hover:underline cursor-pointer">
-                                {videoDescription}
+                                <HashtagText text={videoDescription} maxLength={300} />
                             </span>
                         </div>
                         <div className="flex flex-row items-center mt-1.5 gap-1 hover:underline cursor-pointer">

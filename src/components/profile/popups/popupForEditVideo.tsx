@@ -274,7 +274,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
               <div className={`${style.recommendedContainer} border-r border-gray-200 overflow-y-auto`}>
                 <div className={style.audioTabs}>
                   <span onClick={switchAudioTab} id='Recommended' className={`${style.audioTab} ${audioTabSelected === 'Recommended' ? style.audioTabSelected : ''} font-medium`}>Recommended</span>
-                  <span onClick={switchAudioTab} id='Favorites' className={`${style.audioTab} ${audioTabSelected === 'Favorites' ? style.audioTabSelected : ''} font-medium`}>Favorites</span>
+                  {/* <span onClick={switchAudioTab} id='Favorites' className={`${style.audioTab} ${audioTabSelected === 'Favorites' ? style.audioTabSelected : ''} font-medium`}>Favorites</span> */}
                 </div>
                 <SoundGallery selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio} />
               </div>
@@ -287,8 +287,8 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
             {/* bottom controls bar */}
             <div className={`${style.videoControlBar} border-b border-gray-200`}>
               <div className={style.prevNextArrows}>
-                <img src={isDarkTheme ? leftArrowCurvedinWhite : leftArrowCurved} alt="left-arrow-curved" />
-                <img src={isDarkTheme ? rightArrowCurvedinWhite : rightArrowCurved} alt="left-arrow-curved" />
+                {/* <img src={isDarkTheme ? leftArrowCurvedinWhite : leftArrowCurved} alt="left-arrow-curved" /> */}
+                {/* <img src={isDarkTheme ? rightArrowCurvedinWhite : rightArrowCurved} alt="left-arrow-curved" /> */}
               </div>
               <div className="flex items-center justify-between">
                 <img onClick={togglePlayback} id='playBtn' src={play} alt="play" className='mx-2' />

@@ -87,16 +87,16 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
                 </div>
             </div>
             {/* statistics card */}
-            <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} rounded shadow-sm`}>
+            <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} rounded shadow-sm mb-4`}>
                 <div className='inline-flex w-full ' >
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'border-t-red-500 border-t-4' : 'border-t border-b'} rounded-tl-md`}>Video views <br /><span className='text-2xl font-semibold'>{postAnalytics?.views || 0}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'border-t-red-500 border-t-4' : 'border-t border-b rounded-bl-md'} rounded-tl-md`}>Video views <br /><span className='text-2xl font-semibold'>{postAnalytics?.views || 0}</span></div>
                     <div onClick={switchTab} id={POSTSTATISTICSTABS.TOTAL_PLAY_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Total play time <br /> <span className='text-2xl font-semibold'>{postAnalytics?.profileViews || 0}s</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.AVERAGE_WATCH_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Average watch time <br /> <span className='text-2xl font-semibold'>{postAnalytics?.likes || 0}s</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Watched full video <br /> <span className='text-2xl font-semibold'>{postAnalytics?.watchedFullVideo?.percentage || 0}%</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.NEW_FOLLOWERS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'border-t-red-500 border-t-4' : 'border-t border-b'} rounded-tr-md`}>New followers <br /> <span className='text-2xl font-semibold'>{postAnalytics?.reachedAudience?.count || 0}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.AVERAGE_WATCH_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Share Video <br /> <span className='text-2xl font-semibold'>{postAnalytics?.shares || 0}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Watched full video <br /> <span className='text-2xl font-semibold'>{postAnalytics?.watchedFullVideo?.percentage || 100}%</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.NEW_FOLLOWERS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'border-t-red-500 border-t-4' : 'border-t border-b rounded-br-md'} rounded-tr-md`}>New followers <br /> <span className='text-2xl font-semibold'>{postAnalytics?.reachedAudience?.count || 0}</span></div>
                 </div>
                 {/* Chart Section */}
-                <div className="m-4 border-t pt-6 mb-6 ">
+                {/* <div className="m-4 border-t pt-6 mb-6 ">
                     <div className={`${chartData.length ? 'h-64' : 'h-32'} flex items-center justify-center text-gray-400`}>
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart
@@ -132,7 +132,7 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
+                </div> */}
 
             </div>
             {/* Bottom Metrics Section */}
