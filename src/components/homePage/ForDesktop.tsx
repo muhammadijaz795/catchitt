@@ -372,7 +372,7 @@ function ForDesktop(props: any) {
                                                             />
                                                         ) : followers?.data?.some(
                                                               (user: any) =>
-                                                                  user.follower_userID._id ===
+                                                                  user.followed_userID._id ===
                                                                   post?.user?._id
                                                           ) ? (
                                                             <svg
