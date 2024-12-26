@@ -22,7 +22,7 @@ const HashtagText = ({ text, maxLength }: { text: string, maxLength: number }) =
         return (
           <span
             key={index}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', textShadow:'2px 2px 2px rgb(0 0 0 / 50%)' }}
             onClick={() => navigateToHashtag(part.substring(1))}
           >
             {part}
@@ -33,7 +33,7 @@ const HashtagText = ({ text, maxLength }: { text: string, maxLength: number }) =
     });
   };
 
-  return <div>{parseTextWithHashtags(displayDesc(text))} {isTruncated&&<span className="cursor-pointer float-right" onClick={() => setIsExpanded(!isExpanded)}>{isExpanded?'less':'more'}</span>}</div>
+  return <div>{parseTextWithHashtags(displayDesc(text))} {isTruncated&&<span className="cursor-pointer float-right" style={{textShadow:'2px 2px 2px rgb(0 0 0 / 50%)'}} onClick={() => setIsExpanded(!isExpanded)}>{isExpanded?'less':'more'}</span>}</div>
 };
 
 export default HashtagText;

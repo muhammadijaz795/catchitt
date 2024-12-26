@@ -295,3 +295,8 @@ export const ANALYTICS_OVERVIEW_TIME_PERIODS = {
     'Last 180 days': 180,
     'Last 365 days': 365,
 };
+
+export const CUSTOM_BALANCE_LIMIT = {
+    'MIN': 30,
+    'MAX': 2500000
+}

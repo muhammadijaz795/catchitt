@@ -21,6 +21,7 @@ import CoinsCartModal from './coins-cart-modal';
 import PaymentMethodModal from './payment-method-modal';
 import PaymentSuccessModal from './payment-success-modal';
 import Layout from '../../../shared/layout';
+import { CUSTOM_BALANCE_LIMIT } from '../../../utils/constants';
 
 export interface BalancePageProps {
     className?: string;
@@ -79,6 +80,7 @@ const BalancePage = ({ className }: BalancePageProps) => {
     });
 
     const handleOpenCalculatorModal = () => {
+        setSelectedCoinsAmount((prev:any)=>({...prev, coinsAmount:0}))
         setOpenCalculatorModal(true);
     };
     const handleCloseCalculatorModal = () => {
@@ -89,6 +91,9 @@ const BalancePage = ({ className }: BalancePageProps) => {
         setOpenCartModal(false);
     };
     const rechargeClick = () => {
+        if (selectedCoinsAmount.coinsAmount < CUSTOM_BALANCE_LIMIT.MIN) {
+            setSelectedCoinsAmount((prev:any)=>({...prev, coinsAmount:CUSTOM_BALANCE_LIMIT.MIN}))
+        }
         setOpenCartModal(true);
     };
 
@@ -336,7 +341,7 @@ const BalancePage = ({ className }: BalancePageProps) => {
                                                     </div>
                                                 </div>
                                                 <Box sx={{ marginBottom: '32px' }}>
-                                                    <Calculator isDarkTheme={!!darkTheme} setCustomCoin={setSelectedCoinsAmount} />
+                                                    <Calculator isDarkTheme={!!darkTheme} setCustomCoin={setSelectedCoinsAmount} coins={selectedCoinsAmount.coinsAmount} />
                                                 </Box>
                                                 <div
                                                     className={styles.giftsBottomDiv2}

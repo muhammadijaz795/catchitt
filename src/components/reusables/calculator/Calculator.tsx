@@ -2,10 +2,18 @@ import * as math from 'mathjs';
 import React, { useEffect, useState } from 'react';
 import backspaceIcon from '../../../assets/backspaceIcon.png';
 import './calculator.css';
+import { CUSTOM_BALANCE_LIMIT } from '../../../utils/constants';
 
-export default function Calculator({isDarkTheme, setCustomCoin}:{isDarkTheme:boolean, setCustomCoin:Function}) {
-    const [result, setResult] = useState<string>('');
+export default function Calculator({isDarkTheme, setCustomCoin, coins}:{isDarkTheme:boolean, setCustomCoin:Function, coins:number}) {
+    const [result, setResult] = useState<string>(coins.toString());
     const [selectedOperator, setSelectedOperator] = useState<string>('');
+
+    const checkCustomLimit = (value: string) => {
+        const { MAX, MIN } = CUSTOM_BALANCE_LIMIT;
+        const inLimitValue = Math.min(MAX, Number(value));
+        return inLimitValue.toString();
+    }
+        
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         const buttonName = e.currentTarget.getAttribute('name') || '';
@@ -19,21 +27,21 @@ export default function Calculator({isDarkTheme, setCustomCoin}:{isDarkTheme:boo
             } else if (!selectedOperator) {
                 // Otherwise, select the operator and append it to the result
                 setSelectedOperator(buttonName);
-                setResult(result.concat(buttonName));
+                setResult(checkCustomLimit(result.concat(buttonName)));
             }
         } else {
             // If a number button is clicked
             if (selectedOperator) {
                 // If an operator is already selected, append the number to the result after the operator
                 if (result.slice(-1) === selectedOperator) {
-                    setResult(result.concat(buttonName));
+                    setResult(checkCustomLimit(result.concat(buttonName)));
                 } else {
                     setResult(result + selectedOperator + buttonName);
                 }
                 setSelectedOperator('');
             } else {
                 // Otherwise, simply append the number to the result
-                setResult(result.concat(buttonName));
+                setResult(checkCustomLimit(result.concat(buttonName)));
             }
         }
     };
@@ -63,6 +71,10 @@ export default function Calculator({isDarkTheme, setCustomCoin}:{isDarkTheme:boo
             setCustomCoin((prev:any)=>({...prev, coinsAmount:result}))
         }
     }, [result])
+
+    useEffect(() => {
+        setResult(coins.toString())
+    }, [coins])
     
     return (
         <div className="container">
