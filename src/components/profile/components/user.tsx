@@ -36,7 +36,7 @@ const User: React.FC<{
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.follower_userID?.avatar || defaultAvatar}
+                            srcSet={user?.followed_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
                         <Link
@@ -44,9 +44,9 @@ const User: React.FC<{
                                 console.log('afff');
                                 popupClose();
                             }}
-                            to={'/profile/' + user?.follower_userID?.username}
+                            to={'/profile/' + user?.followed_userID?.username}
                         >
-                            <span className={styles['div-20']}>{user?.follower_userID?.name}</span>
+                            <span className={styles['div-20']}>{user?.followed_userID?.name}</span>
                         </Link>
                     </div>
                     <div onClick={follow} className={styles['div-21']}>

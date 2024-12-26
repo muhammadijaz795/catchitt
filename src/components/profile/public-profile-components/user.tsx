@@ -65,7 +65,7 @@ const PublicUser: React.FC<{
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.follower_userID?.avatar || defaultAvatar}
+                            srcSet={user?.followed_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
                         <Link

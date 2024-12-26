@@ -12,7 +12,7 @@ const UnfollowPopup = ({ openUnfollowPopup, onUnfollow, onCancel, user }: any) =
     const handleFollowClick = async () => {
         setLoading(true);
 
-        const accountId = user?.follower_userID?._id;
+        const accountId = user?.followed_userID?._id;
         const token = localStorage.getItem('token');
 
         if (token) {
