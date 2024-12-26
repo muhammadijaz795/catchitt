@@ -407,7 +407,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <Link to="/about/community-guidelines" target="_blank" className={styles.ALinkStyledNavLink} >About</Link>
                         <Link to="/contactus"  target="_blank" className={styles.ALinkStyledNavLink} >Contact</Link>
                         {/* <Link to="/https://help.seezitt.com/newsroom"  target="_blank" className={styles.ALinkStyledNavLink} >Newsroom</Link> */}
-                        <Link to="/https://help.seezitt.com/career"  target="_blank" className={styles.ALinkStyledNavLink} >Career</Link>
+                        <Link to="https://help.seezitt.com"  target="_blank" className={styles.ALinkStyledNavLink} >Career</Link>
                     </div>}
                     <h4 className={`${styles.sideBarLinks} ${activeProgramClass? activeClass:''}`} onClick={(e)=> {setActiveProgramClass(!activeProgramClass)}} >Program</h4>
                     {activeProgramClass && <div className={styles.DivLinkContainer}>
