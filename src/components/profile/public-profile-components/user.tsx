@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './user.module.scss';
 import { defaultAvatar } from '../../../icons';
 import UnfollowPopup from '../components/unfollow-popup';
@@ -50,6 +50,11 @@ const PublicUser: React.FC<{
         }
     };
 
+    useEffect(() => {
+        console.log('🚀🚀🚀user 1234',user)
+    }, [user])
+    
+
     return (
         <>
             <div className={styles.user}>
@@ -60,7 +65,7 @@ const PublicUser: React.FC<{
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.followed_userID?.avatar || defaultAvatar}
+                            srcSet={user?.follower_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
                         <Link

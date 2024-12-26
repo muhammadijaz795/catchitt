@@ -196,7 +196,7 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                     }
                     {followings?.data?.length > 0 &&
                         followings?.data?.some(
-                            (user: any) => user.followed_userID._id === params?.id
+                            (user: any) => user.follower_userID._id === params?.id
                         ) ? (
                         <button
                             style={{ width: 116 }}

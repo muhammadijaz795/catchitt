@@ -12,7 +12,7 @@ const UnfollowPopup = ({ openUnfollowPopup, onUnfollow, onCancel, user }: any) =
     const handleFollowClick = async () => {
         setLoading(true);
 
-        const accountId = user?.followed_userID?._id;
+        const accountId = user?.follower_userID?._id;
         const token = localStorage.getItem('token');
 
         if (token) {
@@ -40,6 +40,7 @@ const UnfollowPopup = ({ openUnfollowPopup, onUnfollow, onCancel, user }: any) =
             }
         }
     };
+    
     return (
         <Modal
             open={openUnfollowPopup}
@@ -63,7 +64,7 @@ const UnfollowPopup = ({ openUnfollowPopup, onUnfollow, onCancel, user }: any) =
                             width: '100px',
                             borderRadius: '50%',
                         }}
-                        srcSet={user?.followed_userID?.avatar || defaultAvatar}
+                        srcSet={user?.follower_userID?.avatar || defaultAvatar}
                         alt=""
                     />
                     <p
@@ -72,7 +73,7 @@ const UnfollowPopup = ({ openUnfollowPopup, onUnfollow, onCancel, user }: any) =
                         }}
                     >
                         If you changed your mind you will have to request to follow{' '}
-                        {user?.followed_userID?.name} aggain.
+                        {user?.follower_userID?.name} aggain.
                     </p>
 
                     <Button

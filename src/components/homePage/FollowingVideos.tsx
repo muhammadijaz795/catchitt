@@ -415,7 +415,7 @@ function FollowingVideos(props: any) {
                                                             />
                                                         ) : followers?.data?.some(
                                                               (user: any) =>
-                                                                  user.followed_userID._id ===
+                                                                  user.follower_userID._id ===
                                                                   post?.user?._id
                                                           ) ? (
                                                             <svg

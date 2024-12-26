@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './user.module.scss';
 import { defaultAvatar } from '../../../icons';
 import UnfollowPopup from './unfollow-popup';
@@ -22,6 +22,10 @@ const User: React.FC<{
         window.location.reload();
     };
 
+    // useEffect(() => {
+    //     console.log('🚀🚀🚀user 1234', user)
+    // }, [user])
+
     return (
         <>
             <div className={styles.user}>
@@ -32,7 +36,7 @@ const User: React.FC<{
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.followed_userID?.avatar || defaultAvatar}
+                            srcSet={user?.follower_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
                         <Link
@@ -40,9 +44,9 @@ const User: React.FC<{
                                 console.log('afff');
                                 popupClose();
                             }}
-                            to={'/profile/' + user?.followed_userID?.username}
+                            to={'/profile/' + user?.follower_userID?.username}
                         >
-                            <span className={styles['div-20']}>{user?.followed_userID?.name}</span>
+                            <span className={styles['div-20']}>{user?.follower_userID?.name}</span>
                         </Link>
                     </div>
                     <div onClick={follow} className={styles['div-21']}>

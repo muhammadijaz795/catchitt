@@ -49,7 +49,7 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any }>
             }
         }
     };
-
+    
     return (
         <>
             <div className={styles.user}>
@@ -60,11 +60,11 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any }>
                                 borderRadius: '50%',
                             }}
                             loading="lazy"
-                            srcSet={user?.follower_userID?.avatar || defaultAvatar}
+                            srcSet={user?.followed_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
                         />
-                        <Link onClick={popupClose} to={'/profile/' + user?.follower_userID?.username}>
-                            <span className={styles['div-20']}>{user?.follower_userID?.name}</span>
+                        <Link onClick={popupClose} to={'/profile/' + user?.followed_userID?.username}>
+                            <span className={styles['div-20']}>{user?.followed_userID?.name}</span>
                         </Link>
                     </div>
                     <div onClick={remove} style={button}>
