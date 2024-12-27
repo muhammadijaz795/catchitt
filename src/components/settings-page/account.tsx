@@ -110,7 +110,7 @@ const Account = ({ className, openModal }: AccountProps) => {
     const forgotPwdEndPoint = '/auth';
     const signInEndPoint = '/auth/sign-in';
     const { login } = useAuthStore();
-    const { token, email } = useSelector((store: any) => store?.reducers?.profile);
+    const { token, email, registerType } = useSelector((store: any) => store?.reducers?.profile);
     const [response, setResponse] = useState(false);
     const [oldPassword, setOldPassword] = useState('');
     const [responseResult, setResponseResult] = useState('');
@@ -152,6 +152,7 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [openReportsModal, setOpenReportsModal] = useState(false);
     const [openReportSubmittedModal, setOpenReportSubmittedModal] = useState(false);
     const [reportMessage, setReportMessage] = useState('');
+    const [showReportError, setShowReportError] = useState(false);
 
     const [lightdarkTheme, setlightdarkTheme] = useState('');
     const [themeColor, setThemeColor] = useState('');
@@ -325,6 +326,8 @@ const Account = ({ className, openModal }: AccountProps) => {
     // };
 
     const submitReportHandler = () => {
+        if (!reportMessage.length) return setShowReportError(true);
+        else setShowReportError(false);
         setOpenReportsModal(false);
         setOpenReportSubmittedModal(true);
         images.forEach((element: any) => { });
@@ -662,7 +665,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     </div>
                                     <img src={whiteRightArrow} alt="" />
                                 </div>
-                                <div
+                                {!['Google', 'Apple', 'Facebook'].some(type=>type===registerType) && <div
                                     className={styles.accountCards}
                                     onClick={handleOpenChangePassMainModal}
                                 >
@@ -671,7 +674,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <p>Change Password</p>
                                     </div>
                                     <img src={whiteRightArrow} alt="" />
-                                </div>
+                                </div>}
                                 <div
                                     className={styles.accountCards}
                                     onClick={() => navigate('/settings/account/privacy-settings')}
@@ -1501,12 +1504,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     Tell us your problem
                                 </p>
                                 <textarea
-                                    className={`w-[478px] h-[214px] border border-gray-300 rounded-lg p-3 mb-4 resize-none ${darkTheme !== '' ? 'bg-black' : 'bg-white'}`}
+                                    className={`w-[478px] h-[214px] border border-gray-300 rounded-lg p-3 resize-none ${darkTheme !== '' ? 'bg-black' : 'bg-white'}`}
                                     placeholder="Please provide as much detail as possible"
                                     value={reportMessage}
                                     onChange={(e) => setReportMessage(e.target.value)}
                                 />
-                                <p className="font-medium text-lg mb-4">
+                                {showReportError && <p className='text-red-600 text-sm font-semibold'>Please provide report details!</p>}
+                                <p className="font-medium text-lg my-4 ">
                                     Upload supporting media
                                 </p>
                                 {/* <div className="flex flex-row items-center rounded-md gap-2 border-[1.5px] px-3.5 py-2 mb-4">
@@ -1538,6 +1542,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             )
                                         )}
                                         {images.length < 4 && (
+                                            <label htmlFor="fileToUpload">
                                             <div
                                                 // onClick={handleClickMore}
                                                 className="h-[6.375rem] w-[6.25rem] items-center flex justify-center bg-[#DFDFDF] rounded cursor-pointer"
@@ -1550,13 +1555,15 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                     width={28.67}
                                                 />
                                                 <input
-                                                    id="fileInput"
+                                                    id="fileToUpload"
                                                     type="file"
                                                     accept="image/*"
                                                     className="hidden"
-                                                // onChange={handleImageChange}
+                                                    // @ts-ignore
+                                                    onChange={handleImageChange}
                                                 />
                                             </div>
+                                            </label>
                                         )}
                                     </div>
                                 ) : (
@@ -1566,7 +1573,9 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             type="file"
                                             accept="image/*"
                                             className="hidden"
-                                        // onChange={handleImageChange}
+                                            // multiple
+                                            // @ts-ignore
+                                            onChange={handleImageChange}
                                         />
                                         <img src={upload} height={18.5} width={19.04} alt="" />
                                         <p>Upload photo (0/4)</p>
