@@ -1,6 +1,6 @@
 import style from './blockUser.module.scss';
 
-function BlockUser({ onclose, popupH, userId }: any) {
+function BlockUser({ onclose, popupH, userId, darkTheme }: any) {
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
     const blockUser = async () => {
@@ -15,9 +15,9 @@ function BlockUser({ onclose, popupH, userId }: any) {
         }
     };
     return (
-        <div className={style.parent}>
-            <p className={style.title}>{`Block ${userId?.name} ?`}</p>
-            <p className={style.desc}>
+        <div className={`${style.parent} ${darkTheme?'bg-[#181818]':'bg-white'}`}>
+            <p className={`${style.title} ${darkTheme?'text-white':''}`}>{`Block ${userId?.name} ?`}</p>
+            <p className={`${style.desc} ${darkTheme?'text-white':''}`}>
                 They will not be able to send you messages, see your posts, or find your profile.
                 This doesn't include extended scenarios like multi-host livestreams, duets posted by
                 others, or group chats you both participate in. They will not be notified that you

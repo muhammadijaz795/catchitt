@@ -289,6 +289,7 @@ export const PublicProfile = (props: any) => {
                     onBlockClose={() => setBlockPopup(false)}
                     onReportClose={() => setReportPopup(false)}
                     info={videoModalInfo}
+                    darkTheme={darkTheme!==''}
                     // @ts-ignore
                     userId={{ id: videoModalInfo?.user?._id, name: videoModalInfo?.user?.name }}
                 />

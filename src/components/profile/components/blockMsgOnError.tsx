@@ -7,9 +7,9 @@ interface TYpes {
 function BlockMsgOnError({ darkTheme, onclose }: TYpes) {
     return (
         <div className={`${style.parent3} ${darkTheme?'bg-[#181818]':'bg-white'}`}>
-            <p>An error Occurred</p>
+            <p className={darkTheme?'text-white':''}>An error Occurred</p>
             <img src="../../../../public/images/icons/error.svg" alt="" />
-            <p>Something went wrong.</p>
+            <p className={darkTheme?'text-white':''}>Something went wrong.</p>
             <button onClick={onclose}>Done</button>
         </div>
     );
