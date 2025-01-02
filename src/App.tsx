@@ -31,7 +31,6 @@ import BalancePage from './components/settings-page/components/balance-page';
 import GiftRevenuePage from './components/settings-page/components/gift-revenue-page';
 import TransactionHistoryPage from './components/settings-page/components/transaction-history-page';
 import WithdrawalLimitPage from './components/settings-page/components/withdrawal-limit-page';
-import { SoundPage } from './components/sounds-page/sound-page';
 import CreateStoryPage from './components/stories';
 import { SuggestedAccountsPage } from './components/suggested-accounts-page/suggested-accounts-page';
 import UploadPage from './components/upload';
@@ -86,6 +85,8 @@ import PostPage from './components/shared-post';
 import PostAnalytics from './components/analytics/PostAnalytics';
 import CommentAnalytics from './components/analytics/PostAnalytics/CommentAnalytics';
 import { db } from './utils/db';
+import { useUpdateEffect } from 'react-use';
+import SoundPage from './components/sound-module/SoundPage';
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -438,14 +439,11 @@ function App() {
     };
 
     const signupHandler = async () => {
-        let dob = year + '-' + month + '-' + date;
-        setDateOfBirth(dob);
-
         let signupObj;
         if (loginWithPhone) {
             signupObj = { password, phoneNumber: countryCode + phoneNumber, dateOfBirth, name };
         } else {
-            signupObj = { password, email, dateOfBirth: dob, name };
+            signupObj = { password, email, dateOfBirth, name };
         }
 
         // return false;
@@ -684,6 +682,22 @@ function App() {
     const [month, setMonth] = useState('');
     const [date, setDate] = useState('');
     const [year, setYear] = useState('');
+    const [isInvalidDate, setIsInvalidDate] = useState(false);
+
+    useUpdateEffect(() => {
+        if (month && date && year) {
+            let dob = year + '-' + month.toString().padStart(2,"0") + '-' + date.toString().padStart(2,"0");
+            const parsedDob = new Date(dob);
+            const currentDate = new Date();
+            if (parsedDob > currentDate) {
+                console.log('Invalid date of birth');
+                setIsInvalidDate(true);
+            } else {
+                setDateOfBirth(dob);
+                setIsInvalidDate(false);
+            }
+        }
+    }, [month, date, year]);
 
     const handleMonthChange = (event: SelectChangeEvent) => {
         setMonth(event.target.value as string);
@@ -1690,11 +1704,16 @@ function App() {
                                                                                 >
                                                                                     29
                                                                                 </MenuItem>
-                                                                                <MenuItem
+                                                                                {!['2'].some(i=>i==month)&&<MenuItem
                                                                                     value={30}
                                                                                 >
                                                                                     30
-                                                                                </MenuItem>
+                                                                                </MenuItem>}
+                                                                                {!['2','4','6','9','11'].some(i=>i==month)&&<MenuItem
+                                                                                    value={31}
+                                                                                >
+                                                                                    31
+                                                                                </MenuItem>}
                                                                             </Select>
                                                                         </FormControl>
 
@@ -1726,6 +1745,7 @@ function App() {
                                                                         </FormControl>
                                                                     </div>
                                                                 </div>
+                                                                {isInvalidDate&&<p className='text-red-600 text-sm text-start mt-1 font-semibold'>Selected DOB is Incorrect 😞</p>}
                                                                 <div className="flex flex-row justify-between items-center mt-3.5">
                                                                     <p className="font-medium text-[0.938rem]">
                                                                         {signupWithPhone

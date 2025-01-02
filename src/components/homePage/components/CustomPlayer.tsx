@@ -10,6 +10,7 @@ import {
 } from '../../../icons';
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import { isUserLoggedIn } from '../../../utils/common';
+import { useNavigate } from 'react-router-dom';
 
 function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailImage, controls, number }: any) {
     const [duration, setDuration] = useState<number>();
@@ -17,6 +18,8 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
     const { ref, inView, entry } = useInView({
         rootMargin: '-400px 0px -200px 0px',
     });
+
+    const navigate = useNavigate();
 
     var video = document.createElement('video');
     let videoRef: any = useRef();
@@ -138,8 +141,9 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                        {post?.description.length && <HashtagText text={post?.description} maxLength={30} />}
                     </p>
                     {post?.sound && (
-                        <p
-                            className="flex"
+                        <p 
+                            onClick={() =>navigate(`/sounds/${post?.sound?._id}`)}
+                            className="flex cursor-pointer"
                             style={{
                                 textOverflow: 'ellipsis',
                                 overflow: 'hidden',

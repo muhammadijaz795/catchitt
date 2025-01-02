@@ -20,7 +20,7 @@ export interface SoundPageProps {
     className?: string;
 }
 
-interface Sound {
+export interface Sound {
     _id: string;
     isDeleted: boolean;
     title: string;
@@ -106,7 +106,7 @@ interface Post {
     };
 }
 
-export const SoundPage = (className: SoundPageProps) => {
+export const SoundPageOld = (className: SoundPageProps) => {
     const clipboard = new ClipboardJS('btn');
     const { soundId } = useParams();
     const extractedValue = soundId?.replace('soundId=', '');

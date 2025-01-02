@@ -850,7 +850,7 @@ export default function PopupForVideoPlayer({
                                                 src={musicTuneLight}
                                                 alt="tune-icon"
                                             />
-                                            <p className="text-xs font-normal text-white">
+                                            <p onClick={()=>navigate(`/sounds/${info?.sound?._id}`)} className="text-xs font-normal text-white cursor-pointer">
                                                 {info?.sound?.title}
                                             </p>
                                         </div>
