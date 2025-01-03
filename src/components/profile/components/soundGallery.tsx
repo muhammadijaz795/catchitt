@@ -52,22 +52,25 @@ const mockAudios = [
     }
 ]
 
-function SoundGallery({ selectedAudio, setSelectedAudio }: any) {
+function SoundGallery({ isFavoriteSounds, selectedAudio, setSelectedAudio }: any) {
     const abortController = useRef<AbortController | null>(null);
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
     const [gallery, setGallery] = useState<any>({ items: [], page: 1, pageSize: 10, isNextpage: true });
 
-    const fetchPaginatedSounds = async () => {
+    const fetchPaginatedSounds = async (fromStart=false) => {
         try {
             const controller = new AbortController();
             abortController.current = controller;
-            const response = await axios.get(`${API_KEY}/audio/sound-gallery?page=${gallery.page}&pageSize=${gallery.pageSize}`, { headers: { Authorization: token }, signal: controller.signal });
+            const pathName = isFavoriteSounds ? `media-content/sounds?pageNumber=${fromStart?1:gallery.page}&owner=${userId}` : `audio/sound-gallery?page=${fromStart?1:gallery.page}&pageSize=${gallery.pageSize}`;
+            const url = `${API_KEY}/${pathName}`;
+            const response = await axios.get(url, { headers: { Authorization: token }, signal: controller.signal });
             console.log(response.data);
             if (!response.data?.data.length) return setGallery({...gallery, isNextpage: false});
             setGallery((prev: any) => ({
                 ...prev,
-                items: [...prev.items, ...response.data?.data],
-                page: prev.page + 1
+                items: fromStart? response.data?.data : [...prev.items, ...response.data?.data],
+                page: fromStart? 2: prev.page + 1
             }))
         } catch (error) {
             console.error(error);
@@ -78,13 +81,13 @@ function SoundGallery({ selectedAudio, setSelectedAudio }: any) {
     }
 
     useEffect(() => {
-        fetchPaginatedSounds();
+        fetchPaginatedSounds(true);
         return () => {
             if (abortController.current) {
                 abortController.current.abort();
             }
         }
-    }, [])
+    }, [isFavoriteSounds])
 
     useEffect(() => {
         console.log('🚀🚀🚀gallery', gallery);

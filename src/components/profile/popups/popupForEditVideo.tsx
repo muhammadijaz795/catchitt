@@ -237,7 +237,14 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
     handleAudioManipulation();
   }, [selectedAudio])
 
-
+  const skip = (forward=false) => {
+    if (!videoRef.current) return;
+    if (forward) {
+      videoRef.current.currentTime += 5;
+    } else {
+      videoRef.current.currentTime -= 5;
+    }
+  } 
   return (
     <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
       <BootstrapDialog
@@ -274,9 +281,9 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
               <div className={`${style.recommendedContainer} border-r border-gray-200 overflow-y-auto`}>
                 <div className={style.audioTabs}>
                   <span onClick={switchAudioTab} id='Recommended' className={`${style.audioTab} ${audioTabSelected === 'Recommended' ? style.audioTabSelected : ''} font-medium`}>Recommended</span>
-                  {/* <span onClick={switchAudioTab} id='Favorites' className={`${style.audioTab} ${audioTabSelected === 'Favorites' ? style.audioTabSelected : ''} font-medium`}>Favorites</span> */}
+                  <span onClick={switchAudioTab} id='Favorites' className={`${style.audioTab} ${audioTabSelected === 'Favorites' ? style.audioTabSelected : ''} font-medium`}>Favorites</span>
                 </div>
-                <SoundGallery selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio} />
+                <SoundGallery isFavoriteSounds={audioTabSelected==='Favorites'} selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio} />
               </div>
               {/* RIGHT VIDEO CONTAINER */}
               <div className={style.videoContainer}>
@@ -287,8 +294,8 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
             {/* bottom controls bar */}
             <div className={`${style.videoControlBar} border-b border-gray-200`}>
               <div className={style.prevNextArrows}>
-                {/* <img src={isDarkTheme ? leftArrowCurvedinWhite : leftArrowCurved} alt="left-arrow-curved" /> */}
-                {/* <img src={isDarkTheme ? rightArrowCurvedinWhite : rightArrowCurved} alt="left-arrow-curved" /> */}
+                <img onClick={()=>skip()} src={isDarkTheme ? leftArrowCurvedinWhite : leftArrowCurved} alt="left-arrow-curved" />
+                <img onClick={()=>skip(true)} src={isDarkTheme ? rightArrowCurvedinWhite : rightArrowCurved} alt="left-arrow-curved" />
               </div>
               <div className="flex items-center justify-between">
                 <img onClick={togglePlayback} id='playBtn' src={play} alt="play" className='mx-2' />

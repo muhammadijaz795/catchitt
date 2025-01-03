@@ -8,7 +8,7 @@ import PopupForBlock from '../profile/popups/popupForBlock';
 import PopupForVideoPlayer from '../profile/popups/popupForVideoPlayer';
 import StoriesOnPublicProfile from '../profile/popups/storiesOnPublicProfile';
 // import styles from '../discover/discover.module.scss';
-import { DISCOVER_CATEGORIES } from '../../utils/constants';
+import { BASE_URL_FRONTEND, DISCOVER_CATEGORIES, showToast, showToastError } from '../../utils/constants';
 import { useUpdateEffect } from 'react-use';
 import { useNavigate, useParams } from 'react-router-dom';
 import Gifts from '../discover/popups/gifts';
@@ -40,6 +40,7 @@ export default function SoundPage() {
     const [storyPopup, setStoryPopup] = useState([]);
     const [muteStates, setMuteStates] = useState<any>([]);
     const [soundData, setSoundData] = useState<any>();
+    const [linkCopied, setLinkCopied] = useState(false);
 
     // theme
     const [darkTheme, setdarkTheme] = useState('');
@@ -105,6 +106,7 @@ export default function SoundPage() {
     };
 
     useEffect(() => {
+        if (!token) return navigate('/');
         if (!isValidDocId(soundId)) return navigate('/');
         const controller = new AbortController();
         const signal = controller.signal;
@@ -139,19 +141,46 @@ export default function SoundPage() {
     });
 
 
-
-
-
-    const [open, setOpen] = useState(false);
-    const [linkCopied, setLinkCopied] = useState(false);
-
-    const handleTooltipClose = () => {
-        setOpen(false);
+    const handleCopyToClipboard = () => {
+        // Get the current URL
+        const currentURL = window.location.href;
+        navigator.clipboard
+            .writeText(currentURL)
+            .then(() => {
+                showToast('Link copied!');
+                // toast.success('Link Copied');
+            });
+        setLinkCopied(true);
     };
 
-    const handleTooltipOpen = () => {
-        setOpen(true);
+    const handleBookmarking = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/toggleBookmarkSound`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ soundId: soundId }),
+            });
+
+            if (response.ok) {
+                // Toggle the bookmark status here
+                // setBookMarkStatus(!bookMarkStatus);
+                handleFetchSound();
+            } else {
+                console.error('Failed to toggle bookmark:', response.status);
+                showToastError('Failed to toggle bookmark');
+            }
+
+            console.log(response);
+        } catch (error) {
+            console.error('Error during bookmarking:', error);
+            showToastError('Failed to toggle bookmark');
+        }
     };
+
+
 
 
     return (
@@ -178,9 +207,9 @@ export default function SoundPage() {
                                     />
                                     <div
                                         style={{
-                                            display: 'grid',
-                                            gridTemplateColumns: '1fr 3fr',
-                                            textAlign: 'end',
+                                            display: 'flex',
+                                            gap: '3rem',
+
                                         }}
                                     >
                                         <div
@@ -195,40 +224,20 @@ export default function SoundPage() {
                                                 {soundData?.usedCount} Videos
                                             </h6>
                                         </div>
-                                        <div>
-                                            <IconButton onClick={() => { }}>
-                                                {/* {soundData.isBookmarked ? (
-                                            <Bookmark bookmarked={true} />
-                                        ) :
-                                            <Bookmark bookmarked={false} />
-                                        } */}
-                                                <Bookmark bookmarked={soundData?.isBookmarked} />
-                                            </IconButton>
-                                            <ClickAwayListener onClickAway={handleTooltipClose}>
-                                                <Tooltip
-                                                    PopperProps={{
-                                                        disablePortal: true,
-                                                    }}
-                                                    onClose={handleTooltipClose}
-                                                    open={open}
-                                                    disableFocusListener
-                                                    disableHoverListener
-                                                    disableTouchListener
-                                                    title="Link copied!"
-                                                >
-                                                    <IconButton>
-                                                        <img
-                                                            src={
-                                                                linkCopied === true
-                                                                    ? ShareClicked
-                                                                    : Share
-                                                            }
-                                                            alt=""
-                                                            onClick={() => { }}
-                                                        />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </ClickAwayListener>
+                                        <div className='flex gap-4 items-baseline'>
+
+                                            <Bookmark toggleBookmark={handleBookmarking} bookmarked={soundData?.isBookmarked} />
+
+                                            <img
+                                                className='cursor-pointer'
+                                                src={
+                                                    linkCopied === true
+                                                        ? ShareClicked
+                                                        : Share
+                                                }
+                                                alt=""
+                                                onClick={handleCopyToClipboard}
+                                            />
                                         </div>
                                     </div>
                                 </div>
