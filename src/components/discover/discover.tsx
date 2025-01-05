@@ -134,7 +134,7 @@ export default function Discover() {
                     </div>
                 ) : (
                     <>
-                        <DiscoverStories showStories={setStoryPopup} />
+                        {/* <DiscoverStories showStories={setStoryPopup} /> */}
                         <div className=" pl-6 h-screen w-full overflow-y-auto no-scrollbar" id='scrollableDiv'>
                             <div className="flex flex-row mt-8 gap-4 overflow-auto">
                                 {DISCOVER_CATEGORIES?.map((category, index) => (

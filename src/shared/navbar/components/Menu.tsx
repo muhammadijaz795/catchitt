@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const options = ['View profile', 'Get Coins', 'Settings', 'Switch Account', 'Logout'];
 import { useEffect, useState } from 'react';
 import { openLogoutPopup } from '../../../redux/reducers';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any) {
     const dispatch = useDispatch();
@@ -18,7 +19,8 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     const [darkTheme, setdarkTheme] = useState('');
     const [darkThemeblack, setdarkThemeblack] = useState('');
     const [themeColor, setThemeColor] = useState('');
-
+    const navigate = useNavigate();
+    
     const open = Boolean(anchorEl);
     const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -83,12 +85,13 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     const token = useSelector((state: any) => state?.reducers?.profile?.token);
 
     const handleGetCoins = async () => {
-        const res: any = await fetch(`${API_KEY}/payment/web/coins/45`, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
-        });
-        const resData: any = await res.json();
-        window.open(resData?.data?.url)
+        navigate('/settings/account/balance');
+        // const res: any = await fetch(`${API_KEY}/payment/web/coins/45`, {
+        //     method: 'GET',
+        //     headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+        // });
+        // const resData: any = await res.json();
+        // window.open(resData?.data?.url)
     };
 
     useEffect(() => {

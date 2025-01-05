@@ -288,7 +288,7 @@ export const SoundPageOld = (className: SoundPageProps) => {
                                         ) :
                                             <Bookmark bookmarked={false} />
                                         } */}
-                                            <Bookmark bookmarked={soundData.isBookmarked} />
+                                            <Bookmark bookmarked={soundData.isBookmarked} toggleBookmark={undefined} />
                                         </IconButton>
                                         <ClickAwayListener onClickAway={handleTooltipClose}>
                                             <Tooltip

@@ -1648,7 +1648,11 @@ export const Post: React.FC<PostProps> = memo(
                                             </div>
                                         </div>
                                         <Box sx={{ marginBottom: '32px' }}>
-                                            <Calculator isDarkTheme={false} setCustomCoin={()=>{}} />
+                                            <Calculator isDarkTheme={false} 
+                                            setCustomCoin={()=>{}}
+                                            coins={0}                                            
+                                            // setCustomCoin={()=>{}}
+                                             />
                                         </Box>
                                         <div
                                             className={styles.giftsBottomDiv2}
