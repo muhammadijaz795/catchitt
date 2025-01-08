@@ -26,7 +26,7 @@ export default function VideoesMaping({ videos, fetchMore, openVideoModal, setEd
         <InfiniteScroll
             dataLength={videos.items?.length}
             next={fetchMore}
-            hasMore={videos?.totalItems === null}
+            hasMore={videos.items.length < videos.totalItems || videos?.totalItems === null}
             loader={<div
                 style={{
                     display: 'flex',
@@ -47,6 +47,7 @@ export default function VideoesMaping({ videos, fetchMore, openVideoModal, setEd
                         {(() => {
                             if (videos?.totalItems === 0) return 'No videos available in this category.';
                             if (videos.totalItems === undefined) return 'Something went wrong. Please refresh the page.';
+                            if (videos.totalItems === -2) return "User has disabled showing liked videos";
                         })()}
                     </p>
                 </div>

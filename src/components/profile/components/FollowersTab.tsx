@@ -1,18 +1,54 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './followersTab.module.scss';
-
 import FollowerUser from './follower-user';
 import PbulicFollowerUser from '../public-profile-components/follower-user';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { API_KEY } from '../../../utils/constants';
+
+interface PrivacySettings {
+    shareMedia: boolean;
+    downloadMedia: boolean;
+    viewFollowing: boolean;
+    viewFollowers: boolean;
+    viewLikedVideos: boolean;
+    messages: boolean;
+    activityStatus: boolean;
+    viewProfileVisits: boolean;
+    disallowScreenshot: boolean;
+}
+
 export default function FollowersTab({ onClose, followers, isPublic, onScrollBottom, followersTotal }: any) {
 
+    const [privacySettingsData, setPrivacySettingsData] = useState<PrivacySettings>();
+    const token = localStorage.getItem('token');
+
+    const handleFetchPrivacySettings = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/privacy-settings`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            if (response.ok) {
+                const responseData = await response.json();
+                setPrivacySettingsData(responseData.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
-        console.log('🚀🚀🚀followers', followers);
+        handleFetchPrivacySettings();
     }, [followers])
 
     return (
+        privacySettingsData? (privacySettingsData.viewFollowers === false? <div className="flex justify-center items-center mt-3">
+            <span className="font-bold text-xl">
+                User has disabled showing followers.
+            </span>
+        </div> :
         <InfiniteScroll
             dataLength={followers?.length}
             next={onScrollBottom}
@@ -63,6 +99,10 @@ export default function FollowersTab({ onClose, followers, isPublic, onScrollBot
                     />
                 ))
             }
-        </InfiniteScroll>
+        </InfiniteScroll>) : <div className="flex justify-center items-center mt-3">
+            <p className="text-dark font-bold text-xl">
+                <CircularProgress />
+            </p>
+        </div>
     );
 }

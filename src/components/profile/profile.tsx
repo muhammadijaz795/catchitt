@@ -32,7 +32,7 @@ import { Repost } from './svg-components/Repost';
 import PopupForEditVideo from './popups/popupForEditVideo';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import { activeLike, commentWhite, likeWhite, musicBlack, shareWhite } from '../../icons';
-import { showToastSuccess } from '../../utils/constants';
+import { showToastSuccess, STATUS_CODE } from '../../utils/constants';
 
 export const Profile = (props: any) => {
     const [activeTab, setActiveTab] = useState('Videos');
@@ -266,6 +266,7 @@ export const Profile = (props: any) => {
                 )
                     .then((res) => res.json())
                     .then((data) => {
+                        if (STATUS_CODE.OK !== data.status) { return setUserLikedVideos((prev: any) => ({...prev, totalItems: -2})) }
                         setUserLikedVideos((prev: any) => ({
                             ...prev,
                             items: [...prev.items, ...data.data.data],
