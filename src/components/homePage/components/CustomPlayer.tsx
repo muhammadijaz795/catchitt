@@ -138,7 +138,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                         }}
                     >
                         {' '}
-                       {post?.description.length && <HashtagText text={post?.description} maxLength={30} />}
+                       {Boolean(post?.description.length) && <HashtagText text={post?.description} maxLength={30} />}
                     </p>
                     {post?.sound && (
                         <p 

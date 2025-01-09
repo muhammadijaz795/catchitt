@@ -1,7 +1,7 @@
 import { CircularProgress, SvgIcon } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { avatar, downArrow, search } from '../../../icons';
+import { defaultAvatar, downArrow, search } from '../../../icons';
 import CustomButton from '../../../shared/buttons/CustomButton';
 import BasicCheckBox from '../../../shared/checkbox/BasicCheckBox';
 import Text from '../../../shared/components/Text';
@@ -566,7 +566,7 @@ function FormRightSide(props: any) {
                                     >
                                         <img
                                             className="w-[48px] h-[48px] rounded-[50%]"
-                                            src={follower?.follower_userID?.avatar || avatar}
+                                            src={follower?.follower_userID?.avatar || defaultAvatar}
                                             alt=""
                                         />
                                         <Text
