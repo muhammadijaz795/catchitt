@@ -881,7 +881,7 @@ function App() {
                             <Route path="/create-story" element={<CreateStoryPage />} />
                             <Route path="/golive" element={<GoLive />} />
                             <Route path="/myreports" element={<MyReports />} />
-                            <Route path="/analytics" element={<Analytics />} />
+                            <Route path="/analytics/:tab?" element={<Analytics />} />
                             <Route path="/analytics/post/:postId" element={<PostAnalytics />} />
                             <Route path="/analytics/comment/:postId" element={<CommentAnalytics />} />
                             <Route path="/contactus" element={<ContactUs />} />

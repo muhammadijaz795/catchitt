@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../../shared/layout';
 import whiteRightArrow from './svg-components/whiteRightArrow.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ANALYTICS_OVERVIEW_TIME_PERIODS, ANALYTICSTABS } from '../../utils/constants';
 import OverviewTab from './OverviewTab';
 import ContentTab from './ContentTab';
@@ -12,6 +12,7 @@ import { Divider, MenuItem, Menu, ThemeProvider, createTheme } from '@mui/materi
 import React from 'react';
 
 const Analytics = () => {
+    const { tab } = useParams();
     const [currentTab, setCurrentTab] = useState(ANALYTICSTABS.OVERVIEW);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
@@ -20,7 +21,7 @@ const Analytics = () => {
     const [analyticsData, setAnalyticsData] = useState<any>('');
     const [selectedPeriod, setSelectedPeriod] = useState(7);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    
+
     const open = Boolean(anchorEl);
 
     const navigate = useNavigate();
@@ -33,12 +34,12 @@ const Analytics = () => {
         setCurrentTab(Number(event.currentTarget.id));
     }
 
-    
+
     const getUserAnalytics = async (period = 7) => {
         try {
             const periodsInMiliSecond = 1000 * 60 * 60 * 24 * period;
             const gap = Date.now() - periodsInMiliSecond;
-            const startingDate = new Date(gap) 
+            const startingDate = new Date(gap)
             const today = new Date();
             const startDate = `${startingDate.getFullYear()}-${String(startingDate.getMonth() + 1).padStart(2, '0')}-${String(startingDate.getDate()).padStart(2, '0')}`;
             const endDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -59,6 +60,26 @@ const Analytics = () => {
             console.log('error trendinghashtags', error);
         }
     };
+
+    useEffect(() => {
+        switch (tab) {
+            case 'overview':
+                setCurrentTab(ANALYTICSTABS.OVERVIEW);
+                break;
+            case 'content':
+                setCurrentTab(ANALYTICSTABS.CONTENT);
+                break;
+            case 'viewers':
+                setCurrentTab(ANALYTICSTABS.VIEWERS);
+                break;
+            case 'followers':
+                setCurrentTab(ANALYTICSTABS.FOLLOWERS);
+                break;
+            default:
+                break;
+        }
+    }, [])
+
 
     useEffect(() => {
         getUserAnalytics(selectedPeriod);
@@ -86,7 +107,7 @@ const Analytics = () => {
 
     return (
         <Layout>
-            <ThemeProvider theme={darkTheme === '' ? lightThemePalette: darkThemePalette}>
+            <ThemeProvider theme={darkTheme === '' ? lightThemePalette : darkThemePalette}>
                 <header className={`text-gray-600 body-font ${darkTheme === '' ? 'bg-white' : styles.header} border-b px-4`}>
                     <div className="flex flex-wrap flex-col md:flex-row items-center justify-between">
                         <nav className="flex flex-wrap items-center text-base text-gray-400">
@@ -146,7 +167,7 @@ const Analytics = () => {
                                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                             >
-                                {Object.keys(ANALYTICS_OVERVIEW_TIME_PERIODS).map((period:string, index:number) => (
+                                {Object.keys(ANALYTICS_OVERVIEW_TIME_PERIODS).map((period: string, index: number) => (
                                     <MenuItem key={index} onClick={() => { setSelectedPeriod(ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS]); setAnchorEl(null) }}><span className={`font-bold ${ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS] === selectedPeriod ? 'text-[rgb(255,59,92)]' : ''}`}>{period}</span></MenuItem>
                                 ))}
                             </Menu>

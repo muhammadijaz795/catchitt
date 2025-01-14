@@ -173,8 +173,28 @@ import prevArrow from './assets/prev_icon.svg';
 import nextArrow from './assets/next_icon.svg';
 import attachMusic from './assets/attactchMusic.svg';
 import attachMusicInWhite from './assets/attactchMusicInWhite.svg';
+import homeIcon from './assets/homeIcon.svg';
+import hamburgerDark from './assets/hamburgerDark.svg'
+import hamburger from './assets/hamburger.svg'
+import bulbOutlineWhite from './assets/bulbOutlineWhile.svg'
+import bulbOutlineDark from './assets/bulbOutlineDark.svg'
+import academyOutlineWhite from './assets/academy_outline_white.svg';
+import academyOutlineDark from './assets/academy_outline_dark.svg';
+import feedbackQuestionWhite from './assets/feedback_question_white.svg';
+import feedbackQuestionDark from './assets/feedback_question_dark.svg';
+import homeDark from './assets/homeDark.svg';
 
 export {
+    homeDark,
+    hamburgerDark,
+    feedbackQuestionDark,
+    feedbackQuestionWhite,
+    academyOutlineDark,
+    academyOutlineWhite,
+    bulbOutlineDark,
+    bulbOutlineWhite,
+    hamburger,
+    homeIcon,
     attachMusic,
     attachMusicInWhite,
     nextArrow,
