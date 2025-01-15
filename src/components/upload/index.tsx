@@ -50,7 +50,7 @@ function UploadPage() {
         <div className={`flex flex-col ${darkTheme}`}>
             <Navbar />
             <div className={`w-52 h-[100vh] fixed top-0 left-0 ${darkTheme === '' ? 'bg-white' : 'bg-[#181818a8]'} pt-[80px] pb-3 px-2 flex flex-col`}>
-                <button className={`${darkTheme === '' ? 'bg-gray-200 hover:bg-gray-300' : 'bg-custom-dark-222'} w-full ring-0 hover:border-transparent rounded-none my-3`} >Upload</button>
+                <button className={`${darkTheme === '' ? 'bg-gray-200 hover:bg-gray-300' : 'bg-custom-dark-222'} w-full ring-0 hover:border-transparent rounded-none my-3 opacity-80`} >Upload</button>
                 <hr />
                 <ul className='text-sm space-y-6 mt-3 text-left mx-2'>
                     <li className='cursor-pointer flex gap-2' onClick={() => navigate('/home')}>
@@ -61,22 +61,22 @@ function UploadPage() {
                         <img className='w-4 inline-block' src={darkTheme===''?hamburgerDark :hamburger} alt="" />
                         <span>&nbsp;Posts</span>
                     </li>
-                    <li className='cursor-pointer flex gap-2'>
+                    {/* <li className='cursor-pointer flex gap-2'>
                         <img className='w-5 inline-block' src={darkTheme===''?commentOutlineDark:commentOutlineWhite} alt="" />
                         <span>Comments</span>
-                    </li>
+                    </li> */}
                     <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics')}>
                         <img className='w-5 inline-block' src={darkTheme===''?analyticsOutline:analyticsOutlineWhite} alt="" />
                         <span>Analytics</span>
                     </li>
-                    <li className='cursor-pointer flex gap-2'>
+                    {/* <li className='cursor-pointer flex gap-2'>
                         <img className='w-5 inline-block' src={darkTheme===''?bulbOutlineDark:bulbOutlineWhite} alt="" />
                         <span>Inspirations</span>
                     </li>
                     <li className='cursor-pointer flex gap-2'>
                         <img className='w-5 inline-block' src={darkTheme===''?academyOutlineDark :academyOutlineWhite} alt="" />
                         <span>Creator Academy</span>
-                    </li>
+                    </li> */}
                     <li className='cursor-pointer flex gap-2' onClick={() => navigate('/contactus')}>
                         <img className='w-5 inline-block' src={darkTheme===''?feedbackQuestionDark:feedbackQuestionWhite} alt="" />
                         <span>Feedback</span>

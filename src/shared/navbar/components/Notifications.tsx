@@ -318,7 +318,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                 <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                             </div>
                                             <div className={`${style.gridLine}`}>
-                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                 <p className={`${style.notificationContent}`}>liked your video.</p>
                                             </div>
                                         </div>
@@ -342,7 +342,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                 <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                             </div>
                                             <div className={`${style.gridLine}`}>
-                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                 <p className={`${style.notificationContent}`}>commented on your video.</p>
                                             </div>
                                         </div>
@@ -366,7 +366,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                 <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                             </div>
                                             <div className={`${style.gridLine}`}>
-                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                 <p className={`${style.notificationContent}`}>mention you.</p>
                                             </div>
                                         </div>
@@ -391,7 +391,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                 <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                             </div>
                                             <div className={`${style.gridLine}`}>
-                                                <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                 <p className={`${style.notificationContent}`}>Follows you.</p>
                                             </div>
                                         </div>
@@ -427,7 +427,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                     <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
-                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                                     <p className={`${style.notificationContent}`}>liked your video.</p>
                                                                 </div>
                                                             </div>
@@ -449,7 +449,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                     <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
-                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                                     <p className={`${style.notificationContent}`}>commented on your video.</p>
                                                                 </div>
                                                             </div>
@@ -470,7 +470,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                     <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
-                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                                     <p className={`${style.notificationContent}`}>Follows you.</p>
                                                                 </div>
                                                             </div>
@@ -491,7 +491,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                     <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
-                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                                     <p className={`${style.notificationContent}`}>mention you.</p>
                                                                 </div>
                                                             </div>
@@ -513,7 +513,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                     <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
-                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                                     <p className={`${style.notificationContent}`}>Unknown device Signin.</p>
                                                                 </div>
                                                             </div>
@@ -534,7 +534,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                     <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} alt="Profile image" />
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
-                                                                    <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p>
+                                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
                                                                     <p className={`${style.notificationContent}`}>{noti?.message}</p>
                                                                 </div>
                                                             </div>

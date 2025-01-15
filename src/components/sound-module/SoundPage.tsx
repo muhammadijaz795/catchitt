@@ -23,6 +23,7 @@ import exampleSound from '../../assets/exampleSound.png';
 import ShareClicked from '../sounds-page/svg-components/shareClicked.png';
 import Share from '../sounds-page/svg-components/Default.png';
 import styles from '../sounds-page/sound-page.module.scss';
+import COPY_AND_SEND_MENU_MULTIPLE from '../../shared/Menu/copyAndSendForMultiple';
 
 
 export default function SoundPage() {
@@ -45,6 +46,7 @@ export default function SoundPage() {
     // theme
     const [darkTheme, setdarkTheme] = useState('');
 
+    const allowedShareOptions = ['copyLink', 'whatsappShare', 'linkedInShare', 'twitterShare', 'facebookShare'];
 
     const handleFetchSound = async () => {
         try {
@@ -225,20 +227,18 @@ export default function SoundPage() {
                                                 {soundData?.usedCount} Videos
                                             </h6>
                                         </div>
-                                        <div className='flex gap-4 items-baseline'>
+                                        <div className='flex gap-4 items-baseline h-fit'>
 
                                             <Bookmark toggleBookmark={handleBookmarking} bookmarked={soundData?.isBookmarked} />
+                                            <button className='ring-0 hover:border-transparent relative p-0'>
+                                                <img
+                                                    className='cursor-pointer'
+                                                    src={ShareClicked}
+                                                    alt=""
+                                                />
+                                                <COPY_AND_SEND_MENU_MULTIPLE copyHandler={handleCopyToClipboard} allowedShareOptions={allowedShareOptions} URL={window.location.pathname} title={soundData?.title} />
+                                            </button>
 
-                                            <img
-                                                className='cursor-pointer'
-                                                src={
-                                                    linkCopied === true
-                                                        ? ShareClicked
-                                                        : Share
-                                                }
-                                                alt=""
-                                                onClick={handleCopyToClipboard}
-                                            />
                                         </div>
                                     </div>
                                 </div>

@@ -1,0 +1,232 @@
+import { createTheme, styled, ThemeProvider } from '@mui/material';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import Menu, { MenuProps } from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import * as React from 'react';
+import {
+    copyLink,
+    embedShare,
+    facebookShare,
+    linkedInShare,
+    send,
+    twitterShare,
+    whatsappShare,
+} from '../../../icons';
+import { BASE_URL_FRONTEND } from '../../../utils/constants';
+import style from './index.module.scss';
+import LinkIcon from '../../../components/shared-video/svg-components/link-icon.svg';
+const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
+
+export default function COPY_AND_SEND_MENU_MULTIPLE({
+    copyHandler,
+    popupHandler,
+    URL,
+    title,
+    generateEmbedCodeHandler,
+    allowedShareOptions,
+}: any) {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [isDarkTheme, setIsDarkTheme] = React.useState<boolean>(false);
+
+    const open = Boolean(anchorEl);
+    const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
+        setSelectedIndex(index);
+        setAnchorEl(null);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    function extractVideoId(url: string) {
+        const regex = /videos\/(.*?)\/reduced/;
+        const match = url.match(regex);
+        return match ? match[1] : null;
+    }
+
+    const StyledMenu = styled((props: MenuProps) => (
+        <Menu
+            elevation={0}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            {...props}
+        />
+    ))(({ theme }) => ({
+        '& .MuiPaper-root': {
+            marginRight: 10,
+            borderRadius: 6,
+            // marginTop: theme.spacing(1),
+            minWidth: 180,
+            // padding: '0.5rem 0rem ',
+            color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+            boxShadow:
+                'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+            display: 'flex',
+            // '& .MuiMenu-list': {
+            //     padding: '4px 0',
+            // },
+            // '& .MuiMenuItem-root': {
+            //     '& .MuiSvgIcon-root': {
+            //         fontSize: 5,
+            //         color: theme.palette.text.secondary,
+            //         marginRight: theme.spacing(1.5),
+            //     },
+            //     '&:active': {
+            //         backgroundColor: alpha(
+            //             theme.palette.primary.main,
+            //             theme.palette.action.selectedOpacity
+            //         ),
+            //     },
+            // },
+            // '.menuItem': {
+            //     border: '2px solid red',
+            // },
+        },
+    }));
+
+    const shareToWhatsApp = () => {
+        let url = BASE_URL_FRONTEND+URL;
+        window.open(`https://api.whatsapp.com/send?text=${title} - ${url}`, '_blank');
+    };
+
+    const shareToFacebook = () => {
+        let url = BASE_URL_FRONTEND+URL;
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    };
+
+    const shareToTwitter = () => {
+        let url = BASE_URL_FRONTEND+URL;
+        window.open(`https://twitter.com/intent/tweet?url=${url}&text=${title}`, '_blank');
+    };
+
+    const shareToLinkedIn = () => {
+        let url = BASE_URL_FRONTEND+URL;
+        window.open(
+            `https://www.linkedin.com/shareArticle?url=${url}&title=${title}`,
+            '_blank'
+        );
+    };
+
+    const lightThemePalette = createTheme({
+        palette: {
+            mode: 'light',
+        },
+    });
+
+    const darkThemePalette = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
+
+    React.useEffect(() => {
+        const themeColor = window.localStorage.getItem('theme');
+        setIsDarkTheme(themeColor === 'dark');
+    }, []);
+
+    return (
+        <div
+            style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                // top: '100%',
+                // zIndex: 200,
+                width: '100%',
+                height: '100%',
+                background: 'transparent',
+                // display:'flex'
+            }}
+        >
+            <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
+                <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
+                    <ListItemButton
+                        id="lock-button"
+                        aria-haspopup="listbox"
+                        aria-controls="lock-menu"
+                        //   aria-label="when device is locked"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClickListItem}
+                        className={style.navImpClass}
+                    // style={{ background: 'transparent' }}
+                    ></ListItemButton>
+                </List>
+                <StyledMenu
+                    id="lock-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'lock-button',
+                        // role: 'listbox',
+                    }}
+                    style={{
+                        top: 10,
+                        right: 100,
+                        marginRight: 20,
+                        // display:'flex !important'
+                    }}
+                >
+                    {allowedShareOptions.includes('send') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={popupHandler}>
+                            <div className="h-7 w-7 flex items-center justify-center bg-white shadow-md rounded-full">
+                                <img src={send} style={{ width: '1.1rem', height: '1.1rem' }} alt="Send" />
+                            </div>
+                            <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
+                        </div>
+                    </MenuItem>}
+                    {allowedShareOptions.includes('copyLink') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={copyHandler}>
+                            <div className="h-7 w-7 flex items-center justify-center bg-red-500 rounded-full">
+                                <img src={LinkIcon} style={{ width: '1.1rem', height: '1.1rem' }} alt="Copy Link" />
+                            </div>
+                            <p className={`${style.p} ${style.black_500}`}>Copy link</p>
+                        </div>
+                    </MenuItem>}
+                    {allowedShareOptions.includes('embedShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={generateEmbedCodeHandler}>
+                            <img src={embedShare} />
+                            <p className={`${style.p} ${style.black_500}`}>Embed</p>
+                        </div>
+                    </MenuItem>}
+                    {allowedShareOptions.includes('whatsappShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={shareToWhatsApp}>
+                            <img src={whatsappShare} />
+                            <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
+                        </div>
+                    </MenuItem>}
+                    {allowedShareOptions.includes('facebookShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={shareToFacebook}>
+                            <img src={facebookShare} />
+                            <p className={`${style.p} ${style.black_500}`}>Facebook</p>
+                        </div>
+                    </MenuItem>}
+                    {allowedShareOptions.includes('twitterShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={shareToTwitter}>
+                            <img src={twitterShare} />
+                            <p className={`${style.p} ${style.black_500}`}>Twitter</p>
+                        </div>
+                    </MenuItem>}
+                    {allowedShareOptions.includes('linkedInShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                        <div className={style.menuItem} onClick={shareToLinkedIn}>
+                            <img src={linkedInShare} />
+                            <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
+                        </div>
+                    </MenuItem>}
+                </StyledMenu>
+            </ThemeProvider>
+        </div>
+    );
+}

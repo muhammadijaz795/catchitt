@@ -44,7 +44,7 @@ const Analytics = () => {
             const startDate = `${startingDate.getFullYear()}-${String(startingDate.getMonth() + 1).padStart(2, '0')}-${String(startingDate.getDate()).padStart(2, '0')}`;
             const endDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             const response = await fetch(
-                `${API_KEY}/analytics/user?startDate=${startDate}&endDate=${endDate}`,
+                `${API_KEY}/analytics/web-user?startDate=${startDate}&endDate=${endDate}`,
                 {
                     method: 'GET',
                     headers: {
