@@ -39,7 +39,11 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
     // console.log("number", number);
     video.src = src; // Replace with the URL of your video
     video.load(); // Start loading the video metadata
-
+    
+    if (videoRef.current && isMuted) {
+        videoRef.current.muted = isMuted;
+    }
+    
     useEffect(() => {
         if (inView && !videoModal && isPlaying) {
             videoRef?.current?.play();
