@@ -55,6 +55,7 @@ import fullScreen from './svg-components/fullscreen.svg';
 import styles from './video-page.module.scss';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import HashtagText from '../../shared/hashTag/HashtagText';
+import { getCaretCoordinates } from '../../utils/helpers';
 
 const VideoPage = () => {
     // hooks
@@ -347,7 +348,7 @@ const VideoPage = () => {
             setVideoViews(data?.views);
             setVideoDescription(data?.description);
             // loading comments from different API
-            setVideoUrl(data?.reducedVideoUrl.length? data?.reducedVideoUrl : data?.originalUrl);
+            setVideoUrl(data?.reducedVideoUrl.length ? data?.reducedVideoUrl : data?.originalUrl);
             setIsSaved(data?.isSaved);
             setIsLiked(data?.isLiked);
             setMusicTitle(data?.sound?.title);
@@ -791,18 +792,27 @@ const VideoPage = () => {
         // 0.3 second delay
     };
 
-    const handleInputChange = (e: { target: { value: string } }) => {
+    const handleInputChange = (e: { target: { value: string, getBoundingClientRect: any } }) => {
         const inputValue = e.target.value;
         setComment(inputValue);
 
         // Check if there's an @ symbol followed by text, but ignore if it's part of a selected mention
         const mentionTrigger = inputValue.match(/@(\w*)$/);
         if (mentionTrigger && mentionTrigger[1].length > 0) {
+            // const rect = e.target.getBoundingClientRect();
+            // popupRef.current.top = `${rect.top + window.scrollY}px`;
             setIsMentioning(true);
+
         } else {
             setIsMentioning(false);
         }
     };
+
+    useUpdateEffect(() => {
+        if (!isMentioning) return;
+        const positionObj = getCaretCoordinates(inputRef.current, inputRef.current.selectionStart, inputRef.current.parentNode.parentNode);
+        popupRef.current.style.left = `${positionObj?.left ?? 0 + window.scrollX}px`;
+    }, [isMentioning])
 
     const handleKeyDown = (e: { currentTarget: any; key: string; preventDefault: () => void }) => {
         if (!isMentioning) return;
@@ -1468,7 +1478,7 @@ const VideoPage = () => {
                             )}
                             <div className="pb-6 border-b border-b-[#0000001f] cursor-pointer w-full flex flex-row items-center gap-2.5 relative">
                                 <div
-                                    className={`bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn() ? 'focus-within:border-[#16182333]' : ''
+                                    className={`${isDarkTheme ? 'bg-[#FFFFFF1F]' : 'bg-[#1618230f]'} flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn() ? 'focus-within:border-[#16182333]' : ''
                                         } rounded-lg cursor-text pr-2 pl-4 w-full`}
                                 >
                                     <input
@@ -1528,7 +1538,7 @@ const VideoPage = () => {
                                 {isMentioning && (
                                     <div
                                         ref={popupRef}
-                                        className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-fit z-10"
+                                        className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-max z-10"
                                     >
                                         {filteredUsers.length > 0 ? (
                                             filteredUsers.map(
@@ -1578,7 +1588,7 @@ const VideoPage = () => {
                         </div>}
                     </div>
                     {/* All comments section */}
-                    {Boolean(privacyPrivilege)?privacyPrivilege?.privacyOptions?.allowComments ? <InfiniteScroll
+                    {Boolean(privacyPrivilege) ? privacyPrivilege?.privacyOptions?.allowComments ? <InfiniteScroll
                         dataLength={videoComments?.items?.length}
                         next={paginateComments}
                         hasMore={videoComments.items.length < videoComments?.totalItems || videoComments?.totalItems === null}
@@ -1685,7 +1695,7 @@ const VideoPage = () => {
                                             {comment_index === currentCommentIndex &&
                                                 isReplyToCommentClicked && (
                                                     <div className="cursor-pointer flex w-full flex-row items-center gap-2.5 mt-2">
-                                                        <div className="bg-[#1618230f] flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full mr-1">
+                                                        <div className={`${isDarkTheme ? 'bg-[#FFFFFF1F]' : 'bg-[#1618230f]'} flex flex-row items-center justify-between border-[0.063rem] border-transparent focus-within:border-[#16182333] rounded-lg cursor-text pr-2 pl-4 w-full mr-1`}>
                                                             <input
                                                                 value={commentReply}
                                                                 onChange={(e) =>
@@ -1694,7 +1704,7 @@ const VideoPage = () => {
                                                                 maxLength={150}
                                                                 placeholder="Add comment..."
                                                                 type="text"
-                                                                className="bg-transparent placeholder-[#4d4e58] text-black w-full"
+                                                                className="bg-transparent placeholder-[#4d4e58] w-full"
                                                             />
                                                             <div className="flex flex-row items-center">
                                                                 <div
@@ -2075,7 +2085,7 @@ const VideoPage = () => {
                         <p className="font-bold text-xl">
                             Comments are disabled
                         </p>
-                    </div>:''}
+                    </div> : ''}
                     {isCommentsLoading && (
                         <div
                             style={{

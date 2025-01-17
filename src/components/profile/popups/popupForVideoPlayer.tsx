@@ -45,6 +45,7 @@ import { set } from 'lodash';
 import { copyLinkHandler, facebookShareHandler, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import PopupForPrivacySettings from './popupForPrivacySettings';
+import { useUpdateEffect } from 'react-use';
 // import PopupForDeleteMedia from './popupForDeleteMedia';
 
 
@@ -671,9 +672,9 @@ export default function PopupForVideoPlayer({
         }
     }, [videoModal]);
 
-    useEffect(() => {
-      if (privacyPrivilege?.privacyOptions?.allowComments) paginateComments();
-    }, [privacyPrivilege])
+    useUpdateEffect(() => {
+      if (privacyPrivilege?.privacyOptions?.allowComments) paginateComments(true);
+    }, [privacyPrivilege?.privacyOptions?.allowComments])
     
 
     const lightThemePalette = createTheme({
