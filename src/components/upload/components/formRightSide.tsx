@@ -60,6 +60,7 @@ function FormRightSide(props: any) {
     const [postCategories, setPostCategories] = useState(categories);
     const [countries, setCountries] = useState<any>([]);
     const [filteredCountries, setFilteredCountries] = useState<any>([]);
+    const [filteredFollowers, setFilteredFollowers] = useState<any>(followers);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('token');
     const [coverTab, setCoverTab] = useState<string>('suggestion');
@@ -103,6 +104,11 @@ function FormRightSide(props: any) {
     }, []);
 
     useEffect(() => {
+        setFilteredFollowers(followers)
+    }, [followers])
+    
+
+    useEffect(() => {
         const taggedFollowers = taggedUsers.map((user: any) => user?._id);
         updateState('taggedUsers', taggedFollowers);
     }, [taggedUsers]);
@@ -131,10 +137,22 @@ function FormRightSide(props: any) {
         setFilteredCountries(filteredCountriesArr);
     }
 
+    const filterFollowers = (e: any) => {
+        const filteredFollowersArr = followers.filter((follower: any) => {
+            if (follower?.follower_userID?.name?.toLowerCase().includes(e.target.value.toLowerCase())) {
+                return follower;
+            }
+        });
+        setFilteredFollowers(filteredFollowersArr);
+    }
+
     useUpdateEffect(() => {
         setFilteredCountries(countries);
     }, [postLocationsPopup]);
 
+    useUpdateEffect(()=>{
+        setFilteredFollowers(followers)
+    },[tagUsersPopup])
     return (
         <div className="flex-[1.7] flex flex-col mt-[8rem] items-start pl-[2.5rem] md:pl-0 pr-[2.5rem]">
             <div className="w-[100%]">
@@ -527,6 +545,8 @@ function FormRightSide(props: any) {
                 <div className="bg-custom-light p-[2rem] rounded-[8px] w-[570px]">
                     <div className="mb-[1rem]">
                         <BasicInput
+                            autoFocus
+                            onChange={filterFollowers}
                             startAdornment={
                                 <img className="w-[1.5rem] h-[1.5rem]" src={search} alt="" />
                             }
@@ -538,9 +558,9 @@ function FormRightSide(props: any) {
                         id="taggedUsersScrollableDiv"
                     >
                         <InfiniteScroll
-                            dataLength={followers?.length}
+                            dataLength={filteredFollowers?.length}
                             next={loadMoreFollowers}
-                            hasMore={followers.length < totalFollowers || totalFollowers === null}
+                            hasMore={filteredFollowers.length < totalFollowers || totalFollowers === null}
                             loader={
                                 <div
                                     style={{
@@ -565,7 +585,7 @@ function FormRightSide(props: any) {
                                 </div>
                             }
                         >
-                            {followers.map((follower: any, index: number) => {
+                            {filteredFollowers.map((follower: any, index: number) => {
                                 return (
                                     <div
                                         key={index}

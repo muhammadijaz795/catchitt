@@ -450,6 +450,22 @@ export const PrivacySecurityPage = () => {
                                     />
                                 </div>
 
+                                {/* Refresh For you Feed */}
+                                <div className={styles.card}>
+                                    <p>Refresh for you feed</p>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={false}
+                                                onChange={(e) => handleSwitchChange(e, 'refreshFeed')}
+                                            />
+                                        }
+                                    />
+                                </div>
+
                             </FormGroup>
                         </div>
                         <div className={styles.accountCards} onClick={handleOpenBlockedModal}>

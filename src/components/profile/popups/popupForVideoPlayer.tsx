@@ -42,9 +42,10 @@ import Forwardusers from '../../../shared/popups/shareTo/Forwardusers';
 import CountUp from 'react-countup';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { set } from 'lodash';
-import { copyLinkHandler, facebookShareHandler, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import PopupForPrivacySettings from './popupForPrivacySettings';
+import { useUpdateEffect } from 'react-use';
 // import PopupForDeleteMedia from './popupForDeleteMedia';
 
 
@@ -495,6 +496,12 @@ export default function PopupForVideoPlayer({
         }
     };
 
+    useUpdateEffect(() => {
+        if (!isMentioning) return;
+        const positionObj = getCaretCoordinates(inputRef.current, inputRef.current.selectionStart, inputRef.current.parentNode);
+        popupRef.current.style.left = `${positionObj?.left ?? 0 + window.scrollX}px`;
+    }, [isMentioning])
+
     const handleKeyDown = (e: { currentTarget: any; key: string; preventDefault: () => void }) => {
         if (!isMentioning) return;
 
@@ -671,9 +678,9 @@ export default function PopupForVideoPlayer({
         }
     }, [videoModal]);
 
-    useEffect(() => {
-      if (privacyPrivilege?.privacyOptions?.allowComments) paginateComments();
-    }, [privacyPrivilege])
+    useUpdateEffect(() => {
+      if (privacyPrivilege?.privacyOptions?.allowComments) paginateComments(true);
+    }, [privacyPrivilege?.privacyOptions?.allowComments])
     
 
     const lightThemePalette = createTheme({
@@ -1634,7 +1641,7 @@ export default function PopupForVideoPlayer({
                                                     : ''
                                                     } rounded-lg cursor-text pr-2 pl-4 w-full`}
                                             >
-                                                <form onSubmit={(e)=>{e.preventDefault();addCommentHandler();}}>
+                                                <form className='flex-1 relative' onSubmit={(e)=>{e.preventDefault();addCommentHandler();}}>
 
                                                 <input
                                                     onFocus={() => {
@@ -1709,7 +1716,7 @@ export default function PopupForVideoPlayer({
                                         {isMentioning && (
                                             <div
                                                 ref={popupRef}
-                                                className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-fit z-10"
+                                                className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-max z-10"
                                             >
                                                 {filteredUsers.length > 0 ? (
                                                     filteredUsers.map(

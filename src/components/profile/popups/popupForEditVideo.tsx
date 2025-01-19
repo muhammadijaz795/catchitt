@@ -242,6 +242,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
       const data = new Uint8Array(fileData as unknown as ArrayBuffer);
       const newVideo = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
       setVideo(newVideo);
+      setSelectedAudio(null);
       // if (videoRef.current) {
       //   videoRef.current.src = URL.createObjectURL(
       //     new Blob([data.buffer], { type: 'video/mp4' })

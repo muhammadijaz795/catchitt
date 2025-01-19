@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { BASE_URL_FRONTEND, showToast } from './constants';
+import { API_KEY, BASE_URL_FRONTEND, showToast } from './constants';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 
@@ -162,3 +162,78 @@ export const addAudioToVideo = async (videoBlob:Blob, audioFile: string) => {
 //     const data = await ffmpeg.readFile('output.mp4');
 //     return URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
 //   };
+
+
+export function getCaretCoordinates(inputElement:HTMLInputElement, cursorPosition:number, parentElement:HTMLDivElement) {
+    try {
+        const inputStyles = window.getComputedStyle(inputElement);
+        console.log(inputStyles)
+        // Create a hidden mirror element
+        const mirrorDiv = document.createElement('div');
+        mirrorDiv.className = 'hidden-input-mirror';
+        
+        // Copy necessary styles
+        for (let key of [
+            'fontFamily', 'fontSize', 'fontWeight', 'fontStyle',
+            'letterSpacing', 'textTransform', 'wordSpacing', 'lineHeight',
+            'padding', 'border', 'whiteSpace'
+        ]) {
+            // @ts-ignore
+            mirrorDiv.style[key] = inputStyles[key];
+        }
+        
+        mirrorDiv.style.maxWidth = inputStyles.width;
+        // Set the text content up to the cursor position
+        const inputText = inputElement.value.substring(0, cursorPosition);
+        mirrorDiv.textContent = inputText;
+        
+        // Add a marker to determine the exact position
+        const markerSpan = document.createElement('span');
+        markerSpan.textContent = '|';  // A placeholder for the caret
+        mirrorDiv.appendChild(markerSpan);
+    
+        // Append the mirror div to the input's parent
+        parentElement.appendChild(mirrorDiv);
+        
+        // Calculate the marker's position
+        // const rect = markerSpan.getBoundingClientRect();
+        // const parentRect = parentElement.getBoundingClientRect();
+        const mirrorRect = mirrorDiv.getBoundingClientRect();
+        // Remove the mirror element
+        parentElement.removeChild(mirrorDiv);
+        
+        return {
+            // top: rect.top + window.scrollY,
+            // left: rect.left - parentRect.left
+            left: mirrorRect.right - mirrorRect.left
+        };
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const searchUserToAnnotate = async (query:string) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(
+            `${API_KEY}/discover/search?searchQuery=${query}&page=${1}&pageSize=30`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (response.ok) {
+            const responseData = await response.json();
+            const { users, videos, hashtags, sounds } = responseData.data;
+            return users.data;
+            // Update the state with the extracted data
+        }
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}

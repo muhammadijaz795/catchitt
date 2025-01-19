@@ -406,3 +406,12 @@ a.customPlayBtn::after {
 .EmojiPickerReact {
   --epr-category-navigation-button-size: 37px !important;
 }
+
+
+.hidden-input-mirror {
+  visibility: hidden;
+  white-space: pre-wrap;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
