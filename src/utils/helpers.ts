@@ -167,7 +167,6 @@ export const addAudioToVideo = async (videoBlob:Blob, audioFile: string) => {
 export function getCaretCoordinates(inputElement:HTMLInputElement, cursorPosition:number, parentElement:HTMLDivElement) {
     try {
         const inputStyles = window.getComputedStyle(inputElement);
-        console.log(inputStyles)
         // Create a hidden mirror element
         const mirrorDiv = document.createElement('div');
         mirrorDiv.className = 'hidden-input-mirror';
@@ -212,7 +211,7 @@ export function getCaretCoordinates(inputElement:HTMLInputElement, cursorPositio
     }
 }
 
-export const searchUserToAnnotate = async (query:string) => {
+export const searchUserToAnnotate = async (query:string, signal:AbortSignal) => {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(
@@ -223,6 +222,7 @@ export const searchUserToAnnotate = async (query:string) => {
                     'Content-type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
+                signal
             }
         );
 
@@ -234,6 +234,5 @@ export const searchUserToAnnotate = async (query:string) => {
         }
     } catch (error) {
         console.log(error);
-        return [];
     }
 }

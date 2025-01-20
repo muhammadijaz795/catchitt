@@ -12,6 +12,7 @@ import AudioWaveForm from './AudioWaveForm';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import useUpload from '../../upload/hooks';
+import { useUpdateEffect } from 'react-use';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -201,6 +202,10 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   useEffect(() => {
     console.log(loaded);
   }, [loaded]);
+  
+  useUpdateEffect(()=>{
+    setSelectedAudio(null);
+  },[audioTabSelected])
 
   const handleAudioManipulation = async () => {
     try {
@@ -335,7 +340,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
 
               </div>
               {/* RECOMENDETION CONTAINER */}
-              <div className={`${style.recommendedContainer} border-r border-gray-200 overflow-y-auto relative`}>
+              <div className={`${style.recommendedContainer} border-r border-gray-200 relative`}>
                 <div className={style.audioTabs}>
                   <span onClick={switchAudioTab} id='Recommended' className={`${style.audioTab} ${audioTabSelected === 'Recommended' ? style.audioTabSelected : ''} font-medium`}>Recommended</span>
                   <span onClick={switchAudioTab} id='Favorites' className={`${style.audioTab} ${audioTabSelected === 'Favorites' ? style.audioTabSelected : ''} font-medium`}>Favorites</span>

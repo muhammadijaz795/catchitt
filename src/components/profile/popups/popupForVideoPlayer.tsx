@@ -42,7 +42,7 @@ import Forwardusers from '../../../shared/popups/shareTo/Forwardusers';
 import CountUp from 'react-countup';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { set } from 'lodash';
-import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import PopupForPrivacySettings from './popupForPrivacySettings';
 import { useUpdateEffect } from 'react-use';
@@ -71,6 +71,8 @@ export default function PopupForVideoPlayer({
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
+    const abortController = useRef<AbortController | null>(null);
 
     // const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
     const [videoLikes, setVideoLikes] = useState<number>(0);
@@ -127,6 +129,8 @@ export default function PopupForVideoPlayer({
     const [isPrivacyModalOpened, setIsPrivacyModalOpened] = useState(false)
     const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [isFetchingUsers, setIsFetchingUsers] = useState(false);
+
     const open = Boolean(anchorEl);
 
     const videoData = {
@@ -380,6 +384,7 @@ export default function PopupForVideoPlayer({
     const atRateHandler = () => {
         setComment((prev) => prev + '@');
         setIsMentioning(true);
+        setIsFetchingUsers(true);
         inputRef.current.focus(); // Focus back on input
     };
 
@@ -508,13 +513,28 @@ export default function PopupForVideoPlayer({
         // Navigate down
         if (e.key === 'ArrowDown') {
             e.preventDefault();
-            setMentionIndex((prevIndex) => Math.min(prevIndex + 1, filteredUsers.length - 1));
+            // setMentionIndex((prevIndex) => Math.min(prevIndex + 1, filteredUsers.length - 1));
+            const newIndex = Math.min(mentionIndex + 1, filteredUsers.length - 1);
+            setMentionIndex(newIndex);
+            if (filteredUsers.length > 5 && newIndex > 4) {
+                console.dir(popupRef.current);
+                const { clientHeight } = popupRef.current.firstChild;
+                popupRef.current.scrollTop += clientHeight;
+            }
         }
 
         // Navigate up
         if (e.key === 'ArrowUp') {
             e.preventDefault();
-            setMentionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+            // setMentionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+            const newIndex = Math.max(mentionIndex - 1, 0);
+            setMentionIndex(newIndex);
+            if (filteredUsers.length > 5 && (filteredUsers.length-5) > newIndex )
+            {
+                console.dir(popupRef.current);
+                const { clientHeight } = popupRef.current.firstChild;
+                popupRef.current.scrollTop -= clientHeight;
+            }
         }
 
         // Select user with Enter key
@@ -694,6 +714,38 @@ export default function PopupForVideoPlayer({
             mode: 'dark',
         },
     });
+
+    useEffect(() => {
+        if (isMentioning) {
+            // Filter users based on the current input
+            const query = comment.slice(comment.lastIndexOf('@') + 1).toLowerCase();
+            if (query.length) setIsFetchingUsers(true);
+            if (query.length > 2) {
+                if (abortController.current) abortController.current.abort();
+                const controller = new AbortController();
+                abortController.current = controller;
+                // const filtered = dummyUsers.filter((user) =>
+                //     user.username.toLowerCase().includes(query)
+                // );
+                // setFilteredUsers(filtered.slice(0, 5)); // Limit to 5 users
+                (async ()=>{
+                    const searchResultArr = await searchUserToAnnotate(query, controller.signal);
+                    console.log(searchResultArr);
+                    if (!Array.isArray(searchResultArr)) return;
+                    setFilteredUsers(searchResultArr);
+                    setIsFetchingUsers(false);
+                })()
+            } else {
+                setFilteredUsers([]);
+            }
+        } else {
+            setFilteredUsers([]);
+        }
+        
+        return () => {
+            if (abortController.current) abortController.current.abort();
+        }
+    }, [comment, isMentioning]);
 
     return (
         <ThemeProvider theme={darkThemePalette}>
@@ -1713,61 +1765,56 @@ export default function PopupForVideoPlayer({
                                         </div>
                                         <EmojiPicker className="mt-2" open={commentEmojiIndex === -2 ? true : false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} />
 
-                                        {isMentioning && (
-                                            <div
-                                                ref={popupRef}
-                                                className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-max z-10"
-                                            >
-                                                {filteredUsers.length > 0 ? (
-                                                    filteredUsers.map(
-                                                        (
-                                                            user: {
-                                                                id?: any;
-                                                                avatar?: any;
-                                                                name?: any;
-                                                                username: any;
-                                                            },
-                                                            index: number
-                                                        ) => (
-                                                            <div
-                                                                key={user.id}
-                                                                className={`flex flex-row justify-start items-center cursor-pointer px-2 pt-2 hover:bg-gray-800 gap-3 border-b border-gray-100 pb-2 ${index === mentionIndex
-                                                                    ? 'bg-gray-700'
-                                                                    : ''
-                                                                    } ${index === 0
-                                                                        ? 'rounded-t-lg'
-                                                                        : ''
-                                                                    } ${filteredUsers.length - 1 ===
-                                                                        index
-                                                                        ? 'rounded-b-lg'
-                                                                        : ''
-                                                                    }`}
-                                                                onClick={() =>
-                                                                    handleUserSelect(user)
-                                                                }
-                                                            >
-                                                                <img
-                                                                    className="object-contain w-10 h-10 rounded-full"
-                                                                    src={user.avatar}
-                                                                />
-                                                                <div className="text-left text-white">
-                                                                    <p className="text-base font-medium">
-                                                                        {user.name}
-                                                                    </p>
-                                                                    <p className="text-xs font-normal">
-                                                                        {user.username}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    )
-                                                ) : (
-                                                    <div className="px-4 py-2 text-white">
-                                                        No users found
+                                        
+                                {isMentioning && (
+                                    <div
+                                        ref={popupRef}
+                                        className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-max z-10 max-h-80 overflow-y-auto "
+                                    >
+                                        {filteredUsers.length > 0 ? (
+                                            filteredUsers.map(
+                                                (
+                                                    user: {
+                                                        id?: any;
+                                                        avatar?: any;
+                                                        name?: any;
+                                                        username: any;
+                                                    },
+                                                    index: number
+                                                ) => (
+                                                    <div
+                                                        key={user.id}
+                                                        className={`flex flex-row justify-start items-center cursor-pointer px-2 pt-2 hover:bg-gray-800 gap-3 border-b border-gray-100 pb-2 ${index === mentionIndex
+                                                            ? 'bg-gray-700'
+                                                            : ''
+                                                            } ${index === 0 ? 'rounded-t-lg' : ''} ${filteredUsers.length - 1 === index
+                                                                ? 'rounded-b-lg'
+                                                                : ''
+                                                            }`}
+                                                        onClick={() => handleUserSelect(user)}
+                                                    >
+                                                        <img
+                                                            className="object-contain w-10 h-10 rounded-full"
+                                                            src={user.avatar||defaultAvatar}
+                                                        />
+                                                        <div className="text-left text-white">
+                                                            <p className="text-base font-medium">
+                                                                {user.name}
+                                                            </p>
+                                                            <p className="text-xs font-normal">
+                                                                {user.username}
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                )}
+                                                )
+                                            )
+                                        ) : (
+                                            <div className="px-4 py-2 text-white min-w-32 text-center">
+                                               {isFetchingUsers? <CircularProgress style={{width:'20px',height:'20px',padding:'0px',marginBottom:'-4px'}}/>:'No users found'} 
                                             </div>
                                         )}
+                                    </div>
+                                )}
                                     </div>}
                                 </div>
                             </div>
