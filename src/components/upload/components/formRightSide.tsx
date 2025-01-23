@@ -591,7 +591,8 @@ function FormRightSide(props: any) {
                                         key={index}
                                         className="flex py-[1rem] items-center gap-3 hover:bg-custom-gray-400 cursor-pointer"
                                         onClick={() => {
-                                            setTaggedUser([
+                                            const isAlreadyTagged = taggedUsers.some((user)=>user._id===follower?.follower_userID?._id);
+                                           if(!isAlreadyTagged) setTaggedUser([
                                                 ...taggedUsers,
                                                 {
                                                     name: follower?.follower_userID?.name,

@@ -1200,7 +1200,7 @@ function App() {
                                                             <>
                                                                 <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
                                                                     <input
-                                                                        className="w-2/3 bg-login-btn"
+                                                                        className="bg-login-btn w-full"
                                                                         type="text"
                                                                         placeholder={`${isForgotPasswordScenario
                                                                             ? 'Email address'
