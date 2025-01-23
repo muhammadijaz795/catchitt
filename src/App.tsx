@@ -686,7 +686,7 @@ function App() {
 
     useUpdateEffect(() => {
         if (month && date && year) {
-            let dob = year + '-' + month.toString().padStart(2,"0") + '-' + date.toString().padStart(2,"0");
+            let dob = year + '-' + month.toString().padStart(2, "0") + '-' + date.toString().padStart(2, "0");
             const parsedDob = new Date(dob);
             const currentDate = new Date();
             if (parsedDob > currentDate) {
@@ -1100,13 +1100,14 @@ function App() {
                                                                     </div>
                                                                     <input
                                                                         className="w-2/3 bg-login-btn"
-                                                                        type="tel"
+                                                                        type="number"
+                                                                        maxLength={15}
                                                                         placeholder="Phone number"
                                                                         value={phoneNumber}
-                                                                        onChange={(e) =>
-                                                                            setPhoneNumber(
-                                                                                e.target.value
-                                                                            )
+                                                                        onChange={(e) => {
+                                                                            const { value } = e.target;
+                                                                            setPhoneNumber(value.substring(0, 15));
+                                                                        }
                                                                         }
                                                                     />
                                                                 </div>
@@ -1704,12 +1705,12 @@ function App() {
                                                                                 >
                                                                                     29
                                                                                 </MenuItem>
-                                                                                {!['2'].some(i=>i==month)&&<MenuItem
+                                                                                {!['2'].some(i => i == month) && <MenuItem
                                                                                     value={30}
                                                                                 >
                                                                                     30
                                                                                 </MenuItem>}
-                                                                                {!['2','4','6','9','11'].some(i=>i==month)&&<MenuItem
+                                                                                {!['2', '4', '6', '9', '11'].some(i => i == month) && <MenuItem
                                                                                     value={31}
                                                                                 >
                                                                                     31
@@ -1745,7 +1746,7 @@ function App() {
                                                                         </FormControl>
                                                                     </div>
                                                                 </div>
-                                                                {isInvalidDate&&<p className='text-red-600 text-sm text-start mt-1 font-semibold'>Selected DOB is Incorrect 😞</p>}
+                                                                {isInvalidDate && <p className='text-red-600 text-sm text-start mt-1 font-semibold'>Selected DOB is Incorrect 😞</p>}
                                                                 <div className="flex flex-row justify-between items-center mt-3.5">
                                                                     <p className="font-medium text-[0.938rem]">
                                                                         {signupWithPhone
@@ -1881,14 +1882,14 @@ function App() {
                                                                             </div>
                                                                             <input
                                                                                 className="w-2/3 bg-login-btn"
-                                                                                type="tel"
+                                                                                type="number"
+                                                                                maxLength={15}
                                                                                 placeholder="Phone number"
                                                                                 value={phoneNumber}
-                                                                                onChange={(e) =>
-                                                                                    setPhoneNumber(
-                                                                                        e.target
-                                                                                            .value
-                                                                                    )
+                                                                                onChange={(e) => {
+                                                                                    const { value } = e.target;
+                                                                                    setPhoneNumber(value.substring(0, 15));
+                                                                                }
                                                                                 }
                                                                             />
                                                                         </div>
