@@ -23,6 +23,7 @@ import ChatHeader from './components/ChatHeader';
 import ForFriends from './components/welcomeScreens/ForFriends';
 import ForPeoples from './components/welcomeScreens/ForPeoples';
 import ForGroups from './components/welcomeScreens/ForGroups';
+import { useUpdateEffect } from 'react-use';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -85,7 +86,7 @@ const ChatComponent = () => {
     const [blockToggle, setBlockToggle] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [isDarkTheme, setIsDarkTheme] = useState('');
-
+    const [recievedMsg, seTRecievedMsg] = useState<any>(null)
     const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
 
     const longPressH = (item: any) => {
@@ -138,6 +139,7 @@ const ChatComponent = () => {
         (socketRef.current as any).on('receive-msg', (message: any) => {
             let chatActiveUser = localStorage.getItem('chatActiveUser');
             activeUser?.userId
+            seTRecievedMsg(message);
             if (chatActiveUser == message.senderId._id) {
                 console.log('received msg');
                 setActiveChat((currentChat: any) => ({
@@ -164,12 +166,34 @@ const ChatComponent = () => {
 
     }
 
+    
+
+    useUpdateEffect(() => {
+        if (!recievedMsg) return;
+        console.log('first check users array', users, activeChat);
+        let tempUserArr: any[] = [];
+        users?.forEach((user) => {
+            if (user?.conversationId === recievedMsg.conversationId) {
+                tempUserArr.push({
+                    ...user,
+                    lastMsg: recievedMsg.message,
+                    unReadMsgs: conversationId===user.conversationId? user.unReadMsgs:user.unReadMsgs+1,
+                });
+            } else {
+                tempUserArr.push(user);
+            }
+        });
+        setUsers(tempUserArr); 
+        seTRecievedMsg(null)
+    }, [recievedMsg])
+
     const chatSwitchH = (e: any) => {
+
         console.log(
             "chatSwitchH"
         );
 
-        users?.forEach((user,index) => {
+        users?.forEach((user, index) => {
             if (user?.userId === e) {
                 setActiveChat({});
                 setSender(user?.senderId);
@@ -988,8 +1012,8 @@ const ChatComponent = () => {
             />
             <Forwardusers onOpen={forwardModal} onClose={() => setforwardModal(false)} />*/}
             <div>
-                <ToastContainer/>
-            </div> 
+                <ToastContainer />
+            </div>
         </Layout>
     );
 };
