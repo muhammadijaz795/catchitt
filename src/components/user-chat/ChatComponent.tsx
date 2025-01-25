@@ -166,8 +166,6 @@ const ChatComponent = () => {
 
     }
 
-    
-
     useUpdateEffect(() => {
         if (!recievedMsg) return;
         console.log('first check users array', users, activeChat);
@@ -769,6 +767,7 @@ const ChatComponent = () => {
         }
     });
 
+
     return (
         <Layout
         // globalClicker={globalClickH}
@@ -791,6 +790,7 @@ const ChatComponent = () => {
                     onBlock={onBlock}
                     setstaredmodal={setstaredmodal}
                     isDarkTheme={!!isDarkTheme}
+                    activeConversation={conversationId}
                 />
                 <div className={style.chat}>
                     <div className={style.sec1}

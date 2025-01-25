@@ -7,7 +7,7 @@ import UserChat from './chat';
 import style from './chats.module.scss';
 import ResponsiveDialog from './ResponsiveDialog';
 
-function UserChats({ data, OnChatClick, id, userPinH, onBlock, setstaredmodal, isDarkTheme}: any) {
+function UserChats({ data, OnChatClick, id, userPinH, onBlock, setstaredmodal, isDarkTheme, activeConversation}: any) {
   const [openSettingsDialog, setOpenSettingsDialog] = useState(false);
 
   const handleOpenSettingsDialog = () => {
@@ -27,7 +27,7 @@ function UserChats({ data, OnChatClick, id, userPinH, onBlock, setstaredmodal, i
       </div>
       <div key={id} className={style.userChats}>
         {data?.map((chat: any, index: number) => {
-          return <UserChat id={chat.conversationId}  key={chat.conversationId} {...chat} OnChatClick={OnChatClick} userPinH={userPinH} onBlock={onBlock}  setstaredmodal={setstaredmodal} isDarkTheme={isDarkTheme} />;
+          return <UserChat isActive={activeConversation===chat.conversationId} id={chat.conversationId}  key={chat.conversationId} {...chat} OnChatClick={OnChatClick} userPinH={userPinH} onBlock={onBlock}  setstaredmodal={setstaredmodal} isDarkTheme={isDarkTheme} />;
         })}
       </div>
     </div>

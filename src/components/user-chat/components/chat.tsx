@@ -31,7 +31,7 @@ const ITEM_HEIGHT = 60;
 
 
 function UserChat(props: any) {
-    const { userName, lastMsg, ispined, isBlocked, lastSeen, unReadMsgs, OnChatClick, userId, id, isGroup, userImage, conversationId, userPinH, onBlock, setstaredmodal, isDarkTheme } = props || {};
+    const { userName, lastMsg, ispined, isBlocked, lastSeen, unReadMsgs, OnChatClick, userId, id, isGroup, userImage, conversationId, userPinH, onBlock, setstaredmodal, isDarkTheme, isActive } = props || {};
     // console.log("user chat props ", props);
     // const {
     //     moreOptions,
@@ -209,7 +209,7 @@ function UserChat(props: any) {
     return (
         <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
             <div
-                className={`${style.chat} ${isDarkTheme ? 'hover:bg-[#282828]' : 'hover:bg-[#dfdfdf]'}`}
+                className={`${style.chat} ${isDarkTheme ? 'hover:bg-[#282828]' : 'hover:bg-[#dfdfdf]'} ${isActive? isDarkTheme ? 'bg-[#282828]' : 'bg-[#dfdfdf]':''}`}
                 onClick={() => OnChatClick(userId)}
             >
                 {lastMsg ? (
