@@ -24,6 +24,7 @@ import ForFriends from './components/welcomeScreens/ForFriends';
 import ForPeoples from './components/welcomeScreens/ForPeoples';
 import ForGroups from './components/welcomeScreens/ForGroups';
 import { useUpdateEffect } from 'react-use';
+import Forwardusers from './components/modals/Forwardusers';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -55,6 +56,7 @@ const ChatComponent = () => {
     const [copyModal, setCopyModal] = useState(false);
     const [replySms, setreplysms] = useState<boolean>(false);
     const [forwardModal, setforwardModal] = useState<boolean>(false);
+    const [forwardMsg, setForwardMsg] = useState<any>(null);
     const [staredmodal, setstaredmodal] = useState<boolean>(false);
     const [searchMessage, showSearchMessage] = useState<boolean>(false);
     const [selectedData, setselectedData] = useState<any[]>([]);
@@ -147,6 +149,7 @@ const ChatComponent = () => {
                     chats: [
                         ...currentChat?.chats,
                         {
+                            isForwarded:message?.isForwarded,
                             msg: message?.message,
                             time: `${new Date().getHours()}:${new Date().getMinutes()}`,
                             emojis: false,
@@ -157,7 +160,8 @@ const ChatComponent = () => {
                             stared: message?.isStarred,
                             isRead: message?.isRead,
                             type: message?.type,
-                            replysms: false
+                            replysms: false,
+                            recieverName:message.receiverId.name
                         },
                     ],
                 }));
@@ -252,6 +256,8 @@ const ChatComponent = () => {
                         chats: [
                             ...(currentChat?.chats || []),
                             {
+                                recieverName:element.receiverId.name,
+                                isForwarded: element?.isForwarded,
                                 msg: element?.message,
                                 time: messageTimeStamp,
                                 emojis: false,
@@ -397,6 +403,24 @@ const ChatComponent = () => {
             console.log('error trendinghashtags', error);
         }
     };
+
+    const forwardH = async (item: any) => {
+        setforwardModal(true);
+        setForwardMsg(item);
+    }
+
+    const forwardNow = (selectedUsers:any) => {
+        
+        const messageData = {
+            receivers: selectedUsers.map((user:any)=>user.userId),
+            messageId: forwardMsg.id,
+            senderId: loggedUserId == sender ? sender : sender,
+            accessToken: token,
+        };
+        (socketRef.current as any).emit('forward-message', JSON.stringify(messageData));
+        setForwardMsg(null);
+        setforwardModal(false)
+    }
 
     const deleteH = async (item: any) => {
         const tempArr: any[] = [];
@@ -719,6 +743,8 @@ const ChatComponent = () => {
                 const messageTimeStamp = moment(date).format('h:mm A');
 
                 tempArr.push({
+                    recieverName:element.receiverId.name,
+                    isForwarded:element?.isForwarded,
                     msg: element?.message,
                     time: messageTimeStamp,
                     emojis: false,
@@ -880,6 +906,7 @@ const ChatComponent = () => {
                             valuesH={valuesH}
                             valuesH2={valuesH2}
                             deleteH={deleteH}
+                            forwardH={forwardH}
                             activeUser={activeUser}
                             longPressH={longPressH}
                             autoScrolElem={autoScrolElem}
@@ -1009,8 +1036,8 @@ const ChatComponent = () => {
                 onOpen={editGroupNameModal}
                 onClose={() => setEditGroupNameModal(false)}
                 onSaveChanges={onSaveChanges}
-            />
-            <Forwardusers onOpen={forwardModal} onClose={() => setforwardModal(false)} />*/}
+            />*/}
+            <Forwardusers onOpen={forwardModal} forwardNow={forwardNow} onClose={() =>{setforwardModal(false);setForwardMsg(null)}} />
             <div>
                 <ToastContainer />
             </div>
