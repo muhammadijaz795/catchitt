@@ -11,6 +11,7 @@ import {
 } from '../../utils/constants';
 import { ToastContainer } from 'react-toastify';
 
+
 const ContactUs = () => {
     const navigate = useNavigate();
     const [darkTheme, setdarkTheme] = useState('');
@@ -31,6 +32,10 @@ const ContactUs = () => {
     const handleContact = () => {
         console.log("Message sent successfully.");
         showToastSuccess("Message sent successfully.");
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+
     };
     
     return (
@@ -38,7 +43,7 @@ const ContactUs = () => {
             <Navbar />
             <div className={`py-6 px-32 mt-20 ${darkTheme}`}>
                 <div
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate('/')}
                     className="flex flex-row items-center gap-4 cursor-pointer p-4"
                 >
                     <img

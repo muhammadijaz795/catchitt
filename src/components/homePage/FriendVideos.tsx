@@ -67,7 +67,10 @@ function FriendVideos(props: any) {
         { img: commentBlack, actionType: 'comment', activeImage: commentBlack },
         { img: likeBlack, actionType: 'like', activeImage: activeLike },
     ];
-
+    // console.log(
+    //     'Boolean(localStorage.getItem(videoMuted))', JSON.parse(localStorage.getItem('videoMuted'))
+    // )
+    let boolMute = localStorage.getItem('videoMuted') == "true" ? true: false;
     const [videos, setVideos] = useState<Video[]>([]);
     const [page, setPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
@@ -76,10 +79,15 @@ function FriendVideos(props: any) {
     const [scrollY, setScrollY] = useState(0);
     const scrollableDivRef = useRef<HTMLDivElement>(null);
     const APP_URL = process.env.VITE_API_URL;
-    const [isMuted, setIsMuted] = useState(false);
+    const [isMuted, setIsMuted] = useState(boolMute);
     const [isPlaying, setIsPlaying] = useState(true);
 
     const toggleMute = () => {
+        if(isMuted){
+            localStorage.setItem('videoMuted', 'false');
+        }else{
+            localStorage.setItem('videoMuted', 'true');
+        }
         setIsMuted(prevMuted => !prevMuted);
     };
 

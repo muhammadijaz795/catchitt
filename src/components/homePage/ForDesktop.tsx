@@ -75,7 +75,9 @@ function ForDesktop(props: any) {
         { img: commentBlack, actionType: 'comment', activeImage: commentBlack },
         { img: likeBlack, actionType: 'like', activeImage: activeLike },
     ];
-
+    const videoMuted = localStorage.getItem('videoMuted') ? localStorage.getItem('videoMuted'):localStorage.setItem('videoMuted', 'true');
+    let boolMute = localStorage.getItem('videoMuted') == "true" ? true: false;
+    // console.log('videoMuted', videoMuted)
     const [videos, setVideos] = useState<Video[]>([]);
     const [page, setPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
@@ -85,14 +87,20 @@ function ForDesktop(props: any) {
     const scrollableDivRef = useRef<HTMLDivElement>(null);
     const currentVideo = useRef<HTMLDivElement>(null);
     const APP_URL = process.env.VITE_API_URL;
-    const [isMuted, setIsMuted] = useState(false);
+    const [isMuted, setIsMuted] = useState(boolMute);
     const [isPlaying, setIsPlaying] = useState(true);
     const [focusedIndex, setFocusedIndex] = useState(0);
     const itemsRef = useRef<(HTMLLIElement | null)[]>([]);
 
     const toggleMute = () => {
+        if(isMuted){
+            localStorage.setItem('videoMuted', 'false');
+        }else{
+            localStorage.setItem('videoMuted', 'true');
+        }
         setIsMuted((prevMuted) => !prevMuted);
-    };
+        
+    }
 
     const togglePlaying = () => {
         setIsPlaying((prevPlaying) => !prevPlaying);
