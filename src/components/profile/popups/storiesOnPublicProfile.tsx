@@ -7,6 +7,7 @@ import VideoPlayer from "./storyVideo";
 import { useNavigate, useParams } from "react-router-dom";
 import { avgIcon, backArrow, crossClose, defaultAvatar, deleteVideoIcon, moreInWhite, nextArrow, pauseWhite, playWhite, prevArrow, report, storyHeart, storySend, volumeOff, volumeUp } from "../../../icons";
 import PopupForDeleteVideo from "./popupForDeleteVideo";
+import ReactSlider from "react-slider";
 const API_KEY = process.env.VITE_API_URL;
 
 function StoriesOnPublicProfile({ story, onclose, openReport, isDarkTheme }: any) {
@@ -290,10 +291,30 @@ function StoriesOnPublicProfile({ story, onclose, openReport, isDarkTheme }: any
                                                 <div className={style.inputsParent}>
                                                     {
                                                         stories.map((obj: any, index: any) => {
-                                                            return (
-                                                                <input
-                                                                    className={style.progressBar} type="range" value={i > index ? 100 : i < index ? 0 : progress} />
-                                                            )
+                                                            // return (
+                                                            //     <input
+                                                            //         key={index}
+                                                            //         className={style.progressBar} type="range"
+                                                            //         //  value={i > index ? 100 : i < index ? 0 : progress}
+                                                            //           />
+                                                            // )
+                                                            return <ReactSlider
+                                                                key={index}
+                                                                className={`w-full h-1 rounded-lg`}
+                                                                // thumbClassName="h-1 w-1 bg-gray-500 rounded-full cursor-pointer focus:outline-none"
+                                                                trackClassName="rounded-lg"
+                                                                value={i > index ? 100 : i < index ? 0 : progress}
+                                                                // onChange={handleVolumeChange}
+                                                                min={0}
+                                                                max={100}
+                                                                renderTrack={(props, state) => (
+                                                                    <div
+                                                                        {...props}
+                                                                        className={`h-1 rounded-lg ${state.index === 0 ? "bg-gray-500" : "bg-gray-400"
+                                                                            }`}
+                                                                    />
+                                                                )}
+                                                            />
                                                         })
                                                     }
                                                 </div>
@@ -314,7 +335,7 @@ function StoriesOnPublicProfile({ story, onclose, openReport, isDarkTheme }: any
                                                     {
                                                         dropdown ? <div className={style.dropdown}>
                                                             <p onClick={() => { openReport() }} className="py-1"> <img src={report} alt="" />Report</p>
-                                                            {story?.user?._id === userId && <p className="py-1" onClick={()=>deleteStory(story)}> <img src={deleteVideoIcon} alt="" />Delete</p>}
+                                                            {story?.user?._id === userId && <p className="py-1" onClick={() => deleteStory(story)}> <img src={deleteVideoIcon} alt="" />Delete</p>}
                                                         </div> : null
                                                     }
 

@@ -461,7 +461,7 @@ const StoryEditor = ({ file }: any) => {
                 ''
             )}
 
-            <div className="w-[25rem] flex justify-between py-2">
+            <div className="w-[25rem] flex justify-between py-2 mt-1">
                 <div className="flex justify-start items-center gap-[1rem]">
                     <BasicSwitch
                         checked={allowDownload || false}
@@ -472,7 +472,7 @@ const StoryEditor = ({ file }: any) => {
                         Video downloads
                     </p>
                 </div>
-                <button className="py-2 bg-[rgb(255, 59, 92)] text-" onClick={exportVideo}>
+                <button className="py-1 px-3 bg-[rgb(255, 59, 92)] border hover:bg-[#e1434b] hover:text-white" onClick={exportVideo}>
                     Done
                 </button>
             </div>

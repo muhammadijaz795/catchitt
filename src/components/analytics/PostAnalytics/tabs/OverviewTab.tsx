@@ -28,7 +28,7 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
 
     const [activeTab, setActiveTab] = useState(POSTSTATISTICSTABS.VIDEO_VIEWS);
     const [chartData, setChartData] = useState<any>([])
-
+    const [totalPlayTime, setTotalPlayTime] = useState('0s')
     const switchTab = (event: React.MouseEvent<HTMLDivElement>) => {
         setActiveTab(Number(event.currentTarget.id));
     }
@@ -61,6 +61,23 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
         return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`
     }
 
+    const getMediaInfo = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+        const videoElement = (event.target as HTMLVideoElement);
+        const duration = videoElement.duration;
+        if (duration < 60) {
+            setTotalPlayTime(`0:${Math.floor(duration)}s`);
+        } else if (duration >= 60 && duration < 3600) {
+            const minutes = Math.floor(duration / 60);
+            const seconds = Math.floor(duration % 60);
+            setTotalPlayTime(`${minutes}m:${seconds}s`);
+        } else {
+            const hours = Math.floor(duration / 3600);
+            const minutes = Math.floor((duration % 3600) / 60);
+            const seconds = Math.floor(duration % 60);
+            setTotalPlayTime(`${hours}h:${minutes}m:${seconds}s`);
+        }
+    }
+
     useEffect(() => {
         // if(postAnalytics && activeTab) setChartData(prepareData(postAnalytics[possibleGraphs[activeTab]]));
     }, [activeTab])
@@ -90,7 +107,7 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
             <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} rounded shadow-sm mb-4`}>
                 <div className='inline-flex w-full ' >
                     <div onClick={switchTab} id={POSTSTATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'border-t-red-500 border-t-4' : 'border-t border-b rounded-bl-md'} rounded-tl-md`}>Video views <br /><span className='text-2xl font-semibold'>{postAnalytics?.views || 0}</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.TOTAL_PLAY_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Total play time <br /> <span className='text-2xl font-semibold'>{postAnalytics?.profileViews || 0}s</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.TOTAL_PLAY_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Total play time <br /> <span className='text-2xl font-semibold'>{totalPlayTime}</span></div>
                     <div onClick={switchTab} id={POSTSTATISTICSTABS.AVERAGE_WATCH_TIME.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Share Video <br /> <span className='text-2xl font-semibold'>{postAnalytics?.shares || 0}</span></div>
                     <div onClick={switchTab} id={POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'border-t-red-500 border-t-4' : 'border-t border-b'} border-x`}>Watched full video <br /> <span className='text-2xl font-semibold'>{postAnalytics?.watchedFullVideo?.percentage || 100}%</span></div>
                     <div onClick={switchTab} id={POSTSTATISTICSTABS.NEW_FOLLOWERS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'border-t-red-500 border-t-4' : 'border-t border-b rounded-br-md'} rounded-tr-md`}>New followers <br /> <span className='text-2xl font-semibold'>{postAnalytics?.reachedAudience?.count || 0}</span></div>
@@ -141,11 +158,11 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
                     <div className='py-2 px-4 border-b mb-4 text-left'>
                         <span className={`${isDarkTheme?'text-gray-300':'text-gray-600'} text-sm`}>Retention rate</span>
                     </div>
-                    <p className="text-gray-400 text-sm">
+                    {/* <p className="text-gray-400 text-sm">
                         Most viewers stopped watching at 0:04. play the video below to see when they lost interest.
-                    </p>
+                    </p> */}
                     <div className="mt-4 space-y-2 px-4 pb-4 ">
-                        <video className='w-44 h-80 m-auto' controls src={post?.reducedVideoUrl?.length > 0? post?.reducedVideoUrl: post?.originalUrl} />
+                        <video onLoadedMetadata={getMediaInfo} className='w-44 h-80 m-auto' controls src={post?.reducedVideoUrl?.length > 0? post?.reducedVideoUrl: post?.originalUrl} />
                     </div>
                 </div>
                 <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} shadow-sm rounded`}>

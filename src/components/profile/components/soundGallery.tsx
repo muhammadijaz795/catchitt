@@ -56,15 +56,15 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
     const abortController = useRef<AbortController | null>(null);
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
-    const [gallery, setGallery] = useState<any>({ items: mockAudios, page: 1, pageSize: 10, isNextpage: true });
+    const [gallery, setGallery] = useState<any>({ items: [], page: 1, pageSize: 5, isNextpage: true });
 
     const fetchPaginatedSounds = async (fromStart=false) => {
         try {
             const controller = new AbortController();
             abortController.current = controller;
-            const pathName = isFavoriteSounds ? `media-content/sounds?pageNumber=${fromStart?1:gallery.page}&owner=${userId}` : `audio/sound-gallery?page=${fromStart?1:gallery.page}&pageSize=${gallery.pageSize}`;
+            const pathName = isFavoriteSounds ? `profile/bookmarkedSounds?page=${fromStart?1:gallery.page}&pageSize=${gallery.pageSize}` : `audio/sound-gallery?page=${fromStart?1:gallery.page}&pageSize=${gallery.pageSize}`;
             const url = `${API_KEY}/${pathName}`;
-            const response = await axios.get(url, { headers: { Authorization: token }, signal: controller.signal });
+            const response = await axios.get(url, { headers: { Authorization: 'Bearer '+token }, signal: controller.signal });
             console.log(response.data);
             if (!response.data?.data.length) return setGallery({...gallery, isNextpage: false});
             setGallery((prev: any) => ({
@@ -80,14 +80,14 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
         }
     }
 
-    // useEffect(() => {
-    //     fetchPaginatedSounds(true);
-    //     return () => {
-    //         if (abortController.current) {
-    //             abortController.current.abort();
-    //         }
-    //     }
-    // }, [isFavoriteSounds])
+    useEffect(() => {
+        fetchPaginatedSounds(true);
+        return () => {
+            if (abortController.current) {
+                abortController.current.abort();
+            }
+        }
+    }, [isFavoriteSounds])
 
     useEffect(() => {
         console.log('🚀🚀🚀gallery', gallery);
@@ -95,7 +95,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
     
 
     return (
-        <ul className="p-2">
+        <ul id="galleryScrollableDiv" className="p-2 h-64 overflow-y-auto relative">
             <InfiniteScroll
                 dataLength={gallery.items.length}
                 next={fetchPaginatedSounds}
@@ -113,7 +113,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                 </div>}
                 className="mb-20"
                 // scrollThreshold={0.6}
-                scrollableTarget="ModalscrollableDiv"
+                scrollableTarget="galleryScrollableDiv"
                 endMessage={gallery.items.length === 0 &&
                     <div className="flex flex-row justify-center items-center mt-3">
                         <p className="font-bold text-xl">
@@ -131,8 +131,8 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                     >
                         <img className="w-10 h-10 bg-gray-200 mr-2" src={defaultAvatar} alt="soundImg" />
                         <div>
-                            <div className="font-medium text-sm">{audio.name}</div>
-                            <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span>
+                            <div className="font-medium text-sm">{Object.hasOwn(audio,'title')? audio.title: audio.name}</div>
+                            {/* <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span> */}
                         </div>
                        {/* <img src={attachMusicInWhite} alt="attach-sound" /> */}
                     </li>

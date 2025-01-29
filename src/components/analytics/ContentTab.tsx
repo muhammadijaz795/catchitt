@@ -14,7 +14,7 @@ function ContentTab({ isDarkTheme }: any) {
 
   const abortController = useRef<AbortController | null>(null);
 
-  const [posts, setPosts] = useState<any>({ items: [], page: 1, pageSize: 10, totalItems: 0 });
+  const [posts, setPosts] = useState<any>({ items: [], page: 1, pageSize: 10, totalItems: 0, isLoading: true });
   const [mediaToDelete, setMediaToDelete] = useState<any>(null)
 
   const userId = localStorage.getItem('userId');
@@ -46,6 +46,7 @@ function ContentTab({ isDarkTheme }: any) {
             ...prev,
             items: [...data.data.data],
             totalItems: data.data.total,
+            isLoading:false
           }));
         })
         .catch((err) => {
@@ -108,7 +109,7 @@ function ContentTab({ isDarkTheme }: any) {
             </tr>
           </thead>
           <tbody>
-            {posts.items.length? posts.items.map((post: any, index: number) => (
+            {posts.isLoading === false ? posts.items.map((post: any, index: number) => (
               <tr key={index} className={`border-b ${isDarkTheme?'hover:bg-gray-900':'hover:bg-gray-50'}`}>
                 <td className="p-4 flex items-center space-x-4">
                   <div className="w-14 h-24 bg-gray-200 rounded overflow-hidden">
@@ -171,7 +172,7 @@ function ContentTab({ isDarkTheme }: any) {
             marginPagesDisplayed={2}
             pageRangeDisplayed={3}
             onPageChange={(data) => {
-              setPosts((prev: any) => ({ ...prev, page: data.selected + 1 }))
+              setPosts((prev: any) => ({ ...prev, page: data.selected + 1, isLoading: true }))
             }}
             containerClassName={"pagination justify-content-center"}
             pageClassName={"page-item"}

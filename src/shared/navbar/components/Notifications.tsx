@@ -9,12 +9,13 @@ import * as React from 'react';
 import { defaultAvatar, goldCoin, logoutSvg, settingsDark, switchAcount, viewProfile } from '../../../icons';
 import style from './notifications.module.scss';
 import { useAuthStore } from '../../../store/authStore';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FavoriteBorder, AlternateEmail, ChatBubbleOutlineSharp } from '@mui/icons-material';
 const options = ['View profile', 'Get Coins', 'Settings', 'Switch Account', 'Logout'];
 import { useEffect, useState } from 'react';
 import { get, post } from '../../../axios/axiosClient';
 import { useNavigate } from 'react-router-dom';
+import { setNotificationsCount } from '../../../redux/reducers';
 
 export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -45,6 +46,8 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         follow: Notification[],
         unknown: Notification[]
     }
+
+    const dispatch = useDispatch()
 
     const [notification, setNotification] = useState<Notify>({ all: [], like: [], comment: [], tag: [], follow: [], unknown: [] });
     // const [notification, setNotification] = useState<Notification[]>([{type: 'like', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Comment', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." }, {type: 'Follow', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Tag', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Unknown Device Signin', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}]);
@@ -199,20 +202,21 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
             //   setLoading(true);
             try {
                 const response = await fetch(
-                    API_KEY + `/notification`, {
+                    API_KEY + `/notification/web`, {
                     method: 'GET',
                     headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
                 }
                 );
                 const responseData = await response.json();
-                const newNotificationList = Array.isArray(responseData.data.data)
-                    ? (responseData.data.data as Notification[])
-                    : [];
+                const newNotificationList = Array.isArray(responseData.data.data.allActivities)
+                ? (responseData.data.data.allActivities as Notification[])
+                : [];
+                dispatch(setNotificationsCount(newNotificationList));
                 // setNotification(responseData.data.data);
-                const likeNotifications = newNotificationList.filter((noti:any) => noti.type === 'like');
-                const commentNotifications = newNotificationList.filter((noti:any) => noti.type === 'Comment');
-                const tagNotifications = newNotificationList.filter((noti:any) => noti.type === 'Tag');
-                const followNotifications = newNotificationList.filter((noti:any) => noti.type === 'Follow');
+                const likeNotifications = responseData.data.data.likes;
+                const commentNotifications = responseData.data.data.comments;
+                const tagNotifications = responseData.data.data.tags;
+                const followNotifications = responseData.data.data.followers;
                 const unknownNotifications = newNotificationList.filter((noti:any) => noti.type === 'Unknown Device Signin');
                 setNotification({
                     all: newNotificationList, like: likeNotifications, comment: commentNotifications, tag: tagNotifications, follow: followNotifications, unknown: unknownNotifications
@@ -319,7 +323,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                             </div>
                                             <div className={`${style.gridLine}`}>
                                                 {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>liked your video.</p>
+                                                <p className={`${style.notificationContent}`}>{noti.message||'liked your video.'}</p>
                                             </div>
                                         </div>
                                         {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
@@ -343,7 +347,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                             </div>
                                             <div className={`${style.gridLine}`}>
                                                 {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>commented on your video.</p>
+                                                <p className={`${style.notificationContent}`}>{noti.message||'commented on your video.'}</p>
                                             </div>
                                         </div>
                                         {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
@@ -367,7 +371,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                             </div>
                                             <div className={`${style.gridLine}`}>
                                                 {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>mention you.</p>
+                                                <p className={`${style.notificationContent}`}>{noti.message || 'mention you'}</p>
                                             </div>
                                         </div>
                                         {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
@@ -392,7 +396,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                             </div>
                                             <div className={`${style.gridLine}`}>
                                                 {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>Follows you.</p>
+                                                <p className={`${style.notificationContent}`}>{noti.message||'Follows you.'}</p>
                                             </div>
                                         </div>
                                         <button className={`${style.inboxFollow}`} onClick={() => { handleFollowBack(noti?.triggeredUser?._id) }}>Follow back</button>
@@ -428,7 +432,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
                                                                     {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                                    <p className={`${style.notificationContent}`}>liked your video.</p>
+                                                                    <p className={`${style.notificationContent}`}>{noti.message||'liked your video.'}</p>
                                                                 </div>
                                                             </div>
                                                             {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
@@ -450,7 +454,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
                                                                     {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                                    <p className={`${style.notificationContent}`}>commented on your video.</p>
+                                                                    <p className={`${style.notificationContent}`}>{noti.message||'commented on your video.'}</p>
                                                                 </div>
                                                             </div>
                                                             {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
@@ -471,7 +475,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
                                                                     {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                                    <p className={`${style.notificationContent}`}>Follows you.</p>
+                                                                    <p className={`${style.notificationContent}`}>{noti.message||'Follows you.'}</p>
                                                                 </div>
                                                             </div>
                                                             <button className={`${style.inboxFollow}`} onClick={() => { handleFollowBack(noti?.triggeredUser?._id) }}>Follow back</button>
@@ -492,7 +496,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
                                                                     {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                                    <p className={`${style.notificationContent}`}>mention you.</p>
+                                                                    <p className={`${style.notificationContent}`}>{noti.message||'mention you.'}</p>
                                                                 </div>
                                                             </div>
                                                             {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
@@ -514,7 +518,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                                                 </div>
                                                                 <div className={`${style.gridLine}`}>
                                                                     {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                                    <p className={`${style.notificationContent}`}>Unknown device Signin.</p>
+                                                                    <p className={`${style.notificationContent}`}>{noti.message||'Unknown device Signin.'}</p>
                                                                 </div>
                                                             </div>
                                                             {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}

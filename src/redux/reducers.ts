@@ -32,6 +32,23 @@ const followings: any = createSlice({
     },
 });
 
+const notifications: any = createSlice({
+    name: 'notifications',
+    initialState: {
+        unreadNotiCounts: 0
+    },
+    reducers: {
+        setNotificationsCount: (state, action) => {
+            const unreadCount = action.payload.reduce((total:number, noti:any)=>{
+                if (!noti.isRead) total++
+                return total;
+            },0)
+            console.log(unreadCount)
+            state.unreadNotiCounts = unreadCount;
+        }
+    },
+});
+
 const popupSlice: any = createSlice({
     name: 'popupSlice',
     initialState: { isLoginPopup: false },
@@ -286,6 +303,7 @@ const suggestedAccounts: any = createSlice({
 export const { updateHomeVideos } = homeVideos.actions;
 export const { openLoginPopup, closeLoginPopup, toggleLoginPopup } = popupSlice.actions;
 export const { openLogoutPopup, closeLogoutPopup, toggleLogoutPopup } = popupLogoutSlice.actions;
+export const { setNotificationsCount } = notifications.actions
 
 export default combineReducers({
     followings: followings.reducer,
@@ -299,4 +317,5 @@ export default combineReducers({
     popupSlice: popupSlice.reducer,
     popupLogoutSlice:popupLogoutSlice.reducer,
     geo: geoSlice,
+    notifications: notifications.reducer
 });

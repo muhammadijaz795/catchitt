@@ -56,20 +56,20 @@ export const copyLinkHandler = (userName: string, mediaId: string, msg: string) 
         });
 };
 
-export const shareProfileby= {
-    whatsapp:  (userName:string) => {
+export const shareProfileby = {
+    whatsapp: (userName: string) => {
         window.open(`https://api.whatsapp.com/send?text=${BASE_URL_FRONTEND}/profile/${userName}`, '_blank');
     },
-    facebook: (userName:string) => {
+    facebook: (userName: string) => {
         window.open(`https://www.facebook.com/share/share.php?u=${BASE_URL_FRONTEND}/profile/${userName}`, '_blank');
     },
-    twitter: (userName:string) => {
+    twitter: (userName: string) => {
         window.open(`https://twitter.com/intent/tweet?url=${BASE_URL_FRONTEND}/profile/${userName}`, '_blank');
     },
-    linkedin: (userName:string) => {
+    linkedin: (userName: string) => {
         window.open(`https://www.linkedin.com/shareArticle?url=${BASE_URL_FRONTEND}/profile/${userName}`, '_blank');
     },
-    copyLink: async (userName:string): Promise<boolean> => {
+    copyLink: async (userName: string): Promise<boolean> => {
         try {
             await navigator.clipboard.writeText(`${BASE_URL_FRONTEND}/profile/${userName}`);
             return true;
@@ -91,7 +91,7 @@ export const createOpenDialog = (type: string | string[] = 'image', mode: string
     return input;
 };
 
-export const formatCustomDate = (milliseconds:number) => {
+export const formatCustomDate = (milliseconds: number) => {
     const date = new Date(milliseconds);
     const month = date.toLocaleString('default', { month: 'short' });
     const day = date.getDate();
@@ -106,44 +106,44 @@ export const formatCustomDate = (milliseconds:number) => {
 
 
 
-export const addAudioToVideo = async (videoBlob:Blob, audioFile: string) => {
+export const addAudioToVideo = async (videoBlob: Blob, audioFile: string) => {
     try {
 
         console.log('inside addAudioToVideo');
         const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm'
         const ffmpeg = new FFmpeg();
-        
+
         // ffmpeg.on("log", ({ type, message }) => {
         //     console.log(`${type}: ${message}`);
         // });
-        
+
         // ffmpeg.on("progress", ({ progress, time }) => {
         //     console.log(`Processing: ${progress}% done`);
         // });
-        
+
         await ffmpeg.load({
             coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
             wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
             workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
         });
-        
+
         console.log('inside addAudioToVideo 1');
-       
+
         console.log('inside addAudioToVideo 2', status);
-    // Fetch video file from the URL and read it into FFmpeg
+        // Fetch video file from the URL and read it into FFmpeg
         // const videoArrayBuffer = await videoBlob.arrayBuffer();
 
-    //   await ffmpeg.writeFile('input.mp4', new Uint8Array(videoArrayBuffer));
-    //   await ffmpeg.writeFile('input.mp3', await fetchFile(audioFile));
+        //   await ffmpeg.writeFile('input.mp4', new Uint8Array(videoArrayBuffer));
+        //   await ffmpeg.writeFile('input.mp3', await fetchFile(audioFile));
         await ffmpeg.writeFile('input.mp4', await fetchFile(videoBlob));
         await ffmpeg.writeFile('input.mp3', await fetchFile(audioFile));
 
         await ffmpeg.exec(['-i', 'input.mp4', '-i', 'input.mp3', '-c:v', 'copy', '-c:a', 'aac', 'output.mp4']);
-         
+
         const data = await ffmpeg.readFile('output.mp4');
         console.log(data);
         // @ts-ignore
-        return URL.createObjectURL(new Blob([data.buffer], {type: 'video/mp4'}));
+        return URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
     } catch (error) {
         console.error(error);
     }
@@ -153,25 +153,24 @@ export const addAudioToVideo = async (videoBlob:Blob, audioFile: string) => {
 // const addAudioToVideoURL = async (videoURL, audioURL) => {
 //     const ffmpeg = new FFmpeg();
 //     await ffmpeg.load();
-  
+
 //     await ffmpeg.writeFile('input.mp4', await fetchFile(videoURL));
 //     await ffmpeg.writeFile('input.mp3', await fetchFile(audioURL));
-  
+
 //     await ffmpeg.exec(['-i', 'input.mp4', '-i', 'input.mp3', '-c:v', 'copy', '-c:a', 'aac', 'output.mp4']);
-  
+
 //     const data = await ffmpeg.readFile('output.mp4');
 //     return URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
 //   };
 
 
-export function getCaretCoordinates(inputElement:HTMLInputElement, cursorPosition:number, parentElement:HTMLDivElement) {
+export function getCaretCoordinates(inputElement: HTMLInputElement, cursorPosition: number, parentElement: HTMLDivElement) {
     try {
         const inputStyles = window.getComputedStyle(inputElement);
-        console.log(inputStyles)
         // Create a hidden mirror element
         const mirrorDiv = document.createElement('div');
         mirrorDiv.className = 'hidden-input-mirror';
-        
+
         // Copy necessary styles
         for (let key of [
             'fontFamily', 'fontSize', 'fontWeight', 'fontStyle',
@@ -181,27 +180,27 @@ export function getCaretCoordinates(inputElement:HTMLInputElement, cursorPositio
             // @ts-ignore
             mirrorDiv.style[key] = inputStyles[key];
         }
-        
+
         mirrorDiv.style.maxWidth = inputStyles.width;
         // Set the text content up to the cursor position
         const inputText = inputElement.value.substring(0, cursorPosition);
         mirrorDiv.textContent = inputText;
-        
+
         // Add a marker to determine the exact position
         const markerSpan = document.createElement('span');
         markerSpan.textContent = '|';  // A placeholder for the caret
         mirrorDiv.appendChild(markerSpan);
-    
+
         // Append the mirror div to the input's parent
         parentElement.appendChild(mirrorDiv);
-        
+
         // Calculate the marker's position
         // const rect = markerSpan.getBoundingClientRect();
         // const parentRect = parentElement.getBoundingClientRect();
         const mirrorRect = mirrorDiv.getBoundingClientRect();
         // Remove the mirror element
         parentElement.removeChild(mirrorDiv);
-        
+
         return {
             // top: rect.top + window.scrollY,
             // left: rect.left - parentRect.left
@@ -212,7 +211,7 @@ export function getCaretCoordinates(inputElement:HTMLInputElement, cursorPositio
     }
 }
 
-export const searchUserToAnnotate = async (query:string) => {
+export const searchUserToAnnotate = async (query: string, signal: AbortSignal) => {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(
@@ -223,6 +222,7 @@ export const searchUserToAnnotate = async (query:string) => {
                     'Content-type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
+                signal
             }
         );
 
@@ -234,6 +234,5 @@ export const searchUserToAnnotate = async (query:string) => {
         }
     } catch (error) {
         console.log(error);
-        return [];
     }
 }

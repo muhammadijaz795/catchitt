@@ -105,7 +105,8 @@ const VideoPage = () => {
     const [filteredUsers, setFilteredUsers] = useState<any>([]);
     const [isMentioning, setIsMentioning] = useState(false);
     const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
-
+    const [isFetchingUsers, setIsFetchingUsers] = useState(false);
+    
     const dummyUsers = [
         { id: 1, name: 'John Doe', username: 'johndoe', avatar: avatar },
         { id: 2, name: 'Jane Smith', username: 'janesmith', avatar: avatar },
@@ -126,6 +127,7 @@ const VideoPage = () => {
     const navigate = useNavigate();
     const hideTimeoutRef = useRef<any>(null);
     const hideOptionsMenuTimeoutRef = useRef<any>(null);
+    const abortController = useRef<AbortController | null>(null);
 
     const [isFollowed, setUserIsFollowed] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
@@ -209,6 +211,7 @@ const VideoPage = () => {
     const atRateHandler = () => {
         setComment((prev) => prev + '@');
         setIsMentioning(true);
+        setIsFetchingUsers(true);
         inputRef.current.focus(); // Focus back on input
     };
 
@@ -821,13 +824,28 @@ const VideoPage = () => {
         // Navigate down
         if (e.key === 'ArrowDown') {
             e.preventDefault();
-            setMentionIndex((prevIndex) => Math.min(prevIndex + 1, filteredUsers.length - 1));
+            // setMentionIndex((prevIndex) => Math.min(prevIndex + 1, filteredUsers.length - 1));
+            const newIndex = Math.min(mentionIndex + 1, filteredUsers.length - 1);
+            setMentionIndex(newIndex);
+            if (filteredUsers.length > 5 && newIndex > 4) {
+                console.dir(popupRef.current);
+                const { clientHeight } = popupRef.current.firstChild;
+                popupRef.current.scrollTop += clientHeight;
+            }
         }
 
         // Navigate up
         if (e.key === 'ArrowUp') {
             e.preventDefault();
-            setMentionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+            // setMentionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+            const newIndex = Math.max(mentionIndex - 1, 0);
+            setMentionIndex(newIndex);
+            if (filteredUsers.length > 5 && (filteredUsers.length-5) > newIndex )
+            {
+                console.dir(popupRef.current);
+                const { clientHeight } = popupRef.current.firstChild;
+                popupRef.current.scrollTop -= clientHeight;
+            }
         }
 
         // Select user with Enter key
@@ -1019,21 +1037,32 @@ const VideoPage = () => {
         if (isMentioning) {
             // Filter users based on the current input
             const query = comment.slice(comment.lastIndexOf('@') + 1).toLowerCase();
+            if (query.length) setIsFetchingUsers(true);
             if (query.length > 2) {
+                if (abortController.current) abortController.current.abort();
+                const controller = new AbortController();
+                abortController.current = controller;
                 // const filtered = dummyUsers.filter((user) =>
                 //     user.username.toLowerCase().includes(query)
                 // );
                 // setFilteredUsers(filtered.slice(0, 5)); // Limit to 5 users
                 (async ()=>{
-                    const searchResultArr = await searchUserToAnnotate(query);
+                    const searchResultArr = await searchUserToAnnotate(query, controller.signal);
                     console.log(searchResultArr);
+                    if (!Array.isArray(searchResultArr)) return;
                     setFilteredUsers(searchResultArr);
+                    setIsFetchingUsers(false);
                 })()
             } else {
                 setFilteredUsers([]);
             }
         } else {
             setFilteredUsers([]);
+            setMentionIndex(0);
+        }
+        
+        return () => {
+            if (abortController.current) abortController.current.abort();
         }
     }, [comment, isMentioning]);
 
@@ -1544,7 +1573,7 @@ const VideoPage = () => {
                                 {isMentioning && (
                                     <div
                                         ref={popupRef}
-                                        className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-max z-10 max-h-80"
+                                        className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-max z-10 max-h-80 overflow-y-auto"
                                     >
                                         {filteredUsers.length > 0 ? (
                                             filteredUsers.map(
@@ -1584,8 +1613,8 @@ const VideoPage = () => {
                                                 )
                                             )
                                         ) : (
-                                            <div className="px-4 py-2 text-white">
-                                                No users found
+                                            <div className="px-4 py-2 text-white min-w-32 text-center">
+                                               {isFetchingUsers? <CircularProgress style={{width:'20px',height:'20px',padding:'0px',marginBottom:'-4px'}}/>:'No users found'} 
                                             </div>
                                         )}
                                     </div>

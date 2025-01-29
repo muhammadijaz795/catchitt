@@ -113,6 +113,10 @@ input[type="range"]:active {
     flex     : 1;
 }
 
+.progressBar{
+    accent-color: red !important;
+}
+
 .userData {
     display    : flex;
     align-items: flex-start;

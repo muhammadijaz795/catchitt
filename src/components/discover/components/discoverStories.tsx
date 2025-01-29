@@ -757,16 +757,15 @@ const mockStories = [
     const token = localStorage.getItem('token');
 
     const [sliderIndex, setSliderIndex] = useState(0);
-    // useEffect(() => {
-    //     get('/media-content/stories')
-    //         .then((data:any) => {
-    //             console.log('stories 🤖🤖💖🤑🥶🤮😍', data);
-    //             setStories(data?.data?.data||[]);
-    //         })
-    //         .catch((err) => {
-    //             console.log('collectons error', err);
-    //         });
-    // }, []);
+    useEffect(() => {
+        get('/media-content/stories')
+            .then((data:any) => {
+                setStories(data?.data?.data||[]);
+            })
+            .catch((err) => {
+                console.log('collectons error', err);
+            });
+    }, []);
 
     const nextSlide = () => {
         // Check if the slider reference exists
@@ -813,7 +812,7 @@ const mockStories = [
                 {stories.map((storyGroup: any, index: number) => {
                    return (
                         <div key={index} onClick={()=>showStories(storyGroup?.stories)} className={styles.story}>
-                            <img src={storyGroup?.stories[0]?.thumbnailUrl||'https://placehold.co/80x80'} alt="" />
+                            <img src={storyGroup?.avatar||'https://placehold.co/80x80'} alt="" />
                         </div>
                     )
                 })}
