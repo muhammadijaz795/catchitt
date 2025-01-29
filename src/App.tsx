@@ -903,7 +903,7 @@ function App() {
                                     </div>
                                     {isLoginSection ? (
                                         <>
-                                            <div className="overflow-auto w-[21.888rem] mx-auto ">
+                                            <div className=" w-[21.888rem] mx-auto ">
                                                 <h2
                                                     className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
                                                 >
@@ -1020,7 +1020,7 @@ function App() {
                                                                                     : 'h-80'
                                                                                     }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
                                                                             >
-                                                                                <div className="flex flex-row items-center p-2 gap-2">
+                                                                                <div className="flex flex-row items-center p-2 gap-2 border rounded-t-lg">
                                                                                     <img
                                                                                         className="object-contain h-3 w-3 m-2"
                                                                                         src={search}
@@ -1436,7 +1436,7 @@ function App() {
                                         </>
                                     ) : (
                                         <>
-                                            <div className="overflow-auto w-[21.888rem] mx-auto ">
+                                            <div className=" w-[21.888rem] mx-auto ">
                                                 <h2
                                                     className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
                                                 >
@@ -1800,7 +1800,7 @@ function App() {
                                                                                             : 'h-80'
                                                                                             }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
                                                                                     >
-                                                                                        <div className="flex flex-row items-center p-2 gap-2">
+                                                                                        <div className="flex flex-row items-center p-2 gap-2 border rounded-t-lg">
                                                                                             <img
                                                                                                 className="object-contain h-3 w-3 m-2"
                                                                                                 src={
@@ -2110,7 +2110,7 @@ function App() {
                                                     </p>
                                                 </div>
                                             )}
-                                            <div className="mt-3 bottom-0 relative">
+                                            <div className="mt-3 bottom-0 absolute w-full py-4">
                                                 <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
                                                     <h3
                                                         className={`font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 ${textColor} `}

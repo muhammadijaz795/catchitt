@@ -25,6 +25,7 @@ import ForPeoples from './components/welcomeScreens/ForPeoples';
 import ForGroups from './components/welcomeScreens/ForGroups';
 import { useUpdateEffect } from 'react-use';
 import Forwardusers from './components/modals/Forwardusers';
+import { getLatestMsgDateFormat } from '../../utils/helpers';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -179,6 +180,7 @@ const ChatComponent = () => {
                 tempUserArr.push({
                     ...user,
                     lastMsg: recievedMsg.message,
+                    lastSeen: getLatestMsgDateFormat(recievedMsg?.createdTime),
                     unReadMsgs: conversationId===user.conversationId? user.unReadMsgs:user.unReadMsgs+1,
                 });
             } else {
@@ -325,13 +327,7 @@ const ChatComponent = () => {
                     let isPinned = chats?.isPinned;
                     let unReadMsgsCount = chats?.unReadMsgsCount;
                     let isBlocked = chats?.isBlocked;
-                    // Convert milliseconds to date
-                    const date = new Date(chats?.lastMessage?.createdTime);
-
-                    // Format the date using moment.js
-                    const conversationTimeStamp = moment(date).format('h:mm A');
-                    // chats?.users?.forEach((user) => {
-
+                   
                     const isLastIndex = index === res?.data?.data?.length - 1;
 
                     // if (isLastIndex) markMessageAsSeen(chats?.users[0]?._id, chats?._id);
@@ -341,7 +337,7 @@ const ChatComponent = () => {
                         userImage: loggedUserId == chats?.users[1]?._id ? chats?.users[0]?.avatar : chats?.users[1]?.avatar,
                         lastMsg: lastMessage,
                         ispined: isPinned,
-                        lastSeen: conversationTimeStamp,
+                        lastSeen: getLatestMsgDateFormat(chats?.lastMessage?.createdTime),
                         unReadMsgs: unReadMsgsCount,
                         senderId: chats?.users[0]?._id,
                         receiverId: chats?.users[1]?._id,
@@ -501,6 +497,7 @@ const ChatComponent = () => {
                     tempUserArr.push({
                         ...activeUser,
                         lastMsg: msg,
+                        lastSeen: getLatestMsgDateFormat(Date.now()),
                     });
                 } else {
                     tempUserArr.push(user);
