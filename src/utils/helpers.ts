@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { API_KEY, BASE_URL_FRONTEND, showToast } from './constants';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
+import moment from 'moment';
 
 export const getProfile = () => {
     const token = useSelector((store: any) => store?.reducers?.profile);
@@ -235,4 +236,25 @@ export const searchUserToAnnotate = async (query: string, signal: AbortSignal) =
     } catch (error) {
         console.log(error);
     }
+}
+
+export const getLatestMsgDateFormat = (timeStamp: any) => {
+    const msgTimestamp = new Date(timeStamp);
+    const today = new Date()
+    const todayDate = today.toISOString().split('T')[0];
+    const msgDate = msgTimestamp.toISOString().split('T')[0];
+    today.setDate(today.getDate() - 1);
+    const previousDate = today.toISOString().split('T')[0];
+    let conversationTimeStamp;
+    if (todayDate === msgDate) {
+        // Format the date using moment.js
+        conversationTimeStamp = moment(msgTimestamp).format('h:mm A');
+    }
+    else if (msgDate === previousDate) {
+        conversationTimeStamp = 'yesterday';
+    }
+    else {
+        conversationTimeStamp = moment(msgTimestamp).format('ll');
+    }
+    return conversationTimeStamp;
 }
