@@ -101,7 +101,7 @@ function Actions(props: any) {
                                             right: item.receiverId == loggedInUserId ? '-145px' : 'auto',
                                             display: 'flex'
                                         }}
-                                        className={style.dropd}
+                                        className={`${style.dropd} ${isDarkTheme?'bg-[#353434]':'bg-gray-300'}`}
                                     >
                                         <div
                                             style={{
@@ -185,7 +185,7 @@ function Actions(props: any) {
 
                                     </div>
                                 )}
-                                <div className={item.isForwarded ? isDarkTheme?'bg-[#262626] rounded py-1 w-52':'bg-gray-100 border rounded py-1 w-52' : ''} style={{ position: 'relative', zIndex: 20 }}>
+                                <div className={`${item.isForwarded?(item.receiverId == loggedInUserId? (isDarkTheme?'bg-[#262626] py-1 ':'bg-slate-100 border py-1') :(isDarkTheme?'bg-[#414141] py-1':'bg-gray-100 border py-1')):''} min-w-52 rounded`} style={{ position: 'relative', zIndex: 20 }}>
                                     <LongPressButton onLongPress={() => longPressH(item)}
                                     // onMouseEnter={() => {
                                     //     longPressH(item)
@@ -223,7 +223,7 @@ function Actions(props: any) {
                                                         className={`${item.receiverId == loggedInUserId
                                                             ? style.receivedMsg
                                                             : style.sendedMsg
-                                                            } ${item.isForwarded?'py-0 bg-transparent border-0':''}`}
+                                                            } ${item.isForwarded?'py-0 bg-transparent border-0':''} ${item.receiverId == loggedInUserId? (isDarkTheme?'bg-[#262626]':'bg-slate-100'):(isDarkTheme?'bg-[#414141]':'bg-gray-100')}`}
                                                     >
                                                         <TextHighlighter searchQuery={searchQuery} text={item.msg} />
                                                     </p>}
