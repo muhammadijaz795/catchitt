@@ -43,7 +43,6 @@ const notifications: any = createSlice({
                 if (!noti.isRead) total++
                 return total;
             },0)
-            console.log(unreadCount)
             state.unreadNotiCounts = unreadCount;
         }
     },

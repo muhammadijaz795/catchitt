@@ -62,7 +62,7 @@
   top: 42px;
   // left: -145px;
   color: #fff;
-  background: rgba(84, 84, 84, 0.92);
+  // background: #353434;
   z-index: 200;
 }
 .dropd > div {
@@ -132,7 +132,7 @@
   }
   .sendedMsg {
     color: #000;
-    background: rgba(22, 24, 35, 0.06);
+    // background: rgba(22, 24, 35, 0.06);
     border: 1px solid rgba(22, 24, 35, 0.12);
     font-family: Poppins;
     font-size: 16px;
@@ -151,7 +151,7 @@
   .receivedMsg {
     color: #222;
     border: 1px solid rgba(22, 24, 35, 0.12);
-    background: transparent;
+    // background: rgba(84, 84, 84, 0.92);
     font-family: Poppins;
     font-size: 16px;
     font-style: normal;

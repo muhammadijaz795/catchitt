@@ -12,7 +12,7 @@ import Actions from './components/Actions';
 import DoMsg from './components/DoMsg';
 import StaredMesagesSec from './components/StaredMesagesSec';
 
-import { avatar, groupDefaultIcon, more, cross } from '../../icons';
+import { avatar, groupDefaultIcon, more, cross, chatEmojiBg, chatEmojiBgDark } from '../../icons';
 // style
 import style from './index.module.scss';
 import chatHeader from './components/ChatHeader.module.scss';
@@ -150,7 +150,7 @@ const ChatComponent = () => {
                     chats: [
                         ...currentChat?.chats,
                         {
-                            isForwarded:message?.isForwarded,
+                            isForwarded: message?.isForwarded,
                             msg: message?.message,
                             time: `${new Date().getHours()}:${new Date().getMinutes()}`,
                             emojis: false,
@@ -162,7 +162,7 @@ const ChatComponent = () => {
                             isRead: message?.isRead,
                             type: message?.type,
                             replysms: false,
-                            recieverName:message.receiverId.name
+                            recieverName: message.receiverId.name
                         },
                     ],
                 }));
@@ -181,13 +181,13 @@ const ChatComponent = () => {
                     ...user,
                     lastMsg: recievedMsg.message,
                     lastSeen: getLatestMsgDateFormat(recievedMsg?.createdTime),
-                    unReadMsgs: conversationId===user.conversationId? user.unReadMsgs:user.unReadMsgs+1,
+                    unReadMsgs: conversationId === user.conversationId ? user.unReadMsgs : user.unReadMsgs + 1,
                 });
             } else {
                 tempUserArr.push(user);
             }
         });
-        setUsers(tempUserArr); 
+        setUsers(tempUserArr);
         seTRecievedMsg(null)
     }, [recievedMsg])
 
@@ -258,7 +258,7 @@ const ChatComponent = () => {
                         chats: [
                             ...(currentChat?.chats || []),
                             {
-                                recieverName:element.receiverId.name,
+                                recieverName: element.receiverId.name,
                                 isForwarded: element?.isForwarded,
                                 msg: element?.message,
                                 time: messageTimeStamp,
@@ -327,7 +327,7 @@ const ChatComponent = () => {
                     let isPinned = chats?.isPinned;
                     let unReadMsgsCount = chats?.unReadMsgsCount;
                     let isBlocked = chats?.isBlocked;
-                   
+
                     const isLastIndex = index === res?.data?.data?.length - 1;
 
                     // if (isLastIndex) markMessageAsSeen(chats?.users[0]?._id, chats?._id);
@@ -405,10 +405,24 @@ const ChatComponent = () => {
         setForwardMsg(item);
     }
 
-    const forwardNow = (selectedUsers:any) => {
-        
+    const forwardNow = (selectedUsers: any) => {
+        const forwardUsers = selectedUsers.map((user: any) => user.userId)
+        let tempUserArr: any[] = [];
+        users?.forEach((user) => {
+            if (forwardUsers.includes(user?.userId)) {
+                tempUserArr.push({
+                    ...user,
+                    lastMsg: forwardMsg.msg,
+                    lastSeen: getLatestMsgDateFormat(Date.now()),
+                });
+            } else {
+                tempUserArr.push(user);
+            }
+        });
+        setUsers(tempUserArr);
+
         const messageData = {
-            receivers: selectedUsers.map((user:any)=>user.userId),
+            receivers: forwardUsers,
             messageId: forwardMsg.id,
             senderId: loggedUserId == sender ? sender : sender,
             accessToken: token,
@@ -740,8 +754,8 @@ const ChatComponent = () => {
                 const messageTimeStamp = moment(date).format('h:mm A');
 
                 tempArr.push({
-                    recieverName:element.receiverId.name,
-                    isForwarded:element?.isForwarded,
+                    recieverName: element.receiverId.name,
+                    isForwarded: element?.isForwarded,
                     msg: element?.message,
                     time: messageTimeStamp,
                     emojis: false,
@@ -816,7 +830,8 @@ const ChatComponent = () => {
                     activeConversation={conversationId}
                 />
                 <div className={style.chat}>
-                    <div className={style.sec1}
+                    <div className={`${style.sec1} bg-cover bg-no-repeat bg-center`}
+                     style={{backgroundImage: `url(${isDarkTheme?chatEmojiBgDark:chatEmojiBg})`}}
                     // ref={autoScrolElem}
                     >
                         {/* <div className={chatHeader.parent}>
@@ -1034,7 +1049,7 @@ const ChatComponent = () => {
                 onClose={() => setEditGroupNameModal(false)}
                 onSaveChanges={onSaveChanges}
             />*/}
-            <Forwardusers onOpen={forwardModal} forwardNow={forwardNow} onClose={() =>{setforwardModal(false);setForwardMsg(null)}} />
+            <Forwardusers onOpen={forwardModal} forwardNow={forwardNow} onClose={() => { setforwardModal(false); setForwardMsg(null) }} />
             <div>
                 <ToastContainer />
             </div>

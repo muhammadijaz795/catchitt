@@ -183,8 +183,12 @@ import academyOutlineDark from './assets/academy_outline_dark.svg';
 import feedbackQuestionWhite from './assets/feedback_question_white.svg';
 import feedbackQuestionDark from './assets/feedback_question_dark.svg';
 import homeDark from './assets/homeDark.svg';
+import chatEmojiBg from './assets/chat_emoji_bg.svg'
+import chatEmojiBgDark from './assets/chat_emoji_bg_dark.svg'
 
 export {
+    chatEmojiBgDark,
+    chatEmojiBg,
     homeDark,
     hamburgerDark,
     feedbackQuestionDark,

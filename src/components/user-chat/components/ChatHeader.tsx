@@ -19,7 +19,7 @@ function ChatHeader(props: any) {
 
     // const [mark, setmark] = useState(false);
     return (
-        <div className={chatHeader.parent}>
+        <div className={`${chatHeader.parent} ${isDarkTheme?'bg-[#181818]':'bg-white'}`}>
             <div className={chatHeader.chatHeader}>
                 <div>
                     {isGroup ? (
