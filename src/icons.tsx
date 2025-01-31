@@ -185,8 +185,10 @@ import feedbackQuestionDark from './assets/feedback_question_dark.svg';
 import homeDark from './assets/homeDark.svg';
 import chatEmojiBg from './assets/chat_emoji_bg.svg'
 import chatEmojiBgDark from './assets/chat_emoji_bg_dark.svg'
+import crossCloseDark from './assets/cross_close_dark.svg'
 
 export {
+    crossCloseDark,
     chatEmojiBgDark,
     chatEmojiBg,
     homeDark,

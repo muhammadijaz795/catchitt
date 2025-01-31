@@ -83,7 +83,7 @@ function Navbar() {
                                 </svg>
                                 <span style={{ color: 'rgb(255, 59, 92)' }}>Upload </span>
                             </div>
-                            <SendIcon className={style.sendIcon} style={{ fontSize: '30px', color: darkTheme === '' ? '#000' : '#fff' }} onClick={() => navigate(`/chat`)} />
+                            <SendIcon className={style.sendIcon} style={{ fontSize: '30px', cursor:'pointer', color: darkTheme === '' ? '#000' : '#fff' }} onClick={() => navigate(`/chat`)} />
                             <div className={style.user}>
                                 <div
                                     style={{ position: 'relative', width: '100%', height: '100%' }}

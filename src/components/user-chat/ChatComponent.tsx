@@ -4,7 +4,7 @@ import moment from 'moment';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { io } from 'socket.io-client';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Layout from '../../shared/layout';
 import UserChats from './components/chats';
@@ -12,7 +12,7 @@ import Actions from './components/Actions';
 import DoMsg from './components/DoMsg';
 import StaredMesagesSec from './components/StaredMesagesSec';
 
-import { avatar, groupDefaultIcon, more, cross, chatEmojiBg, chatEmojiBgDark } from '../../icons';
+import { avatar, groupDefaultIcon, more, cross, chatEmojiBg, chatEmojiBgDark, leftArrowCurvedinWhite, leftArrowCurved } from '../../icons';
 // style
 import style from './index.module.scss';
 import chatHeader from './components/ChatHeader.module.scss';
@@ -26,6 +26,7 @@ import ForGroups from './components/welcomeScreens/ForGroups';
 import { useUpdateEffect } from 'react-use';
 import Forwardusers from './components/modals/Forwardusers';
 import { getLatestMsgDateFormat } from '../../utils/helpers';
+import ProfileSec from './components/profileSec';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -42,7 +43,7 @@ const ChatComponent = () => {
     //     SEEZITT_VOICE_MESSAGE: 'SeezittVoiceNote',
     //     SEEZITT_LIVE_STREAM: 'SeezittLiveStream',
     // };
-
+    const navigate = useNavigate();
     const API_KEY = process.env.VITE_API_URL;
     const [moreOptions, setMoreOptions] = useState<boolean>(false);
     const [reportPopup, setreportPopup] = useState<boolean>(false);
@@ -91,7 +92,7 @@ const ChatComponent = () => {
     const [isDarkTheme, setIsDarkTheme] = useState('');
     const [recievedMsg, seTRecievedMsg] = useState<any>(null)
     const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
-
+    const [isProfileSecVisible, setIsProfileSecVisible] = useState(false);
     const longPressH = (item: any) => {
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
@@ -196,7 +197,7 @@ const ChatComponent = () => {
         console.log(
             "chatSwitchH"
         );
-
+        setIsProfileSecVisible(false);
         users?.forEach((user, index) => {
             if (user?.userId === e) {
                 setActiveChat({});
@@ -804,7 +805,6 @@ const ChatComponent = () => {
         }
     });
 
-
     return (
         <Layout
         // globalClicker={globalClickH}
@@ -817,6 +817,7 @@ const ChatComponent = () => {
         // dangetBtnText={dangetBtnText}
         // onBlock={onBlock}
         >
+            <img onClick={()=>navigate('/')} className='float-left mt-3 ml-4 cursor-pointer' src={isDarkTheme?leftArrowCurvedinWhite:leftArrowCurved} alt="" />
             <div className={`${style.parent} ${isDarkTheme}`}>
                 <UserChats
                     // onUsersInputChangeHandler={onUsersInputChangeHandler}
@@ -872,6 +873,7 @@ const ChatComponent = () => {
                         </div> */}
 
                         <ChatHeader
+                            openProfileSec={() => setIsProfileSecVisible(!isProfileSecVisible)}
                             isGroup={activeUser?.isGroup}
                             safeMsg={markTheMsgSafe}
                             name={activeUser?.userName}
@@ -1033,6 +1035,7 @@ const ChatComponent = () => {
                         selectedData={selectedData}
                     />
                 )}
+                {isProfileSecVisible && <ProfileSec data={activeUser} isDarkTheme={isDarkTheme} onClose={() => setIsProfileSecVisible(false)} />}
             </div>
             {/* <SearchUser
                 onOpen={addMembersPopup}
