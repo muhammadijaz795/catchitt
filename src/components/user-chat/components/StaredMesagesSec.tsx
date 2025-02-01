@@ -4,6 +4,8 @@ import {
     deleteMsg,
     editInStaredMsg,
     forwardMsg,
+    nextArrow,
+    nextArrowDark,
     rightArrow,
     starMsg,
     unStarMsg,
@@ -11,7 +13,9 @@ import {
 import Search from '../../../shared/navbar/components/Search';
 import style from './stared.module.scss';
 
+
 function StaredMesagesSec({
+    isDarkTheme,
     staredMsgs: staredMsgsList,
     onBack,
     userName,
@@ -21,9 +25,50 @@ function StaredMesagesSec({
     showForwardModal,
     selectedData,
 }: any) {
-    const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
+    const [staredMsgs, setstaredMsgs] = useState<any[]>([
+        {
+            userId: '1',
+            userName: 'User 1',
+            chats: [
+                {
+                    id: '1',
+                    msg: 'Hello, how are you?',
+                    isrecevied: true,
+                    replysms: 'I am fine, what about you?',
+                    userName: 'You',
+                },
+                {
+                    id: '2',
+                    msg: 'I am fine, what about you?',
+                    isrecevied: false,
+                    replysms: 'Hello, how are you?',
+                    userName: 'User',
+                },
+            ],
+        },
+        {
+            userId: '2',
+            userName: 'User 2',
+            chats: [
+                {
+                    id: '3',
+                    msg: 'Hello, how are you?',
+                    isrecevied: true,
+                    replysms: 'I am fine, what about you?',
+                    userName: 'You',
+                },
+                {
+                    id: '4',
+                    msg: 'I am fine, what about you?',
+                    isrecevied: false,
+                    replysms: 'Hello, how are you?',
+                    userName: 'User',
+                },
+            ],
+        },
+    ]);
     const [isEditAble, setisEditAble] = useState<boolean>(false);
-    const [showEmptyContainer, setshowEmptyContainer] = useState<boolean>(true);
+    const [showEmptyContainer, setshowEmptyContainer] = useState<boolean>(false);
     // const [isEditAble, setisEditAble] = useState<boolean>(false);
 
     useEffect(() => {
@@ -53,54 +98,54 @@ function StaredMesagesSec({
         ]);
     }, [staredMsgsList]);
 
-    useEffect(() => {
-        if (staredMsgsList[0]?.chats?.length > 0) {
-            setshowEmptyContainer(false);
-        } else {
-            setisEditAble(false);
-            setshowEmptyContainer(true);
-        }
-    }, [onChangeH]);
+    // useEffect(() => {
+    //     if (staredMsgsList[0]?.chats?.length > 0) {
+    //         setshowEmptyContainer(false);
+    //     } else {
+    //         setisEditAble(false);
+    //         setshowEmptyContainer(true);
+    //     }
+    // }, [onChangeH]);
 
-    const SearchHandler = (e: any) => {
-        const isReceivedChat: any[] = [];
-        const isNotReceivedChat: any[] = [];
-        staredMsgsList?.forEach((element: any) => {
-            element.chats.forEach((chat: any) => {
-                if (chat?.isrecevied) {
-                    isReceivedChat.push(chat);
-                } else {
-                    isNotReceivedChat.push(chat);
-                }
-            });
-        });
+    // const SearchHandler = (e: any) => {
+    //     const isReceivedChat: any[] = [];
+    //     const isNotReceivedChat: any[] = [];
+    //     staredMsgsList?.forEach((element: any) => {
+    //         element.chats.forEach((chat: any) => {
+    //             if (chat?.isrecevied) {
+    //                 isReceivedChat.push(chat);
+    //             } else {
+    //                 isNotReceivedChat.push(chat);
+    //             }
+    //         });
+    //     });
 
-        let filteredReceivedMessages: any = isReceivedChat.filter((chat: any) =>
-            chat?.msg?.toLowerCase()?.includes(e?.toLowerCase())
-        );
-        let filteredNotReceivedMessages: any = isNotReceivedChat.filter((chat: any) =>
-            chat?.msg?.toLowerCase()?.includes(e?.toLowerCase())
-        );
+    //     let filteredReceivedMessages: any = isReceivedChat.filter((chat: any) =>
+    //         chat?.msg?.toLowerCase()?.includes(e?.toLowerCase())
+    //     );
+    //     let filteredNotReceivedMessages: any = isNotReceivedChat.filter((chat: any) =>
+    //         chat?.msg?.toLowerCase()?.includes(e?.toLowerCase())
+    //     );
 
-        setstaredMsgs([
-            {
-                userName: userName,
-                userId: staredMsgsList[1]?.userId,
-                chats: filteredReceivedMessages,
-            },
-            {
-                userName: 'You',
-                userId: staredMsgsList[1]?.userId,
-                chats: [...filteredNotReceivedMessages],
-            },
-        ]);
-    };
+    //     setstaredMsgs([
+    //         {
+    //             userName: userName,
+    //             userId: staredMsgsList[1]?.userId,
+    //             chats: filteredReceivedMessages,
+    //         },
+    //         {
+    //             userName: 'You',
+    //             userId: staredMsgsList[1]?.userId,
+    //             chats: [...filteredNotReceivedMessages],
+    //         },
+    //     ]);
+    // };
 
     return (
         <div className={style.parent}>
             <div className={style.header}>
                 <div>
-                    <img onClick={onBack} src={rightArrow} alt="" />
+                    <img onClick={onBack} src={isDarkTheme?nextArrow:nextArrowDark} alt="" />
                     <p>Starred messages</p>
                 </div>
                 {!showEmptyContainer &&
@@ -119,24 +164,24 @@ function StaredMesagesSec({
             </div>
             {!showEmptyContainer && (
                 <div className={style.contentParent}>
-                    <div>
+                    {/* <div>
                         <Search onInputChangeHandler={SearchHandler} placeholder="Search" />
-                    </div>
+                    </div> */}
                     <div className={style.staredMsgsParent}>
-                        {staredMsgs.map((chats: any, index: number) => {
+                        {staredMsgs.map((user: any, index: number) => {
                             return (
                                 <div key={index}>
-                                    {chats?.chats.length > 0 && (
+                                    {user?.chats.length > 0 && (
                                         <div className={style.msgParent}>
                                             <div>
                                                 <img className={style.avatar} src={avatar} alt="" />
-                                                <p className={style.text_500}>{chats.userName}</p>
+                                                <p className={style.text_500}>{user.userName}</p>
                                             </div>
                                             <p className={style.gray_300}>11:14 PM</p>
                                         </div>
                                     )}
                                     <div className={style.staredChats}>
-                                        {chats?.chats?.map((chat: any, index2: number) => {
+                                        {user?.chats?.map((chat: any, index2: number) => {
                                             return (
                                                 <div key={index2} className={style.chat}>
                                                     <div>
@@ -228,7 +273,7 @@ function StaredMesagesSec({
                                                                 )}
                                                                 <p
                                                                     className={
-                                                                        chats.userName !== 'You'
+                                                                        chat.userName !== 'You'
                                                                             ? style.isreceived
                                                                             : style.userstarMsg
                                                                     }

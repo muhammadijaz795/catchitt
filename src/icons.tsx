@@ -171,6 +171,7 @@ import storyHeart from './assets/story_heart.svg';
 import storySend from './assets/story_send.svg';
 import prevArrow from './assets/prev_icon.svg';
 import nextArrow from './assets/next_icon.svg';
+import nextArrowDark from './assets/next_icon_dark.svg';
 import attachMusic from './assets/attactchMusic.svg';
 import attachMusicInWhite from './assets/attactchMusicInWhite.svg';
 import homeIcon from './assets/homeIcon.svg';
@@ -188,6 +189,7 @@ import chatEmojiBgDark from './assets/chat_emoji_bg_dark.svg'
 import crossCloseDark from './assets/cross_close_dark.svg'
 
 export {
+    nextArrowDark,
     crossCloseDark,
     chatEmojiBgDark,
     chatEmojiBg,

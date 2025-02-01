@@ -12,8 +12,10 @@
 }
 .showEmogis {
   display: flex;
-  width: 217px;
-  background: #eeedf7;
+  width: fit-content;
+  gap: 10px;
+  padding: 10px 10px;
+  // background: #eeedf7;
   border-radius: 50px;
   justify-content: space-evenly;
   align-items: center;
@@ -24,8 +26,10 @@
 }
 .showEmogisr {
   display: flex;
-  width: 217px;
-  background: #eeedf7;
+  width: fit-content;
+  gap: 10px;
+  padding: 10px 10px;
+  // background: #eeedf7;
   border-radius: 50px;
   justify-content: space-evenly;
   align-items: center;
@@ -39,6 +43,10 @@
 }
 .showEmogis > p {
   cursor: pointer;
+  transform: scale(1.2);
+}
+.showEmogis > p:hover {
+  transform: scale(1.4);
 }
 .plusemogi {
   color: rgb(255, 59, 92);

@@ -14,7 +14,8 @@ import {
 } from '../../../icons';
 import Search from '../../../shared/navbar/components/Search';
 import style from './stared.module.scss';
-import { Phone, VideoCall } from '@mui/icons-material';
+import { AccountCircle, AccountCircleOutlined, DonutSmallRounded, NotificationsNoneOutlined, Phone, SearchOutlined, ThumbUpAlt, VideoCall } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 
 // {
@@ -32,34 +33,100 @@ import { Phone, VideoCall } from '@mui/icons-material';
 // }
 
 function ProfileSec({ data, onClose, isDarkTheme }: any) {
+    const navigate = useNavigate();
     useEffect(() => {
-      console.log("data response 👋🚀🚀", data);
-    }, [data])
-    
+        const details = document.querySelectorAll("details");
+
+        const callbackFunc = (event: Event) => {
+            const targetDetail = event.currentTarget as HTMLDetailsElement;
+
+            const marker = targetDetail.querySelector('.marker') as HTMLElement;
+
+            if (targetDetail.open) {
+                marker.style.transform = 'rotate(90deg)';
+            } else {
+                marker.style.transform = 'rotate(0deg)';
+            }
+
+            details.forEach((detail) => {
+                if (detail !== targetDetail) {
+                    detail.removeAttribute("open");
+                    const otherMarker = detail.querySelector('.marker') as HTMLElement;
+                    if (otherMarker) {
+                        otherMarker.style.transform = 'rotate(0deg)';
+                    }
+                }
+            });
+        };
+
+        details.forEach((detail) => {
+            detail.addEventListener("toggle", callbackFunc);
+        });
+
+        return () => {
+            details.forEach((detail) => {
+                detail.removeEventListener("toggle", callbackFunc);
+            });
+        };
+    }, []);
+
     return (
         <div className={style.parent}>
             <div className={style.header}>
                 <div>
-                    <img onClick={onClose} src={isDarkTheme?crossClose:crossCloseDark} alt="" />
+                    <img onClick={onClose} src={isDarkTheme ? crossClose : crossCloseDark} alt="" />
                 </div>
             </div>
             <div className={style.contentParent}>
                 <div className='flex flex-col items-center'>
-                    <img className='w-32 rounded-full' src={data.userImage||defaultAvatar} alt="avatar" />
+                    <img className='w-32 rounded-full' src={data.userImage || defaultAvatar} alt="avatar" />
                     <span className='text-xl font-bold mt-4'>{data.userName}</span>
                 </div>
-                {/* <div className='flex gap-3 justify-center items-center mt-4'>
-                    <div className='flex flex-col items-center'>
-                        <Phone sx={{fontSize:'27px'}}/>
-                        <span className='ml-2 text-sm mt-1'>Audio</span>
+                <div className='flex gap-3 justify-center items-center mt-4'>
+                    <div className='flex flex-col items-center cursor-pointer' onClick={() => navigate(`/profile/${data.userId}`)}>
+                        <span className={`${isDarkTheme ? 'bg-gray-500' : 'bg-slate-100'} p-1 shadow-md rounded-full`}><AccountCircleOutlined sx={{ fontSize: '27px' }} /></span>
+                        <span className='ml-2 text-sm mt-1'>Profile</span>
                     </div>
-                    <div className='flex flex-col items-center'>
-                        <VideoCall sx={{fontSize:'30px'}} />
-                        <span className='ml-2 text-sm mt-1'>Video</span>
+                    <div className='flex flex-col items-center cursor-pointer'>
+                        <span className={`${isDarkTheme ? 'bg-gray-500' : 'bg-slate-100'} p-1 shadow-md rounded-full`}><NotificationsNoneOutlined sx={{ fontSize: '27px' }} /></span>
+                        <span className='ml-2 text-sm mt-1'>Mute</span>
                     </div>
-                 
-                </div> */}
+                    <div className='flex flex-col items-center cursor-pointer'>
+                        <span className={`${isDarkTheme ? 'bg-gray-500' : 'bg-slate-100'} p-1 shadow-md rounded-full`}><SearchOutlined sx={{ fontSize: '27px' }} /></span>
+                        <span className='ml-2 text-sm mt-1'>Search</span>
+                    </div>
+                </div>
+                {/* dropdown section start */}
+                <div className='mt-4 px-2'>
+                    <details>
+                        <summary>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                                <p className={isDarkTheme ? 'text-white' : ''}>Customize Chat</p>
+                                <span className="marker" style={{ fontSize: '2rem' }}>&rsaquo;</span>
+                            </div>
+                        </summary>
+                        <ul className='mt-2 space-y-4 text-left'>
+                            <li className='cursor-pointer'><DonutSmallRounded sx={{ fontSize: '25px' }} /> &nbsp; Change Theme</li>
+                            <li className='cursor-pointer'><ThumbUpAlt sx={{ fontSize: '25px' }} /> &nbsp; Change Emoji</li>
+                            <li className='cursor-pointer'> <span className='font-semibold'>Aa</span> &nbsp; Edit Nicknames</li>
+                        </ul>
+                    </details>
+                    <details className='mt-2'>
+                        <summary>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                                <p className={isDarkTheme ? 'text-white' : ''}>Media and files</p>
+                                <span className="marker" style={{ fontSize: '2rem' }}>&rsaquo;</span>
+                            </div>
+                        </summary>
+                        <ul className='mt-2 space-y-4 text-left'>
+                            <li className='cursor-pointer'>Dummy</li>
+                            <li className='cursor-pointer'>Dummy</li>
+                            <li className='cursor-pointer'>Dummy</li>
+                        </ul>
+                    </details>
+                </div>
             </div>
+
         </div>
     );
 }

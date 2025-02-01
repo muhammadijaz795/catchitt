@@ -302,7 +302,7 @@ function UserChat(props: any) {
                             <Divider />
                         </div>
                     </Menu>
-                    <p className={style.seenStatus}>{lastSeen}</p>
+                    <p className={style.seenStatus+' whitespace-nowrap'}>{lastSeen}</p>
                     {ispined ? (
                         <img src={pinChat} alt="" />
                     ) : unReadMsgs > 0 ? (

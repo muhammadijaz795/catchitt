@@ -26,7 +26,7 @@ import ForGroups from './components/welcomeScreens/ForGroups';
 import { useUpdateEffect } from 'react-use';
 import Forwardusers from './components/modals/Forwardusers';
 import { getLatestMsgDateFormat } from '../../utils/helpers';
-import ProfileSec from './components/profileSec';
+import ProfileSec from './components/ProfileSec';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -218,6 +218,70 @@ const ChatComponent = () => {
         setstaredMsgs([]);
     };
 
+    const fetchStaredMessages = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/chat/messages/stared/${conversationId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const res = await response.json();
+            console.log('stared messages 👎👎🙏🏻🙏🏻🙏🏻🚀🚀🚀', res);
+            const data = Array.isArray(res?.data?.data)?res?.data?.data:[];
+    
+            const opponentStaredMessages = data.filter(
+                (message: any) => message?.senderId !== loggedUserId
+            );
+
+            const ownStaredMessages = data.filter(
+                (message: any) => message?.senderId === loggedUserId
+            );
+
+            const staredMessages = [
+                {
+                    userId: loggedUserId,
+                    userName: 'You',
+                    userImage: '',
+                    chats: ownStaredMessages,
+                },
+                {
+                    userId:  activeUser?.userId,
+                    userName: activeUser?.userName,
+                    userImage: activeUser?.userImage,
+                    chats: opponentStaredMessages,
+                },
+            ]
+
+            const [modifiedOwnMessages, modifiedOpponentMessages] = [ownStaredMessages, opponentStaredMessages].map((messages: any[]) => {
+               return messages.map(
+                (
+                    chats: any,
+                    index: number
+                ) => {
+
+                    return {
+                        id: chats?._id,
+                        userId: chats?.senderId?._id,
+                        userName: chats?.senderId?.name,
+                        userImage: chats?.senderId?.avatar,
+                        replysms: chats?.repliedMessage,
+                        isrecevied: chats?.receiverId?._id === loggedUserId ? false : true,
+                        msg: chats?.message,
+                    };
+                }
+            );
+            });
+            staredMessages[0].chats = modifiedOwnMessages;
+            staredMessages[1].chats = modifiedOpponentMessages;
+            console.log('staredMessages 🥳🥳🥳🥳🥳', staredMessages);
+            setstaredMsgs(staredMessages);
+        } catch (error) {
+            console.log('error', error);
+        }
+    }
+
     const loadChatMessages = async (
         senderId: String | Number,
         receiverId: String | Number,
@@ -376,7 +440,7 @@ const ChatComponent = () => {
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
             if (msg.id === item.id) {
-                tempArr.push({ ...item, [keyName]: value, dropdown: false });
+                tempArr.push({ ...item, dropdown: false, [keyName]: value });
                 setMessageAsStared(msg.id, conversationId);
             } else {
                 tempArr.push(msg);
@@ -432,6 +496,14 @@ const ChatComponent = () => {
         setForwardMsg(null);
         setforwardModal(false)
     }
+
+    const reactToMessage = (messageId: any, reaction: any) => {
+        (socketRef.current as any).emit('react-msg', { from: sender, messageId, react: reaction, type:'emoji' });
+    };
+
+    const removeReaction = (messageId: any) => {
+        (socketRef.current as any).emit('remove-react', { from: sender, messageId });
+    };
 
     const deleteH = async (item: any) => {
         const tempArr: any[] = [];
@@ -805,6 +877,10 @@ const ChatComponent = () => {
         }
     });
 
+    useUpdateEffect(() => {
+        fetchStaredMessages();
+    }, [staredmodal]);
+
     return (
         <Layout
         // globalClicker={globalClickH}
@@ -931,6 +1007,8 @@ const ChatComponent = () => {
                             handleScroll={handleScroll}
                             searchQuery={searchQuery}
                             isDarkTheme={!!isDarkTheme}
+                            reactToMessage={reactToMessage}
+                            removeReaction={removeReaction}
                         />
                         {/* )}  */}
                     </div>
@@ -1017,6 +1095,7 @@ const ChatComponent = () => {
                     */}
                 {staredmodal && (
                     <StaredMesagesSec
+                        isDarkTheme={isDarkTheme}
                         onBack={() => {
                             setstaredmodal(false);
                             setshowShortSidebar(false);
