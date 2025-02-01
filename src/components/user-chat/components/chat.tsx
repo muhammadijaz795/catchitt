@@ -295,7 +295,7 @@ function UserChat(props: any) {
                             <Divider />
                         </div>
                         <div key="block">
-                            <MenuItem onClick={() => { setstaredmodal(true) }}>
+                            <MenuItem onClick={() => { setstaredmodal(true); handleClose() }}>
                                 <GradeIcon />
                                 <span style={{ marginLeft: '8px', fontWeight: 'bold' }} >Stared Message</span>
                             </MenuItem>
