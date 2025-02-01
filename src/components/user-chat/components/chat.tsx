@@ -11,13 +11,14 @@ import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import Divider from '@mui/material/Divider';
-import { avatar, groupDefaultIcon, pinChat, defaultAvatar } from '../../../icons';
+import { avatar, groupDefaultIcon, pinChat, defaultAvatar, eyeIcon } from '../../../icons';
 import style from './chat.module.scss';
 // import hook from '../hook/useChat';
-
+import { AccountCircleOutlined } from '@mui/icons-material';
 import PopupForReport from '../../../components/profile/popups/PopupForReport';
 import BlockPopup from '../../../shared/popups/BlockPopup';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const options = [
     { text: 'Mute', icon: <NotificationsOffOutlinedIcon /> },
@@ -106,6 +107,7 @@ function UserChat(props: any) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const navigate = useNavigate();
     // const handleAction = (text:string, ispined:any) => {
     //     if(text == "Report"){
     //         console.log("Report");
@@ -298,6 +300,13 @@ function UserChat(props: any) {
                             <MenuItem onClick={() => { setstaredmodal(true); handleClose() }}>
                                 <GradeIcon />
                                 <span style={{ marginLeft: '8px', fontWeight: 'bold' }} >Stared Message</span>
+                            </MenuItem>
+                            <Divider />
+                        </div>
+                        <div key="profile">
+                            <MenuItem onClick={() => navigate(`/profile/${userId}`)}>
+                                <AccountCircleOutlined />
+                                <span style={{ marginLeft: '8px', fontWeight: 'bold' }} >Profile</span>
                             </MenuItem>
                             <Divider />
                         </div>
