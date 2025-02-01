@@ -38,7 +38,9 @@ function Actions(props: any) {
         handleScroll,
         chatActiveUserId,
         searchQuery,
-        isDarkTheme
+        isDarkTheme,
+        reactToMessage,
+        removeReaction
     } = props || {};
 
     const loggedInUserId = localStorage.getItem('userId');
@@ -101,7 +103,7 @@ function Actions(props: any) {
                                             right: item.receiverId == loggedInUserId ? '-145px' : 'auto',
                                             display: 'flex'
                                         }}
-                                        className={`${style.dropd} ${isDarkTheme?'bg-[#353434]':'bg-gray-300'}`}
+                                        className={`${style.dropd} ${isDarkTheme?'bg-[#353434]':'bg-gray-300'} shadow-md`}
                                     >
                                         <div
                                             style={{
@@ -115,7 +117,7 @@ function Actions(props: any) {
                                         >
                                             {/* <img src={!item.stared ? starMsg : unStarMsg} alt="" /> */}
                                             <p color="#222" className={style.dropdText}>
-                                                {item.stared ? 'Unlike' : 'Like'}
+                                                {item.stared ? 'UnStar' : 'Star'}
                                             </p>
                                         </div>
                                         <hr className={style.hr} />
@@ -271,15 +273,16 @@ function Actions(props: any) {
                                             left: item.receiverId != loggedInUserId ? '-75px' : 'auto',
                                             right: item.receiverId == loggedInUserId ? '-75px' : 'auto',
                                         }}
-                                        className={style.actionsOnLongP}
+                                        className={`${style.actionsOnLongP} items-center z-50`}
                                     >
-                                        {/* <img
+                                        <img
                                             src={emoji}
                                             alt=""
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
+                                                // valuesH(item, 'showEmogis');
+                                                valuesH2(item, 'showEmogis', !item.showEmogis);
                                             }}
-                                        /> */}
+                                        />
                                         {/* <img
                                             onClick={() => {
                                                 setSmsRef(item?.msg);
@@ -291,71 +294,113 @@ function Actions(props: any) {
                                         /> */}
                                         <img
                                             onClick={() => {
-                                                valuesH(item, 'dropdown');
+                                                valuesH({ ...item, showEmogis: false }, 'dropdown');
                                             }}
                                             src={isDarkTheme ? moreInMsgWhite : moreInMsg}
                                             alt=""
                                         />
-                                        {/* {item.showEmogis && (
+                                        {item.showEmogis && (
                                             <div
                                                 className={`${style.showEmogis} ${
                                                     !item?.isrecevied
                                                         ? style.showEmogisr
                                                         : style.showEmogis
-                                                }`}
+                                                } ${isDarkTheme?'bg-[#353434]':'bg-gray-300 '} shadow-md`}
                                                 style={{
                                                     top: item.id === 1 ? '-35px' : '',
+                                                    transform: !item?.isrecevied? 'translateX(50%)' : 'translateX(-50%)',
                                                 }}
                                             >
+                                                 <p
+                                                    onClick={() => {
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '👍');
+                                                    }}
+                                                >
+                                                    👍
+                                                </p>
                                                 <p
                                                     onClick={() => {
-                                                        insertKeyH('showEmogis', false);
-                                                        insertKeyH('emojis', false);
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '❤️');
                                                     }}
                                                 >
                                                     ❤️{' '}
                                                 </p>
                                                 <p
                                                     onClick={() => {
-                                                        insertKeyH('showEmogis', false);
-                                                        insertKeyH('emojis', false);
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '😂');
                                                     }}
                                                 >
                                                     😂
                                                 </p>
                                                 <p
                                                     onClick={() => {
-                                                        insertKeyH('showEmogis', false);
-                                                        insertKeyH('emojis', false);
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '🥰');
                                                     }}
                                                 >
                                                     🥰
                                                 </p>
                                                 <p
                                                     onClick={() => {
-                                                        insertKeyH('showEmogis', false);
-                                                        insertKeyH('emojis', false);
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '😭');
                                                     }}
                                                 >
                                                     😭
                                                 </p>
                                                 <p
                                                     onClick={() => {
-                                                        insertKeyH('showEmogis', false);
-                                                        insertKeyH('emojis', false);
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '😳');
                                                     }}
                                                 >
                                                     😳
                                                 </p>
                                                 <p
                                                     onClick={() => {
-                                                        insertKeyH('showEmogis', false);
-                                                        insertKeyH('emojis', false);
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '😡');
                                                     }}
                                                 >
-                                                    👍
+                                                    😡
                                                 </p>
                                                 <p
+                                                    onClick={() => {
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '😢');
+                                                    }}
+                                                >
+                                                    😢
+                                                </p>
+                                                <p
+                                                    onClick={() => {
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '😊');
+                                                    }}
+                                                >
+                                                    😊
+                                                </p>
+                                                <p
+                                                    onClick={() => {
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '🙏🏻');
+                                                    }}
+                                                >
+                                                    🙏🏻
+                                                </p>
+                                                <p
+                                                    onClick={() => {
+                                                        valuesH(item,'showEmogis');
+                                                        reactToMessage(item.id, '👎');
+                                                    }}
+                                                >
+                                                    👎
+                                                </p>
+
+                                                {/* <p
                                                     onClick={() => {
                                                         insertKeyH('showEmogis', false);
                                                         insertKeyH('emojis', false);
@@ -363,9 +408,9 @@ function Actions(props: any) {
                                                     className={style.plusemogi}
                                                 >
                                                     +
-                                                </p>
+                                                </p> */}
                                             </div>
-                                        )} */}
+                                        )}
                                     </div>
                                 )}
                             </div>

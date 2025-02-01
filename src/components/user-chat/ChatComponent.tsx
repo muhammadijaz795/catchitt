@@ -4,7 +4,7 @@ import moment from 'moment';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { io } from 'socket.io-client';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Layout from '../../shared/layout';
 import UserChats from './components/chats';
@@ -12,7 +12,7 @@ import Actions from './components/Actions';
 import DoMsg from './components/DoMsg';
 import StaredMesagesSec from './components/StaredMesagesSec';
 
-import { avatar, groupDefaultIcon, more, cross, chatEmojiBg, chatEmojiBgDark } from '../../icons';
+import { avatar, groupDefaultIcon, more, cross, chatEmojiBg, chatEmojiBgDark, leftArrowCurvedinWhite, leftArrowCurved } from '../../icons';
 // style
 import style from './index.module.scss';
 import chatHeader from './components/ChatHeader.module.scss';
@@ -26,6 +26,7 @@ import ForGroups from './components/welcomeScreens/ForGroups';
 import { useUpdateEffect } from 'react-use';
 import Forwardusers from './components/modals/Forwardusers';
 import { getLatestMsgDateFormat } from '../../utils/helpers';
+import ProfileSec from './components/ProfileSec';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -42,7 +43,7 @@ const ChatComponent = () => {
     //     SEEZITT_VOICE_MESSAGE: 'SeezittVoiceNote',
     //     SEEZITT_LIVE_STREAM: 'SeezittLiveStream',
     // };
-
+    const navigate = useNavigate();
     const API_KEY = process.env.VITE_API_URL;
     const [moreOptions, setMoreOptions] = useState<boolean>(false);
     const [reportPopup, setreportPopup] = useState<boolean>(false);
@@ -91,7 +92,7 @@ const ChatComponent = () => {
     const [isDarkTheme, setIsDarkTheme] = useState('');
     const [recievedMsg, seTRecievedMsg] = useState<any>(null)
     const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
-
+    const [isProfileSecVisible, setIsProfileSecVisible] = useState(false);
     const longPressH = (item: any) => {
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
@@ -196,7 +197,7 @@ const ChatComponent = () => {
         console.log(
             "chatSwitchH"
         );
-
+        setIsProfileSecVisible(false);
         users?.forEach((user, index) => {
             if (user?.userId === e) {
                 setActiveChat({});
@@ -216,6 +217,70 @@ const ChatComponent = () => {
 
         setstaredMsgs([]);
     };
+
+    const fetchStaredMessages = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/chat/messages/stared/${conversationId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const res = await response.json();
+            console.log('stared messages 👎👎🙏🏻🙏🏻🙏🏻🚀🚀🚀', res);
+            const data = Array.isArray(res?.data?.data)?res?.data?.data:[];
+    
+            const opponentStaredMessages = data.filter(
+                (message: any) => message?.senderId !== loggedUserId
+            );
+
+            const ownStaredMessages = data.filter(
+                (message: any) => message?.senderId === loggedUserId
+            );
+
+            const staredMessages = [
+                {
+                    userId: loggedUserId,
+                    userName: 'You',
+                    userImage: '',
+                    chats: ownStaredMessages,
+                },
+                {
+                    userId:  activeUser?.userId,
+                    userName: activeUser?.userName,
+                    userImage: activeUser?.userImage,
+                    chats: opponentStaredMessages,
+                },
+            ]
+
+            const [modifiedOwnMessages, modifiedOpponentMessages] = [ownStaredMessages, opponentStaredMessages].map((messages: any[]) => {
+               return messages.map(
+                (
+                    chats: any,
+                    index: number
+                ) => {
+
+                    return {
+                        id: chats?._id,
+                        userId: chats?.senderId?._id,
+                        userName: chats?.senderId?.name,
+                        userImage: chats?.senderId?.avatar,
+                        replysms: chats?.repliedMessage,
+                        isrecevied: chats?.receiverId?._id === loggedUserId ? false : true,
+                        msg: chats?.message,
+                    };
+                }
+            );
+            });
+            staredMessages[0].chats = modifiedOwnMessages;
+            staredMessages[1].chats = modifiedOpponentMessages;
+            console.log('staredMessages 🥳🥳🥳🥳🥳', staredMessages);
+            setstaredMsgs(staredMessages);
+        } catch (error) {
+            console.log('error', error);
+        }
+    }
 
     const loadChatMessages = async (
         senderId: String | Number,
@@ -375,7 +440,7 @@ const ChatComponent = () => {
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
             if (msg.id === item.id) {
-                tempArr.push({ ...item, [keyName]: value, dropdown: false });
+                tempArr.push({ ...item, dropdown: false, [keyName]: value });
                 setMessageAsStared(msg.id, conversationId);
             } else {
                 tempArr.push(msg);
@@ -431,6 +496,14 @@ const ChatComponent = () => {
         setForwardMsg(null);
         setforwardModal(false)
     }
+
+    const reactToMessage = (messageId: any, reaction: any) => {
+        (socketRef.current as any).emit('react-msg', { from: sender, messageId, react: reaction, type:'emoji' });
+    };
+
+    const removeReaction = (messageId: any) => {
+        (socketRef.current as any).emit('remove-react', { from: sender, messageId });
+    };
 
     const deleteH = async (item: any) => {
         const tempArr: any[] = [];
@@ -804,6 +877,9 @@ const ChatComponent = () => {
         }
     });
 
+    useUpdateEffect(() => {
+        fetchStaredMessages();
+    }, [staredmodal]);
 
     return (
         <Layout
@@ -817,6 +893,7 @@ const ChatComponent = () => {
         // dangetBtnText={dangetBtnText}
         // onBlock={onBlock}
         >
+            <img onClick={()=>navigate('/')} className='float-left mt-3 ml-4 cursor-pointer' src={isDarkTheme?leftArrowCurvedinWhite:leftArrowCurved} alt="" />
             <div className={`${style.parent} ${isDarkTheme}`}>
                 <UserChats
                     // onUsersInputChangeHandler={onUsersInputChangeHandler}
@@ -872,6 +949,7 @@ const ChatComponent = () => {
                         </div> */}
 
                         <ChatHeader
+                            openProfileSec={() => setIsProfileSecVisible(!isProfileSecVisible)}
                             isGroup={activeUser?.isGroup}
                             safeMsg={markTheMsgSafe}
                             name={activeUser?.userName}
@@ -929,6 +1007,8 @@ const ChatComponent = () => {
                             handleScroll={handleScroll}
                             searchQuery={searchQuery}
                             isDarkTheme={!!isDarkTheme}
+                            reactToMessage={reactToMessage}
+                            removeReaction={removeReaction}
                         />
                         {/* )}  */}
                     </div>
@@ -1015,6 +1095,7 @@ const ChatComponent = () => {
                     */}
                 {staredmodal && (
                     <StaredMesagesSec
+                        isDarkTheme={isDarkTheme}
                         onBack={() => {
                             setstaredmodal(false);
                             setshowShortSidebar(false);
@@ -1033,6 +1114,7 @@ const ChatComponent = () => {
                         selectedData={selectedData}
                     />
                 )}
+                {isProfileSecVisible && <ProfileSec data={activeUser} isDarkTheme={isDarkTheme} onClose={() => setIsProfileSecVisible(false)} />}
             </div>
             {/* <SearchUser
                 onOpen={addMembersPopup}

@@ -295,14 +295,14 @@ function UserChat(props: any) {
                             <Divider />
                         </div>
                         <div key="block">
-                            <MenuItem onClick={() => { setstaredmodal(true) }}>
+                            <MenuItem onClick={() => { setstaredmodal(true); handleClose() }}>
                                 <GradeIcon />
                                 <span style={{ marginLeft: '8px', fontWeight: 'bold' }} >Stared Message</span>
                             </MenuItem>
                             <Divider />
                         </div>
                     </Menu>
-                    <p className={style.seenStatus}>{lastSeen}</p>
+                    <p className={style.seenStatus+' whitespace-nowrap'}>{lastSeen}</p>
                     {ispined ? (
                         <img src={pinChat} alt="" />
                     ) : unReadMsgs > 0 ? (

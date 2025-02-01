@@ -9,6 +9,7 @@ import BlockPopup from '../popups/BlockPopup';
 import style from './style.module.scss';
 import { useEffect, useState } from 'react';
 import { e } from 'mathjs';
+import { useLocation } from 'react-router-dom';
 
 function Layout(props: any) {
     const {
@@ -32,6 +33,8 @@ function Layout(props: any) {
     const [darkTheme, setdarkTheme] = useState('');
     const [darkThemeblack, setdarkThemeblack] = useState('');
     const [appPopup, setAppPopup] = useState(false);
+
+    const location = useLocation();
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -74,7 +77,8 @@ function Layout(props: any) {
             {/* <TopBar /> */}
             <div style={{ display: 'flex', height: '100vh', width: '100vw', paddingTop: 80 }}>
                 {!showSidebar && !showShortSidebar ? (
-                    <div
+                   location.pathname!=='/chat'&&<div
+                        id='sideBar'
                         // className={` ${darkTheme}`}
                         style={{
                             // display: 'flex',

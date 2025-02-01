@@ -4,6 +4,7 @@ import { avatar, groupDefaultIcon, more, cross, moreInWhite } from '../../../ico
 import chatHeader from './ChatHeader.module.scss';
 function ChatHeader(props: any) {
     const {
+        openProfileSec,
         moreOptionH,
         name,
         profilePic,
@@ -34,7 +35,7 @@ function ChatHeader(props: any) {
                         null
                     )}
                     <div style={{display:'flex',flexDirection:'column'}}>
-                        <p className={chatHeader.name}>{name}</p>
+                        <p onClick={openProfileSec} className={`${chatHeader.name} cursor-pointer`}>{name}</p>
                         {/* <p className={chatHeader.userMention}>{name}</p> */}
                     </div>
                 </div>
