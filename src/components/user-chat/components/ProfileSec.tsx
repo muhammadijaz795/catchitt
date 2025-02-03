@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router-dom';
 //     "isBlocked": false
 // }
 
-function ProfileSec({ data, onClose, isDarkTheme }: any) {
+function ProfileSec({ data, onClose, isDarkTheme, searchMessage }: any) {
     const navigate = useNavigate();
     useEffect(() => {
         const details = document.querySelectorAll("details");
@@ -91,7 +91,7 @@ function ProfileSec({ data, onClose, isDarkTheme }: any) {
                         <span className={`${isDarkTheme ? 'bg-gray-500' : 'bg-slate-100'} p-1 shadow-md rounded-full`}><NotificationsNoneOutlined sx={{ fontSize: '27px' }} /></span>
                         <span className='ml-2 text-sm mt-1'>Mute</span>
                     </div>
-                    <div className='flex flex-col items-center cursor-pointer'>
+                    <div className='flex flex-col items-center cursor-pointer' onClick={(e)=>{searchMessage(true),onClose() }}>
                         <span className={`${isDarkTheme ? 'bg-gray-500' : 'bg-slate-100'} p-1 shadow-md rounded-full`}><SearchOutlined sx={{ fontSize: '27px' }} /></span>
                         <span className='ml-2 text-sm mt-1'>Search</span>
                     </div>
