@@ -78,6 +78,8 @@ import eyeIcon from './assets/eye.svg';
 import rankingIcon from './assets/ranking.svg';
 import uploadPrimaryIcon from './assets/upload.svg';
 import downArrow from './assets/downArrow.svg';
+import weightedDownArrow from './assets/weighted_down_arrow.svg';
+import weightedDownArrowInWhite from './assets/weighted_down_arrow_white.svg';
 import cross from './assets/cross.svg';
 import goLive from './assets/go-live.svg';
 import camera from './assets/camera.svg';
@@ -189,6 +191,8 @@ import chatEmojiBgDark from './assets/chat_emoji_bg_dark.svg'
 import crossCloseDark from './assets/cross_close_dark.svg'
 
 export {
+    weightedDownArrow,
+    weightedDownArrowInWhite,
     nextArrowDark,
     crossCloseDark,
     chatEmojiBgDark,

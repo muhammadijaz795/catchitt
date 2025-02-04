@@ -14,6 +14,8 @@ import {
     videoDuration,
     rightArrowCurvedinWhite,
     rightArrowCurved,
+    weightedDownArrowInWhite,
+    weightedDownArrow,
 } from '../../../icons';
 import style from './Actions.module.scss';
 import LongPressButton from './LongPressEvent';
@@ -98,12 +100,7 @@ function Actions(props: any) {
                             <div className={style.msg}>
                                 {item.emojis && item.dropdown && (
                                     <div
-                                        style={{
-                                            left: item.receiverId == loggedInUserId ? 'auto' : '-145px',
-                                            right: item.receiverId == loggedInUserId ? '-145px' : 'auto',
-                                            display: 'flex'
-                                        }}
-                                        className={`${style.dropd} ${isDarkTheme?'bg-[#353434]':'bg-gray-300'} shadow-md`}
+                                        className={`flex ${style.dropd} ${isDarkTheme ? 'bg-[#353434]' : 'bg-gray-300'} shadow-md ${item.receiverId == loggedInUserId?'-right-20':'right-2'} top-6 z-50`}
                                     >
                                         <div
                                             style={{
@@ -142,7 +139,7 @@ function Actions(props: any) {
                                                 Delete
                                             </p>
                                         </div>
-                                        {item.isrecevied && (
+                                        {/* {item.isrecevied && ( */}
                                             <>
                                                 <hr className={style.hr} />
                                                 <div
@@ -162,7 +159,7 @@ function Actions(props: any) {
                                                     </p>
                                                 </div>
                                             </>
-                                        )}
+                                        {/* )} */}
                                         <hr className={style.hr} />
                                         <div
                                             style={{
@@ -187,7 +184,25 @@ function Actions(props: any) {
 
                                     </div>
                                 )}
-                                <div className={`${item.isForwarded?(item.receiverId == loggedInUserId? (isDarkTheme?'bg-[#262626] py-1 ':'bg-slate-100 border py-1') :(isDarkTheme?'bg-[#414141] py-1':'bg-gray-100 border py-1')):''} min-w-52 rounded`} style={{ position: 'relative', zIndex: 20 }}>
+                                <div className={`${item.isForwarded ? (item.receiverId == loggedInUserId ? (isDarkTheme ? 'bg-[#262626] py-1 ' : 'bg-slate-100 border py-1') : (isDarkTheme ? 'bg-[#414141] py-1' : 'bg-gray-100 border py-1')) : ''} min-w-52 rounded`} style={{ position: 'relative', zIndex: 20 }}>
+                                    {item.emojis && <img
+                                        className='absolute w-[1.2rem] h-[1.2rem] top-1 right-2 cursor-pointer'
+                                        onClick={() => {
+                                            valuesH({ ...item, showEmogis: false }, 'dropdown');
+                                        }}
+                                        src={isDarkTheme ? weightedDownArrowInWhite : weightedDownArrow  }//moreInMsg}
+                                        alt="more"
+                                    />}
+                                    {item.emojis && <img
+                                        className={`absolute w-[1.2rem] h-[1.2rem] top-3 ${item.receiverId == loggedInUserId?'-right-10':'-left-10'} cursor-pointer`}
+                                        src={emoji}
+                                        alt=""
+
+                                        onClick={() => {
+                                            // valuesH(item, 'showEmogis');
+                                            valuesH({...item, dropdown: false}, 'showEmogis');
+                                        }}
+                                    />}
                                     <LongPressButton onLongPress={() => longPressH(item)}
                                     // onMouseEnter={() => {
                                     //     longPressH(item)
@@ -196,11 +211,11 @@ function Actions(props: any) {
                                     //     longPressH(item)
                                     //   }}
                                     >
-                                    {item.isForwarded && 
-                                        <div className='text-xs text-start flex px-1 gap-1'>
-                                            <img className='w-4' src={isDarkTheme?rightArrowCurvedinWhite:rightArrowCurved} alt="forwarded-icon"/>  Forwarded
-                                        </div>
-                                    }
+                                        {item.isForwarded &&
+                                            <div className='text-xs text-start flex px-1 gap-1'>
+                                                <img className='w-4' src={isDarkTheme ? rightArrowCurvedinWhite : rightArrowCurved} alt="forwarded-icon" />  Forwarded
+                                            </div>
+                                        }
 
                                         {item?.replysms ? (
                                             <div
@@ -227,7 +242,7 @@ function Actions(props: any) {
                                                         className={`${item.receiverId == loggedInUserId
                                                             ? style.receivedMsg
                                                             : style.sendedMsg
-                                                            } ${item.isForwarded?'py-0 bg-transparent border-0':''} ${item.receiverId == loggedInUserId? (isDarkTheme?'bg-[#262626]':'bg-slate-100'):(isDarkTheme?'bg-[#414141]':'bg-gray-100')}`}
+                                                            } ${item.isForwarded ? 'py-0 bg-transparent border-0' : ''} ${item.receiverId == loggedInUserId ? (isDarkTheme ? 'bg-[#262626]' : 'bg-slate-100') : (isDarkTheme ? 'bg-[#414141]' : 'bg-gray-100')}`}
                                                     >
                                                         <TextHighlighter searchQuery={searchQuery} text={item.msg} />
                                                     </p>}
@@ -268,7 +283,7 @@ function Actions(props: any) {
                                         <img src={seenMsgSvg} alt="" />
                                     )}
                                 </div>
-                                {item.emojis && (
+                                {/* {item.emojis && (
                                     <div
                                         onClick={(e) => e.stopPropagation()}
                                         style={{
@@ -276,16 +291,18 @@ function Actions(props: any) {
                                             right: item.receiverId == loggedInUserId ? '-75px' : 'auto',
                                         }}
                                         className={`${style.actionsOnLongP} items-center z-50`}
-                                    >
-                                        <img
+                                    > */}
+                                {/* {item.emojis &&<img
+                                            className='absolute top-2 w-[1.2rem] h-[1.2rem] right-10'
                                             src={emoji}
                                             alt=""
+                                           
                                             onClick={() => {
                                                 // valuesH(item, 'showEmogis');
                                                 valuesH2(item, 'showEmogis', !item.showEmogis);
                                             }}
-                                        />
-                                        {/* <img
+                                        />} */}
+                                {/* <img
                                             onClick={() => {
                                                 setSmsRef(item?.msg);
                                                 setSmsId(item?.id);
@@ -294,115 +311,117 @@ function Actions(props: any) {
                                             src={tagMsg}
                                             alt=""
                                         /> */}
-                                        <img
-                                            onClick={() => {
-                                                valuesH({ ...item, showEmogis: false }, 'dropdown');
-                                            }}
-                                            src={isDarkTheme ? moreInMsgWhite : moreInMsg}
-                                            alt=""
-                                        />
-                                        {item.showEmogis && (
-                                            <div
-                                                className={`${style.showEmogis} ${
-                                                    !item?.isrecevied
-                                                        ? style.showEmogisr
-                                                        : style.showEmogis
-                                                } ${isDarkTheme?'bg-[#353434]':'bg-gray-300 '} shadow-md`}
-                                                style={{
-                                                    top: item.id === 1 ? '-35px' : '',
-                                                    transform: !item?.isrecevied? 'translateX(50%)' : 'translateX(-50%)',
-                                                }}
-                                            >
-                                                 <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '👍');
-                                                    }}
-                                                >
-                                                    👍
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '❤️');
-                                                    }}
-                                                >
-                                                    ❤️{' '}
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '😂');
-                                                    }}
-                                                >
-                                                    😂
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '🥰');
-                                                    }}
-                                                >
-                                                    🥰
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '😭');
-                                                    }}
-                                                >
-                                                    😭
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '😳');
-                                                    }}
-                                                >
-                                                    😳
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '😡');
-                                                    }}
-                                                >
-                                                    😡
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '😢');
-                                                    }}
-                                                >
-                                                    😢
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '😊');
-                                                    }}
-                                                >
-                                                    😊
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '🙏🏻');
-                                                    }}
-                                                >
-                                                    🙏🏻
-                                                </p>
-                                                <p
-                                                    onClick={() => {
-                                                        valuesH(item,'showEmogis');
-                                                        reactToMessage(item.id, '👎');
-                                                    }}
-                                                >
-                                                    👎
-                                                </p>
+                                {/* {item.emojis && <img
+                                    className='absolute -top-2 w-[1.2rem] h-[1.2rem]'
+                                    onClick={() => {
+                                        valuesH({ ...item, showEmogis: false }, 'dropdown');
+                                    }}
+                                    src={isDarkTheme ? weightedDownArrowInWhite : moreInMsg}
 
-                                                {/* <p
+                                    alt="more"
+                                />} */}
+                                {item.showEmogis && (
+                                    <div
+                                        className={`${!item?.isrecevied
+                                            ? style.showEmogisr
+                                            : style.showEmogis
+                                            } ${item.receiverId != loggedInUserId?'right-1/4':'left-1/4'}
+                                            ${isDarkTheme ? 'bg-[#353434]' : 'bg-gray-300 '} shadow-md`}
+                                        style={{
+                                            top: item.id === 1 ? '-35px' : '',
+                                            // transform: !item?.isrecevied ? 'translateX(50%)' : 'translateX(-50%)',
+                                        }}
+                                    >
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '👍');
+                                            }}
+                                        >
+                                            👍
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '❤️');
+                                            }}
+                                        >
+                                            ❤️{' '}
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😂');
+                                            }}
+                                        >
+                                            😂
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '🥰');
+                                            }}
+                                        >
+                                            🥰
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😭');
+                                            }}
+                                        >
+                                            😭
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😳');
+                                            }}
+                                        >
+                                            😳
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😡');
+                                            }}
+                                        >
+                                            😡
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😢');
+                                            }}
+                                        >
+                                            😢
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😊');
+                                            }}
+                                        >
+                                            😊
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '🙏🏻');
+                                            }}
+                                        >
+                                            🙏🏻
+                                        </p>
+                                        <p
+                                            onClick={() => {
+                                                valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '👎');
+                                            }}
+                                        >
+                                            👎
+                                        </p>
+
+                                        {/* <p
                                                     onClick={() => {
                                                         insertKeyH('showEmogis', false);
                                                         insertKeyH('emojis', false);
@@ -411,10 +430,10 @@ function Actions(props: any) {
                                                 >
                                                     +
                                                 </p> */}
-                                            </div>
-                                        )}
                                     </div>
                                 )}
+                                {/* </div>
+                                )} */}
                             </div>
                         </div>
                     );
