@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-    avatar,
     deleteMsg,
     editInStaredMsg,
     forwardMsg,
@@ -13,7 +12,6 @@ import {
 import Search from '../../../shared/navbar/components/Search';
 import style from './stared.module.scss';
 
-
 function StaredMesagesSec({
     isDarkTheme,
     staredMsgs: staredMsgsList,
@@ -25,48 +23,7 @@ function StaredMesagesSec({
     showForwardModal,
     selectedData,
 }: any) {
-    const [staredMsgs, setstaredMsgs] = useState<any[]>([
-        {
-            userId: '1',
-            userName: 'User 1',
-            chats: [
-                {
-                    id: '1',
-                    msg: 'Hello, how are you?',
-                    isrecevied: true,
-                    replysms: 'I am fine, what about you?',
-                    userName: 'You',
-                },
-                {
-                    id: '2',
-                    msg: 'I am fine, what about you?',
-                    isrecevied: false,
-                    replysms: 'Hello, how are you?',
-                    userName: 'User',
-                },
-            ],
-        },
-        {
-            userId: '2',
-            userName: 'User 2',
-            chats: [
-                {
-                    id: '3',
-                    msg: 'Hello, how are you?',
-                    isrecevied: true,
-                    replysms: 'I am fine, what about you?',
-                    userName: 'You',
-                },
-                {
-                    id: '4',
-                    msg: 'I am fine, what about you?',
-                    isrecevied: false,
-                    replysms: 'Hello, how are you?',
-                    userName: 'User',
-                },
-            ],
-        },
-    ]);
+    const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
     const [isEditAble, setisEditAble] = useState<boolean>(false);
     const [showEmptyContainer, setshowEmptyContainer] = useState<boolean>(false);
     // const [isEditAble, setisEditAble] = useState<boolean>(false);
@@ -88,14 +45,23 @@ function StaredMesagesSec({
             {
                 userName: userName,
                 userId: staredMsgsList[1]?.userId,
+                userImage: staredMsgsList[1]?.userImage,
                 chats: isReceivedChat,
             },
             {
                 userName: 'You',
-                userId: staredMsgsList[1]?.userId,
+                userId: staredMsgsList[0]?.userId,
+                userImage: staredMsgsList[0]?.userImage,
                 chats: [...isNotReceivedChat],
             },
         ]);
+        const allChats = [...isReceivedChat, ...isNotReceivedChat];
+        if (allChats.length > 0) {
+            setshowEmptyContainer(false);
+        } else {
+            setisEditAble(false);
+            setshowEmptyContainer(true);
+        }
     }, [staredMsgsList]);
 
     // useEffect(() => {
@@ -174,10 +140,10 @@ function StaredMesagesSec({
                                     {user?.chats.length > 0 && (
                                         <div className={style.msgParent}>
                                             <div>
-                                                <img className={style.avatar} src={avatar} alt="" />
+                                                <img className={style.avatar} src={user.userImage} alt={user.userImage} />
                                                 <p className={style.text_500}>{user.userName}</p>
                                             </div>
-                                            <p className={style.gray_300}>11:14 PM</p>
+                                            {/* <p className={style.gray_300}>11:14 PM</p> */}
                                         </div>
                                     )}
                                     <div className={style.staredChats}>
@@ -272,11 +238,9 @@ function StaredMesagesSec({
                                                                     />
                                                                 )}
                                                                 <p
-                                                                    className={
-                                                                        chat.userName !== 'You'
+                                                                    className={`${chat.userName !== 'You'
                                                                             ? style.isreceived
-                                                                            : style.userstarMsg
-                                                                    }
+                                                                            : style.userstarMsg} ${isDarkTheme? 'bg-[#615e5e]':'bg-[#eaeaea]'}`}
                                                                     style={{
                                                                         marginLeft: isEditAble
                                                                             ? '0.5rem'
@@ -293,12 +257,14 @@ function StaredMesagesSec({
                                                                 gap: '0.38rem',
                                                                 justifyContent: 'flex-end',
                                                                 marginTop: '0.5rem',
-                                                                width: '100%',
+                                                                // width: '100%',
+                                                                marginLeft: '3rem',
                                                             }}
                                                         >
                                                             <img src={starMsg} alt="" />
                                                             <p className={style.gray_300}>
-                                                                11:14 AM
+                                                                {/* 11:14 AM */}
+                                                                {chat.timeStamp}
                                                             </p>
                                                         </div>
                                                     </div>

@@ -22,60 +22,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function ConfirmDelete({ isDarkTheme }: any) {
-  const [open, setOpen] = useState(false);
+export default function ConfirmDelete({ isDarkTheme, msg, handleClose, deleteHandler }: any) {
   const API_KEY = process.env.VITE_API_URL;
   const [PrivacyValue, setPrivacyValue] = useState('Friends');
   const token = localStorage.getItem('token');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const loggedUserId = localStorage.getItem('userId');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log((event.target as HTMLInputElement).value)
     setPrivacyValue((event.target as HTMLInputElement).value);
-  };
-
-
-  useEffect(() => {
-    getChatPrivacySettings();
-  }, []);
-
-  const getChatPrivacySettings = async () => {
-    try {
-      const response = await fetch(`${API_KEY}/profile/privacy-settings`, {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        }
-      });
-      const res = await response.json();
-      setPrivacyValue(res.data.allowMessagesFrom);
-    } catch (error) {
-      console.log('error blocking user', error);
-    }
-  };
-
-  const handleUserChatSetting = async () => {
-    try {
-      const response = await fetch(`${API_KEY}/profile/privacy-settings`, {
-        method: 'PATCH',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ allowMessagesFrom: PrivacyValue }),
-      });
-      const res = await response.json();
-    } catch (error) {
-      console.log('error blocking user', error);
-    }
-    setOpen(false);
   };
 
   const lightThemePalette = createTheme({
@@ -92,14 +47,13 @@ export default function ConfirmDelete({ isDarkTheme }: any) {
   return (
     // <React.Fragment>
     <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
-      <SettingsIcon style={{ cursor: 'pointer' }} onClick={handleClickOpen} />
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={Boolean(msg)}
         PaperProps={{
           style: {
-            width: '700px',
+            width: '600px',
             maxWidth: '90%',
             borderRadius: '10px'
           },
@@ -107,7 +61,7 @@ export default function ConfirmDelete({ isDarkTheme }: any) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography style={{ color: '#000 !important', fontSize: '24px', }} sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-            Message settings
+            Delete Message?
           </Typography>
           <CloseIcon
             aria-label="close"
@@ -123,34 +77,12 @@ export default function ConfirmDelete({ isDarkTheme }: any) {
         </div>
         <DialogContent dividers style={{ padding: '24px' }}>
           <Typography gutterBottom style={{ fontSize: '16px', fontWeight: 'bold' }}>
-            Who can send you direct messages
-          </Typography>
-          <Typography gutterBottom style={{ fontSize: '12px' }}>
-            With any option, you can receive messages from users that you’ve sent messages to. Friends are your followers that you follow back.
-          </Typography>
-          <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons"
-              value={PrivacyValue}
-              onChange={handleChange}
-              style={{ marginTop: '15px', }}
-            >
-              <FormControlLabel
-                value="Friends"
-                control={<Radio style={{ color: (PrivacyValue == 'Friends' || PrivacyValue == 'Everyone') ? 'rgb(255, 59, 92)' : '' }} />}
-                label="Friends"
-              />
-              <FormControlLabel
-                value="No one"
-                control={<Radio style={{ color: PrivacyValue === 'No one' ? 'rgb(255, 59, 92)' : '' }} />}
-                label={<div style={{ width: 'max-content' }}>No one</div>}
-              />
-            </RadioGroup>
-          </FormControl>
+          Deleting a message for yourself allows you to delete your copy of messages you've sent or received This has no effect on your recipients' chats          </Typography>
         </DialogContent>
-        <DialogActions style={{ maxWidth: 'fit-content', marginLeft: 'auto', padding: '24px' }}>
-          <button style={{ color: isDarkTheme?'#fff':'rgb(22, 24, 35)', backgroundColor: isDarkTheme?'#282828':'', borderColor: 'rgba(22, 24, 35, 0.12)', minWidth: '165px', }} onClick={handleClose}>Cancel</button>
-          <button style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '165px' }} onClick={handleUserChatSetting} autoFocus>Save</button>
+        <DialogActions style={{ maxWidth: 'fit-content', marginLeft: 'auto', padding: '10px', gap:'15px' }}>
+          {msg?.receiverId !== loggedUserId &&<button className='py-2' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '100px' }} autoFocus>Delete for everyone</button>}
+          <button onClick={()=>deleteHandler(msg)} className='py-2' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '100px' }} autoFocus>Delete for me</button>
+          <button className='py-2' style={{ color: isDarkTheme?'#fff':'rgb(22, 24, 35)', backgroundColor: isDarkTheme?'#282828':'', borderColor: 'rgba(22, 24, 35, 0.12)', minWidth: '100px', }} onClick={handleClose}>Cancel</button>
         </DialogActions>
       </BootstrapDialog>
     </ThemeProvider>

@@ -12,7 +12,7 @@ import Actions from './components/Actions';
 import DoMsg from './components/DoMsg';
 import StaredMesagesSec from './components/StaredMesagesSec';
 
-import { avatar, groupDefaultIcon, more, cross, chatEmojiBg, chatEmojiBgDark, leftArrowCurvedinWhite, leftArrowCurved } from '../../icons';
+import { avatar, groupDefaultIcon, more, cross, chatEmojiBg, chatEmojiBgDark, leftArrowCurvedinWhite, leftArrowCurved, defaultAvatar } from '../../icons';
 // style
 import style from './index.module.scss';
 import chatHeader from './components/ChatHeader.module.scss';
@@ -27,6 +27,8 @@ import { useUpdateEffect } from 'react-use';
 import Forwardusers from './components/modals/Forwardusers';
 import { getLatestMsgDateFormat } from '../../utils/helpers';
 import ProfileSec from './components/ProfileSec';
+import ConfirmDelete from './components/ConfirmDelete';
+import { useSelector } from 'react-redux';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -93,6 +95,10 @@ const ChatComponent = () => {
     const [recievedMsg, seTRecievedMsg] = useState<any>(null)
     const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
     const [isProfileSecVisible, setIsProfileSecVisible] = useState(false);
+    const [selectedMsg, setSelectedMsg] = useState<any>(null);
+
+    const userAvatar = useSelector((state: any) => state?.reducers?.profile?.avatar);
+
     const longPressH = (item: any) => {
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
@@ -243,16 +249,17 @@ const ChatComponent = () => {
                 {
                     userId: loggedUserId,
                     userName: 'You',
-                    userImage: '',
+                    userImage: userAvatar || defaultAvatar,
                     chats: ownStaredMessages,
                 },
                 {
                     userId:  activeUser?.userId,
                     userName: activeUser?.userName,
-                    userImage: activeUser?.userImage,
+                    userImage: activeUser?.userImage || defaultAvatar,
                     chats: opponentStaredMessages,
                 },
             ]
+            console.log('ownStaredMessages 🥳🥳🥳🥳🥳', staredMessages);
 
             const [modifiedOwnMessages, modifiedOpponentMessages] = [ownStaredMessages, opponentStaredMessages].map((messages: any[]) => {
                return messages.map(
@@ -269,6 +276,7 @@ const ChatComponent = () => {
                         replysms: chats?.repliedMessage,
                         isrecevied: chats?.receiverId?._id === loggedUserId ? false : true,
                         msg: chats?.message,
+                        timeStamp: moment(chats?.createdTime).format('MMM Do YY, h:mm A'),
                     };
                 }
             );
@@ -526,6 +534,7 @@ const ChatComponent = () => {
                 }
             );
             const res = await response.json();
+            setSelectedMsg(null);
         } catch (error) {
             console.log('Error deleting message', error);
         }
@@ -895,6 +904,7 @@ const ChatComponent = () => {
         >
             <img onClick={()=>navigate('/')} className='float-left mt-3 ml-4 cursor-pointer' src={isDarkTheme?leftArrowCurvedinWhite:leftArrowCurved} alt="" />
             <div className={`${style.parent} ${isDarkTheme}`}>
+                <ConfirmDelete deleteHandler={deleteH} isDarkTheme={isDarkTheme} msg={selectedMsg} handleClose={()=>setSelectedMsg(null)} />
                 <UserChats
                     // onUsersInputChangeHandler={onUsersInputChangeHandler}
                     id={activeUser?.userId}
@@ -993,6 +1003,7 @@ const ChatComponent = () => {
                             )
                         ) : ( */}
                         <Actions
+                            openDeleteModal={(item:any) =>setSelectedMsg(item)}
                             valuesH={valuesH}
                             valuesH2={valuesH2}
                             deleteH={deleteH}

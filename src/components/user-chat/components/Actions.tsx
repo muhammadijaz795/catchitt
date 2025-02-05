@@ -25,6 +25,7 @@ import VideoModal from './VideoModal';
 import { CircularProgress } from '@mui/material';
 function Actions(props: any) {
     const {
+        openDeleteModal,
         valuesH,
         valuesH2,
         deleteH,
@@ -125,7 +126,8 @@ function Actions(props: any) {
                                             }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                deleteH(item);
+                                                // deleteH(item);
+                                                openDeleteModal(item);
                                             }}
                                         >
                                             {/* <img src={deleteMsg} alt="" /> */}
