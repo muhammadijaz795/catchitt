@@ -16,6 +16,11 @@ import Search from '../../../shared/navbar/components/Search';
 import style from './stared.module.scss';
 import { AccountCircle, AccountCircleOutlined, DonutSmallRounded, NotificationsNoneOutlined, Phone, SearchOutlined, ThumbUpAlt, VideoCall } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { ThemeColorPicker } from './ThemeColorPicker';
+import { EditNickName } from './EditNickName';
+import { Modal } from './Modal';
+import { CUSTOMIZE_COMPONENT } from '../../../utils/constants';
+import { CustomEmojis } from './CustomEmojis';
 
 
 // {
@@ -34,6 +39,15 @@ import { useNavigate } from 'react-router-dom';
 
 function ProfileSec({ data, onClose, isDarkTheme, searchMessage }: any) {
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeComponent, setActiveComponent] = useState(CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER);
+
+    const allCustomizeComponents: { [key in CUSTOMIZE_COMPONENT]: JSX.Element } = {
+        [CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER]: <ThemeColorPicker isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} currentColor={'blue'} onColorSelect={(color) => console.log(color)} />,
+        [CUSTOMIZE_COMPONENT.EMOJI_PICKER]: <CustomEmojis isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} />,
+        [CUSTOMIZE_COMPONENT.EDIT_NICKNAME]: <EditNickName currentNickName={data.userName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} />
+    }
+
     useEffect(() => {
         const details = document.querySelectorAll("details");
 
@@ -70,6 +84,11 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage }: any) {
         };
     }, []);
 
+    const switchActiveComponent = (component: CUSTOMIZE_COMPONENT) => {
+        setActiveComponent(component);
+        setIsModalOpen(true);
+    }
+
     return (
         <div className={style.parent}>
             <div className={style.header}>
@@ -91,7 +110,7 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage }: any) {
                         <span className={`${isDarkTheme ? 'bg-gray-500' : 'bg-slate-100'} p-1 shadow-md rounded-full`}><NotificationsNoneOutlined sx={{ fontSize: '27px' }} /></span>
                         <span className='ml-2 text-sm mt-1'>Mute</span>
                     </div>
-                    <div className='flex flex-col items-center cursor-pointer' onClick={(e)=>{searchMessage(true),onClose() }}>
+                    <div className='flex flex-col items-center cursor-pointer' onClick={(e) => { searchMessage(true), onClose() }}>
                         <span className={`${isDarkTheme ? 'bg-gray-500' : 'bg-slate-100'} p-1 shadow-md rounded-full`}><SearchOutlined sx={{ fontSize: '27px' }} /></span>
                         <span className='ml-2 text-sm mt-1'>Search</span>
                     </div>
@@ -106,12 +125,12 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage }: any) {
                             </div>
                         </summary>
                         <ul className='mt-2 space-y-4 text-left'>
-                            <li className='cursor-pointer'><DonutSmallRounded sx={{ fontSize: '25px' }} /> &nbsp; Change Theme</li>
-                            <li className='cursor-pointer'><ThumbUpAlt sx={{ fontSize: '25px' }} /> &nbsp; Change Emoji</li>
-                            <li className='cursor-pointer'> <span className='font-semibold'>Aa</span> &nbsp; Edit Nicknames</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER)} className='cursor-pointer'><DonutSmallRounded sx={{ fontSize: '25px' }} /> &nbsp; Change Theme</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.EMOJI_PICKER)} className='cursor-pointer'><ThumbUpAlt sx={{ fontSize: '25px' }} /> &nbsp; Change Emoji</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.EDIT_NICKNAME)} className='cursor-pointer'> <span className='font-semibold'>Aa</span> &nbsp; Edit Nicknames</li>
                         </ul>
                     </details>
-                    <details className='mt-2'>
+                    {/* <details className='mt-2'>
                         <summary>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                                 <p className={isDarkTheme ? 'text-white' : ''}>Media and files</p>
@@ -123,10 +142,12 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage }: any) {
                             <li className='cursor-pointer'>Dummy</li>
                             <li className='cursor-pointer'>Dummy</li>
                         </ul>
-                    </details>
+                    </details> */}
                 </div>
             </div>
-
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isDarkTheme={isDarkTheme}>
+                {allCustomizeComponents[activeComponent]}
+            </Modal>
         </div>
     );
 }

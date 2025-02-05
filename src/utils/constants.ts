@@ -288,6 +288,12 @@ export enum POSTSTATISTICSTABS {
     NEW_FOLLOWERS
 }
 
+export enum CUSTOMIZE_COMPONENT {
+    THEME_COLOR_PICKER,
+    EMOJI_PICKER,
+    EDIT_NICKNAME
+}
+
 export const ANALYTICS_OVERVIEW_TIME_PERIODS = {
     'Last 7 days': 7,
     'Last 30 days': 30,
