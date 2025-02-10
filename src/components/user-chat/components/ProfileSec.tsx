@@ -14,7 +14,7 @@ import {
 } from '../../../icons';
 import Search from '../../../shared/navbar/components/Search';
 import style from './stared.module.scss';
-import { AccountCircle, AccountCircleOutlined, DonutSmallRounded, NotificationsNoneOutlined, NotificationsOffOutlined, Phone, SearchOutlined, ThumbUpAlt, VideoCall } from '@mui/icons-material';
+import { AccountCircle, AccountCircleOutlined, DonutSmallRounded, NotificationsNoneOutlined, NotificationsOffOutlined, Phone, SearchOutlined, ThumbUpAlt, VideoCall, Link, FileCopy, Image, Block, Report } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { ThemeColorPicker } from './ThemeColorPicker';
 import { EditNickName } from './EditNickName';
@@ -44,9 +44,16 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
     const [activeComponent, setActiveComponent] = useState(CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER);
 
     const allCustomizeComponents: { [key in CUSTOMIZE_COMPONENT]: JSX.Element } = {
-        [CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER]: <ThemeColorPicker isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} currentColor={data?.themeColor} onColorSelect={(color) => updateSettings({'themeColor':color})} />,
-        [CUSTOMIZE_COMPONENT.EMOJI_PICKER]: <CustomEmojis emoji={data?.emoji} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onEmojiChange={(emoji:any)=>updateSettings({'emoji':emoji})} />,
-        [CUSTOMIZE_COMPONENT.EDIT_NICKNAME]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName:any) => updateSettings({'nickName':nickName})} />
+        [CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER]: <ThemeColorPicker isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} currentColor={data?.themeColor} onColorSelect={(color) => updateSettings({ 'themeColor': color })} />,
+        [CUSTOMIZE_COMPONENT.EMOJI_PICKER]: <CustomEmojis emoji={data?.emoji} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onEmojiChange={(emoji: any) => updateSettings({ 'emoji': emoji })} />,
+        [CUSTOMIZE_COMPONENT.EDIT_NICKNAME]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.MEDIA]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.FILES]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.LINKS]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.MUTE_NOTIFICATION]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.RESTRCIT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.BLOCK]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.REPORT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
     }
 
     const updateSettings = async (parameters: any) => {
@@ -164,7 +171,7 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
                             <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.EDIT_NICKNAME)} className='cursor-pointer'> <span className='font-semibold'>Aa</span> &nbsp; Edit Nicknames</li>
                         </ul>
                     </details>
-                    {/* <details className='mt-2'>
+                    <details className='mt-2'>
                         <summary>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                                 <p className={isDarkTheme ? 'text-white' : ''}>Media and files</p>
@@ -172,11 +179,25 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
                             </div>
                         </summary>
                         <ul className='mt-2 space-y-4 text-left'>
-                            <li className='cursor-pointer'>Dummy</li>
-                            <li className='cursor-pointer'>Dummy</li>
-                            <li className='cursor-pointer'>Dummy</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.MEDIA)} className='cursor-pointer'><Image sx={{ fontSize: '25px' }} /> &nbsp;Media</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.FILES)} className='cursor-pointer'><FileCopy sx={{ fontSize: '25px' }} /> &nbsp;Files</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.LINKS)} className='cursor-pointer'><Link sx={{ fontSize: '25px' }} /> &nbsp;Links</li>
                         </ul>
-                    </details> */}
+                    </details>
+                    <details className='mt-2'>
+                        <summary>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                                <p className={isDarkTheme ? 'text-white' : ''}>Privacy and Support</p>
+                                <span className="marker" style={{ fontSize: '2rem' }}>&rsaquo;</span>
+                            </div>
+                        </summary>
+                        <ul className='mt-2 space-y-4 text-left'>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.MUTE_NOTIFICATION)} className='cursor-pointer'><NotificationsOffOutlined sx={{ fontSize: '25px' }} /> &nbsp;Mute Notifications</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.RESTRCIT)} className='cursor-pointer'><AccountCircle sx={{ fontSize: '25px' }} /> &nbsp;Restrict</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.BLOCK)} className='cursor-pointer'><Block sx={{ fontSize: '25px' }} /> &nbsp;Block</li>
+                            <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.REPORT)} className='cursor-pointer'><Report sx={{ fontSize: '25px' }} /> &nbsp;Report</li>
+                        </ul>
+                    </details>
                 </div>
             </div>
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isDarkTheme={isDarkTheme}>
