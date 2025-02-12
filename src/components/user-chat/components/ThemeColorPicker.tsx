@@ -55,11 +55,11 @@ export const ThemeColorPicker: React.FC<ThemeColorPickerProps> = ({
                         onClose();
                     }}
                     className={`
-                w-16 h-16 rounded-full ${color.primary} 
-                transition-transform duration-200 ease-in-out
-                hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2
-                ${currentColor === color.primary ? 'ring-2 ring-offset-2 ring-gray-400' : ''}
-              `}
+                        w-16 h-16 rounded-full ${color.primary} 
+                        transition-transform duration-200 ease-in-out
+                        hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2
+                        ${currentColor === color.primary ? 'ring-2 ring-offset-2 ring-gray-400' : ''}
+                    `}
                     title={color.name.charAt(0).toUpperCase() + color.name.slice(1)}
                 />
             ))}

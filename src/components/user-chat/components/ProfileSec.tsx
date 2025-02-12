@@ -18,6 +18,7 @@ import { AccountCircle, AccountCircleOutlined, DonutSmallRounded, NotificationsN
 import { useNavigate } from 'react-router-dom';
 import { ThemeColorPicker } from './ThemeColorPicker';
 import { EditNickName } from './EditNickName';
+import { ViewFiles } from './ViewFiles';
 import { Modal } from './Modal';
 import { CUSTOMIZE_COMPONENT } from '../../../utils/constants';
 import { CustomEmojis } from './CustomEmojis';
@@ -47,9 +48,9 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
         [CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER]: <ThemeColorPicker isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} currentColor={data?.themeColor} onColorSelect={(color) => updateSettings({ 'themeColor': color })} />,
         [CUSTOMIZE_COMPONENT.EMOJI_PICKER]: <CustomEmojis emoji={data?.emoji} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onEmojiChange={(emoji: any) => updateSettings({ 'emoji': emoji })} />,
         [CUSTOMIZE_COMPONENT.EDIT_NICKNAME]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.MEDIA]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.FILES]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.LINKS]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.MEDIA]: <ViewFiles MediaName="media" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.FILES]: <ViewFiles MediaName="file" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        [CUSTOMIZE_COMPONENT.LINKS]: <ViewFiles MediaName="link" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
         [CUSTOMIZE_COMPONENT.MUTE_NOTIFICATION]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
         [CUSTOMIZE_COMPONENT.RESTRCIT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
         [CUSTOMIZE_COMPONENT.BLOCK]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
