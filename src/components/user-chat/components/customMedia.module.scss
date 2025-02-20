@@ -1,12 +1,12 @@
 .pickerModal {
     position: absolute;
-    bottom: 70px;
-    left: 5px;
-    border-radius: 8px;
+    bottom: 0;
+    left: 0;
+    border-radius: 0;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
     z-index: 1000;
-    margin: 0.3rem;
-    max-width: 400px;
+    margin: 0;
+    max-width: 100%;
     width: 100%;
     overflow: hidden;
 }

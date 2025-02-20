@@ -1,11 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react'; // Add useRef and useEffect
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { GiphyFetch } from '@giphy/js-fetch-api';
 import { Grid } from '@giphy/react-components';
 import style from './customMedia.module.scss';
 import { ClickAwayListener } from '@mui/material';
-
-// import '@giphy/react-components/dist/index.css';
 
 const GIPHY_KEY = process.env.VITE_GIPHY_API_KEY;
 if (!GIPHY_KEY) {
@@ -15,7 +13,16 @@ const giphyFetch = new GiphyFetch(GIPHY_KEY);
 
 function CustomMediaPicker({ isPickerVisible, setIsPickerVisible, isDarkTheme, setMessageType, setMessage, setUploadedFile, setOpenUploadPic, setFilePreview }: any) {
     const [activeTab, setActiveTab] = useState('emoji'); // Tracks the current tab
+    const modalContentRef = useRef<HTMLDivElement>(null); // Ref for the modal content
+    const [gridWidth, setGridWidth] = useState(0); // State to store the calculated width
 
+    // Calculate the width of the parent container
+    useEffect(() => {
+        if (modalContentRef.current) {
+            const parentWidth = modalContentRef.current.offsetWidth;
+            setGridWidth(parentWidth * 0.98); // 90% of the parent width (adjust as needed)
+        }
+    }, [isPickerVisible, activeTab]); // Recalculate when the picker or tab changes
 
     const onEmojiClick = (emojiObject: any) => {
         setMessageType('Text');
@@ -48,12 +55,12 @@ function CustomMediaPicker({ isPickerVisible, setIsPickerVisible, isDarkTheme, s
                 <button onClick={() => setActiveTab('sticker')} className={activeTab === 'sticker' ? style.activeTab : ''}>Stickers</button>
             </div>
 
-            <div className={`${style.modalContent} ${isDarkTheme?'bg-[#181818]':'bg-white'}`}>
+            <div className={`${style.modalContent} ${isDarkTheme?'bg-[#181818]':'bg-white'}`} ref={modalContentRef}>
                 {activeTab === 'emoji' && <EmojiPicker theme={isDarkTheme ? Theme.DARK : Theme.LIGHT} height={340} width="auto" onEmojiClick={onEmojiClick} />}
                 {activeTab === 'gif' && (
                         <Grid
-                            width={400}
-                            columns={3}
+                            width={gridWidth} // Use the calculated width
+                            columns={5} // Adjust the number of columns as needed
                             fetchGifs={(offset: number) => giphyFetch.trending({ offset, limit: 10 })}
                             onGifClick={(gif: any) => sendGif(gif)}
                             noLink={true}
@@ -61,8 +68,8 @@ function CustomMediaPicker({ isPickerVisible, setIsPickerVisible, isDarkTheme, s
                 )}
                 {activeTab === 'sticker' && (
                         <Grid
-                            width={400}
-                            columns={3}
+                            width={gridWidth} // Use the calculated width
+                            columns={5} // Adjust the number of columns as needed
                             fetchGifs={(offset) => giphyFetch.search('stickers', { offset, limit: 10 })}
                             onGifClick={sendSticker}
                             noLink={true}

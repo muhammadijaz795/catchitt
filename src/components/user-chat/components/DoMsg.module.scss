@@ -6,6 +6,9 @@
   justify-content: space-between;
   // background: #fff;
   box-shadow: 0px -4px 20px 0px rgba(0, 0, 0, 0.05);
+  button:hover{
+    border-color: transparent !important;
+  }
 }
 .doMsgContainer > form {
   display: flex;
@@ -99,4 +102,43 @@
   background-color: #ccc;
   color: #666;
   cursor: not-allowed;
+}
+.imagePopupInner{
+  height: 17rem;
+  width: 100%;
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: block !important;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.btnHide{
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  padding: 0 !important;
+}
+.gridImages{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+.BtnsaddRemove{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+}
+.btnAddMore{
+    display: flex ;
+    width: 7rem;
+    justify-content: space-between;
+    padding: 0.4rem 0.7rem;
+    background-color: #f5f5f5;
+    border-radius: 2rem;
 }
