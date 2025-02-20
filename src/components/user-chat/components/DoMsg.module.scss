@@ -104,7 +104,7 @@
   cursor: not-allowed;
 }
 .imagePopupInner{
-  height: 15rem;
+  height: 17rem;
   width: 100%;
   background-color: white;
   position: absolute;
@@ -113,6 +113,7 @@
   z-index: 2;
   display: block !important;
   padding: 1rem;
+  overflow-y: auto;
 }
 .btnHide{
   position: absolute;
@@ -129,4 +130,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
+}
+.btnAddMore{
+    display: flex ;
+    width: 7rem;
+    justify-content: space-between;
+    padding: 0.4rem 0.7rem;
+    background-color: #e4e6eb;
+    border-radius: 2rem;
 }
