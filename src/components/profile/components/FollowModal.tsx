@@ -53,33 +53,37 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
     // Filtered Following...
     const filteredFollowing = useMemo(() => {
         if (!searchQuery.trim()) return following || [];
+
         return following?.filter((user: any) => {
-            //console.log("Checking user:", user);
-            return user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+            return user?.followed_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
         }) || [];
     }, [following, searchQuery]);
     
     const filteredPublicFollowing = useMemo(() => {
         if (!searchQuery.trim()) return publicFollowing || [];
         return publicFollowing?.filter((user: any) => {
-            //console.log("public following:", user);
             return user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
         }) || [];
     }, [publicFollowing, searchQuery]);
 
     // Filtered Followers
     const filteredFollowers = useMemo(() => {
-        //alert(searchQuery);
-        //console.log('followers...... :-) ', followers);
         if (!searchQuery.trim()) return followers || [];
         return followers?.filter((user: any) => {
-            return user?.followed_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+            return user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
         }) || [];
     }, [followers, searchQuery]);
     
     const filteredPublicFollowers = useMemo(() => {
         if (!searchQuery.trim()) return publicFollowers || [];
         return publicFollowers?.filter((user: any) => {
+            return user?.followed_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        }) || [];
+    }, [publicFollowers, searchQuery]);
+
+    const filteredFriends = useMemo(() => {
+        if (!searchQuery.trim()) return friends || [];
+        return friends?.filter((user: any) => {
             return user?.followed_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
         }) || [];
     }, [publicFollowers, searchQuery]);
@@ -171,16 +175,6 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
 
                         const followingData = await followersResponse.json();
 
-                        // console.log('followers data ');
-                        // console.log(followersData);
-                        // console.log('followingData data ');
-                        // console.log(followingData);
-
-                        // console.log("followersData?.total")
-                        // console.log(followersData?.total)
-
-                        // console.log("ollowingData?.total")
-                        // console.log(followingData?.total)
                         console.log('followers data 🚀🚀🚀🚀', followingData.data);
                         setPublicFollowings(prev => [...prev, ...followingData?.data?.data]);
                         setTotalFollowingPublic(followingData?.data?.total || 0);
@@ -246,7 +240,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                     content: (
                         <>
                             <MessageTab
-                                friends={friends}
+                                friends={filteredFriends}
                                 totalFriends={totalFriends}
                                 loadMoreFriends={loadMoreFriends}
                                 onClose={onClose}
