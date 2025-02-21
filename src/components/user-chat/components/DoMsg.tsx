@@ -32,9 +32,10 @@ import coinsOnly from '../../../assets/gifts/coinsSingle.svg';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data }: any) => {
+const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,currentReplyToMessage,closeReply }: any) => {
 
   const API_KEY = process.env.VITE_API_URL;
+  const loggedInUserId = localStorage.getItem('userId');
  
   const token = localStorage.getItem('token');
   const [uploadedFile, setUploadedFile] = useState<string>('');
@@ -211,6 +212,28 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data }:
   return (
     <>
       <CustomMediaPicker isDarkTheme={isDarkTheme} isPickerVisible={isPickerVisible} setIsPickerVisible={setIsPickerVisible} setMessageType={setMessageType} setMessage={setMessage} setUploadedFile={setUploadedFile} setOpenUploadPic={setOpenUploadPic} setFilePreview={setFilePreview} />
+      {currentReplyToMessage  && (
+            <div>
+              <div className="d-flex justify-content-between align-items-center">
+                <h5 className="mb-0">Reply to {loggedInUserId == currentReplyToMessage.receiverId ? currentReplyToMessage.recieverName: 'Yourself'} :</h5>
+                <button
+                  type="button"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  className="close replyClose"
+                  onClick={closeReply}
+                >
+                  <span>×</span>
+                </button>
+              </div>
+              <div className="replyMsg">
+                {currentReplyToMessage.msg}
+              </div>
+            </div>
+          )}
+
+         
+          
       <div className={`${style.doMsgContainer} ${isDarkTheme ? 'bg-[#282828]' : 'bg-white'}`}>
         <form onSubmit={onSubmit} style={{ padding: '0px' }}>
           {/* <InputEmoji 
@@ -243,7 +266,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data }:
               </div>
             </div>
           </Modal>
-          
+
           <input
             onChange={(e: any) => { setMessage(e.target.value), setMessageType('Text') }}
             type="text"

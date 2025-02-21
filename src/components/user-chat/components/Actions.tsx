@@ -37,6 +37,7 @@ function Actions(props: any) {
         scrollToBottom,
         activeChat,
         copyH,
+        replyMessage,
         showToast,
         handleScroll,
         chatActiveUserId,
@@ -183,6 +184,22 @@ function Actions(props: any) {
                                                 Forward
                                             </p>
                                         </div>
+                                        <hr className={style.hr} />
+                                        <div
+                                            style={{
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                replyMessage(item);
+                                            }}
+                                        >
+                                           
+                                            <p className={style.dropdText}>
+                                                Reply
+                                            </p>
+                                        </div>
 
                                     </div>
                                 )}
@@ -218,6 +235,10 @@ function Actions(props: any) {
                                                 <img className='w-4' src={isDarkTheme ? rightArrowCurvedinWhite : rightArrowCurved} alt="forwarded-icon" />  Forwarded
                                             </div>
                                         }
+
+                                    {/* <div className={style.messageText}>
+                                            {JSON.stringify(item, null, 2)} 
+                                            </div> */}
 
                                         {item?.replysms ? (
                                             <div
