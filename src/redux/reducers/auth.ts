@@ -54,6 +54,18 @@ const loginSlice: any = createSlice({
             return action?.payload?.data;
         });
 
+        builder.addCase(loginWithFBService.fulfilled, (_state: any, action: any) => {
+            console.log('loginWithFBService.fulfilled', action?.payload?.data);
+            
+            localStorage.setItem('userId', action?.payload?.data?._id || '');
+            localStorage.setItem('token', action?.payload?.data?.token || '');
+            localStorage.setItem('profile', JSON.stringify(action?.payload?.data) || '');
+            db.profile.add(action?.payload?.data);
+            useAuthStore.setState(action?.payload?.data);
+
+            return action?.payload?.data;
+        });
+
         builder.addCase(getProfileData.fulfilled, (_state: any, action: any) => {
             localStorage.setItem('profile', JSON.stringify(action?.payload) || '');
             _state.avatar = action?.payload?.avatar;
