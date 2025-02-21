@@ -73,12 +73,22 @@ function Actions(props: any) {
         setPlayingVideo('');
     }
 
+    const scrollChatToBottom = () => {
+        if(autoScrolElem.current) {
+            setTimeout(() => {
+            autoScrolElem.current.scrollTop = autoScrolElem.current.scrollHeight;
+            }, 1000);
+        }
+    };
+
     console.log('activeChat', activeChat, chatActiveUserId);
-    useEffect(() => {
-        setTimeout(() => {
-            scrollToBottom()
-        }, 800);
-    }, [chatActiveUserId]);
+    scrollChatToBottom();
+
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         scrollToBottom()
+    //     }, 800);
+    // }, [chatActiveUserId]);
 
     return (
         <>

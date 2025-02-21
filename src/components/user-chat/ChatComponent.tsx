@@ -375,6 +375,7 @@ const ChatComponent = () => {
             });
             const res = await response.json();
             const tempArr: any[] = [];
+            scrollChatToBottom();
 
             res?.data?.data?.forEach(
                 (
@@ -574,6 +575,14 @@ const ChatComponent = () => {
         if (scrollTop + clientHeight === scrollHeight) {
             // User has scrolled to the bottom
             // loadMoreMessages();
+        }
+    };
+
+    const scrollChatToBottom = () => {
+        if(autoScrolElem.current) {
+            setTimeout(() => {
+            autoScrolElem.current.scrollTop = autoScrolElem.current.scrollHeight;
+            }, 1500);
         }
     };
 
