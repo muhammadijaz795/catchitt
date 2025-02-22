@@ -57,6 +57,29 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
       setIsDivVisible(false);
   };
 
+  // Function to check if the message contains an image extension
+  const isImage = (url:any) => {
+    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);
+  };
+
+  // Function to check if the message contains a video extension
+  const isVideo = (url:any) => {
+    return /\.(mp4|webm|ogg)$/i.test(url);
+  };
+
+  // Function to check if the message contains any attachment (image, video, etc.)
+  const isAttachment = (msg:any) => {
+    return isImage(msg) || isVideo(msg);
+  };
+
+  // Render the message or attachment
+  const renderMessageContent = (msg:any) => {
+    if (isAttachment(msg)) {
+      return <div>Attachment</div>;  // Show "Attachment" text if it's an attachment
+    } else {
+      return <div>{msg}</div>; // Default render as text
+    }
+  };
 
   const uploadfile = async (e: any) => {
     setFilePreview("");
@@ -227,7 +250,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
                 </button>
               </div>
               <div className="replyMsg">
-                {currentReplyToMessage.msg}
+                {renderMessageContent(currentReplyToMessage.msg)}
               </div>
             </div>
           )}

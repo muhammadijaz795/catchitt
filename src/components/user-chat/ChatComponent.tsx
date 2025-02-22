@@ -216,8 +216,9 @@ const ChatComponent = () => {
                             stared: message?.isStarred,
                             isRead: message?.isRead,
                             type: message?.type,
-                            replysms: false,
-                            recieverName: message.receiverId.name
+                            // replysms: false,
+                            recieverName: message.receiverId.name,
+                            replysms: message?.repliedMessage?.message ? message?.repliedMessage?.message : '', // Use an empty string if repliedMessage is null
                         },
                     ],
                 }));
