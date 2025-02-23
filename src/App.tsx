@@ -391,8 +391,9 @@ function App() {
 
     const simpleLoginHandler = async () => {
         let loginObj;
+        console.log("loginWithPhone", loginWithPhone, password, phoneNumber, email);
         if (loginWithPhone) {
-            loginObj = { password, phoneNumber: countryCode + phoneNumber };
+            loginObj = { password, phoneNumber: countryCode +"-"+ phoneNumber };
         } else {
             loginObj = { password, email };
         }
@@ -485,9 +486,10 @@ function App() {
     const signupHandler = async () => {
         let signupObj;
         let signupURL;
-        if (loginWithPhone) {
+        console.log("loginWithPhone", loginWithPhone, password, phoneNumber, email);
+        if (signupWithPhone) {
             
-            signupObj = { password, phoneNumber: countryCode + phoneNumber, dateOfBirth, name };
+            signupObj = { password, phoneNumber: countryCode +'-'+ phoneNumber, dateOfBirth, name };
             setIsLoading(true);
             dispatch(signupWithPhoneNumberService(signupObj))
                 .then((res: any) => {
