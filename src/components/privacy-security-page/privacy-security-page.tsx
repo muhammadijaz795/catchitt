@@ -33,6 +33,11 @@ interface PrivacySettings {
     activityStatus: boolean;
     viewProfileVisits: boolean;
     disallowScreenshot: boolean;
+    mentionAndTags: boolean;
+    allowDuet: boolean;
+    refreshFeed: boolean;
+    allowStory: boolean;
+    isCommentsAllowed: boolean;
 }
 
 interface BlockedUser {
@@ -60,6 +65,11 @@ export const PrivacySecurityPage = () => {
         activityStatus: true,
         viewProfileVisits: true,
         disallowScreenshot: true,
+        mentionAndTags: true,
+        allowDuet: true,
+        refreshFeed: true,
+        allowStory: true,
+        isCommentsAllowed: true
     });
     const API_KEY = process.env.VITE_API_URL;
     const navigate = useNavigate();
@@ -147,6 +157,11 @@ export const PrivacySecurityPage = () => {
                 activityStatus: privacySettingsData.activityStatus,
                 viewProfileVisits: privacySettingsData.viewProfileVisits,
                 disallowScreenshot: privacySettingsData.disallowScreenshot,
+                allowDuet: privacySettingsData.allowDuet,
+                refreshFeed: privacySettingsData.refreshFeed,
+                allowStory: privacySettingsData.allowStory,
+                isCommentsAllowed: privacySettingsData.isCommentsAllowed,
+                mentionAndTags: privacySettingsData.mentionAndTags
             });
         }
     }, [privacySettingsData]);
@@ -375,7 +390,7 @@ export const PrivacySecurityPage = () => {
                                         control={
                                             <IOSSwitch
                                                 sx={{ m: 1 }}
-                                                checked={false}
+                                                checked={settings?.isCommentsAllowed || false}
                                                 onChange={(e: any) =>
                                                     handleSwitchChange(e, 'isCommentsAllowed')
                                                 }
@@ -391,7 +406,7 @@ export const PrivacySecurityPage = () => {
                                         control={
                                             <IOSSwitch
                                                 sx={{ m: 1 }}
-                                                checked={false}
+                                                checked={settings?.mentionAndTags || false}
                                                 onChange={(e: any) =>
                                                     handleSwitchChange(e, 'mentionAndTags')
                                                 }
@@ -427,8 +442,8 @@ export const PrivacySecurityPage = () => {
                                         control={
                                             <IOSSwitch
                                                 sx={{ m: 1 }}
-                                                checked={false}
-                                                onChange={(e) => handleSwitchChange(e, 'allowStory')}
+                                                checked={settings?.allowStory || false}
+                                                onChange={(e : any) => handleSwitchChange(e, 'allowStory')}
                                             />
                                         }
                                     />
@@ -443,8 +458,8 @@ export const PrivacySecurityPage = () => {
                                         control={
                                             <IOSSwitch
                                                 sx={{ m: 1 }}
-                                                checked={false}
-                                                onChange={(e) => handleSwitchChange(e, 'allowDuet')}
+                                                checked={settings?.allowDuet || false}
+                                                onChange={(e: any) => handleSwitchChange(e, 'allowDuet')}
                                             />
                                         }
                                     />
@@ -459,8 +474,8 @@ export const PrivacySecurityPage = () => {
                                         control={
                                             <IOSSwitch
                                                 sx={{ m: 1 }}
-                                                checked={false}
-                                                onChange={(e) => handleSwitchChange(e, 'refreshFeed')}
+                                                checked={settings?.refreshFeed || false}
+                                                onChange={(e: any) => handleSwitchChange(e, 'refreshFeed')}
                                             />
                                         }
                                     />
