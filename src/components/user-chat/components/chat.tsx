@@ -101,6 +101,7 @@ function UserChat(props: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const [muteN, setmuteN] = useState(false);
+    const [reportPopup, setreportPopup] = useState(false);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -108,6 +109,9 @@ function UserChat(props: any) {
         setAnchorEl(null);
     };
     const navigate = useNavigate();
+    const handleReport = () => {
+        setreportPopup(true)
+    }
     // const handleAction = (text:string, ispined:any) => {
     //     if(text == "Report"){
     //         console.log("Report");
@@ -310,6 +314,13 @@ function UserChat(props: any) {
                             </MenuItem>
                             <Divider />
                         </div>
+                        <div key="report">
+                            <MenuItem onClick={() => { handleReport(); } }>
+                                <AccountCircleOutlined />
+                                <span style={{ marginLeft: '8px', fontWeight: 'bold' }} >Report</span>
+                            </MenuItem>
+                            <Divider />
+                        </div>
                     </Menu>
                     <p className={style.seenStatus+' whitespace-nowrap'}>{lastSeen}</p>
                     {ispined ? (
@@ -335,7 +346,16 @@ function UserChat(props: any) {
                         onBlockClose={() => setblockPopup(false)}
                     /> 
                 */}
+                
             </div>
+
+            <PopupForReport className={style.popupReport}
+                        openReport={reportPopup}
+                        onReportClose={() => { setreportPopup(false);  handleClose(); }}
+                        isChatReport={true}
+                        style={{ height: '0px' }}
+                    /> 
+            
         </ThemeProvider>
     );
 }

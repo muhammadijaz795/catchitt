@@ -37,6 +37,7 @@ function Actions(props: any) {
         scrollToBottom,
         activeChat,
         copyH,
+        replyMessage,
         showToast,
         handleScroll,
         chatActiveUserId,
@@ -48,6 +49,36 @@ function Actions(props: any) {
 
     const loggedInUserId = localStorage.getItem('userId');
     const [playingVideo, setPlayingVideo] = useState('');
+
+     // Function to check if the URL is an image
+    const isImage = (url:any) => {
+        return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);
+    };
+
+    // Function to check if the URL is a video
+    const isVideo = (url:any) => {
+        return /\.(mp4|webm|ogg)$/i.test(url);
+    };
+
+    // Render logic for replysms
+    const renderContent = (replysms:any) => {
+        if (isImage(replysms)) {
+            return <img src={replysms} alt="Image" className={style.image} />;
+        } else if (isVideo(replysms)) {
+        return (
+           <video
+                onLoadedMetadata={getMediaInfo}
+                disablePictureInPicture
+                controlsList="nodownload noplaybackrate"
+                // controls={true}
+                style={{ height: "60%", width: "60%", margin:  '0 0 0 auto' }}
+                src={replysms}
+            />
+        );
+        } else {
+            return <TextHighlighter searchQuery={searchQuery} text={replysms} />;
+        }
+    };
 
     const getMediaInfo = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
         const videoElement = (event.target as HTMLVideoElement);
@@ -73,12 +104,22 @@ function Actions(props: any) {
         setPlayingVideo('');
     }
 
+    const scrollChatToBottom = () => {
+        if(autoScrolElem.current) {
+            setTimeout(() => {
+            autoScrolElem.current.scrollTop = autoScrolElem.current.scrollHeight;
+            }, 1000);
+        }
+    };
+
     console.log('activeChat', activeChat, chatActiveUserId);
-    useEffect(() => {
-        setTimeout(() => {
-            scrollToBottom()
-        }, 800);
-    }, [chatActiveUserId]);
+    scrollChatToBottom();
+
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         scrollToBottom()
+    //     }, 800);
+    // }, [chatActiveUserId]);
 
     return (
         <>
@@ -190,6 +231,22 @@ function Actions(props: any) {
                                                 Forward
                                             </p>
                                         </div>
+                                        <hr className={style.hr} />
+                                        <div
+                                            style={{
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                replyMessage(item);
+                                            }}
+                                        >
+                                           
+                                            <p className={style.dropdText}>
+                                                Reply
+                                            </p>
+                                        </div>
 
                                     </div>
                                 )}
@@ -226,6 +283,10 @@ function Actions(props: any) {
                                             </div>
                                         }
 
+                                    {/* <div className={style.messageText}>
+                                            {JSON.stringify(item, null, 2)} 
+                                            </div> */}
+
                                         {item?.replysms ? (
                                             <div
                                                 className={style.tempparent}
@@ -235,9 +296,14 @@ function Actions(props: any) {
                                                     <p className={style.primaryText}>
                                                         {activeUser?.userName}
                                                     </p>
+
                                                     <p className={style.prevmsg}>
-                                                        <TextHighlighter searchQuery={searchQuery} text={item?.replysms} />
+                                                        {renderContent(item?.replysms)}
                                                     </p>
+                                                    
+                                                    {/* <p className={style.prevmsg}>
+                                                        <TextHighlighter searchQuery={searchQuery} text={item?.replysms} />
+                                                    </p> */}
                                                 </div>
                                                 <div>
                                                     <p className={style.ans}><TextHighlighter searchQuery={searchQuery} text={item.msg} /></p>
@@ -282,6 +348,11 @@ function Actions(props: any) {
                                                           <small>{item.recieverName}</small>
                                                         </div>} */}
                                     </LongPressButton>
+                                    {item?.reactions?.length > 0 ? (
+                                        item.reactions.map((reaction: any, index: number) => (
+                                            <span key={index}>{reaction.react} </span>
+                                        ))
+                                        ) : null}
                                 </div>
                                 <div className={style.subContent}>
                                     {item.stared && <><span>❤️</span>

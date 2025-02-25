@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './followModal.module.scss';
 import FollowingTab from './FollowingTab';
 import FollowersTab from './FollowersTab';
@@ -20,6 +20,9 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
     userId,
 }) => {
     const name = useSelector((state: any) => state?.reducers?.profile?.name);
+
+    const [searchQuery, setSearchQuery] = useState('');
+
 
     const followers = useSelector((state: any) => state.reducers?.followers.data);
     const followersPage = useSelector((state: any) => state?.reducers?.followers?.page);
@@ -46,6 +49,44 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
     const [publicFollowingPage, setPublicFollowingPage] = useState(1);
     const [publicFollowersPage, setPublicFollowersPage] = useState(1);
     // const [publicFriendPage, setPublicFriendPage] = useState(1);
+
+    // Filtered Following...
+    const filteredFollowing = useMemo(() => {
+        if (!searchQuery.trim()) return following || [];
+
+        return following?.filter((user: any) => {
+            return user?.followed_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        }) || [];
+    }, [following, searchQuery]);
+    
+    const filteredPublicFollowing = useMemo(() => {
+        if (!searchQuery.trim()) return publicFollowing || [];
+        return publicFollowing?.filter((user: any) => {
+            return user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        }) || [];
+    }, [publicFollowing, searchQuery]);
+
+    // Filtered Followers
+    const filteredFollowers = useMemo(() => {
+        if (!searchQuery.trim()) return followers || [];
+        return followers?.filter((user: any) => {
+            return user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        }) || [];
+    }, [followers, searchQuery]);
+    
+    const filteredPublicFollowers = useMemo(() => {
+        if (!searchQuery.trim()) return publicFollowers || [];
+        return publicFollowers?.filter((user: any) => {
+            return user?.followed_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        }) || [];
+    }, [publicFollowers, searchQuery]);
+
+    const filteredFriends = useMemo(() => {
+        if (!searchQuery.trim()) return friends || [];
+        return friends?.filter((user: any) => {
+            return user?.followed_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        }) || [];
+    }, [publicFollowers, searchQuery]);
 
     const loadMoreFollorwing = () => {
         console.log('loadMoreFollorwing 💕💕💕💕💕');
@@ -103,7 +144,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                         );
 
                         const followingData = await followingResponse.json();
-                        console.log('following data 🚀🚀🚀🚀', followingData.data);
+                        console.log('setting followers data 🚀🚀🚀🚀', followingData.data);
                         setPublicFollowers(prev => [...prev, ...followingData?.data?.data]);
                         setTotalFollowersPublic(followingData?.data?.total || 0);
                     }
@@ -134,16 +175,6 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
 
                         const followingData = await followersResponse.json();
 
-                        // console.log('followers data ');
-                        // console.log(followersData);
-                        // console.log('followingData data ');
-                        // console.log(followingData);
-
-                        // console.log("followersData?.total")
-                        // console.log(followersData?.total)
-
-                        // console.log("ollowingData?.total")
-                        // console.log(followingData?.total)
                         console.log('followers data 🚀🚀🚀🚀', followingData.data);
                         setPublicFollowings(prev => [...prev, ...followingData?.data?.data]);
                         setTotalFollowingPublic(followingData?.data?.total || 0);
@@ -179,7 +210,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                     <FollowingTab
                         onScrollBottom={loadMoreFollorwing}
                         isPublic={isPublic}
-                        following={isPublic ? publicFollowing : following}
+                        following={isPublic ? filteredPublicFollowing : filteredFollowing}
                         onClose={onClose}
                         followingTotal={isPublic? totalFollowingPublic :totalFollowing}
                     />
@@ -192,7 +223,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                 <>
                     <FollowersTab
                         onClose={onClose}
-                        followers={isPublic ? publicFollowers : followers}
+                        followers={isPublic ? filteredPublicFollowers : filteredFollowers}
                         isPublic={isPublic}
                         onScrollBottom={loadMoreFollowers}
                         followersTotal={isPublic? totalFollowersPublic : totalFollowers}
@@ -209,7 +240,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                     content: (
                         <>
                             <MessageTab
-                                friends={friends}
+                                friends={filteredFriends}
                                 totalFriends={totalFriends}
                                 loadMoreFriends={loadMoreFriends}
                                 onClose={onClose}
@@ -224,6 +255,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                 <>
                     <SuggestedTab
                         onClose={onClose}
+                        searchQuery={searchQuery}
                     />
                 </>
             ),
@@ -267,7 +299,7 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
                     ))}
                 </div>
                 <div className={styles.inputContainer}>
-                    <input placeholder="Search" className={styles.input} />
+                    <input placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={styles.input} />
                     <img src="/images/icons/profile.svg" alt="Profile Icon" />
                 </div>
                 {tabs[activeTab].content}

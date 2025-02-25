@@ -48,13 +48,13 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
         [CUSTOMIZE_COMPONENT.THEME_COLOR_PICKER]: <ThemeColorPicker isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} currentColor={data?.themeColor} onColorSelect={(color) => updateSettings({ 'themeColor': color })} />,
         [CUSTOMIZE_COMPONENT.EMOJI_PICKER]: <CustomEmojis emoji={data?.emoji} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onEmojiChange={(emoji: any) => updateSettings({ 'emoji': emoji })} />,
         [CUSTOMIZE_COMPONENT.EDIT_NICKNAME]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.MEDIA]: <ViewFiles MediaName="media" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.FILES]: <ViewFiles MediaName="file" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.LINKS]: <ViewFiles MediaName="link" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.MUTE_NOTIFICATION]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.RESTRCIT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.BLOCK]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
-        [CUSTOMIZE_COMPONENT.REPORT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        // [CUSTOMIZE_COMPONENT.MEDIA]: <ViewFiles MediaName="media" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        // [CUSTOMIZE_COMPONENT.FILES]: <ViewFiles MediaName="file" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        // [CUSTOMIZE_COMPONENT.LINKS]: <ViewFiles MediaName="link" isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        // [CUSTOMIZE_COMPONENT.MUTE_NOTIFICATION]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        // [CUSTOMIZE_COMPONENT.RESTRCIT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        // [CUSTOMIZE_COMPONENT.BLOCK]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
+        // [CUSTOMIZE_COMPONENT.REPORT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
     }
 
     const updateSettings = async (parameters: any) => {
@@ -172,7 +172,7 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
                             <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.EDIT_NICKNAME)} className='cursor-pointer'> <span className='font-semibold'>Aa</span> &nbsp; Edit Nicknames</li>
                         </ul>
                     </details>
-                    <details className='mt-2'>
+                    {/* <details className='mt-2'>
                         <summary>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                                 <p className={isDarkTheme ? 'text-white' : ''}>Media and files</p>
@@ -198,7 +198,7 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
                             <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.BLOCK)} className='cursor-pointer'><Block sx={{ fontSize: '25px' }} /> &nbsp;Block</li>
                             <li onClick={() => switchActiveComponent(CUSTOMIZE_COMPONENT.REPORT)} className='cursor-pointer'><Report sx={{ fontSize: '25px' }} /> &nbsp;Report</li>
                         </ul>
-                    </details>
+                    </details> */}
                 </div>
             </div>
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isDarkTheme={isDarkTheme}>

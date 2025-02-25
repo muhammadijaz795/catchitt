@@ -96,6 +96,7 @@ const ChatComponent = () => {
     const [staredMsgs, setstaredMsgs] = useState<any[]>([]);
     const [isProfileSecVisible, setIsProfileSecVisible] = useState(false);
     const [selectedMsg, setSelectedMsg] = useState<any>(null);
+    const [currentReplyToMessage, setCurrentReplyToMessage] = useState<any>(null);
 
     const userAvatar = useSelector((state: any) => state?.reducers?.profile?.avatar);
 
@@ -142,6 +143,50 @@ const ChatComponent = () => {
             console.log('Disconnected from socket server.');
         });
 
+        // (socketRef.current as any).on('message-sent', (response: any) => {
+        //     console.log('message sent response..')
+        //     console.log(response);
+
+        //     console.log('new object');
+        //     console.log({
+        //         to: response?.receiverId?._id,
+        //         from: response?.senderId?._id,
+        //         msg: response.message,
+        //         type: response.type,
+        //         time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+        //         emojis: false,
+        //         dropdown: false,
+        //         id: response._id,
+        //         // Check if repliedMessage is not null before accessing its properties
+        //         replysms: response.repliedMessage ? response.repliedMessage.message : '', // Use an empty string if repliedMessage is null
+        //         receiverId: response.repliedMessage ? response.repliedMessage.senderId._id : '', // Similarly, check for receiverId
+        //         recieverName: response.repliedMessage ? response.repliedMessage.senderId.name : '', // Similarly, check for recieverName
+        //     });
+
+
+        //     setActiveChat({
+        //         ...activeChat,
+        //         chats: [
+        //             ...activeChat?.chats,
+        //             {
+        //                 to: response?.receiverId?._id,
+        //                 from: response?.senderId?._id,
+        //                 msg: response.message,
+        //                 type: response.type,
+        //                 time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+        //                 emojis: false,
+        //                 dropdown: false,
+        //                 id: response._id,
+        //                 // Check if repliedMessage is not null before accessing its properties
+        //                 replysms: response.repliedMessage ? response.repliedMessage.message : '', // Use an empty string if repliedMessage is null
+        //                 receiverId: response.repliedMessage ? response.repliedMessage.senderId._id : '', // Similarly, check for receiverId
+        //                 recieverName: response.repliedMessage ? response.repliedMessage.senderId.name : '', // Similarly, check for recieverName
+        //             },
+        //         ],
+        //     });  
+        // });
+
+
         (socketRef.current as any).onclose = (event: any) => {
             console.error('WebSocket closed:', event);
         };
@@ -152,6 +197,9 @@ const ChatComponent = () => {
             seTRecievedMsg(message);
             if (chatActiveUser == message.senderId._id) {
                 console.log('received msg');
+                console.log(message);
+                console.log('message_id'+message?._id);
+                console.log('received object');
                 setActiveChat((currentChat: any) => ({
                     ...currentChat,
                     chats: [
@@ -162,14 +210,15 @@ const ChatComponent = () => {
                             time: `${new Date().getHours()}:${new Date().getMinutes()}`,
                             emojis: false,
                             dropdown: false,
-                            id: `${new Date().getTime()}`,
+                            id: message?._id ? message?._id: `${new Date().getTime()}`,
                             isrecevied: true,
                             receiverId: message?.receiverId?._id,
                             stared: message?.isStarred,
                             isRead: message?.isRead,
                             type: message?.type,
-                            replysms: false,
-                            recieverName: message.receiverId.name
+                            // replysms: false,
+                            recieverName: message.receiverId.name,
+                            replysms: message?.repliedMessage?.message ? message?.repliedMessage?.message : '', // Use an empty string if repliedMessage is null
                         },
                     ],
                 }));
@@ -343,6 +392,7 @@ const ChatComponent = () => {
                                 stared: element?.isStarred,
                                 isRead: element?.isRead,
                                 type: element?.type,
+                                reactions: element?.reactions,
                                 replysms: element?.repliedMessage
                                     ? element?.repliedMessage?.message
                                     : false,
@@ -374,6 +424,7 @@ const ChatComponent = () => {
             });
             const res = await response.json();
             const tempArr: any[] = [];
+            scrollChatToBottom();
 
             res?.data?.data?.forEach(
                 (
@@ -561,6 +612,24 @@ const ChatComponent = () => {
         setActiveChat({ ...activeChat, chats: tempArr });
     };
 
+    const replyMessage = (msg: any) => {
+       
+        console.log('replyMessage', msg);
+        users?.forEach((user, index) => {
+            if (user?.userId != msg.id) {
+                console.log('replyMessageNew', user);
+                if(user.userName)
+                    msg.recieverName =  user.userName;
+            }
+        })
+        setCurrentReplyToMessage(msg);
+        console.log('==loggedUserId=='+loggedUserId);
+    };
+
+    const closeReply =() => {
+        setCurrentReplyToMessage(null);
+    };
+
     const showToast = () => {
         toast.success('🎉 Copied successfully', {
             position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
@@ -576,18 +645,28 @@ const ChatComponent = () => {
         }
     };
 
+    const scrollChatToBottom = () => {
+        if(autoScrolElem.current) {
+            setTimeout(() => {
+            autoScrolElem.current.scrollTop = autoScrolElem.current.scrollHeight;
+            }, 1500);
+        }
+    };
+
     const submitH = (e: any) => {
         // console.log("htting", msg, msgType);
         if (e) {
             e.preventDefault();
         }
         e.stopPropagation();
-        const messageData = {
+        let messageData = {
             to: loggedUserId != receiver ? receiver : sender,
             message: msg,
             from: loggedUserId == sender ? sender : sender,
             type: msgType,
             accessToken: token,
+            ...(currentReplyToMessage && { repliedMessageId: currentReplyToMessage.id }),
+
         };
         // Get current time
         const currentTime = moment();
@@ -623,11 +702,15 @@ const ChatComponent = () => {
                             emojis: false,
                             dropdown: false,
                             id: new Date().getTime(),
-                            replysms: smsRef,
+                            // replysms: smsRef,
+                            ...(currentReplyToMessage && {
+                                replysms: currentReplyToMessage.msg,
+                                receiverId: currentReplyToMessage.receiverId,
+                                recieverName: currentReplyToMessage.recieverName,
+                            }),
                         },
                     ],
                 });
-
                 // messageData['repliedMessageId'] = smsId;
                 // sendMessageReply();
                 console.log('messageData', messageData);
@@ -648,11 +731,27 @@ const ChatComponent = () => {
                             emojis: false,
                             dropdown: false,
                             id: new Date().getTime(),
+                            // Only include these values if currentReplyToMessage exists
+                            ...(currentReplyToMessage && {
+                                replysms: currentReplyToMessage.msg,
+                                receiverId: loggedUserId != receiver ? receiver : sender,
+                                recieverName: currentReplyToMessage.recieverName,
+                            }),
                         },
                     ],
                 });
+
                 console.log('messageData', messageData);
-                (socketRef.current as any).emit('send-msg', JSON.stringify(messageData));
+                // (socketRef.current as any).emit('send-msg', JSON.stringify(messageData));
+                // Emit the 'send-msg' event and pass a callback function to receive a response
+                (socketRef.current as any).emit('send-msg', JSON.stringify(messageData), (response:any) => {
+                    console.log('Callback Response:', response);
+                    // You can handle the response here, e.g., show a toast or update the UI
+                });
+
+                setCurrentReplyToMessage(null);
+                console.log('all chats');
+                console.log(activeChat);
                 setMsg('');
                 setMsgType('');
             }
@@ -691,7 +790,9 @@ const ChatComponent = () => {
             } else {
                 setActiveUser(users[0]);
                 localStorage.setItem('chatActiveUser', users[0]?.userId);
-                setChatActiveUserId(users[0]?.userId)
+                setChatActiveUserId(users[0]?.userId);
+                setSender(users[0]?.senderId);
+                setReceiver(users[0]?.receiverId);
             }
         }
     }, [users]);
@@ -1023,6 +1124,7 @@ const ChatComponent = () => {
                             scrollToBottom={scrollToBottom}
                             activeChat={activeChat}
                             copyH={copyH}
+                            replyMessage={replyMessage}
                             showToast={showToast}
                             handleScroll={handleScroll}
                             searchQuery={searchQuery}
@@ -1057,6 +1159,8 @@ const ChatComponent = () => {
                             setMessageType={setMsgType}
                             isDarkTheme={!!isDarkTheme}
                             data={activeUser}
+                            closeReply={closeReply}
+                            currentReplyToMessage={currentReplyToMessage}
                         />
                     )}
                     {!groupOptions && moreOptions && (

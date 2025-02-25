@@ -20,6 +20,7 @@ import DndContainer from './DndContainer';
 import CloseIcon from '@mui/icons-material/Close';
 import { message } from 'antd';
 import { useUpdateEffect } from 'react-use';
+import { setSelectedFile } from '../../../redux/reducers/upload';
 
 function FormRightSide(props: any) {
     const {
@@ -497,7 +498,7 @@ function FormRightSide(props: any) {
                 primaryBtnText="Discard"
                 btnText="Continue editing"
                 onClose={() => setDiscardPostPopup(false)}
-                onPrimaryBtnClick={() => setDiscardPostPopup(false)}
+                onPrimaryBtnClick={() => { setDiscardPostPopup(false); dispatch(setSelectedFile({ file: null }))} }
                 onBtnClick={() => setDiscardPostPopup(false)}
             />
             {/* Search Locations Popup*/}

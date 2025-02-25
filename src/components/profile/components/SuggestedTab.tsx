@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './suggestedTab.module.scss';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import SuggestedUser from './suggested-user';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CircularProgress } from '@mui/material';
 import { getRandomUsers } from '../../../redux/AsyncFuncs';
 
-function SuggestedTab({ onClose }: any) {
+function SuggestedTab({ onClose, searchQuery }: any) {
 
     const suggestedUsers = useSelector((state: any) => state?.reducers?.suggestedAccounts?.data);
     const suggestedPage = useSelector((state: any) => state?.reducers?.suggestedAccounts?.page);
@@ -35,6 +35,13 @@ function SuggestedTab({ onClose }: any) {
         dispatch(getRandomUsers(suggestedPage));
         // Fetch more data for the next page
     };
+
+    const filteredSuggestedUsers = useMemo(() => {
+        if (!searchQuery.trim()) return suggestedUsers || [];
+        return suggestedUsers?.filter((user: any) => {
+            return user?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        }) || [];
+    }, [suggestedUsers, searchQuery]);
 
     return (
         <div className={styles.div}>
@@ -64,7 +71,7 @@ function SuggestedTab({ onClose }: any) {
                     </div>
                 }
             >
-                {suggestedUsers?.map((user: any) => (
+                {filteredSuggestedUsers?.map((user: any) => (
                     <SuggestedUser key={user._id} user={user} onfollowClick={onFolowClick} popupClose={onClose} />
                 ))}
             </InfiniteScroll>

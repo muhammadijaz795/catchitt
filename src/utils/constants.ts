@@ -292,13 +292,13 @@ export enum CUSTOMIZE_COMPONENT {
     THEME_COLOR_PICKER,
     EMOJI_PICKER,
     EDIT_NICKNAME,
-    MEDIA,
-    FILES,
-    LINKS,
-    MUTE_NOTIFICATION,
-    RESTRCIT,
-    BLOCK,
-    REPORT,
+    // MEDIA,
+    // FILES,
+    // LINKS,
+    // MUTE_NOTIFICATION,
+    // RESTRCIT,
+    // BLOCK,
+    // REPORT,
 }
 
 export const ANALYTICS_OVERVIEW_TIME_PERIODS = {

@@ -5,7 +5,7 @@ import BlockMsgOnError from '../components/blockMsgOnError';
 import { useState } from 'react';
 import ThanksForReport from '../components/thanksForReport';
 
-export default function PopupForReport({ openReport, onReportClose, info }: any) {
+export default function PopupForReport({ openReport, onReportClose, info,isChatReport }: any) {
     const [inErrorCase, setInErrorCase] = useState(false);
     const [inSuceedCase, setInSuceedCase] = useState(false);
     const closeErrorMsg = (popupHandler: any) => {
@@ -17,7 +17,7 @@ export default function PopupForReport({ openReport, onReportClose, info }: any)
     };
 
     return (
-        <div className={style.parent}>
+        <div className={`${isChatReport ? style.parentChat : style.parent}`}>
             <Modal open={openReport??false}>
                 <ClickAwayListener
                     onClickAway={() => {
