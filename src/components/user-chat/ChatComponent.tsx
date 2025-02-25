@@ -97,7 +97,7 @@ const ChatComponent = () => {
     const [isProfileSecVisible, setIsProfileSecVisible] = useState(false);
     const [selectedMsg, setSelectedMsg] = useState<any>(null);
     const [currentReplyToMessage, setCurrentReplyToMessage] = useState<any>(null);
-
+    const [isMuted, setIsMuted] = useState(false);
     const userAvatar = useSelector((state: any) => state?.reducers?.profile?.avatar);
 
     const longPressH = (item: any) => {
@@ -1024,6 +1024,7 @@ const ChatComponent = () => {
                     setstaredmodal={setstaredmodal}
                     isDarkTheme={!!isDarkTheme}
                     activeConversation={conversationId}
+                    isMuted={isMuted}
                 />
                 <div className={style.chat}>
                     <div className={`${style.sec1} bg-cover bg-no-repeat bg-center`}

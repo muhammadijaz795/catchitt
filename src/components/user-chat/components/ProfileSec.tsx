@@ -56,6 +56,7 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
         // [CUSTOMIZE_COMPONENT.BLOCK]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
         // [CUSTOMIZE_COMPONENT.REPORT]: <EditNickName currentNickName={data?.nickName} isDarkTheme={isDarkTheme} onClose={() => setIsModalOpen(false)} onUpdateNickName={(nickName: any) => updateSettings({ 'nickName': nickName })} />,
     }
+    
 
     const updateSettings = async (parameters: any) => {
         try {

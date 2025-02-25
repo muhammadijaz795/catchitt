@@ -32,7 +32,7 @@ const ITEM_HEIGHT = 60;
 
 
 function UserChat(props: any) {
-    const { userName, nickName, lastMsg, ispined, isBlocked, lastSeen, unReadMsgs, OnChatClick, userId, id, isGroup, userImage, conversationId, userPinH, onBlock, setstaredmodal, isDarkTheme, isActive } = props || {};
+    const { userName, nickName, lastMsg, ispined, isBlocked, lastSeen, unReadMsgs, OnChatClick, userId, id, isGroup, userImage, conversationId, userPinH, onBlock, setstaredmodal, isDarkTheme, isActive, isMuted } = props || {};
     // console.log("user chat props ", props);
     // const {
     //     moreOptions,
@@ -146,7 +146,27 @@ function UserChat(props: any) {
     //     }
 
     // };  
-
+    const handleMute = async() => {
+        // setMutePopup(true);
+        try {
+            const response = await fetch(`${API_KEY}/chat/conversation/update`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ mute: !isMuted, conversationId }),
+            });
+            const res = await response.json();
+            console.log('handleMute response', res);
+            if (res.status ==200) {
+                window.location.reload();
+            }
+        } catch (error) {
+            console.log('error blocking user', error);
+        }
+    }
+    
     const handleDeleteUserFromChat = async () => {
         try {
             const response = await fetch(
@@ -321,10 +341,23 @@ function UserChat(props: any) {
                             </MenuItem>
                             <Divider />
                         </div>
+                        <div key="mute">
+                            <MenuItem onClick={() => { handleMute(); } }>
+                                <AccountCircleOutlined />
+                                <span style={{ marginLeft: '8px', fontWeight: 'bold' }} >Mute</span>
+                            </MenuItem>
+                            <Divider />
+                        </div>
                     </Menu>
                     <p className={style.seenStatus+' whitespace-nowrap'}>{lastSeen}</p>
                     {ispined ? (
                         <img src={pinChat} alt="" />
+                    ) : (
+                        <div></div>
+                    )}
+                    
+                    {isMuted ? (
+                        <NotificationsOffOutlinedIcon />
                     ) : unReadMsgs > 0 ? (
                         <div className={style.msgCounter}>
                             <p>{unReadMsgs}</p>
