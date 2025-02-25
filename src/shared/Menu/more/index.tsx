@@ -92,24 +92,50 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
     }));
 
 
-    const handleDownload = async (videoUrl:any) => {
-        
+    const handleDownload = async (videoUrl: any) => {
         try {
-          showToastSuccess('Video is downloading...');
-          const response = await fetch(videoUrl);
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(blob);
+            showToastSuccess('Video is downloading...');
     
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'video.mp4';
-          link.click();
+            // Fetch the video data as a blob
+            const response = await fetch(videoUrl, {
+                method: 'GET',
+                headers: {
+                    // Add headers if needed for authorization or content type
+                },
+            });
     
-          window.URL.revokeObjectURL(url); // Clean up the URL object
+            if (!response.ok) {
+                throw new Error('Failed to fetch video');
+            }
+    
+            const blob = await response.blob();
+            
+            // Ensure the response is a valid video blob
+            const contentType = response.headers.get('Content-Type');
+            if (!contentType.includes('video')) {
+                throw new Error('The file is not a valid video');
+            }
+    
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+    
+            // Create a download link
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'video.mp4'; // Set default file name
+    
+            // Trigger the download
+            document.body.appendChild(link); // Append the link to the DOM
+            link.click();
+            document.body.removeChild(link); // Clean up the DOM
+    
+            // Revoke the object URL after download to free up resources
+            window.URL.revokeObjectURL(url);
         } catch (error) {
-          console.error('Failed to download video', error);
+            console.error('Failed to download video', error);
         }
-      };
+    };
+    
 
     return (
         <div

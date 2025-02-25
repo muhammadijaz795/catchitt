@@ -129,6 +129,7 @@ function Actions(props: any) {
                     return (
                         <div
                             key={index}
+                            onMouseEnter={()=>longPressH(item,true)} onMouseLeave={()=>{longPressH(item,false); }}
                             className={style.msgContainer}
                             style={{
                                 margin: item.receiverId == loggedInUserId ? '0px 48% 0px 0%' : '0px 0% 0px 48%',
@@ -138,7 +139,7 @@ function Actions(props: any) {
                             {item.receiverId == loggedInUserId && (
                                 <img src={activeChat?.userImage != "" ? activeChat?.userImage : defaultAvatar} className={style.avatar} alt="" />
                             )}
-
+    
                             <div className={style.msg}>
                                 {item.emojis && item.dropdown && (
                                     <div
@@ -249,7 +250,7 @@ function Actions(props: any) {
                                         </div>
                                     </div>
                                 )}
-                                <div className={`${item.isForwarded ? (item.receiverId == loggedInUserId ? (activeUser.themeColor? activeUser.themeColor: isDarkTheme ? 'bg-[#262626] py-1 ' : 'bg-slate-100 border py-1') : (activeUser.themeColor?activeUser.themeColor+' bg-opacity-75':isDarkTheme ? 'bg-[#414141] py-1' : 'bg-gray-100 border py-1')) : ''} min-w-52 rounded`} style={{ position: 'relative', zIndex: 20 }}>
+                                <div   className={`${item.isForwarded ? (item.receiverId == loggedInUserId ? (activeUser.themeColor? activeUser.themeColor: isDarkTheme ? 'bg-[#262626] py-1 ' : 'bg-slate-100 border py-1') : (activeUser.themeColor?activeUser.themeColor+' bg-opacity-75':isDarkTheme ? 'bg-[#414141] py-1' : 'bg-gray-100 border py-1')) : ''} min-w-52 rounded`} style={{ position: 'relative', zIndex: 20 }}>
                                     {item.emojis && <img
                                         className='absolute w-[1.2rem] h-[1.2rem] top-1 right-2 cursor-pointer'
                                         onClick={() => {
@@ -268,7 +269,8 @@ function Actions(props: any) {
                                             valuesH({...item, dropdown: false}, 'showEmogis');
                                         }}
                                     />}
-                                    <LongPressButton onLongPress={() => longPressH(item)}
+                                    <LongPressButton 
+                                    // onLongPress={(value:any) => longPressH(item,value)}
                                     // onMouseEnter={() => {
                                     //     longPressH(item)
                                     //   }}
