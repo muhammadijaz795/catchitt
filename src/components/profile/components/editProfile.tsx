@@ -436,9 +436,9 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                         /> */}
-                        <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
+                        <div className={`${styles['input-4']} flex flex-row items-center border  mt-2 rounded-md p-2.5`}>
                             <div
-                                className="flex flex-row items-center gap-2 flex-1 cursor-pointer relative text-black"
+                                className="flex flex-row items-center gap-2  cursor-pointer relative text-black"
                                 onClick={
                                     countryCodeModelHandler
                                 }
