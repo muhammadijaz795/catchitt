@@ -1799,7 +1799,7 @@ function App() {
                                                                                 >
                                                                                     28
                                                                                 </MenuItem>
-                                                                                {(!month || !year || (month === 2 && isLeapYear(year))) && (
+                                                                                {(!month || !year || (month == '2' && isLeapYear(year))) && (
                                                                                     <MenuItem value={29}>29</MenuItem>
                                                                                 )}
                                                                                 {!['2'].some(i => i == month) && <MenuItem
