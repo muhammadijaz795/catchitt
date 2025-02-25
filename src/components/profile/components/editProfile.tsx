@@ -1,12 +1,13 @@
 import { Avatar, CircularProgress } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { defaultAvatar } from '../../../icons';
+import { checkCountryCode, chevronDown, defaultAvatar, search } from '../../../icons';
 import { getProfileData } from '../../../redux/AsyncFuncs';
-import { showToast } from '../../../utils/constants';
+import { APP_TEXTS, END_POINTS, METHOD, showToast } from '../../../utils/constants';
 import EditProfileIcon from '../svg-components/EditProfileIcon';
 import styles from './editProfile.module.scss';
 import SelectProfileImgPopup from './select-profile-img';
+import { getCountryPhoneLengthFromIso } from '../../../utils/helpers';
 
 interface Props {
     onCancel: () => void;
@@ -33,6 +34,13 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     const [newProfileImg, setNewProfileImg] = useState('');
     const [selectImagePopup, setSelectImagePopup] = useState(false);
     const [userSelectedCategory, setUserSelectedCategory] = useState('');
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [selectedCountryIndex, setSelectedCountryIndex] = useState<number>(-1);
+    const [countryCode, setCountryCode] = useState<string>('');
+    const [isoCode, setIsoCode] = useState<string>('');
+    const [countryModelOpened, setCountryModelOpened] = useState<boolean>(false);
+    const [countryCodes, setCountryCodes] = useState([]);
+
 
     const [fileObj, setFileObj] = useState<any>(null);
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
@@ -53,6 +61,102 @@ export default function EditProfile({ onCancel, onSave }: Props) {
             setdarkTheme(styles.darkTheme);
         }
     });
+
+    const getMaxPhoneLength = (iso: string): number => {
+            return getCountryPhoneLengthFromIso(iso); // Default to 10 if country not found
+    };
+
+    const getIsoValueFromCountryCode = (countryCode: any): string => {
+        return countryPhoneCodes[countryCode] || '';
+    };
+
+    const countryPhoneCodes: Record<string, string> = {
+        "+93": "af", "+355": "al", "+213": "dz", "+1684": "as", "+376": "ad",
+        "+244": "ao", "+1264": "ai", "+1268": "ag", "+54": "ar", "+374": "am",
+        "+297": "aw", "+61": "au", "+43": "at", "+994": "az", "+1242": "bs",
+        "+973": "bh", "+880": "bd", "+1246": "bb", "+375": "by", "+32": "be",
+        "+501": "bz", "+229": "bj", "+1441": "bm", "+975": "bt", "+591": "bo",
+        "+387": "ba", "+267": "bw", "+55": "br", "+673": "bn", "+359": "bg",
+        "+226": "bf", "+257": "bi", "+855": "kh", "+237": "cm",
+        "+238": "cv", "+1345": "ky", "+236": "cf", "+235": "td", "+56": "cl",
+        "+86": "cn", "+57": "co", "+269": "km", "+242": "cg", "+243": "cd",
+        "+506": "cr", "+225": "ci", "+385": "hr", "+53": "cu", "+357": "cy",
+        "+420": "cz", "+45": "dk", "+253": "dj", "+1767": "dm", "+1849": "do",
+        "+593": "ec", "+20": "eg", "+503": "sv", "+240": "gq", "+291": "er",
+        "+372": "ee", "+251": "et", "+679": "fj", "+358": "fi", "+33": "fr",
+        "+241": "ga", "+220": "gm", "+995": "ge", "+49": "de", "+233": "gh",
+        "+350": "gi", "+30": "gr", "+299": "gl", "+1473": "gd", "+1671": "gu",
+        "+502": "gt", "+224": "gn", "+245": "gw", "+592": "gy", "+509": "ht",
+        "+504": "hn", "+852": "hk", "+36": "hu", "+354": "is", "+91": "in",
+        "+62": "id", "+98": "ir", "+964": "iq", "+353": "ie", "+972": "il",
+        "+39": "it", "+1876": "jm", "+81": "jp", "+962": "jo",
+        "+254": "ke", "+686": "ki", "+850": "kp", "+82": "kr", "+965": "kw",
+        "+996": "kg", "+856": "la", "+371": "lv", "+961": "lb", "+266": "ls",
+        "+231": "lr", "+218": "ly", "+423": "li", "+370": "lt", "+352": "lu",
+        "+853": "mo", "+389": "mk", "+261": "mg", "+265": "mw", "+60": "my",
+        "+960": "mv", "+223": "ml", "+356": "mt", "+692": "mh", "+222": "mr",
+        "+230": "mu", "+52": "mx", "+691": "fm", "+373": "md", "+377": "mc",
+        "+976": "mn", "+382": "me", "+1664": "ms", "+212": "ma", "+258": "mz",
+        "+95": "mm", "+264": "na", "+977": "np", "+31": "nl", "+64": "nz",
+        "+505": "ni", "+227": "ne", "+234": "ng", "+47": "no", "+968": "om",
+        "+92": "pk", "+680": "pw", "+507": "pa", "+675": "pg", "+595": "py",
+        "+51": "pe", "+63": "ph", "+48": "pl", "+351": "pt", "+1787": "pr",
+        "+974": "qa", "+40": "ro", "+7": "ru", "+250": "rw", "+685": "ws",
+        "+966": "sa", "+221": "sn", "+381": "rs", "+248": "sc", "+232": "sl",
+        "+65": "sg", "+421": "sk", "+386": "si", "+677": "sb", "+252": "so",
+        "+27": "za", "+34": "es", "+94": "lk", "+249": "sd", "+597": "sr",
+        "+268": "sz", "+46": "se", "+41": "ch", "+963": "sy", "+886": "tw",
+        "+992": "tj", "+255": "tz", "+66": "th", "+228": "tg", "+676": "to",
+        "+1868": "tt", "+216": "tn", "+90": "tr", "+993": "tm", "+256": "ug",
+        "+380": "ua", "+971": "ae", "+44": "gb", "+1": "us", "+598": "uy",
+        "+998": "uz", "+678": "vu", "+58": "ve", "+84": "vn", "+967": "ye",
+        "+260": "zm", "+263": "zw"
+    };
+    
+
+    const modelClickHandler = (e: { stopPropagation: () => void }) => {
+        e.stopPropagation();
+    };
+
+    const countryCodeModelHandler = () => {
+        setCountryModelOpened(!countryModelOpened);
+    };
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const countryItemClickHandler = (
+        countryItem: { name: string; code: string; iso: string },
+        index: number
+    ) => {
+        setSelectedCountryIndex(index);
+        setCountryCode(countryItem?.code);
+        setIsoCode(countryItem?.iso);
+        countryCodeModelHandler();
+    };
+
+    const fetchCountriesList = async () => {
+            try {
+                const response: any = await fetch(`${API_KEY}/${END_POINTS.COUNTRY_LIST}`, {
+                    method: METHOD.GET,
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                });
+                const { data }: any = await response.json();
+    
+                // Setting all values to countryCodes state
+                setCountryCodes(data?.countries);
+            } catch (error) {
+                console.log('🚀 ~ fetchCountriesList ~ error:', error);
+            }
+        };
+
+    // Filter country codes based on search query
+    const filteredCountryCodes = countryCodes?.filter((countryItem: any) =>
+        countryItem?.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
@@ -78,6 +182,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
             formData.append('businessCategory', category);
             formData.append('birthday', birthDate);
             formData.append('country', country);
+            formData.append('phoneNumber', countryCode + '-' + phoneNumber);
 
             // Send the PATCH request with FormData
             fetch(`${API_KEY}/profile/`, {
@@ -124,6 +229,7 @@ export default function EditProfile({ onCancel, onSave }: Props) {
     }
 
     useEffect(() => {
+        fetchCountriesList();
         loadProfile();
         loadCountries();
         loadMediaCategories();
@@ -157,6 +263,22 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                             ? response?.country
                             : '-- Select an option --'
                     );
+                    
+                    const phone = response?.phoneNumber;
+
+                    // Match the country code and the number separately
+                    const match = phone?.match(/^\+(\d+)-(\d+)$/);
+                    //+92-3061922300
+
+                    if (match) {
+                        const countryCode = `+${match[1]}`;  // +92
+                        const number = match[2];         // 3061922300
+                        setCountryCode(countryCode);
+                        setPhoneNumber(number);
+                        setIsoCode(getIsoValueFromCountryCode(countryCode)?.toUpperCase())
+                    } else {
+                        console.log("Phone not saved for user.");
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -309,11 +431,138 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                         />
                         <div className={styles['div-11']}>{bio.length}/80</div>
                         <div className={styles['div-12']}>Business Phone number</div>
-                        <input
+                        {/* <input
                             className={styles['input-3']}
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
+                        /> */}
+                        <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
+                            <div
+                                className="flex flex-row items-center gap-2 flex-1 cursor-pointer relative text-black"
+                                onClick={
+                                    countryCodeModelHandler
+                                }
+                            >
+                                <p>
+                                    {isoCode +
+                                        ' ' +
+                                        countryCode}
+                                </p>
+                                <img
+                                    className={`object-contain h-2.5 w-2.5 chevron ${countryModelOpened
+                                        ? 'rotate'
+                                        : ''
+                                        }`}
+                                    src={chevronDown}
+                                />
+                                <p className="text-gray-400 ">
+                                    {' '}
+                                    |{' '}
+                                </p>
+                                {countryModelOpened && (
+                                    <div
+                                        onClick={
+                                            modelClickHandler
+                                        }
+                                        className={`absolute ${filteredCountryCodes.length ===
+                                            0
+                                            ? 'h-fit'
+                                            : 'h-80'
+                                            }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
+                                    >
+                                        <div className="flex flex-row items-center p-2 gap-2 border rounded-t-lg">
+                                            <img
+                                                className="object-contain h-3 w-3 m-2"
+                                                src={search}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Search"
+                                                className="w-full text-sm font-normal caret-red-500 bg-white"
+                                                value={
+                                                    searchQuery
+                                                }
+                                                onChange={
+                                                    handleSearchChange
+                                                }
+                                            />
+                                        </div>
+                                        <div className="w-full h-[1px] bg-gray-300" />
+                                        <div
+                                            className={`overflow-y-auto ${filteredCountryCodes.length ===
+                                                0
+                                                ? 'h-fit'
+                                                : 'max-h-[17.188rem]'
+                                                } `}
+                                        >
+                                            {filteredCountryCodes.map(
+                                                (
+                                                    countryItem: any,
+                                                    index: number
+                                                ) => (
+                                                    <div
+                                                        onClick={() =>
+                                                            countryItemClickHandler(
+                                                                countryItem,
+                                                                index
+                                                            )
+                                                        }
+                                                        key={
+                                                            index
+                                                        }
+                                                        className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${selectedCountryIndex ===
+                                                            index
+                                                            ? 'bg-gray-50'
+                                                            : ''
+                                                            }`}
+                                                    >
+                                                        <p
+                                                            className={`font-normal text-black text-left text-xs hover:bg-gray-50`}
+                                                        >
+                                                            {countryItem?.name +
+                                                                ' ' +
+                                                                countryItem?.code}
+                                                        </p>
+                                                        {selectedCountryIndex ===
+                                                            index && (
+                                                                <img
+                                                                    className="h-4 w-4 object-contain"
+                                                                    alt="check-mark"
+                                                                    src={
+                                                                        checkCountryCode
+                                                                    }
+                                                                />
+                                                            )}
+                                                    </div>
+                                                )
+                                            )}
+                                            {filteredCountryCodes.length ===
+                                                0 && (
+                                                    <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
+                                                        {
+                                                            APP_TEXTS.NO_RESULT_FOUND
+                                                        }
+                                                    </p>
+                                                )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <input
+                                className="w-2/3 bg-login-btn"
+                                type="text" // ✅ Change from "number" to "text" to enforce max length
+                                placeholder="Phone number"
+                                value={phoneNumber}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    const { value } = e.target;
+                                    const maxLength = getMaxPhoneLength(isoCode.toLocaleUpperCase());
+
+                                    // ✅ Remove non-numeric characters and enforce max length
+                                    const sanitizedValue = value.replace(/\D/g, '').substring(0, maxLength);
+                                    setPhoneNumber(sanitizedValue);
+                                }}
+                            />
+                        </div>
                         <div className={styles['div-13']}>Email</div>
                         <input
                             disabled
