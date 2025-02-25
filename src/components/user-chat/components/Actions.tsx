@@ -113,13 +113,12 @@ function Actions(props: any) {
     };
 
     console.log('activeChat', activeChat, chatActiveUserId);
-    scrollChatToBottom();
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         scrollToBottom()
-    //     }, 800);
-    // }, [chatActiveUserId]);
+    useEffect(() => {
+        setTimeout(() => {
+            scrollChatToBottom();
+        }, 800);
+    }, [activeUser]);
 
     return (
         <>
