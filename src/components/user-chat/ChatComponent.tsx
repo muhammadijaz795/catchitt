@@ -100,13 +100,17 @@ const ChatComponent = () => {
 
     const userAvatar = useSelector((state: any) => state?.reducers?.profile?.avatar);
 
-    const longPressH = (item: any) => {
+    const longPressH = (item: any, newItem=true) => {   
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
-            if (msg.id === item.id) {
-                tempArr.push({ ...item, emojis: !item.emojis });
-            } else {
-                tempArr.push({ ...msg, emojis: false });
+            if(newItem && newItem == false){
+                tempArr.push({ ...msg, emojis: false, dropdown:false });
+            }else{
+                if (msg.id === item.id) {
+                    tempArr.push({ ...item, emojis: !item.emojis, dropdown:false });
+                }else {
+                    tempArr.push({ ...msg, emojis: false, dropdown:false });
+                }
             }
         });
         setActiveChat({ ...activeChat, chats: tempArr });
@@ -565,7 +569,8 @@ const ChatComponent = () => {
     }
 
     const reactToMessage = (messageId: any, reaction: any) => {
-        (socketRef.current as any).emit('react-msg', { from: sender, messageId, react: reaction, type:'emoji' });
+        console.info(JSON.stringify({ from: sender, messageId, react: reaction, type:'emoji',accessToken: token }));
+        (socketRef.current as any).emit('react-msg', JSON.stringify({ from: sender, messageId, react: reaction, type:'emoji',accessToken: token }));
     };
 
     const removeReaction = (messageId: any) => {
