@@ -248,7 +248,7 @@ function Actions(props: any) {
                                     {item.emojis && <img
                                         className='absolute w-[1.2rem] h-[1.2rem] top-1 right-2 cursor-pointer'
                                         onClick={() => {
-                                            valuesH({ ...item, showEmogis: false }, 'dropdown');
+                                           c
                                         }}
                                         src={isDarkTheme ? weightedDownArrowInWhite : weightedDownArrow  }//moreInMsg}
                                         alt="more"
@@ -345,7 +345,7 @@ function Actions(props: any) {
                                     </LongPressButton>
                                     {item?.reactions?.length > 0 ? (
                                         item.reactions.map((reaction: any, index: number) => (
-                                            <span key={index}>{reaction.react} </span>
+                                            <span style={{float:'left'}} key={index}>{reaction.react} </span>
                                         ))
                                         ) : null}
                                 </div>
@@ -395,7 +395,7 @@ function Actions(props: any) {
 
                                     alt="more"
                                 />} */}
-                                {item.showEmogis && (
+                                {item.showEmogis && item.showEmogis == true && (
                                     <div
                                         className={`${!item?.isrecevied
                                             ? style.showEmogisr
@@ -407,90 +407,93 @@ function Actions(props: any) {
                                             // transform: !item?.isrecevied ? 'translateX(50%)' : 'translateX(-50%)',
                                         }}
                                     >
+
+                                       
+
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '👍');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '👍',item);
                                             }}
                                         >
                                             👍
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '❤️');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '❤️',item);
                                             }}
                                         >
                                             ❤️{' '}
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '😂');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😂',item);
                                             }}
                                         >
                                             😂
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '🥰');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '🥰',item);
                                             }}
                                         >
                                             🥰
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '😭');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😭',item);
                                             }}
                                         >
                                             😭
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '😳');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😳',item);
                                             }}
                                         >
                                             😳
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '😡');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😡',item);
                                             }}
                                         >
                                             😡
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '😢');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😢',item);
                                             }}
                                         >
                                             😢
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '😊');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '😊',item);
                                             }}
                                         >
                                             😊
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '🙏🏻');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '🙏🏻',item);
                                             }}
                                         >
                                             🙏🏻
                                         </p>
                                         <p
                                             onClick={() => {
-                                                valuesH(item, 'showEmogis');
-                                                reactToMessage(item.id, '👎');
+                                                // valuesH(item, 'showEmogis');
+                                                reactToMessage(item.id, '👎',item);
                                             }}
                                         >
                                             👎

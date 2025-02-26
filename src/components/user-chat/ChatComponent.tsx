@@ -568,10 +568,54 @@ const ChatComponent = () => {
         setforwardModal(false)
     }
 
-    const reactToMessage = (messageId: any, reaction: any) => {
-        console.info(JSON.stringify({ from: sender, messageId, react: reaction, type:'emoji',accessToken: token }));
-        (socketRef.current as any).emit('react-msg', JSON.stringify({ from: sender, messageId, react: reaction, type:'emoji',accessToken: token }));
+    // const reactToMessage = (messageId: any, reaction: any) => {
+    //     console.info(JSON.stringify({ from: sender, messageId, react: reaction, type:'emoji',accessToken: token }));
+    //     (socketRef.current as any).emit('react-msg', JSON.stringify({ from: sender, messageId, react: reaction, type:'emoji',accessToken: token }));
+    // };
+
+    const reactToMessage = (messageId: any, reaction: any,item: any) => {
+        // Find the message in activeChat.chats that matches the given messageId
+        const updatedChats = activeChat.chats.map(msg => {
+            if (msg.id == messageId) {
+                // Check if the reaction already exists in the reactions array
+                const existingReactionIndex = msg.reactions.findIndex(r => r.userId === sender); // assuming sender is the user who is reacting
+                if (existingReactionIndex !== -1) {
+                    // Update the existing reaction if it exists
+                    msg.reactions[existingReactionIndex] = {
+                        ...msg.reactions[existingReactionIndex],
+                        react:reaction // Update the reaction (like emoji)
+                    };
+                } else {
+                    // Insert a new reaction if it doesn't exist
+                    msg.reactions.push({
+                        userId: sender, // assuming 'sender' is the user ID of the person reacting
+                        react:reaction // Add the new reaction (like emoji)
+                    });
+                }
+            }
+            return msg; // Return the updated message or the unchanged one
+        });
+
+        // Update your state with the modified chats array
+        setActiveChat(prevState => ({
+            ...prevState,
+            chats: updatedChats
+        }));
+
+        
+        // Emit the updated reaction to the server
+        (socketRef.current as any).emit('react-msg', JSON.stringify({
+            from: sender,
+            messageId: messageId,
+            react: reaction,
+            type: 'emoji',
+            accessToken: token
+        }));
+        valuesH(item, 'showEmogis');
     };
+
+
+    
 
     const removeReaction = (messageId: any) => {
         (socketRef.current as any).emit('remove-react', { from: sender, messageId });
