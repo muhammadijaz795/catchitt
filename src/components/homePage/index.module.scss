@@ -244,7 +244,10 @@
   // line-height: 120%;
   /* 16.8px */
 }
-
+.loginWithWN{
+  background-color: #0866ff;
+  color: white;
+}
 
 .darkTheme {
   background: black !important;
@@ -556,4 +559,8 @@ div.darkTheme div.darkWhiteTheme :hover {
     background: transparent;
   }
 }
-
+.createBtnD{
+  color: #0866ff;
+  padding-left: 0.2rem;
+  text-align: center;
+}
