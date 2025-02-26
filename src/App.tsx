@@ -195,6 +195,7 @@ function App() {
     const [isMainLoginOption, setIsMainLoginOption] = useState(true);
     const [isMainSignupOption, setIsMainSignupOption] = useState(true);
     const [isLoginSection, setIsLoginSection] = useState(true);
+    const [isLoginWithWN, setIsLoginWithWN] = useState(false);
     const [isForgotPasswordScenario, setIsForgotPasswordScenario] = useState(false);
     const isLoginPopup = useSelector((store: any) => store?.reducers?.popupSlice?.isLoginPopup);
     const isLogoutPopup = useSelector((store: any) => store?.reducers?.popupLogoutSlice?.isLogoutPopup);
@@ -237,6 +238,22 @@ function App() {
     const [darkWhiteTheme, setDarkWhiteTheme] = useState('');
     const [textColor, setTextColor] = useState('text-black');
 
+
+
+    // This code will be remove later, added for code understanding...
+    useEffect(() => {
+        console.log('isLoginWithWN ' + isLoginWithWN);
+        console.log('loginWithPhone ' + loginWithPhone);
+        console.log('isMainLoginOption ' + isMainLoginOption);
+        console.log('isMainSignupOption ' + isMainSignupOption);
+        console.log('isLoginSection ' + isLoginSection);
+        console.log('isForgotPasswordScenario ' + isForgotPasswordScenario);
+        console.log('isLoginPopup ' + isLoginPopup);
+        console.log('isLogoutPopup ' + isLogoutPopup);
+    }, [isLoginWithWN, loginWithPhone, isMainLoginOption, isMainSignupOption, isLoginSection, isForgotPasswordScenario, isLoginPopup, isLogoutPopup]); 
+
+
+
     const signupItemClickHandler = (name: string) => {
         switch (name) {
             case 'Use Phone or Email':
@@ -250,6 +267,14 @@ function App() {
             default:
                 console.log('Default case');
         }
+    };
+
+    const handleBackOnWNSocial = () => {
+        console.log("Div clicked!");
+        setIsLoginWithWN(false);
+        setIsMainLoginOption(true);
+        setIsMainSignupOption(true);
+        // Your function logic here
     };
 
     const loginItemClickHandler = (name: string) => {
@@ -278,6 +303,7 @@ function App() {
             case APP_TEXTS.WORLDNOOR:
                 // Handle Apple login
                 console.log('WN Social login');
+                loginWithWorldnoorHandler();
                 break;
             default:
                 console.log('Default case');
@@ -296,6 +322,13 @@ function App() {
             console.log('No Auth : ', nonOAuthError);
         },
     });
+
+    const loginWithWorldnoorHandler = async () => {
+        setIsLoginWithWN(true);
+        setIsMainLoginOption(false);
+        setIsMainSignupOption(false);
+
+    }
 
     const loginWithGoogleAccessToken = async (accessToken: string) => {
         dispatch(loginWithGoogleService({ accessToken }))
@@ -997,9 +1030,12 @@ function App() {
                                 >
 {/* start wn social modal */}
 {/* {style.wnSocialModal} */}
-                                <div className="d-none">
+                                { isLoginWithWN &&
+                                <div className={style.wnSocialModal}>
                                     <div className="d-flex justify-content-between">
-                                        <div className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative left-4 p-1 cursor-pointer">
+                                        <div className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative left-4 p-1 cursor-pointer"
+                                        onClick={handleBackOnWNSocial}
+                                        >
                                             <img className="h-6 w-6 object-contain" src="/public/images/icons/backArrow.svg" />
                                         </div>
                                         <div className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative right-4 p-1 cursor-pointer">
@@ -1068,14 +1104,17 @@ function App() {
                                     </div>
                                     <button className={style.continueBtn}>Continue with Email</button>
                                 </div>
+                                }
 {/* end wn social modal */}
+                                    { !isLoginWithWN &&
                                     <div
                                         onClick={closeLoginPopupHandler}
                                         className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center absolute right-5 p-1 cursor-pointer"
                                     >
                                         <img className="h-4 w-4 object-contain" src={closeIcon} />
                                     </div>
-                                    {isLoginSection ? (
+                                    }
+                                    {!isLoginWithWN && isLoginSection ? (
                                         <>
                                             <div className=" w-[21.888rem] mx-auto ">
                                                 <h2
@@ -1613,6 +1652,7 @@ function App() {
                                         </>
                                     ) : (
                                         <>
+                                            { !isLoginWithWN && 
                                             <div className=" w-[21.888rem] mx-auto ">
                                                 <h2
                                                     className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
@@ -2284,6 +2324,7 @@ function App() {
                                                     </>
                                                 )}
                                             </div>
+                                            }
                                             {isMainLoginOption && (
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
@@ -2308,6 +2349,7 @@ function App() {
                                                     </p>
                                                 </div>
                                             )}
+                                            { !isLoginWithWN &&
                                             <div className="mt-3 bottom-0 absolute w-full py-4">
                                                 <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
                                                     <h3
@@ -2323,6 +2365,7 @@ function App() {
                                                     </h3>
                                                 </div>
                                             </div>
+                                            }
                                         </>
                                     )}
                                 </div>
