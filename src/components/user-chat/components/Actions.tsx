@@ -253,7 +253,7 @@ function Actions(props: any) {
                                     {item.emojis && <img
                                         className='absolute w-[1.2rem] h-[1.2rem] top-1 right-2 cursor-pointer'
                                         onClick={() => {
-                                           c
+                                            valuesH({ ...item, showEmogis: false }, 'dropdown');
                                         }}
                                         src={isDarkTheme ? weightedDownArrowInWhite : weightedDownArrow  }//moreInMsg}
                                         alt="more"
@@ -350,18 +350,19 @@ function Actions(props: any) {
                                     </LongPressButton>
                                     {item?.reactions?.length > 0 ? (
                                         item.reactions.map((reaction: any, index: number) => (
-                                            <span style={{float:'left'}} key={index}>{reaction.react} </span>
+                                            <span className={style.emojiShowed} key={index}>{reaction.react} </span>
                                         ))
                                         ) : null}
                                 </div>
                                 <div className={style.subContent}>
-                                    {item.stared && <><span>❤️</span>
+                                    {item.stared && <><span >❤️</span>
                                         {/* <img src={avatar} className={style.avatarLike} alt="" /> */}
                                     </>}
-                                    <p>{item.time}</p>
+                                    
                                     {!item?.isrecevied && item?.isRead && (
                                         <img src={seenMsgSvg} alt="" />
                                     )}
+                                    <p>{item.time}</p>
                                 </div>
                                 {/* {item.emojis && (
                                     <div

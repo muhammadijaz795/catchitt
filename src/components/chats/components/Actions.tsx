@@ -173,13 +173,13 @@ function Actions(props: any) {
                                     </LongPressButton>
                                 </div>
                                 <div className={style.subContent}>
-                                    {item.stared && <><span>❤️</span> 
+                                    {item.stared && <><span>❤️ </span> 
                                     {/* <img src={avatar} className={style.avatarLike} alt="" /> */}
                                     </>}
-                                    <p>{item.time}</p>
                                     {!item?.isrecevied && item?.isRead && (
                                         <img src={seenMsgSvg} alt="" />
                                     )}
+                                     <p>{item.time}</p>
                                 </div>
                                 {item.emojis && (
                                     <div
