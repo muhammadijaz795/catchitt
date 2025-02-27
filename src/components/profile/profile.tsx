@@ -35,6 +35,7 @@ import { activeLike, commentWhite, likeWhite, musicBlack, shareWhite } from '../
 import { showToastSuccess, STATUS_CODE } from '../../utils/constants';
 
 export const Profile = (props: any) => {
+    const [activeSort, setActiveSort] = useState('latest');
     const [activeTab, setActiveTab] = useState('Videos');
     const [profileModal, setProfileModal] = useState(false);
     const [storyPopup, setStoryPopup] = useState(false);
@@ -536,6 +537,41 @@ export const Profile = (props: any) => {
                                 <div className="mb-2">{item.icon}</div>
                             </div>
                         ))}
+                             {/* 'latest' tab */}
+                                <div  className={`${style.tab} ` } >
+                                    <div className='d-flex'>
+                                        <div
+                                            className={`
+                                            ${activeSort === 'latest' ? style.activeButton : ''}
+                                            `}
+                                            onClick={() => setActiveSort('latest')}
+                                        >
+                                            <span className={`${style.button} ${style.radiusLeft}`}>latest</span>
+                                        </div>
+
+                                        {/* 'Popular' tab */}
+                                        <div
+                                            className={`
+                                        
+                                            ${activeSort === 'popular' ? style.activeButton : ''}
+                                            `}
+                                            onClick={() => setActiveSort('popular')}
+                                        >
+                                            <span className={style.button}>Popular</span>
+                                        </div>
+
+                                        {/* 'Oldest' tab */}
+                                        <div
+                                            className={`
+                                            
+                                            ${activeSort === 'oldest' ? style.activeButton : ''}
+                                            `}
+                                            onClick={() => setActiveSort('oldest')}
+                                        >
+                                            <span className={`${style.button} ${style.radiusRight}`}>Oldest</span>
+                                        </div>
+                                    </div>
+                                </div>
                     </div>
 
                     {/* Videoes Maping */}
