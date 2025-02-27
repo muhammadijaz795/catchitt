@@ -90,6 +90,14 @@ import { useUpdateEffect } from 'react-use';
 import SoundPage from './components/sound-module/SoundPage';
 import { PopupModal } from './components/reusables/popupModal';
 
+interface localStorageUser {
+    name: string;
+    email: string;
+    avatar: string;
+    token: string;
+    socialId: string;
+  }
+
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
     const navigate = useNavigate();
@@ -196,6 +204,7 @@ function App() {
     const [isMainSignupOption, setIsMainSignupOption] = useState(true);
     const [isLoginSection, setIsLoginSection] = useState(true);
     const [isLoginWithWN, setIsLoginWithWN] = useState(false);
+    const [wnLoginError, setWNLoginError] = useState(false);
     const [isWNLoginWithCreds, setIsWNLoginWithCreds] = useState(false);
     const [isForgotPasswordScenario, setIsForgotPasswordScenario] = useState(false);
     const isLoginPopup = useSelector((store: any) => store?.reducers?.popupSlice?.isLoginPopup);
@@ -238,6 +247,8 @@ function App() {
     const [lightDarkTheme, setlightDarkTheme] = useState('');
     const [darkWhiteTheme, setDarkWhiteTheme] = useState('');
     const [textColor, setTextColor] = useState('text-black');
+    const [localStorageUsers, setLocalStorageUsers] = useState<localStorageUser[]>([]);
+
 
 
 
@@ -271,12 +282,44 @@ function App() {
     };
 
     const handleBackOnWNSocial = () => {
-        console.log("Div clicked!");
         setIsLoginWithWN(false);
+        setIsWNLoginWithCreds(false);
         setIsMainLoginOption(true);
         setIsMainSignupOption(true);
         // Your function logic here
     };
+
+    const handleLoginWithSocialID = async(user : localStorageUser) => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`${API_KEY}/auth/social/world-nour`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ socialId: user.socialId, token: user.token }), 
+            });
+
+            const responseJson = await response.json();
+            const data = responseJson.data;
+            console.log(data);
+
+            if (response.ok) {
+                
+                // Handle successful login (e.g., store token, redirect user)
+            } else {
+                // display error message here...
+                //alert(data.message || "Login failed");
+
+                setWNLoginError(true);
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            alert("Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const loginItemClickHandler = (name: string) => {
         switch (name) {
@@ -328,11 +371,100 @@ function App() {
         setIsLoginWithWN(true);
         setIsMainLoginOption(false);
         setIsMainSignupOption(false);
+    }
 
+    const continueWithEmailHandler = async() => {
+        setIsLoginWithWN(false);
+        setIsWNLoginWithCreds(false);
+        setIsMainSignupOption(false);
+    }
+
+    const saveUserToLocalStorage = async (newUser: any): Promise<void> => {
+        try {
+            // Get existing users from local storage or initialize as an empty array
+            const existingUsers: any[] = JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]");
+    
+            // Check if the user already exists based on socialId
+            if (!existingUsers.some(user => user.socialId === newUser.socialId)) {
+                existingUsers.push(newUser);
+                await localStorage.setItem("wn_loggedin_users", JSON.stringify(existingUsers));
+                console.log("User added:", newUser);
+            } else {
+                console.log("User already exists!");
+            }
+        } catch (error) {
+            console.error("Error saving user to local storage:", error);
+        }
+    };
+    
+
+    const getUsersFromLocalStorage = (): any[] => {
+        return JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]");
+    };
+
+    const removeUserFromLocalStorage = (userId: number): void => {
+        let users: any[] = JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]");
+        users = users.filter(user => user.id !== userId);
+        localStorage.setItem("wn_loggedin_users", JSON.stringify(users));
+        console.log("User removed:", userId);
+    };
+
+    const loginWithWNSocial = async () => {
+        setWNLoginError(false);
+        setEmailIdError(false);
+        setIsLoading(true);
+        if (email && validateEmail(email)) {
+            setEmailIdError(false);
+        } else {
+            setEmailIdError(true);
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_KEY}/auth/social/world-nour-signin`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }), 
+            });
+
+            const responseJson = await response.json();
+            const data = responseJson.data;
+
+            if (response.ok) {
+                const userObject = {
+                    'name': data.name,
+                    'email': data.email,
+                    'avatar': data.avatar,
+                    'token': data.token,
+                    'socialId': data.socialId
+                };
+                await saveUserToLocalStorage(userObject);
+                handleLoginWithSocialID(userObject);
+            } else {
+                setWNLoginError(true);
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            alert("Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+
+    const handleGoBackToWNProfiles = async () => {
+        setIsLoginWithWN(true);
+        setIsMainLoginOption(false);
+        setIsMainSignupOption(false);
     }
 
     const addWNSocialAccountHandler = async() => {
-        alert('Handler called');
+        setEmailIdError(false);
+        setIsLoading(false);
+        setWNLoginError(false);
         setIsLoginWithWN(false);
         setIsWNLoginWithCreds(true);
         setIsMainLoginOption(false);
@@ -773,11 +905,15 @@ function App() {
     };
 
     const closeLoginPopupHandler = () => {
+        setIsWNLoginWithCreds(false);
+        setIsLoginWithWN(false);
         dispatch(closeLoginPopup());
         setIsMainLoginOption(true);
     };
 
     useEffect(() => {
+        const storedUsers = JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]") as localStorageUser[];
+        setLocalStorageUsers(storedUsers);
         fetchCountriesList();
         useGeoService();
     }, []);
@@ -795,6 +931,8 @@ function App() {
     };
 
     const handleSignupClick = () => {
+        setIsLoginWithWN(false);
+        setIsWNLoginWithCreds(false);
         setIsLoginSection(false);
     };
 
@@ -1044,7 +1182,7 @@ function App() {
                         <>    
                         <div className="d-flex justify-content-between">
                             <div className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative left-4 p-1 cursor-pointer"
-                            onClick={handleBackOnWNSocial}
+                            onClick={handleGoBackToWNProfiles}
                             >
                                 <img className="h-6 w-6 object-contain" src="/public/images/icons/backArrow.svg" />
                             </div>
@@ -1075,36 +1213,64 @@ function App() {
                                 <input
                                 className="bg-login-btn w-full"
                                 type="text"
-                                placeholder="Email or username"
-                                value=""
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) =>
+                                    setEmail(e.target.value)
+                                }
                                 />
                             </div>
+                            {emailIdError ? (
+                                <p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                    {
+                                        'Please enter valid email ID'
+                                    }
+                                </p>
+                            ) : null}
                             <div className="flex flex-row justify-between items-center border-[1px] bg-login-btn mt-2 rounded-md py-2.5 px-3">
                                 <input
                                 className="w-2/3 bg-login-btn"
                                 type="password"
                                 placeholder="Password"
-                                value=""
+                                value={password}
+                                onChange={(e) =>
+                                    setPassword(
+                                        e.target.value
+                                    )}
                                 />
-                                <svg
-                                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                                focusable="false"
-                                aria-hidden="true"
-                                viewBox="0 0 24 24"
-                                data-testid="VisibilityIcon"
-                                style={{ cursor: "pointer" }}
-                                >
-                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5m0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3" />
-                                </svg>
                             </div>
-                            <div className="flex flex-row items-center mt-4 rounded-md py-2.5 px-3 cursor-pointer bg-[#0866ff] ">
-                                <div className="flex flex-row justify-center items-center gap-2 flex-1 ">
-                                    <p className='text-white'>Login to Worldnoor</p>
+                            {wnLoginError ? (
+                                <p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                    {
+                                        'Signin credentials are incorrect'
+                                    }
+                                </p>
+                            ) : null}
+                            <div 
+                                onClick={!isLoading ? loginWithWNSocial : undefined} // Disable click if loading
+                                className={`flex flex-row items-center mt-4 rounded-md py-2.5 px-3 cursor-pointer bg-[#0866ff] 
+                                    ${isLoading ? "opacity-50 pointer-events-none" : ""}`} // Add blur effect when loading
+                            >
+                                <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                    <p className='text-white'>
+                                        {isLoading ? (
+                                            <CircularProgress
+                                                style={{
+                                                    width: 18,
+                                                    height: 18,
+                                                    color: 'white',
+                                                }}
+                                            />
+                                        ) : "Login to Worldnoor"}
+                                    </p>
                                 </div>
                             </div>
+
                             <div className='d-flex my-2 justify-center'>
                              Or
-                                <span className={style.createBtnD}> Create an Account</span>
+                                <span
+                                onClick={handleSignupClick}
+                                className={style.createBtnD}> Create an Account</span>
                             </div>
                             </div>
                         </>
@@ -1144,13 +1310,24 @@ function App() {
 
 
                                     <div className='px-5'>
-                                        <div className={style.userInfo}>
-                                        <img src="profile.jpg" alt="Profile Picture" className={style.profilePic} />
-                                        <div className={style.userDetails}>
-                                            <h3 className={style.userName}>Charles Allan</h3>
-                                            <p className={style.userEmail}>Charles.Allan1122@gmail.com</p>
-                                        </div>
-                                        </div>
+                                    <div>
+                                        {localStorageUsers.map((user, index) => (
+                                            <div
+                                                key={index}
+                                                onClick={() => {
+                                                    if (!isLoading) handleLoginWithSocialID(user);
+                                                }}
+                                                className={`${style.userInfo} cursor-pointer ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+                                            >
+                                                <img src={user.avatar} alt="Profile Picture" className={style.profilePic} />
+                                                <div className={style.userDetails}>
+                                                    <h3 className={style.userName}>{user.name}</h3>
+                                                    <p className={style.userEmail}>{user.email}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
 
                                         <div 
                                         onClick={addWNSocialAccountHandler}
@@ -1697,7 +1874,7 @@ function App() {
                                             {isMainLoginOption && (
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
-                                                        By continuing with an account located in{' '}
+                                                        Byy continuing with an account located in{' '}
                                                         <span
                                                             className={` ${textColor} cursor-pointer`}
                                                         >
@@ -1725,7 +1902,7 @@ function App() {
                                                     >
                                                         {APP_TEXTS.NO_ACCOUNT}{' '}
                                                         <span
-                                                            className="text-danger-1 font-semibold hover:underline cursor-pointer"
+                                                            className="A text-danger-1 font-semibold hover:underline cursor-pointer"
                                                             onClick={handleSignupClick}
                                                         >
                                                             {APP_TEXTS.SIGN_UP}
@@ -2413,7 +2590,7 @@ function App() {
                                             {isMainLoginOption && (
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
-                                                        By continuing with an account located in{' '}
+                                                        Bya continuing with an account located in{' '}
                                                         <span
                                                             className={`${textColor} cursor-pointer`}
                                                         >
@@ -2434,17 +2611,22 @@ function App() {
                                                     </p>
                                                 </div>
                                             )}
-                                            {isLoginWithWN ? (
-                                                <div className="mt-3 bottom-0 absolute w-full py-4">
+                                            {isLoginWithWN &&
+                                                <div
+                                                onClick={continueWithEmailHandler}
+                                                className="mt-3 bottom-0 absolute w-full py-4">
                                                     <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
                                                         <button className={style.continueBtn}>Continue with Email</button>
                                                     </div>
                                                 </div>
-                                            ) : (
+                                            }
+                                            
+                                            {
+                                                !isWNLoginWithCreds && !isLoginWithWN &&
                                                 <div className="mt-3 bottom-0 absolute w-full py-4">
                                                     <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
                                                         <h3
-                                                            className={`font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 ${textColor}`}
+                                                            className={`b font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 ${textColor}`}
                                                         >
                                                             {SIGNUP_APP_TEXTS.ALREADY_ACCOUNT}{' '}
                                                             <span
@@ -2456,7 +2638,8 @@ function App() {
                                                         </h3>
                                                     </div>
                                                 </div>
-                                            )}
+                                            }
+                                            
 
                                         </>
                                     )}
