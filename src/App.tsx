@@ -411,11 +411,13 @@ function App() {
 
     const loginWithWNSocial = async () => {
         setWNLoginError(false);
+        setEmailIdError(false);
         setIsLoading(true);
         if (email && validateEmail(email)) {
             setEmailIdError(false);
         } else {
             setEmailIdError(true);
+            setIsLoading(false);
             return;
         }
 
@@ -460,6 +462,8 @@ function App() {
     }
 
     const addWNSocialAccountHandler = async() => {
+        setEmailIdError(false);
+        setIsLoading(false);
         setWNLoginError(false);
         setIsLoginWithWN(false);
         setIsWNLoginWithCreds(true);
