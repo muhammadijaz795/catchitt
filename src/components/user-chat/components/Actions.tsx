@@ -359,7 +359,7 @@ function Actions(props: any) {
                                         {/* <img src={avatar} className={style.avatarLike} alt="" /> */}
                                     </>}
                                     
-                                    {!item?.isrecevied && item?.isRead && (
+                                    {item?.isrecevied && item?.isRead && (
                                         <img src={seenMsgSvg} alt="" />
                                     )}
                                     <p>{item.time}</p>

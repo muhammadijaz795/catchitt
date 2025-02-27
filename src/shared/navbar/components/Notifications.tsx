@@ -28,6 +28,13 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     const [tagSection, setTagSection] = useState(false);
     const [followerSection, setFollowerSection] = useState(false);
     const [activeClass, setActiveClass] = useState(style.active);
+    const [messageRequest, setMessageRequest] = useState(false);
+    const [receiveMessageRequest, setReceiveMessageRequest] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1); // Current page to fetch
+    const [hasMoreData, setHasMoreData] = useState(true); // To track if there is more data
+
+
+
     const [notifications, setNotifications] = useState([]);
     type Notification = {
         type: string;
@@ -44,12 +51,13 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         comment: Notification[],
         tag: Notification[],
         follow: Notification[],
-        unknown: Notification[]
+        unknown: Notification[],
+        message_requests: []
     }
 
     const dispatch = useDispatch()
 
-    const [notification, setNotification] = useState<Notify>({ all: [], like: [], comment: [], tag: [], follow: [], unknown: [] });
+    const [notification, setNotification] = useState<Notify>({ all: [], like: [], comment: [], tag: [], follow: [], unknown: [], message_requests: [] });
     // const [notification, setNotification] = useState<Notification[]>([{type: 'like', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Comment', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." }, {type: 'Follow', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Tag', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Unknown Device Signin', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}]);
     const navigate = useNavigate();
 
@@ -61,6 +69,8 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    
 
     const StyledMenu = styled((props: MenuProps) => (
         <Menu
@@ -126,6 +136,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         setCommentSection(false);
         setTagSection(false);
         setFollowerSection(false);
+        setMessageRequest(false);
     }
 
     const handleLike = async () => {
@@ -134,6 +145,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         setCommentSection(false);
         setTagSection(false);
         setFollowerSection(false);
+        setMessageRequest(false);
     }
 
     const handleComment = async () => {
@@ -142,6 +154,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         setLikeSection(false);
         setTagSection(false);
         setFollowerSection(false);
+        setMessageRequest(false);
     }
 
     const handleTag = async () => {
@@ -150,6 +163,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         setLikeSection(false);
         setCommentSection(false);
         setFollowerSection(false);
+        setMessageRequest(false);
     }
 
     const handlefollower = async () => {
@@ -158,6 +172,17 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         setLikeSection(false);
         setCommentSection(false);
         setTagSection(false);
+        setMessageRequest(false);
+    }
+
+    const handleMessageRequest = async () => {
+        setMessageRequest(true);
+        setFollowerSection(false);
+        setAllSection(false);
+        setLikeSection(false);
+        setCommentSection(false);
+        setTagSection(false);
+        
     }
 
     const handleFollowBack = async (userId: any) => {
@@ -195,6 +220,939 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         }
     };
 
+    // Load more data when user scrolls to the bottom
+    const handleScroll = (event: React.UIEvent<HTMLElement>) => {
+        const target = event.target as HTMLElement;
+        const scrollHeight = target.scrollHeight;
+        const scrollTop = target.scrollTop;
+        const clientHeight = target.clientHeight;
+
+        console.log('handleScroll....');
+        console.log('scrollHeight:', scrollHeight);
+        console.log('scrollTop:', scrollTop);
+        console.log('clientHeight:', clientHeight);
+
+        // Add a small buffer to ensure it's within 10px of the bottom
+        const threshold = 20;
+        const isBottom = scrollHeight - scrollTop <= clientHeight + threshold;
+
+        console.log('isBottom:', isBottom, 'hasMoreData:', hasMoreData);
+
+        // Fetch more data if the user is at the bottom and more data is available
+        if (isBottom && hasMoreData) {
+            console.log('Fetching more data...');
+            handleReceiveReqeusts(); // Fetch more data
+        }
+    };
+
+    const handleReceiveReqeusts = async () => {
+        try {
+            const response = await fetch(
+                API_KEY + `/chat/received-requests?page=${currentPage}&pageSize=5`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            }
+            );
+            // const responseData = await response.json();
+            const responseData = {
+                "status": 200,
+                "message": "",
+                "data": {
+                    "data": [
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        },
+                        {
+                            "_id": "67b721076608a55336d1555b",
+                            "createdTime": 1740054791263,
+                            "isDeleted": false,
+                            "users": [
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "67855e3f0e6f817ae851e2fe",
+                                    "name": "Umar Nawaz",
+                                    "avatar": "https://cdn.wnsocial.com/images/6EXfI8EgSPcUApV12J8Vg70GsMZPpcV7GbysjCBv.png",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                },
+                                {
+                                    "activityStatus": {
+                                        "isActive": false
+                                    },
+                                    "_id": "664f7d78552159318a2fd636",
+                                    "name": "Ehsan ul haq",
+                                    "avatar": "",
+                                    "mutedUsers": [],
+                                    "blockedUsers": []
+                                }
+                            ],
+                            "pinnedBy": [],
+                            "deletedBy": [],
+                            "requestStatus": "pending",
+                            "senderId": "67855e3f0e6f817ae851e2fe",
+                            "receiverId": "664f7d78552159318a2fd636",
+                            "nickName": null,
+                            "themeColor": null,
+                            "emoji": null,
+                            "restrict": false,
+                            "block": false,
+                            "mute": false,
+                            "lastModifiedTime": 1740054791264,
+                            "__v": 0,
+                            "lastMessage": {
+                                "_id": "67b721076608a55336d1555e",
+                                "createdTime": 1740054791296,
+                                "isDeleted": false,
+                                "senderId": "67855e3f0e6f817ae851e2fe",
+                                "receiverId": "664f7d78552159318a2fd636",
+                                "conversationId": "67b721076608a55336d1555b",
+                                "starredBy": [],
+                                "clearedBy": [],
+                                "fileName": null,
+                                "message": "Hi",
+                                "thumbnail": null,
+                                "repliedMessage": null,
+                                "type": "Text",
+                                "isRead": false,
+                                "isForwarded": false,
+                                "lastModifiedTime": 1740054791296,
+                                "reactions": [],
+                                "__v": 0
+                            },
+                            "unReadMsgsCount": 1,
+                            "isPinned": false,
+                            "isMuted": false,
+                            "isBlocked": false,
+                            "isBlockedByOtherUser": false
+                        }
+                    ],
+                    "total": 5
+                }
+            }
+            // setReceiveMessageRequest(responseData.data.data);
+            const newMessageRequests = responseData.data.data;
+
+            // Append new data to the existing state
+            setReceiveMessageRequest((prevData) => [
+                ...prevData,
+                ...responseData.data.data,
+            ]);
+
+            // Update the message_requests part of the notification state
+            setNotification((prevState: any) => {
+                return {
+                    ...prevState, // Keep the previous notification state intact
+                    message_requests: [
+                        ...prevState.message_requests, // Add previous message_requests
+                        ...newMessageRequests,         // Append new data from API
+                    ]
+                };
+            });
+            
+            // If we have more data to load, we can keep incrementing the page number
+            // if (responseData.data.total <= receiveMessageRequest.length + responseData.data.data.length) {
+                setHasMoreData(true); // No more data to load
+            // } else {
+            //     setCurrentPage((prevPage) => prevPage + 1); // Increment the page number
+            // }
+            console.log('my all notifications');
+            console.log(notification)
+            console.log("received requests", receiveMessageRequest);
+        } catch (error) {
+            console.error('Error fetching videos:', error);
+        }
+    };
+
+    const acceptRequest = async (notification: any) => {
+        console.log('accept request...');
+        console.log(notification);
+        console.log(notification._id);
+    
+        const noti_id = notification._id;
+        const sender_id = notification.senderId;
+        const receiver_id = notification.receiverId;
+    
+        try {
+            const response = await fetch(API_KEY + `/chat/request/accept/${noti_id}`, {
+                method: 'POST',
+                headers: { 
+                    'Content-type': 'application/json', 
+                    Authorization: `Bearer ${token}` 
+                },
+            });
+            
+            const responseData = await response.json();
+            const LoggedInUserId = localStorage.getItem('userId');
+            // Sending a message after accepting the request
+            const result = await post(`/chat/messages`, {
+                type: 'application/json',
+                data: {
+                    from: receiver_id,
+                    to: sender_id,
+                    message: "Hi",
+                },
+            });
+    
+            if (result?.data) {
+                console.log("Message sent");
+            }
+    
+            // Navigate to the receiver's profile after accepting the request
+            navigate(`/profile/${receiver_id}`);
+    
+            // Calling the function to handle further request updates
+            // handleReceiveReqeusts();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    
+
+    const rejectRequest = async (notification: any) => {
+        console.log('rejecct request...');
+        console.log(notification);
+        console.log(notification._id);
+    
+        const noti_id = notification._id;
+        const sender_id = notification.senderId;
+        const receiver_id = notification.receiverId;
+        try {
+            const response = await fetch(API_KEY + `/chat/request/reject/${noti_id}`, {
+                method: 'POST',
+                headers: { 
+                    'Content-type': 'application/json', 
+                    Authorization: `Bearer ${token}` 
+                },
+            });
+            
+            const responseData = await response.json();
+            const LoggedInUserId = localStorage.getItem('userId');
+            // Navigate to the receiver's profile after accepting the request
+            navigate(`/profile/${receiver_id}`);
+    
+            // Calling the function to handle further request updates
+            // handleReceiveReqeusts();
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
@@ -219,15 +1177,18 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                 const followNotifications = responseData.data.data.followers;
                 const unknownNotifications = newNotificationList.filter((noti:any) => noti.type === 'Unknown Device Signin');
                 setNotification({
-                    all: newNotificationList, like: likeNotifications, comment: commentNotifications, tag: tagNotifications, follow: followNotifications, unknown: unknownNotifications
+                    all: newNotificationList, like: likeNotifications, comment: commentNotifications, tag: tagNotifications, follow: followNotifications, unknown: unknownNotifications, message_requests: []
                 });
+                handleReceiveReqeusts();
                 console.log("notification", notification);
             } catch (error) {
                 console.error('Error fetching videos:', error);
             }
         };
-
         handleGetNotifications();
+        
+
+        // handleReceiveReqeusts();
         if (themeColor == "dark") {
             // setdarkThemeWhite(style.darkThemeWhite);
             setActiveClass(style.activeBlack);
@@ -241,7 +1202,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
         }
 
         return () => {
-            setNotification({ all: [], like: [], comment: [], tag: [], follow: [], unknown: [] });
+            setNotification({ all: [], like: [], comment: [], tag: [], follow: [], unknown: [], message_requests: [] });
         };
 
     }, []);
@@ -311,6 +1272,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                             <button className={`${style.buttontab} ${commentSection ? activeClass : ''} `} onClick={handleComment}>Comments</button>
                             <button className={`${style.buttontab} ${tagSection ? activeClass : ''} `} onClick={handleTag}>Mentions and tags</button>
                             <button className={`${style.buttontab} ${followerSection ? activeClass : ''}`} onClick={handlefollower}>Followers</button>
+                            <button className={`${style.buttontab} ${messageRequest ? activeClass : ''} `} onClick={handleMessageRequest}>Message Requests</button>
                         </div>
 
                         <div className={`${style.inboxList} no-scrollbar`}>
@@ -411,6 +1373,45 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                                 </div>
                                 ))
                             }
+                            <div  className={`${style.inboxList}`}  onScroll={(event)=>handleScroll(event)}>
+                                {messageRequest && (receiveMessageRequest && receiveMessageRequest.length > 0 ? (
+                                    receiveMessageRequest.map((noti: any, key: number) => {
+                                        // Print the notification object for debugging
+                                        const user = noti?.users?.[0]; // Accessing the first user
+                                        const userName = user?.name ? `${user.name} sent request.` : 'User sent request.'; // Fallback name
+                                        const userAvatar = user?.avatar || defaultProfileIcon; // Fallback avatar
+
+                                        return (
+                                            <div key={key}>
+                                                <div className={`${style.inboxListItem}`}>
+                                                    <div className={`${style.inboxListInner}`}>
+                                                        <div className={`${style.avatar}`}>
+                                                            <img src={userAvatar} alt="Profile image" />
+                                                        </div>
+                                                        <div className={`${style.gridLine}`}>
+                                                            <p className={`${style.notificationContent}`}>{userName}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className={`${style.buttonContainer}`}>
+                                                        <button style={{ margin: '5px' }} onClick={() => acceptRequest(noti)} className={`${style.inboxFollow}`}>Accept</button>
+                                                        <button style={{ margin: '5px' }} onClick={() => rejectRequest(noti)} className={`${style.inboxFollow}`}>Reject</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                                ) : (
+                                    <div className={`${style.inboxNoMentions}`}>
+                                        <div className={`${style.inboxNoMentionsInner}`}>
+                                            <AlternateEmail style={{ fontSize: 60 }} />
+                                            <p className={`${style.inboxBoldText}`}>No new requests</p>
+                                            <p>You'll see your requests here when someone sends them.</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+
                         </div>
 
 

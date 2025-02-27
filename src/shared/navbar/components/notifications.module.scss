@@ -132,3 +132,17 @@
   font-size: 22px;
   font-weight: bold;
 }
+
+/* Ensure the container of the buttons is using flexbox with a column layout */
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 0px;
+}
+
+/* Style the buttons if necessary */
+.inboxFollow {
+  width: 100%; /* Optional: make buttons full width */
+  padding: 8px 0; /* Adjust padding as needed */
+}

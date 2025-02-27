@@ -225,6 +225,34 @@ const PublicProfileHeader: FunctionComponent<Props> = ({
                             )}
                         </button>
                     )}
+                    {followings?.data?.length > 0 &&
+                        followings?.data?.some(
+                            (user: any) => user.followed_userID._id === params?.id
+                        ) ? (
+                        <button
+                            style={{ width: 200 }}
+                            className={styles.button2}
+                            onClick={manageFollowBtn}
+                        >
+                            {!followBtnLoading ? (
+                                'Reject Message Request'
+                            ) : (
+                                <CircularProgress style={{ width: 16, height: 16 }} />
+                            )}
+                        </button>
+                    ) : (
+                        <button
+                            className={styles.button2}
+                            style={{ background: 'rgb(255, 59, 92)', color: '#FFF', width: 200 }}
+                            onClick={manageFollowBtn}
+                        >
+                            {!followBtnLoading ? (
+                                'Send Message Request'
+                            ) : (
+                                <CircularProgress style={{ width: 16, height: 16 }} />
+                            )}
+                        </button>
+                    )}
                     <button
                         onClick={() => {
                             setDropdown(!dropdown);
