@@ -241,3 +241,38 @@ div.darkTheme input{
   background: rgb(255, 255, 255) !important;
   color:black !important;
 }
+.activeButton {
+  span{
+    background: rgb(255, 59, 92);
+    color: #fff;
+    border-radius: 0.25rem;
+  }
+}
+.button{
+  display: inline-flex;
+  height: 35px;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  background: #EDEDED;
+  gap: 10px;
+  color: #111;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  bottom: 8px;
+  width: 100%;
+  &:hover{
+    border: none !important;
+
+  }
+}
+.radiusRight{
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+.radiusLeft{
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}

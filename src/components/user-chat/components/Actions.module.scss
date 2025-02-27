@@ -249,4 +249,8 @@
   position: absolute;
   left: 16px;
   bottom: -10px; 
+  z-index: 999;
+}
+.overrideTop{
+  top: 2.1rem !important;
 }
