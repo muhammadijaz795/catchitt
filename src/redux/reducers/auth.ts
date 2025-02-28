@@ -151,6 +151,28 @@ export const loginWithFBService = createAsyncThunk(
     }
 );
 
+export const loginWithWNService = createAsyncThunk(
+    'auth/loginWithWNService',
+    async (values: any, { rejectWithValue }) => {
+        try {
+            alert('loginWithWNService called');
+            let res: any = await post('/auth/social/world-nour-signin', {
+                type: 'application/json',
+                data: { isLoggedIn: true, ...values },
+            });
+
+            if (res?.status === STATUS_CODE.OK) {
+                alert('success');
+                return res?.data;
+            } else {
+                return rejectWithValue(res?.message || 'Invalid status code');
+            }
+        } catch (error: any) {
+            return rejectWithValue(error?.message);
+        }
+    }
+);
+
 export const signupService = createAsyncThunk('auth/signupService', async (values: any) => {
     if (!values) return;
     try {
