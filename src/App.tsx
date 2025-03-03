@@ -37,7 +37,7 @@ import UploadPage from './components/upload';
 import { useAuthStore } from './store/authStore';
 import useApp from './useApp';
 import GoLive from './components/go-live';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { LastPageRounded, Visibility, VisibilityOff } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Analytics from './components/analytics';
@@ -57,6 +57,7 @@ import {
     signupService,
     signupWithPhoneNumberService,
     logoutUserPopup,
+    loginWithWNService,
 } from './redux/reducers/auth';
 import {
     APP_TEXTS,
@@ -96,6 +97,7 @@ interface localStorageUser {
     avatar: string;
     token: string;
     socialId: string;
+    password: string;
   }
 
 // Functional component to handle the initial route navigation
@@ -305,7 +307,9 @@ function App() {
             console.log(data);
 
             if (response.ok) {
-                
+                setIsLoading(false);
+                closeLoginPopupHandler();
+                window.location.href = '/home';
                 // Handle successful login (e.g., store token, redirect user)
             } else {
                 // display error message here...
@@ -421,37 +425,62 @@ function App() {
             return;
         }
 
-        try {
-            const response = await fetch(`${API_KEY}/auth/social/world-nour-signin`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }), 
-            });
+        dispatch(loginWithWNService({ email, password }))
+            .then((res: any) => {
+                if (res?.error) {
+                    console.log('Response error : ', res?.error);
+                    setWNLoginError(true);
+                    setIsLoading(false);
+                    console.log('response payload...', res.payload);
+                } else if (res?.payload?.status == 200) {
+                    console.log('data after successfull login', res?.payload?.data);
+                    const responseData = res?.payload?.data;
 
-            const responseJson = await response.json();
-            const data = responseJson.data;
-
-            if (response.ok) {
-                const userObject = {
-                    'name': data.name,
-                    'email': data.email,
-                    'avatar': data.avatar,
-                    'token': data.token,
-                    'socialId': data.socialId
-                };
-                await saveUserToLocalStorage(userObject);
-                handleLoginWithSocialID(userObject);
-            } else {
+                    const userObject = {
+                        'name': responseData.name,
+                        'email': responseData.email,
+                        'avatar': responseData.avatar,
+                        'token': responseData.token,
+                        'socialId': responseData.socialId,
+                        // password will be remove later..
+                        'password': password,
+                    };
+                    saveUserToLocalStorage(userObject);
+                    closeLoginPopupHandler();
+                    window.location.href = '/home';
+                }
+            })
+            .catch((error: any) => {
                 setWNLoginError(true);
-            }
-        } catch (error) {
-            console.error("Login Error:", error);
-            alert("Something went wrong. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
+                setIsLoading(false);
+                console.log('Error login with google : ', error);
+            });
+    }
+
+    // This will be remove later.
+    const loginWithWNSocialTemp = async (user: any) => {
+        setWNLoginError(false);
+        setEmailIdError(false);
+        setIsLoading(true);
+        
+
+        dispatch(loginWithWNService({ email: user.email, password: user.password }))
+            .then((res: any) => {
+                if (res?.error) {
+                    console.log('Response error : ', res?.error);
+                    setWNLoginError(true);
+                    setIsLoading(false);
+                    console.log('response payload...', res.payload);
+                } else if (res?.payload?.status == 200) {
+                    closeLoginPopupHandler();
+                    window.location.href = '/home';
+                }
+            })
+            .catch((error: any) => {
+                setWNLoginError(true);
+                setIsLoading(false);
+                console.log('Error login with google : ', error);
+            });
     }
 
 
@@ -1315,7 +1344,9 @@ function App() {
                                             <div
                                                 key={index}
                                                 onClick={() => {
-                                                    if (!isLoading) handleLoginWithSocialID(user);
+                                                    //This will be enabled Later
+                                                    //if (!isLoading) handleLoginWithSocialID(user);
+                                                    if (!isLoading) loginWithWNSocialTemp(user);
                                                 }}
                                                 className={`${style.userInfo} cursor-pointer ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
                                             >
@@ -1360,7 +1391,7 @@ function App() {
                                         </svg>
 
                                         </span>
-                                        <span className={style.addText}>Add Another Account</span>
+                                        <span className={style.addText}>{localStorageUsers.length ? "Add Another Account" : "Add Account"}</span>
                                         </div>
 
                                         <p className={style.privacyText}>
