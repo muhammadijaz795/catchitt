@@ -12,7 +12,7 @@ import HashtagText from '../../../shared/hashTag/HashtagText';
 import { isUserLoggedIn } from '../../../utils/common';
 import { useNavigate } from 'react-router-dom';
 
-function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailImage, controls, number }: any) {
+function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailImage, controls, number, onMediaPlay  }: any) {
     const [duration, setDuration] = useState<number>();
     const [playingTime, setPlayingTime] = useState<number>();
     const { ref, inView, entry } = useInView({
@@ -47,7 +47,13 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
     useEffect(() => {
         if (inView && !videoModal && isPlaying) {
             videoRef?.current?.play();
+            if (post?.mediaId && onMediaPlay) {
+                onMediaPlay(post.mediaId);  // Capture media ID when video starts playing
+            }
         } else {
+            if (post?.mediaId && onMediaPlay) {
+                onMediaPlay(post.mediaId);  // Capture media ID when video starts playing
+            }
             videoRef?.current?.pause();
         }
     }, [inView, videoModal]);
@@ -72,9 +78,15 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
     const togglePlayPause = () => {
         const video = videoRef.current;
         if (isPlaying) {
+            if (onMediaPlay && post?.mediaId) {
+                onMediaPlay(post?.mediaId);
+            }
             video.pause();
         } else {
             video.play();
+            if (onMediaPlay && post?.mediaId) {
+                onMediaPlay(post?.mediaId);
+            }
         }
         setIsPlaying(!isPlaying);
     };

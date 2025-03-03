@@ -23,6 +23,7 @@ import { followingsMethod, getHomeVideos, addMoreVideos } from '../../redux/Asyn
 import Layout from '../../shared/layout';
 import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
+import CommentsComponent from '../profile/popups/CommentsComponent';
 import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
 import { ToastContainer } from 'react-toastify';
@@ -54,6 +55,7 @@ function ForDesktop(props: any) {
     const [darkTheme, setdarkTheme] = useState('');
     const [isDarkTheme, setIsDarkTheme] = useState(false);
     const [countFlag, setCountFlag] = useState(true);
+    const [commentModal, setCommentModal] = useState(true);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
     // @ts-ignore
@@ -91,6 +93,10 @@ function ForDesktop(props: any) {
     const [isPlaying, setIsPlaying] = useState(true);
     const [focusedIndex, setFocusedIndex] = useState(0);
     const itemsRef = useRef<(HTMLLIElement | null)[]>([]);
+    const [activeMediaId, setActiveMediaId] = useState<string | null>(null); // Track active video mediaId
+
+
+    
 
     const toggleMute = () => {
         if(isMuted){
@@ -126,6 +132,29 @@ function ForDesktop(props: any) {
             }, 1500);
         });
     };
+
+    useEffect(() => {
+        // If no video is playing, set the first video as active (or any other criteria)
+        if (!activeMediaId && videoes.length > 0) {
+            setActiveMediaId(videoes[0]?.mediaId); // Set the first video as the active one
+        }
+
+        // You can also set a fallback or default logic, for example, last played video, or first available video, etc.
+
+        // For example, if you have a "last played" video stored in local storage or database:
+        // const lastPlayedVideo = getLastPlayedVideoFromStorage();
+        // if (lastPlayedVideo) {
+        //     setActiveMediaId(lastPlayedVideo);
+        // }
+    }, [videoes, activeMediaId]); // This will run on initial load or when `videoes` changes
+
+    const handleMediaPlay = (mediaId: string) => {
+        console.log("Playing media with ID:", mediaId);
+        setActiveMediaId(mediaId);
+        // Handle the media ID (e.g., send it to the server, track analytics, etc.)
+    };
+      
+      
 
     useEffect(() => {
         if (isuploading?.isUploading) {
@@ -214,6 +243,7 @@ function ForDesktop(props: any) {
         };
     }, []);
 
+ 
     // useEffect(() => {
     //     const observer = new IntersectionObserver((videoes) => {
     //         videoes.forEach((entry) => {
@@ -253,6 +283,7 @@ function ForDesktop(props: any) {
                         videoes.map((post: any, number: number) => {
                             return (
                                 <div
+                                    data-media-id={post?.mediaId}
                                     key={number}
                                     id={post?.mediaId}
                                     className={style.videoParent}
@@ -261,7 +292,7 @@ function ForDesktop(props: any) {
                                     // backgroundColor: focusedIndex === number ? 'blue' : 'red',
                                     // }}
                                 >
-                                    <div className={style.mediaContainer} style={{margin:'10px auto'}}>
+                                    <div key={post?.mediaId} className={style.mediaContainer} style={{margin:'10px auto'}}>
                                         <div
                                             style={{
                                                 // width: '100%',
@@ -291,6 +322,7 @@ function ForDesktop(props: any) {
                                                 controls={true}
                                                 post={post}
                                                 number={number}
+                                                onMediaPlay={handleMediaPlay}
                                             />
                                         </div>
 
@@ -407,6 +439,22 @@ function ForDesktop(props: any) {
                                                 </button>
                                             </div>
                                         </div>
+                                        <div style={{width:'20%'}}>
+                                        {/* current state:{activeMediaId} -- {post?.mediaId} */}
+                                        {activeMediaId === post?.mediaId && (
+                                        <CommentsComponent
+                                           key={`mystr_${post?.mediaId}`}
+                                            gifts={true}
+                                            onBlockPopup={true}
+                                            onReportPopup={true}
+                                            // commentModal={commentModal}
+                                            onclose={false}
+                                            info={post}
+                                            sendPopupHandler={true}
+                                            commentModal={ true}  // Default to false if undefined
+                                        />
+                                    )}
+                                    </div>
                                     </div>
                                     {loadingVideo && <CircularProgress />}
                                 </div>
@@ -456,6 +504,10 @@ function ForDesktop(props: any) {
                         </p>
                     </div>
                 )}
+
+                
+               
+                
             </div>
         </Layout>
     );
