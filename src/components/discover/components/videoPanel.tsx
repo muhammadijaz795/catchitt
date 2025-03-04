@@ -143,7 +143,7 @@ export default function VideoesMaping({ fetchMore, videos, openVideoModal, muteS
                             <div className="description">
                                 <span>
                                     {item.description?.length > 20 
-                                        ? item.description.slice(0, 20) + "..." 
+                                        ? item.description.slice(0, 20)
                                         : item.description}
                                 </span>
                             </div>
