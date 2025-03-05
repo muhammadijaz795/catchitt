@@ -48,6 +48,21 @@ const notifications: any = createSlice({
     },
 });
 
+const videoUrlSlice = createSlice({
+    name: 'videoUrl',
+    initialState: {
+        videoUrl: ''
+    },
+    reducers: {
+        setVideoUrl: (state, action) => {
+            state.videoUrl = action.payload;
+        }
+    },
+});
+
+export const { setVideoUrl } = videoUrlSlice.actions;
+export const videoUrl = videoUrlSlice.reducer;
+
 const popupSlice: any = createSlice({
     name: 'popupSlice',
     initialState: { isLoginPopup: false },
@@ -316,5 +331,8 @@ export default combineReducers({
     popupSlice: popupSlice.reducer,
     popupLogoutSlice:popupLogoutSlice.reducer,
     geo: geoSlice,
-    notifications: notifications.reducer
+    notifications: notifications.reducer,
+    videoUrl,
+    setVideoUrl,
+    
 });

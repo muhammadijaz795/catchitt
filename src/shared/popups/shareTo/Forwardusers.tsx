@@ -4,15 +4,44 @@ import { useEffect, useState } from 'react';
 import { avatar, duet, sendSvgPopup } from '../../../icons';
 import Search from '../../navbar/components/Search';
 import { get, post } from '../../../axios/axiosClient';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Forwardusers(props: any) {
     const { onOpen, onClose, videoLink } = props || {};
+    console.log('video link in forward users', videoLink);  
+    console.log(videoLink);
     const [loading, setLoading] = useState<any>(false);
     const API_URL = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const [selecedUsers, setSelecedUsers] = useState<any[]>([]);
     const [users, setusers] = useState<any[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]); // Track selected user IDs
+    const [messageText, setMessageText] = useState('');
+    const { videoUrl } = useSelector(
+        (state: any) => state?.reducers?.videoUrl
+    );
+    console.log('video url Hello', videoUrl)
+    // Add these new handlers
+    const handleCheckboxChange = (userId: string) => {
+        setSelectedUsers(prev => 
+            prev.includes(userId)
+                ? prev.filter(id => id !== userId)
+                : [...prev, userId]
+        );
+    };
+
+    const handleBulkSend = async () => {
+        try {
+            for (const userId of selectedUsers) {
+                await handleMessage(userId, videoLink);
+            }
+            onClose(); // Close modal after sending
+        } catch (error) {
+            console.log('Error sending messages:', error);
+        }
+    };
+
 
     const getFriends = async () => {
         const url = `${API_URL}/profile/${userId}/friends?page=1&pagesize=20`;
@@ -53,7 +82,7 @@ function Forwardusers(props: any) {
                         data: {
                             from: userId,
                             to: friendId,
-                            message: videoLink,
+                            message: `${messageText} ${videoUrl}`, // Combine text and video link,
                         },
                     });
                     if (result?.data) {
@@ -105,6 +134,7 @@ function Forwardusers(props: any) {
                     </div>
                     <div className={style.users}>
                         {users.map((user: any, i: number) => {
+                            const userId = user?.followed_userID?._id;
                             return (
                                 <div key={i} className={style.user}>
                                     <div className={style.sec1}>
@@ -116,15 +146,44 @@ function Forwardusers(props: any) {
                                             <img src={duet} alt="" />
                                             Duet
                                         </button> */}
-                                        <button className={style.primaryBtn} onClick={()=>handleMessage(user?.followed_userID?._id, videoLink)}>
+                                        {/* <button className={style.primaryBtn} onClick={()=>handleMessage(user?.followed_userID?._id, videoLink)}>
                                             <img src={sendSvgPopup} alt="" />
                                             Send
-                                        </button>
+                                        </button> */}
+
+                                            <input
+                                            type="checkbox"
+                                            checked={selectedUsers.includes(userId)}
+                                            onChange={() => handleCheckboxChange(userId)}
+                                        />
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
+
+                    <div className={style.footer}>
+
+                        <div className={style.messageInput}>
+                            <textarea
+                                value={messageText}
+                                onChange={(e) => setMessageText(e.target.value)}
+                                placeholder="Add a message to your video..."
+                                rows={3}
+                            />
+                        </div>
+
+                        <button 
+                        style={{width: '95%',marginTop: '5%',marginLeft: '2%'}}
+                            className={style.primaryBtn} 
+                            onClick={handleBulkSend}
+                            disabled={selectedUsers.length === 0}
+                        >
+                            <img src={sendSvgPopup} alt="" />
+                            Send ({selectedUsers.length})
+                        </button>
+                    </div>
+
                 </div>
             </ClickAwayListener>
         </Modal>

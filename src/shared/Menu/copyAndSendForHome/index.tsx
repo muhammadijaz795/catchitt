@@ -15,6 +15,8 @@ import {
 } from '../../../icons';
 import { BASE_URL_FRONTEND } from '../../../utils/constants';
 import style from './index.module.scss';
+import {setVideoUrl} from '../../../redux/reducers';
+import { useDispatch, useSelector } from 'react-redux';
 import LinkIcon from '../../../components/shared-video/svg-components/link-icon.svg';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 
@@ -29,6 +31,8 @@ export default function COPY_AND_SEND_MENU_HOME({
 }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const dispatch = useDispatch();
+    dispatch(setVideoUrl(videoUrl));
     const open = Boolean(anchorEl);
     const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);

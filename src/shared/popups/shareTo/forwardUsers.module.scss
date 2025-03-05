@@ -7,7 +7,7 @@
   flex-direction: column;
   // gap: 1.5rem;
   .users {
-    height: 27rem;
+    height: 22rem;
     overflow: scroll;
     margin-top: 1.5rem;
     .user {
@@ -99,4 +99,24 @@
   flex-shrink: 0;
   border-radius: 0.375rem;
   background: var(--Foundation-Primary-primary-500, #fff);
+}
+
+.messageInput {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+
+  textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 14px;
+
+      &:focus {
+          outline: none;
+          border-color: #007bff;
+      }
+  }
 }
