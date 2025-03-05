@@ -1381,7 +1381,19 @@ export default function CommentsComponent({
                                                                             }
                                                                             className="flex flex-row items-center gap-2 text-left hover:underline decoration-[#16182380] cursor-pointer mt-[0.688rem]"
                                                                         >
-                                                                            <p className="text-black font-medium text-sm">
+                                                                            <p className="text-black font-medium d-flex items-center text-sm w-[11rem] justify-around">
+                                                                            <span
+                                                                                style={{
+                                                                                    display: "inline-block", 
+                                                                                    height: "1px",
+                                                                                    maxWidth: "4rem",
+                                                                                    width: '90%',
+                                                                                    background: "#d4d5d6",
+                                                                                    paddingRight: '0.2rem'
+                                                                                }}
+                                                                                >
+
+                                                                                </span>
                                                                                 View{' '}
                                                                                 {comment?.replies?.length}{' '}
                                                                                 replies
@@ -1391,7 +1403,7 @@ export default function CommentsComponent({
                                                                                 src={chevronDownLightIcon}
                                                                                 alt="chevron-down-icon"
                                                                                 style={{
-                                                                                    filter: 'invert(15%) sepia(%) saturate(145%) hue-rotate(178deg) brightness(95%) contrast(90%)',
+                                                                                    filter: 'invert(1)',
                                                                                 }}
                                                                             />
                                                                         </div>
