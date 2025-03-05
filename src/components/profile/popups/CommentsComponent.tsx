@@ -983,7 +983,7 @@ export default function CommentsComponent({
                                                                         className="flex items-center gap-[0.09rem] px-4"
                                                                     >
                                                                         <img
-                                                                            className={`w-6 h-6 object-contain cursor-pointer`}
+                                                                            className={` object-contain cursor-pointer`}
                                                                             src={
                                                                                 comment?.isLiked
                                                                                     ? redHeartIcon
@@ -991,7 +991,7 @@ export default function CommentsComponent({
                                                                             }
                                                                             alt=""
                                                                         />
-                                                                        <p className="text-[#0000007A] font-normal text-sm">
+                                                                        <p className="text-[#0000007A] font-normal text-sm pl-1">
                                                                             {comment?.likes ?? 0}
                                                                         </p>
                                                                     </div>
@@ -1017,7 +1017,7 @@ export default function CommentsComponent({
                                                                                                 maxLength={150}
                                                                                                 placeholder="Add comment..."
                                                                                                 type="text"
-                                                                                                className="bg-transparent placeholder-[#4d4e58 text-[#d5cbcb] w-[90%]"
+                                                                                                className="bg-transparent placeholder-[#0000007A] text-[#000] w-[90%]"
                                                                                                 required
                                                                                             />
                                                                                             </form>
@@ -1061,7 +1061,7 @@ export default function CommentsComponent({
                                                                                                     0
                                                                                                     ? 'text-[#16182357]'
                                                                                                     : 'text-[#FFFFFF57]'
-                                                                                                    } font-semibold text-base`}
+                                                                                                    } font-medium text-base`}
                                                                                             >
                                                                                                 Post
                                                                                             </p>
@@ -1083,7 +1083,7 @@ export default function CommentsComponent({
                                                                                     </div>
                                                                                 )}
                                                                         
-                                                                        <EmojiPicker className="mt-2" open={(commentEmojiIndex === comment_index) ? true : false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onReplyEmojiClick} />
+                                                                        <EmojiPicker className="mt-2 position-absolute left-0 bg-[#fff] w-[18rem]" open={(commentEmojiIndex === comment_index) ? true : false} theme={Theme.DARK} height={300} onEmojiClick={onReplyEmojiClick} />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1264,7 +1264,7 @@ export default function CommentsComponent({
                                                                                             className="flex flex-row items-center gap-1.5"
                                                                                         >
                                                                                             <img
-                                                                                                className={`w-4 h-8 object-contain cursor-pointer`}
+                                                                                                className={` object-contain cursor-pointer`}
                                                                                                 src={
                                                                                                     comment_replies?.isLiked
                                                                                                         ? redHeartIcon
@@ -1272,7 +1272,7 @@ export default function CommentsComponent({
                                                                                                 }
                                                                                                 alt="like-icon"
                                                                                             />
-                                                                                            <p className="text-black font-normal text-sm">
+                                                                                            <p className="text-black font-normal text-sm pl-1">
                                                                                                 {
                                                                                                     comment_replies?.likes
                                                                                                 }
@@ -1397,7 +1397,19 @@ export default function CommentsComponent({
                                                                             }
                                                                             className="flex flex-row items-center gap-2 text-left hover:underline decoration-[#16182380] cursor-pointer mt-[0.688rem]"
                                                                         >
-                                                                            <p className="text-black font-medium text-sm">
+                                                                            <p className="text-[#0000007A] font-medium d-flex items-center text-sm w-[11rem] justify-around">
+                                                                            <span
+                                                                                style={{
+                                                                                    display: "inline-block", 
+                                                                                    height: "1px",
+                                                                                    maxWidth: "4rem",
+                                                                                    width: '90%',
+                                                                                    background: "#d4d5d6",
+                                                                                    paddingRight: '0.2rem'
+                                                                                }}
+                                                                                >
+
+                                                                                </span>
                                                                                 View{' '}
                                                                                 {comment?.replies?.length}{' '}
                                                                                 replies
@@ -1407,7 +1419,7 @@ export default function CommentsComponent({
                                                                                 src={chevronDownLightIcon}
                                                                                 alt="chevron-down-icon"
                                                                                 style={{
-                                                                                    filter: 'invert(15%) sepia(%) saturate(145%) hue-rotate(178deg) brightness(95%) contrast(90%)',
+                                                                                    filter: 'invert(1)',
                                                                                 }}
                                                                             />
                                                                         </div>
@@ -1481,7 +1493,7 @@ export default function CommentsComponent({
                                         </div>
                                     )} */}
                                     {/* Add comment section */}
-                                    {privacyPrivilege?.privacyOptions?.allowComments && <div className="py-3 border-t cursor-pointer gap-2.5 sticky px-6 top-100  bottom-0 w-full right-0" style={{ zIndex: 99 }}>
+                                    {privacyPrivilege?.privacyOptions?.allowComments && <div className="py-3 border-t cursor-pointer gap-2.5 sticky px-3 top-100  bottom-0 w-full right-0" style={{ zIndex: 99 }}>
                                          <div className="flex flex-row items-center">
                                             <div
                                                 className={`bg-[#1618230F] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn()
@@ -1547,7 +1559,7 @@ export default function CommentsComponent({
                                                         className={`${comment?.length > 0
                                                             ? 'text-[#16182357]'
                                                             : 'text-[#16182357]'
-                                                            } font-semibold text-base ml-2`}
+                                                            } font-medium text-base ml-2`}
                                                     >
                                                         {addCommentLoading ? <CircularProgress
                                                             style={{
@@ -1559,9 +1571,7 @@ export default function CommentsComponent({
                                                 </div>
                                             )}
                                         </div>
-                                        <EmojiPicker className="mt-2" open={commentEmojiIndex === -2 ? true : false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} />
-
-                                        
+                                        <EmojiPicker className="mt-2 bottom-15 position-absolute left-0 bg-[#fff] w-[18rem]" open={commentEmojiIndex === -2 ? true : false} theme={Theme.DARK} height={300}  onEmojiClick={onEmojiClick} />
                                 {isMentioning && (
                                     <div
                                         ref={popupRef}
