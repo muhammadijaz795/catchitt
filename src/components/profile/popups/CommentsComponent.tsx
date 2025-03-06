@@ -1093,7 +1093,7 @@ export default function CommentsComponent({
                                                                                     </div>
                                                                                 )}
                                                                         
-                                                                        <EmojiPicker className="mt-2 position-absolute left-0 bg-[#fff] w-[18rem]" open={(commentEmojiIndex === comment_index) ? true : false} searchDisabled={true} theme={Theme.light} previewConfig={previewConfig} previewConfig={previewConfig} height={300} onEmojiClick={onReplyEmojiClick} />
+                                                                        <EmojiPicker className="mt-2 position-absolute left-5 bg-[#fff] w-[18rem] shadow-lg" open={(commentEmojiIndex === comment_index) ? true : false} searchDisabled={true} theme={Theme.light}  previewConfig={previewConfig} height={300} width={300} onEmojiClick={onReplyEmojiClick} />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1581,7 +1581,7 @@ export default function CommentsComponent({
                                                 </div>
                                             )}
                                         </div>
-                                        <EmojiPicker className="mt-2 bottom-16 position-absolute left-0 bg-[#fff] w-[18rem]" open={commentEmojiIndex === -2 ? true : false} theme={Theme.light} searchDisabled={true} height={300} width={300}  onEmojiClick={onEmojiClick} />
+                                        <EmojiPicker className="mt-2 bottom-16 position-absolute left-5 bg-[#fff] w-[18rem] shadow-lg" open={commentEmojiIndex === -2 ? true : false} theme={Theme.light} previewConfig={previewConfig} searchDisabled={true} height={300} width={300}  onEmojiClick={onEmojiClick} />
                                 {isMentioning && (
                                     <div
                                         ref={popupRef}
