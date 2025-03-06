@@ -96,6 +96,10 @@ button:hover {
   width: 100% !important;
   height: 100% !important;
 }
+.MuiList-root.MuiList-padding.css-822hb5-MuiList-root{
+  height: 3rem !important;
+  width: 3rem !important;
+}
 .MuiButtonBase-root {
   width: 100% !important;
   height: 100% !important;
@@ -414,4 +418,7 @@ a.customPlayBtn::after {
   position: absolute;
   left: 0;
   top: 0;
+}
+.modal-shares .MuiPaper-root{
+  max-width: 450px !important;
 }
