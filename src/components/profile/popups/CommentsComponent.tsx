@@ -1585,7 +1585,7 @@ export default function CommentsComponent({
                                 {isMentioning && (
                                     <div
                                         ref={popupRef}
-                                        className="absolute bottom-[4.39rem] left-10 bg-black border rounded-lg shadow-lg w-max z-10 max-h-80 overflow-y-auto "
+                                        className="absolute bottom-[4.39rem] w-[300px] left-10 bg-white border rounded-lg shadow-lg w-max z-10 max-h-80 overflow-y-auto "
                                     >
                                         {filteredUsers.length > 0 ? (
                                             filteredUsers.map(
@@ -1600,8 +1600,8 @@ export default function CommentsComponent({
                                                 ) => (
                                                     <div
                                                         key={user.id}
-                                                        className={`flex flex-row justify-start items-center cursor-pointer px-2 pt-2 hover:bg-gray-800 gap-3 border-b border-gray-100 pb-2 ${index === mentionIndex
-                                                            ? 'bg-gray-700'
+                                                        className={`flex flex-row justify-start items-center cursor-pointer px-2 pt-2 hover:bg-gray-100 gap-3 border-b border-gray-100 pb-2 ${index === mentionIndex
+                                                            ? 'bg-white'
                                                             : ''
                                                             } ${index === 0 ? 'rounded-t-lg' : ''} ${filteredUsers.length - 1 === index
                                                                 ? 'rounded-b-lg'
@@ -1614,10 +1614,10 @@ export default function CommentsComponent({
                                                             src={user.avatar||defaultAvatar}
                                                         />
                                                         <div className="text-left text-black">
-                                                            <p className="text-base font-medium">
+                                                            <p className=" font-medium" style={{fontSize: '13px'}}>
                                                                 {user.name}
                                                             </p>
-                                                            <p className="text-xs font-normal">
+                                                            <p className="text-xs font-normal"  style={{fontSize: '11px'}}>
                                                                 {user.username}
                                                             </p>
                                                         </div>
