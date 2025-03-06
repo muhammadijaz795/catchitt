@@ -137,7 +137,8 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
     }, []);
 
     return (
-        <div
+        <div className='modal fade'>
+            <div
             style={{
                 position: 'absolute',
                 right: 0,
@@ -148,85 +149,85 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                 height: '100%',
                 background: 'transparent',
                 // display:'flex'
-            }}
-        >
-            <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
-                <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
-                    <ListItemButton
-                        id="lock-button"
-                        aria-haspopup="listbox"
-                        aria-controls="lock-menu"
-                        //   aria-label="when device is locked"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={handleClickListItem}
-                        className={style.navImpClass}
-                    // style={{ background: 'transparent' }}
-                    ></ListItemButton>
-                </List>
-                <StyledMenu
-                    id="lock-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                        'aria-labelledby': 'lock-button',
-                        // role: 'listbox',
-                    }}
-                    style={{
-                        top: 10,
-                        right: 100,
-                        marginRight: 20,
-                        // display:'flex !important'
-                    }}
-                >
-                    {allowedShareOptions.includes('send') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={popupHandler}>
-                            <div className="h-7 w-7 flex items-center justify-center bg-white shadow-md rounded-full">
-                                <img src={send} style={{ width: '1.1rem', height: '1.1rem' }} alt="Send" />
-                            </div>
-                            <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
-                        </div>
-                    </MenuItem>}
-                    {allowedShareOptions.includes('copyLink') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={copyHandler}>
-                            <div className="h-7 w-7 flex items-center justify-center bg-red-500 rounded-full">
-                                <img src={LinkIcon} style={{ width: '1.1rem', height: '1.1rem' }} alt="Copy Link" />
-                            </div>
-                            <p className={`${style.p} ${style.black_500}`}>Copy link</p>
-                        </div>
-                    </MenuItem>}
-                    {allowedShareOptions.includes('embedShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={generateEmbedCodeHandler}>
-                            <img src={embedShare} />
-                            <p className={`${style.p} ${style.black_500}`}>Embed</p>
-                        </div>
-                    </MenuItem>}
-                    {allowedShareOptions.includes('whatsappShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={shareToWhatsApp}>
-                            <img src={whatsappShare} />
-                            <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
-                        </div>
-                    </MenuItem>}
-                    {allowedShareOptions.includes('facebookShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={shareToFacebook}>
-                            <img src={facebookShare} />
-                            <p className={`${style.p} ${style.black_500}`}>Facebook</p>
-                        </div>
-                    </MenuItem>}
-                    {allowedShareOptions.includes('twitterShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={shareToTwitter}>
-                            <img src={twitterShare} />
-                            <p className={`${style.p} ${style.black_500}`}>Twitter</p>
-                        </div>
-                    </MenuItem>}
-                    {allowedShareOptions.includes('linkedInShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
-                        <div className={style.menuItem} onClick={shareToLinkedIn}>
-                            <img src={linkedInShare} />
-                            <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
-                        </div>
-                    </MenuItem>}
-                </StyledMenu>
-            </ThemeProvider>
+            }}>
+                    <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
+                        <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
+                            <ListItemButton
+                                id="lock-button"
+                                aria-haspopup="listbox"
+                                aria-controls="lock-menu"
+                                //   aria-label="when device is locked"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleClickListItem}
+                                className={style.navImpClass}
+                            // style={{ background: 'transparent' }}
+                            ></ListItemButton>
+                        </List>
+                        <StyledMenu
+                            id="lock-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'lock-button',
+                                // role: 'listbox',
+                            }}
+                            style={{
+                                top: 10,
+                                right: 100,
+                                marginRight: 20,
+                                // display:'flex !important'
+                            }}
+                        >
+                            {allowedShareOptions.includes('send') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                                <div className={style.menuItem} onClick={popupHandler}>
+                                    <div className="h-7 w-7 flex items-center justify-center bg-white shadow-md rounded-full">
+                                        <img src={send} style={{ width: '1.1rem', height: '1.1rem' }} alt="Send" />
+                                    </div>
+                                    <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send</p>
+                                </div>
+                            </MenuItem>}
+                            {allowedShareOptions.includes('copyLink') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                                <div className={style.menuItem} onClick={copyHandler}>
+                                    <div className="h-7 w-7 flex items-center justify-center bg-red-500 rounded-full">
+                                        <img src={LinkIcon} style={{ width: '1.1rem', height: '1.1rem' }} alt="Copy Link" />
+                                    </div>
+                                    <p className={`${style.p} ${style.black_500}`}>Copy link</p>
+                                </div>
+                            </MenuItem>}
+                            {allowedShareOptions.includes('embedShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                                <div className={style.menuItem} onClick={generateEmbedCodeHandler}>
+                                    <img src={embedShare} />
+                                    <p className={`${style.p} ${style.black_500}`}>Embed</p>
+                                </div>
+                            </MenuItem>}
+                            {allowedShareOptions.includes('whatsappShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                                <div className={style.menuItem} onClick={shareToWhatsApp}>
+                                    <img src={whatsappShare} />
+                                    <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
+                                </div>
+                            </MenuItem>}
+                            {allowedShareOptions.includes('facebookShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                                <div className={style.menuItem} onClick={shareToFacebook}>
+                                    <img src={facebookShare} />
+                                    <p className={`${style.p} ${style.black_500}`}>Facebook</p>
+                                </div>
+                            </MenuItem>}
+                            {allowedShareOptions.includes('twitterShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                                <div className={style.menuItem} onClick={shareToTwitter}>
+                                    <img src={twitterShare} />
+                                    <p className={`${style.p} ${style.black_500}`}>Twitter</p>
+                                </div>
+                            </MenuItem>}
+                            {allowedShareOptions.includes('linkedInShare') && <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                                <div className={style.menuItem} onClick={shareToLinkedIn}>
+                                    <img src={linkedInShare} />
+                                    <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
+                                </div>
+                            </MenuItem>}
+                        </StyledMenu>
+                    </ThemeProvider>
+                </div>
         </div>
     );
 }

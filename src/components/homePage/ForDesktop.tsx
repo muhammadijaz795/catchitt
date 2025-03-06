@@ -301,7 +301,7 @@ function ForDesktop(props: any) {
                                     // style={{
                                     // backgroundColor: focusedIndex === number ? 'blue' : 'red',
                                     // }}
-                                >
+                                    >
                                     <div key={post?.mediaId} className={style.mediaContainer} style={{margin:'10px auto'}}>
                                         <div
                                             style={{
@@ -474,7 +474,7 @@ function ForDesktop(props: any) {
                                                 />
                                             )}
                                     </div>
-                                    </div>
+                                </div>
                                     {loadingVideo && <CircularProgress />}
                                 </div>
                             );

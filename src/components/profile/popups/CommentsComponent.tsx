@@ -859,8 +859,8 @@ export default function CommentsComponent({
                                     {/* <svg onClick={onclose()} className="ml-auto" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M16.5999 18.0097C16.6934 18.1013 16.8191 18.1527 16.9499 18.1527C17.0808 18.1527 17.2065 18.1013 17.2999 18.0097L18.0099 17.2997C18.1016 17.2063 18.1529 17.0806 18.1529 16.9497C18.1529 16.8188 18.1016 16.6932 18.0099 16.5997L13.4099 11.9997L18.0099 7.39973C18.1016 7.30626 18.1529 7.1806 18.1529 7.04973C18.1529 6.91885 18.1016 6.79319 18.0099 6.69973L17.3049 5.98973C17.2585 5.94286 17.2032 5.90566 17.1422 5.88028C17.0813 5.8549 17.0159 5.84183 16.9499 5.84183C16.8839 5.84183 16.8186 5.8549 16.7577 5.88028C16.6967 5.90566 16.6414 5.94286 16.5949 5.98973L11.9999 10.5847L7.39994 5.98473C7.30648 5.89311 7.18082 5.8418 7.04994 5.8418C6.91906 5.8418 6.7934 5.89311 6.69994 5.98473L5.98994 6.69473C5.94308 6.74121 5.90588 6.79651 5.88049 6.85744C5.85511 6.91837 5.84204 6.98372 5.84204 7.04973C5.84204 7.11573 5.85511 7.18108 5.88049 7.24201C5.90588 7.30294 5.94308 7.35824 5.98994 7.40473L10.5899 11.9997L5.98994 16.5997C5.89833 16.6932 5.84701 16.8188 5.84701 16.9497C5.84701 17.0806 5.89833 17.2063 5.98994 17.2997L6.69494 18.0097C6.74142 18.0566 6.79672 18.0938 6.85765 18.1192C6.91858 18.1446 6.98393 18.1576 7.04994 18.1576C7.11595 18.1576 7.1813 18.1446 7.24223 18.1192C7.30316 18.0938 7.35846 18.0566 7.40494 18.0097L11.9999 13.4097L16.5999 18.0097Z" fill="black"/>
                                         </svg> */}
-                                        <button onClick={onclose}>Close</button>
-                                    <div className="flex flex-row  mt-2.5 w-full px-3">
+                                        
+                                    <div className="flex flex-row justify-between mt-2.5 w-full px-3">
                                         <div
                                             onClick={() => setCurrentTab(0)}
                                             style={{
@@ -875,7 +875,11 @@ export default function CommentsComponent({
 
                                             
                                         </div>
-                                        
+                                        <button className='border-0 p-0' onClick={onclose}>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16.5999 18.0097C16.6934 18.1013 16.8191 18.1527 16.9499 18.1527C17.0808 18.1527 17.2065 18.1013 17.2999 18.0097L18.0099 17.2997C18.1016 17.2063 18.1529 17.0806 18.1529 16.9497C18.1529 16.8188 18.1016 16.6932 18.0099 16.5997L13.4099 11.9997L18.0099 7.39973C18.1016 7.30626 18.1529 7.1806 18.1529 7.04973C18.1529 6.91885 18.1016 6.79319 18.0099 6.69973L17.3049 5.98973C17.2585 5.94286 17.2032 5.90566 17.1422 5.88028C17.0813 5.8549 17.0159 5.84183 16.9499 5.84183C16.8839 5.84183 16.8186 5.8549 16.7577 5.88028C16.6967 5.90566 16.6414 5.94286 16.5949 5.98973L11.9999 10.5847L7.39994 5.98473C7.30648 5.89311 7.18082 5.8418 7.04994 5.8418C6.91906 5.8418 6.7934 5.89311 6.69994 5.98473L5.98994 6.69473C5.94308 6.74121 5.90588 6.79651 5.88049 6.85744C5.85511 6.91837 5.84204 6.98372 5.84204 7.04973C5.84204 7.11573 5.85511 7.18108 5.88049 7.24201C5.90588 7.30294 5.94308 7.35824 5.98994 7.40473L10.5899 11.9997L5.98994 16.5997C5.89833 16.6932 5.84701 16.8188 5.84701 16.9497C5.84701 17.0806 5.89833 17.2063 5.98994 17.2997L6.69494 18.0097C6.74142 18.0566 6.79672 18.0938 6.85765 18.1192C6.91858 18.1446 6.98393 18.1576 7.04994 18.1576C7.11595 18.1576 7.1813 18.1446 7.24223 18.1192C7.30316 18.0938 7.35846 18.0566 7.40494 18.0097L11.9999 13.4097L16.5999 18.0097Z" fill="black"/>
+                                            </svg>
+                                        </button>
                                         {/* <div
                                             onClick={() => setCurrentTab(1)}
                                             style={{
@@ -1089,7 +1093,7 @@ export default function CommentsComponent({
                                                                                     </div>
                                                                                 )}
                                                                         
-                                                                        <EmojiPicker className="mt-2 position-absolute left-0 bg-[#fff] w-[18rem]" open={(commentEmojiIndex === comment_index) ? true : false} searchDisabled={true} theme={Theme.light} previewConfig={previewConfig} previewConfig={previewConfig} height={300} onEmojiClick={onReplyEmojiClick} />
+                                                                        <EmojiPicker className="mt-2 position-absolute left-5 bg-[#fff] w-[18rem] shadow-lg" open={(commentEmojiIndex === comment_index) ? true : false} searchDisabled={true} theme={Theme.light}  previewConfig={previewConfig} height={300} width={300} onEmojiClick={onReplyEmojiClick} />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1577,7 +1581,7 @@ export default function CommentsComponent({
                                                 </div>
                                             )}
                                         </div>
-                                        <EmojiPicker className="mt-2 bottom-15 position-absolute left-0 bg-[#fff] w-[18rem]" open={commentEmojiIndex === -2 ? true : false} theme={Theme.light} searchDisabled={true} height={300}  onEmojiClick={onEmojiClick} />
+                                        <EmojiPicker className="mt-2 bottom-16 position-absolute left-5 bg-[#fff] w-[18rem] shadow-lg" open={commentEmojiIndex === -2 ? true : false} theme={Theme.light} previewConfig={previewConfig} searchDisabled={true} height={300} width={300}  onEmojiClick={onEmojiClick} />
                                 {isMentioning && (
                                     <div
                                         ref={popupRef}

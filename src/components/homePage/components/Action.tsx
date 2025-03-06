@@ -112,7 +112,6 @@ function Action({
                     background: 'rgb(179 181 189 / 18%)', // '#EAEAEA',
                     borderRadius: '50%',
                     cursor: 'pointer',
-                    position: 'relative',
                     zIndex: 2,
                 }}
                 onClick={() => actionClickHandler()}
