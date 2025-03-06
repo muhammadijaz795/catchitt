@@ -103,7 +103,7 @@ button:hover {
 .MuiButtonBase-root {
   width: 100% !important;
   height: 100% !important;
-  background: transparent !important;
+  background: transparent;
 }
 .MuiButtonBase-root span {
   width: 100% !important;
@@ -421,4 +421,48 @@ a.customPlayBtn::after {
 }
 .modal-shares .MuiPaper-root{
   max-width: 450px !important;
+}
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333 !important; /* Dark background */
+  border-radius: 34px;
+  transition: 0.4s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white; /* White circle */
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #4caf50; /* Green when active */
+}
+
+input:checked + .slider::before {
+  transform: translateX(20px); /* Move the circle */
 }

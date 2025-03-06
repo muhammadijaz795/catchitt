@@ -49,6 +49,10 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
         showToastSuccess('Media marked as not interested successfully');
         dispatch(videoNotInterestedHandle(postMediaId));
     };
+    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAutoScroll(event.target.checked);
+        dispatch(toggleAutoScroll());
+    };
 
     const repostVideoEventHandle = async (postMediaId: any) => {
         console.log(postMediaId);
@@ -101,12 +105,6 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
             // },
         },
     }));
-
-    const handleSwitchChange = (event: any) => {
-        console.log('is checked:',event.target.checked)
-        setAutoScroll(event.target.checked);
-        dispatch(toggleAutoScroll());  
-    };
 
 
     const handleDownload = async (videoUrl: any) => {
@@ -197,12 +195,20 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
                 }}
             >
                 <MenuItem  style={{ padding: '0px', margin: '0px', position: 'relative' }}>
-                    <div className={style.menuItem} >
+                    <div className={`justify-between ${style.menuItem}`} >
                         <p>Auto scroll</p>
-                        <input type="checkbox" checked={autoScroll} onChange={(e: any) =>
-                                                handleSwitchChange(e)
-                                            } 
-                                            name="autoScrollCheckbox" id="autoScrollCheckbox"  />
+                        <label className="toggle-switch">
+                            <input 
+                                type="checkbox" 
+                                checked={autoScroll} 
+                                onChange={handleSwitchChange} 
+                                name="autoScrollCheckbox" 
+                                id="autoScrollCheckbox" 
+                            />
+                            <b className="slider"></b>
+                        </label>
+
+
 
 
                         {/* <div className={style.cards}>
