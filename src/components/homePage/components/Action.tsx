@@ -99,9 +99,10 @@ function Action({
                 position: 'relative',
                 zIndex: 2,
             }}
-            className={style.useractions}
+            className={`${obj.actionType === 'more' ? style.moreClass : ''} ${style.useractions}`}
         >
             <div
+                className={`${obj.actionType === 'more' ? style.bgStyle : ''}`}
                 style={{
                     width: 48,
                     height: 48,
@@ -165,7 +166,8 @@ function Action({
             ) : obj?.actionType === 'fvrt' ? (
                 <p className={style.actionC}>{post.isSaved ? 'Saved' : 'Save'}</p>
             ) : obj?.actionType === 'more' ? (
-                <p className={style.actionC}>More</p>
+                ''
+                // <p className={style.actionCD}></p>
             ) : null}
         </div>
     );

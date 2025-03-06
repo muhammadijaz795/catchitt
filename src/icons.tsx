@@ -189,8 +189,12 @@ import homeDark from './assets/homeDark.svg';
 import chatEmojiBg from './assets/chat_emoji_bg.svg'
 import chatEmojiBgDark from './assets/chat_emoji_bg_dark.svg'
 import crossCloseDark from './assets/cross_close_dark.svg'
+import blackHeartOutline from './assets/black_heart_outline.svg'
+import blackCrossHeart from './assets/black_cross_heart.svg'
 
 export {
+    blackHeartOutline,
+    blackCrossHeart,
     weightedDownArrow,
     weightedDownArrowInWhite,
     nextArrowDark,

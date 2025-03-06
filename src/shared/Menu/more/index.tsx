@@ -5,7 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
-import { copyLink, notAllowed, report, saveVideo, send, repost } from '../../../icons';
+import { copyLink, notAllowed, report, saveVideo, send, repost, blackHeartOutline, blackCrossHeart } from '../../../icons';
 import style from './index.module.scss';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 import {
@@ -198,7 +198,7 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
                 </MenuItem>
                 <MenuItem onClick={()=>{ notInterestedInVideo(postMediaId),handleClose() }} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
-                        <img src={notAllowed} />
+                        <img src={blackCrossHeart} />
                         <p className={`${style.p} ${style.black_500}`}>Not interested</p>
                     </div>
                 </MenuItem>

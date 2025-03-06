@@ -18,6 +18,7 @@ import {
     shareBlack,
     moreBlack,
     savedBlack,
+    moreInWhite
 } from '../../icons';
 import { followingsMethod, getHomeVideos, addMoreVideos } from '../../redux/AsyncFuncs';
 import Layout from '../../shared/layout';
@@ -72,7 +73,7 @@ function ForDesktop(props: any) {
         { img: like, actionType: 'like', activeImage: activeLike },
     ];
     const userBlackActions: any = [
-        { img: moreBlack, actionType: 'more' },
+        { img: moreInWhite, actionType: 'more' },
         { img: shareBlack, actionType: 'share', activeImage: shareBlack },
         { img: savedBlack, actionType: 'fvrt', activeImage: activeFvrt },
         { img: commentBlack, actionType: 'comment', activeImage: commentBlack },
@@ -332,6 +333,9 @@ function ForDesktop(props: any) {
                                                 post={post}
                                                 number={number}
                                                 onMediaPlay={handleMediaPlay}
+                                                visibleReportPopup={() =>
+                                                    setreportPopup(true)
+                                                }
                                             />
                                         </div>
 
