@@ -47,7 +47,8 @@ import threeDotsInChatModalPopup from './assets/threeDotsForPopup.svg';
 import addimage from './assets/addimage.svg';
 import editInStaredMsg from './assets/editInStaredMsg.svg';
 import forwardMsg from './assets/forwardMsg.svg';
-import send from './assets/send.svg';
+import send from './assets//shareSocial/send.svg';
+import RepostVideo from './assets//shareSocial/repost.svg';
 import copyLink from './assets/copyLink.svg';
 import viewProfile from './assets/viewProfile.svg';
 import viewProfileInWhite from './assets/viewProfileInWhite.svg';
@@ -115,11 +116,11 @@ import likeWhite from './assets/likeWhite.svg';
 import shareBlack from './assets/shareBlack.svg';
 import moreBlack from './assets/moreBlack.svg';
 import savedBlack from './assets/savedBlack.svg';
-import embedShare from './assets/embed.svg';
-import whatsappShare from './assets/whatsapp-share.svg';
-import twitterShare from './assets/twitter-share.svg';
-import facebookShare from './assets/facebook-share.svg';
-import linkedInShare from './assets/linkedin-share.svg';
+import embedShare from './assets/shareSocial/embeded.svg';
+import whatsappShare from './assets/shareSocial/whatsapp.svg';
+import twitterShare from './assets//shareSocial/twitterX.svg';
+import facebookShare from './assets//shareSocial/fb.svg';
+import linkedInShare from './assets//shareSocial/linkedIN.svg';
 import deleteVideoIconWhite from './assets/delete-video-white.svg';
 import deleteVideoIcon from './assets/delete-video.svg';
 import editIcon from './assets/edit-icon.svg';
@@ -193,6 +194,7 @@ import blackHeartOutline from './assets/black_heart_outline.svg'
 import blackCrossHeart from './assets/black_cross_heart.svg'
 
 export {
+    RepostVideo,
     blackHeartOutline,
     blackCrossHeart,
     weightedDownArrow,

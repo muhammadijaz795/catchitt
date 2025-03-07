@@ -99,8 +99,9 @@ button:hover {
 .MuiList-root.MuiList-padding.css-822hb5-MuiList-root{
   height: 3rem !important;
   width: 3rem !important;
+  display: flex;
 }
-.MuiButtonBase-root {
+/* .MuiButtonBase-root {
   width: 100% !important;
   height: 100% !important;
   background: transparent;
@@ -109,7 +110,7 @@ button:hover {
   width: 100% !important;
   height: 100% !important;
   background: transparent !important;
-}
+} */
 
 /* .slick-track {
   height: 100% !important;
@@ -465,4 +466,12 @@ input:checked + .slider {
 
 input:checked + .slider::before {
   transform: translateX(20px); /* Move the circle */
+}
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root:hover{
+  background-color: transparent !important;
+}
+.css-o1dzqo-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiPaper-root{
+  min-width: 220px !important;
+  top: 1.5rem;
+  right: 2rem;
 }

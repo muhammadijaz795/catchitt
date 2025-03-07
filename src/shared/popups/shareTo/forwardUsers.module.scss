@@ -1,5 +1,4 @@
 .parent {
-  padding: 1.5rem;
   width: 35rem;
   border-radius: 0.5rem;
   background: var(--Default-white, #fff);
@@ -10,12 +9,12 @@
     height: 22rem;
     overflow-y: auto;
     margin-top: 1.5rem;
+    padding: 0 1.5rem;
     .user {
       display: flex;
       justify-content: space-between;
       padding: 1rem 1rem 1rem 0px;
-      border-bottom: 1px solid #eaeaea;
-      height: 5rem;
+      height: 4.5rem;
       position: relative;
       //   overflow: scroll;
       //   z-index: 1;
@@ -32,7 +31,7 @@
         border-radius: 3rem;
       }
       .sec1 > p:nth-child(2) {
-        color: var(--Default-body, #222);
+        color: var(--Default-body, #161823);
         font-family: Poppins;
         font-size: 1rem;
         font-style: normal;
@@ -62,13 +61,16 @@
     background: var(--Foundation-Primary-primary-500, rgb(255, 59, 92));
   }
   .text_500 {
-    color: var(--Default-body, #222);
+    color: var(--Default-body, #161823);
     font-family: Poppins;
     font-size: 1rem;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 700;
     line-height: 120%;
   }
+}
+.modalHeader{
+  padding: 1rem 1.5rem 0;
 }
 
 .btns {
@@ -102,7 +104,6 @@
 }
 
 .messageInput {
-  padding: 15px;
   border-bottom: 1px solid #eee;
 
   textarea {
@@ -158,9 +159,18 @@
       background-position: center;
   }
 }
-
+.forwardVIMG img{
+  height: 9rem;
+  width: 6rem;
+  object-fit: cover;
+}
 .serachBar{
+  padding:0 1.5rem;
   form{
     border-radius: 0.3rem !important;
   }
+}
+.footer{
+  box-shadow: 0px -1px 4px -1px #d3d3d3;
+  padding: 1rem;
 }

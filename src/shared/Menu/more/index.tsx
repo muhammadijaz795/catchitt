@@ -188,17 +188,25 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
                     // role: 'listbox',
                 }}
                 style={{
-                    top: 10,
-                    right: 100,
+                    top: '100px',
+                    right: '50px',
                     marginRight: 20,
                     // display:'flex !important'
                 }}
             >
                 <MenuItem  style={{ padding: '0px', margin: '0px', position: 'relative' }}>
                     <div className={`justify-between ${style.menuItem}`} >
+                    <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M1 4.99997C1 4.99997 3.94596 1.00001 5.00003 1C6.05411 0.999991 9 5 9 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 15C9 15 6.05404 19 4.99997 19C3.94589 19 1 15 1 15" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                         <p>Auto scroll</p>
+                        {autoScroll}                   
+
                         <label className="toggle-switch">
                             <input 
+                            style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
                                 type="checkbox" 
                                 checked={autoScroll} 
                                 onChange={handleSwitchChange} 
@@ -207,6 +215,13 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
                             />
                             <b className="slider"></b>
                         </label>
+                        {/* <input 
+                                type="checkbox" 
+                                checked={autoScroll} 
+                                onChange={handleSwitchChange} 
+                                name="autoScrollCheckbox" 
+                                id="autoScrollCheckbox" 
+                            /> */}
 
 
 
