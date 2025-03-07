@@ -117,7 +117,7 @@ function Action({
                 onClick={() => actionClickHandler()}
             >
                 
-                <img src={shouldDisplayActiveImage() ? obj.activeImage : obj.img} alt="" /> 
+                <img className={`${obj.actionType === 'share' ? 'position-absolute' : ''}`} src={shouldDisplayActiveImage() ? obj.activeImage : obj.img} alt="" /> 
                 {obj.actionType === 'share' && (
                     <COPY_AND_SEND_MENU_HOME
                         copyHandler={() =>
