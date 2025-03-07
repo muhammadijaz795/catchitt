@@ -21,6 +21,8 @@ import isuploading from './reducers/upload';
 import videoCategories from './reducers/videoCategories';
 import geoSlice from './reducers/geoServices';
 import autoScrollUserSettings from './reducers/autoScrollUserSettings';
+import volume from './reducers/volumeSlice';
+
 
 const followings: any = createSlice({
     name: 'followings',
@@ -336,4 +338,5 @@ export default combineReducers({
     videoUrl,
     setVideoUrl,
     autoScrollUserSettings, 
+    volume
 });

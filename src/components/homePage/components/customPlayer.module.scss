@@ -132,3 +132,78 @@
     transform-origin: left center;
     box-shadow: rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px;
   }
+
+
+  .volumeContainer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 8px 12px;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+  }
+  
+
+  .volumeSlider {
+    width: 100px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;  /* Add this for cross-browser support */
+    background: rgba(255, 255, 255, 0.3); /* Set a visible background for the slider */
+    cursor: pointer;
+    transition: opacity 0.2s;
+    pointer-events: auto; /* Ensure the slider can be interacted with */
+}
+
+.volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;  /* Add for cross-browser support */
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    cursor: grab;
+    transition: transform 0.2s;
+}
+
+.volumeSlider:active::-webkit-slider-thumb {
+    cursor: grabbing;
+    transform: scale(1.2);
+}
+
+.volumeSlider::-webkit-slider-runnable-track {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+
+/* sliderStyles.css */
+
+.react-slider {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.react-slider__thumb {
+  width: 20px;
+  height: 20px;
+  background: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.react-slider__track {
+  height: 8px;
+  background: #3498db;
+  border-radius: 4px;
+}
+
