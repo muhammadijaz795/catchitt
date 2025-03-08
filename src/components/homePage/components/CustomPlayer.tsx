@@ -351,7 +351,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                         )}
                     </div>
 
-                    <div className={style.videoMediaContainer}>
+                    {/* <div className={style.videoMediaContainer}>
                         <div role="button" aria-label="Play" aria-pressed="true" data-e2e="video-play" className={style.playButton} onClick={togglePlayPause}>
                             {isPlaying ? (
                                 <svg stroke='rgba(0,0,0,0.20)' strokeWidth="1px" width="20" data-e2e="" height="20" viewBox="0 0 48 48" fill="#fff" xmlns="http://www.w3.org/2000/svg">
@@ -384,7 +384,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                                                     <path d="M27.44 26.18c-.44.86-.44 1.98-.44 4.22v9.2c0 2.24 0 3.36.44 4.22a4 4 0 0 0 1.74 1.74c.86.44 1.98.44 4.22.44h4.2c2.24 0 3.36 0 4.22-.44a4 4 0 0 0 1.74-1.74c.44-.86.44-1.98.44-4.22v-9.2c0-2.24 0-3.36-.44-4.22a4 4 0 0 0-1.74-1.74C40.96 24 39.84 24 37.6 24h-4.2c-2.24 0-3.36 0-4.22.44a4 4 0 0 0-1.74 1.74ZM37.6 28c1.19 0 1.84 0 2.3.04h.05v.06c.05.46.05 1.11.05 2.3v9.2c0 1.19 0 1.84-.04 2.3v.05h-.06c-.46.05-1.11.05-2.3.05h-4.2c-1.19 0-1.84 0-2.3-.04h-.05v-.06C31 41.44 31 40.8 31 39.6v-9.2c0-1.19 0-1.84.04-2.3v-.05h.06c.46-.05 1.11-.05 2.3-.05h4.2ZM14.83 10.67a1 1 0 0 0 0 1.42l5.78 5.77-2.29 2.3a.6.6 0 0 0 .33 1.02l7.97 1.29a.82.82 0 0 0 .93-.94l-1.29-7.96a.6.6 0 0 0-1.02-.33l-2.3 2.3-5.77-5.79a1 1 0 0 0-1.42 0l-.92.92Z"></path>
                                                 </svg>
                                             </div>
-                                        </div> */}
+                                        </div> }
 
                             <div className={style.videoAudioContainer}>
                                 <div data-e2e="video-sound" role="button" className={style.volumeButton} onClick={onMuteToggle}>
@@ -400,7 +400,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
                             </div>
                         </div>
 
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>
