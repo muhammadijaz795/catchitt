@@ -448,7 +448,7 @@ a.customPlayBtn::after {
   transition: 0.4s;
 }
 
-.slider::before {
+.toggle-switch .slider::before {
   content: "";
   position: absolute;
   height: 18px;
@@ -473,7 +473,21 @@ input:checked + .slider::before {
 .css-o1dzqo-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiPaper-root{
   min-width: 220px !important;
   transform: translate(40px , 1rem) !important;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 .css-o1dzqo-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiPaper-root ._menuItem_1i0or_1{
   padding: 0.25rem 1rem;
 }
+ .slider::before{
+    content: none;
+  }
+.slider
+  .track.track-0{
+    background-color: #fff !important;
+  }
+  .slider .track.track-1{
+    background-color: #c8c8c8ad;
+  }
+  .slider .thumb.thumb-0{
+    background-color: #fff !important;
+  }

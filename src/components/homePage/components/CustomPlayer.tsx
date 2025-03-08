@@ -176,7 +176,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
 
     return (
         <>
-        <div style={{ padding: '20px', width: '200px', position:'absolute', zIndex:'2323' }}>
+        <div style={{  width: '100px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
           
             {/* <ReactSlider
             min={0}
