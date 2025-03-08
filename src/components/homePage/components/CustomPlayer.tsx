@@ -6,9 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setVolume, toggleMute } from '../../../redux/reducers/volumeSlice';
 import ReactSlider from "react-slider";
 
-
-
-
 import {
     music,
     play,
@@ -21,7 +18,7 @@ import { isUserLoggedIn } from '../../../utils/common';
 import { useNavigate } from 'react-router-dom';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
 
-function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailImage, controls, number, onMediaPlay, visibleReportPopup, onEnded  }: any) {
+function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls, number, onMediaPlay, visibleReportPopup, onEnded, isMutedVolume, onMuteToggle  }: any) {
     const [duration, setDuration] = useState<number>();
     const [playingTime, setPlayingTime] = useState<number>();
     const dispatch = useDispatch();
@@ -29,7 +26,7 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
         rootMargin: '-400px 0px -200px 0px',
     });
 
-  const { level, isMutedVolume } = useSelector((state: any) => state?.reducers?.volume);
+  const { level } = useSelector((state: any) => state?.reducers?.volume);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
 
@@ -84,13 +81,11 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
 
     useEffect(() => {
         if (videoRef.current) {
-            // videoRef.current.muted = isMuted;
-            console.log('Updated volume level:', level);
-            videoRef.current.volume = level;
-            videoRef.current.muted = isMutedVolume;
-
+          videoRef.current.volume = level;
+          videoRef.current.muted = isMutedVolume;
+          console.log('Video volume updated:', { level, muted: isMutedVolume });
         }
-    }, [level, isMutedVolume]);
+      }, [level, isMutedVolume, videoRef.current]); // Add videoRef.current to dependencies
 
     // const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     // console.log('volume change...', e.target.value); // Log the volume change event value
@@ -290,15 +285,15 @@ function CustomPlayer({ isMuted, onMuteToggle, src, videoModal, post, thumbnailI
 
 <div>
             <div className={style.volumeContainer}>
-              <button  onClick={() => dispatch(toggleMute())} className={style.volumeButton}>
-                {isMuted ? (
-                  <MutedIcon />
+              <button  onClick={onMuteToggle}   className={style.volumeButton}>
+              {isMutedVolume ? (
+                <MutedIcon />
                 ) : level === 0 ? (
-                  <MutedIcon />
+                <MutedIcon />
                 ) : level <= 0.5 ? (
-                  <LowVolumeIcon />
+                <LowVolumeIcon />
                 ) : (
-                  <HighVolumeIcon />
+                <HighVolumeIcon />
                 )}
               </button>
             </div>

@@ -16,7 +16,7 @@ import { videoNotInterestedHandle, videoRepostHandle } from '../../../redux/Asyn
 import { toggleAutoScroll, setScrollSpeed } from '../../../redux/reducers/autoScrollUserSettings';
 
 
-export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }: any) {
+export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,activeMediaId }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const open = Boolean(anchorEl);
@@ -52,7 +52,25 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
     const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAutoScroll(event.target.checked);
         dispatch(toggleAutoScroll());
+        handleClose(); // This closes the dropdown
+
     };
+
+    // Close the dropdown when the active video changes
+    React.useEffect(() => {
+        if (activeMediaId !== postMediaId) {
+        handleClose();
+        }
+    }, [activeMediaId]); // Trigger when activeMediaId changes
+
+    React.useEffect(() => {
+        const handleScroll = () => {
+            handleClose();
+        };
+        
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const repostVideoEventHandle = async (postMediaId: any) => {
         console.log(postMediaId);

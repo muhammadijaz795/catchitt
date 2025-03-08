@@ -99,16 +99,18 @@ function ForDesktop(props: any) {
     const [activeMediaId, setActiveMediaId] = useState<string | null>(null); // Track active video mediaId
     const { isEnabled } = useSelector((store: any) => store?.reducers?.autoScrollUserSettings);
     // console.info('isEnabled',isEnabled)
+    const { isMutedVolume } = useSelector((state: any) => state?.reducers?.volume);
+
     
     const toggleMute = () => {
-        if(isMuted){
-            localStorage.setItem('videoMuted', 'false');
-        }else{
-            localStorage.setItem('videoMuted', 'true');
+            if(isMuted){
+                localStorage.setItem('videoMuted', 'false');
+            }else{
+                localStorage.setItem('videoMuted', 'true');
+            }
+            setIsMuted((prevMuted) => !prevMuted);
+            return { type: 'TOGGLE_MUTE' };
         }
-        setIsMuted((prevMuted) => !prevMuted);
-        
-    }
 
     const togglePlaying = () => {
         setIsPlaying((prevPlaying) => !prevPlaying);
@@ -347,7 +349,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                         >
                                             <CustomPlayer
                                                 isMuted={isMuted}
-                                                onMuteToggle={toggleMute}
+                                                // onMuteToggle={toggleMute}
                                                 isPlaying={isPlaying}
                                                 togglePlayPause={togglePlaying}
                                                 videoModal={videoModal}
@@ -367,6 +369,8 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                 visibleReportPopup={() =>
                                                     setreportPopup(true)
                                                 }
+                                                isMutedVolume={isMutedVolume}
+                                                onMuteToggle={() => dispatch(toggleMute())}
                                                 
                                             />
                                         </div>
@@ -388,6 +392,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                             popupHandler={() => setSendPopup(true)}
                                                             showVideoModal={showVideoModal}
                                                             post={post}
+                                                            activeMediaId={activeMediaId}
                                                         />
                                                     );
                                                 })}
@@ -409,6 +414,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                             post={post}
                                                             totalPostComments={totalPostComments}
                                                             showCommentsModal={() => setCommentModal(true)}
+                                                            activeMediaId={activeMediaId}
                                                         />
                                                     );
                                                 })}

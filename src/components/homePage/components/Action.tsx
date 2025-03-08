@@ -18,6 +18,7 @@ function Action({
     generateEmbedCodeHandler,
     totalPostComments,
     showCommentsModal,
+    activeMediaId
 }: any) {
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
@@ -153,6 +154,7 @@ function Action({
                         url={ post?.reducedVideoUrl
                             ? post?.reducedVideoUrl : post.originalUrl}
                         postMediaId={post?.mediaId }
+                        activeMediaId={activeMediaId}
                     />
                 )}
             </div>
