@@ -610,10 +610,10 @@ export default function CommentsComponent({
         }
     };
 
-    const handleUserSelect = (user: { username: any }) => {
+    const handleUserSelect = (user: { name: any }) => {
         setComment((prevComment) => {
             const lastMentionStart = prevComment.lastIndexOf('@');
-            const newComment = `${prevComment.slice(0, lastMentionStart)}@${user.username} `;
+            const newComment = `${prevComment.slice(0, lastMentionStart)}@${user.name} `;
             return newComment;
         });
         setIsMentioning(false);
