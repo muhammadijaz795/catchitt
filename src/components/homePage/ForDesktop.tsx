@@ -18,17 +18,20 @@ import {
     shareBlack,
     moreBlack,
     savedBlack,
+    moreInWhite
 } from '../../icons';
 import { followingsMethod, getHomeVideos, addMoreVideos } from '../../redux/AsyncFuncs';
 import Layout from '../../shared/layout';
 import Action from './components/Action';
 import CustomPlayer from './components/CustomPlayer';
+import CommentsComponent from '../profile/popups/CommentsComponent';
 import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
 import { ToastContainer } from 'react-toastify';
 import { updateHomeVideos } from '../../redux/reducers';
 import VideoNavigation from '../../shared/navigation/VideoNavigation';
 // import { Toast } from 'react-toastify/dist/components';
+
 
 function ForDesktop(props: any) {
     interface Video {
@@ -54,6 +57,8 @@ function ForDesktop(props: any) {
     const [darkTheme, setdarkTheme] = useState('');
     const [isDarkTheme, setIsDarkTheme] = useState(false);
     const [countFlag, setCountFlag] = useState(true);
+    const [commentModal, setCommentModal] = useState(true);
+    const [totalPostComments, setTotalPostComments] = useState<number>(0);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
     // @ts-ignore
@@ -69,7 +74,7 @@ function ForDesktop(props: any) {
         { img: like, actionType: 'like', activeImage: activeLike },
     ];
     const userBlackActions: any = [
-        { img: moreBlack, actionType: 'more' },
+        { img: moreInWhite, actionType: 'more' },
         { img: shareBlack, actionType: 'share', activeImage: shareBlack },
         { img: savedBlack, actionType: 'fvrt', activeImage: activeFvrt },
         { img: commentBlack, actionType: 'comment', activeImage: commentBlack },
@@ -91,16 +96,21 @@ function ForDesktop(props: any) {
     const [isPlaying, setIsPlaying] = useState(true);
     const [focusedIndex, setFocusedIndex] = useState(0);
     const itemsRef = useRef<(HTMLLIElement | null)[]>([]);
+    const [activeMediaId, setActiveMediaId] = useState<string | null>(null); // Track active video mediaId
+    const { isEnabled } = useSelector((store: any) => store?.reducers?.autoScrollUserSettings);
+    // console.info('isEnabled',isEnabled)
+    const { isMutedVolume } = useSelector((state: any) => state?.reducers?.volume);
 
+    
     const toggleMute = () => {
-        if(isMuted){
-            localStorage.setItem('videoMuted', 'false');
-        }else{
-            localStorage.setItem('videoMuted', 'true');
+            if(isMuted){
+                localStorage.setItem('videoMuted', 'false');
+            }else{
+                localStorage.setItem('videoMuted', 'true');
+            }
+            setIsMuted((prevMuted) => !prevMuted);
+            return { type: 'TOGGLE_MUTE' };
         }
-        setIsMuted((prevMuted) => !prevMuted);
-        
-    }
 
     const togglePlaying = () => {
         setIsPlaying((prevPlaying) => !prevPlaying);
@@ -126,6 +136,67 @@ function ForDesktop(props: any) {
             }, 1500);
         });
     };
+    // Add these to your main component
+const handleVideoEnd = (endedMediaId: string) => {
+    const currentIndex = videoes.findIndex((post: any) => post.mediaId === endedMediaId);
+    if (currentIndex === -1 || currentIndex >= videoes.length - 1) return;
+  
+    const nextMediaId = videoes[currentIndex + 1].mediaId;
+    
+    // Scroll to next video
+    scrollToVideo(true);
+    
+    // Play next video after scroll completes
+    setTimeout(() => { console.info('here next video'+nextMediaId);
+      setActiveMediaId(nextMediaId);
+    }, 500); // Adjust timeout based on your scroll duration
+  };
+  
+  // Add this scroll function in your main component
+  const scrollToVideo = (isNext: boolean) => {
+    if (!scrollableDivRef.current) return;
+    const videoHeight = (scrollableDivRef.current.children[0] as HTMLElement)?.offsetHeight + 32;
+    const { scrollTop } = scrollableDivRef.current;
+    console.log({
+        top: scrollTop + (isNext ? videoHeight : -videoHeight),
+        behavior: 'smooth'
+      });
+    scrollableDivRef.current.scrollTo({
+      top: scrollTop + (isNext ? videoHeight : -videoHeight),
+      behavior: 'smooth'
+    });
+  };
+
+    const totalCommentsCount = (count: any) => {
+        setTotalPostComments(count);
+        console.log('totalCommentsCount', count);
+    }
+
+    useEffect(() => {
+        // If no video is playing, set the first video as active (or any other criteria)
+        if (!activeMediaId && videoes.length > 0) {
+            // setActiveMediaId(videoes[0]?.mediaId); // Set the first video as the active one
+        }
+
+        // You can also set a fallback or default logic, for example, last played video, or first available video, etc.
+
+        // For example, if you have a "last played" video stored in local storage or database:
+        // const lastPlayedVideo = getLastPlayedVideoFromStorage();
+        // if (lastPlayedVideo) {
+        //     setActiveMediaId(lastPlayedVideo);
+        // }
+    }, [videoes, activeMediaId]); // This will run on initial load or when `videoes` changes
+
+    const handleMediaPlay = (mediaId: string) => {
+        // alert('mediaId='+mediaId);
+        console.log("Playing media with ID:", mediaId);
+        setActiveMediaId(mediaId);
+        setTotalPostComments(0);
+        setCommentModal(true);
+        // Handle the media ID (e.g., send it to the server, track analytics, etc.)
+    };
+      
+      
 
     useEffect(() => {
         if (isuploading?.isUploading) {
@@ -214,6 +285,7 @@ function ForDesktop(props: any) {
         };
     }, []);
 
+ 
     // useEffect(() => {
     //     const observer = new IntersectionObserver((videoes) => {
     //         videoes.forEach((entry) => {
@@ -247,21 +319,22 @@ function ForDesktop(props: any) {
             paddingBottomProp={true}
         >
             <div className={`relative  ${style.parent} ${darkTheme}`}>
-                <VideoNavigation videoListRef={scrollableDivRef} />
+                <VideoNavigation videoListRef={scrollableDivRef} commentModal={commentModal} />
                 <div className={`${style.videoesParent} no-scrollbar`} ref={scrollableDivRef}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
                         videoes.map((post: any, number: number) => {
                             return (
                                 <div
+                                    data-media-id={post?.mediaId}
                                     key={number}
                                     id={post?.mediaId}
-                                    className={style.videoParent}
+                                    className={`${style.videoParent} ${commentModal ? '' : 'mw-100'}`}
                                     // ref={(el: HTMLLIElement | null) => itemsRef.current[number] = el}
                                     // style={{
                                     // backgroundColor: focusedIndex === number ? 'blue' : 'red',
                                     // }}
-                                >
-                                    <div className={style.mediaContainer} style={{margin:'10px auto'}}>
+                                    >
+                                    <div key={post?.mediaId} className={style.mediaContainer} style={{margin:'10px auto'}}>
                                         <div
                                             style={{
                                                 // width: '100%',
@@ -276,7 +349,7 @@ function ForDesktop(props: any) {
                                         >
                                             <CustomPlayer
                                                 isMuted={isMuted}
-                                                onMuteToggle={toggleMute}
+                                                // onMuteToggle={toggleMute}
                                                 isPlaying={isPlaying}
                                                 togglePlayPause={togglePlaying}
                                                 videoModal={videoModal}
@@ -291,6 +364,14 @@ function ForDesktop(props: any) {
                                                 controls={true}
                                                 post={post}
                                                 number={number}
+                                                onEnded={handleVideoEnd}
+                                                onMediaPlay={handleMediaPlay}
+                                                visibleReportPopup={() =>
+                                                    setreportPopup(true)
+                                                }
+                                                isMutedVolume={isMutedVolume}
+                                                onMuteToggle={() => dispatch(toggleMute())}
+                                                
                                             />
                                         </div>
 
@@ -311,6 +392,7 @@ function ForDesktop(props: any) {
                                                             popupHandler={() => setSendPopup(true)}
                                                             showVideoModal={showVideoModal}
                                                             post={post}
+                                                            activeMediaId={activeMediaId}
                                                         />
                                                     );
                                                 })}
@@ -330,6 +412,9 @@ function ForDesktop(props: any) {
                                                             popupHandler={() => setSendPopup(true)}
                                                             showVideoModal={showVideoModal}
                                                             post={post}
+                                                            totalPostComments={totalPostComments}
+                                                            showCommentsModal={() => setCommentModal(true)}
+                                                            activeMediaId={activeMediaId}
                                                         />
                                                     );
                                                 })}
@@ -407,7 +492,27 @@ function ForDesktop(props: any) {
                                                 </button>
                                             </div>
                                         </div>
+                                        <div >
+                                            {/* ACTIVE MEDIA ID: {activeMediaId}
+                                        <pre>{JSON.stringify(post?.mediaId, null, 2)}</pre> */}
+                                                {/* current state:{activeMediaId} -- {post?.mediaId} */}
+                                                {activeMediaId === post?.mediaId  && (
+                                                <CommentsComponent
+                                                key={`mystr_${post?.mediaId}`}
+                                                    gifts={true}
+                                                    onBlockPopup={true}
+                                                    onReportPopup={true}
+                                                    commentModal={commentModal}
+                                                    onclose={()=> {console.log('here clonse...');setCommentModal(false)}}
+                                                    info={post}
+                                                    postId={post?.mediaId}
+                                                    sendPopupHandler={true}
+                                                    // commentModal={true} 
+                                                    totalCommentsCount={totalCommentsCount}
+                                                />
+                                            )}
                                     </div>
+                                </div>
                                     {loadingVideo && <CircularProgress />}
                                 </div>
                             );
@@ -456,6 +561,10 @@ function ForDesktop(props: any) {
                         </p>
                     </div>
                 )}
+
+                
+               
+                
             </div>
         </Layout>
     );

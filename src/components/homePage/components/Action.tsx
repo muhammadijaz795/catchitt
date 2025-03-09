@@ -16,6 +16,9 @@ function Action({
     showVideoModal,
     post,
     generateEmbedCodeHandler,
+    totalPostComments,
+    showCommentsModal,
+    activeMediaId
 }: any) {
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
@@ -30,7 +33,8 @@ function Action({
                     // dispatch(likeHandler);
                 }
                 if (obj?.actionType === 'comment') {
-                    showVideoModal(post);
+                    showCommentsModal();
+                    // showVideoModal(post);
                 }
                 if (obj?.actionType === 'fvrt') {
                     dispatch(videoSavehandle(post.mediaId));
@@ -63,7 +67,7 @@ function Action({
             case 'like':
                 return post.isLiked;
             case 'comment':
-                return post.comments?.length > 0;
+                return totalPostComments > 0 ? totalPostComments : post?.comments?.length || 0;
             case 'share':
                 return post.shares > 0;
             case 'fvrt':
@@ -96,9 +100,10 @@ function Action({
                 position: 'relative',
                 zIndex: 2,
             }}
-            className={style.useractions}
+            className={`${obj.actionType === 'more' ? style.moreClass : ''} ${style.useractions}`}
         >
             <div
+                className={`${obj.actionType === 'more' ? style.bgStyle : ''}`}
                 style={{
                     width: 48,
                     height: 48,
@@ -108,13 +113,12 @@ function Action({
                     background: 'rgb(179 181 189 / 18%)', // '#EAEAEA',
                     borderRadius: '50%',
                     cursor: 'pointer',
-                    position: 'relative',
                     zIndex: 2,
                 }}
                 onClick={() => actionClickHandler()}
             >
                 
-                <img src={shouldDisplayActiveImage() ? obj.activeImage : obj.img} alt="" /> 
+                <img className={`${obj.actionType === 'share' ? 'position-absolute' : ''}`} src={shouldDisplayActiveImage() ? obj.activeImage : obj.img} alt="" /> 
                 {obj.actionType === 'share' && (
                     <COPY_AND_SEND_MENU_HOME
                         copyHandler={() =>
@@ -150,19 +154,21 @@ function Action({
                         url={ post?.reducedVideoUrl
                             ? post?.reducedVideoUrl : post.originalUrl}
                         postMediaId={post?.mediaId }
+                        activeMediaId={activeMediaId}
                     />
                 )}
             </div>
             {obj?.actionType === 'like' ? (
                 <p className={style.actionC}>{post.likes + likes || 0}</p>
             ) : obj?.actionType === 'comment' ? (
-                <p className={style.actionC}>{post?.comments?.length || 0}</p>
+                <p className={style.actionC}>{totalPostComments > 0 ? totalPostComments : post?.comments?.length || 0}</p>
             ) : obj?.actionType === 'share' ? (
                 <p className={style.actionC}>{post.shares || 0}</p>
             ) : obj?.actionType === 'fvrt' ? (
                 <p className={style.actionC}>{post.isSaved ? 'Saved' : 'Save'}</p>
             ) : obj?.actionType === 'more' ? (
-                <p className={style.actionC}>More</p>
+                ''
+                // <p className={style.actionCD}></p>
             ) : null}
         </div>
     );

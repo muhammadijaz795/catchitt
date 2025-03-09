@@ -155,8 +155,8 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any, r
                         {followBackText == 'Follow Back' && <div onClick={()=> handleFollowBack(user?.follower_userID?._id)}  style={button}>
                             {followBackText}
                         </div>}
-                        {followBackText != 'Follow Back' && <div onClick={()=> handleFollowBack(user?.follower_userID?._id)}  style={buttonDefault}>
-                            {followBackText}
+                        {followBackText != 'Follow Back' && <div onClick={()=> handleFollowBack(user?.follower_userID?._id)}  style={{padding:'10px 20px', background:'#ededed',marginLeft: '0.25rem',height: '2.65rem',position: 'relative',top: '3px',borderRadius: '6px',display: 'flex', cursor:'pointer', fontWeight: '600'}}>    
+                            {followBackText} 
                         </div>}
 
                         <div className='border ml-1' style={{padding:'15px 20px', background:'#ededed',marginLeft: '0.25rem',height: '2.65rem',position: 'relative',top: '3px',borderRadius: '6px',display: 'flex', cursor:'pointer'}} onClick={()=> openUnfollowPopup(user)}>

@@ -196,12 +196,14 @@ function Layout(props: any) {
                 </div>
                 <div className={style.GetAppDivBottomContainer}>
                     <div className={style.GetAppDivPromotionContainer}>
-                        <button
-                            className={style.GetAppButtonGetAppText}
-                            onClick={() => showAppPopup()}
-                        >
-                            Get app
-                        </button>
+                    {location.pathname !== '/home' && (
+                            <button
+                                className={style.GetAppButtonGetAppText}
+                                onClick={showAppPopup}
+                            >
+                                Get app
+                            </button>
+                        )}
                         <div className={style.GetAppDivExpandContainer}>
                             <div className={style.GetAppDivXMarkWrapper}>
                                 <svg

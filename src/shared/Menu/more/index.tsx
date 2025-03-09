@@ -1,19 +1,22 @@
-import { alpha, styled } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { alpha, FormControlLabel, FormGroup, IconButton, Switch,SwitchProps,styled } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
-import { copyLink, notAllowed, report, saveVideo, send, repost } from '../../../icons';
+
+import { copyLink, notAllowed, report, saveVideo, send, repost, blackHeartOutline, blackCrossHeart } from '../../../icons';
 import style from './index.module.scss';
 const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Report'];
 import {
     showToastSuccess,
 } from '../../../utils/constants';
 import { videoNotInterestedHandle, videoRepostHandle } from '../../../redux/AsyncFuncs';
+import { toggleAutoScroll, setScrollSpeed } from '../../../redux/reducers/autoScrollUserSettings';
 
-export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }: any) {
+
+export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,activeMediaId }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const open = Boolean(anchorEl);
@@ -23,6 +26,14 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
     const API_URL = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
     const dispatch = useDispatch();
+    const { isEnabled } = useSelector((store: any) => store?.reducers?.autoScrollUserSettings);
+    console.info('isEnabled in more menu',isEnabled)
+    const [autoScroll, setAutoScroll] = React.useState(isEnabled);
+
+    // Update autoScroll when isEnabled changes (if isEnabled is dynamic)
+    React.useEffect(() => {
+        setAutoScroll(isEnabled);
+    }, [isEnabled]);
 
     const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
         setSelectedIndex(index);
@@ -38,6 +49,28 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
         showToastSuccess('Media marked as not interested successfully');
         dispatch(videoNotInterestedHandle(postMediaId));
     };
+    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAutoScroll(event.target.checked);
+        dispatch(toggleAutoScroll());
+        handleClose(); // This closes the dropdown
+
+    };
+
+    // Close the dropdown when the active video changes
+    React.useEffect(() => {
+        if (activeMediaId !== postMediaId) {
+        handleClose();
+        }
+    }, [activeMediaId]); // Trigger when activeMediaId changes
+
+    React.useEffect(() => {
+        const handleScroll = () => {
+            handleClose();
+        };
+        
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const repostVideoEventHandle = async (postMediaId: any) => {
         console.log(postMediaId);
@@ -173,12 +206,74 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
                     // role: 'listbox',
                 }}
                 style={{
-                    top: 10,
-                    right: 100,
+                    top: '100px',
+                    right: '50px',
                     marginRight: 20,
                     // display:'flex !important'
                 }}
             >
+                <MenuItem  style={{ padding: '0px', margin: '0px', position: 'relative' }}>
+                    <div className={`justify-between ${style.menuItem}`} >
+                    <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M1 4.99997C1 4.99997 3.94596 1.00001 5.00003 1C6.05411 0.999991 9 5 9 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 15C9 15 6.05404 19 4.99997 19C3.94589 19 1 15 1 15" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                        <p>Auto scroll</p>
+                        {autoScroll}                   
+
+                        <label className="toggle-switch">
+                            <input 
+                            style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
+                                type="checkbox" 
+                                checked={autoScroll} 
+                                onChange={handleSwitchChange} 
+                                name="autoScrollCheckbox" 
+                                id="autoScrollCheckbox" 
+                            />
+                            <b className="slider"></b>
+                        </label>
+                        {/* <input 
+                                type="checkbox" 
+                                checked={autoScroll} 
+                                onChange={handleSwitchChange} 
+                                name="autoScrollCheckbox" 
+                                id="autoScrollCheckbox" 
+                            /> */}
+
+
+
+
+                        {/* <div className={style.cards}>
+                            <FormGroup
+                            sx={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <div className={style.card}>
+                                <FormControlLabel
+                                    label={undefined}
+                                    labelPlacement="start"
+                                    control={
+                                        <IOSSwitch
+                                            sx={{ m: 1 }}
+                                            // checked={settings?.feedback || false}
+                                            onChange={(e: any) =>
+                                                handleSwitchChange(e, 'feedback')
+                                            }
+                                        />
+                                    }
+                                />
+                                </div>
+                            </FormGroup>
+                        </div> */}
+                    </div>
+                </MenuItem>
+
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px', position: 'relative' }}>
                     <div className={style.menuItem} >
                         <img src={saveVideo} />
@@ -198,7 +293,7 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
                 </MenuItem>
                 <MenuItem onClick={()=>{ notInterestedInVideo(postMediaId),handleClose() }} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
-                        <img src={notAllowed} />
+                        <img src={blackCrossHeart} />
                         <p className={`${style.p} ${style.black_500}`}>Not interested</p>
                     </div>
                 </MenuItem>
@@ -218,3 +313,53 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId }:
         </div>
     );
 }
+
+
+const IOSSwitch = styled((props: SwitchProps) => (
+    <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+))(({ theme }) => ({
+    width: 42,
+    height: 26,
+    padding: 0,
+    '& .MuiSwitch-switchBase': {
+        padding: 0,
+        margin: 2,
+        transitionDuration: '300ms',
+        '&.Mui-checked': {
+            transform: 'translateX(16px)',
+            color: '#fff',
+            '& + .MuiSwitch-track': {
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(255, 59, 92)' : 'rgb(255, 59, 92)',
+                opacity: 1,
+                border: 0,
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+                opacity: 0.5,
+            },
+        },
+        '&.Mui-focusVisible .MuiSwitch-thumb': {
+            color: 'rgb(255, 59, 92)',
+            border: '6px solid #fff',
+        },
+        '&.Mui-disabled .MuiSwitch-thumb': {
+            color:
+                theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
+        },
+        '&.Mui-disabled + .MuiSwitch-track': {
+            opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+        },
+    },
+    '& .MuiSwitch-thumb': {
+        boxSizing: 'border-box',
+        width: 22,
+        height: 22,
+    },
+    '& .MuiSwitch-track': {
+        borderRadius: 26 / 2,
+        backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+        opacity: 1,
+        transition: theme.transitions.create(['background-color'], {
+            duration: 500,
+        }),
+    },
+}));

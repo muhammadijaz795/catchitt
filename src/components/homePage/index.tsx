@@ -623,7 +623,7 @@ function HomePage() {
                 openGifts={giftsPopup}
                 onGiftsClose={() => setGiftsPopup(false)}
             />
-            <Forwardusers onOpen={sendPopup} onClose={() => setSendPopup(false)} />
+            <Forwardusers onOpen={sendPopup} onClose={() => setSendPopup(false)} videoLink={videoUrl} />
             <ToastContainer />
         </div>
     );

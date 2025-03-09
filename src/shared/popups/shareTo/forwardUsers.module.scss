@@ -1,5 +1,4 @@
 .parent {
-  padding: 1.5rem;
   width: 35rem;
   border-radius: 0.5rem;
   background: var(--Default-white, #fff);
@@ -7,15 +6,15 @@
   flex-direction: column;
   // gap: 1.5rem;
   .users {
-    height: 27rem;
-    overflow: scroll;
+    height: 22rem;
+    overflow-y: auto;
     margin-top: 1.5rem;
+    padding: 0 1.5rem;
     .user {
       display: flex;
       justify-content: space-between;
       padding: 1rem 1rem 1rem 0px;
-      border-bottom: 1px solid #eaeaea;
-      height: 5rem;
+      height: 4.5rem;
       position: relative;
       //   overflow: scroll;
       //   z-index: 1;
@@ -32,7 +31,7 @@
         border-radius: 3rem;
       }
       .sec1 > p:nth-child(2) {
-        color: var(--Default-body, #222);
+        color: var(--Default-body, #161823);
         font-family: Poppins;
         font-size: 1rem;
         font-style: normal;
@@ -55,20 +54,23 @@
     font-family: Poppins;
     font-size: 0.875rem;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 120%;
     flex-shrink: 0;
     border-radius: 0.375rem;
     background: var(--Foundation-Primary-primary-500, rgb(255, 59, 92));
   }
   .text_500 {
-    color: var(--Default-body, #222);
+    color: var(--Default-body, #161823);
     font-family: Poppins;
     font-size: 1rem;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 700;
     line-height: 120%;
   }
+}
+.modalHeader{
+  padding: 1rem 1.5rem 0;
 }
 
 .btns {
@@ -99,4 +101,76 @@
   flex-shrink: 0;
   border-radius: 0.375rem;
   background: var(--Foundation-Primary-primary-500, #fff);
+}
+
+.messageInput {
+  border-bottom: 1px solid #eee;
+
+  textarea {
+      width: 100%;
+      padding: 10px;
+      border: 0px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 14px;
+      background-color: transparent;
+      resize: none;
+      &:focus {
+          outline: none;
+          border-color: transparent;
+      }
+  }
+}
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  input {
+      display: none; // Hide default checkbox
+  }
+
+  .customCheckbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid gray;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease-in-out;
+      position: relative;
+  }
+
+  input:checked + .customCheckbox {
+      background-color: rgba(254, 44, 85, 1);
+      border-color: rgba(254, 44, 85, 1);
+  }
+
+  input:checked + .customCheckbox::after {
+      content: "";
+      display: block;
+      width: 16px;
+      height: 12px;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='12' viewBox='0 0 16 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M13.9446 0.23629C14.1425 0.0339121 14.4688 0.0361296 14.6639 0.241177L15.6474 1.27481C15.8328 1.46966 15.8307 1.77627 15.6427 1.96857L6.32127 11.5023C5.84761 11.9868 5.08299 11.9749 4.6235 11.476L0.316521 6.79965C0.134319 6.60182 0.14139 6.29527 0.332518 6.10605L1.34459 5.10408C1.54573 4.90496 1.87194 4.91249 2.06368 5.12067L5.51022 8.86282L13.9446 0.23629Z' fill='white'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+  }
+}
+.forwardVIMG img{
+  height: 9rem;
+  width: 6rem;
+  object-fit: cover;
+}
+.serachBar{
+  padding:0 1.5rem;
+  form{
+    border-radius: 0.3rem !important;
+  }
+}
+.footer{
+  box-shadow: 0px -1px 4px -1px #d3d3d3;
+  padding: 1rem;
 }

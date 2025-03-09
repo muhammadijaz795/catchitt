@@ -3,8 +3,8 @@ import style from './index.module.scss';
 import UpArrow from './UpArrow';
 import DownArrow from './DownArrow';
 
-function VideoNavigation(props: { videoListRef: any }) {
-    const { videoListRef } = props;
+function VideoNavigation(props: { videoListRef: any, commentModal: any }) {
+    const { videoListRef, commentModal } = props;
     // const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isFirstVideo, setIsFirstVideo] = useState(true);
 
@@ -55,11 +55,11 @@ function VideoNavigation(props: { videoListRef: any }) {
     }, []);
 
     return (
-        <div className={style.navigation}>
-            <button id="prevVideoBtn" onClick={() => scrollToVideo(false)}>
+        <div className={`${style.navigation} ${commentModal ? '' : style.right20}`}>
+            <button id="prevVideoBtn" className='border-0' onClick={() => scrollToVideo(false)}>
                 <UpArrow />
             </button>
-            <button id="nextVideoBtn" onClick={() => scrollToVideo(true)}>
+            <button id="nextVideoBtn" className='border-0' onClick={() => scrollToVideo(true)}>
                 <DownArrow />
             </button>
         </div>
