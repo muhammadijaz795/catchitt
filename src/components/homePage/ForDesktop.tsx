@@ -57,7 +57,7 @@ function ForDesktop(props: any) {
     const [darkTheme, setdarkTheme] = useState('');
     const [isDarkTheme, setIsDarkTheme] = useState(false);
     const [countFlag, setCountFlag] = useState(true);
-    const [commentModal, setCommentModal] = useState(true);
+    const [commentModal, setCommentModal] = useState(false);
     const [totalPostComments, setTotalPostComments] = useState<number>(0);
     // @ts-ignore
     const followers = useSelector((store) => store.reducers.followings);
@@ -92,7 +92,7 @@ function ForDesktop(props: any) {
     const scrollableDivRef = useRef<HTMLDivElement>(null);
     const currentVideo = useRef<HTMLDivElement>(null);
     const APP_URL = process.env.VITE_API_URL;
-    const [isMuted, setIsMuted] = useState(boolMute);
+    const [isMuted, setIsMuted] = useState(false);
     const [isPlaying, setIsPlaying] = useState(true);
     const [focusedIndex, setFocusedIndex] = useState(0);
     const itemsRef = useRef<(HTMLLIElement | null)[]>([]);
@@ -192,7 +192,7 @@ const handleVideoEnd = (endedMediaId: string) => {
         console.log("Playing media with ID:", mediaId);
         setActiveMediaId(mediaId);
         setTotalPostComments(0);
-        setCommentModal(true);
+        // setCommentModal(true);
         // Handle the media ID (e.g., send it to the server, track analytics, etc.)
     };
       
@@ -497,7 +497,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                             {/* ACTIVE MEDIA ID: {activeMediaId}
                                         <pre>{JSON.stringify(post?.mediaId, null, 2)}</pre> */}
                                                 {/* current state:{activeMediaId} -- {post?.mediaId} */}
-                                                {activeMediaId === post?.mediaId  && (
+                                                {commentModal && activeMediaId === post?.mediaId  && (
                                                 <CommentsComponent
                                                 key={`mystr_${post?.mediaId}`}
                                                     gifts={true}

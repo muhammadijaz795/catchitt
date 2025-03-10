@@ -145,7 +145,7 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
             
             // Ensure the response is a valid video blob
             const contentType = response.headers.get('Content-Type');
-            if (!contentType.includes('video')) {
+            if (!contentType || !contentType.includes('video')) {
                 throw new Error('The file is not a valid video');
             }
     

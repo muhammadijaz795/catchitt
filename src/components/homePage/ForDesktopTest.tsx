@@ -259,7 +259,7 @@ function ForDesktopTest(props: any) {
             paddingBottomProp={true}
         >
             <div className={`relative  ${style.parent} ${darkTheme}`}>
-                <VideoNavigation videoListRef={scrollableDivRef} />
+                <VideoNavigation videoListRef={scrollableDivRef} commentModal={undefined} />
                 <div className={`${style.videoesParent} no-scrollbar`} ref={scrollableDivRef}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
                         videoes.map((post: any, number: number) => {

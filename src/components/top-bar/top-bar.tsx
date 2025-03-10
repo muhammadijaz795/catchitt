@@ -177,12 +177,12 @@ export const TopBar = ({ className, searchBar }: TopBarProps) => {
                     </div>
                 </Media>
                 <div className={styles.plusProfileDiv}>
-                    <img
+                    {/* <img
                         style={{ width: 36, height: 36, cursor: 'pointer' }}
                         src={createIcon}
                         alt=""
                         onClick={()=>navigate('/upload')}
-                    />
+                    /> */}
                     {isLoggedIn ? (
                         <>
                             {profileData.avatar === '' ? (

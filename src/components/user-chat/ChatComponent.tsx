@@ -103,7 +103,7 @@ const ChatComponent = () => {
     const longPressH = (item: any, newItem=true) => {   
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
-            if(newItem && newItem == false){
+            if(newItem == false){
                 tempArr.push({ ...msg, emojis: false, dropdown:false });
             }else{
                 if (msg.id === item.id) {
@@ -575,10 +575,10 @@ const ChatComponent = () => {
 
     const reactToMessage = (messageId: any, reaction: any,item: any) => {
         // Find the message in activeChat.chats that matches the given messageId
-        const updatedChats = activeChat.chats.map(msg => {
+        const updatedChats = activeChat.chats.map((msg :any) => {
             if (msg.id == messageId) {
                 // Check if the reaction already exists in the reactions array
-                const existingReactionIndex = msg.reactions.findIndex(r => r.userId === sender); // assuming sender is the user who is reacting
+                const existingReactionIndex = msg.reactions.findIndex((r :any) => r.userId === sender); // assuming sender is the user who is reacting
                 if (existingReactionIndex !== -1) {
                     // Update the existing reaction if it exists
                     msg.reactions[existingReactionIndex] = {
@@ -597,7 +597,7 @@ const ChatComponent = () => {
         });
 
         // Update your state with the modified chats array
-        setActiveChat(prevState => ({
+        setActiveChat((prevState :any) => ({
             ...prevState,
             chats: updatedChats
         }));

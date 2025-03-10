@@ -218,12 +218,12 @@ function FriendVideos(props: any) {
                         <p>Live</p>
                     </div> 
                 </div> */}
-                <VideoNavigation videoListRef={scrollableDivRef} />
+                <VideoNavigation videoListRef={scrollableDivRef} commentModal={undefined} />
                 <div className={style.videoesParent} ref={scrollableDivRef}>
                     {videoes?.length > 0 && !loading && activeTab !== 3 ? (
                         videoes.map((post: any, number: number) => {
                             return (
-                                <div key={number} className={style.videoParent}>
+                                <div key={number} className={`${style.videoParent } mw-100`}>
                                     {/* <div className={style.videoHeader}>
                                         <div className={style.videoHeaderSec1}>
                                             <img

@@ -142,67 +142,67 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={styles.linkWord}>For You</p>
                     </div>
                 </Link>
-                {/*
-                //new theme 
-                <Link to="/comingsoon" reloadDocument={false} style={{ textDecoration: 'none' }}>
-                    <div
-                        className={classNames(
-                            // `${selectedIndex === 1 ? styles.selected : styles.navLink}`
-                            `${pathname.includes('/comingsoon') ? styles.selected : styles.navLink}`
-
-                        )}
-                        onClick={() => {
-                            handleLinkClick(1)
-                            setSettingsDropdown(false)
-                        }}
-                    >
-                        <svg
-                            id="svg-section"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
+                    {/*
+                    //new theme 
+                    <Link to="/comingsoon" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                        <div
                             className={classNames(
-                                `${pathname.includes('/comingsoon') ? styles.selectedStroke : ''}`
+                                // `${selectedIndex === 1 ? styles.selected : styles.navLink}`
+                                `${pathname.includes('/comingsoon') ? styles.selected : styles.navLink}`
+
                             )}
+                            onClick={() => {
+                                handleLinkClick(1)
+                                setSettingsDropdown(false)
+                            }}
                         >
-                            <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M19.0714 19.0699C16.0152 22.1263 11.4898 22.7867 7.78642 21.074C7.23971 20.8539 6.79148 20.676 6.36537 20.676C5.17849 20.683 3.70117 21.8339 2.93336 21.067C2.16555 20.2991 3.31726 18.8206 3.31726 17.6266C3.31726 17.2004 3.14642 16.7602 2.92632 16.2124C1.21283 12.5096 1.87411 7.98269 4.93026 4.92721C8.8316 1.02443 15.17 1.02443 19.0714 4.9262C22.9797 8.83501 22.9727 15.1681 19.0714 19.0699Z"
-                                stroke="rgb(255, 59, 92)"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                            <path
-                                d="M15.9398 12.4131H15.9488"
-                                stroke="rgb(255, 59, 92)"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                            <path
-                                d="M11.9301 12.4131H11.9391"
-                                stroke="rgb(255, 59, 92)"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                            <path
-                                d="M7.92128 12.413H7.93028"
-                                stroke="rgb(255, 59, 92)"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
-                        <p className={styles.linkWord}>Chat (Coming Soon)</p>
-                    </div>
-                </Link> 
-                // end new theme 
-                */}
+                            <svg
+                                id="svg-section"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                className={classNames(
+                                    `${pathname.includes('/comingsoon') ? styles.selectedStroke : ''}`
+                                )}
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
+                                    d="M19.0714 19.0699C16.0152 22.1263 11.4898 22.7867 7.78642 21.074C7.23971 20.8539 6.79148 20.676 6.36537 20.676C5.17849 20.683 3.70117 21.8339 2.93336 21.067C2.16555 20.2991 3.31726 18.8206 3.31726 17.6266C3.31726 17.2004 3.14642 16.7602 2.92632 16.2124C1.21283 12.5096 1.87411 7.98269 4.93026 4.92721C8.8316 1.02443 15.17 1.02443 19.0714 4.9262C22.9797 8.83501 22.9727 15.1681 19.0714 19.0699Z"
+                                    stroke="rgb(255, 59, 92)"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                                <path
+                                    d="M15.9398 12.4131H15.9488"
+                                    stroke="rgb(255, 59, 92)"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                                <path
+                                    d="M11.9301 12.4131H11.9391"
+                                    stroke="rgb(255, 59, 92)"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                                <path
+                                    d="M7.92128 12.413H7.93028"
+                                    stroke="rgb(255, 59, 92)"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                            <p className={styles.linkWord}>Chat (Coming Soon)</p>
+                        </div>
+                    </Link> 
+                    // end new theme 
+                    */}
                 <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
                     <div
@@ -299,6 +299,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={styles.linkWord}>Following</p>
                     </div>
                 </Link>
+                
                 )}
                 
                 { isUserLoggedIn() ? (
@@ -331,6 +332,101 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         </div>
                     </Link>
                 ):null}
+                
+                { isUserLoggedIn() ? (
+                    <Link to="/upload" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                    <div
+                        className={classNames(
+                            `${pathname.includes('/upload') ? styles.selected : styles.navLink}`
+                        )}
+                        onClick={() => {
+                            handleLinkClick(2)
+                            setSettingsDropdown(false)
+                        }}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10.0002" cy="10.0007" r="9.16667" stroke="#141B34" stroke-width="1.5"/>
+                        <path d="M10.0002 6.33398L10.0002 13.6673M10.0002 6.33398C9.35829 6.33398 8.15906 8.16209 7.7085 8.62565M10.0002 6.33398C10.642 6.33398 11.8413 8.16209 12.2918 8.62565" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+
+                        <p className={`${styles.linkWord} ${textColor}`}>Upload</p>
+                    </div>
+
+                    
+                    </Link>
+                ):null }
+
+                {/* <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                <div
+                    className={classNames(
+                        `${pathname.includes('/discover') ? styles.selected : styles.navLink}`
+                    )}
+                    onClick={() => {
+                        handleLinkClick(2)
+                        setSettingsDropdown(false)
+                    }}
+                >
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.16683 4.5013C8.16683 2.47626 6.52521 0.834635 4.50016 0.834635C2.47512 0.834635 0.833496 2.47626 0.833496 4.5013C0.833496 6.52635 2.47512 8.16797 4.50016 8.16797C6.52521 8.16797 8.16683 6.52635 8.16683 4.5013Z" stroke="#141B34" stroke-width="1.5"/>
+                    <path d="M8.16683 15.5013C8.16683 13.4763 6.52521 11.8346 4.50016 11.8346C2.47512 11.8346 0.833496 13.4763 0.833496 15.5013C0.833496 17.5263 2.47512 19.168 4.50016 19.168C6.52521 19.168 8.16683 17.5263 8.16683 15.5013Z" stroke="#141B34" stroke-width="1.5"/>
+                    <path d="M19.1668 4.5013C19.1668 2.47626 17.5252 0.834635 15.5002 0.834635C13.4751 0.834635 11.8335 2.47626 11.8335 4.5013C11.8335 6.52635 13.4751 8.16797 15.5002 8.16797C17.5252 8.16797 19.1668 6.52635 19.1668 4.5013Z" stroke="#141B34" stroke-width="1.5"/>
+                    <path d="M19.1668 15.5013C19.1668 13.4763 17.5252 11.8346 15.5002 11.8346C13.4751 11.8346 11.8335 13.4763 11.8335 15.5013C11.8335 17.5263 13.4751 19.168 15.5002 19.168C17.5252 19.168 19.1668 17.5263 19.1668 15.5013Z" stroke="#141B34" stroke-width="1.5"/>
+                    </svg>
+
+                    <p className={`${styles.linkWord} ${textColor}`}>Activity</p>
+                </div>
+
+                
+                </Link> */}
+                { isUserLoggedIn() ? (
+                    <Link to="/chat" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                        <div
+                            className={classNames(
+                                `${pathname.includes('/chat') ? styles.selected : styles.navLink}`
+                            )}
+                            onClick={() => {
+                                handleLinkClick(2)
+                                setSettingsDropdown(false)
+                            }}
+                        >
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.79199 12.291H13.2087M6.79199 7.70768H10.0003" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M11.9899 18.149C15.8243 17.8941 18.8786 14.7965 19.1299 10.9077C19.1791 10.1466 19.1791 9.35853 19.1299 8.59751C18.8786 4.70869 15.8243 1.61105 11.9899 1.35617C10.6817 1.26921 9.31593 1.26939 8.01044 1.35617C4.17602 1.61105 1.1217 4.70869 0.870383 8.59751C0.821201 9.35853 0.821201 10.1466 0.870383 10.9077C0.961917 12.324 1.58831 13.6354 2.32574 14.7427C2.75392 15.518 2.47134 16.4855 2.02536 17.3307C1.70379 17.9401 1.543 18.2447 1.6721 18.4649C1.8012 18.685 2.08957 18.692 2.6663 18.706C3.80686 18.7338 4.57596 18.4104 5.18645 17.9603C5.5327 17.7049 5.70582 17.5773 5.82515 17.5626C5.94447 17.5479 6.17928 17.6446 6.64884 17.838C7.07087 18.0118 7.56088 18.1191 8.01044 18.149C9.31593 18.2358 10.6817 18.236 11.9899 18.149Z" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round"/>
+                            </svg>
+
+                            <p className={`${styles.linkWord} ${textColor}`}>Messages</p>
+                        </div>
+
+
+                    </Link>
+                ):null }
+                
+
+                {/* <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                <div
+                    className={classNames(
+                        `${pathname.includes('/discover') ? styles.selected : styles.navLink}`
+                    )}
+                    onClick={() => {
+                        handleLinkClick(2)
+                        setSettingsDropdown(false)
+                    }}
+                >
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.833496 12.5228C0.833496 9.06582 0.833496 7.33734 1.90744 6.26339C2.98138 5.18945 4.70986 5.18945 8.16683 5.18945H11.8335C15.2905 5.18945 17.0189 5.18945 18.0929 6.26339C19.1668 7.33734 19.1668 9.06582 19.1668 12.5228C19.1668 15.9798 19.1668 17.7082 18.0929 18.7822C17.0189 19.8561 15.2905 19.8561 11.8335 19.8561H8.16683C4.70986 19.8561 2.98138 19.8561 1.90744 18.7822C0.833496 17.7082 0.833496 15.9798 0.833496 12.5228Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M7.25 2.4401L10 5.1901L13.6667 1.52344" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+
+                    <p className={`${styles.linkWord} ${textColor}`}>Profile</p>
+                </div>
+
+
+                </Link> */}
+
                 
 
                 <span

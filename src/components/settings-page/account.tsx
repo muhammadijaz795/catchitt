@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import analyticsBlack from '../../assets/analytics.svg';
 import atForgotPwd from '../../assets/atForgotPwd.png';
 import check from '../../assets/check.png';
@@ -21,10 +21,11 @@ import privacyPolicyIconBlack from '../../assets/privacyPolicyIcon.svg';
 import reportProblemBlack from '../../assets/reportProblemIcon.svg';
 import seezittLogoIcon from '../../assets/seezittLogoIcon.svg';
 import termsConfitionsIconBlack from '../../assets/termsConditionsIcon.svg';
-import Layout from '../../shared/layout';
+import SettingLayout from '../../shared/settingLayout';
 import { useAuthStore } from '../../store/authStore';
 import InputField from '../reusables/InputField';
 import styles from './account.module.scss';
+import sibarStyles from './../side-nav-bar/side-nav-bar.module.scss';
 import { DeleteReasonPopup } from './components/delete-reason-popup';
 import { ShareProfilePopup } from './components/shareProfilePopup';
 import { SwitchToBusinessPopup } from './components/switchToBusinessPopup';
@@ -48,6 +49,9 @@ import {
     termsConditionsIconWhite,
     analyticsWhite,
 } from '../../icons';
+import { SideNavBar } from '../side-nav-bar/side-nav-bar';
+import { SuggestedActivity } from '../suggested-activity/suggested-activity';
+import Navbar from '../../shared/navbar';
 
 export interface AccountProps {
     className?: string;
@@ -620,20 +624,23 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     return (
         <>
-            {/* <div className={styles.root}> */}
-            <Layout>
-                {/* <div className={styles.topBarDiv}>
-                    <TopBar />
-                </div> */}
-                <div className={styles.container}>
-                    {/* <div className={styles.leftSide}>
-                        <div className={styles.sideNavDiv}>
-                            <SideNavBar selectedIndex={selectedIndex} settingsDropdownState={true} />
+            <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
+                        <Navbar />            
+                <div className={styles.container} style={{ maxWidth: '1140px', margin: 'auto', marginTop: '5rem' }}>
+                    { <div className={sibarStyles.leftSide} style={{ width: '25%', backgroundColor: '#fff' }}>
+                        <div className={sibarStyles.sideNavDiv}>
+                        <Link to="/" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                            <div>
+                                <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0.833496 12.5228C0.833496 9.06582 0.833496 7.33734 1.90744 6.26339C2.98138 5.18945 4.70986 5.18945 8.16683 5.18945H11.8335C15.2905 5.18945 17.0189 5.18945 18.0929 6.26339C19.1668 7.33734 19.1668 9.06582 19.1668 12.5228C19.1668 15.9798 19.1668 17.7082 18.0929 18.7822C17.0189 19.8561 15.2905 19.8561 11.8335 19.8561H8.16683C4.70986 19.8561 2.98138 19.8561 1.90744 18.7822C0.833496 17.7082 0.833496 15.9798 0.833496 12.5228Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M7.25 2.4401L10 5.1901L13.6667 1.52344" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+
+                                <p className={sibarStyles.linkWord}>Profile</p>
+                            </div>
+                            </Link>
                         </div>
-                        <div className={styles.suggestedActivityDiv}>
-                            <SuggestedActivity showActivity={true} showSuggestedContent={true} />
-                        </div>
-                    </div> */}
+                    </div> }
                     <div className={` ${styles.middleSectionDiv} ${darkTheme} `}>
                         <div className={styles.settingsWrapper}>
                             <div className={`${styles.pageHeader} p-3`}>
@@ -940,8 +947,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                         </div>
                     </div>
                 </div>
-            </Layout>
-
+            </div>
             <ThemeProvider theme={darkTheme ? darkThemePalette : lightThemePalette}>
                 {passwordSuccessModal && (
                     <>

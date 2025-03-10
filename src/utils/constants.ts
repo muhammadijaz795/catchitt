@@ -83,6 +83,7 @@ export const APP_TEXTS = {
     GOOGLE: 'Continue with Google',
     TWITTER: 'Continue with Twitter',
     APPLE: 'Continue with Apple',
+    WORLDNOOR: 'Continue with WN Social',
 };
 
 export const LOGIN_OPTIONS = [
@@ -113,8 +114,8 @@ export const LOGIN_OPTIONS = [
     // },
     {
         styles: 'mt-3',
-        name: APP_TEXTS.APPLE,
-        image: appleAuth,
+        name: APP_TEXTS.WORLDNOOR,
+        image: 'https://wnsocial.com/images/40.svg?8f57b5cc3adddd472f9381e4029e6c60',
     },
 ];
 

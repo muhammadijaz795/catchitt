@@ -29,7 +29,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     const [followerSection, setFollowerSection] = useState(false);
     const [activeClass, setActiveClass] = useState(style.active);
     const [messageRequest, setMessageRequest] = useState(false);
-    const [receiveMessageRequest, setReceiveMessageRequest] = useState([]);
+    const [receiveMessageRequest, setReceiveMessageRequest] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1); // Current page to fetch
     const [hasMoreData, setHasMoreData] = useState(true); // To track if there is more data
 

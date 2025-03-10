@@ -245,7 +245,10 @@
   // line-height: 120%;
   /* 16.8px */
 }
-
+.loginWithWN{
+  background-color: #0866ff;
+  color: white;
+}
 
 .darkTheme {
   background: black !important;
@@ -430,4 +433,136 @@ div.darkTheme div.darkWhiteTheme :hover {
 .mediaContainer:hover .DivMediaCardBottom {
   background-color: transparent !important;
   margin-bottom: 80px;
+}
+
+.wnSocialModal{
+  .modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Close button in the top-left or top-right corner */
+  .closeBtn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: auto; /* pushes the logo/title to the right */
+    color: #333;
+  }
+  
+  /* Logo and title grouped */
+  .logoTitle {
+    display: flex;
+    align-items: center;
+    margin: 0 auto; /* center this group horizontally if desired */
+  }
+  
+  /* Logo image */
+  .logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-right: 0.5rem;
+  }
+  
+  /* Modal Title */
+  .modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  /* User info container */
+  .userInfo {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+  }
+  
+  /* Profile picture styling */
+  .profilePic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+  
+  /* User name & email */
+  .userDetails {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .userName {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111111 !important;
+    text-align: left;
+  }
+  
+  .userEmail {
+    margin: 0.25rem 0 0;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  
+  /* "Add Another Account" section */
+  .addAccount {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    color: #111111; /* or your primary brand color */
+    font-weight: 500;
+    font-size: 1rem;
+  }
+  
+  /* Plus icon styling */
+  .plusIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  
+  /* Privacy text paragraph */
+  .privacyText {
+    font-size: 11px;
+    line-height: 1.4;
+    color: #7B7D82FE;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    padding: 0 1rem ;
+    text-align: center;
+  }
+  .privacyText span{
+    font-weight: 500;
+    color: #111111;
+  }
+  /* Continue button */
+  .continueBtn {
+    width: 100%;
+    color: #111111;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+    background: transparent;
+  }
+}
+.createBtnD{
+  color: #0866ff;
+  padding-left: 0.2rem;
+  text-align: center;
+  cursor: pointer;
 }

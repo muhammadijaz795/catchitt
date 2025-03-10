@@ -66,6 +66,17 @@ const loginSlice: any = createSlice({
             return action?.payload?.data;
         });
 
+        builder.addCase(loginWithWNService.fulfilled, (_state: any, action: any) => {
+            console.log('loginWithWNService.fulfilled', action?.payload?.data);
+            localStorage.setItem('userId', action?.payload?.data?._id || '');
+            localStorage.setItem('token', action?.payload?.data?.token || '');
+            localStorage.setItem('profile', JSON.stringify(action?.payload?.data) || '');
+            db.profile.add(action?.payload?.data);
+            useAuthStore.setState(action?.payload?.data);
+
+            return action?.payload?.data;
+        });
+
         builder.addCase(getProfileData.fulfilled, (_state: any, action: any) => {
             localStorage.setItem('profile', JSON.stringify(action?.payload) || '');
             _state.avatar = action?.payload?.avatar;
@@ -136,6 +147,26 @@ export const loginWithFBService = createAsyncThunk(
     async (values: any, { rejectWithValue }) => {
         try {
             let res: any = await post('/auth/social/facebook', {
+                type: 'application/json',
+                data: { isLoggedIn: true, ...values },
+            });
+
+            if (res?.status === STATUS_CODE.OK) {
+                return res?.data;
+            } else {
+                return rejectWithValue(res?.message || 'Invalid status code');
+            }
+        } catch (error: any) {
+            return rejectWithValue(error?.message);
+        }
+    }
+);
+
+export const loginWithWNService = createAsyncThunk(
+    'auth/loginWithWNService',
+    async (values: any, { rejectWithValue }) => {
+        try {
+            let res: any = await post('/auth/social/world-nour-signin', {
                 type: 'application/json',
                 data: { isLoggedIn: true, ...values },
             });

@@ -268,24 +268,13 @@ function Actions(props: any) {
                                             valuesH({...item, dropdown: false}, 'showEmogis');
                                         }}
                                     />}
-                                    <LongPressButton 
-                                    // onLongPress={(value:any) => longPressH(item,value)}
-                                    // onMouseEnter={() => {
-                                    //     longPressH(item)
-                                    //   }}
-                                    //   onMouseLeave={() => {
-                                    //     longPressH(item)
-                                    //   }}
-                                    >
+                                    
+                                    <LongPressButton className={`${item?.type == 'Image' || item?.type == 'Video' ? 'bg-white p-2' : ''}`}>
                                         {item.isForwarded &&
                                             <div className='text-xs text-start flex px-1 gap-1'>
                                                 <img className='w-4' src={isDarkTheme ? rightArrowCurvedinWhite : rightArrowCurved} alt="forwarded-icon" />  Forwarded
                                             </div>
                                         }
-
-                                    {/* <div className={style.messageText}>
-                                            {JSON.stringify(item, null, 2)} 
-                                            </div> */}
 
                                         {item?.replysms ? (
                                             <div
@@ -296,14 +285,9 @@ function Actions(props: any) {
                                                     <p className={style.primaryText}>
                                                         {activeUser?.userName}
                                                     </p>
-
                                                     <p className={style.prevmsg}>
                                                         {renderContent(item?.replysms)}
                                                     </p>
-                                                    
-                                                    {/* <p className={style.prevmsg}>
-                                                        <TextHighlighter searchQuery={searchQuery} text={item?.replysms} />
-                                                    </p> */}
                                                 </div>
                                                 <div>
                                                     <p className={style.ans}><TextHighlighter searchQuery={searchQuery} text={item.msg} /></p>
@@ -323,31 +307,37 @@ function Actions(props: any) {
                                                     </p>}
 
                                                 {['Image', 'Sticker', 'Gif'].some(type => type === item?.type) &&
-                                                    <img src={item.msg} />
+                                                    <div className="bg-white p-2">
+                                                        <img src={item.msg} style={{ height: '14rem' }} />
+                                                    </div>
                                                 }
 
                                                 {item?.type == 'Video' &&
-                                                    <div onClick={() => setPlayingVideo(item.msg)} className={`absolute top-0 ${item.receiverId == loggedInUserId ? 'left-0' : 'right-0'} h-full z-10 bg-black bg-opacity-50`} style={{ width: "60%" }}>
-                                                        <a href="#" className="customPlayBtn"></a>
-                                                        <div className="flex absolute bottom-0 left-1">
-                                                            <img src={videoDuration} alt="duration" />
-                                                            <p className="text-white text-xs ml-1 opacity-60">0</p>
+                                                    <div className="bg-white p-2">
+                                                        <div onClick={() => setPlayingVideo(item.msg)} className={`absolute ${style.overrideTop} ${item.receiverId == loggedInUserId ? 'left-0' : 'right-0'}  z-10 bg-black bg-opacity-50`} style={{ width: '56%',  left: '50%', transform: 'translateX(-50%)', height: '12.85rem'}}>
+                                                            <a href="#" className="customPlayBtn"></a>
+                                                            <div className="flex absolute bottom-0 left-1">
+                                                                <img src={videoDuration} alt="duration" />
+                                                                <p className="text-white text-xs ml-1 opacity-60">0</p>
+                                                            </div>
                                                         </div>
-                                                    </div>}
-                                                {item?.type == 'Video' && <video
-                                                    onLoadedMetadata={getMediaInfo}
-                                                    disablePictureInPicture
-                                                    controlsList="nodownload noplaybackrate"
-                                                    // controls={true}
-                                                    style={{ height: "60%", width: "60%", margin: item.receiverId == loggedInUserId ? '0 auto 0 0' : '0 0 0 auto' }}
-                                                    src={item.msg}
-                                                />}
+                                                        <video
+                                                            onLoadedMetadata={getMediaInfo}
+                                                            disablePictureInPicture
+                                                            controlsList="nodownload noplaybackrate"
+                                                            style={{
+                                                                height: "16rem",
+                                                                width: "60%",
+                                                                margin: "auto"
+                                                            }}
+                                                            src={item.msg}
+                                                        />
+                                                    </div>
+                                                }
                                             </>
                                         )}
-                                        {/* {item.isForwarded && <div className='text-xs px-2 opacity-60 text-start'>
-                                                          <small>{item.recieverName}</small>
-                                                        </div>} */}
                                     </LongPressButton>
+
                                     {item?.reactions?.length > 0 ? (
                                         item.reactions.map((reaction: any, index: number) => (
                                             <span className={style.emojiShowed} key={index}>{reaction.react} </span>
@@ -360,7 +350,10 @@ function Actions(props: any) {
                                     </>}
                                     
                                     {item?.isrecevied && item?.isRead && (
-                                        <img src={seenMsgSvg} alt="" />
+                                        // <img src={seenMsgSvg} alt="" />
+                                        <svg width="13" height="7" viewBox="0 0 13 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12.4027 0.256008C12.1193 -0.0658309 11.6554 -0.0658309 11.372 0.256008L7.19738 5.01045L6.12796 3.79624L8.22814 1.4117C8.5116 1.08986 8.5116 0.563218 8.22814 0.241379C7.94468 -0.0804598 7.48084 -0.0804598 7.19738 0.241379L3.00989 5.01045L1.61836 3.43051C1.3349 3.10867 0.871056 3.10867 0.587595 3.43051C0.304135 3.75235 0.304135 4.279 0.587595 4.60084L2.49451 6.76594C2.63624 6.92685 2.81662 7 3.00989 7C3.20316 7 3.38355 6.91222 3.52528 6.75131L5.09719 4.96656L6.66911 6.75131C6.81084 6.91222 6.99122 6.98537 7.18449 6.98537C7.36488 6.98537 7.55814 6.8976 7.69987 6.73668L12.4027 1.39707C12.6991 1.08986 12.6991 0.577847 12.4027 0.256008Z" fill="#23A9F9"/>
+                                        </svg>                                        
                                     )}
                                     <p>{item.time}</p>
                                 </div>

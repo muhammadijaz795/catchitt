@@ -37,7 +37,7 @@ import UploadPage from './components/upload';
 import { useAuthStore } from './store/authStore';
 import useApp from './useApp';
 import GoLive from './components/go-live';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { LastPageRounded, Visibility, VisibilityOff } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Analytics from './components/analytics';
@@ -57,6 +57,7 @@ import {
     signupService,
     signupWithPhoneNumberService,
     logoutUserPopup,
+    loginWithWNService,
 } from './redux/reducers/auth';
 import {
     APP_TEXTS,
@@ -89,6 +90,15 @@ import { db } from './utils/db';
 import { useUpdateEffect } from 'react-use';
 import SoundPage from './components/sound-module/SoundPage';
 import { getCountryPhoneLengthFromIso } from './utils/helpers';
+
+interface localStorageUser {
+    name: string;
+    email: string;
+    avatar: string;
+    token: string;
+    socialId: string;
+    password: string;
+  }
 
 // Functional component to handle the initial route navigation
 const InitialRouteHandler = () => {
@@ -195,6 +205,9 @@ function App() {
     const [isMainLoginOption, setIsMainLoginOption] = useState(true);
     const [isMainSignupOption, setIsMainSignupOption] = useState(true);
     const [isLoginSection, setIsLoginSection] = useState(true);
+    const [isLoginWithWN, setIsLoginWithWN] = useState(false);
+    const [wnLoginError, setWNLoginError] = useState(false);
+    const [isWNLoginWithCreds, setIsWNLoginWithCreds] = useState(false);
     const [isForgotPasswordScenario, setIsForgotPasswordScenario] = useState(false);
     const isLoginPopup = useSelector((store: any) => store?.reducers?.popupSlice?.isLoginPopup);
     const isLogoutPopup = useSelector((store: any) => store?.reducers?.popupLogoutSlice?.isLogoutPopup);
@@ -236,6 +249,24 @@ function App() {
     const [lightDarkTheme, setlightDarkTheme] = useState('');
     const [darkWhiteTheme, setDarkWhiteTheme] = useState('');
     const [textColor, setTextColor] = useState('text-black');
+    const [localStorageUsers, setLocalStorageUsers] = useState<localStorageUser[]>([]);
+
+
+
+
+    // This code will be remove later, added for code understanding...
+    useEffect(() => {
+        console.log('isLoginWithWN ' + isLoginWithWN);
+        console.log('loginWithPhone ' + loginWithPhone);
+        console.log('isMainLoginOption ' + isMainLoginOption);
+        console.log('isMainSignupOption ' + isMainSignupOption);
+        console.log('isLoginSection ' + isLoginSection);
+        console.log('isForgotPasswordScenario ' + isForgotPasswordScenario);
+        console.log('isLoginPopup ' + isLoginPopup);
+        console.log('isLogoutPopup ' + isLogoutPopup);
+    }, [isLoginWithWN, loginWithPhone, isMainLoginOption, isMainSignupOption, isLoginSection, isForgotPasswordScenario, isLoginPopup, isLogoutPopup]); 
+
+
 
     const signupItemClickHandler = (name: string) => {
         switch (name) {
@@ -251,6 +282,48 @@ function App() {
                 console.log('Default case');
         }
     };
+
+    const handleBackOnWNSocial = () => {
+        setIsLoginWithWN(false);
+        setIsWNLoginWithCreds(false);
+        setIsMainLoginOption(true);
+        setIsMainSignupOption(true);
+        // Your function logic here
+    };
+
+    const handleLoginWithSocialID = async(user : localStorageUser) => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`${API_KEY}/auth/social/world-nour`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ socialId: user.socialId, token: user.token }), 
+            });
+
+            const responseJson = await response.json();
+            const data = responseJson.data;
+            console.log(data);
+
+            if (response.ok) {
+                setIsLoading(false);
+                closeLoginPopupHandler();
+                window.location.href = '/home';
+                // Handle successful login (e.g., store token, redirect user)
+            } else {
+                // display error message here...
+                //alert(data.message || "Login failed");
+
+                setWNLoginError(true);
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            alert("Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const loginItemClickHandler = (name: string) => {
         switch (name) {
@@ -275,9 +348,10 @@ function App() {
                 // Handle Twitter login
                 console.log('Twitter login');
                 break;
-            case APP_TEXTS.APPLE:
+            case APP_TEXTS.WORLDNOOR:
                 // Handle Apple login
-                console.log('Apple login');
+                console.log('WN Social login');
+                loginWithWorldnoorHandler();
                 break;
             default:
                 console.log('Default case');
@@ -296,6 +370,135 @@ function App() {
             console.log('No Auth : ', nonOAuthError);
         },
     });
+
+    const loginWithWorldnoorHandler = async () => {
+        setIsLoginWithWN(true);
+        setIsMainLoginOption(false);
+        setIsMainSignupOption(false);
+    }
+
+    const continueWithEmailHandler = async() => {
+        setIsLoginWithWN(false);
+        setIsWNLoginWithCreds(false);
+        setIsMainSignupOption(false);
+    }
+
+    const saveUserToLocalStorage = async (newUser: any): Promise<void> => {
+        try {
+            // Get existing users from local storage or initialize as an empty array
+            const existingUsers: any[] = JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]");
+    
+            // Check if the user already exists based on socialId
+            if (!existingUsers.some(user => user.socialId === newUser.socialId)) {
+                existingUsers.push(newUser);
+                await localStorage.setItem("wn_loggedin_users", JSON.stringify(existingUsers));
+                console.log("User added:", newUser);
+            } else {
+                console.log("User already exists!");
+            }
+        } catch (error) {
+            console.error("Error saving user to local storage:", error);
+        }
+    };
+    
+
+    const getUsersFromLocalStorage = (): any[] => {
+        return JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]");
+    };
+
+    const removeUserFromLocalStorage = (userId: number): void => {
+        let users: any[] = JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]");
+        users = users.filter(user => user.id !== userId);
+        localStorage.setItem("wn_loggedin_users", JSON.stringify(users));
+        console.log("User removed:", userId);
+    };
+
+    const loginWithWNSocial = async () => {
+        setWNLoginError(false);
+        setEmailIdError(false);
+        setIsLoading(true);
+        if (email && validateEmail(email)) {
+            setEmailIdError(false);
+        } else {
+            setEmailIdError(true);
+            setIsLoading(false);
+            return;
+        }
+
+        dispatch(loginWithWNService({ email, password }))
+            .then((res: any) => {
+                if (res?.error) {
+                    console.log('Response error : ', res?.error);
+                    setWNLoginError(true);
+                    setIsLoading(false);
+                    console.log('response payload...', res.payload);
+                } else if (res?.payload?.status == 200) {
+                    console.log('data after successfull login', res?.payload?.data);
+                    const responseData = res?.payload?.data;
+
+                    const userObject = {
+                        'name': responseData.name,
+                        'email': responseData.email,
+                        'avatar': responseData.avatar,
+                        'token': responseData.token,
+                        'socialId': responseData.socialId,
+                        // password will be remove later..
+                        'password': password,
+                    };
+                    saveUserToLocalStorage(userObject);
+                    closeLoginPopupHandler();
+                    window.location.href = '/home';
+                }
+            })
+            .catch((error: any) => {
+                setWNLoginError(true);
+                setIsLoading(false);
+                console.log('Error login with google : ', error);
+            });
+    }
+
+    // This will be remove later.
+    const loginWithWNSocialTemp = async (user: any) => {
+        setWNLoginError(false);
+        setEmailIdError(false);
+        setIsLoading(true);
+        
+
+        dispatch(loginWithWNService({ email: user.email, password: user.password }))
+            .then((res: any) => {
+                if (res?.error) {
+                    console.log('Response error : ', res?.error);
+                    setWNLoginError(true);
+                    setIsLoading(false);
+                    console.log('response payload...', res.payload);
+                } else if (res?.payload?.status == 200) {
+                    closeLoginPopupHandler();
+                    window.location.href = '/home';
+                }
+            })
+            .catch((error: any) => {
+                setWNLoginError(true);
+                setIsLoading(false);
+                console.log('Error login with google : ', error);
+            });
+    }
+
+
+    const handleGoBackToWNProfiles = async () => {
+        setIsLoginWithWN(true);
+        setIsMainLoginOption(false);
+        setIsMainSignupOption(false);
+    }
+
+    const addWNSocialAccountHandler = async() => {
+        setEmailIdError(false);
+        setIsLoading(false);
+        setWNLoginError(false);
+        setIsLoginWithWN(false);
+        setIsWNLoginWithCreds(true);
+        setIsMainLoginOption(false);
+        setIsMainSignupOption(false);
+    }
 
     const loginWithGoogleAccessToken = async (accessToken: string) => {
         dispatch(loginWithGoogleService({ accessToken }))
@@ -699,11 +902,15 @@ function App() {
     };
 
     const closeLoginPopupHandler = () => {
+        setIsWNLoginWithCreds(false);
+        setIsLoginWithWN(false);
         dispatch(closeLoginPopup());
         setIsMainLoginOption(true);
     };
 
     useEffect(() => {
+        const storedUsers = JSON.parse(localStorage.getItem("wn_loggedin_users") || "[]") as localStorageUser[];
+        setLocalStorageUsers(storedUsers);
         fetchCountriesList();
         useGeoService();
     }, []);
@@ -721,6 +928,8 @@ function App() {
     };
 
     const handleSignupClick = () => {
+        setIsLoginWithWN(false);
+        setIsWNLoginWithCreds(false);
         setIsLoginSection(false);
     };
 
@@ -963,14 +1172,211 @@ function App() {
                                 <div
                                     className={`w-[30.688rem] mx-auto mt-3 bg-white py-4 rounded-lg relative h-[42.125rem]  ${lightDarkTheme} `}
                                 >
-                                    <div
+{/* start wn social modal */}
+{/* {style.wnSocialModal} */}
+
+                        {isWNLoginWithCreds && !isLoginWithWN ? (
+                        <>    
+                        <div className="d-flex justify-content-between">
+                            <div className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative left-4 p-1 cursor-pointer"
+                            onClick={handleGoBackToWNProfiles}
+                            >
+                                <img className="h-6 w-6 object-contain" src="/public/images/icons/backArrow.svg" />
+                            </div>
+                            <div 
+                                onClick={closeLoginPopupHandler}
+                                className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative right-4 p-1 cursor-pointer">
+                                    <img className="h-4 w-4 object-contain" src="/public/images/icons/close.svg" />
+                            </div>  
+                        </div>
+                        <div className="w-[90%] mx-auto">
+                            <h2 className="mt-3 mb-3 color-[#111111] d-flex justify-content-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="207" height="47" viewBox="0 0 207 47" fill="none">
+                                    <path d="M27.5273 42.3241H15.3231C7.12077 42.3241 0.470703 35.6749 0.470703 27.4736V15.271C0.470703 7.06964 7.12077 0.42041 15.3231 0.42041H27.5273C35.7296 0.42041 42.3797 7.06964 42.3797 15.271V27.4736C42.3797 35.6749 35.7296 42.3241 27.5273 42.3241Z" fill="url(#paint0_linear_33_4905)"/>
+                                    <path d="M14.4569 17.2087L21.4086 27.8824C21.9997 28.7839 22.003 29.9504 21.4164 30.8552C20.0243 32.9994 16.8898 33.006 15.4922 30.8662L5.07349 14.9209H10.2243C11.9302 14.9209 13.5222 15.7804 14.4569 17.2087ZM20.6783 14.9209H15.5275L25.9473 30.8651C27.3461 33.0049 30.4805 32.9994 31.8715 30.8541C32.4582 29.9493 32.456 28.7828 31.8638 27.8813L24.9121 17.2076C23.9752 15.7804 22.3831 14.9209 20.6783 14.9209ZM35.3783 17.2087C34.4414 15.7815 32.8504 14.9209 31.1445 14.9209H25.9937L33.7763 26.8307L35.9561 22.1656C36.6455 20.693 36.524 18.9674 35.6368 17.6053L35.3783 17.2087Z" fill="#F2F2F2"/>
+                                    <path d="M78.4249 13.089L71.9304 35H67.8635L63.2606 18.417L58.374 35L54.3386 35.0315L48.1278 13.089H51.9425L56.4824 30.9331L61.4005 13.089H65.4359L70.0073 30.8385L74.5786 13.089H78.4249ZM99.3908 35H95.7968L84.9831 18.6377V35H81.3891V13.0575H84.9831L95.7968 29.3883V13.0575H99.3908V35ZM119.52 35.2207C118.048 35.2207 116.724 34.9685 115.547 34.464C114.37 33.9386 113.445 33.203 112.773 32.2572C112.1 31.3114 111.764 30.208 111.764 28.9469H115.61C115.694 29.8927 116.062 30.6703 116.714 31.2799C117.386 31.8894 118.322 32.1941 119.52 32.1941C120.76 32.1941 121.726 31.8999 122.42 31.3114C123.114 30.7019 123.46 29.9242 123.46 28.9784C123.46 28.2428 123.24 27.6438 122.798 27.1814C122.378 26.719 121.842 26.3617 121.19 26.1095C120.56 25.8573 119.677 25.5841 118.542 25.2898C117.113 24.9115 115.947 24.5332 115.043 24.1548C114.16 23.7555 113.403 23.146 112.773 22.3263C112.142 21.5066 111.827 20.4137 111.827 19.0475C111.827 17.7865 112.142 16.683 112.773 15.7372C113.403 14.7915 114.286 14.0663 115.421 13.5619C116.556 13.0575 117.87 12.8053 119.362 12.8053C121.485 12.8053 123.219 13.3412 124.564 14.4131C125.93 15.464 126.687 16.9142 126.834 18.7638H122.861C122.798 17.9651 122.42 17.2821 121.726 16.7146C121.033 16.1471 120.119 15.8634 118.984 15.8634C117.954 15.8634 117.113 16.1261 116.461 16.6515C115.81 17.177 115.484 17.9336 115.484 18.9214C115.484 19.594 115.684 20.151 116.083 20.5923C116.504 21.0127 117.029 21.349 117.659 21.6012C118.29 21.8534 119.152 22.1266 120.245 22.4209C121.695 22.8202 122.872 23.2196 123.776 23.6189C124.7 24.0182 125.478 24.6383 126.109 25.479C126.76 26.2987 127.086 27.4021 127.086 28.7893C127.086 29.9032 126.781 30.9541 126.172 31.9419C125.583 32.9298 124.711 33.7284 123.555 34.3379C122.42 34.9264 121.075 35.2207 119.52 35.2207ZM138.862 35.2837C137.222 35.2837 135.74 34.9159 134.416 34.1803C133.092 33.4237 132.052 32.3728 131.295 31.0276C130.539 29.6615 130.16 28.0852 130.16 26.2987C130.16 24.5332 130.549 22.9673 131.327 21.6012C132.104 20.235 133.166 19.1842 134.511 18.4485C135.856 17.7129 137.359 17.3451 139.019 17.3451C140.68 17.3451 142.182 17.7129 143.528 18.4485C144.873 19.1842 145.934 20.235 146.712 21.6012C147.489 22.9673 147.878 24.5332 147.878 26.2987C147.878 28.0641 147.479 29.63 146.68 30.9961C145.882 32.3623 144.789 33.4237 143.401 34.1803C142.035 34.9159 140.522 35.2837 138.862 35.2837ZM138.862 32.1626C139.786 32.1626 140.648 31.9419 141.447 31.5005C142.266 31.0592 142.929 30.3971 143.433 29.5144C143.937 28.6316 144.19 27.5597 144.19 26.2987C144.19 25.0376 143.948 23.9762 143.464 23.1145C142.981 22.2317 142.34 21.5697 141.541 21.1283C140.743 20.6869 139.881 20.4662 138.956 20.4662C138.031 20.4662 137.17 20.6869 136.371 21.1283C135.593 21.5697 134.973 22.2317 134.511 23.1145C134.049 23.9762 133.817 25.0376 133.817 26.2987C133.817 28.1692 134.29 29.6195 135.236 30.6493C136.203 31.6582 137.411 32.1626 138.862 32.1626ZM150.233 26.2987C150.233 24.5122 150.59 22.9463 151.305 21.6012C152.041 20.235 153.049 19.1842 154.332 18.4485C155.614 17.7129 157.085 17.3451 158.745 17.3451C160.847 17.3451 162.581 17.8495 163.947 18.8584C165.334 19.8462 166.27 21.2649 166.753 23.1145H162.875C162.56 22.2527 162.056 21.5802 161.362 21.0968C160.668 20.6134 159.796 20.3717 158.745 20.3717C157.274 20.3717 156.097 20.8971 155.214 21.948C154.353 22.9779 153.922 24.4281 153.922 26.2987C153.922 28.1692 154.353 29.63 155.214 30.6809C156.097 31.7317 157.274 32.2572 158.745 32.2572C160.826 32.2572 162.203 31.3429 162.875 29.5144H166.753C166.249 31.2799 165.303 32.688 163.916 33.7389C162.528 34.7688 160.805 35.2837 158.745 35.2837C157.085 35.2837 155.614 34.9159 154.332 34.1803C153.049 33.4237 152.041 32.3728 151.305 31.0276C150.59 29.6615 150.233 28.0852 150.233 26.2987ZM172.163 15.3274C171.512 15.3274 170.965 15.1067 170.524 14.6653C170.083 14.224 169.862 13.6775 169.862 13.026C169.862 12.3744 170.083 11.8279 170.524 11.3866C170.965 10.9452 171.512 10.7245 172.163 10.7245C172.794 10.7245 173.33 10.9452 173.771 11.3866C174.213 11.8279 174.433 12.3744 174.433 13.026C174.433 13.6775 174.213 14.224 173.771 14.6653C173.33 15.1067 172.794 15.3274 172.163 15.3274ZM173.929 17.6288V35H170.335V17.6288H173.929ZM177.449 26.2356C177.449 24.4911 177.807 22.9463 178.521 21.6012C179.257 20.2561 180.245 19.2157 181.485 18.4801C182.746 17.7234 184.133 17.3451 185.646 17.3451C187.012 17.3451 188.2 17.6183 189.209 18.1648C190.239 18.6902 191.058 19.3523 191.668 20.151V17.6288H195.293V35H191.668V32.4148C191.058 33.2345 190.228 33.9176 189.177 34.464C188.126 35.0105 186.928 35.2837 185.583 35.2837C184.091 35.2837 182.725 34.9054 181.485 34.1488C180.245 33.3711 179.257 32.2992 178.521 30.9331C177.807 29.5459 177.449 27.9801 177.449 26.2356ZM191.668 26.2987C191.668 25.1006 191.416 24.0603 190.911 23.1775C190.428 22.2948 189.787 21.6222 188.988 21.1598C188.189 20.6974 187.328 20.4662 186.403 20.4662C185.478 20.4662 184.616 20.6974 183.818 21.1598C183.019 21.6012 182.368 22.2633 181.863 23.146C181.38 24.0077 181.138 25.0376 181.138 26.2356C181.138 27.4336 181.38 28.4845 181.863 29.3883C182.368 30.292 183.019 30.9856 183.818 31.469C184.637 31.9314 185.499 32.1626 186.403 32.1626C187.328 32.1626 188.189 31.9314 188.988 31.469C189.787 31.0066 190.428 30.3341 190.911 29.4513C191.416 28.5476 191.668 27.4967 191.668 26.2987ZM203.608 11.6703V35H200.014V11.6703H203.608Z" fill="black"/>
+                                    <defs>
+                                    <linearGradient id="paint0_linear_33_4905" x1="2.19636" y1="-1.05854" x2="38.1129" y2="40.8494" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00A8E8"/>
+                                    <stop offset="1" stop-color="#0883B2"/>
+                                    </linearGradient>
+                                    </defs>
+                                </svg>
+                            </h2>
+                            <div className="flex flex-row justify-between items-center my-4">
+                                <p className="text-[1rem] color-[#111111] px-2">WN Social is your gateway to enter all apps developed by Posh. Create your Worldnoor ID or login if you already have one.</p>
+                            </div>
+                            <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
+                                <input
+                                className="bg-login-btn w-full"
+                                type="text"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) =>
+                                    setEmail(e.target.value)
+                                }
+                                />
+                            </div>
+                            {emailIdError ? (
+                                <p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                    {
+                                        'Please enter valid email ID'
+                                    }
+                                </p>
+                            ) : null}
+                            <div className="flex flex-row justify-between items-center border-[1px] bg-login-btn mt-2 rounded-md py-2.5 px-3">
+                                <input
+                                className="w-2/3 bg-login-btn"
+                                type="password"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) =>
+                                    setPassword(
+                                        e.target.value
+                                    )}
+                                />
+                            </div>
+                            {wnLoginError ? (
+                                <p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                    {
+                                        'Signin credentials are incorrect'
+                                    }
+                                </p>
+                            ) : null}
+                            <div 
+                                onClick={!isLoading ? loginWithWNSocial : undefined} // Disable click if loading
+                                className={`flex flex-row items-center mt-4 rounded-md py-2.5 px-3 cursor-pointer bg-[#0866ff] 
+                                    ${isLoading ? "opacity-50 pointer-events-none" : ""}`} // Add blur effect when loading
+                            >
+                                <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                    <p className='text-white'>
+                                        {isLoading ? (
+                                            <CircularProgress
+                                                style={{
+                                                    width: 18,
+                                                    height: 18,
+                                                    color: 'white',
+                                                }}
+                                            />
+                                        ) : "Login to Worldnoor"}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className='d-flex my-2 justify-center'>
+                             Or
+                                <span
+                                onClick={handleSignupClick}
+                                className={style.createBtnD}> Create an Account</span>
+                            </div>
+                            </div>
+                        </>
+                        ) : null
+}
+
+                                { isLoginWithWN &&
+                                <div className={style.wnSocialModal}>
+                                    <div className="d-flex justify-content-between">
+                                        <div className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative left-4 p-1 cursor-pointer"
+                                        onClick={handleBackOnWNSocial}
+                                        >
+                                            <img className="h-6 w-6 object-contain" src="/public/images/icons/backArrow.svg" />
+                                        </div>
+                                        <div 
+                                        onClick={closeLoginPopupHandler}
+                                        className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative right-4 p-1 cursor-pointer">
+                                            <img className="h-4 w-4 object-contain" src="/public/images/icons/close.svg" />
+                                        </div>
+                                    </div>
+                                    <div className={style.modalHeader}>
+                                        <div className={style.logoTitle}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="207" height="47" viewBox="0 0 207 47" fill="none">
+                                            <path d="M27.5273 42.3241H15.3231C7.12077 42.3241 0.470703 35.6749 0.470703 27.4736V15.271C0.470703 7.06964 7.12077 0.42041 15.3231 0.42041H27.5273C35.7296 0.42041 42.3797 7.06964 42.3797 15.271V27.4736C42.3797 35.6749 35.7296 42.3241 27.5273 42.3241Z" fill="url(#paint0_linear_33_4905)"/>
+                                            <path d="M14.4569 17.2087L21.4086 27.8824C21.9997 28.7839 22.003 29.9504 21.4164 30.8552C20.0243 32.9994 16.8898 33.006 15.4922 30.8662L5.07349 14.9209H10.2243C11.9302 14.9209 13.5222 15.7804 14.4569 17.2087ZM20.6783 14.9209H15.5275L25.9473 30.8651C27.3461 33.0049 30.4805 32.9994 31.8715 30.8541C32.4582 29.9493 32.456 28.7828 31.8638 27.8813L24.9121 17.2076C23.9752 15.7804 22.3831 14.9209 20.6783 14.9209ZM35.3783 17.2087C34.4414 15.7815 32.8504 14.9209 31.1445 14.9209H25.9937L33.7763 26.8307L35.9561 22.1656C36.6455 20.693 36.524 18.9674 35.6368 17.6053L35.3783 17.2087Z" fill="#F2F2F2"/>
+                                            <path d="M78.4249 13.089L71.9304 35H67.8635L63.2606 18.417L58.374 35L54.3386 35.0315L48.1278 13.089H51.9425L56.4824 30.9331L61.4005 13.089H65.4359L70.0073 30.8385L74.5786 13.089H78.4249ZM99.3908 35H95.7968L84.9831 18.6377V35H81.3891V13.0575H84.9831L95.7968 29.3883V13.0575H99.3908V35ZM119.52 35.2207C118.048 35.2207 116.724 34.9685 115.547 34.464C114.37 33.9386 113.445 33.203 112.773 32.2572C112.1 31.3114 111.764 30.208 111.764 28.9469H115.61C115.694 29.8927 116.062 30.6703 116.714 31.2799C117.386 31.8894 118.322 32.1941 119.52 32.1941C120.76 32.1941 121.726 31.8999 122.42 31.3114C123.114 30.7019 123.46 29.9242 123.46 28.9784C123.46 28.2428 123.24 27.6438 122.798 27.1814C122.378 26.719 121.842 26.3617 121.19 26.1095C120.56 25.8573 119.677 25.5841 118.542 25.2898C117.113 24.9115 115.947 24.5332 115.043 24.1548C114.16 23.7555 113.403 23.146 112.773 22.3263C112.142 21.5066 111.827 20.4137 111.827 19.0475C111.827 17.7865 112.142 16.683 112.773 15.7372C113.403 14.7915 114.286 14.0663 115.421 13.5619C116.556 13.0575 117.87 12.8053 119.362 12.8053C121.485 12.8053 123.219 13.3412 124.564 14.4131C125.93 15.464 126.687 16.9142 126.834 18.7638H122.861C122.798 17.9651 122.42 17.2821 121.726 16.7146C121.033 16.1471 120.119 15.8634 118.984 15.8634C117.954 15.8634 117.113 16.1261 116.461 16.6515C115.81 17.177 115.484 17.9336 115.484 18.9214C115.484 19.594 115.684 20.151 116.083 20.5923C116.504 21.0127 117.029 21.349 117.659 21.6012C118.29 21.8534 119.152 22.1266 120.245 22.4209C121.695 22.8202 122.872 23.2196 123.776 23.6189C124.7 24.0182 125.478 24.6383 126.109 25.479C126.76 26.2987 127.086 27.4021 127.086 28.7893C127.086 29.9032 126.781 30.9541 126.172 31.9419C125.583 32.9298 124.711 33.7284 123.555 34.3379C122.42 34.9264 121.075 35.2207 119.52 35.2207ZM138.862 35.2837C137.222 35.2837 135.74 34.9159 134.416 34.1803C133.092 33.4237 132.052 32.3728 131.295 31.0276C130.539 29.6615 130.16 28.0852 130.16 26.2987C130.16 24.5332 130.549 22.9673 131.327 21.6012C132.104 20.235 133.166 19.1842 134.511 18.4485C135.856 17.7129 137.359 17.3451 139.019 17.3451C140.68 17.3451 142.182 17.7129 143.528 18.4485C144.873 19.1842 145.934 20.235 146.712 21.6012C147.489 22.9673 147.878 24.5332 147.878 26.2987C147.878 28.0641 147.479 29.63 146.68 30.9961C145.882 32.3623 144.789 33.4237 143.401 34.1803C142.035 34.9159 140.522 35.2837 138.862 35.2837ZM138.862 32.1626C139.786 32.1626 140.648 31.9419 141.447 31.5005C142.266 31.0592 142.929 30.3971 143.433 29.5144C143.937 28.6316 144.19 27.5597 144.19 26.2987C144.19 25.0376 143.948 23.9762 143.464 23.1145C142.981 22.2317 142.34 21.5697 141.541 21.1283C140.743 20.6869 139.881 20.4662 138.956 20.4662C138.031 20.4662 137.17 20.6869 136.371 21.1283C135.593 21.5697 134.973 22.2317 134.511 23.1145C134.049 23.9762 133.817 25.0376 133.817 26.2987C133.817 28.1692 134.29 29.6195 135.236 30.6493C136.203 31.6582 137.411 32.1626 138.862 32.1626ZM150.233 26.2987C150.233 24.5122 150.59 22.9463 151.305 21.6012C152.041 20.235 153.049 19.1842 154.332 18.4485C155.614 17.7129 157.085 17.3451 158.745 17.3451C160.847 17.3451 162.581 17.8495 163.947 18.8584C165.334 19.8462 166.27 21.2649 166.753 23.1145H162.875C162.56 22.2527 162.056 21.5802 161.362 21.0968C160.668 20.6134 159.796 20.3717 158.745 20.3717C157.274 20.3717 156.097 20.8971 155.214 21.948C154.353 22.9779 153.922 24.4281 153.922 26.2987C153.922 28.1692 154.353 29.63 155.214 30.6809C156.097 31.7317 157.274 32.2572 158.745 32.2572C160.826 32.2572 162.203 31.3429 162.875 29.5144H166.753C166.249 31.2799 165.303 32.688 163.916 33.7389C162.528 34.7688 160.805 35.2837 158.745 35.2837C157.085 35.2837 155.614 34.9159 154.332 34.1803C153.049 33.4237 152.041 32.3728 151.305 31.0276C150.59 29.6615 150.233 28.0852 150.233 26.2987ZM172.163 15.3274C171.512 15.3274 170.965 15.1067 170.524 14.6653C170.083 14.224 169.862 13.6775 169.862 13.026C169.862 12.3744 170.083 11.8279 170.524 11.3866C170.965 10.9452 171.512 10.7245 172.163 10.7245C172.794 10.7245 173.33 10.9452 173.771 11.3866C174.213 11.8279 174.433 12.3744 174.433 13.026C174.433 13.6775 174.213 14.224 173.771 14.6653C173.33 15.1067 172.794 15.3274 172.163 15.3274ZM173.929 17.6288V35H170.335V17.6288H173.929ZM177.449 26.2356C177.449 24.4911 177.807 22.9463 178.521 21.6012C179.257 20.2561 180.245 19.2157 181.485 18.4801C182.746 17.7234 184.133 17.3451 185.646 17.3451C187.012 17.3451 188.2 17.6183 189.209 18.1648C190.239 18.6902 191.058 19.3523 191.668 20.151V17.6288H195.293V35H191.668V32.4148C191.058 33.2345 190.228 33.9176 189.177 34.464C188.126 35.0105 186.928 35.2837 185.583 35.2837C184.091 35.2837 182.725 34.9054 181.485 34.1488C180.245 33.3711 179.257 32.2992 178.521 30.9331C177.807 29.5459 177.449 27.9801 177.449 26.2356ZM191.668 26.2987C191.668 25.1006 191.416 24.0603 190.911 23.1775C190.428 22.2948 189.787 21.6222 188.988 21.1598C188.189 20.6974 187.328 20.4662 186.403 20.4662C185.478 20.4662 184.616 20.6974 183.818 21.1598C183.019 21.6012 182.368 22.2633 181.863 23.146C181.38 24.0077 181.138 25.0376 181.138 26.2356C181.138 27.4336 181.38 28.4845 181.863 29.3883C182.368 30.292 183.019 30.9856 183.818 31.469C184.637 31.9314 185.499 32.1626 186.403 32.1626C187.328 32.1626 188.189 31.9314 188.988 31.469C189.787 31.0066 190.428 30.3341 190.911 29.4513C191.416 28.5476 191.668 27.4967 191.668 26.2987ZM203.608 11.6703V35H200.014V11.6703H203.608Z" fill="black"/>
+                                            <defs>
+                                            <linearGradient id="paint0_linear_33_4905" x1="2.19636" y1="-1.05854" x2="38.1129" y2="40.8494" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#00A8E8"/>
+                                            <stop offset="1" stop-color="#0883B2"/>
+                                            </linearGradient>
+                                            </defs>
+                                        </svg>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div className='px-5'>
+                                    <div>
+                                        {localStorageUsers.map((user, index) => (
+                                            <div
+                                                key={index}
+                                                onClick={() => {
+                                                    //This will be enabled Later
+                                                    //if (!isLoading) handleLoginWithSocialID(user);
+                                                    if (!isLoading) loginWithWNSocialTemp(user);
+                                                }}
+                                                className={`${style.userInfo} cursor-pointer ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+                                            >
+                                                <img src={user.avatar} alt="Profile Picture" className={style.profilePic} />
+                                                <div className={style.userDetails}>
+                                                    <h3 className={style.userName}>{user.name}</h3>
+                                                    <p className={style.userEmail}>{user.email}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+
+                                        <div 
+                                        onClick={addWNSocialAccountHandler}
+                                        className={style.addAccount}>
+                                        <span className={style.plusIcon}>
+                                        <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="62"
+                                        height="63"
+                                        viewBox="0 0 62 63"
+                                        fill="none"
+                                        >
+                                        <circle cx="31" cy="31.5" r="30.5" fill="#EAEAEA" />
+                                        
+                                        <path
+                                            d="M31 22V41"
+                                            stroke="#575757"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                        
+                                        <path
+                                            d="M22 31H41"
+                                            stroke="#575757"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                        </svg>
+
+                                        </span>
+                                        <span className={style.addText}>{localStorageUsers.length ? "Add Another Account" : "Add Account"}</span>
+                                        </div>
+
+                                        <p className={style.privacyText}>
+                                        <span>WN Social</span> values your privacy and security. By logging into <span>Seezitt</span> through <span>WN Social</span>, rest assured that your information and data are treated with the utmost confidentiality. Our commitment to your privacy means that your data will not be shared or compromised.
+                                        </p>
+                                    </div>
+                                </div>
+                                }
+{/* end wn social modal */}
+                                    {!isLoginWithWN && !isWNLoginWithCreds && isLoginSection ? (
+                                        <>
+                                        <div
                                         onClick={closeLoginPopupHandler}
                                         className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center absolute right-5 p-1 cursor-pointer"
                                     >
-                                        <img className="h-4 w-4 object-contain" src={closeIcon} />
+                                        <img className="h-4 w-4 object-contain" src="/public/images/icons/close.svg" />
                                     </div>
-                                    {isLoginSection ? (
-                                        <>
                                             <div className=" w-[21.888rem] mx-auto ">
                                                 <h2
                                                     className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
@@ -1467,7 +1873,7 @@ function App() {
                                             {isMainLoginOption && (
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
-                                                        By continuing with an account located in{' '}
+                                                        Byy continuing with an account located in{' '}
                                                         <span
                                                             className={` ${textColor} cursor-pointer`}
                                                         >
@@ -1488,12 +1894,6 @@ function App() {
                                                     </p>
                                                 </div>
                                             )}
-                                            {/* <div
-                                                className={`rounded-[0.5rem] font-medium text-base flex flex-row items-center border border-loginItem h-11 px-3 cursor-pointer `}
-                                            >
-                                                <p className="mx-auto text-[0.938rem]">WN Social</p>
-                                            </div> */}
-                                           
                                             <div className="mt-3 absolute bottom-0 w-full py-4">
                                                 <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
                                                     <h3
@@ -1501,7 +1901,7 @@ function App() {
                                                     >
                                                         {APP_TEXTS.NO_ACCOUNT}{' '}
                                                         <span
-                                                            className="text-danger-1 font-semibold hover:underline cursor-pointer"
+                                                            className="A text-danger-1 font-semibold hover:underline cursor-pointer"
                                                             onClick={handleSignupClick}
                                                         >
                                                             {APP_TEXTS.SIGN_UP}
@@ -1513,6 +1913,7 @@ function App() {
                                         </>
                                     ) : (
                                         <>
+                                            { !isLoginWithWN && !isWNLoginWithCreds &&
                                             <div className=" w-[21.888rem] mx-auto ">
                                                 <h2
                                                     className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
@@ -2184,10 +2585,11 @@ function App() {
                                                     </>
                                                 )}
                                             </div>
+                                            }
                                             {isMainLoginOption && (
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
-                                                        By continuing with an account located in{' '}
+                                                        Bya continuing with an account located in{' '}
                                                         <span
                                                             className={`${textColor} cursor-pointer`}
                                                         >
@@ -2208,24 +2610,40 @@ function App() {
                                                     </p>
                                                 </div>
                                             )}
-                                            <div className="mt-3 bottom-0 absolute w-full py-4">
-                                                <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
-                                                    <h3
-                                                        className={`font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 ${textColor} `}
-                                                    >
-                                                        {SIGNUP_APP_TEXTS.ALREADY_ACCOUNT}{' '}
-                                                        <span
-                                                            className="text-danger-1 font-semibold hover:underline cursor-pointer"
-                                                            onClick={handleLoginpopupClick}
-                                                        >
-                                                            {SIGNUP_APP_TEXTS.LOGIN}
-                                                        </span>
-                                                    </h3>
+                                            {isLoginWithWN &&
+                                                <div
+                                                onClick={continueWithEmailHandler}
+                                                className="mt-3 bottom-0 absolute w-full py-4">
+                                                    <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
+                                                        <button className={style.continueBtn}>Continue with Email</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            }
+                                            
+                                            {
+                                                !isWNLoginWithCreds && !isLoginWithWN &&
+                                                <div className="mt-3 bottom-0 absolute w-full py-4">
+                                                    <div className="border-t-[0.3px] border-gray-200 text-center pt-3.5">
+                                                        <h3
+                                                            className={`b font-normal text-[0.938rem] flex flex-row items-center justify-center gap-1 ${textColor}`}
+                                                        >
+                                                            {SIGNUP_APP_TEXTS.ALREADY_ACCOUNT}{' '}
+                                                            <span
+                                                                className="text-danger-1 font-semibold hover:underline cursor-pointer"
+                                                                onClick={handleLoginpopupClick}
+                                                            >
+                                                                {SIGNUP_APP_TEXTS.LOGIN}
+                                                            </span>
+                                                        </h3>
+                                                    </div>
+                                                </div>
+                                            }
+                                            
+
                                         </>
                                     )}
                                 </div>
+                                
                             </div>
                         )}
 
