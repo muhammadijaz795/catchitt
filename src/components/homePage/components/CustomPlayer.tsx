@@ -1,10 +1,17 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import style from './customPlayer.module.scss';
-import {setVideoUrl} from '../../../redux/reducers';
+import { setVideoUrl } from '../../../redux/reducers';
+import {setCurrentPost} from '../../../redux/reducers/currentPostReducer'; // Import the action
+
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setVolume, toggleMute } from '../../../redux/reducers/volumeSlice';
 import ReactSlider from "react-slider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+
 
 import {
     music,
@@ -17,8 +24,10 @@ import HashtagText from '../../../shared/hashTag/HashtagText';
 import { isUserLoggedIn } from '../../../utils/common';
 import { useNavigate } from 'react-router-dom';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
+import CustomContextMenu from './CustomContextMenu';
+import { BASE_URL_FRONTEND, showToastSuccess } from '../../../utils/constants';
 
-function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls, number, onMediaPlay, visibleReportPopup, onEnded, isMutedVolume, onMuteToggle  }: any) {
+function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls, number, onMediaPlay, visibleReportPopup, onEnded, isMutedVolume, onMuteToggle, popupHandler  }: any) {
     const [duration, setDuration] = useState<number>();
     const [playingTime, setPlayingTime] = useState<number>();
     const dispatch = useDispatch();
@@ -43,6 +52,11 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
     const [isDragging, setIsDragging] = useState(false);
     const [isShowMore, setIsShowMore] = useState(false);
     const { isEnabled } = useSelector((store: any) => store?.reducers?.autoScrollUserSettings);
+
+    const [showContextMenu, setShowContextMenu] = useState(false);
+    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+
+
     // const [videoSize, setVideoSize] = useState({ width: '100vw', height: '100vh' });
 
     // const progress = (currentTime / post?.duration) * 100;
@@ -69,6 +83,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                 ? post?.reducedVideoHlsUrl
                 : post?.originalUrl;
                 dispatch(setVideoUrl(videoUrl));
+                dispatch(setCurrentPost(post));
             }
         } else {
             if (post?.mediaId && onMediaPlay) {
@@ -97,11 +112,109 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
         // console.log('volume change...', e.target.value); // Log the volume change event value
         // const newVolume = parseFloat(e.target.value);
         dispatch(setVolume(newLevel)); // Update the volume in Redux
+        
     };
 
     const handleMuteToggle = () => {
         dispatch(toggleMute());
     };
+
+    const handleContextMenu = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setContextMenuPosition({ x: e.clientX, y: e.clientY });
+        console.log('here...')
+        setShowContextMenu(true);
+    };
+
+    const handleDownload = async (event: any) => {
+        event.stopPropagation();
+        // Implement your download logic here
+        console.log('Downloading video...');
+        setShowContextMenu(false);
+
+        try {
+            showToastSuccess('Video is downloading...');
+            // Fetch the video data as a blob
+            const response = await fetch(src, {
+                method: 'GET',
+                headers: {
+                    // Add headers if needed for authorization or content type
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch video');
+            }
+            const blob = await response.blob();
+            // Ensure the response is a valid video blob
+            const contentType = response.headers.get('Content-Type');
+            if (!contentType || !contentType.includes('video')) {
+                throw new Error('The file is not a valid video');
+            }
+    
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            // Create a download link
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'video.mp4'; // Set default file name
+    
+            // Trigger the download
+            document.body.appendChild(link); // Append the link to the DOM
+            link.click();
+            document.body.removeChild(link); // Clean up the DOM
+    
+            // Revoke the object URL after download to free up resources
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Failed to download video', error);
+        }
+    };
+
+    const handleCopyLink = (event: any) => {
+        event.stopPropagation();
+        copyLinkHandler(post?.user?.username, post?.mediaId, 'Copied successfully')
+        setShowContextMenu(false);
+    };
+
+    const handleVideoDetail = (event: any) => {
+        event.stopPropagation();
+        setShowContextMenu(false);
+        const url = `${BASE_URL_FRONTEND}/${post?.user?.username}/video/${post?.mediaId}`;
+        // Open the URL in a new tab
+        window.open(url, '_blank');
+
+       
+    };
+
+    const sendToFriends = (event: any) => {
+        event.stopPropagation();
+        popupHandler();
+    }
+    
+    const handleCloseContextMenu = (event: any) => {
+        event.stopPropagation();  // Stop the click event from bubbling up to the parent
+        setShowContextMenu(false);
+    };
+
+    useEffect(()=> {
+        console.log('current post');
+        console.log(post);
+    },[])
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (showContextMenu) {
+                setShowContextMenu(false);
+            }
+        };
+    
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [showContextMenu]);
+    
 
     // useEffect(() => {
     //     if (videoRef.current) {
@@ -129,6 +242,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                 ? post?.reducedVideoHlsUrl
                 : post?.originalUrl;
                 dispatch(setVideoUrl(videoUrl));
+                dispatch(setCurrentPost(post));
             }
         }
         setIsPlaying(!isPlaying);
@@ -266,6 +380,19 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                     }}
                     onClick={togglePlayPause}>
                     {inView && <>
+
+                      {/* Custom context menu */}
+                {showContextMenu && (
+                    <CustomContextMenu
+                        x={contextMenuPosition.x}
+                        y={contextMenuPosition.y}
+                        onClose={handleCloseContextMenu}
+                        onDownload={handleDownload}
+                        onCopyLink={handleCopyLink}
+                        popupHandler={sendToFriends}
+                        onVideoDetail={handleVideoDetail}
+                    />
+                )}
                    
                     <video
                         poster={thumbnailImage}
@@ -281,6 +408,11 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                         preload='none' //{number == 0 ? 'auto' : 'none'}
                         playsInline
                         onEnded={isEnabled ? handleEnded : undefined}  
+                        // onContextMenu={(e) => {
+                        //     e.preventDefault(); // Prevent the default browser context menu
+                        //     setIsShowMore(true); // Show your custom context menu
+                        // }}
+                        onContextMenu={handleContextMenu}
                     />
 
 <div>

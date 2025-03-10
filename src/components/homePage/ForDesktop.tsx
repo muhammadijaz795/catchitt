@@ -371,6 +371,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                 }
                                                 isMutedVolume={isMutedVolume}
                                                 onMuteToggle={() => dispatch(toggleMute())}
+                                                popupHandler={() => setSendPopup(true)}
                                                 
                                             />
                                         </div>

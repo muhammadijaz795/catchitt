@@ -274,23 +274,20 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                     </div>
                 </MenuItem>
 
-                <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px', position: 'relative' }}>
+                {/* <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px', position: 'relative' }}>
                     <div className={style.menuItem} >
                         <img src={saveVideo} />
                         <a 
-                        // download={true} 
                         target='_blank' style={{
                             width: '100%', height: '100%',position: 'absolute',
                             top: 0,
                             left: 0,
                             background: 'transparent !important'
                         }} 
-                        // href={url} download 
-                        // href={url} download="video.mp4" 
                         onClick={()=>handleDownload(url)}></a>
                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Save video</p>
                     </div>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={()=>{ notInterestedInVideo(postMediaId),handleClose() }} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
                         <img src={blackCrossHeart} />
