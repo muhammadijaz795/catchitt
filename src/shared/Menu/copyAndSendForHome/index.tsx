@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import {
     RepostVideo,
     copyLink,
@@ -18,9 +19,10 @@ import {
     twitterShare,
     whatsappShare,
 } from '../../../icons';
-import { BASE_URL_FRONTEND } from '../../../utils/constants';
+import { BASE_URL_FRONTEND, showToastSuccess } from '../../../utils/constants';
 import style from './index.module.scss';
 import LinkIcon from '../../../components/shared-video/svg-components/link-icon.svg';
+import { videoRepostHandle } from '../../../redux/AsyncFuncs';
 
 export default function COPY_AND_SEND_MODAL_HOME({
     copyHandler,
@@ -30,7 +32,9 @@ export default function COPY_AND_SEND_MODAL_HOME({
     videoTitle,
     userName,
     generateEmbedCodeHandler,
+    mediaId,
 }: any) {
+    const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -69,6 +73,14 @@ export default function COPY_AND_SEND_MODAL_HOME({
             '_blank'
         );
     };
+
+    const repostVideoEventHandle = async () => {
+        console.log(mediaId);
+        showToastSuccess('Media reposted successfully');
+        dispatch(videoRepostHandle(mediaId));
+        handleClose();
+    }
+
 
     return (
         <div className='modal-shares'>
@@ -118,7 +130,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                     </MenuItem> 
                 <Grid container spacing={2}>
                     <Grid item xs={3}>
-                    <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
+                    <MenuItem onClick={repostVideoEventHandle} style={{ padding: '0px', margin: '0px' }}>
                         <div className={style.menuItem} >
                             <div className=" flex items-center justify-center rounded-full">
                                 <img className='!w-14 !h-14' src={RepostVideo}  alt="Copy Link" />

@@ -72,12 +72,6 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const repostVideoEventHandle = async (postMediaId: any) => {
-        console.log(postMediaId);
-        showToastSuccess('Media reposted successfully');
-        dispatch(videoRepostHandle(postMediaId));
-    }
-
     const StyledMenu = styled((props: MenuProps) => (
         <Menu
             elevation={0}
@@ -298,12 +292,6 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                     <div className={style.menuItem} onClick={visibleReportPopup}>
                         <img src={report} />
                         <p className={`${style.p} ${style.black_500}`}>Report</p>
-                    </div>
-                </MenuItem>
-                <MenuItem onClick={()=>{ repostVideoEventHandle(postMediaId),handleClose()}} style={{ padding: '0px', margin: '0px' }}>
-                    <div className={style.menuItem}>
-                        <img src={repost} />
-                        <p className={`${style.p} ${style.black_500}`}>Repost</p>
                     </div>
                 </MenuItem>
             </StyledMenu>
