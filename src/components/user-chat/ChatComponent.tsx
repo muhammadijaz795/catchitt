@@ -256,6 +256,7 @@ const ChatComponent = () => {
         console.log(
             "chatSwitchH"
         );
+        setMsg('');
         setIsProfileSecVisible(false);
         users?.forEach((user, index) => {
             if (user?.userId === e) {
