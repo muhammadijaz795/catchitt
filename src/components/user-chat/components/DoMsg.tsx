@@ -260,7 +260,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
                     </svg>
                 </button>
               </div>
-              <div className={style.replyMsg}>
+              <div className={`${style.replyMsg} ${isDarkTheme ? style.darkReply : ''}`}>
                 {renderMessageContent(currentReplyToMessage.msg)}
               </div>
             </div>
