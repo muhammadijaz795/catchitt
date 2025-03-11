@@ -873,7 +873,28 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             followers won’t be affected.</span>
                                             </div>
                                         </div>
-                                        <p onClick={handleOpenDeleteAccountMainModal} style={{ color: '#FE2C55' }}>Delete</p>
+                                        <label className="toggle-switch !left-4">
+                                            <input 
+                                            style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
+                                                type="checkbox"
+                                                name="autoScrollCheckbox" 
+                                                id="autoScrollCheckbox" 
+                                            />
+                                            <b className="slider"></b>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className='w-100 border-bottom pb-3'>
+                                    <h5 className='h6 text-left'>Data</h5>
+                                    <div
+                                        className={styles.accountCards}>
+                                        <div className={styles.settingName}>
+                                            <div className='text-left'>
+                                            <p>Download your data </p>
+                                            <span className='text-xs text-[#16182399]'>Get a copy of your Seezitt data</span>
+                                            </div>
+                                        </div>
+                                        <img src={whiteRightArrow} alt="" />
                                     </div>
                                 </div>
                             </div>
