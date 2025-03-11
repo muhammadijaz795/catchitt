@@ -345,9 +345,24 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             setSettingsDropdown(false)
                         }}
                     >
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="10.0002" cy="10.0007" r="9.16667" stroke="#141B34" stroke-width="1.5"/>
-                        <path d="M10.0002 6.33398L10.0002 13.6673M10.0002 6.33398C9.35829 6.33398 8.15906 8.16209 7.7085 8.62565M10.0002 6.33398C10.642 6.33398 11.8413 8.16209 12.2918 8.62565" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg
+                            width="22"
+                            height="23"
+                            viewBox="0 0 22 23"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className={classNames({ [styles.selectedStroke]: pathname.includes('/upload') })}
+                            stroke="currentColor" // Inherits text color for light/dark mode support
+                        >
+                            <circle cx="11.0002" cy="11.1598" r="9.16667" 
+                            stroke={`${pathname.includes('/upload') ? 'rgb(255, 59, 92)': textColor}`}
+                            strokeWidth="1.5" />
+                            <path 
+                                d="M11.0002 7.49316L11.0002 14.8265M11.0002 7.49316C10.3583 7.49316 9.15906 9.32127 8.7085 9.78483M11.0002 7.49316C11.642 7.49316 12.8413 9.32127 13.2918 9.78483" 
+                                stroke={`${pathname.includes('/upload') ? 'rgb(255, 59, 92)': textColor}`}                                strokeWidth="1.5" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                            />
                         </svg>
 
                         <p className={`${styles.linkWord} ${textColor}`}>Upload</p>
@@ -393,8 +408,12 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             }}
                         >
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.79199 12.291H13.2087M6.79199 7.70768H10.0003" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M11.9899 18.149C15.8243 17.8941 18.8786 14.7965 19.1299 10.9077C19.1791 10.1466 19.1791 9.35853 19.1299 8.59751C18.8786 4.70869 15.8243 1.61105 11.9899 1.35617C10.6817 1.26921 9.31593 1.26939 8.01044 1.35617C4.17602 1.61105 1.1217 4.70869 0.870383 8.59751C0.821201 9.35853 0.821201 10.1466 0.870383 10.9077C0.961917 12.324 1.58831 13.6354 2.32574 14.7427C2.75392 15.518 2.47134 16.4855 2.02536 17.3307C1.70379 17.9401 1.543 18.2447 1.6721 18.4649C1.8012 18.685 2.08957 18.692 2.6663 18.706C3.80686 18.7338 4.57596 18.4104 5.18645 17.9603C5.5327 17.7049 5.70582 17.5773 5.82515 17.5626C5.94447 17.5479 6.17928 17.6446 6.64884 17.838C7.07087 18.0118 7.56088 18.1191 8.01044 18.149C9.31593 18.2358 10.6817 18.236 11.9899 18.149Z" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M6.79199 12.291H13.2087M6.79199 7.70768H10.0003"
+                            stroke={`${pathname.includes('/chat') ? 'rgb(255, 59, 92)': textColor}`}
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M11.9899 18.149C15.8243 17.8941 18.8786 14.7965 19.1299 10.9077C19.1791 10.1466 19.1791 9.35853 19.1299 8.59751C18.8786 4.70869 15.8243 1.61105 11.9899 1.35617C10.6817 1.26921 9.31593 1.26939 8.01044 1.35617C4.17602 1.61105 1.1217 4.70869 0.870383 8.59751C0.821201 9.35853 0.821201 10.1466 0.870383 10.9077C0.961917 12.324 1.58831 13.6354 2.32574 14.7427C2.75392 15.518 2.47134 16.4855 2.02536 17.3307C1.70379 17.9401 1.543 18.2447 1.6721 18.4649C1.8012 18.685 2.08957 18.692 2.6663 18.706C3.80686 18.7338 4.57596 18.4104 5.18645 17.9603C5.5327 17.7049 5.70582 17.5773 5.82515 17.5626C5.94447 17.5479 6.17928 17.6446 6.64884 17.838C7.07087 18.0118 7.56088 18.1191 8.01044 18.149C9.31593 18.2358 10.6817 18.236 11.9899 18.149Z" 
+                            stroke={`${pathname.includes('/chat') ? 'rgb(255, 59, 92)': textColor}`}
+                            stroke-width="1.5" stroke-linejoin="round"/>
                             </svg>
 
                             <p className={`${styles.linkWord} ${textColor}`}>Messages</p>
