@@ -472,10 +472,10 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                 <div className={styles.sidebarLoginBox}>
                  { isUserLoggedIn() ? (
                     <>
-                        <p className={styles.sidebarTextStyle} ><b style={{fontWeight: '900'}}>Suggested for you</b>
+                        <p className={styles.sidebarTextStyle} ><b style={{fontWeight: '600'}}>Suggested for you</b>
                         {/* <br/> Accounts you follow will appear here */}
                         </p>
-                        <SuggestedActivity showActivity={true} showSuggestedContent={true} />
+                        <SuggestedActivity showActivity={true} showSuggestedContent={true} className='py-3' />
                     </>
                     ):(
                        <>

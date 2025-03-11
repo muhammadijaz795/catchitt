@@ -95,7 +95,7 @@ import facebookAuth from './components/login/svg-components/facebook-auth.svg';
 import googleAuth from './components/login/svg-components/google-auth.svg';
 import twitterAuth from './components/login/svg-components/twitter-auth.svg';
 import appleAuth from './components/login/svg-components/apple-auth.svg';
-import logoAuth from './components/login/svg-components/logo-auth.svg';
+import logoAuth from './assets/logoV2.svg';
 import logoAuthWhite from './components/login/svg-components/logo-auth-white.svg';
 import chevronUp from './assets/chevron-up.png';
 import chevronDown from './assets/chevron-down.png';

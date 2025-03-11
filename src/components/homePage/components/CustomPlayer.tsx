@@ -119,12 +119,24 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
         dispatch(toggleMute());
     };
 
-    const handleContextMenu = (e: React.MouseEvent) => {
+    const handleContextMenu = (e: React.MouseEvent<HTMLVideoElement>) => {
         e.preventDefault();
-        setContextMenuPosition({ x: e.clientX, y: e.clientY });
-        console.log('here...')
+    
+        const videoRect = e.currentTarget.getBoundingClientRect(); // Get video position relative to the viewport
+        const clickX = e.clientX - videoRect.left; // Adjust X based on video position
+        const clickY = e.clientY - videoRect.top; // Adjust Y based on video position
+    
+        const menuWidth = 224; // Approximate width of the context menu
+        const menuHeight = 180; // Approximate height of the context menu
+    
+        // Prevent the menu from going outside the video bounds
+        const adjustedX = clickX + menuWidth > videoRect.width ? videoRect.width - menuWidth - 10 : clickX;
+        const adjustedY = clickY + menuHeight > videoRect.height ? videoRect.height - menuHeight - 10 : clickY;
+    
+        setContextMenuPosition({ x: adjustedX, y: adjustedY });
         setShowContextMenu(true);
     };
+    
 
     const handleDownload = async (event: any) => {
         event.stopPropagation();
