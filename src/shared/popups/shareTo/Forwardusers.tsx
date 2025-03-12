@@ -1,10 +1,11 @@
 import { ClickAwayListener, IconButton, Modal } from '@mui/material';
 import style from './forwardUsers.module.scss';
 import { useEffect, useState } from 'react';
-import { avatar, duet, sendSvgPopup } from '../../../icons';
+import { avatar, duet, sendSvgPopup,defaultAvatar } from '../../../icons';
 import Search from '../../navbar/components/Search';
 import { get, post } from '../../../axios/axiosClient';
 import { useDispatch, useSelector } from 'react-redux';
+
 
 function Forwardusers(props: any) {
     const { onOpen, onClose, videoLink } = props || {};
@@ -21,7 +22,10 @@ function Forwardusers(props: any) {
     const { videoUrl } = useSelector(
         (state: any) => state?.reducers?.videoUrl
     );
-    console.log('video url Hello', videoUrl)
+    const currentPost = useSelector((state: any) => state?.reducers?.currentPost);
+
+    console.log('video url Hello', videoUrl);
+    console.log(currentPost);
     // Add these new handlers
     const handleCheckboxChange = (userId: string) => {
         setSelectedUsers(prev => 
@@ -147,8 +151,10 @@ function Forwardusers(props: any) {
                             const userId = user?.followed_userID?._id;
                             return (
                                 <div key={i} className={style.user}>
+                                                    {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
+
                                     <div className={style.sec1}>
-                                        <img src={user?.followed_userID?.avatar ?? avatar} alt="" />
+                                        <img src={user?.followed_userID?.avatar || defaultAvatar} alt="" />
                                         <p>{user?.followed_userID?.name}</p>
                                     </div>
                                     <div className={style.btns}>
@@ -192,7 +198,7 @@ function Forwardusers(props: any) {
                                 
                             </div>
                             <div className={style.forwardVIMG}>
-                                <img  src="https://lh3.googleusercontent.com/a/ACg8ocJZLll8A3w0xsToOd-IO78DR47-GmD3SIy0003nOMxUL2PO1JU-=s96-c" alt="" />
+                                <img  src={currentPost?.thumbnailUrl} alt="" />
                             </div>
                         </div>
                         <button 

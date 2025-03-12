@@ -428,6 +428,7 @@ a.customPlayBtn::after {
   display: inline-block;
   width: 44px;
   height: 24px;
+  left: 2rem;
 }
 
 .toggle-switch input {

@@ -43,7 +43,7 @@ function Search({
                 margin: '5px 6px',
                 flex: 1,
                 height: 40,
-                background: textColor ==='black'?'#F8F8F8':'#282828',
+                background: textColor ==='black'?'#F8F8F8':'grey',
                 borderRadius: '92px',//showClose ? 0 : 4,
                 display: 'flex',
                 alignItems: 'center',

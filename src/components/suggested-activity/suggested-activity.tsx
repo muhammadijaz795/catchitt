@@ -3,7 +3,6 @@ import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-f
 import { memo, useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import styles from './suggested-activity.module.scss';
-
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import defaultProfileIcon from '../../assets/defaultProfileIcon.png';
 import useDebounce from '../reusables/useDebounce';
@@ -314,7 +313,7 @@ export const SuggestedActivity = memo(
                                                   >{`${account.name}`}</p>
                                                   <h6
                                                       style={{
-                                                          color: textColor,
+                                                          color: '#A9A9A9',
                                                           textAlign: 'left',
                                                           fontFamily: ' Poppins',
                                                           fontSize: '12px',
@@ -346,9 +345,9 @@ export const SuggestedActivity = memo(
                                    <p
                                       onClick={() => navigate('/suggested-accounts')}
                                       className={styles.linkText}
-                                      style={{ cursor: 'pointer' }}
+                                      style={{ cursor: 'pointer', marginTop: '1rem' }}
                                   >
-                                      See more
+                                      See All
                                   </p>
                               {/* </div> */}
                            </div>

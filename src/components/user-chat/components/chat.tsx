@@ -8,6 +8,7 @@ import NotificationsOffOutlinedIcon from '@mui/icons-material/NotificationsOffOu
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
+import PanoramaHorizontalSharpIcon from '@mui/icons-material/PanoramaHorizontalSharp';
 import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import Divider from '@mui/material/Divider';
@@ -336,7 +337,7 @@ function UserChat(props: any) {
                         </div>
                         <div key="report">
                             <MenuItem onClick={() => { handleReport(); } }>
-                                <img src="/src/assets/report.svg" />
+                                <PanoramaHorizontalSharpIcon />
                                 <span style={{ marginLeft: '8px', fontWeight: 'bold' }} >Report</span>
                             </MenuItem>
                             <Divider />

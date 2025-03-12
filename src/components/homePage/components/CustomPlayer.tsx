@@ -1,10 +1,17 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import style from './customPlayer.module.scss';
-import {setVideoUrl} from '../../../redux/reducers';
+import { setVideoUrl } from '../../../redux/reducers';
+import {setCurrentPost} from '../../../redux/reducers/currentPostReducer'; // Import the action
+
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setVolume, toggleMute } from '../../../redux/reducers/volumeSlice';
 import ReactSlider from "react-slider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+
 
 import {
     music,
@@ -17,8 +24,10 @@ import HashtagText from '../../../shared/hashTag/HashtagText';
 import { isUserLoggedIn } from '../../../utils/common';
 import { useNavigate } from 'react-router-dom';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
+import CustomContextMenu from './CustomContextMenu';
+import { BASE_URL_FRONTEND, showToastSuccess } from '../../../utils/constants';
 
-function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls, number, onMediaPlay, visibleReportPopup, onEnded, isMutedVolume, onMuteToggle  }: any) {
+function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls, number, onMediaPlay, visibleReportPopup, onEnded, isMutedVolume, onMuteToggle, popupHandler  }: any) {
     const [duration, setDuration] = useState<number>();
     const [playingTime, setPlayingTime] = useState<number>();
     const dispatch = useDispatch();
@@ -28,7 +37,8 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
 
   const { level } = useSelector((state: any) => state?.reducers?.volume);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-
+  const volumeContainerRef = useRef<HTMLDivElement>(null); // Ref for the volume container
+  const hideSliderTimeout = useRef<NodeJS.Timeout | null>(null); 
 
     const navigate = useNavigate();
 
@@ -43,6 +53,11 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
     const [isDragging, setIsDragging] = useState(false);
     const [isShowMore, setIsShowMore] = useState(false);
     const { isEnabled } = useSelector((store: any) => store?.reducers?.autoScrollUserSettings);
+
+    const [showContextMenu, setShowContextMenu] = useState(false);
+    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+
+
     // const [videoSize, setVideoSize] = useState({ width: '100vw', height: '100vh' });
 
     // const progress = (currentTime / post?.duration) * 100;
@@ -69,6 +84,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                 ? post?.reducedVideoHlsUrl
                 : post?.originalUrl;
                 dispatch(setVideoUrl(videoUrl));
+                dispatch(setCurrentPost(post));
             }
         } else {
             if (post?.mediaId && onMediaPlay) {
@@ -87,11 +103,6 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
         }
       }, [level, isMutedVolume, videoRef.current]); // Add videoRef.current to dependencies
 
-    // const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     // console.log('volume change...', e.target.value); // Log the volume change event value
-    //     // const newVolume = parseFloat(e.target.value);
-    //     // dispatch(setVolume(newVolume)); // Update the volume in Redux
-    // };
 
     const handleVolumeChange = (newLevel:any) => {
         // console.log('volume change...', e.target.value); // Log the volume change event value
@@ -99,9 +110,146 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
         dispatch(setVolume(newLevel)); // Update the volume in Redux
     };
 
+     // Handle mouse enter on the volume container
+     const handleMouseEnter = () => {
+        console.log('Mouse entered volume container');
+        if (hideSliderTimeout.current) {
+            clearTimeout(hideSliderTimeout.current); // Clear any pending hide timeout
+        }
+        setShowVolumeSlider(true);
+    };
+
+    // Handle mouse leave from the volume container
+    const handleMouseLeave = () => {
+        console.log('Mouse left volume container');
+        // Delay hiding the slider to allow the mouse to move between the icon and slider
+        hideSliderTimeout.current = setTimeout(() => {
+            setShowVolumeSlider(false);
+        }, 400); // Adjust the delay as needed
+    };
+
+
     const handleMuteToggle = () => {
         dispatch(toggleMute());
     };
+
+     // Cleanup the timeout when the component unmounts
+     useEffect(() => {
+        return () => {
+            if (hideSliderTimeout.current) {
+                clearTimeout(hideSliderTimeout.current);
+            }
+        };
+    }, []);
+
+    const handleContextMenu = (e: React.MouseEvent<HTMLVideoElement>) => {
+        e.preventDefault();
+    
+        const videoRect = e.currentTarget.getBoundingClientRect(); // Get video position relative to the viewport
+        const clickX = e.clientX - videoRect.left; // Adjust X based on video position
+        const clickY = e.clientY - videoRect.top; // Adjust Y based on video position
+    
+        const menuWidth = 224; // Approximate width of the context menu
+        const menuHeight = 180; // Approximate height of the context menu
+    
+        // Prevent the menu from going outside the video bounds
+        const adjustedX = clickX + menuWidth > videoRect.width ? videoRect.width - menuWidth - 10 : clickX;
+        const adjustedY = clickY + menuHeight > videoRect.height ? videoRect.height - menuHeight - 10 : clickY;
+    
+        setContextMenuPosition({ x: adjustedX, y: adjustedY });
+        setShowContextMenu(true);
+    };
+    
+
+    const handleDownload = async (event: any) => {
+        event.stopPropagation();
+        // Implement your download logic here
+        console.log('Downloading video...');
+        setShowContextMenu(false);
+
+        try {
+            showToastSuccess('Video is downloading...');
+            // Fetch the video data as a blob
+            const response = await fetch(src, {
+                method: 'GET',
+                headers: {
+                    // Add headers if needed for authorization or content type
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch video');
+            }
+            const blob = await response.blob();
+            // Ensure the response is a valid video blob
+            const contentType = response.headers.get('Content-Type');
+            if (!contentType || !contentType.includes('video')) {
+                throw new Error('The file is not a valid video');
+            }
+    
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            // Create a download link
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'video.mp4'; // Set default file name
+    
+            // Trigger the download
+            document.body.appendChild(link); // Append the link to the DOM
+            link.click();
+            document.body.removeChild(link); // Clean up the DOM
+    
+            // Revoke the object URL after download to free up resources
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Failed to download video', error);
+        }
+    };
+
+    const handleCopyLink = (event: any) => {
+        event.stopPropagation();
+        copyLinkHandler(post?.user?.username, post?.mediaId, 'Copied successfully')
+        setShowContextMenu(false);
+    };
+
+    const handleVideoDetail = (event: any) => {
+        event.stopPropagation();
+        setShowContextMenu(false);
+        const url = `${BASE_URL_FRONTEND}/${post?.user?.username}/video/${post?.mediaId}`;
+        // Open the URL in a new tab
+        window.open(url, '_blank');
+
+       
+    };
+
+    const sendToFriends = (event: any) => {
+        event.stopPropagation();
+        popupHandler();
+    }
+    
+    const handleCloseContextMenu = (event: any) => {
+        event.stopPropagation();  // Stop the click event from bubbling up to the parent
+        setShowContextMenu(false);
+    };
+
+    useEffect(()=> {
+        console.log('current post');
+        console.log(post);
+    },[])
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (showContextMenu) {
+                setShowContextMenu(false);
+            }
+        };
+    
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [showContextMenu]);
+    
 
     // useEffect(() => {
     //     if (videoRef.current) {
@@ -129,6 +277,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                 ? post?.reducedVideoHlsUrl
                 : post?.originalUrl;
                 dispatch(setVideoUrl(videoUrl));
+                dispatch(setCurrentPost(post));
             }
         }
         setIsPlaying(!isPlaying);
@@ -176,73 +325,6 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
 
     return (
         <>
-        <div style={{  width: '100px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
-          
-            {/* <ReactSlider
-            min={0}
-            max={1}
-            step={0.01}
-            value={level}
-            onChange={handleVolumeChange}
-            renderThumb={(props) => (
-              <div {...props} style={{ display: 'none' }} /> // Completely hide thumb
-            )}
-            renderTrack={(props, state) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: '4px',
-                  background: `linear-gradient(to right,rgba(124, 243, 19, 0) ${level * 100}%, #ddd ${level * 100}%)`,
-                  borderRadius: '2px',
-                  cursor: 'pointer'
-                }}
-              />
-            )}
-          /> */}
-
-<ReactSlider
-        min={0}
-        max={1}
-        step={0.01}
-        value={level}
-        onChange={handleVolumeChange}
-        renderThumb={(props) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: '20px', // Thumb size
-              width: '20px',  // Thumb size
-              borderRadius: '50%', // Circular thumb
-              backgroundColor: 'grey', // Thumb color
-              cursor: 'pointer', // Pointer cursor on thumb
-              position: 'absolute', // Make thumb follow the slider
-              top: '-8px', // Adjust vertically to align it properly with track
-              boxShadow: 'none', // Remove any default shadow effect from the thumb
-            }}
-          />
-        )}
-        renderTrack={(props, state) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: '4px', // Track height
-              background: `linear-gradient(to right, #3498db ${state.valueNow * 100}%, transparent ${state.valueNow * 100}%)`, // Only show filled track (track-0)
-              borderRadius: '2px', // Rounded corners for the track
-              cursor: 'pointer', // Pointer cursor on track
-              border: 'none', // Remove the default border (black line)
-              boxShadow: 'none', // Remove the shadow effect from the track
-            }}
-          />
-        )}
-      />
-        </div>
-   
-
-
-
             <div
                 style={{
                     position: 'relative',
@@ -266,6 +348,19 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                     }}
                     onClick={togglePlayPause}>
                     {inView && <>
+
+                      {/* Custom context menu */}
+                {showContextMenu && (
+                    <CustomContextMenu
+                        x={contextMenuPosition.x}
+                        y={contextMenuPosition.y}
+                        onClose={handleCloseContextMenu}
+                        onDownload={handleDownload}
+                        onCopyLink={handleCopyLink}
+                        popupHandler={sendToFriends}
+                        onVideoDetail={handleVideoDetail}
+                    />
+                )}
                    
                     <video
                         poster={thumbnailImage}
@@ -281,24 +376,85 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                         preload='none' //{number == 0 ? 'auto' : 'none'}
                         playsInline
                         onEnded={isEnabled ? handleEnded : undefined}  
+                        // onContextMenu={(e) => {
+                        //     e.preventDefault(); // Prevent the default browser context menu
+                        //     setIsShowMore(true); // Show your custom context menu
+                        // }}
+                        onContextMenu={handleContextMenu}
                     />
 
-<div>
-            <div className={style.volumeContainer}>
-              <button  onClick={onMuteToggle}   className={style.volumeButton}>
-              {isMutedVolume ? (
-                <MutedIcon />
-                ) : level === 0 ? (
-                <MutedIcon />
-                ) : level <= 0.5 ? (
-                <LowVolumeIcon />
-                ) : (
-                <HighVolumeIcon />
-                )}
-              </button>
-            </div>
-            
-          </div>
+                        <div>
+                            <div className={style.volumeContainer} ref={volumeContainerRef}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                >
+                            <button onClick={(event) => {
+                                event.stopPropagation();
+                                onMuteToggle();
+                            }} className={style.volumeButton}>
+                                {isMutedVolume ? (
+                                    <MutedIcon />
+                                ) : level === 0 ? (
+                                    <MutedIcon />
+                                ) : level <= 0.5 ? (
+                                    <LowVolumeIcon />
+                                ) : (
+                                    <HighVolumeIcon />
+                                )}
+                            </button>
+                            {showVolumeSlider && (
+                            <div  style={{  width: '84px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
+                                <div
+                                className={style.barVolume}
+                                    onMouseEnter={handleMouseEnter} // Keep the slider visible when hovering over it
+                                    onMouseLeave={handleMouseLeave} // Hide the slider when leaving the slider
+                                    onClick={(event) => event.stopPropagation()} // Stop click event propagation
+                                    onMouseDown={(event) => event.stopPropagation()} // Stop mouse down event propagation
+                                >
+                                    <ReactSlider
+                                        min={0}
+                                        max={1}
+                                        step={0.01}
+                                        value={level}
+                                        onChange={handleVolumeChange}
+                                        renderThumb={(props) => (
+                                        <div
+                                        {...props}
+                                        style={{
+                                            ...props.style,
+                                            height: '15px', // Thumb size
+                                            width: '15px',  // Thumb size
+                                            borderRadius: '50%', // Circular thumb
+                                            backgroundColor: 'grey', // Thumb color
+                                            cursor: 'pointer', // Pointer cursor on thumb
+                                            position: 'absolute', // Make thumb follow the slider
+                                            top: '-6px', // Adjust vertically to align it properly with track
+                                            boxShadow: 'none', // Remove any default shadow effect from the thumb
+                                        }}
+                                        />
+                                    )}
+                                    renderTrack={(props, state) => (
+                                        <div
+                                        {...props}
+                                        style={{
+                                            ...props.style,
+                                            height: '4px', // Track height
+                                            borderRadius: '2px', // Rounded corners for the track
+                                            cursor: 'pointer', // Pointer cursor on track
+                                            border: 'none', // Remove the default border (black line)
+                                            boxShadow: 'none', // Remove the shadow effect from the track
+                                        }}
+                                        />
+                                    )}
+                                    />
+                                </div>
+                           
+                            </div>
+ )}
+                            
+
+                            </div>
+                        </div>
                     
                     </>}
 
@@ -405,20 +561,24 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
 
 // Add these SVG components
 const MutedIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 14.8135V9.18646C14 6.04126 14 4.46866 13.0747 4.0773C12.1494 3.68593 11.0603 4.79793 8.88232 7.02192C7.75439 8.17365 7.11085 8.42869 5.50604 8.42869C4.10257 8.42869 3.40084 8.42869 2.89675 8.77262C1.85035 9.48655 2.00852 10.882 2.00852 12C2.00852 13.118 1.85035 14.5134 2.89675 15.2274C3.40084 15.5713 4.10257 15.5713 5.50604 15.5713C7.11085 15.5713 7.75439 15.8264 8.88232 16.9781C11.0603 19.2021 12.1494 20.3141 13.0747 19.9227C14 19.5313 14 17.9587 14 14.8135Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 10L22 14M18 14L22 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
   );
   
   const LowVolumeIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+<path d="M14 14.9444V9.31732C14 6.17212 14 4.59952 13.0747 4.20816C12.1494 3.81679 11.0603 4.92879 8.88232 7.15278C7.75439 8.3045 7.11085 8.55955 5.50604 8.55955C4.10257 8.55955 3.40084 8.55955 2.89675 8.90347C1.85035 9.61741 2.00852 11.0128 2.00852 12.1309C2.00852 13.2489 1.85035 14.6443 2.89675 15.3582C3.40084 15.7022 4.10257 15.7022 5.50604 15.7022C7.11085 15.7022 7.75439 15.9572 8.88232 17.1089C11.0603 19.3329 12.1494 20.4449 13.0747 20.0536C14 19.6622 14 18.0896 14 14.9444Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17 9.13086C17.6254 9.95053 18 10.9943 18 12.1309C18 13.2674 17.6254 14.3112 17 15.1309" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
   );
   
   const HighVolumeIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 14.9444V9.31732C14 6.17212 14 4.59952 13.0747 4.20816C12.1494 3.81679 11.0603 4.92879 8.88232 7.15278C7.75439 8.3045 7.11085 8.55955 5.50604 8.55955C4.10257 8.55955 3.40084 8.55955 2.89675 8.90347C1.85035 9.61741 2.00852 11.0128 2.00852 12.1309C2.00852 13.2489 1.85035 14.6443 2.89675 15.3582C3.40084 15.7022 4.10257 15.7022 5.50604 15.7022C7.11085 15.7022 7.75439 15.9572 8.88232 17.1089C11.0603 19.3329 12.1494 20.4449 13.0747 20.0536C14 19.6622 14 18.0896 14 14.9444Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 9.13086C17.6254 9.95053 18 10.9943 18 12.1309C18 13.2674 17.6254 14.3112 17 15.1309" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 7.13086C21.2508 8.49699 22 10.2366 22 12.1309C22 14.0251 21.2508 15.7647 20 17.1309" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   );
 export default React.memo(CustomPlayer);

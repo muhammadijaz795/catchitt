@@ -149,7 +149,7 @@
   .sendedMsg {
     color: #000;
     background: linear-gradient(73.71deg, rgba(0, 0, 0, 0) 80.01%, rgba(0, 0, 0, 0.55) 116.4%);
-    background-color: #f4f4f4;
+    // background-color: #f4f4f4;
     border: 1px solid rgba(22, 24, 35, 0.12);
     font-family: Poppins;
     font-size: 16px;
@@ -203,7 +203,7 @@
   width: 100%;
   border-radius: 4px;
   // background: var(--Foundation-Primary-primary-50, #eeedf7);
-  background: #fff;
+  // background: #fff;
 }
 .tempparent > div:nth-child(2) {
   padding: 0px 16px;
@@ -253,4 +253,7 @@
 }
 .overrideTop{
   top: 2.1rem !important;
+}
+.isDarkClass:hover{
+  background-color: rgb(108, 102, 102) !important;
 }

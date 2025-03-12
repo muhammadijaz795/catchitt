@@ -47,10 +47,10 @@ h6 {
 }
 
 .middleSectionDiv {
-  width: 70%;
+  width: 100%;
   margin-top: 45px;
-  margin-left: auto;
-  margin-right: auto;
+  padding-left: 2.5rem;
+  padding-right: 0;
 }
 
 .container {
@@ -161,7 +161,7 @@ h6 {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: 32px;
+  margin-top: 0;
 }
 
 .post {

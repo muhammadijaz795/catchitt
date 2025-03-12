@@ -146,6 +146,7 @@ function Action({
                         videoUrl={post?.reducedVideoUrl}
                         userName={post?.user?.username}
                         videoTitle={post?.description} // Assuming you have a title property
+                        mediaId={post?.mediaId}
                     />
                 )}
                 { isUserLoggedIn() && obj.actionType === 'more' && (

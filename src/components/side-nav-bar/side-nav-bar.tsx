@@ -422,7 +422,59 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
                     </Link>
                 ):null }
-                
+                { isUserLoggedIn() ? (
+                    <Link to="/live" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                        <div
+                            className={classNames(
+                                `${pathname.includes('/live') ? styles.selected : styles.navLink}`
+                            )}
+                            onClick={() => {
+                                handleLinkClick(2)
+                                setSettingsDropdown(false)
+                            }}
+                        >
+
+                        <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.8335 12.9251C1.8335 9.46816 1.8335 7.73968 2.90744 6.66574C3.98138 5.5918 5.70986 5.5918 9.16683 5.5918H12.8335C16.2905 5.5918 18.0189 5.5918 19.0929 6.66574C20.1668 7.73968 20.1668 9.46816 20.1668 12.9251C20.1668 16.3821 20.1668 18.1106 19.0929 19.1845C18.0189 20.2585 16.2905 20.2585 12.8335 20.2585H9.16683C5.70986 20.2585 3.98138 20.2585 2.90744 19.1845C1.8335 18.1106 1.8335 16.3821 1.8335 12.9251Z" 
+                            stroke={`${pathname.includes('/live') ? 'rgb(255, 59, 92)': textColor}`}
+                            stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M8.25 2.84245L11 5.59245L14.6667 1.92578" 
+                            stroke={`${pathname.includes('/live') ? 'rgb(255, 59, 92)': textColor}`}
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                            <p className={`${styles.linkWord} ${textColor}`}>Live</p>
+                        </div>
+
+
+                    </Link>
+                ):null }
+
+                { isUserLoggedIn() ? (
+                    <Link to="/live" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                        <div
+                            className={classNames(
+                                `${pathname.includes('/live') ? styles.selected : styles.navLink}`
+                            )}
+                            onClick={() => {
+                                handleLinkClick(2)
+                                setSettingsDropdown(false)
+                            }}
+                        >
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8.16683 4.5013C8.16683 2.47626 6.52521 0.834635 4.50016 0.834635C2.47512 0.834635 0.833496 2.47626 0.833496 4.5013C0.833496 6.52635 2.47512 8.16797 4.50016 8.16797C6.52521 8.16797 8.16683 6.52635 8.16683 4.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            <path d="M8.16683 15.5013C8.16683 13.4763 6.52521 11.8346 4.50016 11.8346C2.47512 11.8346 0.833496 13.4763 0.833496 15.5013C0.833496 17.5263 2.47512 19.168 4.50016 19.168C6.52521 19.168 8.16683 17.5263 8.16683 15.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            <path d="M19.1668 4.5013C19.1668 2.47626 17.5252 0.834635 15.5002 0.834635C13.4751 0.834635 11.8335 2.47626 11.8335 4.5013C11.8335 6.52635 13.4751 8.16797 15.5002 8.16797C17.5252 8.16797 19.1668 6.52635 19.1668 4.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            <path d="M19.1668 15.5013C19.1668 13.4763 17.5252 11.8346 15.5002 11.8346C13.4751 11.8346 11.8335 13.4763 11.8335 15.5013C11.8335 17.5263 13.4751 19.168 15.5002 19.168C17.5252 19.168 19.1668 17.5263 19.1668 15.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            </svg>
+
+                            <p className={`${styles.linkWord} ${textColor}`}>Activity</p>
+                        </div>
+
+
+                    </Link>
+                ):null }
 
                 {/* <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
@@ -488,13 +540,31 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     </div>
                 </span>
 
+                <span
+                   
+                    style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={profileNavigation}>
+
+                    <div
+                        className={classNames(
+                            `${pathname.includes('/more') ? styles.selected : styles.navLink}`
+                        )}
+                    >   
+                        <svg width="16" height="3" viewBox="0 0 16 3" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.9959 1.55078H8.00488" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M13.9998 1.55078H14.0088" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M1.99981 1.55078H2.00879" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p className={styles.linkWord}>More</p>
+                    </div>
+                </span>
+
                 <div className={styles.sidebarLoginBox}>
                  { isUserLoggedIn() ? (
                     <>
-                        <p className={styles.sidebarTextStyle} ><b style={{fontWeight: '900'}}>Suggested for you</b>
+                        <p className={styles.sidebarTextStyle} ><b style={{fontWeight: '600'}}>Suggested for you</b>
                         {/* <br/> Accounts you follow will appear here */}
                         </p>
-                        <SuggestedActivity showActivity={true} showSuggestedContent={true} />
+                        <SuggestedActivity showActivity={true} showSuggestedContent={true} className='py-3' />
                     </>
                     ):(
                        <>

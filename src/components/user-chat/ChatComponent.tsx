@@ -231,31 +231,94 @@ const ChatComponent = () => {
 
     }
 
+    // useUpdateEffect(() => {
+    //     if (!recievedMsg) return;
+    //     console.log('new message forwared recevied...')
+    //     console.log('first check users array', users, activeChat);
+    //     console.log(recievedMsg);
+    //     console.log(recievedMsg.conversationId)
+    //     let tempUserArr: any[] = [];
+    //     let userFound = false;
+    //     users?.forEach((user) => {
+    //         if (user?.conversationId === recievedMsg.conversationId) {
+    //             tempUserArr.push({
+    //                 ...user,
+    //                 lastMsg: recievedMsg.message,
+    //                 lastSeen: getLatestMsgDateFormat(recievedMsg?.createdTime),
+    //                 unReadMsgs: conversationId === user.conversationId ? user.unReadMsgs : user.unReadMsgs + 1,
+    //             });
+    //             userFound = true; // Mark as found
+    //         } else {
+    //             tempUserArr.push(user);
+    //         }
+    //     });
+    //     setUsers(tempUserArr);
+    //     seTRecievedMsg(null)
+    // }, [recievedMsg])
+
     useUpdateEffect(() => {
         if (!recievedMsg) return;
+    
+        console.log('new message forwarded received...');
         console.log('first check users array', users, activeChat);
+        console.log(recievedMsg);
+        console.log(recievedMsg.conversationId);
+    
         let tempUserArr: any[] = [];
+        let userFound = false;
+    
+        // First, try to find and update the user in the existing users array
         users?.forEach((user) => {
             if (user?.conversationId === recievedMsg.conversationId) {
+                // Update the existing user's message details
                 tempUserArr.push({
                     ...user,
                     lastMsg: recievedMsg.message,
                     lastSeen: getLatestMsgDateFormat(recievedMsg?.createdTime),
                     unReadMsgs: conversationId === user.conversationId ? user.unReadMsgs : user.unReadMsgs + 1,
                 });
+                userFound = true; // Mark the user as found
             } else {
-                tempUserArr.push(user);
+                tempUserArr.push(user); // Keep other users in the same order
             }
         });
-        setUsers(tempUserArr);
-        seTRecievedMsg(null)
-    }, [recievedMsg])
+    
+        // If user is found, move them to the top
+        if (userFound) {
+            // Remove the found user from its original position
+            const updatedUserArr = tempUserArr.filter(user => user.conversationId !== recievedMsg.conversationId);
+            // Add the updated user at the top
+            updatedUserArr.unshift(tempUserArr.find(user => user.conversationId === recievedMsg.conversationId));
+            setUsers(updatedUserArr);
+        } else {
+            // If user doesn't exist, add them at the top
+            tempUserArr.unshift({
+                userId: recievedMsg.senderId,
+                userName: recievedMsg.senderName,
+                userImage: recievedMsg.senderImage,
+                lastMsg: recievedMsg.message,
+                lastSeen: getLatestMsgDateFormat(recievedMsg?.createdTime),
+                unReadMsgs: 1, // New message count is 1
+                conversationId: recievedMsg.conversationId,
+                themeColor: null,
+                nickName: null,
+                emoji: null,
+                isBlocked: false,
+                mute: false
+            });
+            setUsers(tempUserArr);
+        }
+    
+        seTRecievedMsg(null); // Reset received message state
+    }, [recievedMsg]);
+    
 
     const chatSwitchH = (e: any) => {
 
         console.log(
             "chatSwitchH"
         );
+        setMsg('');
         setIsProfileSecVisible(false);
         users?.forEach((user, index) => {
             if (user?.userId === e) {

@@ -232,6 +232,14 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
     setMessageType('Text');
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent default Enter key behavior
+        e.stopPropagation(); // Prevent the event from propagating
+        onSubmit(e as any);  
+    }
+};
+
   return (
     <>
       <CustomMediaPicker isDarkTheme={isDarkTheme} isPickerVisible={isPickerVisible} setIsPickerVisible={setIsPickerVisible} setMessageType={setMessageType} setMessage={setMessage} setUploadedFile={setUploadedFile} setOpenUploadPic={setOpenUploadPic} setFilePreview={setFilePreview} />
@@ -252,7 +260,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
                     </svg>
                 </button>
               </div>
-              <div className={style.replyMsg}>
+              <div className={`${style.replyMsg} ${isDarkTheme ? style.darkReply : ''}`}>
                 {renderMessageContent(currentReplyToMessage.msg)}
               </div>
             </div>
@@ -299,6 +307,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
             placeholder="Write a message..."
             value={!!uploadedFile ? '' : msg}
             style={{ width: '-webkit-fill-available', padding: '0.5rem' }}
+            onKeyDown={handleKeyDown} // Handling Enter key press
           />
           <button onClick={showGiftPopup}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

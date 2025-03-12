@@ -112,7 +112,7 @@ function Actions(props: any) {
     //     }
     // };
 
-    console.log('activeChat', activeChat, chatActiveUserId);
+    console.log('activeChat in Actions.tsx', activeChat, chatActiveUserId);
 
     // useEffect(() => {
     //     setTimeout(() => {
@@ -145,6 +145,7 @@ function Actions(props: any) {
                                         className={`flex ${style.dropd} ${isDarkTheme ? 'bg-[#353434]' : 'bg-white'} ${item.receiverId == loggedInUserId?'-right-20':'right-2'} top-6 z-50`}
                                     >
                                         <div
+                                            className={`${isDarkTheme ? style.isDarkClass:''}`}
                                             style={{
                                                 cursor: 'pointer',
                                                 width: '100%',
@@ -163,6 +164,7 @@ function Actions(props: any) {
                                         </div>
 
                                         <div
+                                            className={`${isDarkTheme ? style.isDarkClass:''}`}
                                             style={{
                                                 cursor: 'pointer',
                                                 width: '100%',
@@ -188,6 +190,7 @@ function Actions(props: any) {
                                         {/* {item.isrecevied && ( */}
                                             <>
                                                 <div
+                                                className={`${isDarkTheme ? style.isDarkClass:''}`}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         copyH(item.msg);
@@ -209,6 +212,7 @@ function Actions(props: any) {
                                             </>
                                         {/* )} */}
                                         <div
+                                        className={`${isDarkTheme ? style.isDarkClass:''}`}
                                             style={{
                                                 cursor: 'pointer',
                                                 width: '100%',
@@ -231,6 +235,7 @@ function Actions(props: any) {
                                             </p>
                                         </div>
                                         <div
+                                        className={`${isDarkTheme ? style.isDarkClass:''}`}
                                             style={{
                                                 cursor: 'pointer',
                                                 width: '100%',
@@ -249,7 +254,20 @@ function Actions(props: any) {
                                         </div>
                                     </div>
                                 )}
-                                <div   className={`${item.isForwarded ? (item.receiverId == loggedInUserId ? (activeUser.themeColor? activeUser.themeColor: isDarkTheme ? 'bg-[#262626] py-1 ' : 'bg-slate-100 border py-1') : (activeUser.themeColor?activeUser.themeColor+' bg-opacity-75':isDarkTheme ? 'bg-[#414141] py-1' : 'bg-gray-100 border py-1')) : ''} min-w-52 rounded`} style={{ position: 'relative', zIndex: 20 }}>
+                                {/* className={`${item.isForwarded ? (item.receiverId == loggedInUserId ? (activeUser.themeColor? activeUser.themeColor: isDarkTheme ? 'bg-[#262626] py-1 ' : 'bg-slate-100 border py-1') : (activeUser.themeColor?activeUser.themeColor+' bg-opacity-75':isDarkTheme ? 'bg-[#414141] py-1' : 'bg-gray-100 border py-1')) : ''} min-w-52 rounded`} style={{ position: 'relative', zIndex: 20 }} */}
+                                <div  className={`${item.isForwarded
+    ? (item.receiverId === loggedInUserId
+      ? (activeUser.themeColor
+        ? activeUser.themeColor
+        : isDarkTheme
+          ? 'bg-[#414141] py-1'  // Always apply bg-[#414141] when isDarkTheme is true
+          : 'border py-1')
+      : (activeUser.themeColor
+        ? activeUser.themeColor + ' bg-opacity-75'
+        : isDarkTheme
+          ? 'bg-[#414141] py-1'  // Always apply bg-[#414141] when isDarkTheme is true
+          : 'bg-gray-100 border py-1'))
+    : isDarkTheme ? 'bg-[#414141] py-1':''} min-w-52 rounded`} >
                                     {item.emojis && <img
                                         className='absolute w-[1.2rem] h-[1.2rem] top-1 right-2 cursor-pointer'
                                         onClick={() => {
