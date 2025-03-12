@@ -37,7 +37,8 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
 
   const { level } = useSelector((state: any) => state?.reducers?.volume);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-
+  const volumeContainerRef = useRef<HTMLDivElement>(null); // Ref for the volume container
+  const hideSliderTimeout = useRef<NodeJS.Timeout | null>(null); 
 
     const navigate = useNavigate();
 
@@ -102,22 +103,44 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
         }
       }, [level, isMutedVolume, videoRef.current]); // Add videoRef.current to dependencies
 
-    // const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     // console.log('volume change...', e.target.value); // Log the volume change event value
-    //     // const newVolume = parseFloat(e.target.value);
-    //     // dispatch(setVolume(newVolume)); // Update the volume in Redux
-    // };
 
     const handleVolumeChange = (newLevel:any) => {
         // console.log('volume change...', e.target.value); // Log the volume change event value
         // const newVolume = parseFloat(e.target.value);
         dispatch(setVolume(newLevel)); // Update the volume in Redux
-        
     };
+
+     // Handle mouse enter on the volume container
+     const handleMouseEnter = () => {
+        console.log('Mouse entered volume container');
+        if (hideSliderTimeout.current) {
+            clearTimeout(hideSliderTimeout.current); // Clear any pending hide timeout
+        }
+        setShowVolumeSlider(true);
+    };
+
+    // Handle mouse leave from the volume container
+    const handleMouseLeave = () => {
+        console.log('Mouse left volume container');
+        // Delay hiding the slider to allow the mouse to move between the icon and slider
+        hideSliderTimeout.current = setTimeout(() => {
+            setShowVolumeSlider(false);
+        }, 400); // Adjust the delay as needed
+    };
+
 
     const handleMuteToggle = () => {
         dispatch(toggleMute());
     };
+
+     // Cleanup the timeout when the component unmounts
+     useEffect(() => {
+        return () => {
+            if (hideSliderTimeout.current) {
+                clearTimeout(hideSliderTimeout.current);
+            }
+        };
+    }, []);
 
     const handleContextMenu = (e: React.MouseEvent<HTMLVideoElement>) => {
         e.preventDefault();
@@ -302,52 +325,6 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
 
     return (
         <>
-        <div style={{  width: '100px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
-          
-            
-
-            <ReactSlider
-            min={0}
-            max={1}
-            step={0.01}
-            value={level}
-            onChange={handleVolumeChange}
-            renderThumb={(props) => (
-                <div
-                {...props}
-                style={{
-                    ...props.style,
-                    height: '20px', // Thumb size
-                    width: '20px',  // Thumb size
-                    borderRadius: '50%', // Circular thumb
-                    backgroundColor: 'grey', // Thumb color
-                    cursor: 'pointer', // Pointer cursor on thumb
-                    position: 'absolute', // Make thumb follow the slider
-                    top: '-8px', // Adjust vertically to align it properly with track
-                    boxShadow: 'none', // Remove any default shadow effect from the thumb
-                }}
-                />
-            )}
-            renderTrack={(props, state) => (
-                <div
-                {...props}
-                style={{
-                    ...props.style,
-                    height: '4px', // Track height
-                    background: `linear-gradient(to right, #3498db ${state.valueNow * 100}%, transparent ${state.valueNow * 100}%)`, // Only show filled track (track-0)
-                    borderRadius: '2px', // Rounded corners for the track
-                    cursor: 'pointer', // Pointer cursor on track
-                    border: 'none', // Remove the default border (black line)
-                    boxShadow: 'none', // Remove the shadow effect from the track
-                }}
-                />
-            )}
-            />
-        </div>
-   
-
-
-
             <div
                 style={{
                     position: 'relative',
@@ -407,10 +384,12 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                     />
 
                         <div>
-                            <div className={style.volumeContainer}>
+                            <div className={style.volumeContainer} ref={volumeContainerRef}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                >
                             <button onClick={(event) => {
                                 event.stopPropagation();
-                                console.info('button clicked!')
                                 onMuteToggle();
                             }} className={style.volumeButton}>
                                 {isMutedVolume ? (
@@ -423,6 +402,57 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                                     <HighVolumeIcon />
                                 )}
                             </button>
+
+                            <div style={{  width: '100px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
+
+                            {showVolumeSlider && (
+                                <div
+                                    onMouseEnter={handleMouseEnter} // Keep the slider visible when hovering over it
+                                    onMouseLeave={handleMouseLeave} // Hide the slider when leaving the slider
+                                    onClick={(event) => event.stopPropagation()} // Stop click event propagation
+                                    onMouseDown={(event) => event.stopPropagation()} // Stop mouse down event propagation
+                                >
+                                    <ReactSlider
+                                        min={0}
+                                        max={1}
+                                        step={0.01}
+                                        value={level}
+                                        onChange={handleVolumeChange}
+                                        renderThumb={(props) => (
+                                        <div
+                                        {...props}
+                                        style={{
+                                            ...props.style,
+                                            height: '20px', // Thumb size
+                                            width: '20px',  // Thumb size
+                                            borderRadius: '50%', // Circular thumb
+                                            backgroundColor: 'grey', // Thumb color
+                                            cursor: 'pointer', // Pointer cursor on thumb
+                                            position: 'absolute', // Make thumb follow the slider
+                                            top: '-8px', // Adjust vertically to align it properly with track
+                                            boxShadow: 'none', // Remove any default shadow effect from the thumb
+                                        }}
+                                        />
+                                    )}
+                                    renderTrack={(props, state) => (
+                                        <div
+                                        {...props}
+                                        style={{
+                                            ...props.style,
+                                            height: '4px', // Track height
+                                            borderRadius: '2px', // Rounded corners for the track
+                                            cursor: 'pointer', // Pointer cursor on track
+                                            border: 'none', // Remove the default border (black line)
+                                            boxShadow: 'none', // Remove the shadow effect from the track
+                                        }}
+                                        />
+                                    )}
+                                    />
+                                </div>
+                            )}
+                            </div>
+
+                            
 
                             </div>
                         </div>
