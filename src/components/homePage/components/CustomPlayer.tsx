@@ -402,11 +402,10 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                                     <HighVolumeIcon />
                                 )}
                             </button>
-
-                            <div style={{  width: '100px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
-
                             {showVolumeSlider && (
+                            <div  style={{  width: '84px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
                                 <div
+                                className={style.barVolume}
                                     onMouseEnter={handleMouseEnter} // Keep the slider visible when hovering over it
                                     onMouseLeave={handleMouseLeave} // Hide the slider when leaving the slider
                                     onClick={(event) => event.stopPropagation()} // Stop click event propagation
@@ -423,13 +422,13 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                                         {...props}
                                         style={{
                                             ...props.style,
-                                            height: '20px', // Thumb size
-                                            width: '20px',  // Thumb size
+                                            height: '15px', // Thumb size
+                                            width: '15px',  // Thumb size
                                             borderRadius: '50%', // Circular thumb
                                             backgroundColor: 'grey', // Thumb color
                                             cursor: 'pointer', // Pointer cursor on thumb
                                             position: 'absolute', // Make thumb follow the slider
-                                            top: '-8px', // Adjust vertically to align it properly with track
+                                            top: '-6px', // Adjust vertically to align it properly with track
                                             boxShadow: 'none', // Remove any default shadow effect from the thumb
                                         }}
                                         />
@@ -449,9 +448,9 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                                     )}
                                     />
                                 </div>
-                            )}
+                           
                             </div>
-
+ )}
                             
 
                             </div>

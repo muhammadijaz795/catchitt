@@ -209,3 +209,13 @@
 }
 
 
+.barVolume::after{
+  position: absolute;
+    content: '';
+    top: -0.75rem;
+    height: 1.85rem;
+    width: 6rem;
+    background: #00000045;
+    border-radius: 1rem;
+    left: -0.25rem;
+}
