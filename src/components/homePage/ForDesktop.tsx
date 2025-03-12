@@ -29,6 +29,7 @@ import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
 import { ToastContainer } from 'react-toastify';
 import { updateHomeVideos } from '../../redux/reducers';
+import {toggleMute} from '../../redux/reducers/volumeSlice'
 import VideoNavigation from '../../shared/navigation/VideoNavigation';
 // import { Toast } from 'react-toastify/dist/components';
 
@@ -102,15 +103,20 @@ function ForDesktop(props: any) {
     const { isMutedVolume } = useSelector((state: any) => state?.reducers?.volume);
 
     
-    const toggleMute = () => {
-            if(isMuted){
-                localStorage.setItem('videoMuted', 'false');
-            }else{
-                localStorage.setItem('videoMuted', 'true');
-            }
-            setIsMuted((prevMuted) => !prevMuted);
-            return { type: 'TOGGLE_MUTE' };
-        }
+    // const toggleMute = () => {
+    //         if(isMuted){
+    //             localStorage.setItem('videoMuted', 'false');
+    //         }else{
+    //             localStorage.setItem('videoMuted', 'true');
+    //         }
+    //         setIsMuted((prevMuted) => !prevMuted);
+    //         return { type: 'TOGGLE_MUTE' };
+    //     }
+
+    const toggleMuteClicked = () => {
+        dispatch(toggleMute()); // Dispatch the toggleMute action creator
+
+    };
 
     const togglePlaying = () => {
         setIsPlaying((prevPlaying) => !prevPlaying);
@@ -370,7 +376,8 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                     setreportPopup(true)
                                                 }
                                                 isMutedVolume={isMutedVolume}
-                                                onMuteToggle={() => dispatch(toggleMute())}
+                                                onMuteToggle={toggleMuteClicked}
+                                                // onMuteToggle={() => dispatch(toggleMute())}
                                                 popupHandler={() => setSendPopup(true)}
                                                 
                                             />

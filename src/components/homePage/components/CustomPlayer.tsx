@@ -304,66 +304,45 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
         <>
         <div style={{  width: '100px', position:'absolute', zIndex:'2323', top: '1.6rem', left: '3rem' }}>
           
-            {/* <ReactSlider
+            
+
+            <ReactSlider
             min={0}
             max={1}
             step={0.01}
             value={level}
             onChange={handleVolumeChange}
             renderThumb={(props) => (
-              <div {...props} style={{ display: 'none' }} /> // Completely hide thumb
-            )}
-            renderTrack={(props, state) => (
-              <div
+                <div
                 {...props}
                 style={{
-                  ...props.style,
-                  height: '4px',
-                  background: `linear-gradient(to right,rgba(124, 243, 19, 0) ${level * 100}%, #ddd ${level * 100}%)`,
-                  borderRadius: '2px',
-                  cursor: 'pointer'
+                    ...props.style,
+                    height: '20px', // Thumb size
+                    width: '20px',  // Thumb size
+                    borderRadius: '50%', // Circular thumb
+                    backgroundColor: 'grey', // Thumb color
+                    cursor: 'pointer', // Pointer cursor on thumb
+                    position: 'absolute', // Make thumb follow the slider
+                    top: '-8px', // Adjust vertically to align it properly with track
+                    boxShadow: 'none', // Remove any default shadow effect from the thumb
                 }}
-              />
+                />
             )}
-          /> */}
-
-<ReactSlider
-        min={0}
-        max={1}
-        step={0.01}
-        value={level}
-        onChange={handleVolumeChange}
-        renderThumb={(props) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: '20px', // Thumb size
-              width: '20px',  // Thumb size
-              borderRadius: '50%', // Circular thumb
-              backgroundColor: 'grey', // Thumb color
-              cursor: 'pointer', // Pointer cursor on thumb
-              position: 'absolute', // Make thumb follow the slider
-              top: '-8px', // Adjust vertically to align it properly with track
-              boxShadow: 'none', // Remove any default shadow effect from the thumb
-            }}
-          />
-        )}
-        renderTrack={(props, state) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: '4px', // Track height
-              background: `linear-gradient(to right, #3498db ${state.valueNow * 100}%, transparent ${state.valueNow * 100}%)`, // Only show filled track (track-0)
-              borderRadius: '2px', // Rounded corners for the track
-              cursor: 'pointer', // Pointer cursor on track
-              border: 'none', // Remove the default border (black line)
-              boxShadow: 'none', // Remove the shadow effect from the track
-            }}
-          />
-        )}
-      />
+            renderTrack={(props, state) => (
+                <div
+                {...props}
+                style={{
+                    ...props.style,
+                    height: '4px', // Track height
+                    background: `linear-gradient(to right, #3498db ${state.valueNow * 100}%, transparent ${state.valueNow * 100}%)`, // Only show filled track (track-0)
+                    borderRadius: '2px', // Rounded corners for the track
+                    cursor: 'pointer', // Pointer cursor on track
+                    border: 'none', // Remove the default border (black line)
+                    boxShadow: 'none', // Remove the shadow effect from the track
+                }}
+                />
+            )}
+            />
         </div>
    
 
@@ -427,22 +406,26 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                         onContextMenu={handleContextMenu}
                     />
 
-<div>
-            <div className={style.volumeContainer}>
-              <button  onClick={onMuteToggle}   className={style.volumeButton}>
-              {isMutedVolume ? (
-                <MutedIcon />
-                ) : level === 0 ? (
-                <MutedIcon />
-                ) : level <= 0.5 ? (
-                <LowVolumeIcon />
-                ) : (
-                <HighVolumeIcon />
-                )}
-              </button>
-            </div>
-            
-          </div>
+                        <div>
+                            <div className={style.volumeContainer}>
+                            <button onClick={(event) => {
+                                event.stopPropagation();
+                                console.info('button clicked!')
+                                onMuteToggle();
+                            }} className={style.volumeButton}>
+                                {isMutedVolume ? (
+                                    <MutedIcon />
+                                ) : level === 0 ? (
+                                    <MutedIcon />
+                                ) : level <= 0.5 ? (
+                                    <LowVolumeIcon />
+                                ) : (
+                                    <HighVolumeIcon />
+                                )}
+                            </button>
+
+                            </div>
+                        </div>
                     
                     </>}
 
@@ -549,20 +532,24 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
 
 // Add these SVG components
 const MutedIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 14.8135V9.18646C14 6.04126 14 4.46866 13.0747 4.0773C12.1494 3.68593 11.0603 4.79793 8.88232 7.02192C7.75439 8.17365 7.11085 8.42869 5.50604 8.42869C4.10257 8.42869 3.40084 8.42869 2.89675 8.77262C1.85035 9.48655 2.00852 10.882 2.00852 12C2.00852 13.118 1.85035 14.5134 2.89675 15.2274C3.40084 15.5713 4.10257 15.5713 5.50604 15.5713C7.11085 15.5713 7.75439 15.8264 8.88232 16.9781C11.0603 19.2021 12.1494 20.3141 13.0747 19.9227C14 19.5313 14 17.9587 14 14.8135Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 10L22 14M18 14L22 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
   );
   
   const LowVolumeIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+<path d="M14 14.9444V9.31732C14 6.17212 14 4.59952 13.0747 4.20816C12.1494 3.81679 11.0603 4.92879 8.88232 7.15278C7.75439 8.3045 7.11085 8.55955 5.50604 8.55955C4.10257 8.55955 3.40084 8.55955 2.89675 8.90347C1.85035 9.61741 2.00852 11.0128 2.00852 12.1309C2.00852 13.2489 1.85035 14.6443 2.89675 15.3582C3.40084 15.7022 4.10257 15.7022 5.50604 15.7022C7.11085 15.7022 7.75439 15.9572 8.88232 17.1089C11.0603 19.3329 12.1494 20.4449 13.0747 20.0536C14 19.6622 14 18.0896 14 14.9444Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17 9.13086C17.6254 9.95053 18 10.9943 18 12.1309C18 13.2674 17.6254 14.3112 17 15.1309" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
   );
   
   const HighVolumeIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 14.9444V9.31732C14 6.17212 14 4.59952 13.0747 4.20816C12.1494 3.81679 11.0603 4.92879 8.88232 7.15278C7.75439 8.3045 7.11085 8.55955 5.50604 8.55955C4.10257 8.55955 3.40084 8.55955 2.89675 8.90347C1.85035 9.61741 2.00852 11.0128 2.00852 12.1309C2.00852 13.2489 1.85035 14.6443 2.89675 15.3582C3.40084 15.7022 4.10257 15.7022 5.50604 15.7022C7.11085 15.7022 7.75439 15.9572 8.88232 17.1089C11.0603 19.3329 12.1494 20.4449 13.0747 20.0536C14 19.6622 14 18.0896 14 14.9444Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 9.13086C17.6254 9.95053 18 10.9943 18 12.1309C18 13.2674 17.6254 14.3112 17 15.1309" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 7.13086C21.2508 8.49699 22 10.2366 22 12.1309C22 14.0251 21.2508 15.7647 20 17.1309" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   );
 export default React.memo(CustomPlayer);
