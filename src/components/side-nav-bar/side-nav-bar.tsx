@@ -422,7 +422,59 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
                     </Link>
                 ):null }
-                
+                { isUserLoggedIn() ? (
+                    <Link to="/live" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                        <div
+                            className={classNames(
+                                `${pathname.includes('/live') ? styles.selected : styles.navLink}`
+                            )}
+                            onClick={() => {
+                                handleLinkClick(2)
+                                setSettingsDropdown(false)
+                            }}
+                        >
+
+                        <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.8335 12.9251C1.8335 9.46816 1.8335 7.73968 2.90744 6.66574C3.98138 5.5918 5.70986 5.5918 9.16683 5.5918H12.8335C16.2905 5.5918 18.0189 5.5918 19.0929 6.66574C20.1668 7.73968 20.1668 9.46816 20.1668 12.9251C20.1668 16.3821 20.1668 18.1106 19.0929 19.1845C18.0189 20.2585 16.2905 20.2585 12.8335 20.2585H9.16683C5.70986 20.2585 3.98138 20.2585 2.90744 19.1845C1.8335 18.1106 1.8335 16.3821 1.8335 12.9251Z" 
+                            stroke={`${pathname.includes('/live') ? 'rgb(255, 59, 92)': textColor}`}
+                            stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M8.25 2.84245L11 5.59245L14.6667 1.92578" 
+                            stroke={`${pathname.includes('/live') ? 'rgb(255, 59, 92)': textColor}`}
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                            <p className={`${styles.linkWord} ${textColor}`}>Live</p>
+                        </div>
+
+
+                    </Link>
+                ):null }
+
+                { isUserLoggedIn() ? (
+                    <Link to="/live" reloadDocument={false} style={{ textDecoration: 'none' }}>
+
+                        <div
+                            className={classNames(
+                                `${pathname.includes('/live') ? styles.selected : styles.navLink}`
+                            )}
+                            onClick={() => {
+                                handleLinkClick(2)
+                                setSettingsDropdown(false)
+                            }}
+                        >
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8.16683 4.5013C8.16683 2.47626 6.52521 0.834635 4.50016 0.834635C2.47512 0.834635 0.833496 2.47626 0.833496 4.5013C0.833496 6.52635 2.47512 8.16797 4.50016 8.16797C6.52521 8.16797 8.16683 6.52635 8.16683 4.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            <path d="M8.16683 15.5013C8.16683 13.4763 6.52521 11.8346 4.50016 11.8346C2.47512 11.8346 0.833496 13.4763 0.833496 15.5013C0.833496 17.5263 2.47512 19.168 4.50016 19.168C6.52521 19.168 8.16683 17.5263 8.16683 15.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            <path d="M19.1668 4.5013C19.1668 2.47626 17.5252 0.834635 15.5002 0.834635C13.4751 0.834635 11.8335 2.47626 11.8335 4.5013C11.8335 6.52635 13.4751 8.16797 15.5002 8.16797C17.5252 8.16797 19.1668 6.52635 19.1668 4.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            <path d="M19.1668 15.5013C19.1668 13.4763 17.5252 11.8346 15.5002 11.8346C13.4751 11.8346 11.8335 13.4763 11.8335 15.5013C11.8335 17.5263 13.4751 19.168 15.5002 19.168C17.5252 19.168 19.1668 17.5263 19.1668 15.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
+                            </svg>
+
+                            <p className={`${styles.linkWord} ${textColor}`}>Activity</p>
+                        </div>
+
+
+                    </Link>
+                ):null }
 
                 {/* <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
@@ -485,6 +537,24 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                          <path fillRule="evenodd" clipRule="evenodd" d="M24.0003 7C20.1343 7 17.0003 10.134 17.0003 14C17.0003 17.866 20.1343 21 24.0003 21C27.8663 21 31.0003 17.866 31.0003 14C31.0003 10.134 27.8663 7 24.0003 7ZM13.0003 14C13.0003 7.92487 17.9252 3 24.0003 3C30.0755 3 35.0003 7.92487 35.0003 14C35.0003 20.0751 30.0755 25 24.0003 25C17.9252 25 13.0003 20.0751 13.0003 14ZM24.0003 33C18.0615 33 13.0493 36.9841 11.4972 42.4262C11.3457 42.9573 10.8217 43.3088 10.2804 43.1989L8.32038 42.8011C7.77914 42.6912 7.4266 42.1618 7.5683 41.628C9.49821 34.358 16.1215 29 24.0003 29C31.8792 29 38.5025 34.358 40.4324 41.628C40.5741 42.1618 40.2215 42.6912 39.6803 42.8011L37.7203 43.1989C37.179 43.3088 36.6549 42.9573 36.5035 42.4262C34.9514 36.9841 29.9391 33 24.0003 33Z"></path>
                         </svg>)}
                         <p className={styles.linkWord}>Profile</p>
+                    </div>
+                </span>
+
+                <span
+                   
+                    style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={profileNavigation}>
+
+                    <div
+                        className={classNames(
+                            `${pathname.includes('/more') ? styles.selected : styles.navLink}`
+                        )}
+                    >   
+                        <svg width="16" height="3" viewBox="0 0 16 3" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.9959 1.55078H8.00488" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M13.9998 1.55078H14.0088" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M1.99981 1.55078H2.00879" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p className={styles.linkWord}>More</p>
                     </div>
                 </span>
 
