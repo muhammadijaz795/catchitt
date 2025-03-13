@@ -67,12 +67,14 @@ export const ReportProblemPopup = ({
     const [lightdarkTheme, setlightdarkTheme] = useState('');
 
     useEffect(() => {
-        var themeColor = window.localStorage.getItem('theme');
-
-        if (themeColor == 'dark') {
+        const themeColor = window.localStorage.getItem('theme');
+    
+        if (themeColor === 'dark') {
             setlightdarkTheme(styles.darkTheme);
+        } else {
+            setlightdarkTheme(styles.lightTheme); // Ensure light theme is set
         }
-    });
+    }, []); // Em
 
     return (
         <div className={classNames(styles.root, className)}>

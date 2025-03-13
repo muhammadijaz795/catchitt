@@ -20,6 +20,7 @@
   background: var(--Default-white, #fff); //new theme 
   box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.03);  //new theme 
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .cardDivOpened {
@@ -39,6 +40,7 @@
   justify-content: flex-start;
   text-decoration: none;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .navLink {
@@ -282,4 +284,37 @@ div.darkThemeblack p{
 
 .activeBlackClass{
   color:#222 !important;
+}
+
+// overlay
+
+.overlay {
+  position: fixed;
+  top: 5rem;
+  left: 5rem;
+  width: 100vw;
+  height: calc(100vh - 5rem);
+  display: flex;
+  z-index: 1000;
+  right: 100%;
+  transition: max-width 0.3s ease-in-out; /* Smooth transition effect */
+
+}
+
+.overlayContent {
+  background: white;
+  padding: 20px;
+  border-left: 1px solid #c8c8c8;
+  height: 100%;
+  min-width: 20rem;
+  box-shadow: 0px 6px 20px 0px rgba(0, 0, 0, 0.03);
+
+}
+.OverlayOpenMain{
+  p.linkWord, .sidebarLoginBox, .divFooterContainer{
+    display: none;
+  }
+}
+body:has(.OverlayOpenMain) #sideBar{
+  max-width: 5rem;
 }

@@ -422,13 +422,13 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                                         {...props}
                                         style={{
                                             ...props.style,
-                                            height: '15px', // Thumb size
-                                            width: '15px',  // Thumb size
+                                            height: '12px', // Thumb size
+                                            width: '12px',  // Thumb size
                                             borderRadius: '50%', // Circular thumb
                                             backgroundColor: 'grey', // Thumb color
                                             cursor: 'pointer', // Pointer cursor on thumb
                                             position: 'absolute', // Make thumb follow the slider
-                                            top: '-6px', // Adjust vertically to align it properly with track
+                                            top: '-4px', // Adjust vertically to align it properly with track
                                             boxShadow: 'none', // Remove any default shadow effect from the thumb
                                         }}
                                         />

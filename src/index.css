@@ -492,3 +492,7 @@ input:checked + .slider::before {
   .slider .thumb.thumb-0{
     background-color: #fff !important;
   }
+
+  body:has(.OverlayOpenMain) #sideBar {
+    max-width: 5rem;
+  }
