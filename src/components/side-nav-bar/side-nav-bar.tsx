@@ -34,27 +34,29 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
     const [isOpenOverlay, setIsOpenOverlay] = useState(false);
     const [isOpenOverlayActivity, setIsOpenOverlayActivity] = useState(false);
-
+    
     const handleToggleOverlay = () => {
         setIsOpenOverlay(!isOpenOverlay);
+        setIsOpenOverlayActivity(false); // Ensure the second overlay is closed
     };
-
+    
     const handleCloseOverlay = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
             setIsOpenOverlay(false);
         }
     };
+    
     const handleToggleOverlayActivity = () => {
-        setIsOpenOverlay(false);
         setIsOpenOverlayActivity(!isOpenOverlayActivity);
+        setIsOpenOverlay(false); // Ensure the first overlay is closed
     };
-
+    
     const handleCloseOverlayActivity = (e: React.MouseEvent<HTMLDivElement>) => {
-        // Prevent closing when clicking inside the overlay content
         if (e.target === e.currentTarget) {
             setIsOpenOverlayActivity(false);
         }
     };
+    
 
     const handleLinkClick = (index: number) => {
         setIndex(index); // Update the selectedIndex in the store
