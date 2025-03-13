@@ -61,7 +61,9 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     // const [notification, setNotification] = useState<Notification[]>([{type: 'like', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Comment', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." }, {type: 'Follow', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Tag', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}, {type: 'Unknown Device Signin', triggeredUser: {avatar: defaultAvatar, name: 'dummy'}, message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}]);
     const navigate = useNavigate();
 
-    const open = Boolean(anchorEl);
+    // const open = Boolean(anchorEl);
+    const [open, setOpen] = useState(true); // Set open to true initially
+
     const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -514,17 +516,9 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
     return (
         <ThemeProvider theme={darkTheme === '' ? lightThemePalette : darkThemePalette}>
             <div
-                style={{
-                    position: 'absolute',
-                    right: 0,
-                    top: '0%',
-                    zIndex: 200,
-                    width: '100%',
-                    height: '100%',
-                    background: 'transparent',
-                }}
+               
             >
-                <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
+                {/* <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
                     <ListItemButton
                         id="lock-button"
                         aria-haspopup="listbox"
@@ -534,8 +528,8 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                         onClick={handleClickListItem}
                         style={{ background: 'transparent' }}
                     ></ListItemButton>
-                </List>
-                <StyledMenu
+                </List> */}
+                {/* <StyledMenu
                     id="lock-menu"
                     anchorEl={anchorEl}
                     open={open}
@@ -549,9 +543,9 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                         right: 0,
                         width: 200,
                     }}
-                >
+                > */}
                     <div className={`${style.notificationsContainer}`}>
-                        <span className={`${style.inboxTitle}`}>Notifications</span>
+                        {/* <span className={`${style.inboxTitle}`}>Notifications</span> */}
                         <div className={`${style.inboxTabs}`}>
                             <button className={`${style.buttontab} ${allSection ? activeClass : ''} `} onClick={handleAllSection}>All activity</button>
                             <button className={`${style.buttontab} ${likeSection ? activeClass : ''} `} onClick={handleLike}>Likes</button>
@@ -961,7 +955,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                         </div>
                     </div> */}
                     </div>
-                </StyledMenu>
+                {/* </StyledMenu> */}
             </div>
         </ThemeProvider>
     );

@@ -84,7 +84,7 @@ function Navbar() {
                                 <span style={{ color: 'rgb(255, 59, 92)' }}>Upload </span>
                             </div>
                             <SendIcon className={style.sendIcon} style={{ fontSize: '30px', cursor:'pointer', color: darkTheme === '' ? '#000' : '#fff' }} onClick={() => navigate(`/chat`)} /> */}
-                            <div className={style.user}>
+                            {/* <div className={style.user}>
                                 <div
                                     style={{ position: 'relative', width: '100%', height: '100%' }}
                                 >
@@ -94,10 +94,9 @@ function Navbar() {
                                     </div>
                                     <Notifications />
                                 </div>
-                                {/* <p className={style.name}>{profile?.name?.split(' ')[0]}</p> */}
 
-                            </div>
-                            <div className={style.user}>
+                            </div> */}
+                            {/* <div className={style.user}>
                                 <div
                                     style={{ position: 'relative', width: '100%', height: '100%' }}
                                 >
@@ -112,18 +111,15 @@ function Navbar() {
                                         src={profile?.avatar || defaultAvatar}
                                         alt=""
                                     />
-                                    {/* <div  style={{ position: 'relative', width:'100%' , height:'100%' , border:'1px solid red' }}> */}
                                     <NavbarMunu
                                         onViewProfile={() => navigate(`/profile`)}
                                         Onlogout={() => logoutAccount()}
                                         onSettings={() => navigate('/settings/account')}
                                     />
-                                    {/* </div> */}
                                 </div>
-                                {/* <p className={style.name} style={{whiteSpace:'nowrap'}}>{profile?.name?.length>12?profile?.name?.substring(0,12)+'...':profile?.name}</p> */}
                                 <p className={style.name} style={{ whiteSpace: 'nowrap' }}>{profile?.name?.split(" ")[0]}</p>
 
-                            </div>
+                            </div> */}
                             {/* <MenuDropdownPopup
                                         menuPopupStatusToggler={menuPopupStatusToggler}
                                         menuPopupStatus={menuPopupStatus}
