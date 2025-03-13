@@ -11,6 +11,7 @@ import { openLogoutPopup } from '../../redux/reducers';
 import { SuggestedActivity } from '../../components/suggested-activity/suggested-activity';
 import { defaultAvatar } from '../../icons';
 import Notifications from './../../shared/navbar/components/Notifications'
+import PopupForGetApp from '../../shared/components/PopupForGetApp';
 
 export interface SideNavBarProps {
     className?: string;
@@ -34,6 +35,35 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
     const [isOpenOverlay, setIsOpenOverlay] = useState(false);
     const [isOpenOverlayActivity, setIsOpenOverlayActivity] = useState(false);
+    const [appPopup, setAppPopup] = useState(false);
+    const [showNextBar, setShowNextBar] = useState(false);
+    const currentActiveTheme = window.localStorage.getItem('theme')
+
+    const openThemeMenu = () => {
+        setShowNextBar(!showNextBar);
+        setIsOpenOverlayActivity(false); // Ensure the second overlay is closed
+    }
+
+    const backNewBar = () => {
+        setShowNextBar(!showNextBar);
+    }
+    const showAppPopup = () => {
+        setAppPopup(true);
+    };
+
+    const closeAppPopup = () => {
+        setAppPopup(false);
+    };
+
+    const darkThemeFun = () => {
+        window.localStorage.setItem('theme', "dark");
+        window.location.reload();
+    };
+
+    const lightThemeFun = () => {
+        window.localStorage.setItem('theme', "light");
+        window.location.reload();
+    };
     
     const handleToggleOverlay = () => {
         setIsOpenOverlay(!isOpenOverlay);
@@ -67,6 +97,14 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
         const email = 'info@ogoul.com';
         window.location.href = `mailto:${email}`;
         setIndex(6)
+    }
+
+    const handleGetCoins = async () => {
+        navigate('/settings/account/balance');
+    };
+
+    const getSettings =  async () => {
+        navigate('/settings/account');
     }
 
     useEffect(() => {
@@ -593,62 +631,98 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     </div>
                 </span>
 
+                <PopupForGetApp openAppPopup={appPopup} closeAppPopup={closeAppPopup} />
+                
+
                 {isOpenOverlay && (
-                <div className={styles.overlay} onClick={handleCloseOverlay}>
-                    <div className={styles.overlayContent}>
-                        <div className='d-flex justify-between'>
-                            <p className='font-semibold text-lg'>More</p>
-                            <button onClick={() => setIsOpenOverlay(false)} className='border-0 bg-[#AEA5A530] rounded-full p-1'>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19.35 6.06095C19.4432 5.96726 19.4954 5.84054 19.4954 5.70845C19.4954 5.57635 19.4432 5.44963 19.35 5.35595L18.65 4.64595C18.6035 4.59908 18.5482 4.56188 18.4873 4.5365C18.4264 4.51112 18.361 4.49805 18.295 4.49805C18.229 4.49805 18.1637 4.51112 18.1027 4.5365C18.0418 4.56188 17.9865 4.59908 17.94 4.64595L12 10.5859L6.06003 4.65095C5.96635 4.55782 5.83962 4.50555 5.70753 4.50555C5.57544 4.50555 5.44871 4.55782 5.35503 4.65095L4.64503 5.36095C4.5519 5.45463 4.49963 5.58135 4.49963 5.71345C4.49963 5.84554 4.5519 5.97226 4.64503 6.06595L10.585 12.0009L4.65003 17.9409C4.5569 18.0346 4.50463 18.1614 4.50463 18.2934C4.50463 18.4255 4.5569 18.5523 4.65003 18.6459L5.36003 19.3559C5.45371 19.4491 5.58044 19.5013 5.71253 19.5013C5.84462 19.5013 5.97135 19.4491 6.06503 19.3559L12 13.4159L17.94 19.3509C18.0337 19.4441 18.1604 19.4963 18.2925 19.4963C18.4246 19.4963 18.5513 19.4441 18.645 19.3509L19.355 18.6409C19.4482 18.5473 19.5004 18.4205 19.5004 18.2884C19.5004 18.1564 19.4482 18.0296 19.355 17.9359L13.415 12.0009L19.35 6.06095Z" fill={`${textColor}`}></path>
-                            </svg>                                  
-                            </button>
-                        </div>
-                        <div className='d-flex mt-4'>
-                            <p className='font-medium'>Get Coins </p>
-                        </div>
-                        <div className='d-flex mt-4'>
-                            <p className='font-medium'>Create Seezitt effects </p>
-                        </div>
-                        <div className='d-flex mt-4 justify-between align-items-center'>
-                            <p className='font-medium'>Creator tools </p>
-                            <span>
-                                <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div className='d-flex mt-4 justify-between align-items-center'>
-                            <p className='font-medium'>English</p>
-                            <span>
-                                <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div className='d-flex mt-4 justify-between align-items-center'>
-                            <p className='font-medium'>Dark mode </p>
-                            <span>
-                                <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div className='d-flex mt-4'>
-                            <p className='font-medium'>Settings </p>
-                        </div>
-                        <div className='d-flex mt-4'>
-                            <p className='font-medium'>Feedback and help </p>
-                        </div>
-                        <div className='d-flex mt-4'>
-                            <p className='font-medium'>Get app </p>
-                        </div>
-                        <div className='d-flex mt-4'>
-                            <p className='font-medium'>Log out </p>
+  showNextBar ? (
+    <div className={styles.overlay} onClick={handleCloseOverlay}>
+       
+                        <div className={styles.overlayContent}>
+                        <p onClick={backNewBar}>Back</p>
+                            <div onClick={darkThemeFun} className='d-flex mt-4 justify-between align-items-center'>
+                                <p className='font-medium'>Dark mode </p>
+                                {currentActiveTheme =='dark' ? 'active':''}
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div onClick={lightThemeFun} className='d-flex mt-4 justify-between align-items-center'>
+                                <p className='font-medium'>Light mode </p>
+                                {currentActiveTheme == 'light' ? 'active':''}
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            
                         </div>
                     </div>
-                </div>
-            )}
+  ) : ( <div className={styles.overlay} onClick={handleCloseOverlay}>
+                        <div className={styles.overlayContent}>
+                            <div className='d-flex justify-between'>
+                                <p className='font-semibold text-lg'>More</p>
+                                <button onClick={() => setIsOpenOverlay(false)} className='border-0 bg-[#AEA5A530] rounded-full p-1'>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.35 6.06095C19.4432 5.96726 19.4954 5.84054 19.4954 5.70845C19.4954 5.57635 19.4432 5.44963 19.35 5.35595L18.65 4.64595C18.6035 4.59908 18.5482 4.56188 18.4873 4.5365C18.4264 4.51112 18.361 4.49805 18.295 4.49805C18.229 4.49805 18.1637 4.51112 18.1027 4.5365C18.0418 4.56188 17.9865 4.59908 17.94 4.64595L12 10.5859L6.06003 4.65095C5.96635 4.55782 5.83962 4.50555 5.70753 4.50555C5.57544 4.50555 5.44871 4.55782 5.35503 4.65095L4.64503 5.36095C4.5519 5.45463 4.49963 5.58135 4.49963 5.71345C4.49963 5.84554 4.5519 5.97226 4.64503 6.06595L10.585 12.0009L4.65003 17.9409C4.5569 18.0346 4.50463 18.1614 4.50463 18.2934C4.50463 18.4255 4.5569 18.5523 4.65003 18.6459L5.36003 19.3559C5.45371 19.4491 5.58044 19.5013 5.71253 19.5013C5.84462 19.5013 5.97135 19.4491 6.06503 19.3559L12 13.4159L17.94 19.3509C18.0337 19.4441 18.1604 19.4963 18.2925 19.4963C18.4246 19.4963 18.5513 19.4441 18.645 19.3509L19.355 18.6409C19.4482 18.5473 19.5004 18.4205 19.5004 18.2884C19.5004 18.1564 19.4482 18.0296 19.355 17.9359L13.415 12.0009L19.35 6.06095Z" fill={`${textColor}`}></path>
+                                </svg>                                  
+                                </button>
+                            </div>
+                            <div className='d-flex mt-4' onClick={handleGetCoins}>
+                                <p className='font-medium'>Get Coins </p>
+                            </div>
+                            {/* <div className='d-flex mt-4'>
+                                <p className='font-medium'>Create Seezitt effects </p>
+                            </div> */}
+                            {/* <div className='d-flex mt-4 justify-between align-items-center'>
+                                <p className='font-medium'>Creator tools </p>
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div> */}
+                            <div className='d-flex mt-4 justify-between align-items-center'>
+                                <p className='font-medium'>English</p>
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div onClick={openThemeMenu} className='d-flex mt-4 justify-between align-items-center'>
+                                <p className='font-medium'>Dark mode </p>
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div className='d-flex mt-4' onClick={getSettings}>
+                                <p className='font-medium'>Settings </p>
+                            </div>
+
+                            
+                            <a className='hover:text-inherit' href="https://help.seezitt.com/" target="_blank">
+                                <div className='d-flex mt-4'>
+                                    <p className='font-medium'>Feedback and help </p>
+                                </div>
+                            </a>
+                            <div className='d-flex mt-4' onClick={showAppPopup}>
+                                <p className='font-medium'>Get app </p>
+                            </div>
+                            <div className='d-flex mt-4' onClick={() => {
+                                                        dispatch(openLogoutPopup());
+                                                    }}>
+                                <p className='font-medium'>Logout </p>
+                            </div>
+                        </div>
+                    </div>
+                 )
+                )}
 
                 <div className={styles.sidebarLoginBox}>
                  { isUserLoggedIn() ? (
