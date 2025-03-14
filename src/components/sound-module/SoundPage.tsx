@@ -229,13 +229,18 @@ export default function SoundPage() {
                                         </div>
                                         <div className='flex gap-4 items-baseline h-fit'>
 
-                                            <Bookmark toggleBookmark={handleBookmarking} bookmarked={soundData?.isBookmarked} />
+                                            {/* <Bookmark toggleBookmark={handleBookmarking} bookmarked={soundData?.isBookmarked} /> */}
                                             <button className='ring-0 hover:border-transparent relative p-0'>
+                                                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5546 8.48191L13.3171 8.29548V7.51052V3.63086L21.4998 12.1309L13.3171 20.6309V16.5046V15.4972L12.3098 15.5046C8.838 15.5302 5.4275 17.1774 2.49983 19.719C2.54612 19.3844 2.67769 18.7718 2.94391 17.9637C3.3786 16.644 4.01326 15.3296 4.88691 14.1018C6.71045 11.5391 9.24414 9.29126 12.5546 8.48191Z" stroke="#161823" stroke-width="2"/>
+                                                </svg>
+
+                                                {/*                                                 
                                                 <img
                                                     className='cursor-pointer'
                                                     src={ShareClicked}
                                                     alt=""
-                                                />
+                                                /> */}
                                                 <COPY_AND_SEND_MENU_MULTIPLE copyHandler={handleCopyToClipboard} allowedShareOptions={allowedShareOptions} URL={window.location.pathname} title={soundData?.title} />
                                             </button>
 
