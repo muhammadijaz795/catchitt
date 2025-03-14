@@ -85,6 +85,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                 : post?.originalUrl;
                 dispatch(setVideoUrl(videoUrl));
                 dispatch(setCurrentPost(post));
+                localStorage.setItem('currentPost', post);
             }
         } else {
             if (post?.mediaId && onMediaPlay) {
@@ -278,6 +279,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                 : post?.originalUrl;
                 dispatch(setVideoUrl(videoUrl));
                 dispatch(setCurrentPost(post));
+                localStorage.setItem('currentPost', post);
             }
         }
         setIsPlaying(!isPlaying);

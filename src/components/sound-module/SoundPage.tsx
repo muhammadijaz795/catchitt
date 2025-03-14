@@ -25,7 +25,7 @@ import Share from '../sounds-page/svg-components/Default.png';
 import styles from '../sounds-page/sound-page.module.scss';
 import COPY_AND_SEND_MENU_MULTIPLE from '../../shared/Menu/copyAndSendForMultiple';
 
-// import MORE_MENU_HOME from '../../shared/Menu/more/ReportMenu';
+import MORE_MENU_HOME from '../../shared/Menu/more/ReportMenu';
 
 
 export default function SoundPage() {
@@ -248,12 +248,12 @@ export default function SoundPage() {
                                                 <COPY_AND_SEND_MENU_MULTIPLE open={isOpenShare} copyHandler={handleCopyToClipboard} allowedShareOptions={allowedShareOptions} URL={window.location.pathname} title={soundData?.title} />
                                             </button>
                                             
-                                           {/* <MORE_MENU_HOME
-                                                onReportPopup={() => setReportPopup(true)}
+                                           <MORE_MENU_HOME
+                                                visibleReportPopup={() => {setReportPopup(true);}}
                                                 url={''}
                                                 postMediaId={soundData?.mediaId?._id }
                                                 activeMediaId={soundData?.mediaId?._id}
-                                            /> */}
+                                            />
 
                                         </div>
                                     </div>
