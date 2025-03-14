@@ -10,9 +10,11 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
             onClose();
         };
 
-        setTimeout(() => {
-            document.addEventListener('click', handleClickOutside);
-        }, 0);
+        document.addEventListener('click', handleClickOutside);
+
+        // setTimeout(() => {
+            
+        // }, 0);
 
         return () => {
             document.removeEventListener('click', handleClickOutside);

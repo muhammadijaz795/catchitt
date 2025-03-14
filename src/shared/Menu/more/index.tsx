@@ -16,7 +16,7 @@ import { videoNotInterestedHandle, videoRepostHandle } from '../../../redux/Asyn
 import { toggleAutoScroll, setScrollSpeed } from '../../../redux/reducers/autoScrollUserSettings';
 
 
-export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,activeMediaId }: any) {
+export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,activeMediaId,isFromPopupVideoPlayer }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const open = Boolean(anchorEl);
@@ -179,7 +179,7 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
             // }}
             className={style.actionMoreStyle}
         >
-            <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
+            <List component="nav" className={`${isFromPopupVideoPlayer ? isFromPopupVideoPlayer : ''} more_menu_item_class`} aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
                 <ListItemButton
                     id="lock-button"
                     aria-haspopup="listbox"
@@ -213,7 +213,7 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                     <path d="M1 4.99997C1 4.99997 3.94596 1.00001 5.00003 1C6.05411 0.999991 9 5 9 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M9 15C9 15 6.05404 19 4.99997 19C3.94589 19 1 15 1 15" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                        <p className=''>Auto scroll</p>
+                        <p className='!font-medium'>Auto scroll</p>
                         {autoScroll}                   
 
                         <label className="toggle-switch">
@@ -284,17 +284,17 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                 </MenuItem> */}
                 <MenuItem onClick={()=>{ notInterestedInVideo(postMediaId),handleClose() }} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}>
-                        <img width="20" src={blackCrossHeart} />
-                        <p className={`${style.p} ${style.black_500}`}>Not interested</p>
+                        <img height="22" src={blackCrossHeart} />
+                        <p className= '!font-medium' style={{paddingLeft: '2px'}}>Not interested</p>
                     </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem} onClick={visibleReportPopup}>
-                        <svg width="20" height="16" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="16" height="16" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1 5L1 19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M8.75758 1.90865C5.45236 0.224973 2.85125 1.21144 1.55426 2.2192C1.32048 2.40085 1.20358 2.49167 1.10179 2.69967C1 2.90767 1 3.10138 1 3.4888V12.7319C1.9697 11.6342 4.87879 9.9328 8.75758 11.9086C12.224 13.6744 15.1741 12.9424 16.5697 12.1795C16.7633 12.0737 16.8601 12.0207 16.9301 11.9028C17 11.7849 17 11.6569 17 11.4009V3.87389C17 3.04538 17 2.63113 16.8027 2.48106C16.6053 2.33099 16.1436 2.459 15.2202 2.71504C13.64 3.15319 11.3423 3.22532 8.75758 1.90865Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <p className={`${style.p} ${style.black_500} `}>Report</p>
+                        <p className='!font-medium ml-1'>Report</p>
                     </div>
                 </MenuItem>
             </StyledMenu>

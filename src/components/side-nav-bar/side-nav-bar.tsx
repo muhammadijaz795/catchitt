@@ -10,6 +10,8 @@ import { logoutUser } from '../../redux/reducers/auth';
 import { openLogoutPopup } from '../../redux/reducers';
 import { SuggestedActivity } from '../../components/suggested-activity/suggested-activity';
 import { defaultAvatar } from '../../icons';
+import Notifications from './../../shared/navbar/components/Notifications'
+import PopupForGetApp from '../../shared/components/PopupForGetApp';
 
 export interface SideNavBarProps {
     className?: string;
@@ -31,6 +33,60 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     const [isDropdownOpen, setDropdownOpen] = useState(settingsDropdownState);
     // const [sidebarTextStyle, setSidebarTextStyle] = useState(styles.sidebarTextStyle);
 
+    const [isOpenOverlay, setIsOpenOverlay] = useState(false);
+    const [isOpenOverlayActivity, setIsOpenOverlayActivity] = useState(false);
+    const [appPopup, setAppPopup] = useState(false);
+    const [showNextBar, setShowNextBar] = useState(false);
+    const currentActiveTheme = window.localStorage.getItem('theme')
+
+    const openThemeMenu = () => {
+        setShowNextBar(!showNextBar);
+        setIsOpenOverlayActivity(false); // Ensure the second overlay is closed
+    }
+
+    const backNewBar = () => {
+        setShowNextBar(!showNextBar);
+    }
+    const showAppPopup = () => {
+        setAppPopup(true);
+    };
+
+    const closeAppPopup = () => {
+        setAppPopup(false);
+    };
+
+    const darkThemeFun = () => {
+        window.localStorage.setItem('theme', "dark");
+        window.location.reload();
+    };
+
+    const lightThemeFun = () => {
+        window.localStorage.setItem('theme', "light");
+        window.location.reload();
+    };
+    
+    const handleToggleOverlay = () => {
+        setIsOpenOverlay(!isOpenOverlay);
+        setIsOpenOverlayActivity(false); // Ensure the second overlay is closed
+    };
+    
+    const handleCloseOverlay = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget) {
+            setIsOpenOverlay(false);
+        }
+    };
+    
+    const handleToggleOverlayActivity = () => {
+        setIsOpenOverlayActivity(!isOpenOverlayActivity);
+        setIsOpenOverlay(false); // Ensure the first overlay is closed
+    };
+    
+    const handleCloseOverlayActivity = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget) {
+            setIsOpenOverlayActivity(false);
+        }
+    };
+    
 
     const handleLinkClick = (index: number) => {
         setIndex(index); // Update the selectedIndex in the store
@@ -41,6 +97,14 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
         const email = 'info@ogoul.com';
         window.location.href = `mailto:${email}`;
         setIndex(6)
+    }
+
+    const handleGetCoins = async () => {
+        navigate('/settings/account/balance');
+    };
+
+    const getSettings =  async () => {
+        navigate('/settings/account');
     }
 
     useEffect(() => {
@@ -108,7 +172,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     
 
     return (
-        <div className={` ${classNames(styles.root, className)} ${darkTheme}`}>
+        <div className={`${isOpenOverlay === true || isOpenOverlayActivity === true ? styles.OverlayOpenMain : ''} ${classNames(styles.root, className)} ${darkTheme}`}>
             <div className={isDropdownOpen === true ? styles.cardDivOpened : styles.cardDiv}>
                 <Link to="/home" reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <div
@@ -451,16 +515,12 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                 ):null }
 
                 { isUserLoggedIn() ? (
-                    <Link to="/live" reloadDocument={false} style={{ textDecoration: 'none' }}>
-
+                    <div   style={{ textDecoration: 'none', cursor: 'pointer' }}>
                         <div
                             className={classNames(
                                 `${pathname.includes('/live') ? styles.selected : styles.navLink}`
                             )}
-                            onClick={() => {
-                                handleLinkClick(2)
-                                setSettingsDropdown(false)
-                            }}
+                            onClick={handleToggleOverlayActivity}
                         >
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8.16683 4.5013C8.16683 2.47626 6.52521 0.834635 4.50016 0.834635C2.47512 0.834635 0.833496 2.47626 0.833496 4.5013C0.833496 6.52635 2.47512 8.16797 4.50016 8.16797C6.52521 8.16797 8.16683 6.52635 8.16683 4.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
@@ -468,13 +528,26 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             <path d="M19.1668 4.5013C19.1668 2.47626 17.5252 0.834635 15.5002 0.834635C13.4751 0.834635 11.8335 2.47626 11.8335 4.5013C11.8335 6.52635 13.4751 8.16797 15.5002 8.16797C17.5252 8.16797 19.1668 6.52635 19.1668 4.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
                             <path d="M19.1668 15.5013C19.1668 13.4763 17.5252 11.8346 15.5002 11.8346C13.4751 11.8346 11.8335 13.4763 11.8335 15.5013C11.8335 17.5263 13.4751 19.168 15.5002 19.168C17.5252 19.168 19.1668 17.5263 19.1668 15.5013Z" stroke={`${pathname.includes('/activity') ? 'rgb(255, 59, 92)': textColor}`} stroke-width="1.5"/>
                             </svg>
-
                             <p className={`${styles.linkWord} ${textColor}`}>Activity</p>
                         </div>
-
-
-                    </Link>
+                    </div>
                 ):null }
+
+                {isOpenOverlayActivity && (
+                    <div className={styles.overlay} onClick={handleCloseOverlayActivity}>
+                        <div className={styles.overlayContent}>
+                            <div className='d-flex justify-between'>
+                                <p className='font-semibold text-lg'>Notifications</p>
+                                <button onClick={() => setIsOpenOverlayActivity(false)} className='border-0 bg-[#AEA5A530] rounded-full p-1'>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.35 6.06095C19.4432 5.96726 19.4954 5.84054 19.4954 5.70845C19.4954 5.57635 19.4432 5.44963 19.35 5.35595L18.65 4.64595C18.6035 4.59908 18.5482 4.56188 18.4873 4.5365C18.4264 4.51112 18.361 4.49805 18.295 4.49805C18.229 4.49805 18.1637 4.51112 18.1027 4.5365C18.0418 4.56188 17.9865 4.59908 17.94 4.64595L12 10.5859L6.06003 4.65095C5.96635 4.55782 5.83962 4.50555 5.70753 4.50555C5.57544 4.50555 5.44871 4.55782 5.35503 4.65095L4.64503 5.36095C4.5519 5.45463 4.49963 5.58135 4.49963 5.71345C4.49963 5.84554 4.5519 5.97226 4.64503 6.06595L10.585 12.0009L4.65003 17.9409C4.5569 18.0346 4.50463 18.1614 4.50463 18.2934C4.50463 18.4255 4.5569 18.5523 4.65003 18.6459L5.36003 19.3559C5.45371 19.4491 5.58044 19.5013 5.71253 19.5013C5.84462 19.5013 5.97135 19.4491 6.06503 19.3559L12 13.4159L17.94 19.3509C18.0337 19.4441 18.1604 19.4963 18.2925 19.4963C18.4246 19.4963 18.5513 19.4441 18.645 19.3509L19.355 18.6409C19.4482 18.5473 19.5004 18.4205 19.5004 18.2884C19.5004 18.1564 19.4482 18.0296 19.355 17.9359L13.415 12.0009L19.35 6.06095Z" fill={`${textColor}`}></path>
+                                </svg>                                  
+                                </button>
+                            </div>
+                            <Notifications />
+                        </div>
+                    </div>
+                )}
 
                 {/* <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
@@ -542,7 +615,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
                 <span
                    
-                    style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={profileNavigation}>
+                    style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={handleToggleOverlay}>
 
                     <div
                         className={classNames(
@@ -557,6 +630,152 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={styles.linkWord}>More</p>
                     </div>
                 </span>
+
+                <PopupForGetApp openAppPopup={appPopup} closeAppPopup={closeAppPopup} />
+                
+
+                {isOpenOverlay && (
+  showNextBar ? (
+    <div className={styles.overlay} onClick={handleCloseOverlay}>
+       
+                        <div className={styles.overlayContent}>
+                            <p className='d-flex align-items-center cursor-pointer' onClick={backNewBar}>
+                                <span className='bg-[#f1f2f3] p-1 rounded-full w-[1.35rem] mr-2'>
+                                    <svg fill="#424242"  color="inherit" font-size="12" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="m19.26 24 13.66-13.67a1 1 0 0 0 0-1.41l-1.84-1.84a1 1 0 0 0-1.41 0L13.46 23.3a1 1 0 0 0 0 1.42l16.2 16.21a1 1 0 0 0 1.42 0l1.84-1.84a1 1 0 0 0 0-1.41L19.26 24Z"></path></svg>
+                                </span>
+                                {currentActiveTheme}
+                            </p>
+                            <div onClick={darkThemeFun} className="d-flex mt-3 p-2 rounded-full cursor-pointer justify-between align-items-center"
+                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                            >
+                                    <p className="font-medium">Dark mode</p>
+                                    <span>
+                                        {currentActiveTheme === "dark" ? (
+                                            <svg
+                                                fill="white"  // White color for dark mode
+                                                stroke="white" // White stroke
+                                                fontSize="14"
+                                                viewBox="0 0 48 48"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="1em"
+                                                height="1em"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    clipRule="evenodd"
+                                                    d="M43 6.08c.7.45 1.06.67 1.25.98c.16.27.23.59.2.9c-.03.36-.26.72-.7 1.43L23.06 42.14a3.5 3.5 0 0 1-5.63.39L4.89 27.62c-.54-.64-.81-.96-.9-1.32a1.5 1.5 0 0 1 .09-.92c.14-.33.46-.6 1.1-1.14l1.69-1.42c.64-.54.96-.81 1.31-.9c.3-.06.63-.04.92.09c.34.14.6.46 1.15 1.1l9.46 11.25 18.11-28.7c.45-.72.68-1.07.99-1.26c.27-.16.59-.23.9-.2c.36.03.71.25 1.43.7L43 6.08Z"
+                                                ></path>
+                                            </svg>
+                                        ) : null}
+                                    </span>
+                                </div>
+
+                                <div onClick={lightThemeFun} className="d-flex mt-3 p-2 rounded-full cursor-pointer justify-between align-items-center"
+                                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                                >
+                                    <p className="font-medium">Light mode</p>
+                                    <span>
+                                        {currentActiveTheme === "light" ? (
+                                            <svg
+                                                fill="black"  // Black color for light mode
+                                                stroke="black" // Black stroke
+                                                fontSize="14"
+                                                viewBox="0 0 48 48"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="1em"
+                                                height="1em"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    clipRule="evenodd"
+                                                    d="M43 6.08c.7.45 1.06.67 1.25.98c.16.27.23.59.2.9c-.03.36-.26.72-.7 1.43L23.06 42.14a3.5 3.5 0 0 1-5.63.39L4.89 27.62c-.54-.64-.81-.96-.9-1.32a1.5 1.5 0 0 1 .09-.92c.14-.33.46-.6 1.1-1.14l1.69-1.42c.64-.54.96-.81 1.31-.9c.3-.06.63-.04.92.09c.34.14.6.46 1.15 1.1l9.46 11.25 18.11-28.7c.45-.72.68-1.07.99-1.26c.27-.16.59-.23.9-.2c.36.03.71.25 1.43.7L43 6.08Z"
+                                                ></path>
+                                            </svg>
+                                        ) : null}
+                                    </span>
+                                </div>
+
+                        </div>
+                    </div>
+  ) : ( <div className={styles.overlay} onClick={handleCloseOverlay}>
+                        <div className={styles.overlayContent}>
+                            <div className='d-flex justify-between'>
+                                <p className='font-semibold text-lg'>More</p>
+                                <button onClick={() => setIsOpenOverlay(false)} className='border-0 bg-[#AEA5A530] rounded-full p-1'>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.35 6.06095C19.4432 5.96726 19.4954 5.84054 19.4954 5.70845C19.4954 5.57635 19.4432 5.44963 19.35 5.35595L18.65 4.64595C18.6035 4.59908 18.5482 4.56188 18.4873 4.5365C18.4264 4.51112 18.361 4.49805 18.295 4.49805C18.229 4.49805 18.1637 4.51112 18.1027 4.5365C18.0418 4.56188 17.9865 4.59908 17.94 4.64595L12 10.5859L6.06003 4.65095C5.96635 4.55782 5.83962 4.50555 5.70753 4.50555C5.57544 4.50555 5.44871 4.55782 5.35503 4.65095L4.64503 5.36095C4.5519 5.45463 4.49963 5.58135 4.49963 5.71345C4.49963 5.84554 4.5519 5.97226 4.64503 6.06595L10.585 12.0009L4.65003 17.9409C4.5569 18.0346 4.50463 18.1614 4.50463 18.2934C4.50463 18.4255 4.5569 18.5523 4.65003 18.6459L5.36003 19.3559C5.45371 19.4491 5.58044 19.5013 5.71253 19.5013C5.84462 19.5013 5.97135 19.4491 6.06503 19.3559L12 13.4159L17.94 19.3509C18.0337 19.4441 18.1604 19.4963 18.2925 19.4963C18.4246 19.4963 18.5513 19.4441 18.645 19.3509L19.355 18.6409C19.4482 18.5473 19.5004 18.4205 19.5004 18.2884C19.5004 18.1564 19.4482 18.0296 19.355 17.9359L13.415 12.0009L19.35 6.06095Z" fill={`${textColor}`}></path>
+                                </svg>                                  
+                                </button>
+                            </div>
+                            <div
+                            className='d-flex mt-2 p-2 cursor-pointer rounded-full' onClick={handleGetCoins} 
+                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                            >
+                                <p className='font-medium'>Get Coins </p>
+                            </div>
+                            {/* <div className='d-flex mt-4 cursor-pointer '>
+                                <p className='font-medium'>Create Seezitt effects </p>
+                            </div> */}
+                            {/* <div className='d-flex mt-4 cursor-pointer  justify-between align-items-center'>
+                                <p className='font-medium'>Creator tools </p>
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div> */}
+                            {/* <div className='d-flex mt-4 cursor-pointer  justify-between align-items-center'>
+                                <p className='font-medium'>English</p>
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div> */}
+                            <div onClick={openThemeMenu} className='d-flex mt-2 p-2 cursor-pointer rounded-full  justify-between align-items-center'   
+                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                            >
+                                <p className='font-medium'>Dark mode </p>
+                                <span>
+                                    <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1.26953L7 7.26953L1 13.2695" stroke="#D3D3D3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div className='d-flex mt-2 p-2 cursor-pointer rounded-full' onClick={getSettings} 
+                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                            >
+                                <p className='font-medium'>Settings </p>
+                            </div>
+
+                            
+                            <a className='d-flex mt-2 p-2 cursor-pointer rounded-full' href="https://help.seezitt.com/" target="_blank" 
+                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
+                                    <p className='font-medium'>Feedback and help </p>
+                            </a>
+                            <div className='d-flex mt-2 p-2 cursor-pointer rounded-full ' onClick={showAppPopup} 
+                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
+                                <p className='font-medium'>Get app </p>
+                            </div>
+                            <div 
+                                                        className='d-flex mt-2 p-2 cursor-pointer rounded-full 'onClick={() => {
+                                                            dispatch(openLogoutPopup());
+                                                        }} 
+                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
+                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
+                                <p className='font-medium'>Logout </p>
+                            </div>
+                        </div>
+                    </div>
+                 )
+                )}
 
                 <div className={styles.sidebarLoginBox}>
                  { isUserLoggedIn() ? (

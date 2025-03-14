@@ -1,5 +1,5 @@
 .notificationsContainer {
-  padding: 16px;
+  // padding: 16px;
 }
 
 .notificationList {
@@ -18,7 +18,7 @@
 
 .inboxList {
   max-height: 400px;
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 .inboxFollow {
@@ -52,21 +52,19 @@
 }
 
 .buttontab {
-  border: 1px solid #1a1a1a;
-  padding: .25em 1em;
-  font-size: 1em;
+  padding: .25em 0.5em;
+  font-size: 14px;
   font-weight: 500;
   font-family: inherit;
-  background-color: transparent;
+  background-color: #F1F1F2;
   cursor: pointer;
   // color: #1a1a1a;
   border-radius: 50px;
-  margin: 10px 10px 10px 0px;
+  margin: 3px 4px 10px 0px;
 }
 
 .buttontab.active {
   color: rgb(255, 59, 92);
-  padding: .25em 1em;
   border: 1px solid rgb(255, 59, 92);
 }
 

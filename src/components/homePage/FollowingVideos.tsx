@@ -307,6 +307,7 @@ function FollowingVideos(props: any) {
                                                 thumbnailImage={post?.thumbnailUrl}
                                                 controls={true}
                                                 post={post}
+                                                popupHandler1={() => setSendPopup(true)}
                                             />
                                         </div>
                                         {/* <div className={style.DivMediaCardBottom}>

@@ -33,8 +33,8 @@ function Action({
                     // dispatch(likeHandler);
                 }
                 if (obj?.actionType === 'comment') {
-                    showCommentsModal();
-                    // showVideoModal(post);
+                    // showCommentsModal();
+                    showVideoModal(post);
                 }
                 if (obj?.actionType === 'fvrt') {
                     dispatch(videoSavehandle(post.mediaId));
@@ -67,7 +67,7 @@ function Action({
             case 'like':
                 return post.isLiked;
             case 'comment':
-                return totalPostComments > 0 ? totalPostComments : post?.comments?.length || 0;
+                return post?.comments?.length || 0;
             case 'share':
                 return post.shares > 0;
             case 'fvrt':
@@ -162,7 +162,7 @@ function Action({
             {obj?.actionType === 'like' ? (
                 <p className={style.actionC}>{post.likes + likes || 0}</p>
             ) : obj?.actionType === 'comment' ? (
-                <p className={style.actionC}>{totalPostComments > 0 ? totalPostComments : post?.comments?.length || 0}</p>
+                <p className={style.actionC}>{post?.comments?.length || 0}</p>
             ) : obj?.actionType === 'share' ? (
                 <p className={style.actionC}>{post.shares || 0}</p>
             ) : obj?.actionType === 'fvrt' ? (

@@ -28,7 +28,7 @@ import CommentsComponent from '../profile/popups/CommentsComponent';
 import style from './index.module.scss';
 import FollowUserCard from '../../shared/cards/followCard';
 import { ToastContainer } from 'react-toastify';
-import { updateHomeVideos } from '../../redux/reducers';
+import { openLoginPopup, updateHomeVideos } from '../../redux/reducers';
 import {toggleMute} from '../../redux/reducers/volumeSlice'
 import VideoNavigation from '../../shared/navigation/VideoNavigation';
 // import { Toast } from 'react-toastify/dist/components';
@@ -66,6 +66,8 @@ function ForDesktop(props: any) {
     const isuploading = useSelector((store) => store?.reducers?.isuploading);
     // @ts-ignore
     const suggestedUsers = useSelector((store) => store.reducers.suggestedAccounts);
+    const profile = useSelector((store: any) => store?.reducers?.profile);
+
     const dispatch = useDispatch();
     const userActions: any = [
         { img: moreInHome, actionType: 'more' },
@@ -123,6 +125,15 @@ function ForDesktop(props: any) {
     };
 
     const navigate: any = useNavigate();
+
+     const profileNavigation = () => {
+            let getAuth = localStorage.getItem("token");
+            if(getAuth){
+                navigate("/profile");
+            }else{
+                dispatch(openLoginPopup());
+            }
+        };
 
     const follow_Unfollow_handler = async (id: any) => {
         setFollowimgbtnId(id);
@@ -378,7 +389,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                 isMutedVolume={isMutedVolume}
                                                 onMuteToggle={toggleMuteClicked}
                                                 // onMuteToggle={() => dispatch(toggleMute())}
-                                                popupHandler={() => setSendPopup(true)}
+                                                popupHandler1={() => setSendPopup(true)}
                                                 
                                             />
                                         </div>
@@ -404,6 +415,35 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                         />
                                                     );
                                                 })}
+                                                <div className={style.DivAvatarActionItemContainer}>
+                                                <a
+                                                    className="e1g2yhv83 css-1w9wqra-StyledLink-AvatarLink er1vbsz0"
+                                                    href="#"
+                                                    onClick={profileNavigation}>
+
+                                                    <div
+                                                        className={style.AvatarDivContainer}
+                                                        style={{ width: '48px', height: '48px' }}>
+                                                        <span
+                                                            className={style.SpanAvatarContainer}
+                                                            style={{
+                                                                width: '48px',
+                                                                height: '48px',
+                                                            }}
+                                                        >
+                                                            <img
+                                                                loading="lazy"
+                                                                alt="sherjangkhan5"
+                                                                src={
+                                                                    profile?.avatar ||
+                                                                    defaultAvatar
+                                                                }
+                                                                className="css-1zpj2q-ImgAvatar e1e9er4e1"
+                                                            />
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            </div>
                                             {isDarkTheme == false &&
                                                 userBlackActions.map((obj: any, i: number) => {
                                                     return (
@@ -499,6 +539,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                     </span>
                                                 </button>
                                             </div>
+
                                         </div>
                                         <div >
                                             {/* ACTIVE MEDIA ID: {activeMediaId}
