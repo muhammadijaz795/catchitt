@@ -1593,7 +1593,7 @@ export default function CommentsComponent({
                                                     user: {
                                                         id?: any;
                                                         avatar?: any;
-                                                        name?: any;
+                                                        name: any;
                                                         username: any;
                                                     },
                                                     index: number

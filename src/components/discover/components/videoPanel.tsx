@@ -3,6 +3,7 @@ import muteIcon from '../svg-components/volume-mute.svg';
 import unmuteIcon from '../svg-components/volume-unmute.svg';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CircularProgress } from '@mui/material';
+import defaultProfileICon from '../../../assets/defaultProfileIcon.png';
 
 interface Type {
     videos: any;
@@ -113,7 +114,7 @@ export default function VideoesMaping({ fetchMore, videos, openVideoModal, muteS
                                     }}
                                     >
                                     <img
-                                        src={item?.user.avatar || "https://cdn.worldnoordev.com/icon-person.png"}
+                                        src={item?.user.avatar || defaultProfileICon}
                                         alt="User profile"
                                         style={{
                                         width: "24px",
@@ -137,7 +138,7 @@ export default function VideoesMaping({ fetchMore, videos, openVideoModal, muteS
                                     }}
                                     >
                                     <img
-                                        src={item?.user.avatar || "https://cdn.worldnoordev.com/icon-person.png"}
+                                        src={item?.user.avatar || defaultProfileICon}
                                         alt="User profile"
                                         style={{
                                             borderRadius: "50%",

@@ -291,9 +291,9 @@
 
   }
 
-  .soundInfo {
-    row-gap: 16px;
-  }
+  // .soundInfo {
+  //   row-gap: 16px;
+  // }
 
   .soundTitle{
     text-align: start;
@@ -301,9 +301,9 @@
     text-wrap: nowrap;
     /* H1/Semibold120 */
     font-family: Poppins; 
-    font-size: 20px;
+    font-size: 27px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 120%; /* 24px */ 
   }
   .soundArtist{
@@ -325,7 +325,7 @@
     color: var(--foundation-body-body-200, #999);
     /* Base/Regular */
     font-family: Poppins;
-    font-size: 16px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 400;
     line-height: 150%; /* 24px */

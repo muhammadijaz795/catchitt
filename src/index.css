@@ -479,6 +479,7 @@ input:checked + .slider::before {
 .css-o1dzqo-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiPaper-root ._menuItem_1i0or_1{
   padding: 0.25rem 1rem;
 }
+
  .slider::before{
     content: none;
   }

@@ -15,6 +15,8 @@ export default function PopupForReport({ openReport, onReportClose, info,isChatR
             setInSuceedCase(true);
         }
     };
+    console.log('open report popup',openReport)
+    // alert()
 
     return (
         <div className={`${isChatReport ? style.parentChat : style.parent}`}>

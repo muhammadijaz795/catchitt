@@ -754,11 +754,11 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                             </div>
 
                             
-                            <a className='d-flex mt-2 p-2 cursor-pointer rounded-full' href="https://help.seezitt.com/" target="_blank" 
+                            <Link className='d-flex mt-2 p-2 cursor-pointer rounded-full' to="https://help.seezitt.com/" target="_blank" 
                              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
                              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
-                                    <p className='font-medium'>Feedback and help </p>
-                            </a>
+                                    <p className='font-medium hover:text-none'>Feedback and help </p>
+                            </Link>
                             <div className='d-flex mt-2 p-2 cursor-pointer rounded-full ' onClick={showAppPopup} 
                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
