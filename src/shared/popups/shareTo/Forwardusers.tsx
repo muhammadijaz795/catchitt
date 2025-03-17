@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 function Forwardusers(props: any) {
-    const { onOpen, onClose, videoLink } = props || {};
+    const { onOpen, onClose, videoLink,videoThumbnail } = props || {};
     console.log('video link in forward users', videoLink);  
     console.log(videoLink);
     const [loading, setLoading] = useState<any>(false);
@@ -26,6 +26,9 @@ function Forwardusers(props: any) {
 
     console.log('video url Hello', videoUrl);
     console.log(currentPost);
+
+    console.log('videoLink');
+    console.log(videoLink);
     // Add these new handlers
     const handleCheckboxChange = (userId: string) => {
         setSelectedUsers(prev => 
@@ -81,12 +84,13 @@ function Forwardusers(props: any) {
         const handleMessage = async (friendId:any, videoLink:any) => {
         console.log("handleMessage", userId)
             try {
+                let newVideoUrl = videoUrl || videoLink;
                     const result = await post(`/chat/messages`,{
                         type: 'application/json',
                         data: {
                             from: userId,
                             to: friendId,
-                            message: `${messageText} ${videoUrl}`, // Combine text and video link,
+                            message: `${messageText} ${newVideoUrl}`, // Combine text and video link,
                         },
                     });
                     if (result?.data) {
@@ -198,7 +202,7 @@ function Forwardusers(props: any) {
                                 
                             </div>
                             <div className={style.forwardVIMG}>
-                                <img  src={currentPost?.thumbnailUrl} alt="" />
+                                <img  src={currentPost?.thumbnailUrl || videoThumbnail} alt="" />
                             </div>
                         </div>
                         <button 

@@ -189,7 +189,9 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClickListItem}
                     style={{ background: 'transparent !important' }}
-                ></ListItemButton>
+                >{isFromPopupVideoPlayer ?  <span style={{marginLeft:'20%'}}><svg className="!w-[2rem] !h-[2rem]" style={{minWidth: '2rem'}} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12.1309C2 11.0263 2.89543 10.1309 4 10.1309C5.10455 10.1309 6 11.0263 6 12.1309C6 13.2354 5.10455 14.1309 4 14.1309C2.89543 14.1309 2 13.2354 2 12.1309ZM10 12.1309C10 11.0263 10.8954 10.1309 12 10.1309C13.1046 10.1309 14 11.0263 14 12.1309C14 13.2354 13.1046 14.1309 12 14.1309C10.8954 14.1309 10 13.2354 10 12.1309ZM18 12.1309C18 11.0263 18.8955 10.1309 20 10.1309C21.1045 10.1309 22 11.0263 22 12.1309C22 13.2354 21.1045 14.1309 20 14.1309C18.8955 14.1309 18 13.2354 18 12.1309Z" fill="#161823"/>
+                                    </svg></span>:''}</ListItemButton>
             </List>
             <StyledMenu
                 id="lock-menu"
@@ -207,67 +209,69 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                     // display:'flex !important'
                 }}
             >
-                <MenuItem  style={{ padding: '0px', margin: '0px', position: 'relative' }}>
-                    <div className={style.menuItem} >
-                    <svg width="20" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M1 4.99997C1 4.99997 3.94596 1.00001 5.00003 1C6.05411 0.999991 9 5 9 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 15C9 15 6.05404 19 4.99997 19C3.94589 19 1 15 1 15" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                        <p className=''>Auto scroll</p>
-                        {autoScroll}                   
+                {isFromPopupVideoPlayer ? '': 
+                    <MenuItem  style={{ padding: '0px', margin: '0px', position: 'relative' }}>
+                        <div className={style.menuItem} >
+                        <svg width="20" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M1 4.99997C1 4.99997 3.94596 1.00001 5.00003 1C6.05411 0.999991 9 5 9 5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 15C9 15 6.05404 19 4.99997 19C3.94589 19 1 15 1 15" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                            <p className=''>Auto scroll</p>
+                            {autoScroll}                   
 
-                        <label className="toggle-switch">
-                            <input 
-                            style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
-                                type="checkbox" 
-                                checked={autoScroll} 
-                                onChange={handleSwitchChange} 
-                                name="autoScrollCheckbox" 
-                                id="autoScrollCheckbox" 
-                            />
-                            <b className="slider"></b>
-                        </label>
-                        {/* <input 
-                                type="checkbox" 
-                                checked={autoScroll} 
-                                onChange={handleSwitchChange} 
-                                name="autoScrollCheckbox" 
-                                id="autoScrollCheckbox" 
-                            /> */}
-
-
-
-
-                        {/* <div className={style.cards}>
-                            <FormGroup
-                            sx={{
-                                width: '100%',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <div className={style.card}>
-                                <FormControlLabel
-                                    label={undefined}
-                                    labelPlacement="start"
-                                    control={
-                                        <IOSSwitch
-                                            sx={{ m: 1 }}
-                                            // checked={settings?.feedback || false}
-                                            onChange={(e: any) =>
-                                                handleSwitchChange(e, 'feedback')
-                                            }
-                                        />
-                                    }
+                            <label className="toggle-switch">
+                                <input 
+                                style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
+                                    type="checkbox" 
+                                    checked={autoScroll} 
+                                    onChange={handleSwitchChange} 
+                                    name="autoScrollCheckbox" 
+                                    id="autoScrollCheckbox" 
                                 />
-                                </div>
-                            </FormGroup>
-                        </div> */}
-                    </div>
-                </MenuItem>
+                                <b className="slider"></b>
+                            </label>
+                            {/* <input 
+                                    type="checkbox" 
+                                    checked={autoScroll} 
+                                    onChange={handleSwitchChange} 
+                                    name="autoScrollCheckbox" 
+                                    id="autoScrollCheckbox" 
+                                /> */}
+
+
+
+
+                            {/* <div className={style.cards}>
+                                <FormGroup
+                                sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <div className={style.card}>
+                                    <FormControlLabel
+                                        label={undefined}
+                                        labelPlacement="start"
+                                        control={
+                                            <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                // checked={settings?.feedback || false}
+                                                onChange={(e: any) =>
+                                                    handleSwitchChange(e, 'feedback')
+                                                }
+                                            />
+                                        }
+                                    />
+                                    </div>
+                                </FormGroup>
+                            </div> */}
+                        </div>
+                    </MenuItem>
+                }
 
                 {/* <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px', position: 'relative' }}>
                     <div className={style.menuItem} >

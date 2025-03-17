@@ -888,17 +888,10 @@ export default function PopupForVideoPlayer({
                             editVideoHandler={editVideoHandler}
                         /> */}
                         <div
-                            className="flex flex-row items-center w-screen h-screen relative"
+                            className="flex flex-row items-center w-screen h-screen relative newpopup"
                         >
 
-                                    <MORE_MENU_HOME
-                                        visibleReportPopup={true}
-                                        url={ info?.reducedVideoUrl
-                                            ? info?.reducedVideoUrl : info.originalUrl}
-                                        postMediaId={info?.mediaId }
-                                        activeMediaId={info?.mediaId}
-                                        isFromPopupVideoPlayer={'yes'}
-                                    />
+                                   
 
                             {/* Video and right panel */}
                             <div className="flex w-full h-full">
@@ -952,6 +945,16 @@ export default function PopupForVideoPlayer({
                                         }
                                         onContextMenu={handleContextMenu}
                                     />
+
+                                    {/* <MORE_MENU_HOME
+                                         visibleReportPopup={() => {setReportPopup(true);}}
+                                        url={ info?.reducedVideoUrl
+                                            ? info?.reducedVideoUrl : info.originalUrl}
+                                        postMediaId={info?.mediaId }
+                                        activeMediaId={info?.mediaId}
+                                        isFromPopupVideoPlayer={'yes'}
+                                    /> */}
+
                                 </div>
 
                                 {/* Right side (37%) bg-white and bg-f8f8f8 for light */}

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { copyLink, notAllowed, report, saveVideo, send, repost, blackHeartOutline, blackCrossHeart } from '../../../icons';
 
 
-function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler, onVideoDetail,isSharedVideo }: any) {
+function CustomContextMenuDetail({ x, y, onClose, handleFullscreen }: any) {
 
     useEffect(() => {
         // Close context menu when clicking outside
@@ -41,7 +41,6 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
                     display: 'flex',
                     alignItems: 'center'
                 }}
-                onClick={onDownload}
             >
                 {/* <img style={{float:'left',paddingRight:'10px'}} src={saveVideo} /> */}
                 <svg 
@@ -86,7 +85,7 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
                     display: 'flex',
                     alignItems: 'center'
                 }}
-                onClick={onCopyLink}
+                onClick={handleFullscreen}
             >
                 {/* <img  style={{float:'left',paddingRight:'10px'}} src={copyLink} />
                  */}
@@ -120,7 +119,7 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
                     />
                 </svg>
 
-                <span className='pl-2'>Copy link</span>
+                <span className='pl-2'>Full Screen</span>
             </div>
             <div
                 style={{
@@ -132,7 +131,7 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
                     display: 'flex',
                     alignItems: 'center'
                 }}
-                onClick={popupHandler}
+               
             >
                 {/* <img  style={{float:'left',paddingRight:'10px'}} src={send} /> */}
                 <svg 
@@ -150,37 +149,8 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
 
                 <span className='pl-2'>Send to friends</span>
             </div>
-            {isSharedVideo? '': <div
-                style={{
-                    padding: '8px 16px',
-                    cursor: 'pointer',
-                    fontSize: '16px',
-                    color: '#161823',
-                    fontWeight: '500',
-                    display: 'flex',
-                    alignItems: 'center'
-                }}
-                onClick={onVideoDetail}
-            >
-                 <svg 
-                        width="24" 
-                        height="25" 
-                        viewBox="0 0 24 25" 
-                        fill="none" 
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path 
-                            d="M12 3.547c-1.182 0-2.352.232-3.444.685A9.99 9.99 0 0 0 5.636 6.183a9.997 9.997 0 0 0-1.951 3.92 10.04 10.04 0 0 0 0 7.272c.452 1.092 1.115 2.084 1.951 2.92a9.99 9.99 0 0 0 2.92 1.95c1.092.453 2.262.686 3.444.686 2.387 0 4.676-.949 6.364-2.637A8.985 8.985 0 0 0 21 12.547c0-2.387-.949-4.677-2.636-6.364A8.988 8.988 0 0 0 12 3.547ZM1 12.547c0-2.918 1.159-5.716 3.222-7.779C6.285 2.706 9.083 1.547 12 1.547s5.715 1.159 7.778 3.222C21.841 6.831 23 9.629 23 12.547c0 2.918-1.159 5.716-3.222 7.778C17.715 22.388 14.917 23.547 12 23.547s-5.715-1.159-7.778-3.222A10.953 10.953 0 0 1 1 12.547Zm12.5-4c0 .398-.158.78-.439 1.061a1.501 1.501 0 0 1-2.122 0A1.501 1.501 0 0 1 10.5 8.547c0-.398.158-.78.439-1.061a1.501 1.501 0 0 1 2.122 0c.281.281.439.663.439 1.061ZM11.5 11.547a.502.502 0 0 0-.354.146.502.502 0 0 0-.146.354v5.5c0 .133.052.26.146.354a.502.502 0 0 0 .354.146h1a.502.502 0 0 0 .354-.146.502.502 0 0 0 .146-.354v-5.5a.502.502 0 0 0-.146-.354.502.502 0 0 0-.354-.146h-1Z" 
-                            fill="#161823"
-                        />
-                    </svg>
-
-                <span className='pl-2'>View video details</span>
-            </div> 
-            }
         </div>
-           
     );
 }
 
-export default CustomContextMenu;
+export default CustomContextMenuDetail;

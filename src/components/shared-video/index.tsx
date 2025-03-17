@@ -20,7 +20,7 @@ import { openLoginPopup } from '../../redux/reducers';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import Layout from '../../shared/layout';
 import { isUserLoggedIn } from '../../utils/common';
-import { BASE_URL_FRONTEND, showToast, showToastSuccess, STATUS_CODE } from '../../utils/constants';
+import { BASE_URL_FRONTEND, showToast, showToastSuccess, STATUS_CODE, showToastError } from '../../utils/constants';
 import PopupForReport from '../profile/popups/PopupForReport';
 import atTheRateOf from './svg-components/at-the-rate-of.svg';
 import chevronDownIconVideo from './svg-components/chevron-down-icon-video.svg';
@@ -56,7 +56,9 @@ import fullScreen from './svg-components/fullscreen.svg';
 import styles from './video-page.module.scss';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import HashtagText from '../../shared/hashTag/HashtagText';
-import { getCaretCoordinates, searchUserToAnnotate } from '../../utils/helpers';
+import { getCaretCoordinates, searchUserToAnnotate, shareProfileby } from '../../utils/helpers';
+import CustomContextMenu from '../homePage/components/CustomContextMenu';
+import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
 
 const VideoPage = () => {
     // hooks
@@ -106,7 +108,10 @@ const VideoPage = () => {
     const [isMentioning, setIsMentioning] = useState(false);
     const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
     const [isFetchingUsers, setIsFetchingUsers] = useState(false);
-    
+
+    const [showContextMenu, setShowContextMenu] = useState(false);
+    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+    const [videoThumbnail, setVideoThumbnail] = useState(null);
     const dummyUsers = [
         { id: 1, name: 'John Doe', username: 'johndoe', avatar: avatar },
         { id: 2, name: 'Jane Smith', username: 'janesmith', avatar: avatar },
@@ -159,6 +164,8 @@ const VideoPage = () => {
     const [likedReplies, setLikedReplies] = useState<{ [key: string]: boolean }>({});
     const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
     const [visibleReplies, setVisibleReplies] = useState<any>({});
+    const [sendPopup, setSendPopup] = useState(false);
+    
 
     const videoData = {
         videoId: selectedVideoId ?? videoId,
@@ -318,7 +325,6 @@ const VideoPage = () => {
             console.log('🚀 ~ commentReplyLikeToggler ~ error:', error);
         }
     };
-
     const toggleRepliesVisibility = (commentId: number) => {
         setVisibleReplies((prev: any) => ({
             ...prev,
@@ -340,6 +346,9 @@ const VideoPage = () => {
                 }
             );
             const { data } = await fetchMediaResponse.json();
+            console.log('new data');
+            console.log(data);
+            setVideoThumbnail(data?.thumbnailUrl)
             setIsVideoLoaded(false);
             setUserId(data?.user?._id);
             setName(data?.user?.name);
@@ -910,6 +919,101 @@ const VideoPage = () => {
         setIsMentioning(false);
     };
 
+    const handleContextMenu = (e: React.MouseEvent<HTMLVideoElement>) => {
+            e.preventDefault();
+        
+            const videoRect = e.currentTarget.getBoundingClientRect(); // Get video position relative to the viewport
+            const clickX = e.clientX - videoRect.left; // Adjust X based on video position
+            const clickY = e.clientY - videoRect.top; // Adjust Y based on video position
+        
+            const menuWidth = 224; // Approximate width of the context menu
+            const menuHeight = 180; // Approximate height of the context menu
+        
+            // Prevent the menu from going outside the video bounds
+            const adjustedX = clickX + menuWidth > videoRect.width ? videoRect.width - menuWidth - 10 : clickX;
+            const adjustedY = clickY + menuHeight > videoRect.height ? videoRect.height - menuHeight - 10 : clickY;
+        
+            setContextMenuPosition({ x: adjustedX, y: adjustedY });
+            setShowContextMenu(true);
+        };
+        
+    
+        const handleDownload = async (event: any) => {
+            event.stopPropagation();
+            // Implement your download logic here
+            console.log('Downloading video...');
+            setShowContextMenu(false);
+    
+            try {
+                showToastSuccess('Video is downloading...');
+                // Fetch the video data as a blob
+                const response = await fetch(videoUrl, {
+                    method: 'GET',
+                    headers: {
+                        // Add headers if needed for authorization or content type
+                    },
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to fetch video');
+                }
+                const blob = await response.blob();
+                // Ensure the response is a valid video blob
+                const contentType = response.headers.get('Content-Type');
+                if (!contentType || !contentType.includes('video')) {
+                    throw new Error('The file is not a valid video');
+                }
+        
+                // Create a URL for the blob
+                const url = window.URL.createObjectURL(blob);
+                // Create a download link
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'video.mp4'; // Set default file name
+        
+                // Trigger the download
+                document.body.appendChild(link); // Append the link to the DOM
+                link.click();
+                document.body.removeChild(link); // Clean up the DOM
+        
+                // Revoke the object URL after download to free up resources
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Failed to download video', error);
+            }
+        };
+    
+        const handleCopyLink = async (event: any) => {
+            event.stopPropagation();
+             const isCopied = await shareProfileby.copyLink(userName);
+            isCopied ? copyHandler('Copied') : showToastError('Failed to copy link');
+            setShowContextMenu(false);
+        };
+    
+        const sendToFriends = (event: any) => {
+            event.stopPropagation();
+            setSendPopup(true);
+            // popupHandler1();
+        }
+        
+        const handleCloseContextMenu = (event: any) => {
+            event.stopPropagation();  // Stop the click event from bubbling up to the parent
+            setShowContextMenu(false);
+        };
+    
+        useEffect(() => {
+            const handleClickOutside = (e: MouseEvent) => {
+                if (showContextMenu) {
+                    setShowContextMenu(false);
+                }
+            };
+        
+            document.addEventListener('click', handleClickOutside);
+            return () => {
+                document.removeEventListener('click', handleClickOutside);
+            };
+        }, [showContextMenu]);
+
     // hooks
     useEffect(() => {
         const handleClickOutside = (e: { target: any }) => {
@@ -1086,8 +1190,22 @@ const VideoPage = () => {
                                 playsInline
                                 src={videoUrl}
                                 onEnded={scrollToNextVideoHandler}
+                                onContextMenu={handleContextMenu}
                             />
                         </div>
+
+                        {showContextMenu && (
+                            <CustomContextMenu
+                                x={contextMenuPosition.x}
+                                y={contextMenuPosition.y}
+                                onClose={handleCloseContextMenu}
+                                onDownload={handleDownload}
+                                onCopyLink={handleCopyLink}
+                                popupHandler={sendToFriends}
+                                isSharedVideo={true}
+                            />
+                        )}
+
                         {/* Progress bar */}
                         {!isVideoLoaded && (
                             <div className="custom-spinner absolute flex flex-row justify-center items-center top-[50%] left-[50%]">
@@ -2211,6 +2329,9 @@ const VideoPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* <Forwardusers onOpen={sendPopup} onClose={() => setSendPopup(false)} /> */}
+            <Forwardusers videoLink={videoUrl} onOpen={sendPopup} videoThumbnail={videoThumbnail} onClose={() => setSendPopup(false)} />
             {reportPopup && (
                 <PopupForReport
                     openReport={reportPopup}
