@@ -1270,6 +1270,100 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     </div>
                                 </div>
                             </div>
+                            <div className={`${styles.suggestedContent} gap-0`}>
+                                <div className='w-100 border-bottom pb-3'>
+                                <div className={`${styles.pageHeader} mb-0 mt-0 gap-1`}>
+                                    <h4 className={`${darkTheme ? 'text-white' : 'text-black'}`}>Screen time </h4>
+                                    <span style={{ marginLeft: '0.5rem'}}>
+                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.22005 5.18294C9.22005 5.09454 9.18493 5.00975 9.12242 4.94724C9.0599 4.88473 8.97512 4.84961 8.88671 4.84961H8.17005C8.08164 4.84961 7.99686 4.88473 7.93434 4.94724C7.87183 5.00975 7.83671 5.09454 7.83671 5.18294V9.63961C7.83671 9.72802 7.87183 9.8128 7.93434 9.87531C7.99686 9.93782 8.08164 9.97294 8.17005 9.97294H8.88671C8.97512 9.97294 9.0599 9.93782 9.12242 9.87531C9.18493 9.8128 9.22005 9.72802 9.22005 9.63961V5.18294ZM7.87005 12.6363C8.05338 12.8096 8.27005 12.8963 8.52671 12.8963C8.79338 12.8963 9.01005 12.8096 9.18671 12.6363C9.36671 12.4629 9.45671 12.2463 9.45671 11.9896C9.45671 11.7229 9.36671 11.5063 9.18671 11.3329C9.10218 11.2434 8.99968 11.1728 8.88594 11.1257C8.77219 11.0786 8.64978 11.0561 8.52671 11.0596C8.27005 11.0596 8.05338 11.1496 7.87005 11.3329C7.78419 11.4189 7.71684 11.5214 7.67212 11.6344C7.62741 11.7473 7.60628 11.8682 7.61005 11.9896C7.61005 12.2463 7.69671 12.4629 7.87005 12.6363Z" fill="#161823" fill-opacity="0.34"/>
+                                        <path d="M15.8634 8.83919C15.8634 6.89427 15.0908 5.02901 13.7156 3.65374C12.3403 2.27848 10.475 1.50586 8.53011 1.50586C6.58519 1.50586 4.71993 2.27848 3.34466 3.65374C1.96939 5.02901 1.19678 6.89427 1.19678 8.83919C1.19678 10.7841 1.96939 12.6494 3.34466 14.0246C4.71993 15.3999 6.58519 16.1725 8.53011 16.1725C10.475 16.1725 12.3403 15.3999 13.7156 14.0246C15.0908 12.6494 15.8634 10.7841 15.8634 8.83919ZM14.5301 8.83919C14.5301 9.62712 14.3749 10.4073 14.0734 11.1353C13.7719 11.8632 13.3299 12.5247 12.7728 13.0818C12.2156 13.639 11.5542 14.0809 10.8262 14.3825C10.0983 14.684 9.31804 14.8392 8.53011 14.8392C7.74218 14.8392 6.96196 14.684 6.23401 14.3825C5.50606 14.0809 4.84462 13.639 4.28747 13.0818C3.73032 12.5247 3.28836 11.8632 2.98683 11.1353C2.68531 10.4073 2.53011 9.62712 2.53011 8.83919C2.53011 7.24789 3.16225 5.72177 4.28747 4.59655C5.41269 3.47133 6.93881 2.83919 8.53011 2.83919C10.1214 2.83919 11.6475 3.47133 12.7728 4.59655C13.898 5.72177 14.5301 7.24789 14.5301 8.83919Z" fill="#161823" fill-opacity="0.34"/>
+                                        </svg>
+                                    </span>
+                                </div>
+                                    <div
+                                        className={styles.accountCards}>
+                                        <div className={styles.settingName}>
+                                            <div className='text-left'>
+                                            <p className='d-flex mt-3 mb-1'>Daily screen time</p>
+                                            <span className='text-xs text-[#16182399]'>Get notified if you reach your time on Seezitt.</span>
+                                            </div>
+                                        </div>
+                                       <div className='d-flex'>
+                                            <span className='text-lg text-[#16182399]'>off</span>
+                                            <img src={whiteRightArrow} alt="" />
+                                       </div>
+                                    </div>
+                                    <div
+                                        className={styles.accountCards}>
+                                        <div className={styles.settingName}>
+                                            <div className='text-left'>
+                                            <p className='d-flex mt-3 mb-1'>Screen time breaks</p>
+                                            <span className='text-xs text-[#16182399]'>Get reminded to take breaks from scrolling.</span>
+                                            </div>
+                                        </div>
+                                       <div className='d-flex'>
+                                            <span className='text-lg text-[#16182399]'>off</span>
+                                            <img src={whiteRightArrow} alt="" />
+                                       </div>
+                                    </div>
+                                    <div
+                                        className={styles.accountCards}>
+                                        <div className={styles.settingName}>
+                                            <div className='text-left'>
+                                            <p className='d-flex mt-3 mb-1'>Sleep reminders</p>
+                                            <span className='text-xs text-[#16182399]'>Get reminded about your sleep time.</span>
+                                            </div>
+                                        </div>
+                                       <div className='d-flex'>
+                                            <span className='text-lg text-[#16182399]'>off</span>
+                                            <img src={whiteRightArrow} alt="" />
+                                       </div>
+                                    </div>
+                                    <div
+                                        className={styles.accountCards}>
+                                        <div className={styles.settingName}>
+                                            <div className='text-left'>
+                                            <p className='d-flex mt-3 mb-1'>
+                                            Weekly screen time updates</p>
+                                            <span className='text-xs text-[#16182399]'>Stay updated on your time from your Inbox.</span>
+                                            </div>
+                                        </div>
+                                        <label className="toggle-switch !left-1">
+                                            <input 
+                                            style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
+                                                type="checkbox"
+                                                name="autoScrollCheckbox" 
+                                                id="autoScrollCheckbox" 
+                                            />
+                                            <b className="slider"></b>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className={`${styles.suggestedContent} mb-0`}>
+                                <div className='w-100 border-bottom '>
+                                    <Accordion className='shadow-none px-0'>
+                                        <AccordionSummary
+                                        className='shadow-none px-0'
+                                        expandIcon={<ArrowDropDownIcon />}
+                                        aria-controls="panel2-content"
+                                        id="panel2-header"
+                                        >
+                                        <div className={styles.settingName}>
+                                            <div className='text-left'>
+                                                <p>Summary </p>
+                                                <span className='text-xs text-[#16182399]'>Your weekly metrics include your time on the app and on seezitt.com.</span>
+                                            </div>
+                                        </div>
+                                        </AccordionSummary>
+                                        <AccordionDetails className='px-1 bg-[#f8f8f8]'>
+                                            
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </div>
+                            </div>
                         </div>
                         <div className={styles.settingsWrapper}>
                             <div className={`${styles.pageHeader} p-3`}>
