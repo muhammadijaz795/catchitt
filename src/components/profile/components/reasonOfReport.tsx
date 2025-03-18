@@ -65,7 +65,7 @@ function ReasonOfReport({ onclose, video, popupHandler }: Types) {
         }
     });
     return (
-        <div className={`${style.parentDiv} ${style.darkTheme}`}>
+        <div className={`${style.parentDiv} ${darkTheme}`}>
             <p>Reason for report</p>
             <div className={style.checkboxParent}>
                 <div>

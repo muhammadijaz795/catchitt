@@ -245,7 +245,7 @@ export default function SoundPage() {
                                                     src={ShareClicked}
                                                     alt=""
                                                 /> */}
-                                                <COPY_AND_SEND_MENU_MULTIPLE open={isOpenShare} copyHandler={handleCopyToClipboard} allowedShareOptions={allowedShareOptions} URL={window.location.pathname} title={soundData?.title} />
+                                                <COPY_AND_SEND_MENU_MULTIPLE open={isOpenShare} copyHandler={handleCopyToClipboard} allowedShareOptions={allowedShareOptions} URL={window.location.pathname} title={soundData?.title} isHideEmbedOption={true} />
                                             </button>
                                             
                                            <MORE_MENU_HOME

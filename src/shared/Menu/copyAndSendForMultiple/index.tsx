@@ -31,7 +31,9 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
     title,
     generateEmbedCodeHandler,
     allowedShareOptions,
-    open
+    open,
+    hideSharePopupHandler,
+    isHideEmbedOption
 }: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
@@ -49,6 +51,9 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
     };
 
     const handleClose = () => {
+        if(hideSharePopupHandler){
+            hideSharePopupHandler();
+        }
         setAnchorEl(null);
     };
 
@@ -202,7 +207,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                 </div>
                             </MenuItem>
                             </Grid> */}
-                            <Grid item xs={3}>
+                            {/* <Grid item xs={3}>
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={popupHandler}>
                                         <div className=" flex items-center justify-center bg-white shadow-md rounded-full">
@@ -211,8 +216,8 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                         <p className={`${style.p} ${style.fp} ${style.black_500}`}>Send to friends</p>
                                     </div>
                                 </MenuItem>
-                                </Grid>
-                            
+                                </Grid> */}
+                             {isHideEmbedOption == true ? '': (
                             <Grid item xs={3}>
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={generateEmbedCodeHandler}>
@@ -221,6 +226,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                     </div>
                                 </MenuItem>
                                 </Grid>
+                            )}
                                 <Grid item xs={3}>
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={shareToWhatsApp}>

@@ -59,6 +59,7 @@ import HashtagText from '../../shared/hashTag/HashtagText';
 import { getCaretCoordinates, searchUserToAnnotate, shareProfileby } from '../../utils/helpers';
 import CustomContextMenu from '../homePage/components/CustomContextMenu';
 import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
+import COPY_AND_SEND_MENU_MULTIPLE from '../../shared/Menu/copyAndSendForMultiple';
 
 const VideoPage = () => {
     // hooks
@@ -165,6 +166,8 @@ const VideoPage = () => {
     const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
     const [visibleReplies, setVisibleReplies] = useState<any>({});
     const [sendPopup, setSendPopup] = useState(false);
+    const allowedShareOptions = ['copyLink', 'whatsappShare', 'linkedInShare', 'twitterShare', 'facebookShare'];
+
     
 
     const videoData = {
@@ -272,6 +275,16 @@ const VideoPage = () => {
             console.log('🚀 ~ addCommentHandler ~ error:', error);
         }
     };
+
+    const handleCopyToClipboard = () => {
+        const currentURL = videoUrl;
+        navigator.clipboard
+        .writeText(currentURL)
+        .then(() => {
+            showToast('Link copied!');
+        });
+    };
+    
 
     const replyToCommentHandler = async (commentId: number) => {
         if (isUserLoggedIn()) {
@@ -638,10 +651,11 @@ const VideoPage = () => {
     };
 
     const showPopupHandler = () => {
-        if (hideTimeoutRef.current) {
-            clearTimeout(hideTimeoutRef.current);
-        }
-        setShowSharePopup(true);
+        setShowSharePopup(!showSharePopup);
+        // if (hideTimeoutRef.current) {
+        //     clearTimeout(hideTimeoutRef.current);
+        // }
+        // setShowSharePopup(true);
     };
 
     const hideSharePopupHandler = () => {
@@ -1183,7 +1197,7 @@ const VideoPage = () => {
                             <video
                                 onClick={togglePlayPause}
                                 ref={videoRef}
-                                className="h-[31.875rem] w-full object-contain rounded-t-md bg-[#161823] cursor-pointer"
+                                className="h-[40rem] w-full object-contain rounded-t-md bg-[#161823] cursor-pointer"
                                 controls={false}
                                 autoPlay={true}
                                 width="300px"
@@ -1415,8 +1429,8 @@ const VideoPage = () => {
                             </div>
                             <div className="text-center relative">
                                 <img
-                                    onMouseEnter={showPopupHandler}
-                                    onMouseLeave={hideSharePopupHandler}
+                                    onClick={showPopupHandler}
+                                    // onMouseLeave={hideSharePopupHandler}
                                     className="h-7 w-7 object-contain cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:rotate-12"
                                     src={shareIcon}
                                 />
@@ -1424,109 +1438,18 @@ const VideoPage = () => {
                             </div>
                         </div>
                         {showSharePopup && (
-                            <div
-                                onMouseEnter={showPopupHandler}
-                                onMouseLeave={hideSharePopupHandler}
-                                className="absolute bottom-20 right-24 bg-white shadow-lg rounded-md p-6"
-                            >
-                                {/* Arrow pointing to the share icon */}
-                                <div className="absolute bottom-5 -right-1 transform rotate-45 bg-white w-4 h-4 border-l-0 border-t-0 border-gray-300"></div>
+                            
+                            <COPY_AND_SEND_MENU_MULTIPLE generateEmbedCodeHandler={embedShareHandler} open={showPopupHandler} hideSharePopupHandler={hideSharePopupHandler} copyHandler={handleCopyToClipboard} allowedShareOptions={allowedShareOptions} URL={window.location.pathname} title={musicTitle} />
 
-                                <ul className="space-y-3">
-                                    <li
-                                        onClick={embedShareHandler}
-                                        className="flex items-center space-x-4 cursor-pointer"
-                                    >
-                                        <div className="bg-gray-500 w-8 h-8 rounded-full flex items-center justify-center">
-                                            {/* Embed Icon */}
-                                            <img
-                                                src={embedShare}
-                                                alt="Embed"
-                                                className="object-contain w-8 h-8"
-                                            />
-                                        </div>
-                                        <span className="text-black font-medium">Embed</span>
-                                    </li>
-                                    <li
-                                        onClick={() => copyHandler('Copied')}
-                                        className="flex items-center space-x-4 cursor-pointer pt-2"
-                                    >
-                                        <div className="bg-red-500 w-8 h-8 rounded-full flex items-center justify-center">
-                                            {/* Copy Link Icon */}
-                                            <img
-                                                src={linkIcon}
-                                                alt="Copy Link"
-                                                className="object-contain w-5 h-5"
-                                            />
-                                        </div>
-                                        <span className="text-black font-medium">Copy link</span>
-                                    </li>
-                                    <li
-                                        onClick={shareToWhatsApp}
-                                        className="flex items-center space-x-4 cursor-pointer pt-2"
-                                    >
-                                        <div className="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center">
-                                            {/* Share to WhatsApp Icon */}
-                                            <img
-                                                src={whatsappShare}
-                                                alt="Share to WhatsApp"
-                                                className="object-contain w-8 h-8"
-                                            />
-                                        </div>
-                                        <span className="text-black font-medium">
-                                            Share to WhatsApp
-                                        </span>
-                                    </li>
-                                    <li
-                                        onClick={shareToFacebook}
-                                        className="flex items-center space-x-4 cursor-pointer pt-2"
-                                    >
-                                        <div className="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center">
-                                            {/* Share to WhatsApp Icon */}
-                                            <img
-                                                src={facebookShare}
-                                                alt="Share to Facebook"
-                                                className="object-contain w-8 h-8"
-                                            />
-                                        </div>
-                                        <span className="text-black font-medium">
-                                            Share to Facebook
-                                        </span>
-                                    </li>
-                                    <li
-                                        onClick={shareToTwitter}
-                                        className="flex items-center space-x-4 cursor-pointer pt-2"
-                                    >
-                                        <div className="bg-blue-400 w-8 h-8 rounded-full flex items-center justify-center">
-                                            {/* Share to Twitter Icon */}
-                                            <img
-                                                src={twitterShare}
-                                                alt="Share to Twitter"
-                                                className="object-contain w-8 h-8"
-                                            />
-                                        </div>
-                                        <span className="text-black font-medium">
-                                            Share to Twitter
-                                        </span>
-                                    </li>
-                                    <li
-                                        onClick={shareToLinkedIn}
-                                        className="flex items-center space-x-4 cursor-pointer pt-2"
-                                    >
-                                        <div className="bg-blue-700 w-8 h-8 rounded-full flex items-center justify-center">
-                                            {/* Share to LinkedIn Icon */}
-                                            <img
-                                                src={linkedInShare}
-                                                alt="Share to LinkedIn"
-                                                className="object-contain w-8 h-8"
-                                            />
-                                        </div>
-                                        <span className="text-black font-medium">
-                                            Share to LinkedIn
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
+                            // <div
+                            //     onMouseEnter={showPopupHandler}
+                            //     onMouseLeave={hideSharePopupHandler}
+                            //     className="absolute bottom-20 right-24 bg-white shadow-lg rounded-md p-6"
+                            // >
+                            //     <div className="absolute bottom-5 -right-1 transform rotate-45 bg-white w-4 h-4 border-l-0 border-t-0 border-gray-300"></div>
+                                
+                               
+                            // </div>
                         )}
                     </div>
                     <div className="p-3.5 bg-[#16182308] rounded-b-xl">
