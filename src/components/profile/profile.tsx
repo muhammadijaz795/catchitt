@@ -440,6 +440,31 @@ export const Profile = (props: any) => {
         setProfileViewsContent(newProfileViewsContent);
     };
 
+    const sortData = (criteria: string) =>
+    {
+        const sortVideos = (videos) =>
+        {
+            switch (criteria)
+            {
+                case 'latest':
+                    return [...videos].sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+                case 'oldest':
+                    return [...videos].sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+                case 'popular':
+                    return [...videos].sort((a, b) => b.likes - a.likes);
+                default:
+                    return videos;
+            }
+        };
+      
+        setUserVideos((prev: any) => ({ ...prev, items: sortVideos(userVideos.items) }));
+        setPrivateVideos((prev: any) => ({ ...prev, items: sortVideos(privateVideos.items) }));
+        setBookmarkVideos((prev: any) => ({ ...prev, items: sortVideos(bookmarkVideos.items) }));
+        setUserLikedVideos((prev: any) => ({ ...prev, items: sortVideos(userlikedVideos.items) }));
+        setUserTaggedVideos((prev: any) => ({ ...prev, items: sortVideos(usertaggedVideos.items) }));
+        setRepostsVideos((prev: any) => ({ ...prev, items: sortVideos(repostVideos.items) }));
+    };
+
     useEffect(() => {
         if (copyPopup) {
             setTimeout(() => {
@@ -567,7 +592,7 @@ export const Profile = (props: any) => {
                                             className={`
                                             ${activeSort === 'latest' ? style.activeButton : ''}
                                             `}
-                                            onClick={() => setActiveSort('latest')}
+                                            onClick={() => {setActiveSort('latest'); sortData('latest')}}
                                         >
                                             <span className={`${style.button} ${style.radiusLeft}`}>latest</span>
                                         </div>
@@ -578,7 +603,7 @@ export const Profile = (props: any) => {
                                         
                                             ${activeSort === 'popular' ? style.activeButton : ''}
                                             `}
-                                            onClick={() => setActiveSort('popular')}
+                                            onClick={() => {setActiveSort('popular'); sortData('popular')}}
                                         >
                                             <span className={style.button}>Popular</span>
                                         </div>
@@ -589,7 +614,7 @@ export const Profile = (props: any) => {
                                             
                                             ${activeSort === 'oldest' ? style.activeButton : ''}
                                             `}
-                                            onClick={() => setActiveSort('oldest')}
+                                            onClick={() => {setActiveSort('oldest'); sortData('oldest')}}
                                         >
                                             <span className={`${style.button} ${style.radiusRight}`}>Oldest</span>
                                         </div>
