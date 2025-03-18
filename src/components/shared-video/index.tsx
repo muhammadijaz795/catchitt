@@ -992,6 +992,7 @@ const VideoPage = () => {
     
         const sendToFriends = (event: any) => {
             event.stopPropagation();
+            setShowContextMenu(false);
             setSendPopup(true);
             // popupHandler1();
         }
