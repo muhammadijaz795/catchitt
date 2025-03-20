@@ -44,6 +44,7 @@ import whiteRightArrow from './svg-components/whiteRightArrow.svg';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ManageAccount from './components/manageAccount'
+import Ads from './components/ads'
 
 import {
     changePassIconWhite,
@@ -708,9 +709,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                             </Link>
                         </div>
                     </div> }
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md`}>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
                         <p className='p-3 text-xl font-semibold'>Download Seezitt data</p>
                         <ManageAccount > </ManageAccount>
+                    </div>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md`}>
+                        <p className='p-3 text-xl font-semibold'>Download Seezitt data</p>
+                        <ads /> 
                     </div>
                     <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
                         <div className={styles.settingsWrapper}>
