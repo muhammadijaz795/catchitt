@@ -191,6 +191,13 @@ const Account = ({ className, openModal }: AccountProps) => {
         },
     });
 
+    const [isPrivateAccount, setIsPrivateAccount] = useState(false);
+    const [allowInBrowser, setAllowInBrowser] = useState(false);
+    const [businessAccount, setBusinessAccount] = useState(false);
+    const [notificationSettings, setNotificationSettings] = useState<Record<string, boolean>>({});
+
+
+
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
 
@@ -389,7 +396,67 @@ const Account = ({ className, openModal }: AccountProps) => {
         setSettingsDropdown(true);
         handleFetchCategoriesNames();
         handleProfileFetch();
+        getAccountSettings();
+        getNotificationSettings();
     }, []);
+
+      // Fetch current notification settings
+  const getNotificationSettings = async () => {
+    try {
+      const response = await fetch(
+        `${API_KEY}/profile/get_profile_notifications_settings`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Fetched settings:", data);
+
+      // Set state with in-app notification settings
+      setNotificationSettings(data.inAppNotifications || {});
+    } catch (error) {
+      console.error("Error fetching notification settings:", error);
+    }
+  };
+
+    const getAccountSettings = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/profile/v2/manage-account`, {
+                method: 'GET',
+                headers: { 
+                    'Content-type': 'application/json', 
+                    Authorization: `Bearer ${token}` 
+                },
+            });
+    
+            console.log('get account settings response:', response);
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            if(data){
+                let newData = data?.data;
+                setAllowInBrowser(newData.allowInBrowser === "true");
+                setIsPrivateAccount(newData.privateAccount);
+                setBusinessAccount(newData.businessAccount === "true");
+            }
+            console.log('Account settings data:', data);
+        } catch (error) {
+            console.error('Error fetching account settings:', error);
+        }
+    };
+    
 
     const handleProfileFetch = async () => {
         try {
@@ -430,6 +497,48 @@ const Account = ({ className, openModal }: AccountProps) => {
             console.error('Error fetching category data:', error);
         }
     };
+
+
+    // Update notification settings when checkboxes are toggled
+    const updateNewSettings = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>) => {
+        try {
+        const value = event.target.checked;
+        console.log(name, value);
+
+        // Optimistically update UI
+        setNotificationSettings((prev) => ({ ...prev, [name]: value }));
+
+        const data = {
+            inAppNotifications: {
+                ...notificationSettings, // Preserve previous values
+                [name]: value, // Update only the toggled setting
+            },
+        };
+
+        const response = await fetch(
+            `${API_KEY}/profile/new-notifications-settings`,
+            {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Updated settings response:", result);
+        } catch (error) {
+        console.error("Error updating notification settings:", error);
+        }
+    };
+
+
 
     const handleCheckboxChange = async (category: Category) => {
         // Check if the category is already selected
@@ -627,6 +736,30 @@ const Account = ({ className, openModal }: AccountProps) => {
             setdarkTheme(styles.darkTheme);
         }
     });
+
+    const changeCheckbox = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>) => {
+        // Access the checked value of the checkbox
+        const value = event.target.checked;
+        console.log(name, value);  // Log the name and value (true/false)
+        // let data = {};
+        // if(name == 'private_account'){
+        //     data = { privateAccount: value };
+        //     setIsPrivateAccount(value);
+        // }
+        // if(name == 'all_in_browser'){
+        //     data = {allowInBrowser: value};
+        //     setAllowInBrowser(value);
+        // }
+        
+        const response = await fetch(`${API_KEY}/profile/v2/manage-account`, {
+            method: 'PATCH',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            body: JSON.stringify({[name]: value}),
+        });
+        console.log(response);
+        getAccountSettings();
+
+      };
 
     return (
         <>
@@ -886,11 +1019,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             </div>
                                         </div>
                                         <label className="toggle-switch !left-1">
-                                            <input 
+                                            <input
+                                            onChange={changeCheckbox('privateAccount')} 
                                             style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
                                                 type="checkbox"
                                                 name="autoScrollCheckbox" 
-                                                id="autoScrollCheckbox" 
+                                                id="autoScrollCheckbox"
+                                                checked={isPrivateAccount}  // Control the checkbox based on state 
                                             />
                                             <b className="slider"></b>
                                         </label>
@@ -928,8 +1063,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             <input 
                                             style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
                                                 type="checkbox"
+                                                onChange={changeCheckbox('allowInBrowser')} 
                                                 name="autoScrollCheckbox" 
                                                 id="autoScrollCheckbox" 
+                                                checked={allowInBrowser}  // Control the checkbox based on state 
                                             />
                                             <b className="slider"></b>
                                         </label>
@@ -967,7 +1104,9 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                         style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
-                                                            id="autoScrollCheckbox" 
+                                                            id="autoScrollCheckbox"
+                                                            checked={notificationSettings.likes || false}
+                                                            onChange={updateNewSettings('likes')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -987,6 +1126,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.comments || false}
+                                                            onChange={updateNewSettings('comments')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1006,6 +1147,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.newFollowers || false}
+                                                            onChange={updateNewSettings('newFollowers')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1025,6 +1168,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.mentionAndTags || false}
+                                                            onChange={updateNewSettings('mentionAndTags')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1059,6 +1204,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.likes || false}
+                                                            onChange={updateNewSettings('likes')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1078,6 +1225,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.comments || false}
+                                                            onChange={updateNewSettings('comments')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1097,6 +1246,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.newFollowers || false}
+                                                            onChange={updateNewSettings('newFollowers')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1116,6 +1267,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.mentionAndTags || false}
+                                                            onChange={updateNewSettings('mentionAndTags')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1135,6 +1288,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.reposts || false}
+                                                            onChange={updateNewSettings('reposts')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1164,6 +1319,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 type="checkbox"
                                                 name="autoScrollCheckbox" 
                                                 id="autoScrollCheckbox" 
+                                                onChange={changeCheckbox('businessAccount')} 
+                                                checked={businessAccount}
                                             />
                                             <b className="slider"></b>
                                         </label>
