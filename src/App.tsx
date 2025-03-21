@@ -1122,6 +1122,9 @@ function App() {
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/profile/:id" element={<PublicProfile />} />
                             <Route path="/settings/account" element={<Account />} />
+                            <Route path="/settings/keyword-filtering" element={<Account />} />
+                            <Route path="/settings/download-your-data" element={<Account />} />
+                            
                             <Route
                                 path="/settings/account/activity"
                                 element={<PushNotificationsPage />}
