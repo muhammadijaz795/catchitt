@@ -44,7 +44,9 @@ import whiteRightArrow from './svg-components/whiteRightArrow.svg';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ManageAccount from './components/manageAccount'
-import Ads from './components/ads'
+import Ads from './components/ads';
+import { useLocation } from "react-router-dom";
+
 
 import {
     changePassIconWhite,
@@ -186,8 +188,22 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [privacyColor, setprivacyColor] = useState('#222222');
     const [balanceColor, setBalanceColor] = useState('#222222');
     const [otherBalanceColor, setOtherBalanceColor] = useState('#130F26');
-    const [visibleDiv, setVisibleDiv] = useState<string>('manage_account');
+    const location = useLocation();
+    const [visibleDiv, setVisibleDiv] = useState("");
+
+      useEffect(() => {
+        if (location.pathname.includes("settings/keyword-filtering")) {
+          setVisibleDiv("filter_keywords");
+        } else if (location.pathname.includes("settings/download-your-data")) {
+          setVisibleDiv("download_data");
+        } else if (location.pathname.includes("settings/account")) {
+          setVisibleDiv("manage_account");
+        }
+      }, [location.pathname]); // Runs every time the URL changes
+
     const [open, setOpen] = useState(false); 
+    
+
 
     const lightThemePalette = createTheme({
         palette: {
@@ -230,6 +246,12 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     const OpenModalDeleteData = () => setOpen(true);
     const CloseModalDeleteData = () => setOpen(false);
+
+    // useEffect(() => {
+    //     if (location.pathname.includes("settings/keyword-filtering")) {
+    //       setVisibleDiv("filter_keywords");
+    //     }
+    //   }, [location.pathname]); // Runs when the pathname changes
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -282,7 +304,14 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     // Function to toggle visibility
   const toggleVisibility = (divId: string) => {
-    setVisibleDiv(visibleDiv === divId ? '' : divId);
+    if(divId === 'manage_account'){
+        navigate('/settings/account');
+    }else if(divId === 'download_data'){
+        navigate('/settings/download-your-data');
+    }else if(divId === 'filter_keywords'){
+        navigate('/settings/keyword-filtering');
+    }
+    
   };
 
     const handleOpenChangePassMainModal = () => {
