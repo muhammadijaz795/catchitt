@@ -1,26 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
 
 interface KeywordFiltersProps {
+  keywordData: { keyword: string; filters: string[] };
   onClose: () => void;
   onKeywordAdded: () => Promise<void>;
 }
 
-const KeywordFilters: React.FC<KeywordFiltersProps> = ({ onClose, onKeywordAdded }) => {
+const KeywordFilters: React.FC<KeywordFiltersProps> = ({ keywordData, onClose, onKeywordAdded }) => {
 
   const API_KEY = process.env.VITE_API_URL;
   const { token } = useSelector((store: any) => store?.reducers?.profile);
   
-  const [keyword, setKeyword] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  const [keyword, setKeyword] = useState(keywordData?.keyword || ""); 
+  const [selectedFilters, setSelectedFilters] = useState<string[]>(keywordData?.filters || []);
+
   const filters = [
     { id: "for_you", label: "For You" },
     { id: "live", label: "LIVE" },
     { id: "following", label: "Following" },
     { id: "friends", label: "Friends" },
   ];
+
+  useEffect(() => {
+    if (keywordData) {
+      setKeyword(keywordData.keyword);
+      setSelectedFilters(keywordData.filters);
+    } else {
+      setKeyword(""); // Reset for adding a new keyword
+      setSelectedFilters([]);
+    }
+  }, [keywordData]);
 
   const handleCheckboxChange = (filterId: string) => {
     setSelectedFilters((prev) =>

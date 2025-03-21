@@ -9,6 +9,8 @@ const KeywordsPage: React.FC = () => {
   const [keywords, setKeywords] = useState<any[]>([]);
   const [showAddKeyword, setShowAddKeyword] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedKeyword, setSelectedKeyword] = useState<any | null>(null);
+
 
   // Fetch Keywords List
   const fetchKeywords = async () => {
@@ -73,6 +75,7 @@ const KeywordsPage: React.FC = () => {
       {/* Show Add Keyword Form */}
       {showAddKeyword && (
         <KeywordFilters
+          keywordData={selectedKeyword}
           onClose={() => setShowAddKeyword(false)}
           onKeywordAdded={fetchKeywords} // Refresh List on Add
         />
@@ -81,29 +84,41 @@ const KeywordsPage: React.FC = () => {
       {/* Keyword List */}
       <h3 className="mt-6 text-lg font-semibold">Filtered keywords</h3>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
-          {keywords.length === 0 ? (
-            <p className="text-gray-500">No keywords added yet.</p>
-          ) : (
-            keywords.map((item) => (
-              <div key={item._id} className="flex justify-between items-center bg-gray-100 p-3 rounded-md mt-2">
-                <div>
-                  <p className="font-medium">{item.keyword}</p>
-                  <p className="text-sm text-gray-500">
-                    Filter from:{" "}
-                    <span className="font-semibold">{item.filters.join(", ")}</span>
-                  </p>
+      {!showAddKeyword && (  // Hide this section when showAddKeyword is true
+        loading ? (
+          <p>Loading...</p>
+        ) : (
+          <div>
+            {keywords.length === 0 ? (
+              <p className="text-gray-500">No keywords added yet.</p>
+            ) : (
+              keywords.map((item) => (
+                <div
+                  onClick={() => {
+                    setSelectedKeyword(item);
+                    setShowAddKeyword(true);
+                  }}
+                  key={item._id}
+                  className="flex justify-between items-center bg-gray-100 p-3 rounded-md mt-2"
+                >
+                  <div>
+                    <p className="font-medium">{item.keyword}</p>
+                    <p className="text-sm text-gray-500">
+                      Filter from:{" "}
+                      <span className="font-semibold">{item.filters.join(", ")}</span>
+                    </p>
+                  </div>
+                  <button onClick={(e) => {
+      e.stopPropagation(); // Prevents triggering the row click event
+      handleDelete(item.keyword);
+    }} className="text-red-500">
+                    🗑
+                  </button>
                 </div>
-                <button onClick={() => handleDelete(item.keyword)} className="text-red-500">
-                  🗑
-                </button>
-              </div>
-            ))
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        )
       )}
     </div>
   );
