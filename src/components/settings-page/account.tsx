@@ -62,6 +62,10 @@ import { SuggestedActivity } from '../suggested-activity/suggested-activity';
 import Navbar from '../../shared/navbar';
 import MuteAdvertisers from './components/mute-advertisers';
 import DisconnectAdvertisers from './components/disconnect-advertisers';
+import DailyScreenTime from './components/daily-screen-time';
+import ScreenTimeBreaks from './components/screen-time-breaks';
+import SleepReminder from './components/sleep-reminders';
+import KeywordFilters from './components/keyword-filters';
 
 export interface AccountProps {
     className?: string;
@@ -182,6 +186,7 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [privacyColor, setprivacyColor] = useState('#222222');
     const [balanceColor, setBalanceColor] = useState('#222222');
     const [otherBalanceColor, setOtherBalanceColor] = useState('#130F26');
+    const [open, setOpen] = useState(false); 
 
     const lightThemePalette = createTheme({
         palette: {
@@ -194,6 +199,23 @@ const Account = ({ className, openModal }: AccountProps) => {
             mode: 'dark',
         },
     });
+
+    const style = {
+        fontfamily: 'Poppins',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 600,
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        border: 'none',
+        borderRadius: '8px',
+        p: 0,
+      };
+
+    const OpenModalDeleteData = () => setOpen(true);
+    const CloseModalDeleteData = () => setOpen(false);
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -732,7 +754,36 @@ const Account = ({ className, openModal }: AccountProps) => {
                             Advertisers you have hidden
                         </span>
                     </div>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
+                            <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Daily screen time</h4>
+                            <span className='text-left px-3 text-[#161823] pt-1 text-sm'> 
+                            We’ll let you know if you reach your daily time to help you balance your day.
+                            </span>
+                        <DailyScreenTime />
+                    </div>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
+                            <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Screen time breaks</h4>
+                            <span className='text-left px-3 text-[#161823] pt-1 text-sm'> 
+                            Break reminders help you feel more mindful and balanced on Seezitt.
+                            </span>
+                        <ScreenTimeBreaks />
+                    </div>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
+                            <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Sleep reminders</h4>
+                            <span className='text-left px-3 text-[#161823] pt-1 text-sm'> 
+                                Sleep reminders on Seezitt can help you get ready for bed and stay asleep.
+                            </span>
+                        <SleepReminder />
+                    </div>
                     <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md`}>
+                            <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Filter keywords</h4>
+                            <span className='text-left px-3 text-[#161823] pt-1 text-sm'> 
+                            When you filter a keyword, you won’t see posts in your selected feeds that contain that word in any
+                            titles, descriptions, or stickers. Certain keywords can’t be filtered.
+                            </span>
+                        <KeywordFilters />
+                    </div>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>Disconnect advertisers</h4>
                             <ul className='list-disc pl-5 ml-3 text-left px-3 text-[#000000A6] text-sm'>
                                 <li>Once disconnected, your future off-Seezitt data will not be used to serve personalized ads to you, but this data may still be used for other purposes.</li>
@@ -743,6 +794,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             Advertisers you have hidden
                         </span>
                     </div>
+                    
                     <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
                         <div className={styles.settingsWrapper}>
                             
@@ -1290,7 +1342,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                 </div>
                                 <div className='w-100 border-bottom pb-3'>
                                     <div
-                                        className={styles.accountCards}>
+                                        className={styles.accountCards} onClick={OpenModalDeleteData}>
                                         <div className={styles.settingName}>
                                             <div className='text-left'>
                                             <p className='d-flex mt-3 mb-1'>
@@ -1307,6 +1359,41 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     </div>
                                 </div>
                             </div>
+                            <Modal open={open} onClose={CloseModalDeleteData} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                                    <Box sx={style}>
+                                      <div className='d-flex justify-between border-bottom p-4'>
+                                        
+                                        <Typography id="modal-modal-title" sx={{  fontSize: '22px', fontWeight: '600'}} variant="h5" component="p">
+                                            Clear off-Seezitt data
+                                        </Typography>
+                                        <span onClick={CloseModalDeleteData}>
+                                            <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M25.7996 8.9198C25.9237 8.79489 25.9934 8.62593 25.9934 8.4498C25.9934 8.27368 25.9237 8.10471 25.7996 7.9798L24.8662 7.03314C24.8042 6.97065 24.7305 6.92105 24.6493 6.88721C24.568 6.85336 24.4809 6.83594 24.3929 6.83594C24.3049 6.83594 24.2177 6.85336 24.1365 6.88721C24.0553 6.92105 23.9815 6.97065 23.9196 7.03314L15.9996 14.9531L8.07955 7.0398C7.95464 6.91564 7.78568 6.84594 7.60955 6.84594C7.43343 6.84594 7.26446 6.91564 7.13955 7.0398L6.19289 7.98647C6.06872 8.11138 5.99902 8.28035 5.99902 8.45647C5.99902 8.63259 6.06872 8.80156 6.19289 8.92647L14.1129 16.8398L6.19955 24.7598C6.07538 24.8847 6.00569 25.0537 6.00569 25.2298C6.00569 25.4059 6.07538 25.5749 6.19955 25.6998L7.14622 26.6465C7.27113 26.7706 7.44009 26.8403 7.61622 26.8403C7.79234 26.8403 7.96131 26.7706 8.08622 26.6465L15.9996 18.7265L23.9196 26.6398C24.0445 26.764 24.2134 26.8337 24.3896 26.8337C24.5657 26.8337 24.7346 26.764 24.8596 26.6398L25.8062 25.6931C25.9304 25.5682 26.0001 25.3993 26.0001 25.2231C26.0001 25.047 25.9304 24.878 25.8062 24.7531L17.8862 16.8398L25.7996 8.9198Z" fill="#161823" fill-opacity="0.75"/>
+                                            </svg>
+                                        </span>
+                                      </div>
+                                      <div className='p-4'>
+                                            <Typography sx={{color: '#000000', fontSize: '16px',  fontWeight: '500', lineHeight: '21px', letterSpacing: '0.03px'}}  component="p">It may take up to 30 days for your off-Seezitt data to be cleared from your account.</Typography>
+                                            <Typography sx={{color: '#000000', fontSize: '16px', marginBottom: '1rem', marginTop: '1rem', fontWeight: '500', lineHeight: '21px', letterSpacing: '0.03px'}}  component="p">Depending on your other settings you may see ads on Seezitt based on new off-Seezitt data.</Typography>
+                                            <Typography sx={{color: '#000000', fontSize: '16px', fontWeight: '500', lineHeight: '21px', letterSpacing: '0.03px'}}  component="p">Here are some things to know:</Typography>
+                                            <ul className='list-disc ml-5 mt-4' style={{color: '#000000B8', fontSize: '14px', fontWeight: '400',}} >
+                                                <li>Off-Seezitt activity includes information shared with Seezitt to help measure the
+                                                effectiveness of ads on Seezitt. Seezitt also uses this activity to personalize your ads on Seezitt.</li>
+                                                <li>If you clear your off-Seezitt activity, you will still see ads on Seezitt, but these ads may be less relevant to you.</li>
+                                            </ul>
+                                      </div>
+                                      <div className='border-top p-3'>
+                                            <div className='d-flex gap-2 justify-end'>
+                                                <button className="bg-[#fff] text-dark font-semibold px-5 rounded-md border text-sm">
+                                                    <p className="text-[rgb(255, 59, 92)] font-normal">Cancel</p>
+                                                </button>
+                                                <button className="bg-[#FE2C55] text-white font-semibold px-5 rounded-md text-sm">
+                                                    <p className="text-[rgb(255, 59, 92)] font-normal">Confirm</p>
+                                                </button>
+                                            </div>
+                                      </div>
+                                    </Box>
+                                  </Modal>
                             <div className={`${styles.suggestedContent} gap-0`}>
                                 <div className='w-100 border-bottom pb-3'>
                                 <div className={`${styles.pageHeader} mb-0 mt-0 gap-1`}>

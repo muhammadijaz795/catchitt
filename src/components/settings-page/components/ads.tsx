@@ -45,7 +45,7 @@ const CustomTabs = styled(Tabs)({
 
 const Ads: React.FC = () => {
   const [value, setValue] = useState(0);
-  const [open, setOpen] = useState(false); // ✅ Moved inside the component
+  const [open, setOpen] = useState(false); 
   const [gender, setGender] = useState("male");
   const [customGender, setCustomGender] = useState("");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
