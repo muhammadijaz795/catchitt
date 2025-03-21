@@ -54,6 +54,65 @@ const dailyScreenTime: React.FC = () => {
                 </label>
             </div>
         </Typography>
+        <div className="bg-gray-100 p-4 rounded-md mt-3">
+        <label className="flex items-center space-x-2 mb-3 cursor-pointer">
+            <input type="radio" name="screen_time" className="hidden peer" checked />
+            <div className="w-5 h-5 rounded-full border-2 border-red-500 flex items-center justify-center peer-checked:bg-red-500">
+                <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
+            </div>
+            <span className="text-gray-900">Set the same limit every day</span>
+        </label>
+
+        <div className="grid grid-cols-5 gap-2">
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]  ">40m</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">1h</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">1h 30m</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">2h</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Custom</button>
+        </div>
+
+        <label className="flex items-center space-x-2 mt-3 cursor-pointer">
+            <input type="radio" name="screen_time" className="hidden peer" />
+            <div className="w-5 h-5 rounded-full border-2 border-gray-400 flex items-center justify-center peer-checked:bg-red-500">
+                <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
+            </div>
+            <span className="text-gray-900">Set a custom limit per day</span>
+        </label>
+        <div id="customLimitSection" className=" mt-3">
+            <div className="grid grid-cols-7 gap-2 text-center font-medium text-gray-800">
+                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] focus:border ">Mon</button>
+                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Tue</button>
+                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Wed</button>
+                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Thu</button>
+                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Fri</button>
+                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Sat</button>
+                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Sun</button>
+            </div>
+            <div className="grid grid-cols-7 gap-2 mt-2">
+                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
+                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
+                </select>
+                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
+                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
+                </select>
+                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
+                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
+                </select>
+                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
+                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
+                </select>
+                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
+                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
+                </select>
+                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
+                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
+                </select>
+                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
+                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
+                </select>
+            </div>
+        </div>
+    </div>
         <div className='d-flex mt-3 justify-end'>
             <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm">
                 <p className="text-[rgb(255, 59, 92)] font-normal">Done</p>
