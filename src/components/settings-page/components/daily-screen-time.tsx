@@ -1,13 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material";
 
 
 const dailyScreenTime: React.FC = () => {
  
- 
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const [selectedTimes, setSelectedTimes] = useState({});
+    const [openDropdown, setOpenDropdown] = useState(null);
+    const dropdownRefs = useRef({});
+    const [dropPosition, setDropPosition] = useState({});
 
- 
+    // Close dropdown on outside click
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (!Object.values(dropdownRefs.current).some(ref => ref && ref.contains(event.target))) {
+                setOpenDropdown(null);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Open dropdown and set position BEFORE rendering
+    const toggleDropdown = (day) => {
+        if (openDropdown === day) {
+            setOpenDropdown(null);
+            return;
+        }
+
+        setTimeout(() => {
+            if (dropdownRefs.current[day]) {
+                const rect = dropdownRefs.current[day].getBoundingClientRect();
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+
+                setDropPosition((prev) => ({
+                    ...prev,
+                    [day]: spaceBelow < 200 && spaceAbove > spaceBelow ? "top" : "bottom", 
+                }));
+
+                setOpenDropdown(day); // Open dropdown AFTER setting position
+            }
+        }, 50);
+    };
+
+    const selectTime = (day, hours, minutes) => {
+        setSelectedTimes(prev => ({ ...prev, [day]: `${hours}h ${minutes}m` }));
+        setOpenDropdown(null);
+    };
+
+    
   return (
       <div className=" w-100 p-3">
         <div className="border-top">
@@ -80,36 +123,66 @@ const dailyScreenTime: React.FC = () => {
         </label>
         <div id="customLimitSection" className=" mt-3">
             <div className="grid grid-cols-7 gap-2 text-center font-medium text-gray-800">
-                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] focus:border ">Mon</button>
-                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Tue</button>
-                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Wed</button>
-                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Thu</button>
-                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Fri</button>
-                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Sat</button>
-                <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Sun</button>
-            </div>
-            <div className="grid grid-cols-7 gap-2 mt-2">
-                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
-                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
-                </select>
-                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
-                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
-                </select>
-                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
-                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
-                </select>
-                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
-                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
-                </select>
-                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
-                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
-                </select>
-                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
-                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
-                </select>
-                <select className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]">
-                    <option>1h</option> <option>1h 30m</option> <option>2h</option> <option>Custom</option>
-                </select>
+                
+                {days.map((day) => (
+                    <div key={day} className=" items-center justify-between mb-3">
+                        {/* Day Button */}
+                        <button className="border px-4 py-2 w-24 mb-3 rounded-sm text-gray-900 bg-white focus:border-[#FE2C55]">
+                            {day}
+                        </button>
+
+                        {/* Time Picker */}
+                        <div className="relative w-24" ref={(el) => (dropdownRefs.current[day] = el)}>
+                            <span
+                                className="border px-3 py-2 rounded-sm text-gray-900 bg-white cursor-pointer block text-center"
+                                onClick={() => toggleDropdown(day)}
+                            >
+                                {selectedTimes[day] || "1h"}
+                            </span>
+
+                            {/* Dropdown */}
+                            {openDropdown === day && (
+                                  <div className={`absolute w-40 bg-white shadow-lg rounded-md border z-10 
+                                  ${dropPosition[day] === "top" ? "bottom-full mb-2" : "top-full mt-2"}`}>
+                                    <div className="flex">
+                                        
+                                        {/* Hours List */}
+                                        <div className="h-40 overflow-y-auto w-1/2 border-r">
+                                            <ul className="text-center">
+                                                {[...Array(6)].map((_, i) => (
+                                                    <li 
+                                                        key={i} 
+                                                        className="p-2 cursor-pointer hover:bg-gray-200"
+                                                        onClick={() => selectTime(day, i, "00")}
+                                                    >
+                                                        {i}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                        {/* Minutes List */}
+                                        <div className="h-40 overflow-y-auto w-1/2">
+                                            <ul className="text-center">
+                                                {["00", "05", "10", "15", "20", "25", "30"].map((min, i) => (
+                                                    <li 
+                                                        key={i} 
+                                                        className="p-2 cursor-pointer hover:bg-gray-200"
+                                                        onClick={() => selectTime(day, selectedTimes[day]?.split("h")[0] || 0, min)}
+                                                    >
+                                                        {min}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
+               
             </div>
         </div>
     </div>

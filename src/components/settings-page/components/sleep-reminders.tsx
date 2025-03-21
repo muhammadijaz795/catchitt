@@ -1,65 +1,71 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { styled } from "@mui/material";
-
+import { AccessTime } from "@mui/icons-material";
 
 const SleepReminder: React.FC = () => {
- 
- 
+  const [isEnabled, setIsEnabled] = useState(true);
+  const [time, setTime] = useState("00:00");
 
- 
+  const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTime(event.target.value);
+  };
+
   return (
-      <div className=" w-100 p-3">
-        <div className="border-top">
-                <div className='text-left d-flex mt-3'>
-                    <span className="pt-1">
-                    <svg width="16" height="17" style={{marginRight: '0.5rem'}} viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.33301 8.16016C7.33281 8.26734 7.35846 8.373 7.40778 8.46816C7.45711 8.56332 7.52865 8.64519 7.61634 8.70682L10.6797 10.8502C10.7522 10.9004 10.8417 10.9199 10.9286 10.9043C11.0154 10.8886 11.0925 10.8392 11.143 10.7668L11.5263 10.2202C11.5766 10.1476 11.5961 10.0581 11.5805 9.97126C11.5648 9.88441 11.5154 9.80729 11.443 9.75682L8.80968 7.91349C8.76552 7.88286 8.72943 7.842 8.70447 7.79441C8.67951 7.74682 8.66643 7.6939 8.66634 7.64016V4.49349C8.66634 4.40508 8.63122 4.3203 8.56871 4.25779C8.5062 4.19528 8.42141 4.16016 8.33301 4.16016H7.66634C7.57794 4.16016 7.49315 4.19528 7.43064 4.25779C7.36813 4.3203 7.33301 4.40508 7.33301 4.49349V8.16016Z" fill="#161823"/>
-                        <path d="M8.00033 0.826172C6.0554 0.826172 4.19014 1.59879 2.81488 2.97406C1.43961 4.34932 0.666992 6.21458 0.666992 8.15951C0.666992 10.1044 1.43961 11.9697 2.81488 13.345C4.19014 14.7202 6.0554 15.4928 8.00033 15.4928C9.94525 15.4928 11.8105 14.7202 13.1858 13.345C14.561 11.9697 15.3337 10.1044 15.3337 8.15951C15.3337 6.21458 14.561 4.34932 13.1858 2.97406C11.8105 1.59879 9.94525 0.826172 8.00033 0.826172ZM2.00033 8.15951C2.00033 7.37157 2.15552 6.59136 2.45705 5.8634C2.75858 5.13545 3.20053 4.47402 3.75768 3.91686C4.31484 3.35971 4.97627 2.91776 5.70423 2.61623C6.43218 2.3147 7.21239 2.15951 8.00033 2.15951C8.78826 2.15951 9.56847 2.3147 10.2964 2.61623C11.0244 2.91776 11.6858 3.35971 12.243 3.91686C12.8001 4.47402 13.2421 5.13545 13.5436 5.8634C13.8451 6.59136 14.0003 7.37157 14.0003 8.15951C14.0003 9.7508 13.3682 11.2769 12.243 12.4021C11.1177 13.5274 9.59162 14.1595 8.00033 14.1595C6.40903 14.1595 4.8829 13.5274 3.75768 12.4021C2.63247 11.2769 2.00033 9.7508 2.00033 8.15951Z" fill="#161823"/>
-                    </svg>
-                    </span>
-                    <div>
-                        <p className='d-flex  mb-1'>Set your sleep time</p>
-                        <span className='text-xs text-[#16182399]'>You’ll get reminded if you reach your sleep time</span>
-                    </div>
-                </div>
-            
-                <div className='text-left d-flex mt-3 '>
-                    <span className="pt-1">
-                    <svg width="17" height="17" style={{marginRight: '0.5rem'}}  viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.59363 8.82024L3.76029 7.08023C3.76317 7.04833 3.77518 7.01793 3.79488 6.99268C3.81458 6.96742 3.84115 6.94838 3.87139 6.93783C3.90164 6.92728 3.93428 6.92567 3.96542 6.93319C3.99655 6.94071 4.02486 6.95704 4.04696 6.98024L4.90696 7.8369C4.94169 7.87151 4.96836 7.91335 4.98507 7.95944C5.00178 8.00553 5.00812 8.05475 5.00363 8.10357L4.92029 8.95023C4.82696 9.90024 4.30029 10.5902 3.73363 11.3102H8.24029C8.32822 11.3115 8.41208 11.3474 8.47363 11.4102L9.42696 12.3602C9.4498 12.3835 9.4653 12.413 9.47154 12.445C9.47778 12.4771 9.47449 12.5102 9.46206 12.5404C9.44964 12.5705 9.42864 12.5964 9.40166 12.6147C9.37468 12.6331 9.34291 12.6431 9.31029 12.6436H2.36029C2.23503 12.6436 2.11229 12.6084 2.00614 12.5419C1.89998 12.4754 1.81471 12.3803 1.76008 12.2676C1.70546 12.1549 1.6837 12.0291 1.6973 11.9045C1.71089 11.78 1.7593 11.6618 1.83696 11.5636C2.46029 10.7736 3.49029 9.88357 3.59363 8.82024ZM1.80696 2.85357L14.2203 15.2669C14.2782 15.2846 14.3398 15.2862 14.3985 15.2715C14.4572 15.2568 14.5109 15.2264 14.5536 15.1836L15.027 14.7136C15.0582 14.6826 15.083 14.6457 15.0999 14.6051C15.1168 14.5645 15.1256 14.5209 15.1256 14.4769C15.1256 14.4329 15.1168 14.3893 15.0999 14.3487C15.083 14.3081 15.0582 14.2712 15.027 14.2402L13.4303 12.6436H14.2803C14.4056 12.6436 14.5283 12.6084 14.6344 12.5419C14.7406 12.4754 14.8259 12.3803 14.8805 12.2676C14.9351 12.1549 14.9569 12.0291 14.9433 11.9045C14.9297 11.78 14.8813 11.6618 14.8036 11.5636C14.1803 10.7736 13.1503 9.88357 13.047 8.82024L12.707 5.29023C12.6161 4.34773 12.224 3.45958 11.5888 2.75734C10.9537 2.05509 10.1092 1.57611 9.18052 1.39135C8.25184 1.20659 7.28835 1.32587 6.43277 1.73152C5.57719 2.13718 4.87503 2.80763 4.43029 3.64357L2.83029 2.04357C2.76798 1.98249 2.68421 1.94828 2.59696 1.94828C2.50971 1.94828 2.42594 1.98249 2.36363 2.04357L1.88696 2.52023C1.84351 2.5633 1.81276 2.61749 1.79806 2.67688C1.78336 2.73626 1.78529 2.79854 1.80363 2.8569L1.80696 2.85357ZM5.44029 4.65357C5.68311 4.00373 6.13865 3.45515 6.73282 3.09706C7.32698 2.73898 8.02482 2.59244 8.71283 2.68129C9.40085 2.77014 10.0386 3.08915 10.5223 3.58644C11.006 4.08372 11.3072 4.73002 11.377 5.42023L11.7203 8.95023C11.8136 9.90024 12.3403 10.5902 12.907 11.3102H12.097L5.43696 4.65023L5.44029 4.65357ZM10.6203 14.3036C10.657 14.1236 10.5036 13.9736 10.3203 13.9736H6.32029C6.13696 13.9736 5.98363 14.1236 6.02029 14.3069C6.44696 16.5102 10.1936 16.5102 10.6203 14.3069V14.3036Z" fill="#161823"/>
-                    </svg>
-                    </span>
-                    <div>
-                        <p className='d-flex mb-1'>Push notifications are muted</p>
-                        <span className='text-xs text-[#16182399]'>To reduce distractions, push notifications are muted for 7 hours after your sleep time</span>
-                    </div>
-                </div>
-        </div>
-        <Typography className="border-top pt-3 mt-3">
-            <div className="d-flex justify-between">
-                <div>
-                    <div className='text-left'>
-                        <p className='text-base'>Set up sleep reminders</p>
-                    </div>
-                </div>
-                <label className="toggle-switch !left-1">
-                    <input 
-                    style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
-                        type="checkbox"
-                        name="autoScrollCheckbox" 
-                        id="autoScrollCheckbox" 
-                    />
-                    <b className="slider"></b>
-                </label>
-            </div>
-        </Typography>
-        <div className='d-flex mt-3 justify-end'>
-            <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm">
-                <p className="text-[rgb(255, 59, 92)] font-normal">Done</p>
-            </button>
+    <div className="w-100 p-3">
+      <div className="border-top">
+        <div className='text-left d-flex mt-3'>
+          <span className="pt-1">
+            <AccessTime className="text-gray-600 mr-2" />
+          </span>
+          <div>
+            <p className='d-flex mb-1'>Set your sleep time</p>
+            <span className='text-xs text-[#16182399]'>You’ll get reminded if you reach your sleep time</span>
+          </div>
         </div>
       </div>
+
+      <Typography className="border-top pt-3 mt-3">
+        <div className="d-flex justify-between">
+          <div>
+            <p className='text-base'>Set up sleep reminders</p>
+          </div>
+          <label className="toggle-switch !left-1">
+            <input 
+              type="checkbox"
+              className="sr-only peer"
+              checked={isEnabled}
+              onChange={() => setIsEnabled(!isEnabled)}
+            />
+            <b className="slider"></b>
+          </label>
+        </div>
+      </Typography>
+
+      {isEnabled && (
+        <div className="bg-gray-100 p-4 mt-4 rounded-md">
+          <p className="font-medium">Sleep reminders</p>
+          <div className="flex items-center gap-3">
+            <div className="relative w-[8rem]">
+              <input
+                type="time"
+                value={time}
+                onChange={handleTimeChange}
+                className="w-full p-2 bg-white h-10 border border-gray-300 rounded-sm mt-2 cursor-pointer hover:border-gray-400"
+              />
+            </div>
+            <span className="text-sm text-gray-600 mt-1 block">
+              {time} – 7 hours later
+            </span>
+          </div>
+        </div>
+      )}
+
+      <div className='d-flex mt-3 justify-end'>
+        <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm">
+          Done
+        </button>
+      </div>
+    </div>
   );
 };
 
