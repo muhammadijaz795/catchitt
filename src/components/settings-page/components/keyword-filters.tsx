@@ -82,7 +82,7 @@ const KeywordFilters: React.FC<KeywordFiltersProps> = ({ onClose, onKeywordAdded
           placeholder="Enter a word or hashtag"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          className="border rounded-sm p-2 w-full"
+          className="border bg-transparent rounded-sm p-2 w-full"
         />
       </div>
 

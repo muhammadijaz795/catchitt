@@ -1722,13 +1722,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     </Accordion>
                                 </div>
                             </div>
-                            <div className={styles.suggestedContent} onClick={() => toggleVisibility('filter_keywords')}>
+                            <div className={styles.suggestedContent} >
                                 <div className={`${styles.pageHeader} mb-0 mt-0`}>
                                     <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0`}>Content preferences</h4>
                                 </div>
                                 <div className='w-100 border-bottom pb-3'>
                                     <div
-                                        className={styles.accountCards}>
+                                        className={styles.accountCards} onClick={() => toggleVisibility('filter_keywords')}>
                                         <div className={styles.settingName}>
                                             <div className='text-left'>
                                             <p>Filter keywords</p>
@@ -1768,7 +1768,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <p>Content preference</p>
                                     </div>
                                     <img src={whiteRightArrow} alt="" />
-                                </div> */}
+                                </div> 
                                 <div
                                     className={styles.accountCards}
                                 >
