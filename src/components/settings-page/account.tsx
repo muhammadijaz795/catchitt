@@ -180,6 +180,8 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [privacyColor, setprivacyColor] = useState('#222222');
     const [balanceColor, setBalanceColor] = useState('#222222');
     const [otherBalanceColor, setOtherBalanceColor] = useState('#130F26');
+    const [visibleDiv, setVisibleDiv] = useState<string>('manage_account');
+
 
     const lightThemePalette = createTheme({
         palette: {
@@ -197,6 +199,13 @@ const Account = ({ className, openModal }: AccountProps) => {
     const [allowInBrowser, setAllowInBrowser] = useState(false);
     const [businessAccount, setBusinessAccount] = useState(false);
     const [notificationSettings, setNotificationSettings] = useState<Record<string, boolean>>({});
+    const [profileSettings, setProfileSettings] = useState<Record<string, boolean>>({});
+
+    const [downloadDataSettings, setDownloadDataSettings] = useState({
+        download: 'all_data',
+        download_items: ['messages', 'profile_and_posts', 'activity'],
+        format: 'txt',
+      });
 
 
 
@@ -248,6 +257,11 @@ const Account = ({ className, openModal }: AccountProps) => {
             navigate('/auth');
         }
     }, [token]);
+
+    // Function to toggle visibility
+  const toggleVisibility = (divId: string) => {
+    setVisibleDiv(visibleDiv === divId ? '' : divId);
+  };
 
     const handleOpenChangePassMainModal = () => {
         setOpenChangePassMainModal(true);
@@ -406,7 +420,7 @@ const Account = ({ className, openModal }: AccountProps) => {
   const getNotificationSettings = async () => {
     try {
       const response = await fetch(
-        `${API_KEY}/profile/get_profile_notifications_settings`,
+        `${API_KEY}/profile/notifications-settings`,
         {
           method: "GET",
           headers: {
@@ -422,9 +436,12 @@ const Account = ({ className, openModal }: AccountProps) => {
 
       const data = await response.json();
       console.log("Fetched settings:", data);
+      console.log('in app notifications...');
+      console.log(data?.data?.inAppNotifications)
 
       // Set state with in-app notification settings
-      setNotificationSettings(data.inAppNotifications || {});
+      setNotificationSettings(data?.data?.inAppNotifications || {});
+      setProfileSettings(data?.data?.interactionsNotifications || {});
     } catch (error) {
       console.error("Error fetching notification settings:", error);
     }
@@ -452,6 +469,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                 setAllowInBrowser(newData.allowInBrowser === "true");
                 setIsPrivateAccount(newData.privateAccount);
                 setBusinessAccount(newData.businessAccount === "true");
+                setDownloadDataSettings(newData.downloadDataSettings);
             }
             console.log('Account settings data:', data);
         } catch (error) {
@@ -537,6 +555,44 @@ const Account = ({ className, openModal }: AccountProps) => {
         console.log("Updated settings response:", result);
         } catch (error) {
         console.error("Error updating notification settings:", error);
+        }
+    };
+
+    const updateSettings = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>) => {
+        try {
+        const value = event.target.checked;
+        console.log(name, value);
+
+        // Optimistically update UI
+        setProfileSettings((prev) => ({ ...prev, [name]: value }));
+
+        const data = {
+            interactionsNotifications: {
+                ...profileSettings, // Preserve previous values
+                [name]: value, // Update only the toggled setting
+            },
+        };
+
+        const response = await fetch(
+            `${API_KEY}/profile/notifications-settings`,
+            {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Updated settings response:", result);
+        } catch (error) {
+            console.error("Error updating notification settings:", error);
         }
     };
 
@@ -739,6 +795,24 @@ const Account = ({ className, openModal }: AccountProps) => {
         }
     });
 
+    const updateAccountSettings = async (newSettings: Record<string, any>) => {
+        try {
+          const response = await fetch(`${API_KEY}/profile/v2/manage-account`, {
+            method: 'PATCH',
+            headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            body: JSON.stringify(newSettings),
+          });
+          console.log(response);
+          setDownloadDataSettings({
+            download: newSettings.download,
+            download_items: newSettings.download_items,
+            format: newSettings.format,
+          }); // Update local state
+        } catch (error) {
+          console.error('Error updating settings:', error);
+        }
+    };
+
     const changeCheckbox = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>) => {
         // Access the checked value of the checkbox
         const value = event.target.checked;
@@ -761,7 +835,12 @@ const Account = ({ className, openModal }: AccountProps) => {
         console.log(response);
         getAccountSettings();
 
-      };
+    };
+
+    const downloadYourData = () => {
+
+    }
+
 
     return (
         <>
@@ -770,13 +849,13 @@ const Account = ({ className, openModal }: AccountProps) => {
                 <div className={`${styles.container} `} style={{ maxWidth: '1140px', margin: 'auto', marginTop: '7rem' }}>
 
                     { <div className={`${sibarStyles.leftSide} ${darkTheme} shadow-md rounded-lg px-4` } style={{ width: '30rem', backgroundColor: '#fff', }}>
-                        <div className={`${sibarStyles.sideNavDiv} pt-4`} >
-                            <Link to="/" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                        <div className={`${sibarStyles.sideNavDiv} pt-4`} onClick={() => toggleVisibility('manage_account')}>
+                            <Link to="/settings/account" reloadDocument={false} style={{ textDecoration: 'none' }}>
                             <div className='d-flex'>
                             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7415 4.33984C10.8085 4.33984 9.24148 5.90684 9.24148 7.83984C9.24148 9.77284 10.8085 11.3398 12.7415 11.3398C14.6745 11.3398 16.2415 9.77284 16.2415 7.83984C16.2415 5.90684 14.6745 4.33984 12.7415 4.33984ZM7.24148 7.83984C7.24148 4.80228 9.70393 2.33984 12.7415 2.33984C15.7791 2.33984 18.2415 4.80228 18.2415 7.83984C18.2415 10.8774 15.7791 13.3398 12.7415 13.3398C9.70393 13.3398 7.24148 10.8774 7.24148 7.83984ZM12.7415 17.3398C9.77208 17.3398 7.26598 19.3319 6.48993 22.0529C6.41418 22.3185 6.15218 22.4942 5.88153 22.4393L4.90152 22.2404C4.6309 22.1854 4.45463 21.9207 4.52548 21.6538C5.49044 18.0188 8.80208 15.3398 12.7415 15.3398C16.6809 15.3398 19.9926 18.0188 20.9575 21.6538C21.0284 21.9207 20.8521 22.1854 20.5815 22.2404L19.6015 22.4393C19.3308 22.4942 19.0688 22.3185 18.9931 22.0529C18.217 19.3319 15.7109 17.3398 12.7415 17.3398Z" fill="#161823"/>
                             </svg>
-                            <p className={`${sibarStyles.linkWord} pl-2`}>Manage Account  </p>
+                            <p className={`${sibarStyles.linkWord} pl-2`}>Manage Account</p>
                             </div>
                             </Link>
                         </div>
@@ -842,18 +921,18 @@ const Account = ({ className, openModal }: AccountProps) => {
                             </Link>
                         </div>
                     </div> }
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white d-none shadow-md`}>
-                    <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold p-3 text-xl`}>Download Seezitt data</h4>
-                        <ManageAccount /> 
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md`}  style={{ display: visibleDiv === 'download_data' ? 'block' : 'none' }}>
+                        <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold p-3 text-xl`}>Download Seezitt data</h4>
+                        <ManageAccount downloadDataSettings={downloadDataSettings} updateAccountSettings={updateAccountSettings} /> 
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md`}>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme}  bg-white shadow-md`} style={{ display: visibleDiv === 'adds' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>How your ads are personalized</h4>
                             <span className='text-left px-3 text-[#000000A6] text-sm'> Personalized ads can be based on inferences that Seezitt has made about you. You can manage whether your ads are based on these factors below. Any changes that you make can take up to 48 hours to go into effect. These changes will not affect whether we otherwise can use the information we collect about you to help us personalize your ads.
                             <a href="" className='font-semibold'>Learn more</a>
                         </span>
                         <Ads /> 
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white  shadow-md`}>
+                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md`} style={{ display: visibleDiv === 'manage_account' ? 'block' : 'none' }}>
                         <div className={styles.settingsWrapper}>
                             
                             <div className={styles.suggestedContent}>
@@ -1045,7 +1124,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </label>
                                     </div>
                                 </div>
-                                <div className='w-100 border-bottom pb-3'>
+                                <div className='w-100 border-bottom pb-3' onClick={() => toggleVisibility('download_data')}>
                                     <h5 className='h6 text-left'>Data</h5>
                                     <div
                                         className={styles.accountCards}>
@@ -1119,8 +1198,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox"
-                                                            checked={notificationSettings.likes || false}
-                                                            onChange={updateNewSettings('likes')} 
+                                                            checked={profileSettings.likes || false}
+                                                            onChange={updateSettings('likes')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1140,8 +1219,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
-                                                            checked={notificationSettings.comments || false}
-                                                            onChange={updateNewSettings('comments')} 
+                                                            checked={profileSettings.comments || false}
+                                                            onChange={updateSettings('comments')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1161,8 +1240,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
-                                                            checked={notificationSettings.newFollowers || false}
-                                                            onChange={updateNewSettings('newFollowers')} 
+                                                            checked={profileSettings.newFollowers || false}
+                                                            onChange={updateSettings('newFollowers')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
@@ -1182,8 +1261,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             type="checkbox"
                                                             name="autoScrollCheckbox" 
                                                             id="autoScrollCheckbox" 
-                                                            checked={notificationSettings.mentionAndTags || false}
-                                                            onChange={updateNewSettings('mentionAndTags')} 
+                                                            checked={profileSettings.mentionAndTags || false}
+                                                            onChange={updateSettings('mentionAndTags')} 
                                                         />
                                                         <b className="slider"></b>
                                                     </label>
