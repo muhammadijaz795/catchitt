@@ -1742,7 +1742,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                 </div>
                             </div>
                         </div>
-                        <div className={styles.settingsWrapper}>
+                        {/* <div className={styles.settingsWrapper}>
                             <div className={`${styles.pageHeader} p-3`}>
                                 <h4 className={darkTheme ? 'text-white' : 'text-black'}>Content & Activity</h4>
                             </div>
@@ -1866,7 +1866,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     <img src={whiteRightArrow} alt="" />
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
