@@ -537,3 +537,7 @@ div.lightdarkTheme > p > h1, h2, h3, h4  {
   color:white !important;
   border-radius: 16px;
 }
+
+.scroll-section {
+  scroll-margin-top: 48px; /* Matches your navbar height */
+}

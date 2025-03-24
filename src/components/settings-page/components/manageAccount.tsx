@@ -174,6 +174,26 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
         {selectedDownload === 'custom' && (
           <div className="w-100 d-flex flex-column gap-3 border-bottom py-3">
 
+<FormControlLabel
+                        className='w-100 d-flex justify-between flex-row-reverse pl-3'
+
+              control={
+                <Checkbox
+                  checked={selectedItems && selectedItems.includes('profile_and_posts')}
+                  onChange={handleItemChange('profile_and_posts')}
+                  sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }}
+                />
+              }
+              label={
+                <Stack spacing={0.5}>
+                    <span>Profile and Posts</span>
+                    <FormHelperText sx={{ fontSize: '12px', color: 'gray' }}>
+                    Personal information, your followers, accounts you follow, your posts on Seezit
+                    </FormHelperText>
+                  </Stack>
+              }
+            />
+
               <FormControlLabel
                 className="w-100 d-flex justify-between flex-row-reverse pl-3"
                 control={
@@ -187,7 +207,7 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
                   <Stack spacing={0.5}>
                     <span>Activity</span>
                     <FormHelperText sx={{ fontSize: '12px', color: 'gray' }}>
-                      This is a small description about activity.
+                      Likes, comments, favorites, browsing history
                     </FormHelperText>
                   </Stack>
                 }
@@ -207,30 +227,12 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
                 <Stack spacing={0.5}>
                     <span>Message</span>
                     <FormHelperText sx={{ fontSize: '12px', color: 'gray' }}>
-                      This is a small description about activity.
+                      Direct messages you’ve sent and received
                     </FormHelperText>
                   </Stack>
               }
             />
-            <FormControlLabel
-                        className='w-100 d-flex justify-between flex-row-reverse pl-3'
-
-              control={
-                <Checkbox
-                  checked={selectedItems && selectedItems.includes('profile_and_posts')}
-                  onChange={handleItemChange('profile_and_posts')}
-                  sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }}
-                />
-              }
-              label={
-                <Stack spacing={0.5}>
-                    <span>Profile and Posts</span>
-                    <FormHelperText sx={{ fontSize: '12px', color: 'gray' }}>
-                      This is a small description about activity.
-                    </FormHelperText>
-                  </Stack>
-              }
-            />
+            
           </div>
         )}
 
