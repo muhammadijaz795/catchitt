@@ -863,6 +863,23 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     }
 
+    function changeScreenTimeUpdates(event)
+    {
+        let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
+        let payload =
+        {
+            method: 'PATCH',
+            headers:
+            {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+            body: JSON.stringify({ weeklyUpdates: event.target.checked }),
+        };
+    
+        fetch(endpoint, payload)
+        .catch(error => console.error('Failed to update screen time:', error));
+    }
 
     return (
         <>
@@ -1693,6 +1710,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 type="checkbox"
                                                 name="autoScrollCheckbox" 
                                                 id="autoScrollCheckbox" 
+                                                onChange={(event) => changeScreenTimeUpdates(event)}
                                             />
                                             <b className="slider"></b>
                                         </label>
