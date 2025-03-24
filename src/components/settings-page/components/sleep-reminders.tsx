@@ -54,7 +54,7 @@ const SleepReminder: React.FC = () => {
               />
             </div>
             <span className="text-sm text-gray-600 mt-1 block">
-              {time} – 7 hours later
+              {time}–{new Date(new Date(`1970-01-01T${time}:00`).setHours(new Date(`1970-01-01T${time}:00`).getHours() + 7)).toTimeString().slice(0, 5)} , 7 hours
             </span>
           </div>
         </div>
