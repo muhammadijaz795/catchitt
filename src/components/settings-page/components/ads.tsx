@@ -56,7 +56,24 @@ const Ads: React.FC = () => {
   };
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () =>
+  {
+    let endpoint = process.env.VITE_API_URL + '/profile/v2/gender-choice-in-ad'
+    let payload =
+    {
+      method: 'PATCH',
+      headers:
+      {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer " + localStorage.getItem('token'),
+      },
+      body: JSON.stringify({ genderChoice: gender })
+    };
+    
+    fetch(endpoint, payload)
+    .catch(error => console.error('Failed to update gender:', error));
+    setOpen(false);
+  }
 
   return (
     <Box className="text-left" sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -161,8 +178,8 @@ const Ads: React.FC = () => {
             <FormControlLabel value="female" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between">
-            <TextField variant="standard" placeholder="Custom" sx={{ width: '70%' }} />
-            <FormControlLabel value="custom" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
+            <TextField variant="standard" placeholder="Custom" sx={{ width: '70%' }} onChange={(e) => setCustomGender(e.target.value)}/>
+            <FormControlLabel value={customGender} control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
           </Box>
         </RadioGroup>
         </Box>
