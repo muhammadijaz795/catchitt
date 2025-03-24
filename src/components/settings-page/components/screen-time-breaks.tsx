@@ -50,6 +50,24 @@ const screenTimeBreaks: React.FC = () => {
         setSelectedTimes(prev => ({ ...prev, [day]: `${hours}h ${minutes}m` }));
         setOpenDropdown(null);
     };
+
+    function saveChanges()
+    {
+        let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
+        let payload =
+        {
+            method: 'PATCH',
+            headers:
+            {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+            body: JSON.stringify({ screenTimeBreaksPayload: (([h, m]) => ({ hours: +h, minutes: +m }))(selectedTimes.daily.match(/\d+/g)) }),
+        };
+    
+        fetch(endpoint, payload)
+        .catch(error => console.error('Failed to update screen time:', error));
+    }
   return (
       <div className=" w-100 p-3">
         <div className="border-top">
@@ -108,7 +126,7 @@ const screenTimeBreaks: React.FC = () => {
             </div>
         )}
         <div className='d-flex mt-3 justify-end'>
-            <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm">
+            <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm" onClick={() => saveChanges()}>
                 <p className="text-[rgb(255, 59, 92)] font-normal">Done</p>
             </button>
         </div>
