@@ -75,6 +75,16 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
   const [selectedItems, setSelectedItems] = useState(downloadDataSettings.download_items);
   const [downloadRequests, setDownloadRequests] = useState<DownloadRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  var themeColor = window.localStorage.getItem('theme');
+
+  // const [darkTheme, setdarkTheme] = useState('');
+  // useEffect(() => {
+  //     var themeColor = window.localStorage.getItem('theme');
+  //     if (themeColor == 'dark') {
+  //         // setdarkTheme();
+  //     }
+  // });
+
 
 
   
@@ -232,7 +242,7 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
   };
 
   return (
-    <Box className="text-left" sx={{ width: '100%', bgcolor: 'background.paper' }}>
+    <Box className={`text-left ${themeColor == 'dark' ? 'darkClass001': 'lightClass001'}`} sx={{ width: '100%', bgcolor: 'background.paper' }}>
       <AppBar  position="static" color="default" sx={{ boxShadow: 'none', backgroundColor: 'white' }}>
         <CustomTabs className='w-[94%] m-auto' sx={{borderBottom: '1px solid #16182333'}} value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
           <Tab
