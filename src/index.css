@@ -503,3 +503,6 @@ input:checked + .slider::before {
   .css-ja756o-MuiButtonBase-root-MuiTab-root.Mui-selected{
     color: #000 !important;
   }
+  .darkTheme .css-1086bdv-MuiPaper-root-MuiAccordion-root{
+    background-color: #76767630;
+  }

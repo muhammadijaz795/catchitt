@@ -1079,7 +1079,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                     </div>
                     <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'adds' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>How your ads are personalized</h4>
-                            <span className='text-left px-3 text-[#000000A6] text-sm'> Personalized ads can be based on inferences that Seezitt has made about you. You can manage whether your ads are based on these factors below. Any changes that you make can take up to 48 hours to go into effect. These changes will not affect whether we otherwise can use the information we collect about you to help us personalize your ads.
+                            <span className='text-left px-3 text-[#000000A6] d-block text-sm'> Personalized ads can be based on inferences that Seezitt has made about you. You can manage whether your ads are based on these factors below. Any changes that you make can take up to 48 hours to go into effect. These changes will not affect whether we otherwise can use the information we collect about you to help us personalize your ads.
                             <a href="" className='font-semibold'>Learn more</a>
                         </span>
                         <Ads /> 
@@ -1389,7 +1389,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                     <h5 className='h6 text-left'>Your preferences</h5>
                                     <span className='text-xs text-[#16182399] d-block text-left mb-3'>Your preferences will be synced automatically to the Seezit app.</span>
                                     
-                                    <Accordion className='shadow-none px-0'>
+                                    <Accordion className={ `${darkTheme ? 'bg-transparent': 'bg-[#f8f8f8]'} shadow-none  px-0`}>
                                         <AccordionSummary
                                         className='shadow-none px-0'
                                         expandIcon={<ArrowDropDownIcon />}
@@ -1403,7 +1403,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             </div>
                                         </div>
                                         </AccordionSummary>
-                                        <AccordionDetails className='px-1 bg-[#f8f8f8]'>
+                                        <AccordionDetails className={ `${darkTheme ? 'bg-transparent': 'bg-[#f8f8f8]'}   px-1`}>
                                             <Typography >
                                                 <div
                                                     className={styles.accountCards}>
@@ -1494,15 +1494,15 @@ const Account = ({ className, openModal }: AccountProps) => {
                             </div>
                             <div className={`${styles.suggestedContent} py-0`}>
                                 <div className='w-100 border-bottom pb-0'>
-                                    <Accordion className='shadow-none px-0'>
+                                    <Accordion className={ `${darkTheme ? 'bg-transparent': 'bg-[#f8f8f8]'} shadow-none  px-0`}>
                                         <AccordionSummary
                                         className='shadow-none px-0'
                                         expandIcon={<ArrowDropDownIcon />}
                                         aria-controls="panel2-content"
                                         id="panel2-header">
-                                         <h5 className='h6 text-left'>In-app notifications</h5>
+                                         <p className='h6 text-left'>In-app notifications</p>
                                         </AccordionSummary>
-                                        <AccordionDetails className='px-1 bg-[#f8f8f8]'>
+                                        <AccordionDetails className={ `${darkTheme ? 'bg-transparent': 'bg-[#f8f8f8]'}   px-1`}>
                                             <Typography >
                                                 <div
                                                     className={styles.accountCards}>
@@ -1874,7 +1874,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             </div>
                             <div className={`${styles.suggestedContent} mb-0`}>
                                 <div className='w-100 border-bottom '>
-                                    <Accordion className='shadow-none px-0'>
+                                    <Accordion className={ `${darkTheme ? 'bg-transparent': 'bg-[#f8f8f8]'} shadow-none  px-0`}>
                                         <AccordionSummary
                                         className='shadow-none px-0'
                                         expandIcon={<ArrowDropDownIcon />}
@@ -1888,8 +1888,8 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             </div>
                                         </div>
                                         </AccordionSummary>
-                                        <AccordionDetails className='px-1 bg-[#f8f8f8]'>
-                                           <TimeChart /> 
+                                        <AccordionDetails className={ `${darkTheme ? 'bg-transparent': ''} shadow-none  px-1`}>
+                                           <TimeChart  /> 
                                         </AccordionDetails>
                                     </Accordion>
                                 </div>

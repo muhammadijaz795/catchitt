@@ -12,6 +12,7 @@ interface TabPanelProps {
   value: number;
 }
 
+
 const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other }) => {
   return (
     <div
@@ -319,7 +320,7 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
         {selectedDownload === 'custom' && (
           <div className="w-100 d-flex flex-column gap-3 border-bottom py-3">
 
-<FormControlLabel
+          <FormControlLabel
                         className='w-100 d-flex justify-between flex-row-reverse pl-3'
 
               control={

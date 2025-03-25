@@ -46,6 +46,7 @@ const CustomTabs = styled(Tabs)({
 const Ads: React.FC = () => {
   const [value, setValue] = useState(0);
   const [open, setOpen] = useState(false); 
+  const [openList, setOpenList] = useState(false); 
   const [gender, setGender] = useState("male");
   const [customGender, setCustomGender] = useState("");
   const [allCategories, setAllCategories] = useState(
@@ -63,6 +64,10 @@ const Ads: React.FC = () => {
   };
 
   const handleOpen = () => setOpen(true);
+ const openModalList = ()=> setOpenList(true);
+ const closeListModal = () => {
+  setOpenList(false);
+ }
   const handleClose = () =>
   {
     let endpoint = process.env.VITE_API_URL + '/profile/v2/gender-choice-in-ad'
@@ -95,9 +100,9 @@ const Ads: React.FC = () => {
   useEffect(fetchCategories, []);
 
   return (
-    <Box className="text-left" sx={{ width: "100%", bgcolor: "background.paper" }}>
-      <AppBar position="static" color="default" sx={{ boxShadow: "none", borderBottom: "1px solid #16182333" }}>
-        <CustomTabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
+    <Box className="text-left " sx={{ width: "100%", bgcolor: "background.paper" }}>
+      <AppBar position="static" color="default" sx={{ boxShadow: 'none', backgroundColor: 'white' }} >
+        <CustomTabs className='w-[94%] m-auto'  value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
           <Tab label="Topic" id="simple-tab-0" aria-controls="simple-tabpanel-0" sx={{ flex: 1, color: "black", textTransform: "none" }} />
           <Tab
             label="Gender"
@@ -145,7 +150,7 @@ const Ads: React.FC = () => {
             All topics
           </span>
           {allCategories.items.map((category, index) => (
-            <div className='d-flex justify-between mt-3' key={category._id}>
+            <div className='d-flex justify-between mt-3' key={category._id} onClick={openModalList}>
                 <div >
                     <div className='text-left'>
                       <p>{category.name}</p>
@@ -175,7 +180,38 @@ const Ads: React.FC = () => {
         </Box>
       </TabPanel>
 
-      {/* Modal */}
+{/* modal for list */}
+  <Modal open={openList} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+          <Box sx={style}>
+            <span onClick={handleClose}>
+              <svg fill="#000" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: 'auto'}} width="2em" height="2em">
+              <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
+              </svg>
+            </span>
+            <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">
+            Gender
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>
+                Personalized ads can be based on inferences that Seezitt has made about you. Updates apply only to your ad settings and do not affect other Seezitt services.
+            </Typography>
+            <RadioGroup value={gender} onChange={handleChangeGender}>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Typography>Male</Typography>
+              <FormControlLabel value="male" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
+            </Box>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Typography>Female</Typography>
+              <FormControlLabel value="female" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
+            </Box>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <TextField variant="standard" placeholder="Custom" sx={{ width: '70%' }} onChange={(e) => setCustomGender(e.target.value)}/>
+              <FormControlLabel value={customGender} control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
+            </Box>
+          </RadioGroup>
+          </Box>
+        </Modal>
+        
+      {/* Modal for gender*/}
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
           <span onClick={handleClose}>
