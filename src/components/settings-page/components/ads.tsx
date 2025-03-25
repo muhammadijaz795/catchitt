@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppBar, Tabs, Tab, Box, Typography, Modal, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { styled } from "@mui/material";
 
@@ -48,6 +48,13 @@ const Ads: React.FC = () => {
   const [open, setOpen] = useState(false); 
   const [gender, setGender] = useState("male");
   const [customGender, setCustomGender] = useState("");
+  const [allCategories, setAllCategories] = useState(
+    {
+      items: [],
+      isLoading: false,
+      canLoadMore: false
+    }
+  );
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -74,6 +81,18 @@ const Ads: React.FC = () => {
     .catch(error => console.error('Failed to update gender:', error));
     setOpen(false);
   }
+
+  function fetchCategories()
+  { 
+    setAllCategories(prev => ({ ...prev, isLoading: true }));
+
+    fetch(process.env.VITE_API_URL + '/media-content/categories')
+    .then(response => response.ok ? response.json() : Promise.reject("Failed to fetch data"))
+    .then(data => setAllCategories({ items: data.data, isLoading: false, canLoadMore: data.data.length > 0 }))
+    .catch(error => setAllCategories(prev => ({ ...prev, isLoading: false })));
+  }
+
+  useEffect(fetchCategories, []);
 
   return (
     <Box className="text-left" sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -125,10 +144,11 @@ const Ads: React.FC = () => {
           <span className='text-sm font-medium text-[#16182399]'>
             All topics
           </span>
-          <div className='d-flex justify-between mt-3'>
+          {allCategories.items.map((category, index) => (
+            <div className='d-flex justify-between mt-3' key={category._id}>
                 <div >
                     <div className='text-left'>
-                      <p>Education</p>
+                      <p>{category.name}</p>
                     </div>
                 </div>
                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -136,6 +156,7 @@ const Ads: React.FC = () => {
                 </svg>
 
             </div>
+          ))}
         </div>
       </TabPanel>
 
