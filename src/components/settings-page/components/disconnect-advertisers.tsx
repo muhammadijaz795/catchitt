@@ -15,7 +15,7 @@ const DisconnectAdvertisers: React.FC = () => {
     function fetchCategories()
     { 
         setSponsored(prev => ({ ...prev, isLoading: true }));
-        let endpoint = process.env.VITE_API_URL + '/profile/v2/disconnect-advertiser';
+        let endpoint = process.env.VITE_API_URL + '/profile/v2/ads-settings';
         let payload =
         {
             method: 'GET',
