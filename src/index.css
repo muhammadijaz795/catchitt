@@ -506,3 +506,6 @@ input:checked + .slider::before {
   .darkTheme .css-1086bdv-MuiPaper-root-MuiAccordion-root{
     background-color: #76767630;
   }
+  .darkTheme .css-1aquho2-MuiTabs-indicator{
+    background-color: white !important;
+  }

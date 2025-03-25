@@ -551,6 +551,9 @@ div.lightdarkTheme > p > h1, h2, h3, h4  {
   }
   .middleSectionDiv{
     background-color: #252525;
+    .css-8je8zh-MuiTouchRipple-root{
+      color: #FE2C55 !important;
+    }
     p, span, svg path{
       color: #FFF;
       fill: white;
@@ -563,7 +566,17 @@ div.lightdarkTheme > p > h1, h2, h3, h4  {
   .css-mmst5v{
     background-color: #252525;
   }
+  button{
+    color: white !important;
+  }
+ 
 }
 .leftSide{
   background-color: white;
+}
+.active{
+  color:rgb(254, 44, 85) !important;
+  svg path{
+    fill: rgb(254, 44, 85) !important;
+  }
 }

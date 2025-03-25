@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styles from '../account.module.scss';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -77,13 +78,13 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
   const [loading, setLoading] = useState(true);
   var themeColor = window.localStorage.getItem('theme');
 
-  // const [darkTheme, setdarkTheme] = useState('');
-  // useEffect(() => {
-  //     var themeColor = window.localStorage.getItem('theme');
-  //     if (themeColor == 'dark') {
-  //         // setdarkTheme();
-  //     }
-  // });
+  const [darkTheme, setdarkTheme] = useState('');
+  useEffect(() => {
+      var themeColor = window.localStorage.getItem('theme');
+      if (themeColor == 'dark') {
+           setdarkTheme(styles.darkTheme);
+      }
+  });
 
 
 
@@ -242,20 +243,37 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
   };
 
   return (
-    <Box className={`text-left ${themeColor == 'dark' ? 'darkClass001': 'lightClass001'}`} sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      <AppBar  position="static" color="default" sx={{ boxShadow: 'none', backgroundColor: 'white' }}>
-        <CustomTabs className='w-[94%] m-auto' sx={{borderBottom: '1px solid #16182333'}} value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
+    <Box className={`text-left ${darkTheme ? 'bg-transparent': ''}`} sx={{ width: '100%', bgcolor: 'background.paper' }}>
+      <AppBar  position="static" className={`${darkTheme ? 'bg-transparent': ''}`} color="default" sx={{ boxShadow: 'none',  }}>
+        <CustomTabs className={`${darkTheme ? 'bg-transparent': ''} w-[94%] m-auto`} sx={{borderBottom: '1px solid #16182333'}} value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
           <Tab
             label="Request data"
             id="simple-tab-0"
             aria-controls="simple-tabpanel-0"
-            sx={{ flex: 1, color: 'black', textTransform: 'none' }}
+            sx={{ 
+              flex: 1, 
+              color: 'black', 
+              textTransform: 'none', 
+              '&.Mui-selected': { 
+                color: 'black', 
+                borderBottom: `2px solid ${themeColor === 'dark' ? 'white' : ''}` 
+              } 
+            }}
           />
           <Tab
             label="Download data"
             id="simple-tab-1"
             aria-controls="simple-tabpanel-1"
-            sx={{ flex: 1, color: 'black', textTransform: 'none', '&.Mui-selected': { color: 'black', borderBottom: '2px solid black' } }}
+                    sx={{ 
+            flex: 1, 
+            color: 'black', 
+            textTransform: 'none', 
+            '&.Mui-selected': { 
+              color: 'black', 
+              borderBottom: `2px solid ${themeColor === 'dark' ? 'white' : ''}` 
+            } 
+          }}
+
           />
         </CustomTabs>
       </AppBar>
