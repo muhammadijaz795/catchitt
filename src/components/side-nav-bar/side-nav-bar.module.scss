@@ -286,7 +286,10 @@ div.darkThemeblack p{
   color:#222 !important;
 }
 .active{
-  color:red !important;
+  color:rgb(254, 44, 85) !important;
+  svg path{
+    fill: rgb(254, 44, 85);
+  }
 }
 
 // overlay
