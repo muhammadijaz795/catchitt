@@ -132,6 +132,8 @@ const Account = ({ className, openModal }: AccountProps) => {
     const signInEndPoint = '/auth/sign-in';
     const { login } = useAuthStore();
     const { token, email, registerType } = useSelector((store: any) => store?.reducers?.profile);
+    console.log('current user data...')
+    console.log(useSelector((store: any) => store?.reducers?.profile));
     const [response, setResponse] = useState(false);
     const [oldPassword, setOldPassword] = useState('');
     const [responseResult, setResponseResult] = useState('');

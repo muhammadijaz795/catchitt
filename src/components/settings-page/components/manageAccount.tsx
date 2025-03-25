@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Tabs, Tab, Box, Typography, FormControlLabel, Radio, Checkbox, Stack, FormHelperText } from '@mui/material';
 import { styled } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -39,11 +43,40 @@ interface ManageAccountProps {
   updateAccountSettings: (data: any) => Promise<void>;
 }
 
+interface DownloadRequest {
+  custom: {
+    activity: boolean;
+    messages: boolean;
+    profileAndPosts: boolean;
+  };
+  _id: string;
+  isDeleted: boolean;
+  userId: string;
+  url: string | null;
+  expiresAt: string | null;
+  format: string;
+  status: string;
+  createdTime: number;
+  lastModifiedTime: number;
+  __v: number;
+}
+
+interface ApiResponse {
+  status: number;
+  message: string;
+  data: DownloadRequest[];
+}
+
 const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, updateAccountSettings }) => {
   const [value, setValue] = useState(0);
   const [selectedDownload, setSelectedDownload] = useState(downloadDataSettings.download);
   const [selectedFormat, setSelectedFormat] = useState(downloadDataSettings.format);
   const [selectedItems, setSelectedItems] = useState(downloadDataSettings.download_items);
+  const [downloadRequests, setDownloadRequests] = useState<DownloadRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+
+  
 
   // Sync local state with props when `downloadDataSettings` changes
   useEffect(() => {
@@ -51,6 +84,10 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
     setSelectedFormat(downloadDataSettings.format);
     setSelectedItems(downloadDataSettings.download_items);
   }, [downloadDataSettings]);
+
+  useEffect(() => {
+    getRequestData();
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -63,6 +100,109 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
 
   const handleFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFormat(event.target.value);
+  };
+  const API_KEY = process.env.VITE_API_URL;
+  const { token, email, registerType } = useSelector((store: any) => store?.reducers?.profile);
+  
+  const requestDataDownload = async () => {
+    try {
+      const requestBody = {
+        custom: {
+          activity: selectedItems.includes('activity'),
+          messages: selectedItems.includes('messages'),
+          profileAndPosts: selectedItems.includes('profile_and_posts')
+        },
+        format: selectedFormat.toLowerCase() // Ensure it's lowercase to match your API
+      };
+  
+      const response = await fetch(`${API_KEY}/profile/request-data`, {
+        method: 'POST',
+        headers: { 
+            'Content-type': 'application/json', 
+            Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify(requestBody)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to request data download');
+      }
+  
+      const data = await response.json();
+      console.log('Download requested successfully:', data);
+
+     
+      toast.success('Download requested successfully', {
+          position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
+          autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
+      });
+   
+      
+      // Refresh the download requests list
+      // getRequestData();
+      
+      // Optionally show a success message to the user
+      // setSuccessMessage('Your data download has been requested. Check back later.');
+  
+    } catch (error) {
+      console.error('Error requesting data download:', error);
+      // Optionally show an error message to the user
+      // setErrorMessage('Failed to request data download. Please try again.');
+    }
+  };
+
+  const getRequestData = async () => {
+      try {
+          const response = await fetch(`${API_KEY}/profile/v2/request-data-listing`, {
+              method: 'GET',
+              headers: { 
+                  'Content-type': 'application/json', 
+                  Authorization: `Bearer ${token}` 
+              },
+          });
+
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          if(data){
+              setLoading(false);
+              let newData = data?.data;
+              setDownloadRequests(newData);
+              console.log('Account settings data:', newData);
+          }
+      } catch (error) {
+          console.error('Error fetching account settings:', error);
+      }
+  };
+
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
+  
+  const getSelectedItemsText = (custom: {
+    activity: boolean;
+    messages: boolean;
+    profileAndPosts: boolean;
+  }) => {
+    const items = [];
+    if (custom.profileAndPosts) items.push('Profile and posts');
+    if (custom.activity) items.push('Activity');
+    if (custom.messages) items.push('Messages');
+    return items.join(', ');
+  };
+
+  const isRequestExpired = (expiresAt: string | null) => {
+    if (!expiresAt) return false; // If no expiry date, it's not expired
+    const expiryDate = new Date(expiresAt);
+    const currentDate = new Date();
+    return currentDate > expiryDate;
   };
 
   const handleItemChange = (item: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,6 +223,11 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
     };
 
     await updateAccountSettings(data);
+     // Switch to the "Download data" tab (index 1)
+    setValue(1);
+    
+    // Refresh the download requests list
+    getRequestData();
   };
 
   return (
@@ -277,7 +422,7 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
           />
         </div>
 
-        {/* Request Data Button */}
+
         <button
           className="bg-[#FE2C55] text-white font-semibold px-4 rounded-md w-full"
           onClick={handleRequestData}
@@ -285,7 +430,7 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
           <p className="text-[rgb(255, 59, 92)] font-normal">Request data</p>
         </button>
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <div className="p-5 d-flex flex-col text-center">
           <svg style={{ height: '3rem' }} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 53 53" fill="none">
             <path d="M2.14821 26.3405C2.14821 14.7714 2.14821 8.98692 5.74225 5.39287C9.3363 1.79883 15.1208 1.79883 26.6899 1.79883C38.2589 1.79883 44.0435 1.79883 47.6375 5.39287C51.2315 8.98692 51.2315 14.7714 51.2315 26.3405C51.2315 37.9095 51.2315 43.6941 47.6375 47.2881C44.0435 50.8822 38.2589 50.8822 26.6899 50.8822C15.1208 50.8822 9.3363 50.8822 5.74225 47.2881C2.14821 43.6941 2.14821 37.9095 2.14821 26.3405Z" stroke="#141B34" stroke-width="2.5" />
@@ -297,7 +442,78 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
             <p className="text-[rgb(255, 59, 92)] font-normal">Request data</p>
           </button>
         </div>
+      </TabPanel> */}
+
+      <TabPanel value={value} index={1}>
+        <div className="p-5 d-flex flex-col">
+          {/* <h2 className="text-lg font-semibold mb-4">Download TikTok data</h2> */}
+          
+          <div className="mb-6">
+            {/* <div className="flex justify-between items-center mb-2">
+              <h3 className="font-medium">Request data</h3>
+              <button 
+                className="bg-[#FE2C55] text-white font-semibold px-4 py-1 rounded-md"
+                onClick={handleRequestData}
+              >
+                <p className="text-white font-normal">Request data</p>
+              </button>
+            </div> */}
+            {/* <span className="text-[#FE2C55] cursor-pointer">Learn more</span> */}
+            <p className="text-sm text-[#0000008F]">
+              When your file is ready for download, it'll be available for 4 days. If you submit another request, your existing file will expire. 
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-3">Past requests</h3>
+            
+            {loading ? (
+              <p>Loading...</p>
+            ) : downloadRequests.length === 0 ? (
+              <div className="text-center py-8">
+                <svg style={{ height: '3rem' }} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 53 53" fill="none">
+                  {/* Your SVG path here */}
+                </svg>
+                <p className="h6 mt-4">No requests yet</p>
+                <span className="text-[#0000008F]">Start a request to download your data</span>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {downloadRequests.map((request) => (
+                  <div key={request._id} className="border-b pb-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium">Requested on {formatDate(request.createdTime)}</p>
+                        <p className={`text-sm ${
+                          request.status === 'FAILED' ? 'text-red-500' : 
+                          isRequestExpired(request.expiresAt) ? 'text-[#0000008F]' : 'text-green-500'
+                        }`}>
+                          {request.status === 'FAILED' ? 'Failed' : 
+                          isRequestExpired(request.expiresAt) ? 'Expired' : 'Available for download'}
+                        </p>
+                      </div>
+                      {request.url && !isRequestExpired(request.expiresAt) && (
+                        <button 
+                          className="text-[#FE2C55] font-medium"
+                          onClick={() => requestDataDownload()}
+                        >
+                          Download data
+                        </button>
+                      )}
+                    </div>
+                    <div className="mt-2">
+                      <p className="text-sm text-[#0000008F]">
+                        {getSelectedItemsText(request.custom)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </TabPanel>
+      <ToastContainer />
     </Box>
   );
 };
