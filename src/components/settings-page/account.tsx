@@ -209,14 +209,17 @@ const Account = ({ className, openModal }: AccountProps) => {
     };
 
     const navigateToSection = (sectionId: keyof typeof sectionRefs) => {
-        setActiveSection(sectionId);
-        setActiveItem(sectionId);
-        // console.log(sectionId);
-        sectionRefs[sectionId].current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-       
+        console.log('pathname',location.pathname)
+        if (location.pathname !== '/settings/account') {
+            navigate('/settings/account');
+        }else{
+            setActiveSection(sectionId);
+            setActiveItem(sectionId);
+            sectionRefs[sectionId].current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     };
 
       useEffect(() => {
