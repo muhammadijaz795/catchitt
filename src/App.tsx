@@ -1124,7 +1124,13 @@ function App() {
                             <Route path="/settings/account" element={<Account />} />
                             <Route path="/settings/keyword-filtering" element={<Account />} />
                             <Route path="/settings/download-your-data" element={<Account />} />
+                            <Route path="/setting/ad_privacy/personalized_ads" element={<Account />} />
+                            <Route path="/setting/ad_privacy/advertiser_settings" element={<Account />} />
+                            <Route path="/setting/ad_privacy/disconnect_advertisers" element={<Account />} />
                             <Route path="/setting/daily-screen-time-edit" element={<Account />} />
+                            <Route path="/setting/time-break-edit" element={<Account />} />
+                            <Route path="/setting/sleep-reminder-edit" element={<Account />} />
+
                             
                             <Route
                                 path="/settings/account/activity"
