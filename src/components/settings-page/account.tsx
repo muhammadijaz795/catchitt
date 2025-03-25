@@ -209,14 +209,17 @@ const Account = ({ className, openModal }: AccountProps) => {
     };
 
     const navigateToSection = (sectionId: keyof typeof sectionRefs) => {
-        setActiveSection(sectionId);
-        setActiveItem(sectionId);
-        // console.log(sectionId);
-        sectionRefs[sectionId].current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-       
+        console.log('pathname',location.pathname)
+        if (location.pathname !== '/settings/account') {
+            navigate('/settings/account');
+        }else{
+            setActiveSection(sectionId);
+            setActiveItem(sectionId);
+            sectionRefs[sectionId].current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     };
 
       useEffect(() => {
@@ -226,8 +229,18 @@ const Account = ({ className, openModal }: AccountProps) => {
           setVisibleDiv("download_data");
         } else if (location.pathname.includes("settings/account")) {
           setVisibleDiv("manage_account");
-        } else if(location.pathname.includes('daily-screen-time-edit')){
-            setVisibleDiv("daily_screen_time"); 
+        } else if (location.pathname.includes('/setting/ad_privacy/personalized_ads')) {
+          setVisibleDiv("adds");
+        } else if (location.pathname.includes("/setting/ad_privacy/advertiser_settings")) {
+          setVisibleDiv("mute_advertisers");
+        } else if (location.pathname.includes("/setting/ad_privacy/disconnect_advertisers")) {
+          setVisibleDiv("disconnect_advertisers");
+        } else if (location.pathname.includes("/setting/daily-screen-time-edit")) {
+          setVisibleDiv("daily_screen_time");
+        } else if (location.pathname.includes("/setting/time-break-edit")) {
+          setVisibleDiv("screen_time_breaks");
+        } else if (location.pathname.includes("/setting/sleep-reminder-edit")) {
+          setVisibleDiv("sleep_reminders");
         }
       }, [location.pathname]); // Runs every time the URL changes
 
@@ -344,6 +357,18 @@ const Account = ({ className, openModal }: AccountProps) => {
         navigate('/settings/download-your-data');
     }else if(divId === 'filter_keywords'){
         navigate('/settings/keyword-filtering');
+    }else if(divId === 'adds'){
+        navigate('/setting/ad_privacy/personalized_ads');
+    }else if(divId === 'mute_advertisers'){
+        navigate('/setting/ad_privacy/advertiser_settings');
+    }else if(divId === 'disconnect_advertisers'){
+        navigate('/setting/ad_privacy/disconnect_advertisers');
+    }else if(divId === 'daily_screen_time'){
+        navigate('/setting/daily-screen-time-edit');
+    }else if(divId === 'screen_time_breaks'){
+        navigate('/setting/time-break-edit');
+    }else if(divId === 'sleep_reminders'){
+        navigate('/setting/sleep-reminder-edit');
     }
     
   };
