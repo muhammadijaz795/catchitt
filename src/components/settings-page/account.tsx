@@ -931,6 +931,40 @@ const Account = ({ className, openModal }: AccountProps) => {
         setAddKeywordPage(data);
     }
 
+    function changeScreenTimeUpdates(event)
+    {
+        let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
+        let payload =
+        {
+            method: 'PATCH',
+            headers:
+            {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+            body: JSON.stringify({ weeklyUpdates: event.target.checked }),
+        };
+    
+        fetch(endpoint, payload)
+        .catch(error => console.error('Failed to update screen time:', error));
+    }
+
+    function clearOffData()
+    {
+        let endpoint = process.env.VITE_API_URL + '/profile/v2/clear-off-seezit-data'
+        let payload =
+        {
+            method: 'DELETE',
+            headers:
+            {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+        };
+    
+        fetch(endpoint, payload)
+        .catch(error => console.error("Error:", error));
+    }
 
     return (
         <>
@@ -1688,10 +1722,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                       </div>
                                       <div className='border-top p-3'>
                                             <div className='d-flex gap-2 justify-end'>
-                                                <button className="bg-[#fff] text-dark font-semibold px-5 rounded-md border text-sm">
+                                                <button className="bg-[#fff] text-dark font-semibold px-5 rounded-md border text-sm" onClick={CloseModalDeleteData}>
                                                     <p className="text-[rgb(255, 59, 92)] font-normal">Cancel</p>
                                                 </button>
-                                                <button className="bg-[#FE2C55] text-white font-semibold px-5 rounded-md text-sm">
+                                                <button className="bg-[#FE2C55] text-white font-semibold px-5 rounded-md text-sm" onClick={() => {clearOffData(); CloseModalDeleteData();}}>
                                                     <p className="text-[rgb(255, 59, 92)] font-normal">Confirm</p>
                                                 </button>
                                             </div>
@@ -1763,6 +1797,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 type="checkbox"
                                                 name="autoScrollCheckbox" 
                                                 id="autoScrollCheckbox" 
+                                                onChange={(event) => changeScreenTimeUpdates(event)}
                                             />
                                             <b className="slider"></b>
                                         </label>

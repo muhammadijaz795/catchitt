@@ -10,6 +10,32 @@ const SleepReminder: React.FC = () => {
     setTime(event.target.value);
   };
 
+  function saveChanges()
+  {
+    let [hours, minutes] = time.split(":").map(Number);
+    let sleepReminderPayload =
+    {
+      hours: hours % 12 || 12,
+      minutes,
+      amPmValue: hours >= 12 ? "PM" : "AM"
+    };
+
+    let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
+    let payload =
+    {
+      method: 'PATCH',
+      headers:
+      {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer " + localStorage.getItem('token'),
+      },
+      body: JSON.stringify({ sleepReminderPayload }),
+    };
+
+    fetch(endpoint, payload)
+    .catch(error => console.error('Failed to update screen time:', error));
+  }
+
   return (
     <div className="w-100 p-3">
       <div className="border-top">
@@ -54,14 +80,14 @@ const SleepReminder: React.FC = () => {
               />
             </div>
             <span className="text-sm text-gray-600 mt-1 block">
-              {time} – 7 hours later
+              {time}–{new Date(new Date(`1970-01-01T${time}:00`).setHours(new Date(`1970-01-01T${time}:00`).getHours() + 7)).toTimeString().slice(0, 5)} , 7 hours
             </span>
           </div>
         </div>
       )}
 
       <div className='d-flex mt-3 justify-end'>
-        <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm">
+        <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm" onClick={() => saveChanges()}>
           Done
         </button>
       </div>

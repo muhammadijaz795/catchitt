@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppBar, Tabs, Tab, Box, Typography, Modal, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { styled } from "@mui/material";
 
@@ -48,6 +48,13 @@ const Ads: React.FC = () => {
   const [open, setOpen] = useState(false); 
   const [gender, setGender] = useState("male");
   const [customGender, setCustomGender] = useState("");
+  const [allCategories, setAllCategories] = useState(
+    {
+      items: [],
+      isLoading: false,
+      canLoadMore: false
+    }
+  );
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -56,7 +63,36 @@ const Ads: React.FC = () => {
   };
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () =>
+  {
+    let endpoint = process.env.VITE_API_URL + '/profile/v2/gender-choice-in-ad'
+    let payload =
+    {
+      method: 'PATCH',
+      headers:
+      {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer " + localStorage.getItem('token'),
+      },
+      body: JSON.stringify({ genderChoice: gender })
+    };
+    
+    fetch(endpoint, payload)
+    .catch(error => console.error('Failed to update gender:', error));
+    setOpen(false);
+  }
+
+  function fetchCategories()
+  { 
+    setAllCategories(prev => ({ ...prev, isLoading: true }));
+
+    fetch(process.env.VITE_API_URL + '/media-content/categories')
+    .then(response => response.ok ? response.json() : Promise.reject("Failed to fetch data"))
+    .then(data => setAllCategories({ items: data.data, isLoading: false, canLoadMore: data.data.length > 0 }))
+    .catch(error => setAllCategories(prev => ({ ...prev, isLoading: false })));
+  }
+
+  useEffect(fetchCategories, []);
 
   return (
     <Box className="text-left" sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -108,10 +144,11 @@ const Ads: React.FC = () => {
           <span className='text-sm font-medium text-[#16182399]'>
             All topics
           </span>
-          <div className='d-flex justify-between mt-3'>
+          {allCategories.items.map((category, index) => (
+            <div className='d-flex justify-between mt-3' key={category._id}>
                 <div >
                     <div className='text-left'>
-                      <p>Education</p>
+                      <p>{category.name}</p>
                     </div>
                 </div>
                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,6 +156,7 @@ const Ads: React.FC = () => {
                 </svg>
 
             </div>
+          ))}
         </div>
       </TabPanel>
 
@@ -161,8 +199,8 @@ const Ads: React.FC = () => {
             <FormControlLabel value="female" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between">
-            <TextField variant="standard" placeholder="Custom" sx={{ width: '70%' }} />
-            <FormControlLabel value="custom" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
+            <TextField variant="standard" placeholder="Custom" sx={{ width: '70%' }} onChange={(e) => setCustomGender(e.target.value)}/>
+            <FormControlLabel value={customGender} control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
           </Box>
         </RadioGroup>
         </Box>

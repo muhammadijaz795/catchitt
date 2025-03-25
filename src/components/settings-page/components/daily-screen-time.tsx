@@ -10,6 +10,8 @@ const dailyScreenTime: React.FC = () => {
     const [openDropdown, setOpenDropdown] = useState(null);
     const dropdownRefs = useRef({});
     const [dropPosition, setDropPosition] = useState({});
+    const [isDailyScreenTimeEnabled, setIsDailyScreenTimeEnabled] = useState(false);
+    const [selectedTimeLimitOption, setSelectedTimeLimitOption] = useState('daily');
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -50,6 +52,31 @@ const dailyScreenTime: React.FC = () => {
         setOpenDropdown(null);
     };
 
+    function saveChanges()
+    {
+        let times = Object.entries(selectedTimeLimitOption == 'daily' ? { everyday: selectedTimes.daily } : selectedTimes)
+        .map(([day, time]) => (
+            {  
+                day: day.toLowerCase(),  
+                time: Object.fromEntries(time.match(/\d+/g).map((v, i) => [["hours", "minutes"][i], +v]))  
+            }
+        ));
+
+        let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
+        let payload =
+        {
+            method: 'PATCH',
+            headers:
+            {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+            body: JSON.stringify({ dailyScreenTimePayload: { type: 'daily', times } }),
+        };
+    
+        fetch(endpoint, payload)
+        .catch(error => console.error('Failed to update screen time:', error));
+    }
     
   return (
       <div className=" w-100 p-3">
@@ -92,35 +119,39 @@ const dailyScreenTime: React.FC = () => {
                         type="checkbox"
                         name="autoScrollCheckbox" 
                         id="autoScrollCheckbox" 
+                        checked={isDailyScreenTimeEnabled}
+                        onChange={(e) => setIsDailyScreenTimeEnabled(e.target.checked)}
                     />
                     <b className="slider"></b>
                 </label>
             </div>
         </Typography>
+        {isDailyScreenTimeEnabled && (
         <div className="bg-gray-100 p-4 rounded-md mt-3">
         <label className="flex items-center space-x-2 mb-3 cursor-pointer">
-            <input type="radio" name="screen_time" className="hidden peer" checked />
+            <input type="radio" name="screen_time" className="hidden peer" value="daily" checked={selectedTimeLimitOption == 'daily'} onChange={(e) => {setSelectedTimeLimitOption(e.target.value); setSelectedTimes({})}}/>
             <div className="w-5 h-5 rounded-full border-2 border-red-500 flex items-center justify-center peer-checked:bg-red-500">
                 <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
             </div>
             <span className="text-gray-900">Set the same limit every day</span>
         </label>
-
+        {selectedTimeLimitOption == 'daily' && (
         <div className="grid grid-cols-5 gap-2">
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]  ">40m</button>
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">1h</button>
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">1h 30m</button>
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">2h</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]  " onClick={() => selectTime('daily', "0", "40")}>40m</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "1", "00")}>1h</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "1", "30")}>1h 30m</button>
+            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "2", "00")}>2h</button>
             <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Custom</button>
         </div>
-
+        )}
         <label className="flex items-center space-x-2 mt-3 cursor-pointer">
-            <input type="radio" name="screen_time" className="hidden peer" />
+            <input type="radio" name="screen_time" className="hidden peer" value="custom" checked={selectedTimeLimitOption == 'custom'} onChange={(e) => {setSelectedTimeLimitOption(e.target.value); setSelectedTimes({})}}/>
             <div className="w-5 h-5 rounded-full border-2 border-gray-400 flex items-center justify-center peer-checked:bg-red-500">
                 <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
             </div>
             <span className="text-gray-900">Set a custom limit per day</span>
         </label>
+        {selectedTimeLimitOption == 'custom' && (
         <div id="customLimitSection" className=" mt-3">
             <div className="grid grid-cols-7 gap-2 text-center font-medium text-gray-800">
                 
@@ -185,9 +216,11 @@ const dailyScreenTime: React.FC = () => {
                
             </div>
         </div>
+        )}
     </div>
+)}
         <div className='d-flex mt-3 justify-end'>
-            <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm">
+            <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm" onClick={() => saveChanges()}>
                 <p className="text-[rgb(255, 59, 92)] font-normal">Done</p>
             </button>
         </div>

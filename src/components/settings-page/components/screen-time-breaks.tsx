@@ -1,13 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material";
 
 
 const screenTimeBreaks: React.FC = () => {
  
- 
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const [selectedTimes, setSelectedTimes] = useState({});
+    const [openDropdown, setOpenDropdown] = useState(null);
+    const dropdownRefs = useRef({});
+    const [dropPosition, setDropPosition] = useState({});
+    const [isEnabled, setIsEnabled] = useState(false);
 
- 
+    // Close dropdown on outside click
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (!Object.values(dropdownRefs.current).some(ref => ref && ref.contains(event.target))) {
+                setOpenDropdown(null);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Open dropdown and set position BEFORE rendering
+    const toggleDropdown = (day) => {
+        if (openDropdown === day) {
+            setOpenDropdown(null);
+            return;
+        }
+
+        setTimeout(() => {
+            if (dropdownRefs.current[day]) {
+                const rect = dropdownRefs.current[day].getBoundingClientRect();
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+
+                setDropPosition((prev) => ({
+                    ...prev,
+                    [day]: spaceBelow < 200 && spaceAbove > spaceBelow ? "top" : "bottom", 
+                }));
+
+                setOpenDropdown(day); // Open dropdown AFTER setting position
+            }
+        }, 50);
+    };
+
+    const selectTime = (day, hours, minutes) => {
+        setSelectedTimes(prev => ({ ...prev, [day]: `${hours}h ${minutes}m` }));
+        setOpenDropdown(null);
+    };
+
+    function saveChanges()
+    {
+        let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
+        let payload =
+        {
+            method: 'PATCH',
+            headers:
+            {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+            body: JSON.stringify({ screenTimeBreaksPayload: (([h, m]) => ({ hours: +h, minutes: +m }))(selectedTimes.daily.match(/\d+/g)) }),
+        };
+    
+        fetch(endpoint, payload)
+        .catch(error => console.error('Failed to update screen time:', error));
+    }
   return (
       <div className=" w-100 p-3">
         <div className="border-top">
@@ -22,13 +82,12 @@ const screenTimeBreaks: React.FC = () => {
                         <p className='d-flex  mb-1'>Schedule a break</p>
                         <span className='text-xs text-[#16182399]'>Get reminded to take a break from Seezitt after a period of uninterrupted screen time.</span>
                     </div>
-                </div>
-            
-                <div className='text-left d-flex mt-3 '>
-                    <span className="pt-1">
-                        <svg width="16" height="17" style={{marginRight: '0.5rem'}} viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4.94331 4.93617C5.02233 4.18053 5.37844 3.48095 5.94291 2.97242C6.50739 2.46389 7.24022 2.18247 7.99998 2.18247C8.75974 2.18247 9.49257 2.46389 10.057 2.97242C10.6215 3.48095 10.9776 4.18053 11.0566 4.93617L11.4 8.46617C11.4933 9.41617 12.02 10.1062 12.5866 10.8262H3.41331C3.97998 10.1062 4.50665 9.41617 4.59998 8.46617L4.94331 4.93284V4.93617ZM7.99998 0.826172C5.73331 0.826172 3.83331 2.54951 3.61331 4.80617L3.27331 8.33617C3.17331 9.39951 2.13998 10.2895 1.51665 11.0795C1.43898 11.1778 1.39058 11.296 1.37699 11.4205C1.36339 11.545 1.38515 11.6708 1.43977 11.7836C1.49439 11.8963 1.57967 11.9913 1.68582 12.0578C1.79198 12.1243 1.91472 12.1596 2.03998 12.1595H13.96C14.0852 12.1596 14.208 12.1243 14.3141 12.0578C14.4203 11.9913 14.5056 11.8963 14.5602 11.7836C14.6148 11.6708 14.6366 11.545 14.623 11.4205C14.6094 11.296 14.561 11.1778 14.4833 11.0795C13.86 10.2895 12.83 9.39951 12.7266 8.33617L12.3866 4.80617C12.2806 3.71634 11.7727 2.70502 10.9617 1.96925C10.1508 1.23349 9.09496 0.825997 7.99998 0.826172ZM10.3 13.8262C10.3366 13.6428 10.1833 13.4928 9.99998 13.4928H5.99998C5.81665 13.4928 5.66331 13.6428 5.69998 13.8262C6.12665 16.0295 9.87331 16.0295 10.3 13.8262Z" fill="#161823"/>
-                        </svg>
+            </div>
+            <div className='text-left d-flex mt-3 '>
+                <span className="pt-1">
+                <svg width="16" height="17"  style={{marginRight: '0.5rem'}} viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.94331 4.93617C5.02233 4.18053 5.37844 3.48095 5.94291 2.97242C6.50739 2.46389 7.24022 2.18247 7.99998 2.18247C8.75974 2.18247 9.49257 2.46389 10.057 2.97242C10.6215 3.48095 10.9776 4.18053 11.0566 4.93617L11.4 8.46617C11.4933 9.41617 12.02 10.1062 12.5866 10.8262H3.41331C3.97998 10.1062 4.50665 9.41617 4.59998 8.46617L4.94331 4.93284V4.93617ZM7.99998 0.826172C5.73331 0.826172 3.83331 2.54951 3.61331 4.80617L3.27331 8.33617C3.17331 9.39951 2.13998 10.2895 1.51665 11.0795C1.43898 11.1778 1.39058 11.296 1.37699 11.4205C1.36339 11.545 1.38515 11.6708 1.43977 11.7836C1.49439 11.8963 1.57967 11.9913 1.68582 12.0578C1.79198 12.1243 1.91472 12.1596 2.03998 12.1595H13.96C14.0852 12.1596 14.208 12.1243 14.3141 12.0578C14.4203 11.9913 14.5056 11.8963 14.5602 11.7836C14.6148 11.6708 14.6366 11.545 14.623 11.4205C14.6094 11.296 14.561 11.1778 14.4833 11.0795C13.86 10.2895 12.83 9.39951 12.7266 8.33617L12.3866 4.80617C12.2806 3.71634 11.7727 2.70502 10.9617 1.96925C10.1508 1.23349 9.09496 0.825997 7.99998 0.826172ZM10.3 13.8262C10.3366 13.6428 10.1833 13.4928 9.99998 13.4928H5.99998C5.81665 13.4928 5.66331 13.6428 5.69998 13.8262C6.12665 16.0295 9.87331 16.0295 10.3 13.8262Z" fill="#161823"/>
+                </svg>
                     </span>
                     <div>
                         <p className='d-flex mb-1'>Tailor your experience</p>
@@ -49,13 +108,25 @@ const screenTimeBreaks: React.FC = () => {
                         type="checkbox"
                         name="autoScrollCheckbox" 
                         id="autoScrollCheckbox" 
+                        checked={isEnabled}
+                        onChange={(e) => setIsEnabled(e.target.checked)}
                     />
                     <b className="slider"></b>
                 </label>
             </div>
         </Typography>
+        {isEnabled && (
+            <div className="bg-gray-100 p-4 rounded-md mt-3">
+                <div className="grid grid-cols-5 gap-2">
+                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]  " onClick={() => selectTime('daily', "0", "10")}>10m</button>
+                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "0", "20")}>20m</button>
+                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "0", "30")}>30m</button>
+                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Custom</button>
+                </div>
+            </div>
+        )}
         <div className='d-flex mt-3 justify-end'>
-            <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm">
+            <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm" onClick={() => saveChanges()}>
                 <p className="text-[rgb(255, 59, 92)] font-normal">Done</p>
             </button>
         </div>
