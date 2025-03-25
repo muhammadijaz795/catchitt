@@ -1130,9 +1130,6 @@ const Account = ({ className, openModal }: AccountProps) => {
                                 <li>You may continue to see ads from this advertiser when Seezitt shows you relevant ads based on your on-Seezitt activity.</li>
                             </ul>
                         <DisconnectAdvertisers />
-                        <span className='text-left px-3 text-[#000000A6] text-sm'> 
-                            Advertisers you have hidden
-                        </span>
                     </div>
                     <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'manage_account' ? 'block' : 'none' }}>
                         <div className={styles.settingsWrapper}>
