@@ -325,3 +325,6 @@ div.darkThemeblack p{
 body:has(.OverlayOpenMain) #sideBar{
   max-width: 5rem;
 }
+.darkTheme.main{
+  background-color: #121212 !important;
+}

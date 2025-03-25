@@ -57,6 +57,7 @@ h6 {
   justify-content : space-between;
   border-radius   : 8px;
   padding-bottom  : 1rem;
+  background-color: #FFF;
 }
 
 .container {
@@ -218,7 +219,6 @@ h6 {
   gap            : 16px;
   border-radius  : 8px;
   row-gap        : 32px;
-  background     : var(--default-white, #fff);
 }
 
 .nameText {
@@ -532,12 +532,32 @@ div.lightdarkTheme > p > h1, h2, h3, h4  {
 //   color:white !important;
 // }
 
-.darkTheme, .darkTheme .suggestedContent {
-  background: #181818 !important;
+.darkTheme, .darkTheme  {
+  background: #121212 !important;
   color:white !important;
   border-radius: 16px;
 }
 
 .scroll-section {
   scroll-margin-top: 48px; /* Matches your navbar height */
+}
+.darkTheme{
+  .leftSide{
+    background-color: #252525;
+      svg path{
+        fill: white;
+      }
+    
+  }
+  .middleSectionDiv{
+    background-color: #252525;
+    p, span, svg path{
+      color: #FFF;
+      fill: white;
+      fill-opacity: 1;
+    }
+  }
+}
+.leftSide{
+  background-color: white;
 }

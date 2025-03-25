@@ -968,11 +968,11 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     return (
         <>
-            <div >
+            <div className={` ${darkTheme} main`}>
                  <Navbar />            
-                <div className={`${styles.container} position-relative`} style={{ maxWidth: '1140px', margin: 'auto', marginTop: '7rem' }}>
+                <div className={`${styles.container} position-relative`} style={{ maxWidth: '1140px', margin: 'auto', paddingTop: '7rem' }}>
                     
-                    { <div className={`${sibarStyles.leftSide} ${darkTheme} shadow-md rounded-lg px-4 pb-4` } style={{ width: '30rem', backgroundColor: '#fff', maxHeight: 'calc(100vh - 7.5rem)', position: 'sticky',top: '6rem' }}>
+                    { <div className={`${styles.leftSide} justify-start  shadow-md rounded-lg px-4 pb-4` } style={{ width: '30rem', height: 'calc(100vh - 7.5rem)', position: 'sticky',top: '6rem' }}>
                     <span onClick={handleBackClick} className='position-absolute cursor-pointer bg-gray-200 p-2 rounded-full' style={{right: '107%'}}>
                         <svg width="1em" data-e2e="" height="1em" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.58579 22.5858L20.8787 6.29289C21.2692 5.90237 21.9024 5.90237 22.2929 6.29289L23.7071 7.70711C24.0976 8.09763 24.0976 8.7308 23.7071 9.12132L10.8284 22H39C39.5523 22 40 22.4477 40 23V25C40 25.5523 39.5523 26 39 26H10.8284L23.7071 38.8787C24.0976 39.2692 24.0976 39.9024 23.7071 40.2929L22.2929 41.7071C21.9024 42.0976 21.2692 42.0976 20.8787 41.7071L4.58579 25.4142C3.80474 24.6332 3.80474 23.3668 4.58579 22.5858Z"></path></svg>
                     </span>
@@ -1048,18 +1048,18 @@ const Account = ({ className, openModal }: AccountProps) => {
                             {/* </Link> */}
                         </div>
                     </div> }
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`}  style={{ display: visibleDiv === 'download_data' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}  shadow-md text-left`}  style={{ display: visibleDiv === 'download_data' ? 'block' : 'none' }}>
                         <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold p-3 text-xl`}>Download Seezitt data</h4>
                         <ManageAccount downloadDataSettings={downloadDataSettings} updateAccountSettings={updateAccountSettings} /> 
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'adds' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'adds' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>How your ads are personalized</h4>
                             <span className='text-left px-3 text-[#000000A6] text-sm'> Personalized ads can be based on inferences that Seezitt has made about you. You can manage whether your ads are based on these factors below. Any changes that you make can take up to 48 hours to go into effect. These changes will not affect whether we otherwise can use the information we collect about you to help us personalize your ads.
                             <a href="" className='font-semibold'>Learn more</a>
                         </span>
                         <Ads /> 
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'mute_advertisers' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}  shadow-md text-left`} style={{ display: visibleDiv === 'mute_advertisers' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>Mute advertisers</h4>
                             <span className='text-left px-3 text-[#000000A6] text-sm'> 
                                 You can hide the ads from an advertiser who has recently shown you ads on Seezitt. You will not see ads from this advertiser for 28 days. This setting only applies to Seezitt ads, and you may continue to see this advertiser’s ads on other ad networks.
@@ -1069,28 +1069,28 @@ const Account = ({ className, openModal }: AccountProps) => {
                             Advertisers you have hidden
                         </span>
                     </div>
-                    <div  className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'daily_screen_time' ? 'block' : 'none' }}>
+                    <div  className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'daily_screen_time' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Daily screen time</h4>
                             <span className='text-left px-3 text-[#161823] pt-1 text-sm'> 
                             We’ll let you know if you reach your daily time to help you balance your day.
                             </span>
                         <DailyScreenTime />
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'screen_time_breaks' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'screen_time_breaks' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Screen time breaks</h4>
                             <span className='text-left px-3 text-[#161823] pt-1 text-sm'> 
                             Break reminders help you feel more mindful and balanced on Seezitt.
                             </span>
                         <ScreenTimeBreaks />
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'sleep_reminders' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'sleep_reminders' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Sleep reminders</h4>
                             <span className='text-left px-3 text-[#161823] pt-1 text-sm'> 
                                 Sleep reminders on Seezitt can help you get ready for bed and stay asleep.
                             </span>
                         <SleepReminder />
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'filter_keywords' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'filter_keywords' ? 'block' : 'none' }}>
                     {!addKeywordPage && <><h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-bold text-xl p-3`}>Filter keywords</h4><span className='text-left px-3 d-block text-[#161823] pt-1 text-sm'>
                             When you filter a keyword, you won’t see posts in your selected feeds that contain that word in any
                             titles, descriptions, or stickers. Certain keywords can’t be filtered.
@@ -1098,7 +1098,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             
                         <KeywordFilters isAddKeywordPage={isAddKeywordPage} />
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'disconnect_advertisers' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'disconnect_advertisers' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>Disconnect advertisers</h4>
                             <ul className='list-disc pl-5 ml-3 text-left px-3 text-[#000000A6] text-sm'>
                                 <li>Once disconnected, your future off-Seezitt data will not be used to serve personalized ads to you, but this data may still be used for other purposes.</li>
@@ -1109,7 +1109,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                             Advertisers you have hidden
                         </span>
                     </div>
-                    <div className={` ${styles.middleSectionDiv} ${darkTheme} bg-white shadow-md text-left`} style={{ display: visibleDiv === 'manage_account' ? 'block' : 'none' }}>
+                    <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'manage_account' ? 'block' : 'none' }}>
                         <div className={styles.settingsWrapper}>
                             
                             <div  className={styles.suggestedContent}>
@@ -1139,7 +1139,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </svg>
                                         <p>QR Code</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 {!['Google', 'Apple', 'Facebook'].some(type=>type===registerType) && <div
                                     className={styles.accountCards}
@@ -1149,7 +1152,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={changePassIcon} alt="" />
                                         <p>Change Password</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>}
                                 <div
                                     className={styles.accountCards}
@@ -1182,7 +1188,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </svg>
                                         <p>Privacy and Security</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div
                                     className={styles.accountCards}
@@ -1229,7 +1238,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </svg>
                                         <p>Balance</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div
                                     className={styles.accountCards}
@@ -1260,7 +1272,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             account
                                         </p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div> */}
                                 <div  className='w-100 border-bottom pb-3'>
                                     <h5  ref={sectionRefs.manage_account}  className='h6 text-left'>Account control</h5>
@@ -1311,7 +1326,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             <span className='text-xs text-[#16182399]'>Get a copy of your Seezitt data</span>
                                             </div>
                                         </div>
-                                        <img src={whiteRightArrow} alt="" />
+                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                     </div>
                                 </div>
                             </div>
@@ -1617,7 +1635,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             viewers.</span>
                                             </div>
                                         </div>
-                                        <img src={whiteRightArrow} alt="" />
+                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                     </div>
                                 </div>
                                 <div className='w-100 border-bottom pb-3' onClick={() => toggleVisibility('mute_advertisers')}>
@@ -1633,7 +1654,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             <span className='text-xs text-[#16182399]'>Mute ads from specific advertisers who showed you ads recently on Seezitt.</span>
                                             </div>
                                         </div>
-                                        <img src={whiteRightArrow} alt="" />
+                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                     </div>
                                 </div>
                             </div>
@@ -1657,7 +1681,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             </span>
                                             </div>
                                         </div>
-                                        <img src={whiteRightArrow} alt="" />
+                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                     </div>
                                 </div>
                                 <div className='w-100 pb-3' onClick={() => toggleVisibility('disconnect_advertisers')}>
@@ -1675,7 +1702,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             </span>
                                             </div>
                                         </div>
-                                        <img src={whiteRightArrow} alt="" />
+                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                     </div>
                                 </div>
                                 <div className='w-100 border-bottom pb-3'>
@@ -1693,7 +1723,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             </span>
                                             </div>
                                         </div>
-                                        <img src={whiteRightArrow} alt="" />
+                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                     </div>
                                 </div>
                             </div>
@@ -1753,7 +1786,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </div>
                                        <div className='d-flex'>
                                             <span className='text-lg text-[#16182399]'>off</span>
-                                            <img src={whiteRightArrow} alt="" />
+                                           <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                        </div>
                                     </div>
                                     <div
@@ -1766,7 +1802,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </div>
                                        <div className='d-flex'>
                                             <span className='text-lg text-[#16182399]'>off</span>
-                                            <img src={whiteRightArrow} alt="" />
+                                           <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                        </div>
                                     </div>
                                     <div
@@ -1779,7 +1818,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </div>
                                        <div className='d-flex'>
                                             <span className='text-lg text-[#16182399]'>off</span>
-                                            <img src={whiteRightArrow} alt="" />
+                                           <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                        </div>
                                     </div>
                                     <div
@@ -1841,7 +1883,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             titles, descriptions, or stickers. Certain keywords can’t be filtered.s</span>
                                             </div>
                                         </div>
-                                        <img src={whiteRightArrow} alt="" />
+                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                     </div>
                                 </div>
                             </div>
@@ -1859,7 +1904,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={notificationBell} alt="" />
                                         <p>Push notifications</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div
                                     className={styles.accountCards}
@@ -1871,7 +1919,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={contentIcon} alt="" />
                                         <p>Content preference</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div> 
                                 <div
                                     className={styles.accountCards}
@@ -1883,7 +1934,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={contentIcon} alt="" />
                                         <p>Keywords</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div
                                     className={styles.accountCards}
@@ -1900,7 +1954,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         />
                                         <p>Analytics</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                             </div>
                         </div> */}
@@ -1914,21 +1971,30 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={reportProblem} alt="" />
                                         <p>Report a problem</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div className={styles.accountCards}>
                                     <div className={styles.settingName} onClick={myReportsHandler}>
                                         <img src={myReports} alt="" />
                                         <p>My Reports</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div className={styles.accountCards}>
                                     <div className={styles.settingName} onClick={contactUsHandler}>
                                         <img src={contactUS} alt="" />
                                         <p>Contact Us</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                             </div>
                         </div> */}
@@ -1945,7 +2011,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={seezittLogoIcon} alt="" />
                                         <p>Community guidelines</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div className={styles.accountCards}>
                                     <div
@@ -1955,7 +2024,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={termsConfitionsIcon} alt="" />
                                         <p>Terms and conditions</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                                 <div className={styles.accountCards}>
                                     <div
@@ -1965,7 +2037,10 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         <img src={privacyPolicyIcon} alt="" />
                                         <p>Privacy Policy</p>
                                     </div>
-                                    <img src={whiteRightArrow} alt="" />
+                                   <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+</svg>
+
                                 </div>
                             </div>
                         </div> */}
