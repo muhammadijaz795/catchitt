@@ -115,7 +115,7 @@ const KeywordsPage: React.FC<KeywordsPageProps> = ({ isAddKeywordPage }) => {
                     setShowAddKeyword(true);
                   }}
                   key={item._id}
-                  className="flex justify-between items-center bg-gray-100 p-3 rounded-md mt-2"
+                  className=" cursor-pointer flex justify-between items-center bg-gray-100 p-3 rounded-md mt-2"
                 >
                   <div>
                     <p className="font-medium">{item.keyword}</p>
