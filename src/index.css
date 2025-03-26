@@ -444,7 +444,7 @@ a.customPlayBtn::after {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #1618231F !important; /* Dark background */
+  background-color: #1618231F; /* Dark background */
   border-radius: 34px;
   transition: 0.4s;
 }
@@ -508,4 +508,7 @@ input:checked + .slider::before {
   }
   .darkTheme .css-1aquho2-MuiTabs-indicator{
     background-color: white !important;
+  }
+  .darkTheme .slider{
+    background-color: #595a61 !important;
   }

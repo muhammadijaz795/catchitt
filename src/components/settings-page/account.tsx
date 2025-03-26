@@ -1334,7 +1334,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 id="autoScrollCheckbox"
                                                 checked={isPrivateAccount}  // Control the checkbox based on state 
                                             />
-                                            <b className="slider"></b>
+                                            <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                         </label>
                                     </div>
                                 </div>
@@ -1378,7 +1378,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 id="autoScrollCheckbox" 
                                                 checked={allowInBrowser}  // Control the checkbox based on state 
                                             />
-                                            <b className="slider"></b>
+                                            <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                         </label>
                                     </div>
                                 </div>
@@ -1418,7 +1418,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={profileSettings.likes || false}
                                                             onChange={updateSettings('likes')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1439,7 +1439,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={profileSettings.comments || false}
                                                             onChange={updateSettings('comments')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1460,7 +1460,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={profileSettings.newFollowers || false}
                                                             onChange={updateSettings('newFollowers')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1481,7 +1481,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={profileSettings.mentionAndTags || false}
                                                             onChange={updateSettings('mentionAndTags')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1517,7 +1517,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={notificationSettings.likes || false}
                                                             onChange={updateNewSettings('likes')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1538,7 +1538,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={notificationSettings.comments || false}
                                                             onChange={updateNewSettings('comments')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1559,7 +1559,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={notificationSettings.newFollowers || false}
                                                             onChange={updateNewSettings('newFollowers')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1580,7 +1580,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={notificationSettings.mentionAndTags || false}
                                                             onChange={updateNewSettings('mentionAndTags')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1601,7 +1601,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                             checked={notificationSettings.reposts || false}
                                                             onChange={updateNewSettings('reposts')} 
                                                         />
-                                                        <b className="slider"></b>
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                                     </label>
                                                 </div>
                                             </Typography>
@@ -1632,7 +1632,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 onChange={changeCheckbox('businessAccount')} 
                                                 checked={businessAccount}
                                             />
-                                            <b className="slider"></b>
+                                            <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                         </label>
                                     </div>
                                 </div>
@@ -1863,7 +1863,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 id="autoScrollCheckbox" 
                                                 onChange={(event) => changeScreenTimeUpdates(event)}
                                             />
-                                            <b className="slider"></b>
+                                            <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                         </label>
                                     </div>
 
