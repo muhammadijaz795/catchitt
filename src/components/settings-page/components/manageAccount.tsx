@@ -113,50 +113,50 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
   const { token, email, registerType } = useSelector((store: any) => store?.reducers?.profile);
   
   const requestDataDownload = async () => {
-    try {
-      const requestBody = {
-        custom: {
-          activity: selectedItems.includes('activity'),
-          messages: selectedItems.includes('messages'),
-          profileAndPosts: selectedItems.includes('profile_and_posts')
-        },
-        format: selectedFormat.toLowerCase() // Ensure it's lowercase to match your API
-      };
+    // try {
+    //   const requestBody = {
+    //     custom: {
+    //       activity: selectedItems.includes('activity'),
+    //       messages: selectedItems.includes('messages'),
+    //       profileAndPosts: selectedItems.includes('profile_and_posts')
+    //     },
+    //     format: selectedFormat.toLowerCase() // Ensure it's lowercase to match your API
+    //   };
   
-      const response = await fetch(`${API_KEY}/profile/request-data`, {
-        method: 'POST',
-        headers: { 
-            'Content-type': 'application/json', 
-            Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify(requestBody)
-      });
+    //   const response = await fetch(`${API_KEY}/profile/request-data`, {
+    //     method: 'POST',
+    //     headers: { 
+    //         'Content-type': 'application/json', 
+    //         Authorization: `Bearer ${token}` 
+    //     },
+    //     body: JSON.stringify(requestBody)
+    //   });
   
-      if (!response.ok) {
-        throw new Error('Failed to request data download');
-      }
+    //   if (!response.ok) {
+    //     throw new Error('Failed to request data download');
+    //   }
   
-      const data = await response.json();
-      console.log('Download requested successfully:', data);
+    //   const data = await response.json();
+    //   console.log('Download requested successfully:', data);
 
      
-      toast.success('Download requested successfully', {
-          position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
-          autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
-      });
+    //   toast.success('Download requested successfully', {
+    //       position: 'bottom-right', // Set the position (top-right, top-center, top-left, bottom-right, bottom-center, bottom-left)
+    //       autoClose: 2000, // Set the auto-close duration in milliseconds (e.g., 2000ms = 2 seconds)
+    //   });
    
       
-      // Refresh the download requests list
-      // getRequestData();
+    //   // Refresh the download requests list
+    //   // getRequestData();
       
-      // Optionally show a success message to the user
-      // setSuccessMessage('Your data download has been requested. Check back later.');
+    //   // Optionally show a success message to the user
+    //   // setSuccessMessage('Your data download has been requested. Check back later.');
   
-    } catch (error) {
-      console.error('Error requesting data download:', error);
-      // Optionally show an error message to the user
-      // setErrorMessage('Failed to request data download. Please try again.');
-    }
+    // } catch (error) {
+    //   console.error('Error requesting data download:', error);
+    //   // Optionally show an error message to the user
+    //   // setErrorMessage('Failed to request data download. Please try again.');
+    // }
   };
 
   const getRequestData = async () => {
@@ -222,20 +222,37 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
   };
 
   const handleRequestData = async () => {
-    const data = {
-      downloadDataSettings: {
-        download: selectedDownload,
-        download_items: selectedDownload === 'custom' ? selectedItems : [],
-        format: selectedFormat,
-      },
-    };
-
-    await updateAccountSettings(data);
-     // Switch to the "Download data" tab (index 1)
-    setValue(1);
-    
-    // Refresh the download requests list
-    getRequestData();
+    // Prepare the request data based on selection
+    const requestData = selectedDownload === 'all_data' 
+      ? {
+          all_data: {}, // Empty object for "All Data"
+          format: selectedFormat.toUpperCase() // "JSON" or "TXT"
+        }
+      : {
+          custom: {
+            activity: selectedItems.includes('activity'),
+            messages: selectedItems.includes('messages'),
+            profileAndPosts: selectedItems.includes('profile_and_posts')
+          },
+          format: selectedFormat.toUpperCase()
+        };
+  
+    try {
+      // Send the formatted data to the API
+      await updateAccountSettings(requestData);
+  
+      // Switch to the "Download data" tab (index 1)
+      setValue(1);
+      
+      // Refresh the download requests list
+      getRequestData();
+  
+      // Show success message
+      toast.success('Data request submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting data request:', error);
+      toast.error('Failed to submit data request.');
+    }
   };
 
   return (
@@ -511,16 +528,27 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
                         <p className="font-medium">Requested on {formatDate(request.createdTime)}</p>
                         <p className={`text-sm ${
                           request.status === 'FAILED' ? 'text-red-500' : 
+                          request.status === 'PENDING' ? 'text-yellow-500' :
                           isRequestExpired(request.expiresAt) ? 'text-[#0000008F]' : 'text-green-500'
                         }`}>
                           {request.status === 'FAILED' ? 'Failed' : 
+                          request.status === 'PENDING' ? 'Pending' :
                           isRequestExpired(request.expiresAt) ? 'Expired' : 'Available for download'}
                         </p>
                       </div>
                       {request.url && !isRequestExpired(request.expiresAt) && (
                         <button 
                           className="text-[#FE2C55] font-medium"
-                          onClick={() => requestDataDownload()}
+                          onClick={() => {
+                            // Create a temporary anchor element to trigger download
+                            const link = document.createElement('a');
+                            link.href = request.url || '';
+                            link.target = '_blank'; // Open in new tab (optional)
+                            link.download = `seezitt-data-${new Date(request.createdTime).toISOString().split('T')[0]}.zip`; // Set filename
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          }}
                         >
                           Download data
                         </button>

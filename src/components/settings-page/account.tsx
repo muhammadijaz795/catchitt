@@ -907,8 +907,8 @@ const Account = ({ className, openModal }: AccountProps) => {
 
     const updateAccountSettings = async (newSettings: Record<string, any>) => {
         try {
-          const response = await fetch(`${API_KEY}/profile/v2/manage-account`, {
-            method: 'PATCH',
+          const response = await fetch(`${API_KEY}/profile/request-data`, {
+            method: 'POST',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify(newSettings),
           });
