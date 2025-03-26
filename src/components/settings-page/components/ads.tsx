@@ -118,7 +118,7 @@ const Ads: React.FC = () => {
           <span className='text-sm font-medium text-[#16182399]'>
           Infer#FE2C55 by <br /> Seezitt
           </span>
-          <div className='d-flex justify-between'>
+          <div className='d-flex justify-between cursor-pointer'>
                 <div >
                     <div className='text-left'>
                       <p>View all</p>
@@ -134,7 +134,7 @@ const Ads: React.FC = () => {
           <span className='text-sm font-medium text-[#16182399]'>
             Your choices
           </span>
-          <div className='d-flex justify-between'>
+          <div className='d-flex justify-between cursor-pointer'>
                 <div >
                     <div className='text-left'>
                       <p>View all</p>
@@ -150,7 +150,7 @@ const Ads: React.FC = () => {
             All topics
           </span>
           {allCategories.items.map((category, index) => (
-            <div className='d-flex justify-between mt-3' key={category._id} onClick={openModalList}>
+            <div className='d-flex justify-between mt-3 cursor-pointer' key={category._id} onClick={openModalList}>
                 <div >
                     <div className='text-left'>
                       <p>{category.name}</p>
@@ -166,9 +166,9 @@ const Ads: React.FC = () => {
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        <Box className="w-100 border-bottom py-3 mb-3">
+        <Box className="w-100 border-bottom py-3 mb-3 cursor-pointer" onClick={handleOpen}>
           <Typography className="text-sm font-medium text-[#16182399]">Gender</Typography>
-          <Box className="d-flex justify-between mt-3" onClick={handleOpen}>
+          <Box className="d-flex justify-between mt-3 " >
             <Typography></Typography>
             <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -181,9 +181,9 @@ const Ads: React.FC = () => {
       </TabPanel>
 
 {/* modal for list */}
-  <Modal open={openList} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+  <Modal open={openList} onClose={closeListModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
           <Box sx={style}>
-            <span onClick={handleClose}>
+            <span onClick={closeListModal}>
               <svg fill="#000" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: 'auto'}} width="2em" height="2em">
               <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
               </svg>
@@ -195,18 +195,21 @@ const Ads: React.FC = () => {
                 Personalized ads can be based on inferences that Seezitt has made about you. Updates apply only to your ad settings and do not affect other Seezitt services.
             </Typography>
             <RadioGroup value={gender} onChange={handleChangeGender}>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Typography>Male</Typography>
+            <Box className="mt-3" display="flex" alignItems="center" justifyContent="space-between">
+            <span>
+                <Typography>Intreseted</Typography>
+                <span className="text-sm">We will try best</span>
+              </span>
               <FormControlLabel value="male" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
             </Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Typography>Female</Typography>
+            <Box className="mt-3" display="flex" alignItems="center" justifyContent="space-between">
+              <span>
+                <Typography>Not Intreseted</Typography>
+                <span className="text-sm">We will try best</span>
+              </span>
               <FormControlLabel value="female" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
             </Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <TextField variant="standard" placeholder="Custom" sx={{ width: '70%' }} onChange={(e) => setCustomGender(e.target.value)}/>
-              <FormControlLabel value={customGender} control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
-            </Box>
+            
           </RadioGroup>
           </Box>
         </Modal>
