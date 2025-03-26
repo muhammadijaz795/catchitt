@@ -4,6 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } fro
 import moment from "moment";
 
 const TimeSpentChart = () => {
+  var themeColor = window.localStorage.getItem('theme');
+
   // Generate the next 7 days dynamically with sample data
   const generateDates = () => {
     return Array.from({ length: 7 }, (_, i) => ({
@@ -21,11 +23,19 @@ const TimeSpentChart = () => {
   const totalTime = totalDayTime + totalNightTime;
 
   return (
-    <Card sx={{ maxWidth: 800, margin: "auto", mt: 4, p: 2 }}>
+    <Card sx={{
+      backgroundColor: themeColor === 'dark' ? 'transparent' : '',
+      maxWidth: 800,
+      margin: "auto",
+      mt: 4,
+      p: 2
+    }}>
       <Grid container spacing={2}>
         {/* Left Side: Chart */}
         <Grid item xs={8}>
-          <Typography variant="h6" fontWeight="bold">
+          <Typography variant="h6" fontWeight="bold" sx={{
+            color: themeColor === 'dark' ? 'white' : ''
+          }}>
             Time spent
           </Typography>
           <ResponsiveContainer width="100%" height={250}>
@@ -34,7 +44,7 @@ const TimeSpentChart = () => {
               <YAxis domain={[0, 60]} tick={{ fontSize: 12 }} />
               <Tooltip />
               <Legend />
-              <Bar dataKey="dayTime" fill="#4CAF50" name="Day Time" />
+              <Bar  dataKey="dayTime" fill="#4CAF50" name="Day Time" />
               <Bar dataKey="nightTime" fill="#FF5722" name="Night Time" />
             </BarChart>
           </ResponsiveContainer>
@@ -43,22 +53,22 @@ const TimeSpentChart = () => {
         {/* Right Side: Stats */}
         <Grid item xs={4}>
           <Box>
-            <Typography variant="body1" fontWeight="bold">
+            <Typography variant="body1" fontWeight="bold" sx={{color: themeColor === 'dark' ? 'white' : ''}}>
               Day time 🕒
             </Typography>
-            <Typography variant="h6">{totalDayTime}m</Typography>
+            <Typography variant="h6" style={{ color: themeColor === 'dark' ? 'white' : ''}}>{totalDayTime}m</Typography>
           </Box>
           <Box mt={2}>
-            <Typography variant="body1" fontWeight="bold">
+            <Typography variant="body1" fontWeight="bold" sx={{color: themeColor === 'dark' ? 'white' : ''}}>
               Night time 🌙
             </Typography>
-            <Typography variant="h6">{totalNightTime}m</Typography>
+            <Typography variant="h6" style={{ color: themeColor === 'dark' ? 'white' : ''}}>{totalNightTime}m</Typography>
           </Box>
           <Box mt={2}>
-            <Typography variant="body1" fontWeight="bold">
+            <Typography variant="body1" fontWeight="bold" sx={{color: themeColor === 'dark' ? 'white' : ''}}>
               Total ⏳
             </Typography>
-            <Typography variant="h6">{totalTime}m</Typography>
+            <Typography variant="h6" style={{ color: themeColor === 'dark' ? 'white' : ''}}>{totalTime}m</Typography>
           </Box>
         </Grid>
       </Grid>

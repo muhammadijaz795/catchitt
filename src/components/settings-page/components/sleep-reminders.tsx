@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { AccessTime } from "@mui/icons-material";
+import styles from '../account.module.scss';
 
 const SleepReminder: React.FC = () => {
+
+  var themeColor = window.localStorage.getItem('theme');
+  
+    const [darkTheme, setdarkTheme] = useState('');
+    useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+        if (themeColor == 'dark') {
+             setdarkTheme(styles.darkTheme);
+        }
+    });
+  
+
   const [isEnabled, setIsEnabled] = useState(true);
   const [time, setTime] = useState("00:00");
 
@@ -68,7 +81,7 @@ const SleepReminder: React.FC = () => {
       </Typography>
 
       {isEnabled && (
-        <div className="bg-gray-100 p-4 mt-4 rounded-md">
+        <div className={`${darkTheme ? '' : 'bg-gray-200' } p-4 mt-4 rounded-md`}>
           <p className="font-medium">Sleep reminders</p>
           <div className="flex items-center gap-3">
             <div className="relative w-[8rem]">
@@ -76,7 +89,7 @@ const SleepReminder: React.FC = () => {
                 type="time"
                 value={time}
                 onChange={handleTimeChange}
-                className="w-full p-2 bg-white h-10 border border-gray-300 rounded-sm mt-2 cursor-pointer hover:border-gray-400"
+                className={`${darkTheme ? '' : 'bg-white' } w-full p-2  h-10 border border-gray-300 rounded-sm mt-2 cursor-pointer hover:border-gray-400`}
               />
             </div>
             <span className="text-sm text-gray-600 mt-1 block">

@@ -10,6 +10,7 @@ interface KeywordFiltersProps {
 }
 
 const KeywordFilters: React.FC<KeywordFiltersProps> = ({ keywordData, onClose, onKeywordAdded }) => {
+  var themeColor = window.localStorage.getItem('theme');
 
   const API_KEY = process.env.VITE_API_URL;
   const { token } = useSelector((store: any) => store?.reducers?.profile);
@@ -107,7 +108,7 @@ const KeywordFilters: React.FC<KeywordFiltersProps> = ({ keywordData, onClose, o
           placeholder="Enter a word or hashtag"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          className="bg-[#F5F5F5] rounded-md p-3  w-full"
+          className={`${themeColor === 'dark' ? 'bg-slate-500' : 'bg-[#F5F5F5]'}  rounded-md p-3 w-full`}
         />
       </div>
 
@@ -122,7 +123,7 @@ const KeywordFilters: React.FC<KeywordFiltersProps> = ({ keywordData, onClose, o
             {selectedFilters.length === filters.length ? "Unselect all" : "Select all"}
           </button>
         </div>
-        <div className="bg-[#F5F5F5] rounded-md p-3 w-full mt-2">
+        <div className={`${themeColor === 'dark' ? 'bg-slate-500' : 'bg-[#F5F5F5]'}  rounded-md p-3 w-full mt-2"`}>
         {filters.map((filter) => (
             <label key={filter.id} className="flex items-center justify-between text-base py-1 cursor-pointer">
                 <span>{filter.label}</span>
@@ -135,14 +136,14 @@ const KeywordFilters: React.FC<KeywordFiltersProps> = ({ keywordData, onClose, o
                 <div className="w-5 h-5 border-2 border-gray-500 rounded-md peer-checked:bg-red-500 peer-checked:border-red-500 flex items-center justify-center">
                 {/* White Check Mark */}
                 <svg
-                    className="w-4 h-4 text-white  peer-checked:block"
+                    className={`${themeColor === 'dark' ? 'text-black' : 'text-white'} "w-4 h-4  peer-checked:block`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="3"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 12.5l4 4 9-9"></path>
+                    <path  strokeLinecap="round" strokeLinejoin="round" d="M5 12.5l4 4 9-9"></path>
                 </svg>
                 </div>
             </label>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AppBar, Tabs, Tab, Box, Typography, Modal, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { styled } from "@mui/material";
+import styles from '../account.module.scss';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -20,6 +21,8 @@ const style = {
   borderRadius: '8px',
   p: 4,
 };
+
+
 
 const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other }) => {
   return (
@@ -63,7 +66,18 @@ const Ads: React.FC = () => {
     setGender(event.target.value);
   };
 
-  const handleOpen = () => setOpen(true);
+
+
+  var themeColor = window.localStorage.getItem('theme');
+  const [darkTheme, setdarkTheme] = useState('');
+  useEffect(() => {
+      var themeColor = window.localStorage.getItem('theme');
+      if (themeColor == 'dark') {
+           setdarkTheme(styles.darkTheme);
+      }
+  });
+
+ const handleOpen = () => setOpen(true);
  const openModalList = ()=> setOpenList(true);
  const closeListModal = () => {
   setOpenList(false);
@@ -100,9 +114,10 @@ const Ads: React.FC = () => {
   useEffect(fetchCategories, []);
 
   return (
-    <Box className="text-left " sx={{ width: "100%", bgcolor: "background.paper" }}>
-      <AppBar position="static" color="default" sx={{ boxShadow: 'none', backgroundColor: 'white' }} >
-        <CustomTabs className='w-[94%] m-auto'  value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
+    <>
+    <Box className={`text-left ${darkTheme ? 'bg-transparent': 'bg-transparent'}`} sx={{ width: "100%", bgcolor: "background.paper" }}>
+      <AppBar className={`${darkTheme ? 'bg-transparent': 'bg-transparent'} position-relative`} color="default" sx={{ boxShadow: 'none',  }}>
+        <CustomTabs className={`${darkTheme ? 'bg-transparent': ''} w-[94%] m-auto `} sx={{borderBottom: '1px solid #16182333'}} value={value} onChange={handleChange} aria-label="basic tabs example" variant="Ads">
           <Tab label="Topic" id="simple-tab-0" aria-controls="simple-tabpanel-0" sx={{ flex: 1, color: "black", textTransform: "none" }} />
           <Tab
             label="Gender"
@@ -112,7 +127,6 @@ const Ads: React.FC = () => {
           />
         </CustomTabs>
       </AppBar>
-
       <TabPanel value={value} index={0}>  
         <div className='w-100 border-bottom py-3 mb-3'>
           <span className='text-sm font-medium text-[#16182399]'>
@@ -245,6 +259,10 @@ const Ads: React.FC = () => {
         </Box>
       </Modal>
     </Box>
+    <Box>
+
+    </Box>
+    </>
   );
 };
 

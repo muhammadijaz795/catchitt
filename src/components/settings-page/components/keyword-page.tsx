@@ -15,6 +15,7 @@ const KeywordsPage: React.FC<KeywordsPageProps> = ({ isAddKeywordPage }) => {
   const [loading, setLoading] = useState(true);
   const [selectedKeyword, setSelectedKeyword] = useState<any | null>(null);
   const [showAddButton, setShowAddButton] = useState(true);
+  var themeColor = window.localStorage.getItem('theme');
 
 
   // Fetch Keywords List
@@ -115,8 +116,9 @@ const KeywordsPage: React.FC<KeywordsPageProps> = ({ isAddKeywordPage }) => {
                     setShowAddKeyword(true);
                   }}
                   key={item._id}
-                  className="flex justify-between items-center bg-gray-100 p-3 rounded-md mt-2"
-                >
+                  className={`${themeColor === 'dark' ? 'bg-slate-500' : 'bg-gray-100'} flex justify-between items-center p-3 rounded-md mt-2`}
+
+                 >
                   <div>
                     <p className="font-medium">{item.keyword}</p>
                     <p className="text-sm text-gray-500">

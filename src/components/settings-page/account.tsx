@@ -998,7 +998,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                 <div className={`${styles.container} position-relative`} style={{ maxWidth: '1140px', margin: 'auto', paddingTop: '7rem' }}>
                     
                     { <div className={`${styles.leftSide} justify-start  shadow-md rounded-lg px-4 pb-4` } style={{ width: '30rem', height: 'calc(100vh - 7.5rem)', position: 'sticky',top: '6rem' }}>
-                    <span onClick={handleBackClick} className='position-absolute cursor-pointer bg-gray-200 p-2 rounded-full' style={{right: '107%'}}>
+                    <span onClick={handleBackClick} className={` ${darkTheme ? '' : 'bg-gray-200' }   position-absolute cursor-pointer p-2 rounded-full`} style={{right: '107%'}}>
                         <svg width="1em" data-e2e="" height="1em" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.58579 22.5858L20.8787 6.29289C21.2692 5.90237 21.9024 5.90237 22.2929 6.29289L23.7071 7.70711C24.0976 8.09763 24.0976 8.7308 23.7071 9.12132L10.8284 22H39C39.5523 22 40 22.4477 40 23V25C40 25.5523 39.5523 26 39 26H10.8284L23.7071 38.8787C24.0976 39.2692 24.0976 39.9024 23.7071 40.2929L22.2929 41.7071C21.9024 42.0976 21.2692 42.0976 20.8787 41.7071L4.58579 25.4142C3.80474 24.6332 3.80474 23.3668 4.58579 22.5858Z"></path></svg>
                     </span>
                         <div onClick={() => navigateToSection('manage_account')}  className={`${sibarStyles.sideNavDiv} pt-4 cursor-pointer ${activeItem === 'manage_account' ? sibarStyles.active : ''}`} >
@@ -1808,7 +1808,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </div>
                                        <div className='d-flex'>
                                             <span className='text-lg text-[#16182399]'>off</span>
-                                           <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                           <svg style={{marginLeft: '4px'}} width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
 </svg>
 
@@ -1824,7 +1824,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </div>
                                        <div className='d-flex'>
                                             <span className='text-lg text-[#16182399]'>off</span>
-                                           <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                           <svg style={{marginLeft: '4px'}} width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
 </svg>
 
@@ -1840,7 +1840,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                         </div>
                                        <div className='d-flex'>
                                             <span className='text-lg text-[#16182399]'>off</span>
-                                           <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                           <svg style={{marginLeft: '4px'}} width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
 </svg>
 

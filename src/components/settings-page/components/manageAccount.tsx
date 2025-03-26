@@ -86,10 +86,6 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
       }
   });
 
-
-
-  
-
   // Sync local state with props when `downloadDataSettings` changes
   useEffect(() => {
     setSelectedDownload(downloadDataSettings.download);
@@ -243,8 +239,8 @@ const FullWidthTabs: React.FC<ManageAccountProps> = ({ downloadDataSettings, upd
   };
 
   return (
-    <Box className={`text-left ${darkTheme ? 'bg-transparent': ''}`} sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      <AppBar  position="static" className={`${darkTheme ? 'bg-transparent': ''}`} color="default" sx={{ boxShadow: 'none',  }}>
+    <Box className={`text-left ${darkTheme ? 'bg-transparent': 'bg-transparent'}`} sx={{ width: '100%', bgcolor: 'background.paper' }}>
+      <AppBar  position="static" className={`${darkTheme ? 'bg-transparent': 'bg-transparent'}`} color="default" sx={{ boxShadow: 'none',  }}>
         <CustomTabs className={`${darkTheme ? 'bg-transparent': ''} w-[94%] m-auto`} sx={{borderBottom: '1px solid #16182333'}} value={value} onChange={handleChange} aria-label="basic tabs example" variant="fullWidth">
           <Tab
             label="Request data"
