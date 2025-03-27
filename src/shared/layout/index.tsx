@@ -33,8 +33,15 @@ function Layout(props: any) {
     const [darkTheme, setdarkTheme] = useState('');
     const [darkThemeblack, setdarkThemeblack] = useState('');
     const [appPopup, setAppPopup] = useState(false);
-
     const location = useLocation();
+    let isSettingsRoute = location.pathname.toLowerCase().includes('setting');
+    const path = location.pathname.toLowerCase();
+    const isSettingsRouteAccount = !path.includes('settings') && !path.includes('settings/account');
+    console.log('isSettingsRouteAccount', isSettingsRouteAccount);
+    if(!isSettingsRouteAccount){
+        isSettingsRoute = false;
+    }
+
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -72,10 +79,11 @@ function Layout(props: any) {
             style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}
             onClick={globalClicker}
         >
-            <Navbar />
+            {isSettingsRoute && <Navbar />}
+
 
             {/* <TopBar /> */}
-            <div style={{ display: 'flex', height: '100vh', width: '100vw', paddingTop: 80 }}>
+            <div style={{ display: 'flex', height: '100vh', width: '100vw', paddingTop: isSettingsRoute ? 80 : 0 }}>
                 {!showSidebar && !showShortSidebar ? (
                    location.pathname!=='/chat'&&<div
                         id='sideBar'
