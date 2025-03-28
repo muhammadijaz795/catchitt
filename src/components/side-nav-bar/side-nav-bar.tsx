@@ -12,7 +12,7 @@ import { SuggestedActivity } from '../../components/suggested-activity/suggested
 import Notifications from './../../shared/navbar/components/Notifications'
 import PopupForGetApp from '../../shared/components/PopupForGetApp';
 import Search from '../../shared/navbar/components/Search';
-import { createIcon, defaultAvatar, logo, logoAuth, logoAuthWhite } from '../../icons';
+import { createIcon, defaultAvatar, logo, logoS, logoAuth, logoAuthWhite } from '../../icons';
 
 export interface SideNavBarProps {
     className?: string;
@@ -209,8 +209,15 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
             <div className={isDropdownOpen === true ? styles.cardDivOpened : styles.cardDiv}>
                 
             <div onClick={() => navigate('/')} className={styles.sec1}>
-                <img className='w-44 px-3' src={logo} alt="" />
+                {isOpenOverlay || isOpenOverlaySearch || isOpenOverlayActivity ? (
+                <img className="h-10 px-3" src={logoS} alt="" />
+
+                ) : (
+                    <img className="w-44 px-3" src={logo} alt="" />
+                )}
             </div>
+
+
 
                 <span
                    
