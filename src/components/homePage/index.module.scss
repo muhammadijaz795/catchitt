@@ -158,7 +158,7 @@
       margin: auto;
       // max-width: 435px;
       max-width: var(--media-post-width, 48vh );
-      max-height: var(--media-post-height, 85vh );
+      max-height: 100vh;
       position: relative;
       display: flex;
       justify-content: center;
@@ -170,7 +170,7 @@
         flex-direction: column-reverse;
         gap: 1rem;
         height: 100%;
-        right: -29px;
+        right: -5vw;
 
         .useractions {
           display: flex;
@@ -194,11 +194,6 @@
   }
 }
 
-@media (max-width: 1200px) {
-  .actions {
-    right: 20px !important;
-  }
-}
 
 .suggestedUsersContainer {
   max-width: 20%; //435px;

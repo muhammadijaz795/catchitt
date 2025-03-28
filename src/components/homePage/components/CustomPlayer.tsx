@@ -344,7 +344,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                         backgroundImage:`url(${thumbnailImage})`,
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
-                        height: 'var(--media-post-height, 85vh )',
+                        height: '97vh',
                         backgroundSize: 'cover',
                         width: 'var(--media-post-width, 48vh)',
                     }}
@@ -371,7 +371,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
                         loop={isEnabled ? false : true}
                         autoPlay={videoModal ? false : inView}
                         controls={false} //{controls}
-                        style={{ height: 'var(--media-post-height, 85vh )', position: 'relative', zIndex: 1, }}
+                        style={{ height: '97vh', position: 'relative', zIndex: 1, }}
                         src={src}
                         ref={videoRef}
                         className={style.video}

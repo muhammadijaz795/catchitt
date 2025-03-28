@@ -222,13 +222,10 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                 <span
                    
                    style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={handleToggleOverlaySearch}>
-
-                   <div
-                       className={classNames(
-                           `${pathname.includes('/more') ? styles.selected : styles.navLink}`
-                       )}>   
-                       <span className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? 'rounded-full w-auto p-2' : 'rounded-3xl w-100 '} bg-gray-500 h-8 d-flex align-items-center `}>
-                            <svg fill="white" style={{ paddingLeft: isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ?  undefined : '0.5rem'  }} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.83 7.5a14.34 14.34 0 1 1 0 28.68 14.34 14.34 0 0 1 0-28.68Zm0-4a18.33 18.33 0 1 0 11.48 32.64l8.9 8.9a1 1 0 0 0 1.42 0l1.4-1.41a1 1 0 0 0 0-1.42l-8.89-8.9A18.34 18.34 0 0 0 21.83 3.5Z"></path></svg>
+                   <div className='mt-2.5 mb-1'>   
+                       <span className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? 'rounded-full max-w-10 w-auto justify-center' : 'rounded-3xl w-100 '} bg-[#f1f1f1] h-10 d-flex align-items-center `} >
+                            <svg fill={`${darkTheme ? 'white': 'black'}`} style={{ padding: isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ?  undefined : '0.5rem'  }} viewBox="0 0 48 48"  xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M21.83 7.5a14.34 14.34 0 1 1 0 28.68 14.34 14.34 0 0 1 0-28.68Zm0-4a18.33 18.33 0 1 0 11.48 32.64l8.9 8.9a1 1 0 0 0 1.42 0l1.4-1.41a1 1 0 0 0 0-1.42l-8.89-8.9A18.34 18.34 0 0 0 21.83 3.5Z"></path></svg>
                        </span>
                    </div>
                </span>
@@ -608,6 +605,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                 )}
 
                 {/* search sidebar overlay */}
+
                 {isOpenOverlaySearch && (
                     <div className={styles.overlay} onClick={handleCloseOverlaySearch}>
                         <div className={styles.overlayContent}>
@@ -619,8 +617,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 </svg>                                  
                                 </button>
                             </div>
-                            <div className='bg-[#1F1F1F] py-2.5 mt-3 rounded-3xl border'>
-                                <input className={`${styles.searchInput} font-medium px-1 w-[95%]`} placeholder='Search' type="text" />
+                            <div className={`${darkTheme ? 'bg-[#1F1F1F]' : ''}  py-2.5 mt-3 rounded-3xl border`}>
+                                <input className={`${darkTheme ? '': 'bg-transparent'} ${styles.searchInput} font-medium px-1 w-[95%]`} placeholder='Search' type="text" />
                             </div>
                             <div className='py-3'>
                                 <ul>
