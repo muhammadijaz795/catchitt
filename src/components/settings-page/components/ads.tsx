@@ -280,7 +280,25 @@ const Ads: React.FC = () => {
       </Modal>
     </Box>
     <Box>
+        <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>Your choices</h4>
+        <span className='text-left px-3 text-[#000000A6] d-block text-sm'> These are the topics you specified as being interested or not interested in. You can update your preferences anytime.</span>
+        <span className='text-left px-3 text-[#000000A6] font-semibold d-block text-sm mt-3'>Manage topics</span>
 
+        <div className="px-3">
+          <div className={styles.accountCards} >
+              <div className={styles.settingName}>
+                  <div className='text-left'>
+                  <p className='d-flex mt-3 mb-1 font-medium'>Credit Bureaus</p>
+                  </div>
+              </div>
+              <div className='d-flex'>
+                  <span className='text-md text-[#000] font-medium'>Intrested</span>
+                  <svg style={{marginLeft: '4px'}} width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
+                  </svg>
+              </div>
+          </div>
+        </div>
     </Box>
     </>
   );
