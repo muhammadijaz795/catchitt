@@ -49,6 +49,7 @@ const CustomTabs = styled(Tabs)({
 const Ads: React.FC = () => {
   const [value, setValue] = useState(0);
   const [open, setOpen] = useState(false); 
+  const [openIntrest, setOpenIntrest] = useState(false); 
   const [openList, setOpenList] = useState(false); 
   const [gender, setGender] = useState("male");
   const [customGender, setCustomGender] = useState("");
@@ -80,6 +81,10 @@ const Ads: React.FC = () => {
   });
 
  const handleOpen = () => setOpen(true);
+ const handleOpenIntrested = () => setOpenIntrest(true);
+ const handleCloseIntrest = () => {
+    setOpenIntrest(false);
+ };
 //  const openModalList = ()=> setOpenList(true);
  const closeListModal = () => {
     let endpoint = process.env.VITE_API_URL + '/profile/v2/inferred-by-seezitt'
@@ -285,7 +290,7 @@ const Ads: React.FC = () => {
         <span className='text-left px-3 text-[#000000A6] font-semibold d-block text-sm mt-3'>Manage topics</span>
 
         <div className="px-3">
-          <div className={styles.accountCards} >
+          <div className={styles.accountCards} onClick={handleOpenIntrested}>
               <div className={styles.settingName}>
                   <div className='text-left'>
                   <p className='d-flex mt-3 mb-1 font-medium'>Credit Bureaus</p>
@@ -299,6 +304,31 @@ const Ads: React.FC = () => {
               </div>
           </div>
         </div>
+        <Modal open={openIntrest} onClose={handleCloseIntrest} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Box sx={style}>
+          <span onClick={handleCloseIntrest}>
+            <svg fill="#000" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: 'auto'}} width="2em" height="2em">
+            <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
+            </svg>
+          </span>
+          <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">
+          Gender
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>
+              Personalized ads can be based on inferences that Seezitt has made about you. Updates apply only to your ad settings and do not affect other Seezitt services.
+          </Typography>
+          <RadioGroup value={gender} onChange={handleChangeGender}>
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Typography>Male</Typography>
+            <FormControlLabel value="male" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
+          </Box>
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Typography>Female</Typography>
+            <FormControlLabel value="female" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
+          </Box>
+        </RadioGroup>
+        </Box>
+      </Modal>
     </Box>
     </>
   );
