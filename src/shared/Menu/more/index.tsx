@@ -203,9 +203,9 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                     // role: 'listbox',
                 }}
                 style={{
-                    top: '100px',
-                    right: '50px',
-                    marginRight: 20,
+                    top: '10px',
+                    right: '0px',
+                    marginRight: 0,
                     // display:'flex !important'
                 }}
             >
