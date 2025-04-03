@@ -11,7 +11,7 @@ import { openLogoutPopup } from '../../redux/reducers';
 import { SuggestedActivity } from '../../components/suggested-activity/suggested-activity';
 import Notifications from './../../shared/navbar/components/Notifications'
 import PopupForGetApp from '../../shared/components/PopupForGetApp';
-import Search from '../../shared/navbar/components/Search';
+// import Search from '../../shared/navbar/components/Search';
 import { createIcon, defaultAvatar, logo, logoS, logoAuth, logoAuthWhite } from '../../icons';
 
 export interface SideNavBarProps {
@@ -40,6 +40,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [Search, setSearch] = useState<any>('');
+    const [searchHistory, setSearchHistory] = useState<string[]>([]);
     const profile = useSelector((store: any) => store?.reducers?.profile);
 
     const { pathname } = useLocation()
@@ -59,6 +61,46 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
         setShowNextBar(!showNextBar);
         setIsOpenOverlayActivity(false); // Ensure the second overlay is closed
     }
+
+    useEffect(() => {
+        const storedSearches = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+        setSearchHistory(storedSearches);
+    }, []);
+
+    // Handle form submission
+    // Handle form submission (search)
+    const submitHandler = (e?: React.FormEvent, searchValue?: string) => {
+        if (e) e.preventDefault();
+        const searchQuery = searchValue || Search;
+        if (searchQuery.trim() === "") return; // Prevent empty searches
+
+        // Update history and store in localStorage
+        const updatedHistory = [searchQuery, ...searchHistory.filter(item => item !== searchQuery)]; // Avoid duplicates
+        setSearchHistory(updatedHistory);
+        localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
+
+        // Navigate to search results
+        navigate(`/searchPage/${searchQuery}/All`);
+
+        // Keep input field filled
+        setSearch(searchQuery);
+    };
+
+    const clearSearch = () => {
+        setSearch('');
+    };
+
+     // Delete search item
+     const deleteSearchItem = (item: string) => {
+        const updatedHistory = searchHistory.filter(search => search !== item);
+        setSearchHistory(updatedHistory);
+        localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
+    };
+
+    const handleHistoryClick = (item: string) => {
+        setSearch(item);
+        submitHandler(undefined, item); // Call submitHandler with the selected history item
+    };
 
     const backNewBar = () => {
         setShowNextBar(!showNextBar);
@@ -226,6 +268,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                        <span className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? 'rounded-full max-w-10 w-auto justify-center' : 'rounded-3xl w-100 '} bg-[#f1f1f1] h-10 d-flex align-items-center `} >
                             <svg fill={`${darkTheme ? 'white': 'black'}`} style={{ padding: isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ?  undefined : '0.5rem'  }} viewBox="0 0 48 48"  xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M21.83 7.5a14.34 14.34 0 1 1 0 28.68 14.34 14.34 0 0 1 0-28.68Zm0-4a18.33 18.33 0 1 0 11.48 32.64l8.9 8.9a1 1 0 0 0 1.42 0l1.4-1.41a1 1 0 0 0 0-1.42l-8.89-8.9A18.34 18.34 0 0 0 21.83 3.5Z"></path></svg>
+                            {!isOpenOverlaySearch && Search}
                        </span>
                    </div>
                </span>
@@ -618,12 +661,42 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 </button>
                             </div>
                             <div className={`${darkTheme ? 'bg-[#1F1F1F]' : ''}  py-2.5 mt-3 rounded-3xl border position-relative`}>
-                                <input className={`${darkTheme ? '': 'bg-transparent'} ${styles.searchInput} font-medium px-1 w-[95%]`} placeholder='Search' type="text" />
-                                <svg width="16" height="15" className='position-absolute right-3 top-2 border-0 bg-[#AEA5A530] rounded-full p-1' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.35 6.06095C19.4432 5.96726 19.4954 5.84054 19.4954 5.70845C19.4954 5.57635 19.4432 5.44963 19.35 5.35595L18.65 4.64595C18.6035 4.59908 18.5482 4.56188 18.4873 4.5365C18.4264 4.51112 18.361 4.49805 18.295 4.49805C18.229 4.49805 18.1637 4.51112 18.1027 4.5365C18.0418 4.56188 17.9865 4.59908 17.94 4.64595L12 10.5859L6.06003 4.65095C5.96635 4.55782 5.83962 4.50555 5.70753 4.50555C5.57544 4.50555 5.44871 4.55782 5.35503 4.65095L4.64503 5.36095C4.5519 5.45463 4.49963 5.58135 4.49963 5.71345C4.49963 5.84554 4.5519 5.97226 4.64503 6.06595L10.585 12.0009L4.65003 17.9409C4.5569 18.0346 4.50463 18.1614 4.50463 18.2934C4.50463 18.4255 4.5569 18.5523 4.65003 18.6459L5.36003 19.3559C5.45371 19.4491 5.58044 19.5013 5.71253 19.5013C5.84462 19.5013 5.97135 19.4491 6.06503 19.3559L12 13.4159L17.94 19.3509C18.0337 19.4441 18.1604 19.4963 18.2925 19.4963C18.4246 19.4963 18.5513 19.4441 18.645 19.3509L19.355 18.6409C19.4482 18.5473 19.5004 18.4205 19.5004 18.2884C19.5004 18.1564 19.4482 18.0296 19.355 17.9359L13.415 12.0009L19.35 6.06095Z" fill="black"></path></svg>
-                            </div>
+                            <form 
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    submitHandler(e);
+                                }} 
+                                style={{ flex: 1 }}
+                            >
+                                <input 
+                                    className={`${darkTheme ? '' : 'bg-transparent'} ${styles.searchInput} font-medium px-1 w-[95%]`} 
+                                    placeholder='Search' 
+                                    type="text" 
+                                    value={Search} 
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)} 
+                                />
+                            </form>
+                            
+                            {Search && (
+                                <svg onClick={clearSearch}  width="16" height="15" className='position-absolute right-3 top-2 border-0 bg-[#AEA5A530] rounded-full p-1' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.35 6.06095C19.4432 5.96726 19.4954 5.84054 19.4954 5.70845C19.4954 5.57635 19.4432 5.44963 19.35 5.35595L18.65 4.64595C18.6035 4.59908 18.5482 4.56188 18.4873 4.5365C18.4264 4.51112 18.361 4.49805 18.295 4.49805C18.229 4.49805 18.1637 4.51112 18.1027 4.5365C18.0418 4.56188 17.9865 4.59908 17.94 4.64595L12 10.5859L6.06003 4.65095C5.96635 4.55782 5.83962 4.50555 5.70753 4.50555C5.57544 4.50555 5.44871 4.55782 5.35503 4.65095L4.64503 5.36095C4.5519 5.45463 4.49963 5.58135 4.49963 5.71345C4.49963 5.84554 4.5519 5.97226 4.64503 6.06595L10.585 12.0009L4.65003 17.9409C4.5569 18.0346 4.50463 18.1614 4.50463 18.2934C4.50463 18.4255 4.5569 18.5523 4.65003 18.6459L5.36003 19.3559C5.45371 19.4491 5.58044 19.5013 5.71253 19.5013C5.84462 19.5013 5.97135 19.4491 6.06503 19.3559L12 13.4159L17.94 19.3509C18.0337 19.4441 18.1604 19.4963 18.2925 19.4963C18.4246 19.4963 18.5513 19.4441 18.645 19.3509L19.355 18.6409C19.4482 18.5473 19.5004 18.4205 19.5004 18.2884C19.5004 18.1564 19.4482 18.0296 19.355 17.9359L13.415 12.0009L19.35 6.06095Z" fill="black"></path></svg>
+                            )}
+                                </div>
                             <div className='py-3'>
                                 <ul>
-                                    <li className='d-flex justify-between align-items-center'>
+                                {searchHistory.map((item, index) => (
+                                    <li onClick={() => handleHistoryClick(item)} key={index} className='d-flex justify-between align-items-center cursor-pointer'>
+                                        <p className='d-flex'>
+                                            <svg style={{  marginRight: '4px'}} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.27689 2.5013C8.54463 2.5013 9.76044 3.00491 10.6569 3.90133C11.5533 4.79776 12.0569 6.01357 12.0569 7.2813C12.0569 8.54904 11.5533 9.76485 10.6569 10.6613C9.76044 11.5577 8.54463 12.0613 7.27689 12.0613C6.00916 12.0613 4.79335 11.5577 3.89692 10.6613C3.0005 9.76485 2.49689 8.54904 2.49689 7.2813C2.49689 6.01357 3.0005 4.79776 3.89692 3.90133C4.79335 3.00491 6.00916 2.5013 7.27689 2.5013ZM7.27689 1.16797C6.30097 1.16931 5.33956 1.40441 4.47314 1.85358C3.60673 2.30276 2.86051 2.95294 2.29696 3.74971C1.7334 4.54647 1.3689 5.46665 1.23397 6.4332C1.09904 7.39975 1.1976 8.38457 1.52141 9.30521C1.84521 10.2259 2.38484 11.0555 3.09512 11.7248C3.8054 12.3941 4.66567 12.8835 5.60391 13.1521C6.54216 13.4206 7.53109 13.4605 8.48793 13.2684C9.44476 13.0763 10.3417 12.6578 11.1036 12.048L14.0702 15.0146C14.1012 15.0459 14.1381 15.0707 14.1787 15.0876C14.2193 15.1045 14.2629 15.1132 14.3069 15.1132C14.3509 15.1132 14.3945 15.1045 14.4351 15.0876C14.4757 15.0707 14.5126 15.0459 14.5436 15.0146L15.0102 14.5446C15.0415 14.5136 15.0663 14.4768 15.0832 14.4362C15.1001 14.3955 15.1088 14.352 15.1088 14.308C15.1088 14.264 15.1001 14.2204 15.0832 14.1798C15.0663 14.1392 15.0415 14.1023 15.0102 14.0713L12.0469 11.1046C12.7674 10.2057 13.2192 9.12155 13.3503 7.97703C13.4814 6.83251 13.2864 5.67423 12.7879 4.63569C12.2894 3.59715 11.5075 2.72061 10.5325 2.10708C9.55745 1.49355 8.4289 1.16801 7.27689 1.16797Z" fill={darkTheme ? "#fff" : "#000"}/>
+                                            </svg>
+                                            {item}
+                                        </p>
+                                        <svg  onClick={(e) => { e.stopPropagation(); deleteSearchItem(item); }} fill={darkTheme ? "#fff" : "#000"} color="inherit" font-size="16" style={{ cursor: 'pointer'}} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+                                            <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
+                                        </svg>
+                                    </li>
+                                ))}
+                                {/* <li className='d-flex justify-between align-items-center'>
                                         <p className='d-flex'>
                                         <svg style={{  marginRight: '4px'}} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M7.27689 2.5013C8.54463 2.5013 9.76044 3.00491 10.6569 3.90133C11.5533 4.79776 12.0569 6.01357 12.0569 7.2813C12.0569 8.54904 11.5533 9.76485 10.6569 10.6613C9.76044 11.5577 8.54463 12.0613 7.27689 12.0613C6.00916 12.0613 4.79335 11.5577 3.89692 10.6613C3.0005 9.76485 2.49689 8.54904 2.49689 7.2813C2.49689 6.01357 3.0005 4.79776 3.89692 3.90133C4.79335 3.00491 6.00916 2.5013 7.27689 2.5013ZM7.27689 1.16797C6.30097 1.16931 5.33956 1.40441 4.47314 1.85358C3.60673 2.30276 2.86051 2.95294 2.29696 3.74971C1.7334 4.54647 1.3689 5.46665 1.23397 6.4332C1.09904 7.39975 1.1976 8.38457 1.52141 9.30521C1.84521 10.2259 2.38484 11.0555 3.09512 11.7248C3.8054 12.3941 4.66567 12.8835 5.60391 13.1521C6.54216 13.4206 7.53109 13.4605 8.48793 13.2684C9.44476 13.0763 10.3417 12.6578 11.1036 12.048L14.0702 15.0146C14.1012 15.0459 14.1381 15.0707 14.1787 15.0876C14.2193 15.1045 14.2629 15.1132 14.3069 15.1132C14.3509 15.1132 14.3945 15.1045 14.4351 15.0876C14.4757 15.0707 14.5126 15.0459 14.5436 15.0146L15.0102 14.5446C15.0415 14.5136 15.0663 14.4768 15.0832 14.4362C15.1001 14.3955 15.1088 14.352 15.1088 14.308C15.1088 14.264 15.1001 14.2204 15.0832 14.1798C15.0663 14.1392 15.0415 14.1023 15.0102 14.0713L12.0469 11.1046C12.7674 10.2057 13.2192 9.12155 13.3503 7.97703C13.4814 6.83251 13.2864 5.67423 12.7879 4.63569C12.2894 3.59715 11.5075 2.72061 10.5325 2.10708C9.55745 1.49355 8.4289 1.16801 7.27689 1.16797Z" fill={darkTheme ? "#fff" : "#000"}/>
@@ -633,7 +706,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                         <svg fill={darkTheme ? "#fff" : "#000"} color="inherit" font-size="16" style={{ cursor: 'pointer'}} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
                                             <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
                                         </svg>
-                                    </li>
+                                    </li> */}
+                                    
                                 </ul>
                             </div>
                         </div>
