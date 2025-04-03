@@ -6,16 +6,16 @@ import { styled } from "@mui/material";
 const screenTimeBreaks: React.FC = () => {
  
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const [selectedTimes, setSelectedTimes] = useState({});
+    const [selectedTimes, setSelectedTimes] = useState<{ daily: string }>({ daily: "" });
     const [openDropdown, setOpenDropdown] = useState(null);
-    const dropdownRefs = useRef({});
+    const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
     const [dropPosition, setDropPosition] = useState({});
     const [isEnabled, setIsEnabled] = useState(false);
 
     // Close dropdown on outside click
     useEffect(() => {
-        function handleClickOutside(event) {
-            if (!Object.values(dropdownRefs.current).some(ref => ref && ref.contains(event.target))) {
+        function handleClickOutside(event: MouseEvent) {
+            if (!Object.values(dropdownRefs.current).some(ref => ref && event.target instanceof Node && ref.contains(event.target))) {
                 setOpenDropdown(null);
             }
         }
@@ -24,7 +24,7 @@ const screenTimeBreaks: React.FC = () => {
     }, []);
 
     // Open dropdown and set position BEFORE rendering
-    const toggleDropdown = (day) => {
+    const toggleDropdown = (day: any) => {
         if (openDropdown === day) {
             setOpenDropdown(null);
             return;
@@ -32,21 +32,25 @@ const screenTimeBreaks: React.FC = () => {
 
         setTimeout(() => {
             if (dropdownRefs.current[day]) {
-                const rect = dropdownRefs.current[day].getBoundingClientRect();
-                const spaceBelow = window.innerHeight - rect.bottom;
-                const spaceAbove = rect.top;
-
-                setDropPosition((prev) => ({
-                    ...prev,
-                    [day]: spaceBelow < 200 && spaceAbove > spaceBelow ? "top" : "bottom", 
-                }));
-
-                setOpenDropdown(day); // Open dropdown AFTER setting position
+                const rect = dropdownRefs.current[day]?.getBoundingClientRect();
+        
+                if (rect) {  // Ensure rect is not undefined
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    const spaceAbove = rect.top;
+        
+                    setDropPosition((prev) => ({
+                        ...prev,
+                        [day]: spaceBelow < 200 && spaceAbove > spaceBelow ? "top" : "bottom", 
+                    }));
+        
+                    setOpenDropdown(day); // Open dropdown AFTER setting position
+                }
             }
         }, 50);
+        
     };
 
-    const selectTime = (day, hours, minutes) => {
+    const selectTime = (day: any, hours: any, minutes: any) => {
         setSelectedTimes(prev => ({ ...prev, [day]: `${hours}h ${minutes}m` }));
         setOpenDropdown(null);
     };
@@ -62,7 +66,13 @@ const screenTimeBreaks: React.FC = () => {
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + localStorage.getItem('token'),
             },
-            body: JSON.stringify({ screenTimeBreaksPayload: (([h, m]) => ({ hours: +h, minutes: +m }))(selectedTimes.daily.match(/\d+/g)) }),
+            body: JSON.stringify({ 
+                screenTimeBreaksPayload: ((match) => {
+                    if (!match) return { hours: 0, minutes: 0 };
+                    const [h, m] = match;
+                    return { hours: +h, minutes: +m };
+                })(selectedTimes.daily.match(/\d+/g)) 
+            }),
         };
     
         fetch(endpoint, payload)

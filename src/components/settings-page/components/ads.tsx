@@ -53,14 +53,23 @@ const Ads: React.FC = () => {
   const [openList, setOpenList] = useState(false); 
   const [gender, setGender] = useState("male");
   const [customGender, setCustomGender] = useState("");
-  const [allCategories, setAllCategories] = useState(
-    {
-      items: [],
-      isLoading: false,
-      canLoadMore: false
-    }
-  );
-  const [selectedTopic, setSelectedTopic] = useState({});
+  const [allCategories, setAllCategories] = useState<{
+    items: Topic[];
+    isLoading: boolean;
+    canLoadMore: boolean;
+  }>({
+    items: [],
+    isLoading: false,
+    canLoadMore: false,
+  });
+  interface Topic {
+    _id: string;
+    name: string;
+  }
+  
+  // const [selectedTopic, setSelectedTopic] = useState({});
+  const [selectedTopic, setSelectedTopic] = useState<Topic>({ _id: '', name: '' });
+
   const [isInterested, setIsInterested] = useState(true);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -132,10 +141,10 @@ const Ads: React.FC = () => {
     .catch(error => setAllCategories(prev => ({ ...prev, isLoading: false })));
   }
 
-  function openModalList(category: Object)
+  function openModalList(category: Topic)
   {
-    setSelectedTopic(category);
-    setOpenList(true);
+      setSelectedTopic(category);
+      setOpenList(true);
   };
 
   useEffect(fetchCategories, []);
@@ -144,7 +153,8 @@ const Ads: React.FC = () => {
     <>
     <Box className={`text-left ${darkTheme ? 'bg-transparent': 'bg-transparent'}`} sx={{ width: "100%", bgcolor: "background.paper" }}>
       <AppBar className={`${darkTheme ? 'bg-transparent': 'bg-transparent'} position-relative`} color="default" sx={{ boxShadow: 'none',  }}>
-        <CustomTabs className={`${darkTheme ? 'bg-transparent': ''} w-[94%] m-auto `} sx={{borderBottom: '1px solid #16182333'}} value={value} onChange={handleChange} aria-label="basic tabs example" variant="Ads">
+        <CustomTabs className={`${darkTheme ? 'bg-transparent': ''} w-[94%] m-auto `} sx={{borderBottom: '1px solid #16182333'}} value={value} onChange={handleChange} aria-label="basic tabs example" variant="standard">
+
           <Tab label="Topic" id="simple-tab-0" aria-controls="simple-tabpanel-0" sx={{ flex: 1, color: "black", textTransform: "none" }} />
           <Tab
             label="Gender"
@@ -191,10 +201,10 @@ const Ads: React.FC = () => {
             All topics
           </span>
           {allCategories.items.map((category, index) => (
-            <div className='d-flex justify-between mt-3 cursor-pointer' key={category._id} onClick={() => openModalList(category)}>
+            <div className='d-flex justify-between mt-3 cursor-pointer' key={index} onClick={() => openModalList(category)}>
                 <div >
                     <div className='text-left'>
-                      <p>{category.name}</p>
+                      <p>{category?.name}</p>
                     </div>
                 </div>
                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -956,7 +956,7 @@ const Account = ({ className, openModal }: AccountProps) => {
         setAddKeywordPage(data);
     }
 
-    function changeScreenTimeUpdates(event)
+    function changeScreenTimeUpdates(event: React.ChangeEvent<HTMLInputElement>)
     {
         let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
         let payload =

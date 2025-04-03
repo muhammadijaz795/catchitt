@@ -6,17 +6,21 @@ import { styled } from "@mui/material";
 const dailyScreenTime: React.FC = () => {
  
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const [selectedTimes, setSelectedTimes] = useState({});
-    const [openDropdown, setOpenDropdown] = useState(null);
-    const dropdownRefs = useRef({});
-    const [dropPosition, setDropPosition] = useState({});
+    interface SelectedTimes {
+        daily?: string;
+        [key: string]: string | undefined;
+    }
+    const [selectedTimes, setSelectedTimes] = useState<SelectedTimes>({ daily: "" });
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    const [dropPosition, setDropPosition] = useState<Record<string, string>>({});
     const [isDailyScreenTimeEnabled, setIsDailyScreenTimeEnabled] = useState(false);
     const [selectedTimeLimitOption, setSelectedTimeLimitOption] = useState('daily');
 
     // Close dropdown on outside click
     useEffect(() => {
-        function handleClickOutside(event) {
-            if (!Object.values(dropdownRefs.current).some(ref => ref && ref.contains(event.target))) {
+        function handleClickOutside(event: MouseEvent) {
+            if (!Object.values(dropdownRefs.current).some(ref => ref && event.target instanceof Node && ref.contains(event.target))) {
                 setOpenDropdown(null);
             }
         }
@@ -25,7 +29,7 @@ const dailyScreenTime: React.FC = () => {
     }, []);
 
     // Open dropdown and set position BEFORE rendering
-    const toggleDropdown = (day) => {
+    const toggleDropdown = (day: string) => {
         if (openDropdown === day) {
             setOpenDropdown(null);
             return;
@@ -33,34 +37,57 @@ const dailyScreenTime: React.FC = () => {
 
         setTimeout(() => {
             if (dropdownRefs.current[day]) {
-                const rect = dropdownRefs.current[day].getBoundingClientRect();
-                const spaceBelow = window.innerHeight - rect.bottom;
-                const spaceAbove = rect.top;
+                const rect = dropdownRefs.current[day]?.getBoundingClientRect();
+                if (rect) {  // Ensure rect is not undefined
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    const spaceAbove = rect.top;
 
-                setDropPosition((prev) => ({
-                    ...prev,
-                    [day]: spaceBelow < 200 && spaceAbove > spaceBelow ? "top" : "bottom", 
-                }));
+                    setDropPosition((prev) => ({
+                        ...prev,
+                        [day]: spaceBelow < 200 && spaceAbove > spaceBelow ? "top" : "bottom", 
+                    }));
 
-                setOpenDropdown(day); // Open dropdown AFTER setting position
+                    setOpenDropdown(day); // Open dropdown AFTER setting position
+                }
             }
         }, 50);
     };
 
-    const selectTime = (day, hours, minutes) => {
+    const selectTime = (day: any, hours: any, minutes: any) => {
         setSelectedTimes(prev => ({ ...prev, [day]: `${hours}h ${minutes}m` }));
         setOpenDropdown(null);
     };
 
     function saveChanges()
     {
+        // let times = Object.entries(selectedTimeLimitOption == 'daily' ? { everyday: selectedTimes.daily } : selectedTimes)
+        // .map(([day, time]) => (
+        //     {  
+        //         day: day.toLowerCase(),  
+        //         time: Object.fromEntries(time.match(/\d+/g).map((v, i) => [["hours", "minutes"][i], +v]))  
+        //     }
+        // ));
+
         let times = Object.entries(selectedTimeLimitOption == 'daily' ? { everyday: selectedTimes.daily } : selectedTimes)
-        .map(([day, time]) => (
-            {  
-                day: day.toLowerCase(),  
-                time: Object.fromEntries(time.match(/\d+/g).map((v, i) => [["hours", "minutes"][i], +v]))  
+    .map(([day, time]) => {
+            // Match the digits (hours and minutes), ensure the array has 2 elements (hours and minutes)
+            const timeParts = time?.match(/\d+/g);
+            if (timeParts && timeParts.length === 2) {
+                return {
+                    day: day.toLowerCase(),
+                    time: {
+                        hours: +timeParts[0],  // Convert string to number
+                        minutes: +timeParts[1]  // Convert string to number
+                    }
+                };
+            } else {
+                // Handle the case where the time format is invalid (not 2 digits found)
+                console.error(`Invalid time format for ${day}: ${time}`);
+                return { day: day.toLowerCase(), time: null }; // or handle differently
             }
-        ));
+    });
+
+
 
         let endpoint = process.env.VITE_API_URL + '/profile/v2/screen-times'
         let payload =
@@ -199,7 +226,8 @@ const dailyScreenTime: React.FC = () => {
                                                     <li 
                                                         key={i} 
                                                         className="p-2 cursor-pointer hover:bg-gray-200"
-                                                        onClick={() => selectTime(day, selectedTimes[day]?.split("h")[0] || 0, min)}
+                                                        onClick={() => selectTime(day, (selectedTimes[day]?.split("h")[0] || 0), min)}
+
                                                     >
                                                         {min}
                                                     </li>
