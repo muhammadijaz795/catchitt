@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { AppBar, Tabs, Tab, Box, Typography, Modal, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { styled } from "@mui/material";
 
@@ -44,6 +45,7 @@ const CustomTabs = styled(Tabs)({
 });
 
 const Ads: React.FC = () => {
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
   const [open, setOpen] = useState(false); 
   const [openList, setOpenList] = useState(false); 
@@ -139,7 +141,7 @@ const Ads: React.FC = () => {
           <span className='text-sm font-medium text-[#16182399]'>
           Inferred by <br /> Seezitt
           </span>
-          <div className='d-flex justify-between cursor-pointer'>
+          <div className='d-flex justify-between cursor-pointer' onClick={() => navigate('/setting/ad_privacy/personalized_ads/inferred_by_topics')}>
                 <div >
                     <div className='text-left'>
                       <p>View all</p>
@@ -211,7 +213,7 @@ const Ads: React.FC = () => {
             </span>
             <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">{selectedTopic?.name}</Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>
-              Personalized ads can be based on inferences that TikTok has made about you. Changes can take up to 48 hours to take effect.
+              Personalized ads can be based on inferences that Seezitt has made about you. Changes can take up to 48 hours to take effect.
             </Typography>
             <RadioGroup value={isInterested} onChange={(event) => setIsInterested(event.target.value == 'true')}>
             <Box className="mt-3" display="flex" alignItems="center" justifyContent="space-between">
