@@ -1125,6 +1125,8 @@ function App() {
                             <Route path="/settings/keyword-filtering" element={<Account />} />
                             <Route path="/settings/download-your-data" element={<Account />} />
                             <Route path="/setting/ad_privacy/personalized_ads" element={<Account />} />
+                            <Route path="/setting/ad_privacy/personalized_ads/inferred_by_topics" element={<Account />} />
+                            <Route path="/setting/ad_privacy/personalized_ads/your_choices_topics" element={<Account />} />
                             <Route path="/setting/ad_privacy/advertiser_settings" element={<Account />} />
                             <Route path="/setting/ad_privacy/disconnect_advertisers" element={<Account />} />
                             <Route path="/setting/daily-screen-time-edit" element={<Account />} />
