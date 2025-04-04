@@ -512,4 +512,10 @@ input:checked + .slider::before {
   .darkTheme .slider{
     background-color: #595a61 !important;
   }
-  
+  button.btn-color-white{
+    color: white !important;
+  } 
+  button.btn-color-dark{
+    color: #000 !important;
+
+  }

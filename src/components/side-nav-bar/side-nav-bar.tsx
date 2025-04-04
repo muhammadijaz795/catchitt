@@ -264,12 +264,16 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                 <span
                    
                    style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={handleToggleOverlaySearch}>
-                   <div className='mt-2.5 mb-1'>   
-                       <span className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? 'rounded-full max-w-10 w-auto justify-center' : 'rounded-3xl w-100 '} bg-[#f1f1f1] h-10 d-flex align-items-center `} >
+                   <div className='mt-2.5 mb-1'> 
+                    <span className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? 'rounded-full max-w-10 w-auto justify-center' : 'rounded-3xl w-100 '} h-10 d-flex align-items-center `} style={{ backgroundColor: darkTheme ? '#414141' : '#F2F2F2', color: darkTheme ? '#FFFFFF' : '#000000', }}>
+                       <span>
                             <svg fill={`${darkTheme ? 'white': 'black'}`} style={{ padding: isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ?  undefined : '0.5rem'  }} viewBox="0 0 48 48"  xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M21.83 7.5a14.34 14.34 0 1 1 0 28.68 14.34 14.34 0 0 1 0-28.68Zm0-4a18.33 18.33 0 1 0 11.48 32.64l8.9 8.9a1 1 0 0 0 1.42 0l1.4-1.41a1 1 0 0 0 0-1.42l-8.89-8.9A18.34 18.34 0 0 0 21.83 3.5Z"></path></svg>
                             {!isOpenOverlaySearch && Search}
                        </span>
+                       <em className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? 'd-none' : 'd-block'}  `}>Search</em>
+                    </span>  
+                       
                    </div>
                </span>
                 <Link to="/home" reloadDocument={false} style={{ textDecoration: 'none' }}>

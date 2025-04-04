@@ -467,9 +467,7 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                     );
                                                 })}
                                             <div className={style.DivAvatarActionItemContainer}>
-                                                <a
-                                                    className="e1g2yhv83 css-1w9wqra-StyledLink-AvatarLink er1vbsz0"
-                                                    href="#"
+                                                <a href="#"
                                                     onClick={() =>
                                                         navigate(`/profile/${post?.user?._id}`)
                                                     }

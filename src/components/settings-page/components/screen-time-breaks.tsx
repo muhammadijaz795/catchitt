@@ -78,6 +78,11 @@ const screenTimeBreaks: React.FC = () => {
         fetch(endpoint, payload)
         .catch(error => console.error('Failed to update screen time:', error));
     }
+
+    const ThemeColor = localStorage.getItem('themeColor');
+
+
+
   return (
       <div className=" w-100 p-3">
         <div className="border-top">
@@ -121,17 +126,17 @@ const screenTimeBreaks: React.FC = () => {
                         checked={isEnabled}
                         onChange={(e) => setIsEnabled(e.target.checked)}
                     />
-                    <b className="slider"></b>
-                </label>
+                    <b className={`${ThemeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
+                    </label>
             </div>
         </Typography>
         {isEnabled && (
-            <div className="bg-gray-100 p-4 rounded-md mt-3">
+            <div className={`${ThemeColor === 'dark' ? 'bg-gray-100 ': 'bg-gray-600'} p-4 rounded-md mt-3`}>
                 <div className="grid grid-cols-5 gap-2">
-                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]  " onClick={() => selectTime('daily', "0", "10")}>10m</button>
-                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "0", "20")}>20m</button>
-                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "0", "30")}>30m</button>
-                    <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Custom</button>
+                    <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "0", "10")}>10m</button>
+                    <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "0", "20")}>20m</button>
+                    <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "0", "30")}>30m</button>
+                    <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `}>Custom</button>
                 </div>
             </div>
         )}

@@ -105,6 +105,9 @@ const dailyScreenTime: React.FC = () => {
         .catch(error => console.error('Failed to update screen time:', error));
     }
     
+    const ThemeColor = localStorage.getItem('themeColor');
+
+
   return (
       <div className=" w-100 p-3">
         <div className="border-top">
@@ -149,12 +152,12 @@ const dailyScreenTime: React.FC = () => {
                         checked={isDailyScreenTimeEnabled}
                         onChange={(e) => setIsDailyScreenTimeEnabled(e.target.checked)}
                     />
-                    <b className="slider"></b>
+                    <b className={`${ThemeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                 </label>
             </div>
         </Typography>
         {isDailyScreenTimeEnabled && (
-        <div className="bg-gray-100 p-4 rounded-md mt-3">
+        <div className={`${ThemeColor === 'dark' ? 'bg-gray-100 ': 'bg-gray-600'} p-4 rounded-md mt-3`}>
         <label className="flex items-center space-x-2 mb-3 cursor-pointer">
             <input type="radio" name="screen_time" className="hidden peer" value="daily" checked={selectedTimeLimitOption == 'daily'} onChange={(e) => {setSelectedTimeLimitOption(e.target.value); setSelectedTimes({})}}/>
             <div className="w-5 h-5 rounded-full border-2 border-red-500 flex items-center justify-center peer-checked:bg-red-500">
@@ -164,11 +167,11 @@ const dailyScreenTime: React.FC = () => {
         </label>
         {selectedTimeLimitOption == 'daily' && (
         <div className="grid grid-cols-5 gap-2">
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55]  " onClick={() => selectTime('daily', "0", "40")}>40m</button>
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "1", "00")}>1h</button>
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "1", "30")}>1h 30m</button>
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] " onClick={() => selectTime('daily', "2", "00")}>2h</button>
-            <button className="border p-[6px] rounded-sm text-gray-900 bg-white focus:text-[#FE2C55] ">Custom</button>
+            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "0", "40")}>40m</button>
+            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "1", "00")}>1h</button>
+            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "1", "30")}>1h 30m</button>
+            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "2", "00")}>2h</button>
+            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `}>Custom</button>
         </div>
         )}
         <label className="flex items-center space-x-2 mt-3 cursor-pointer">
@@ -185,18 +188,18 @@ const dailyScreenTime: React.FC = () => {
                 {days.map((day) => (
                     <div key={day} className=" items-center justify-between mb-3">
                         {/* Day Button */}
-                        <button className="border px-4 py-2 w-24 mb-3 rounded-sm text-gray-900 bg-white focus:border-[#FE2C55]">
+                        <button className={ ` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'}  border px-4 py-2 w-24 mb-3 rounded-sm bg-white focus:border-[#FE2C55]`}>
                             {day}
                         </button>
 
                         {/* Time Picker */}
                         <div className="relative w-24" ref={(el) => (dropdownRefs.current[day] = el)}>
-                            <span
-                                className="border px-3 py-2 rounded-sm text-gray-900 bg-white cursor-pointer block text-center"
+                            <button
+                                className={ ` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'}  border px-3 py-2 rounded-sm w-100 bg-white cursor-pointer block text-center`}
                                 onClick={() => toggleDropdown(day)}
                             >
                                 {selectedTimes[day] || "1h"}
-                            </span>
+                            </button>
 
                             {/* Dropdown */}
                             {openDropdown === day && (

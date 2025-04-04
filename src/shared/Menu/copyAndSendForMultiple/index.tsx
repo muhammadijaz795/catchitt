@@ -131,23 +131,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
             '_blank'
         );
     };
-
-    const lightThemePalette = createTheme({
-        palette: {
-            mode: 'light',
-        },
-    });
-
-    const darkThemePalette = createTheme({
-        palette: {
-            mode: 'dark',
-        },
-    });
-
-    React.useEffect(() => {
-        const themeColor = window.localStorage.getItem('theme');
-        setIsDarkTheme(themeColor === 'dark');
-    }, []);
+      const ThemeColor = localStorage.getItem('themeColor');
 
     return (
          <div className='modal-shares'>
@@ -181,7 +165,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                         </svg>
                         </DialogActions>
                     <DialogTitle onClick={(e) => e.stopPropagation()} className={isDarkTheme ? 'bg-[#181818]' : 'bg-white'} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#000' }}>
-                        <span className='font-medium text-black' >Share to</span>
+                        <span className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `} >Share to</span>
                     
                     </DialogTitle>                
                     <DialogContent onClick={(e) => e.stopPropagation()}  className={isDarkTheme ? 'bg-[#181818] !px-2.5' : 'bg-white !px-2.5'}>
@@ -203,7 +187,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                     <div className=" flex items-center justify-center rounded-full">
                                         <img className='!w-14 !h-14' src={RepostVideo}  alt="Copy Link" />
                                     </div>
-                                    <p className={`${style.p} ${style.black_500}`}>Repost</p>
+                                    <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Repost</p>
                                 </div>
                             </MenuItem>
                             </Grid> */}
@@ -222,7 +206,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={generateEmbedCodeHandler}>
                                         <img className='!w-14 !h-14' src={embedShare} />
-                                        <p className={`${style.p} ${style.black_500}`}>Embed</p>
+                                        <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Embed</p>
                                     </div>
                                 </MenuItem>
                                 </Grid>
@@ -231,7 +215,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={shareToWhatsApp}>
                                         <img className='!w-14 !h-14' src={whatsappShare} />
-                                        <p className={`${style.p} ${style.black_500}`}>Whatsapp</p>
+                                        <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Whatsapp</p>
                                     </div>
                                 </MenuItem>
                                 </Grid>
@@ -239,7 +223,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={shareToFacebook}>
                                         <img className='!w-14 !h-14' src={facebookShare} />
-                                        <p className={`${style.p} ${style.black_500}`}>Facebook</p>
+                                        <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Facebook</p>
                                     </div>
                                 </MenuItem>
                                 </Grid>
@@ -247,7 +231,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={shareToTwitter}>
                                         <img className='!w-14 !h-14' src={twitterShare} />
-                                        <p className={`${style.p} ${style.black_500}`}>Twitter</p>
+                                        <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Twitter</p>
                                     </div>
                                 </MenuItem>
                                 </Grid>
@@ -255,7 +239,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
                                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                                     <div className={style.menuItem} onClick={shareToLinkedIn}>
                                         <img className='!w-14 !h-14' src={linkedInShare} />
-                                        <p className={`${style.p} ${style.black_500}`}>LinkedIn</p>
+                                        <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>LinkedIn</p>
                                     </div>
                                 </MenuItem>
                                 </Grid>
