@@ -1876,7 +1876,15 @@ const Account = ({ className, openModal }: AccountProps) => {
                                                 type="checkbox"
                                                 name="autoScrollCheckbox" 
                                                 id="autoScrollCheckbox" 
-                                                onChange={(event) => {changeScreenTimeUpdates(event); event.target.parentElement.classList.toggle('checkedToggle', event.target.checked);}}
+                                                onChange={(event) => {
+                                                    changeScreenTimeUpdates(event);
+                                                  
+                                                    // Check if parentElement is not null before toggling the class
+                                                    const parentElement = event.target.parentElement;
+                                                    if (parentElement) {
+                                                      parentElement.classList.toggle('checkedToggle', event.target.checked);
+                                                    }
+                                                  }}
                                             />
                                             <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
                                         </label>
