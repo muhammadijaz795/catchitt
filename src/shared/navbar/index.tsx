@@ -8,7 +8,7 @@ import { openLogoutPopup } from '../../redux/reducers';
 import { logoutUser } from '../../redux/reducers/auth';
 import style from './Navbar.module.scss';
 import NavbarMunu from './components/Menu';
-import Notifications from './components/Notifications'
+import Notifications from './components/NotificationsHeader'
 import Search from './components/Search';
 import { openLoginPopup } from '../../redux/reducers';
 import MenuDropdownPopup from '../Menu/dropdownPopup';
@@ -84,7 +84,7 @@ function Navbar() {
                                 <span style={{ color: 'rgb(255, 59, 92)' }}>Upload </span>
                             </div>
                             <SendIcon className={style.sendIcon} style={{ fontSize: '30px', cursor:'pointer', color: darkTheme === '' ? '#000' : '#fff' }} onClick={() => navigate(`/chat`)} /> */}
-                            {/* <div className={style.user}>
+                            <div className={style.user}>
                                 <div
                                     style={{ position: 'relative', width: '100%', height: '100%' }}
                                 >
@@ -95,7 +95,8 @@ function Navbar() {
                                     <Notifications />
                                 </div>
 
-                            </div> */}
+                            </div>
+                            
                             <div className={style.user}>
                                 <div
                                     style={{ position: 'relative', width: '100%', height: '100%' }}
