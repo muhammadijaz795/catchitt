@@ -519,3 +519,8 @@ input:checked + .slider::before {
     color: #000 !important;
 
   }
+
+ .darkTheme .css-imlpdn {
+  background-color: #000 !important;
+  box-shadow: 1px 1px 1xp #fff;
+ }

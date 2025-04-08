@@ -234,10 +234,14 @@ const Ads: React.FC = () => {
       </TabPanel>
 
 {/* modal for list */}
-  <Modal open={openList} onClose={closeListModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-          <Box sx={style}>
+  <Modal open={openList} onClose={closeListModal} aria-labelledby="modal-modal-title" className={`${darkTheme}`} aria-describedby="modal-modal-description">
+          <Box sx={{
+              ...style,
+              bgcolor: darkTheme ? "#121212" : "background.paper",
+              color: darkTheme ? "#fff" : "#000",
+            }} >
             <span onClick={closeListModal}>
-              <svg fill="#000" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: 'auto'}} width="2em" height="2em">
+              <svg fill={`${darkTheme ? '#fff' : '#000'}`} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: 'auto'}} width="2em" height="2em">
               <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
               </svg>
             </span>
@@ -266,19 +270,19 @@ const Ads: React.FC = () => {
         </Modal>
         
       {/* Modal for gender*/}
-      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box sx={style}>
+      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" className={`${darkTheme}`} aria-describedby="modal-modal-description">
+      <Box sx={{
+              ...style,
+              bgcolor: darkTheme ? "#121212" : "background.paper",
+              color: darkTheme ? "#fff" : "#000",
+            }} >
           <span onClick={handleClose}>
-            <svg fill="#000" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: 'auto'}} width="2em" height="2em">
+            <svg fill={`${darkTheme ? '#fff' : '#000'}`} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: 'auto'}} width="2em" height="2em">
             <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
             </svg>
           </span>
-          <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">
-          Gender
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>
-              Personalized ads can be based on inferences that Seezitt has made about you. Updates apply only to your ad settings and do not affect other Seezitt services.
-          </Typography>
+          <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">Gender</Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>Personalized ads can be based on inferences that Seezitt has made about you. Updates apply only to your ad settings and do not affect other Seezitt services.</Typography>
           <RadioGroup value={gender} onChange={handleChangeGender}>
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Typography>Male</Typography>
@@ -296,7 +300,6 @@ const Ads: React.FC = () => {
         </Box>
       </Modal>
     </Box>
-    <Box></Box>
     </>
   );
 };
