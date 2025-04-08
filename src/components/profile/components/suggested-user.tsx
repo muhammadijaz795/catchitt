@@ -62,6 +62,10 @@ const SuggestedUser: React.FC<{ user: any; onfollowClick: any; popupClose: any }
                             loading="lazy"
                             srcSet={user?.avatar || defaultAvatar}
                             className={styles['img-2']}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                            }}
                         />
                         <Link onClick={popupClose} to={'/profile/' + user?._id}>
                             <span className={styles['div-20']}>{user?.name}</span>

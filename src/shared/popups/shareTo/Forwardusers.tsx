@@ -158,7 +158,10 @@ function Forwardusers(props: any) {
                                                     {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
 
                                     <div className={style.sec1}>
-                                        <img src={user?.followed_userID?.avatar || defaultAvatar} alt="" />
+                                        <img src={user?.followed_userID?.avatar || defaultAvatar} alt=""  onError={(e) => {
+                                            (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                            (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                        }} />
                                         <p>{user?.followed_userID?.name}</p>
                                     </div>
                                     <div className={style.btns}>

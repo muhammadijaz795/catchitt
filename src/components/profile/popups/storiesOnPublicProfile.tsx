@@ -264,7 +264,10 @@ function StoriesOnPublicProfile({ story, onclose, openReport, isDarkTheme }: any
                                         <>
                                             <img className={style.bgImage} src={item.thumbnailUrl || 'https://placehold.co/150x280'} alt="" />
                                             <div className={style.overlay}>
-                                                <img onClick={() => navigate(`/profile/${item.user.username}`)} className={`${style.avatar} cursor-pointer`} src={item.user?.avatar || defaultAvatar} alt="" />
+                                                <img onClick={() => navigate(`/profile/${item.user.username}`)} className={`${style.avatar} cursor-pointer`} src={item.user?.avatar || defaultAvatar} alt="" onError={(e) => {
+                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                    (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                }} />
                                                 <h6 className={style.username}>@{item.user?.username}</h6>
                                             </div>
                                         </>
@@ -319,7 +322,16 @@ function StoriesOnPublicProfile({ story, onclose, openReport, isDarkTheme }: any
                                                     }
                                                 </div>
                                                 <div className={style.userData}>
-                                                    <img className="cursor-pointer" onClick={() => navigate(`/profile/${story.user.username}`)} width={25} height={25} src={story?.user?.avatar || defaultAvatar} alt="avatar" />
+                                                    <img className="cursor-pointer" 
+                                                        onClick={() => navigate(`/profile/${story.user.username}`)} 
+                                                        width={25} height={25} 
+                                                        src={story?.user?.avatar || defaultAvatar} 
+                                                        alt="avatar" 
+                                                        onError={(e) => {
+                                                            (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                            (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                        }}
+                                                    />
                                                     <div>
                                                         <p>{story?.user?.name}</p>
                                                         <p><img src={avgIcon} alt="" />{story?.user?.username}</p>
@@ -359,7 +371,10 @@ function StoriesOnPublicProfile({ story, onclose, openReport, isDarkTheme }: any
                                         <>
                                             <img className={style.bgImage} src={item.thumbnailUrl || 'https://placehold.co/150x280'} alt="" />
                                             <div className={style.overlay}>
-                                                <img onClick={() => navigate(`/profile/${item.user.username}`)} className={`${style.avatar} cursor-pointer`} src={item.user?.avatar || defaultAvatar} alt="" />
+                                                <img onClick={() => navigate(`/profile/${item.user.username}`)} className={`${style.avatar} cursor-pointer`} src={item.user?.avatar || defaultAvatar} alt="" onError={(e) => {
+                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                    (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                }} />
                                                 <h6 className={style.username}>@{item.user?.username}</h6>
                                             </div>
                                         </>

@@ -146,6 +146,10 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any, r
                             loading="lazy"
                             srcSet={user?.follower_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                            }}
                         />
                         <Link onClick={popupClose} to={'/profile/' + user?.follower_userID?.username}>
                             <span className={styles['div-20']}>{user?.follower_userID?.name}</span>

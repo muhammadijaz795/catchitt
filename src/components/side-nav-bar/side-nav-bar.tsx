@@ -766,6 +766,10 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 maxWidth:'initial'
                             }}
                             src={profile?.avatar || defaultAvatar}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                            }}
                             alt=""
                         />
                         </>
@@ -992,7 +996,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <Link to="/about/terms-conditions" target="_blank" className={styles.ALinkStyledNavLink} >Terms</Link>
                         <Link to="/about/privacy-policy"  target="_blank" className={styles.ALinkStyledNavLink} >Privacy policy</Link>
                     </div>}
-                    <span data-e2e="copyright" className={styles.SpanCopyright}>© 2024 Seezitt</span></div>
+                    <span data-e2e="copyright" className={styles.SpanCopyright}>© 2025 Seezitt</span></div>
 
                 {/*  //new theme 
                 

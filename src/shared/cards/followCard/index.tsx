@@ -11,6 +11,10 @@ function FollowUserCard({ user, darkTheme }: any) {
                 style={{ cursor: 'pointer' }}
                 src={defaultAvatar || user?.avatar}
                 alt=""
+                onError={(e) => {
+                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                    (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                }}
             />
             <p className={style.name}>{user?.name}</p>
             {user?.bio && <p className={style.bio}>{user?.bio?.slice(0, 30)}</p>}

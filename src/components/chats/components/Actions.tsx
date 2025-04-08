@@ -48,7 +48,10 @@ function Actions(props: any) {
                             }}
                         >
                             {item.receiverId == loggedInUserId && (
-                                <img src={activeChat?.userImage!=""? activeChat?.userImage:defaultAvatar} className={style.avatar} alt="" />
+                                <img src={activeChat?.userImage!=""? activeChat?.userImage:defaultAvatar} className={style.avatar} alt="" onError={(e) => {
+                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                    (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                }} />
                             )}
 
                             <div className={style.msg}>

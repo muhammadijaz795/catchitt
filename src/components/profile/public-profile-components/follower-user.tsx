@@ -168,6 +168,10 @@ const PbulicFollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: 
                             loading="lazy"
                             srcSet={user?.followed_userID?.avatar || defaultAvatar}
                             className={styles['img-2']}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                            }}
                         />
                         <Link onClick={popupClose} to={'/profile/' + user?.followed_userID?.username}>
                             <span className={styles['div-20']}>{user?.followed_userID?.name}</span>

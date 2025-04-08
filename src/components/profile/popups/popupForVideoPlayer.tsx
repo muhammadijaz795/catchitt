@@ -966,6 +966,10 @@ export default function PopupForVideoPlayer({
                                                     className="h-10 w-10 object-cover rounded-full"
                                                     src={info?.user?.avatar || defaultAvatar}
                                                     alt="avatar"
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                        (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                    }}
                                                 />
                                                 <div className="text-white">
                                                     <p className="text-base font-bold">
@@ -1294,6 +1298,10 @@ export default function PopupForVideoPlayer({
                                                             className={`w-12 h-12 object-contain rounded-full cursor-pointer`}
                                                             src={comment?.user?.avatar || defaultAvatar}
                                                             alt=""
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                            }}
                                                         />
                                                     ) : (
                                                         <div
@@ -1947,6 +1955,10 @@ export default function PopupForVideoPlayer({
                                                         <img
                                                             className="object-contain w-10 h-10 rounded-full"
                                                             src={user.avatar||defaultAvatar}
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                            }}
                                                         />
                                                         <div className="text-left text-white">
                                                             <p className="text-base font-medium">

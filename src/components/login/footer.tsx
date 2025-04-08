@@ -6,7 +6,7 @@ const Footer = () => {
                     English
                 </p>
             </div>
-            <p className="font-normal text-sm text-white">© 2024 Seezitt</p>
+            <p className="font-normal text-sm text-white">© 2025 Seezitt</p>
         </div>
     );
 };

@@ -401,6 +401,10 @@ function FollowingVideos(props: any) {
                                                                     defaultAvatar
                                                                 }
                                                                 className="css-1zpj2q-ImgAvatar e1e9er4e1"
+                                                                onError={(e) => {
+                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                    (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                                }}
                                                             />
                                                         </span>
                                                     </div>

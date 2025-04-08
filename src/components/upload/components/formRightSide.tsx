@@ -608,6 +608,10 @@ function FormRightSide(props: any) {
                                             className="w-[48px] h-[48px] rounded-[50%]"
                                             src={follower?.follower_userID?.avatar || defaultAvatar}
                                             alt=""
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                            }}
                                         />
                                         <Text
                                             fontWeight={500}

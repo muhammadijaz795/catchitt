@@ -140,7 +140,10 @@ function ProfileSec({ data, onClose, isDarkTheme, searchMessage, manipulateUsers
             </div>
             <div className={style.contentParent}>
                 <div className='flex flex-col items-center'>
-                    <img className='w-32 rounded-full' src={data.userImage || defaultAvatar} alt="avatar" />
+                    <img className='w-32 rounded-full' src={data.userImage || defaultAvatar} alt="avatar" onError={(e) => {
+                                                            (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                            (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                        }} />
                     <span className='text-xl font-bold mt-4'>{data.userName}</span>
                     <span className='text-sm'>{data.nickName}</span>
                 </div>

@@ -1098,9 +1098,9 @@ const Account = ({ className, openModal }: AccountProps) => {
                     </div>
                     <div className={` ${styles.middleSectionDiv}  shadow-md text-left`} style={{ display: visibleDiv === 'mute_advertisers' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>Mute advertisers</h4>
-                            <span className='text-left px-3 text-[#000000A6] text-sm'> 
+                            <p className='text-left px-3 text-[#000000A6] text-sm'> 
                                 You can hide the ads from an advertiser who has recently shown you ads on Seezitt. You will not see ads from this advertiser for 28 days. This setting only applies to Seezitt ads, and you may continue to see this advertiser’s ads on other ad networks.
-                            </span>
+                            </p>
                         <MuteAdvertisers />
                         <span className='text-left px-3 text-[#000000A6] text-sm'> 
                             Advertisers you have hidden
@@ -1137,7 +1137,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                     </div>
                     <div className={` ${styles.middleSectionDiv}   shadow-md text-left`} style={{ display: visibleDiv === 'disconnect_advertisers' ? 'block' : 'none' }}>
                             <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>Disconnect advertisers</h4>
-                            <ul className='list-disc pl-5 ml-3 text-left px-3 text-[#000000A6] text-sm'>
+                            <ul className='list-disc pl-5 ml-3 text-left px-3 text-sm'>
                                 <li>Once disconnected, your future off-Seezitt data will not be used to serve personalized ads to you, but this data may still be used for other purposes.</li>
                                 <li>You may continue to see ads from this advertiser when Seezitt shows you relevant ads based on your on-Seezitt activity.</li>
                             </ul>

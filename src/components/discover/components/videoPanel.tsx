@@ -117,8 +117,12 @@ export default function VideoesMaping({ fetchMore, videos, openVideoModal, muteS
                                         src={item?.user.avatar || defaultProfileICon}
                                         alt="User profile"
                                         style={{
-                                        width: "24px",
-                                        height: "24px",
+                                            width: "24px",
+                                            height: "24px",
+                                        }}
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                            (e.target as HTMLImageElement).src = defaultProfileICon;  // Set default image if there's an error
                                         }}
                                     />
                                 </span>
@@ -147,6 +151,10 @@ export default function VideoesMaping({ fetchMore, videos, openVideoModal, muteS
                                             height: "1.5rem", // Adjust as needed
                                             overflow: 'hidden',
     
+                                        }}
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                            (e.target as HTMLImageElement).src = defaultProfileICon;  // Set default image if there's an error
                                         }}
                                     />
                                 </span>

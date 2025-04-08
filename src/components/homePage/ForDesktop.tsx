@@ -438,6 +438,10 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                                     profile?.avatar ||
                                                                     defaultAvatar
                                                                 }
+                                                                onError={(e) => {
+                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                    (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                                }}
                                                                 className="css-1zpj2q-ImgAvatar e1e9er4e1"
                                                             />
                                                         </span>
@@ -491,6 +495,10 @@ const handleVideoEnd = (endedMediaId: string) => {
                                                                     defaultAvatar
                                                                 }
                                                                 className="css-1zpj2q-ImgAvatar e1e9er4e1"
+                                                                onError={(e) => {
+                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                    (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                                                }}
                                                             />
                                                         </span>
                                                     </div>

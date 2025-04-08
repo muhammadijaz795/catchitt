@@ -111,6 +111,10 @@ function Navbar() {
                                         }}
                                         src={profile?.avatar || defaultAvatar}
                                         alt=""
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                            (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                        }}
                                     />
                                     <NavbarMunu
                                         onViewProfile={() => navigate(`/profile`)}

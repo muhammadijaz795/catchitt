@@ -1926,677 +1926,692 @@ function App() {
                                     ) : (
                                         <>
                                             { !isLoginWithWN && !isWNLoginWithCreds &&
-                                            <div className=" w-[21.888rem] mx-auto ">
-                                                <h2
-                                                    className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
+                                            <>
+                                            <div className="d-flex justify-content-between">
+                                                <div className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative left-4 p-1 cursor-pointer"
+                                                
                                                 >
-                                                    Signup to Seezitt
-                                                </h2>
-                                                {signupNext == false ? (
-                                                    <>
-                                                        {isMainSignupOption ? (
-                                                            <>
-                                                                {SIGNUP_OPTIONS?.map(
-                                                                    (option, index) => (
-                                                                        <SignupHandler
-                                                                            singupItemClickHandler={
-                                                                                signupItemClickHandler
-                                                                            }
-                                                                            key={index}
-                                                                            name={option.name}
-                                                                            image={option.image}
-                                                                            styles={option.styles}
-                                                                            darkWhiteTheme={
-                                                                                darkWhiteTheme
-                                                                            }
-                                                                        />
-                                                                    )
-                                                                )}
-                                                                <div className="mt-3">
-                                                                    <FacebookLogin
-                                                                        appId="281129028310496"
-                                                                        autoLoad={false}
-                                                                        fields="name,email,picture"
-                                                                        callback={responseFacebook}
-                                                                        render={(renderProps: {
-                                                                            onClick: () => void;
-                                                                        }) => (
-                                                                            <div
-                                                                                onClick={
-                                                                                    renderProps.onClick
+                                                    {/* <img className="h-6 w-6 object-contain" src="/public/images/icons/backArrow.svg" /> */}
+                                                </div>
+                                                <div 
+                                                    onClick={closeLoginPopupHandler}
+                                                    className="bg-gray-100/50 rounded-full h-10 w-10 flex flex-row justify-center items-center relative right-4 p-1 cursor-pointer">
+                                                        <img className="h-4 w-4 object-contain" src="/public/images/icons/close.svg" />
+                                                </div>  
+                                            </div>
+                                                <div className=" w-[21.888rem] mx-auto ">
+                                                                                                    <h2
+                                                        className={`font-bold text-3xl mt-5 mb-4 ${textColor}`}
+                                                    >
+                                                        Signup to Seezitt
+                                                    </h2>
+                                                
+                                                    {signupNext == false ? (
+                                                        <>
+                                                            {isMainSignupOption ? (
+                                                                <>
+                                                                    {SIGNUP_OPTIONS?.map(
+                                                                        (option, index) => (
+                                                                            <SignupHandler
+                                                                                singupItemClickHandler={
+                                                                                    signupItemClickHandler
                                                                                 }
-                                                                                className={`rounded-[0.5rem] font-medium text-base flex flex-row items-center border border-loginItem h-11 px-3 cursor-pointer hover:bg-slate-100 `}
-                                                                            >
-                                                                                <img
-                                                                                    className="object-contain h-5 w-5"
-                                                                                    src={fb}
-                                                                                />
-                                                                                <p className="mx-auto text-[0.938rem]">
-                                                                                    Continue with
-                                                                                    Facebook
-                                                                                </p>
-                                                                            </div>
-                                                                        )}
-                                                                    />
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <div className="flex flex-row justify-between items-center mt-3.5">
-                                                                    <p className="font-medium text-[0.938rem]">
-                                                                        When’s your birthday?
-                                                                    </p>
-                                                                </div>
-                                                                <div className=" justify-between items-center mt-3.5">
-                                                                    <div className="flex flex-row">
-                                                                        <FormControl
-                                                                            fullWidth
-                                                                            className="dobselectbox p-1"
-                                                                        >
-                                                                            <InputLabel id="demo-simple-select-label">
-                                                                                Month
-                                                                            </InputLabel>
-                                                                            <Select
-                                                                                labelId="demo-simple-select-label"
-                                                                                id="demo-simple-select"
-                                                                                className="bg-login-btn"
-                                                                                value={month}
-                                                                                label="Month"
-                                                                                onChange={
-                                                                                    handleMonthChange
+                                                                                key={index}
+                                                                                name={option.name}
+                                                                                image={option.image}
+                                                                                styles={option.styles}
+                                                                                darkWhiteTheme={
+                                                                                    darkWhiteTheme
                                                                                 }
-                                                                            >
-                                                                                <MenuItem value={1}>
-                                                                                    January
-                                                                                </MenuItem>
-                                                                                <MenuItem value={2}>
-                                                                                    Febuary
-                                                                                </MenuItem>
-                                                                                <MenuItem value={3}>
-                                                                                    March
-                                                                                </MenuItem>
-                                                                                <MenuItem value={4}>
-                                                                                    April
-                                                                                </MenuItem>
-                                                                                <MenuItem value={5}>
-                                                                                    May
-                                                                                </MenuItem>
-                                                                                <MenuItem value={6}>
-                                                                                    June
-                                                                                </MenuItem>
-                                                                                <MenuItem value={7}>
-                                                                                    July
-                                                                                </MenuItem>
-                                                                                <MenuItem value={8}>
-                                                                                    August
-                                                                                </MenuItem>
-                                                                                <MenuItem value={9}>
-                                                                                    September
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={10}
-                                                                                >
-                                                                                    October
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={11}
-                                                                                >
-                                                                                    November
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={12}
-                                                                                >
-                                                                                    December
-                                                                                </MenuItem>
-                                                                            </Select>
-                                                                        </FormControl>
-
-                                                                        <FormControl
-                                                                            fullWidth
-                                                                            className="p-1"
-                                                                        >
-                                                                            <InputLabel id="demo-simple-select-label">
-                                                                                Date
-                                                                            </InputLabel>
-                                                                            <Select
-                                                                                labelId="demo-simple-select-label"
-                                                                                className="bg-login-btn"
-                                                                                id="demo-simple-select"
-                                                                                value={date}
-                                                                                label="Month"
-                                                                                onChange={
-                                                                                    handleDateChange
-                                                                                }
-                                                                            >
-                                                                                <MenuItem value={1}>
-                                                                                    1
-                                                                                </MenuItem>
-                                                                                <MenuItem value={2}>
-                                                                                    2
-                                                                                </MenuItem>
-                                                                                <MenuItem value={3}>
-                                                                                    3
-                                                                                </MenuItem>
-                                                                                <MenuItem value={4}>
-                                                                                    4
-                                                                                </MenuItem>
-                                                                                <MenuItem value={5}>
-                                                                                    5
-                                                                                </MenuItem>
-                                                                                <MenuItem value={6}>
-                                                                                    6
-                                                                                </MenuItem>
-                                                                                <MenuItem value={7}>
-                                                                                    7
-                                                                                </MenuItem>
-                                                                                <MenuItem value={8}>
-                                                                                    8
-                                                                                </MenuItem>
-                                                                                <MenuItem value={9}>
-                                                                                    9
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={10}
-                                                                                >
-                                                                                    10
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={11}
-                                                                                >
-                                                                                    11
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={12}
-                                                                                >
-                                                                                    12
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={13}
-                                                                                >
-                                                                                    13
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={14}
-                                                                                >
-                                                                                    14
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={15}
-                                                                                >
-                                                                                    15
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={16}
-                                                                                >
-                                                                                    16
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={17}
-                                                                                >
-                                                                                    17
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={18}
-                                                                                >
-                                                                                    18
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={19}
-                                                                                >
-                                                                                    19
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={20}
-                                                                                >
-                                                                                    20
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={21}
-                                                                                >
-                                                                                    21
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={22}
-                                                                                >
-                                                                                    22
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={23}
-                                                                                >
-                                                                                    23
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={24}
-                                                                                >
-                                                                                    24
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={25}
-                                                                                >
-                                                                                    25
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={26}
-                                                                                >
-                                                                                    26
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={27}
-                                                                                >
-                                                                                    27
-                                                                                </MenuItem>
-                                                                                <MenuItem
-                                                                                    value={28}
-                                                                                >
-                                                                                    28
-                                                                                </MenuItem>
-                                                                                {(!month || !year || (month == '2' && isLeapYear(year))) && (
-                                                                                    <MenuItem value={29}>29</MenuItem>
-                                                                                )}
-                                                                                {!['2'].some(i => i == month) && <MenuItem
-                                                                                    value={30}
-                                                                                >
-                                                                                    30
-                                                                                </MenuItem>}
-                                                                                {!['2', '4', '6', '9', '11'].some(i => i == month) && <MenuItem
-                                                                                    value={31}
-                                                                                >
-                                                                                    31
-                                                                                </MenuItem>}
-                                                                            </Select>
-                                                                        </FormControl>
-
-                                                                        <FormControl
-                                                                            fullWidth
-                                                                            className="p-1"
-                                                                        >
-                                                                            <InputLabel id="demo-simple-select-label">
-                                                                                Year
-                                                                            </InputLabel>
-                                                                            <Select
-                                                                                labelId="demo-simple-select-label"
-                                                                                id="demo-simple-select"
-                                                                                className="bg-login-btn"
-                                                                                value={year}
-                                                                                label="Month"
-                                                                                onChange={
-                                                                                    handleYearChange
-                                                                                }
-                                                                            >
-                                                                                {/* {(function (rows, i, len) {
-                                                                                while (--i >= len) {
-                                                                                rows.push(<MenuItem key={i} value={i}>{i}</MenuItem>)
-                                                                                }
-                                                                                return rows;
-                                                                            })([], 2025, 1900)} */}
-                                                                                {generateMenuItems()}
-                                                                            </Select>
-                                                                        </FormControl>
-                                                                    </div>
-                                                                </div>
-                                                                {isInvalidDate && <p className='text-red-600 text-sm text-start mt-1 font-semibold'>Selected DOB is Incorrect 😞</p>}
-                                                                <div className="flex flex-row justify-between items-center mt-3.5">
-                                                                    <p className="font-medium text-[0.938rem]">
-                                                                        {signupWithPhone
-                                                                            ? 'Phone'
-                                                                            : 'Email'}
-                                                                    </p>
-                                                                    <p
-                                                                        onClick={toggleSignupMethod}
-                                                                        className="font-medium text-xs text-gray-600 cursor-pointer hover:underline"
-                                                                    >
-                                                                        {signupWithPhone
-                                                                            ? 'Signup with email'
-                                                                            : 'Signup with phone'}
-                                                                    </p>
-                                                                </div>
-                                                                {signupWithPhone ? (
-                                                                    <>
-                                                                        <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
-                                                                            <div
-                                                                                onClick={
-                                                                                    countryCodeModelHandler
-                                                                                }
-                                                                                className="flex flex-row items-center gap-2 flex-1 cursor-pointer relative text-black"
-                                                                            >
-                                                                                <p>
-                                                                                    {isoCode +
-                                                                                        ' ' +
-                                                                                        countryCode}
-                                                                                </p>
-                                                                                <img
-                                                                                    className={`object-contain h-2.5 w-2.5 chevron ${countryModelOpened
-                                                                                        ? 'rotate'
-                                                                                        : ''
-                                                                                        }`}
-                                                                                    src={
-                                                                                        chevronDown
+                                                                            />
+                                                                        )
+                                                                    )}
+                                                                    <div className="mt-3">
+                                                                        <FacebookLogin
+                                                                            appId="281129028310496"
+                                                                            autoLoad={false}
+                                                                            fields="name,email,picture"
+                                                                            callback={responseFacebook}
+                                                                            render={(renderProps: {
+                                                                                onClick: () => void;
+                                                                            }) => (
+                                                                                <div
+                                                                                    onClick={
+                                                                                        renderProps.onClick
                                                                                     }
-                                                                                />
-                                                                                <p className="text-gray-400 ">
-                                                                                    {' '}
-                                                                                    |{' '}
-                                                                                </p>
-                                                                                {countryModelOpened && (
-                                                                                    <div
-                                                                                        onClick={
-                                                                                            modelClickHandler
-                                                                                        }
-                                                                                        className={`absolute ${filteredCountryCodes.length ===
-                                                                                            0
-                                                                                            ? 'h-fit'
-                                                                                            : 'h-80'
-                                                                                            }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
+                                                                                    className={`rounded-[0.5rem] font-medium text-base flex flex-row items-center border border-loginItem h-11 px-3 cursor-pointer hover:bg-slate-100 `}
+                                                                                >
+                                                                                    <img
+                                                                                        className="object-contain h-5 w-5"
+                                                                                        src={fb}
+                                                                                    />
+                                                                                    <p className="mx-auto text-[0.938rem]">
+                                                                                        Continue with
+                                                                                        Facebook
+                                                                                    </p>
+                                                                                </div>
+                                                                            )}
+                                                                        />
+                                                                    </div>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div className="flex flex-row justify-between items-center mt-3.5">
+                                                                        <p className="font-medium text-[0.938rem]">
+                                                                            When’s your birthday?
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className=" justify-between items-center mt-3.5">
+                                                                        <div className="flex flex-row">
+                                                                            <FormControl
+                                                                                fullWidth
+                                                                                className="dobselectbox p-1"
+                                                                            >
+                                                                                <InputLabel id="demo-simple-select-label">
+                                                                                    Month
+                                                                                </InputLabel>
+                                                                                <Select
+                                                                                    labelId="demo-simple-select-label"
+                                                                                    id="demo-simple-select"
+                                                                                    className="bg-login-btn"
+                                                                                    value={month}
+                                                                                    label="Month"
+                                                                                    onChange={
+                                                                                        handleMonthChange
+                                                                                    }
+                                                                                >
+                                                                                    <MenuItem value={1}>
+                                                                                        January
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={2}>
+                                                                                        Febuary
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={3}>
+                                                                                        March
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={4}>
+                                                                                        April
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={5}>
+                                                                                        May
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={6}>
+                                                                                        June
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={7}>
+                                                                                        July
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={8}>
+                                                                                        August
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={9}>
+                                                                                        September
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={10}
                                                                                     >
-                                                                                        <div className="flex flex-row items-center p-2 gap-2 border rounded-t-lg">
-                                                                                            <img
-                                                                                                className="object-contain h-3 w-3 m-2"
-                                                                                                src={
-                                                                                                    search
-                                                                                                }
-                                                                                            />
-                                                                                            <input
-                                                                                                type="text"
-                                                                                                placeholder="Search"
-                                                                                                className="w-full text-sm font-normal caret-red-500 bg-white"
-                                                                                                value={
-                                                                                                    searchQuery
-                                                                                                }
-                                                                                                onChange={
-                                                                                                    handleSearchChange
-                                                                                                }
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="w-full h-[1px] bg-gray-300" />
+                                                                                        October
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={11}
+                                                                                    >
+                                                                                        November
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={12}
+                                                                                    >
+                                                                                        December
+                                                                                    </MenuItem>
+                                                                                </Select>
+                                                                            </FormControl>
+
+                                                                            <FormControl
+                                                                                fullWidth
+                                                                                className="p-1"
+                                                                            >
+                                                                                <InputLabel id="demo-simple-select-label">
+                                                                                    Date
+                                                                                </InputLabel>
+                                                                                <Select
+                                                                                    labelId="demo-simple-select-label"
+                                                                                    className="bg-login-btn"
+                                                                                    id="demo-simple-select"
+                                                                                    value={date}
+                                                                                    label="Month"
+                                                                                    onChange={
+                                                                                        handleDateChange
+                                                                                    }
+                                                                                >
+                                                                                    <MenuItem value={1}>
+                                                                                        1
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={2}>
+                                                                                        2
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={3}>
+                                                                                        3
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={4}>
+                                                                                        4
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={5}>
+                                                                                        5
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={6}>
+                                                                                        6
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={7}>
+                                                                                        7
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={8}>
+                                                                                        8
+                                                                                    </MenuItem>
+                                                                                    <MenuItem value={9}>
+                                                                                        9
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={10}
+                                                                                    >
+                                                                                        10
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={11}
+                                                                                    >
+                                                                                        11
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={12}
+                                                                                    >
+                                                                                        12
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={13}
+                                                                                    >
+                                                                                        13
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={14}
+                                                                                    >
+                                                                                        14
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={15}
+                                                                                    >
+                                                                                        15
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={16}
+                                                                                    >
+                                                                                        16
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={17}
+                                                                                    >
+                                                                                        17
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={18}
+                                                                                    >
+                                                                                        18
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={19}
+                                                                                    >
+                                                                                        19
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={20}
+                                                                                    >
+                                                                                        20
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={21}
+                                                                                    >
+                                                                                        21
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={22}
+                                                                                    >
+                                                                                        22
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={23}
+                                                                                    >
+                                                                                        23
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={24}
+                                                                                    >
+                                                                                        24
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={25}
+                                                                                    >
+                                                                                        25
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={26}
+                                                                                    >
+                                                                                        26
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={27}
+                                                                                    >
+                                                                                        27
+                                                                                    </MenuItem>
+                                                                                    <MenuItem
+                                                                                        value={28}
+                                                                                    >
+                                                                                        28
+                                                                                    </MenuItem>
+                                                                                    {(!month || !year || (month == '2' && isLeapYear(year))) && (
+                                                                                        <MenuItem value={29}>29</MenuItem>
+                                                                                    )}
+                                                                                    {!['2'].some(i => i == month) && <MenuItem
+                                                                                        value={30}
+                                                                                    >
+                                                                                        30
+                                                                                    </MenuItem>}
+                                                                                    {!['2', '4', '6', '9', '11'].some(i => i == month) && <MenuItem
+                                                                                        value={31}
+                                                                                    >
+                                                                                        31
+                                                                                    </MenuItem>}
+                                                                                </Select>
+                                                                            </FormControl>
+
+                                                                            <FormControl
+                                                                                fullWidth
+                                                                                className="p-1"
+                                                                            >
+                                                                                <InputLabel id="demo-simple-select-label">
+                                                                                    Year
+                                                                                </InputLabel>
+                                                                                <Select
+                                                                                    labelId="demo-simple-select-label"
+                                                                                    id="demo-simple-select"
+                                                                                    className="bg-login-btn"
+                                                                                    value={year}
+                                                                                    label="Month"
+                                                                                    onChange={
+                                                                                        handleYearChange
+                                                                                    }
+                                                                                >
+                                                                                    {/* {(function (rows, i, len) {
+                                                                                    while (--i >= len) {
+                                                                                    rows.push(<MenuItem key={i} value={i}>{i}</MenuItem>)
+                                                                                    }
+                                                                                    return rows;
+                                                                                })([], 2025, 1900)} */}
+                                                                                    {generateMenuItems()}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </div>
+                                                                    </div>
+                                                                    {isInvalidDate && <p className='text-red-600 text-sm text-start mt-1 font-semibold'>Selected DOB is Incorrect 😞</p>}
+                                                                    <div className="flex flex-row justify-between items-center mt-3.5">
+                                                                        <p className="font-medium text-[0.938rem]">
+                                                                            {signupWithPhone
+                                                                                ? 'Phone'
+                                                                                : 'Email'}
+                                                                        </p>
+                                                                        <p
+                                                                            onClick={toggleSignupMethod}
+                                                                            className="font-medium text-xs text-gray-600 cursor-pointer hover:underline"
+                                                                        >
+                                                                            {signupWithPhone
+                                                                                ? 'Signup with email'
+                                                                                : 'Signup with phone'}
+                                                                        </p>
+                                                                    </div>
+                                                                    {signupWithPhone ? (
+                                                                        <>
+                                                                            <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
+                                                                                <div
+                                                                                    onClick={
+                                                                                        countryCodeModelHandler
+                                                                                    }
+                                                                                    className="flex flex-row items-center gap-2 flex-1 cursor-pointer relative text-black"
+                                                                                >
+                                                                                    <p>
+                                                                                        {isoCode +
+                                                                                            ' ' +
+                                                                                            countryCode}
+                                                                                    </p>
+                                                                                    <img
+                                                                                        className={`object-contain h-2.5 w-2.5 chevron ${countryModelOpened
+                                                                                            ? 'rotate'
+                                                                                            : ''
+                                                                                            }`}
+                                                                                        src={
+                                                                                            chevronDown
+                                                                                        }
+                                                                                    />
+                                                                                    <p className="text-gray-400 ">
+                                                                                        {' '}
+                                                                                        |{' '}
+                                                                                    </p>
+                                                                                    {countryModelOpened && (
                                                                                         <div
-                                                                                            className={`overflow-y-auto ${filteredCountryCodes.length ===
+                                                                                            onClick={
+                                                                                                modelClickHandler
+                                                                                            }
+                                                                                            className={`absolute ${filteredCountryCodes.length ===
                                                                                                 0
                                                                                                 ? 'h-fit'
-                                                                                                : 'max-h-[17.188rem]'
-                                                                                                } `}
+                                                                                                : 'h-80'
+                                                                                                }  w-80 bg-white top-11 -left-2.5 rounded-md shadow-md cursor-default z-10`}
                                                                                         >
-                                                                                            {filteredCountryCodes.map(
-                                                                                                (
-                                                                                                    countryItem: any,
-                                                                                                    index: number
-                                                                                                ) => (
-                                                                                                    <div
-                                                                                                        onClick={() =>
-                                                                                                            countryItemClickHandler(
-                                                                                                                countryItem,
+                                                                                            <div className="flex flex-row items-center p-2 gap-2 border rounded-t-lg">
+                                                                                                <img
+                                                                                                    className="object-contain h-3 w-3 m-2"
+                                                                                                    src={
+                                                                                                        search
+                                                                                                    }
+                                                                                                />
+                                                                                                <input
+                                                                                                    type="text"
+                                                                                                    placeholder="Search"
+                                                                                                    className="w-full text-sm font-normal caret-red-500 bg-white"
+                                                                                                    value={
+                                                                                                        searchQuery
+                                                                                                    }
+                                                                                                    onChange={
+                                                                                                        handleSearchChange
+                                                                                                    }
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div className="w-full h-[1px] bg-gray-300" />
+                                                                                            <div
+                                                                                                className={`overflow-y-auto ${filteredCountryCodes.length ===
+                                                                                                    0
+                                                                                                    ? 'h-fit'
+                                                                                                    : 'max-h-[17.188rem]'
+                                                                                                    } `}
+                                                                                            >
+                                                                                                {filteredCountryCodes.map(
+                                                                                                    (
+                                                                                                        countryItem: any,
+                                                                                                        index: number
+                                                                                                    ) => (
+                                                                                                        <div
+                                                                                                            onClick={() =>
+                                                                                                                countryItemClickHandler(
+                                                                                                                    countryItem,
+                                                                                                                    index
+                                                                                                                )
+                                                                                                            }
+                                                                                                            key={
                                                                                                                 index
-                                                                                                            )
-                                                                                                        }
-                                                                                                        key={
-                                                                                                            index
-                                                                                                        }
-                                                                                                        className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${selectedCountryIndex ===
-                                                                                                            index
-                                                                                                            ? 'bg-gray-50'
-                                                                                                            : ''
-                                                                                                            }`}
-                                                                                                    >
-                                                                                                        <p
-                                                                                                            className={`font-normal text-black text-left text-xs hover:bg-gray-50`}
+                                                                                                            }
+                                                                                                            className={`flex flex-row justify-between items-center p-2.5 cursor-pointer mb-2 rounded-b-md ${selectedCountryIndex ===
+                                                                                                                index
+                                                                                                                ? 'bg-gray-50'
+                                                                                                                : ''
+                                                                                                                }`}
                                                                                                         >
-                                                                                                            {countryItem?.name +
-                                                                                                                ' ' +
-                                                                                                                countryItem?.code}
-                                                                                                        </p>
-                                                                                                        {selectedCountryIndex ===
-                                                                                                            index && (
-                                                                                                                <img
-                                                                                                                    className="h-4 w-4 object-contain"
-                                                                                                                    alt="check-mark"
-                                                                                                                    src={
-                                                                                                                        checkCountryCode
-                                                                                                                    }
-                                                                                                                />
-                                                                                                            )}
-                                                                                                    </div>
-                                                                                                )
-                                                                                            )}
-                                                                                            {filteredCountryCodes.length ===
-                                                                                                0 && (
-                                                                                                    <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
-                                                                                                        {
-                                                                                                            APP_TEXTS.NO_RESULT_FOUND
-                                                                                                        }
-                                                                                                    </p>
+                                                                                                            <p
+                                                                                                                className={`font-normal text-black text-left text-xs hover:bg-gray-50`}
+                                                                                                            >
+                                                                                                                {countryItem?.name +
+                                                                                                                    ' ' +
+                                                                                                                    countryItem?.code}
+                                                                                                            </p>
+                                                                                                            {selectedCountryIndex ===
+                                                                                                                index && (
+                                                                                                                    <img
+                                                                                                                        className="h-4 w-4 object-contain"
+                                                                                                                        alt="check-mark"
+                                                                                                                        src={
+                                                                                                                            checkCountryCode
+                                                                                                                        }
+                                                                                                                    />
+                                                                                                                )}
+                                                                                                        </div>
+                                                                                                    )
                                                                                                 )}
+                                                                                                {filteredCountryCodes.length ===
+                                                                                                    0 && (
+                                                                                                        <p className="font-normal text-gray-400 text-xs hover:bg-gray-50 my-2">
+                                                                                                            {
+                                                                                                                APP_TEXTS.NO_RESULT_FOUND
+                                                                                                            }
+                                                                                                        </p>
+                                                                                                    )}
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
-                                                                            <input
-                                                                                className="w-2/3 bg-login-btn"
-                                                                                type="text" // ✅ Change from "number" to "text" to enforce max length
-                                                                                placeholder="Phone number"
-                                                                                value={phoneNumber}
-                                                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                                                    const { value } = e.target;
-                                                                                    const maxLength = getMaxPhoneLength(isoCode.toLocaleUpperCase());
-
-                                                                                    // ✅ Remove non-numeric characters and enforce max length
-                                                                                    const sanitizedValue = value.replace(/\D/g, '').substring(0, maxLength);
-                                                                                    setPhoneNumber(sanitizedValue);
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                        <div
-                                                                            onClick={signupPhoneNumberNextScreen}
-                                                                            className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
-                                                                        >
-                                                                            <div className="flex flex-row justify-center items-center gap-2 flex-1">
-                                                                                <p>
-                                                                                    {isLoading ? (
-                                                                                        <CircularProgress
-                                                                                            style={{
-                                                                                                width: 18,
-                                                                                                height: 18,
-                                                                                                color: 'red',
-                                                                                            }}
-                                                                                        />
-                                                                                    ) : (
-                                                                                        'Next'
                                                                                     )}
-                                                                                </p>
+                                                                                </div>
+                                                                                <input
+                                                                                    className="w-2/3 bg-login-btn"
+                                                                                    type="text" // ✅ Change from "number" to "text" to enforce max length
+                                                                                    placeholder="Phone number"
+                                                                                    value={phoneNumber}
+                                                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                                        const { value } = e.target;
+                                                                                        const maxLength = getMaxPhoneLength(isoCode.toLocaleUpperCase());
+
+                                                                                        // ✅ Remove non-numeric characters and enforce max length
+                                                                                        const sanitizedValue = value.replace(/\D/g, '').substring(0, maxLength);
+                                                                                        setPhoneNumber(sanitizedValue);
+                                                                                    }}
+                                                                                />
                                                                             </div>
-                                                                        </div>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
-                                                                            <input
-                                                                                className="w-2/3 bg-login-btn"
-                                                                                type="text"
-                                                                                placeholder="Email"
-                                                                                value={email}
-                                                                                onChange={(e) =>
-                                                                                    setEmail(
-                                                                                        e.target
-                                                                                            .value
-                                                                                    )
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                        {emailIdError ? (
-                                                                            <p className="font-light text-left text-xs text-red-700 mt-2.5">
-                                                                                {
-                                                                                    'Please enter email id'
-                                                                                }
-                                                                            </p>
-                                                                        ) : null}
-
-                                                                        <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md py-2.5 px-3">
-                                                                            <input
-                                                                                className="w-2/3 bg-gray-100"
-                                                                                type="text"
-                                                                                placeholder="Enter 6-digit code"
-                                                                                name="code"
-                                                                                value={otpCode}
-                                                                                onChange={(e) =>
-                                                                                    setOtpCode(
-                                                                                        e.target
-                                                                                            .value
-                                                                                    )
-                                                                                }
-                                                                            />
-                                                                            <div className="flex flex-row justify-center items-center gap-2 flex-1">
-                                                                                <p
-                                                                                    className={`text-gray-400 ${style.black_text}`}
-                                                                                >
-                                                                                    {' '}
-                                                                                    |{' '}
-                                                                                </p>
-                                                                                <p
-                                                                                    onClick={
-                                                                                        sendOTPCode
-                                                                                    }
-                                                                                    className={`text-black cursor-pointer`}
-                                                                                >
-                                                                                    {otpbuttonText}
-                                                                                </p>
+                                                                            <div
+                                                                                onClick={signupPhoneNumberNextScreen}
+                                                                                className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
+                                                                            >
+                                                                                <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                                                                    <p>
+                                                                                        {isLoading ? (
+                                                                                            <CircularProgress
+                                                                                                style={{
+                                                                                                    width: 18,
+                                                                                                    height: 18,
+                                                                                                    color: 'red',
+                                                                                                }}
+                                                                                            />
+                                                                                        ) : (
+                                                                                            'Next'
+                                                                                        )}
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        {otpError ? (
-                                                                            <p className="font-light text-left text-xs text-red-700 mt-2.5">
-                                                                                {
-                                                                                    'Please enter valid otp'
-                                                                                }
-                                                                            </p>
-                                                                        ) : null}
-                                                                        <div
-                                                                            onClick={signupNextScreen}
-                                                                            className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
-                                                                        >
-                                                                            <div className="flex flex-row justify-center items-center gap-2 flex-1">
-                                                                                <p>
-                                                                                    {isLoading ? (
-                                                                                        <CircularProgress
-                                                                                            style={{
-                                                                                                width: 18,
-                                                                                                height: 18,
-                                                                                                color: 'red',
-                                                                                            }}
-                                                                                        />
-                                                                                    ) : (
-                                                                                        'Next'
-                                                                                    )}
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </>
-                                                                )}
-
-                                                                
-                                                                <div
-                                                                    onClick={handleSignUpMainScreen}
-                                                                    className="flex flex-row justify-center items-center gap-2 mt-4 cursor-pointer"
-                                                                >
-                                                                    <img
-                                                                        src={back}
-                                                                        className="h-2.5 w-2.5 object-contain"
-                                                                    />
-                                                                    <p className="font-medium text-xs">
-                                                                        Go Back
-                                                                    </p>
-                                                                </div>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <div className="flex flex-row justify-between items-center mt-3.5">
-                                                            <p className="font-medium text-[0.938rem]">
-                                                                Password
-                                                            </p>
-                                                        </div>
-                                                        <div className="flex flex-row justify-between items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3 text-black">
-                                                            <input
-                                                                className="w-2/3 bg-login-btn"
-                                                                type={
-                                                                    showPassword
-                                                                        ? 'text'
-                                                                        : 'password'
-                                                                }
-                                                                placeholder="Password"
-                                                                value={password}
-                                                                onChange={(e) =>
-                                                                    setPassword(e.target.value)
-                                                                }
-                                                            />
-                                                            {!showPassword ? (
-                                                                <Visibility
-                                                                    style={{ cursor: 'pointer' }}
-                                                                    onClick={togglePassword}
-                                                                />
-                                                            ) : (
-                                                                <VisibilityOff
-                                                                    style={{ cursor: 'pointer' }}
-                                                                    onClick={togglePassword}
-                                                                />
-                                                            )}
-                                                        </div>
-
-                                                        <div className="flex flex-row justify-between items-center mt-3.5">
-                                                            <p className="font-medium text-[0.938rem]">
-                                                                Name
-                                                            </p>
-                                                        </div>
-                                                        <div className="flex flex-row justify-between items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3">
-                                                            <input
-                                                                className="w-2/3 bg-login-btn"
-                                                                type="text"
-                                                                placeholder="Name"
-                                                                value={name}
-                                                                onChange={(e) =>
-                                                                    setName(e.target.value)
-                                                                }
-                                                            />
-                                                        </div>
-
-                                                        <div
-                                                            onClick={signupHandler}
-                                                            className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
-                                                        >
-                                                            <div className="flex flex-row justify-center items-center gap-2 flex-1">
-                                                                <p>
-                                                                    {isLoading ? (
-                                                                        <CircularProgress
-                                                                            style={{
-                                                                                width: 18,
-                                                                                height: 18,
-                                                                                color: 'red',
-                                                                            }}
-                                                                        />
+                                                                        </>
                                                                     ) : (
-                                                                        'Signup'
+                                                                        <>
+                                                                            <div className="flex flex-row items-center border border-gray-500 bg-login-btn mt-2 rounded-md p-2.5">
+                                                                                <input
+                                                                                    className="w-2/3 bg-login-btn"
+                                                                                    type="text"
+                                                                                    placeholder="Email"
+                                                                                    value={email}
+                                                                                    onChange={(e) =>
+                                                                                        setEmail(
+                                                                                            e.target
+                                                                                                .value
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                            </div>
+                                                                            {emailIdError ? (
+                                                                                <p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                                                                    {
+                                                                                        'Please enter email id'
+                                                                                    }
+                                                                                </p>
+                                                                            ) : null}
+
+                                                                            <div className="flex flex-row items-center border border-gray-500 bg-gray-100 mt-2 rounded-md py-2.5 px-3">
+                                                                                <input
+                                                                                    className="w-2/3 bg-gray-100"
+                                                                                    type="text"
+                                                                                    placeholder="Enter 6-digit code"
+                                                                                    name="code"
+                                                                                    value={otpCode}
+                                                                                    onChange={(e) =>
+                                                                                        setOtpCode(
+                                                                                            e.target
+                                                                                                .value
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                                <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                                                                    <p
+                                                                                        className={`text-gray-400 ${style.black_text}`}
+                                                                                    >
+                                                                                        {' '}
+                                                                                        |{' '}
+                                                                                    </p>
+                                                                                    <p
+                                                                                        onClick={
+                                                                                            sendOTPCode
+                                                                                        }
+                                                                                        className={`text-black cursor-pointer`}
+                                                                                    >
+                                                                                        {otpbuttonText}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            {otpError ? (
+                                                                                <p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                                                                    {
+                                                                                        'Please enter valid otp'
+                                                                                    }
+                                                                                </p>
+                                                                            ) : null}
+                                                                            <div
+                                                                                onClick={signupNextScreen}
+                                                                                className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
+                                                                            >
+                                                                                <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                                                                    <p>
+                                                                                        {isLoading ? (
+                                                                                            <CircularProgress
+                                                                                                style={{
+                                                                                                    width: 18,
+                                                                                                    height: 18,
+                                                                                                    color: 'red',
+                                                                                                }}
+                                                                                            />
+                                                                                        ) : (
+                                                                                            'Next'
+                                                                                        )}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </>
                                                                     )}
+
+                                                                    
+                                                                    <div
+                                                                        onClick={handleSignUpMainScreen}
+                                                                        className="flex flex-row justify-center items-center gap-2 mt-4 cursor-pointer"
+                                                                    >
+                                                                        <img
+                                                                            src={back}
+                                                                            className="h-2.5 w-2.5 object-contain"
+                                                                        />
+                                                                        <p className="font-medium text-xs">
+                                                                            Go Back
+                                                                        </p>
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <div className="flex flex-row justify-between items-center mt-3.5">
+                                                                <p className="font-medium text-[0.938rem]">
+                                                                    Password
                                                                 </p>
                                                             </div>
-                                                        </div>
-                                                        {isError ? (
-                                                            <p className="font-light text-left text-xs text-red-700 mt-2.5">
-                                                                {errorMessage}
-                                                            </p>
-                                                        ) : null}
+                                                            <div className="flex flex-row justify-between items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3 text-black">
+                                                                <input
+                                                                    className="w-2/3 bg-login-btn"
+                                                                    type={
+                                                                        showPassword
+                                                                            ? 'text'
+                                                                            : 'password'
+                                                                    }
+                                                                    placeholder="Password"
+                                                                    value={password}
+                                                                    onChange={(e) =>
+                                                                        setPassword(e.target.value)
+                                                                    }
+                                                                />
+                                                                {!showPassword ? (
+                                                                    <Visibility
+                                                                        style={{ cursor: 'pointer' }}
+                                                                        onClick={togglePassword}
+                                                                    />
+                                                                ) : (
+                                                                    <VisibilityOff
+                                                                        style={{ cursor: 'pointer' }}
+                                                                        onClick={togglePassword}
+                                                                    />
+                                                                )}
+                                                            </div>
 
-                                                        <div
-                                                            onClick={goBackSignupHandler}
-                                                            className="flex flex-row justify-center items-center gap-2 mt-4 cursor-pointer"
-                                                        >
-                                                            <img
-                                                                src={back}
-                                                                className="h-2.5 w-2.5 object-contain"
-                                                            />
-                                                            <p className="font-medium text-xs">
-                                                                Go Back
-                                                            </p>
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
+                                                            <div className="flex flex-row justify-between items-center mt-3.5">
+                                                                <p className="font-medium text-[0.938rem]">
+                                                                    Name
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row justify-between items-center border border-gray-500 bg-login-btn mt-2 rounded-md py-2.5 px-3">
+                                                                <input
+                                                                    className="w-2/3 bg-login-btn"
+                                                                    type="text"
+                                                                    placeholder="Name"
+                                                                    value={name}
+                                                                    onChange={(e) =>
+                                                                        setName(e.target.value)
+                                                                    }
+                                                                />
+                                                            </div>
+
+                                                            <div
+                                                                onClick={signupHandler}
+                                                                className={`flex flex-row items-center bg-login-btn mt-4 rounded-md py-2.5 px-3 cursor-pointer ${style.NextBtn}`}
+                                                            >
+                                                                <div className="flex flex-row justify-center items-center gap-2 flex-1">
+                                                                    <p>
+                                                                        {isLoading ? (
+                                                                            <CircularProgress
+                                                                                style={{
+                                                                                    width: 18,
+                                                                                    height: 18,
+                                                                                    color: 'red',
+                                                                                }}
+                                                                            />
+                                                                        ) : (
+                                                                            'Signup'
+                                                                        )}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            {isError ? (
+                                                                <p className="font-light text-left text-xs text-red-700 mt-2.5">
+                                                                    {errorMessage}
+                                                                </p>
+                                                            ) : null}
+
+                                                            <div
+                                                                onClick={goBackSignupHandler}
+                                                                className="flex flex-row justify-center items-center gap-2 mt-4 cursor-pointer"
+                                                            >
+                                                                <img
+                                                                    src={back}
+                                                                    className="h-2.5 w-2.5 object-contain"
+                                                                />
+                                                                <p className="font-medium text-xs">
+                                                                    Go Back
+                                                                </p>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                </>
                                             }
                                             {isMainLoginOption && (
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
