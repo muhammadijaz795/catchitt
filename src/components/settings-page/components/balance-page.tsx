@@ -154,7 +154,7 @@ const BalancePage = ({ className }: BalancePageProps) => {
     };
 
     const handleGoBack = () => {
-        navigate('/settings/account'); // Navigate back to the previous page
+        navigate(-1); // Navigate back to the previous page
         setSettingsDropdown(true);
     };
 
