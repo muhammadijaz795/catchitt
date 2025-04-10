@@ -1,4 +1,4 @@
-import { Box, Chip, CircularProgress, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Stack, styled, SvgIcon, Tooltip } from '@mui/material';
+import { Box, Chip, CircularProgress, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Stack, styled, SvgIcon, Tooltip, SelectChangeEvent } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defaultAvatar, downArrow, search } from '../../../icons';
@@ -85,6 +85,34 @@ function FormRightSide(props: any) {
     const token = localStorage.getItem('token');
     const [coverTab, setCoverTab] = useState<string>('suggestion');
 
+    const [postTimeOption, setPostTimeOption] = useState(); // "now" or "schedule"
+    const [time, setTime] = useState("00:00");
+    const [date, setDate] = useState("");
+    const [canView, setCanView] = useState("everyone");
+    // updateState('canView', "everyone");
+
+
+    const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newTime = event.target.value;
+        setTime(newTime);
+    };
+
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newDate = event.target.value;
+        setDate(newDate);
+    };
+
+    useEffect(() => {
+        if (postTimeOption === "schedule" && date && time) {
+            const localDateTime = new Date(`${date}T${time}`);
+            const utcDateTime = localDateTime.toISOString();
+            updateState('scheduledAt', utcDateTime);
+        }
+    }, [date, time]);
+
+
+      
+
     const StyledSelect = styled(Select)(({ theme }) => ({
         backgroundColor: '#f3f3f3',
         borderRadius: 12,
@@ -145,6 +173,7 @@ function FormRightSide(props: any) {
     useEffect(() => {
         loadCountries();
         if (totalFollowers === null) dispatch(loadFollowers(1));
+        updateState('canView', "everyone");
     }, []);
 
     useEffect(() => {
@@ -200,8 +229,14 @@ function FormRightSide(props: any) {
         setFilteredFollowers(followers)
     },[tagUsersPopup]);
 
-    console.log('uploadState');
-    console.log(uploadState);
+    const handleCanViewChange = (event: SelectChangeEvent) => {
+        const value = event.target.value;
+        setCanView(value);
+        updateState('canView', value);
+    };
+
+    // console.log('uploadState');
+    // console.log(uploadState);
 
 
     
@@ -338,7 +373,7 @@ function FormRightSide(props: any) {
                                 </div>
                             )}
                         </div>
-                        {/* <div className="w-[100%] flex flex-col pt-2">
+                        <div className="w-[100%] flex flex-col pt-2">
                             <div className="flex justify-between w-[100%]">
                                 <p className="text-[0.875rem]  font-medium text-custom-dark-222 leading-[1.7rem]">
                                     Category
@@ -420,7 +455,7 @@ function FormRightSide(props: any) {
                                 onClick={() => setTagUsersPopup(true)}
                                 placeholder="Tag people"
                             />
-                        </div> */}
+                        </div>
                         <div className="w-[100%] flex flex-col pt-2">
                             <div className="flex justify-between w-[100%]">
                                 <p className="text-[0.875rem] font-medium text-custom-dark-222 leading-[1.7rem]">
@@ -486,49 +521,48 @@ function FormRightSide(props: any) {
                                 <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
                                     When to post
                                 </p>
-                            <RadioGroup row defaultValue="now" name="when-to-post">
-                            <FormControlLabel
-                                value="now"
-                                control={
-                                <Radio
-                                    sx={{
-                                    color: '#FF2C55',
-                                    '&.Mui-checked': {
-                                        color: '#FF2C55',
-                                    },
-                                    }}
-                                />
-                                }
-                                label="Now"
-                            />
-                            <FormControlLabel
-                                value="schedule"
-                                control={
-                                <Radio
-                                    sx={{
-                                    color: '#ccc',
-                                    '&.Mui-checked': {
-                                        color: '#FF2C55',
-                                    },
-                                    }}
-                                />
-                                }
-                                label={
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                    Schedule
-                                    <Tooltip title="Set a time to publish later">
-                                        <IconButton size="small">
-                                            <svg className='ml-1' width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.989" d="M6.33905 0.511719C3.11961 0.511719 0.509888 3.12144 0.509888 6.34089C0.509888 9.56033 3.11961 12.1701 6.33905 12.1701C9.5585 12.1701 12.1682 9.56033 12.1682 6.34089C12.1682 3.12144 9.5585 0.511719 6.33905 0.511719ZM6.33905 1.67755C7.57585 1.67755 8.76198 2.16887 9.63653 3.04341C10.5111 3.91796 11.0024 5.10409 11.0024 6.34089C11.0024 7.57768 10.5111 8.76382 9.63653 9.63836C8.76198 10.5129 7.57585 11.0042 6.33905 11.0042C5.10226 11.0042 3.91612 10.5129 3.04158 9.63836C2.16704 8.76382 1.67572 7.57768 1.67572 6.34089C1.67572 5.10409 2.16704 3.91796 3.04158 3.04341C3.91612 2.16887 5.10226 1.67755 6.33905 1.67755ZM6.33905 3.4263C6.18446 3.4263 6.03619 3.48772 5.92687 3.59703C5.81755 3.70635 5.75614 3.85462 5.75614 4.00922C5.75614 4.16382 5.81755 4.31208 5.92687 4.4214C6.03619 4.53072 6.18446 4.59214 6.33905 4.59214C6.49365 4.59214 6.64192 4.53072 6.75124 4.4214C6.86056 4.31208 6.92197 4.16382 6.92197 4.00922C6.92197 3.85462 6.86056 3.70635 6.75124 3.59703C6.64192 3.48772 6.49365 3.4263 6.33905 3.4263ZM5.75614 5.17505C5.60154 5.17505 5.45327 5.23647 5.34395 5.34578C5.23464 5.4551 5.17322 5.60337 5.17322 5.75797C5.17322 6.03893 5.38249 6.24878 5.64655 6.30474L5.30088 7.98005C5.16564 8.65681 5.64946 9.25547 6.33847 9.25547H6.92139C7.07599 9.25547 7.22425 9.19406 7.33357 9.08474C7.44289 8.97542 7.50431 8.82715 7.50431 8.67255C7.50431 8.51795 7.44289 8.36969 7.33357 8.26037C7.22425 8.15105 7.07599 8.08964 6.92139 8.08964H6.46671L6.9039 5.86756C6.92146 5.78366 6.92004 5.6969 6.89973 5.61363C6.87942 5.53036 6.84075 5.45268 6.78654 5.38629C6.73233 5.3199 6.66396 5.26647 6.58643 5.22992C6.5089 5.19337 6.42418 5.17462 6.33847 5.17505H5.75614Z" fill="black" fill-opacity="0.34"/>
-                                            </svg>
-                                        </IconButton>
-                                    </Tooltip>
-                                </Box>
-                                }
-                            />
-                            </RadioGroup>
-                        </FormControl>
+                                <RadioGroup
+                                    row
+                                    value={postTimeOption}
+                                    onChange={(e) => setPostTimeOption(e.target.value)}
+                                    name="when-to-post"
+                                >
+                                    <FormControlLabel
+                                        value="now"
+                                        control={<Radio sx={{ color: '#FF2C55', '&.Mui-checked': { color: '#FF2C55' } }} />}
+                                        label="Now"
+                                    />
+                                    <FormControlLabel
+                                        value="schedule"
+                                        control={<Radio sx={{ color: '#ccc', '&.Mui-checked': { color: '#FF2C55' } }} />}
+                                        label={
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                Schedule
+                                                <Tooltip title="Set a time to publish later">
+                                                    <IconButton size="small">{/* your icon */}</IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                        }
+                                    />
+                                </RadioGroup>
 
+                        </FormControl>
+                        {postTimeOption === "schedule" && (
+                            <>
+                        <input
+                            type="time"
+                            value={time}
+                            onChange={handleTimeChange}
+                            className={`w-full p-2  h-10 border border-gray-300 rounded-sm mt-2 cursor-pointer hover:border-gray-400`}
+                        />
+                         <input
+                            type="date"
+                            value={date}
+                            onChange={handleDateChange}
+                            className={`w-full p-2  h-10 border border-gray-300 rounded-sm mt-2 cursor-pointer hover:border-gray-400`}
+                        />
+                        </>
+                    )}
                         </div>
                         <div className='text-left mb-2'>
                         <FormControl fullWidth>
@@ -536,7 +570,8 @@ function FormRightSide(props: any) {
                                 Who can watch this video
                                 </p>
                             <Select
-                            defaultValue="everyone"
+                            value={canView}
+                            onChange={(event) => handleCanViewChange(event)}
                             IconComponent={KeyboardArrowDownIcon}
                             sx={{
                                 width: '15rem',
@@ -555,7 +590,7 @@ function FormRightSide(props: any) {
                             >
                             <MenuItem value="everyone">Everyone</MenuItem>
                             <MenuItem value="followers">Followers</MenuItem>
-                            <MenuItem value="private">Only Me</MenuItem>
+                            <MenuItem value="onlyme">Only Me</MenuItem>
                             </Select>
                         </FormControl>
                         </div>
@@ -571,7 +606,7 @@ function FormRightSide(props: any) {
                                         onChange={(e: any) =>
                                             updateState('replyOnComment', e?.target?.checked)
                                         }
-                                        checked={state?.replyOnComment || false}
+                                        checked={state?.replyOnComment}
                                     />
                                     <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
                                         Comment
@@ -582,13 +617,13 @@ function FormRightSide(props: any) {
                                         onChange={(e: any) =>
                                             updateState('allowDuet', e?.target?.checked)
                                         }
-                                        checked={state?.allowDuet || false}
+                                        checked={state?.allowDuet}
                                     />
                                     <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
                                         Duet
                                     </p>
                                 </div>
-                                {/* <div className="flex gap-2 items-center">
+                                <div className="flex gap-2 items-center">
                                     <BasicCheckBox
                                         onChange={(e: any) =>
                                             updateState('allowStitch', e?.target?.checked)
@@ -598,7 +633,7 @@ function FormRightSide(props: any) {
                                     <p className="text-[1rem] font-medium text-custom-dark-222 leading-[1.1rem]">
                                         Stitch
                                     </p>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
                         <div className="flex justify-start items-center pt-3 gap-[1.5rem]">

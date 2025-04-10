@@ -7,6 +7,7 @@ import { STATUS_CODE, UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 
 interface StateInterface {
+    canView: string;
     category?: any;
     description?: string;
     videoId?: string;
@@ -20,6 +21,7 @@ interface StateInterface {
     allowAddStory?: boolean;
     taggedUsers?: any;
     replyOnComment?: boolean;
+    scheduledAt?: string; // Added property
 }
 
 function useUpload() {
@@ -113,10 +115,15 @@ function useUpload() {
         setIsPosting(true);
         let getLinks: any = {};
         let postPayload = new FormData();
+        let postURL = '/media-content/request-video-upload';
+        if(state?.scheduledAt){
+            console.log(state?.scheduledAt);
+            postURL+= '?scheduledAt=' + state?.scheduledAt;
+        }
 
         // Do get request for video urls
         try {
-            getLinks = await get('/media-content/request-video-upload');
+            getLinks = await get(postURL);
         } catch (error) {
             console.error('Something Went Wrong', error);
             setIsPosting(false);
@@ -128,9 +135,19 @@ function useUpload() {
         postPayload.append('category', state?.category?._id || '');
         postPayload.append('description', state?.description || '');
         postPayload.append('isOnlyMe', `${state?.isOnlyMe || false}`);
+        if(state?.canView) {
+            postPayload.append('canView', state?.canView || '');
+        }
+        postPayload.append('privacy', `${state?.isOnlyMe || false}`); // only_me, followers, everyone
         postPayload.append('allowDuet', `${state?.allowDuet || false}`);
         postPayload.append('allowDownload', `${state?.allowDownload || false}`);
+        postPayload.append('allowStitch', `${state?.allowStitch || false}`);
         postPayload.append('place', state?.place || '');
+        if(state?.scheduledAt){
+            console.log(state?.scheduledAt);
+            postPayload.append('scheduledAt', state?.scheduledAt || '');
+        }
+        
         // postPayload.append('taggedUsers', state?.taggedUsers || []);
         // postPayload.append('replyOnComment', '');
 
