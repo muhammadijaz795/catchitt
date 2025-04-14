@@ -14,14 +14,14 @@ function UploadFile({ changeFileHandler }: any) {
     const [lightTheme, setlightTheme] = useState('bg-custom-light');
 
     useEffect(() => {
-        var themeColor = window.localStorage.getItem('theme');
-
-        if (themeColor == 'dark') {
-            setdarkTheme(style.darkTheme);
-            setlightTheme('');
-        } else {
-            setlightTheme('bg-custom-light');
-        }
+        // var themeColor = window.localStorage.getItem('theme');
+        // setlightTheme('bg-custom-light');
+        // if (themeColor == 'dark') {
+        //     setdarkTheme(style.darkTheme);
+        //     setlightTheme('');
+        // } else {
+        //     setlightTheme('bg-custom-light');
+        // }
     });
 
    

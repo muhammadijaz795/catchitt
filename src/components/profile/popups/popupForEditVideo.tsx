@@ -14,6 +14,8 @@ import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import useUpload from '../../upload/hooks';
 import { useUpdateEffect } from 'react-use';
 import { Typography } from 'antd';
+import { debounce } from 'lodash';
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -45,6 +47,13 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   const videoRef = useRef<HTMLVideoElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const playbackTrack = useRef<HTMLDivElement>(null);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = debounce((query: string) => {
+    setSearchQuery(query);
+  }, 500);
+
 
   const lightThemePalette = createTheme({
     palette: {
@@ -302,6 +311,13 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
     handleClose();
   }
 
+  // Clean up debounce on unmount
+useEffect(() => {
+  return () => {
+      handleSearch.cancel();
+  };
+}, []);
+
   useEffect(() => {
     if (open) {
       setVideo(targetVideo);
@@ -363,7 +379,18 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
                   ></path>
                 </svg>
               </span>
-              <input type="text" className="bg-transparent pl-3" placeholder="Search" />
+              <input type="text" className="bg-transparent pl-3" placeholder="Search"   onChange={(e) => handleSearch(e.target.value)} />
+              {searchQuery && (
+                  <button 
+                      onClick={() => {
+                          setSearchQuery('');
+                          handleSearch('');
+                      }}
+                      className="pr-2"
+                  >
+                      ×
+                  </button>
+              )}
             </span>
           </div>
 
@@ -391,6 +418,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
             isFavoriteSounds={audioTabSelected === 'Favorites'}
             selectedAudio={selectedAudio}
             setSelectedAudio={setSelectedAudio}
+            searchQuery={searchQuery}
           />
 
           {/* Add Sound Button */}

@@ -43,11 +43,11 @@ function UploadPage() {
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
-
-        if (themeColor == 'dark') {
-            setdarkTheme(style.darkTheme);
-        } else {
-        }
+        setdarkTheme('');
+        // if (themeColor == 'dark') {
+        //     setdarkTheme(style.darkTheme);
+        // } else {
+        // }
     });
 
     // useEffect(() => {

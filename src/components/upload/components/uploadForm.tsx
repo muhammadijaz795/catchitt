@@ -22,13 +22,14 @@ function UploadForm(props: any) {
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
+        setlightTheme('bg-custom-light');
 
-        if (themeColor == 'dark') {
-            setdarkTheme(style.darkTheme);
-            setlightTheme('');
-        } else {
-            setlightTheme('bg-custom-light');
-        }
+        // if (themeColor == 'dark') {
+        //     setdarkTheme(style.darkTheme);
+        //     setlightTheme('');
+        // } else {
+        //     setlightTheme('bg-custom-light');
+        // }
     });
 
     const renderUploadStatus = () => {
