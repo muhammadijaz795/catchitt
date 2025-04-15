@@ -140,10 +140,13 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                         onClick={() => setSelectedAudio(audio.url)}
                     >
                         <img className="w-10 h-10 bg-gray-200 mr-2" src={defaultAvatar} alt="soundImg" />
-                        <div>
+                        <div className="w-[15rem]">
                             <div className="font-medium text-sm">{Object.hasOwn(audio,'title')? audio.title: audio.name}</div>
-                            <button
-                                className="text-xl ml-4"
+                            
+                            {/* <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span> */}
+                        </div>
+                        <button
+                                className="btn text-xl ml-4"
                                 onClick={(e) => {
                                     e.stopPropagation(); // Prevent playing audio on click
                                     toggleFavorite(audio._id);
@@ -152,8 +155,6 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                             >
                                 {audio.isBookmarked ? '💖' : '🤍'}
                             </button>
-                            {/* <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span> */}
-                        </div>
                        {/* <img src={attachMusicInWhite} alt="attach-sound" /> */}
                     </li>
                 ))}
