@@ -146,6 +146,7 @@ function UploadForm(props: any) {
                     selectedVideoSrc={selectedVideoSrc}
                     selectFilesHandler={selectFilesHandler}
                     updateState={updateState}
+                    state={state}
                 />
                 
             </div>

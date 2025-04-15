@@ -11,13 +11,20 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import WifiIcon from '@mui/icons-material/Wifi';
 import BatteryFullIcon from '@mui/icons-material/BatteryFull';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo }: any) {
+function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo,state }: any) {
     const [replaceVideoPopup, setReplaceVideoPopup] = React.useState(false);
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const [value, setValue] = React.useState(1); // Default: Profile
 
-  const handleChange = (event, newValue) => {
+    const profileImg = useSelector((state: any) => state?.reducers?.profile?.avatar);
+    const name = useSelector((state: any) => state?.reducers?.profile?.name);
+    const userName = useSelector((state: any) => state?.reducers?.profile?.username);
+    const coverImg = useSelector((state: any) => state?.reducers?.profile?.cover);
+
+  const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
   };
     const MyIcon = (
@@ -148,14 +155,14 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
         }}
       >
         <Avatar
-          src="https://via.placeholder.com/100"
+          src={profileImg}
           sx={{ width: 80, height: 80 }}
         />
         <Typography
           variant="subtitle1"
           sx={{ mt: 1, fontWeight: 'bold', color: '#000' }}
         >
-          muhammadasifitz
+          {name}
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
@@ -186,7 +193,7 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
                 <>
                   <Box
                     component="img"
-                    src="https://via.placeholder.com/100x100"
+                    src={state.thumbnailUrl}
                     alt="Post"
                     sx={{
                       width: '100%',
