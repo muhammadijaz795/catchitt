@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Divider, MenuItem, Menu, ThemeProvider, createTheme, Box, Typography, Grid, Card, CardMedia, CardContent, Tabs, Tab, Container, Select, Chip } from '@mui/material';
+import { Divider, MenuItem, Menu, ThemeProvider, createTheme, Box, Typography, Grid, Card, CardMedia, CardContent, Tabs, Tab, Container, Select, Chip, IconButton } from '@mui/material';
 import OverviewTab from './OverviewTab';
 import ContentTab from './ContentTab';
 import ViewersTab from './ViewersTab';
 import FollowersTab from './FollowersTab';
 import { ANALYTICS_OVERVIEW_TIME_PERIODS, ANALYTICSTABS } from '../../utils/constants';
 import styles from './style.module.scss';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 
 const articles = [
     {
@@ -146,6 +147,29 @@ const Analytics = () => {
       }
     }
   }, [tab]);
+
+  const chipLabels = [
+    'All',
+    'Entertainment',
+    'Beauty & Style',
+    'Performance',
+    'Sports & Outdoors',
+    'Talent',
+    'Nature',
+    'Comedy',
+    'Vlogs',
+    'Tech',
+  ];
+
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    const { current } = scrollRef;
+    if (current) {
+      const scrollAmount = direction === 'left' ? -200 : 200;
+      current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     getUserAnalytics(selectedPeriod);
@@ -305,15 +329,28 @@ const Analytics = () => {
                     </Select>
                 </Box>
                 {/* Filter Chips */}
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={3} flexWrap="wrap" gap={2}>
-                    <Box display="flex" gap={1} flexWrap="wrap">
-                    {['All', 'Entertainment', 'Beauty & Style', 'Performance', 'Sports & Outdoors', 'Talent', 'Nature'].map(
-                        (label, idx) => (
-                        <Chip key={idx} label={label} clickable variant="outlined" />
-                        )
-                    )}
-                    </Box>
-                </Box>
+                <Box display="flex" alignItems="center" mb={3} gap={1}>
+      <IconButton onClick={() => scroll('left')}>
+        <ChevronLeft />
+      </IconButton>
+      <Box
+        ref={scrollRef}
+        sx={{
+          display: 'flex',
+          overflowX: 'auto',
+          gap: 1,
+          scrollbarWidth: 'none', // Firefox
+          '&::-webkit-scrollbar': { display: 'none' }, // Chrome
+        }}
+      >
+        {chipLabels.map((label, idx) => (
+          <Chip key={idx} label={label} clickable variant="outlined" />
+        ))}
+      </Box>
+      <IconButton onClick={() => scroll('right')}>
+        <ChevronRight />
+      </IconButton>
+    </Box>
 
                 {/* Video Grid */}
                 <Grid container spacing={2}>
