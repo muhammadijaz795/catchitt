@@ -504,12 +504,16 @@ const handleFollowerApply = () => {
             borderRadius: 2,
             position: 'relative',
             overflow: 'hidden',
+            '&:hover':{
+                backgroundColor: '#E6E8EA'
+
+            },
             '&:hover .hoverArrow': {
               opacity: 1,
               transform: 'translateX(0)',
             },
           }}>
-          <CardContent sx={{ display: 'flex', gap: 2 }}>
+          <CardContent sx={{ display: 'flex', gap: 2, padding: '0.5rem !important' }}>
             <Avatar src={comment.avatar} alt={comment.user} />
             <Box flexGrow={1}>
                 <Box display="flex" alignItems="center" >
@@ -563,14 +567,26 @@ const handleFollowerApply = () => {
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </Box>
-            <Typography fontWeight={600} textAlign='left' m='auto' fontSize="0.85rem">
+            <Typography fontWeight={600} textAlign='left' m='auto' fontSize="0.75rem">
                 Videoplay back movie
               </Typography>
 
               <div className='w-40 m-auto'>
-                <div className='bg-slate-300 rounded-full h-6 w-6 flex align-items-center justify-center m-auto hoverArrow'>
+                <Box sx={{
+                    width: 30,
+                    height: 30,
+                    bgcolor: 'grey.300',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    m: 'auto',
+                    opacity: 0,
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                    }} className='hoverArrow'>
                     <svg fill="black" color="inherit" font-size="16" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M28.74 24 15.08 10.33a1 1 0 0 1 0-1.41l1.84-1.84a1 1 0 0 1 1.41 0L34.54 23.3a1 1 0 0 1 0 1.42l-16.2 16.21a1 1 0 0 1-1.42 0l-1.84-1.84a1 1 0 0 1 0-1.41L28.74 24Z"></path></svg>
-                </div>
+                </Box>
               </div>
           </CardContent>
         </Card>
