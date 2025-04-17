@@ -44,6 +44,7 @@ function useUpload() {
         isOnlyMe: info?.privacyOptions?.isOnlyMe,
         allowDownload: info?.privacyOptions?.allowDownload,
         allowAddStory: info?.privacyOptions?.allowAddStory,
+        canView: info?.canView
     });
     // const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);

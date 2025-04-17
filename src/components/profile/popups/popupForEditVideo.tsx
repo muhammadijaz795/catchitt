@@ -312,11 +312,11 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   }
 
   // Clean up debounce on unmount
-useEffect(() => {
-  return () => {
-      handleSearch.cancel();
-  };
-}, []);
+// useEffect(() => {
+//   return () => {
+//       handleSearch.cancel();
+//   };
+// }, []);
 
   useEffect(() => {
     if (open) {
@@ -450,10 +450,10 @@ useEffect(() => {
           }}
         >
           <CardContent className="flex flex-col justify-between h-full bg-black/30 backdrop-blur-sm p-4">
-            <Typography variant="subtitle1" className="font-bold uppercase">
+            <Typography className="font-bold uppercase">
               {item.title}
             </Typography>
-            <Typography variant="body2" className="self-end bg-black/50 rounded px-2 py-1 text-sm">
+            <Typography className="self-end bg-black/50 rounded px-2 py-1 text-sm">
               {item.count}
             </Typography>
           </CardContent>

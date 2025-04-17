@@ -169,10 +169,10 @@ function FormRightSide(props: any) {
     const [time, setTime] = useState('');
     const [date, setDate] = useState('');
   
-    const handleTimeChange = (e) => setTime(e.target.value);
-    const handleDateChange = (e) => setDate(e.target.value);
+    const handleTimeChange = (e:any) => setTime(e.target.value);
+    const handleDateChange = (e:any) => setDate(e.target.value);
   
-    const handleChange = (e) => {
+    const handleChange = (e:any) => {
       const value = e.target.value;
       setPostTimeOption(value);
   
@@ -586,7 +586,7 @@ function FormRightSide(props: any) {
       onSelectThumbnail={handleSelectThumbnail}
       onCustomThumbnail={handleCustomThumbnail}
       currentThumbnail={state?.thumbnailUrl}
-      aspectRatio={62 / 127}
+    //   aspectRatio={62 / 127}
     />
   </div>
 </div>
@@ -728,8 +728,8 @@ function FormRightSide(props: any) {
                                         }
                                     />
                                     }
-                                    renderValue={(selected) => {
-                                    return selected ? selected : <span style={{ color: '#999' }}>Search locations</span>;
+                                    renderValue={(selected:any) => {
+                                        return selected ? selected : <span style={{ color: '#999' }}>Search locations</span>;
                                     }}
                                 >
                                     <MenuItem value="new_york">New York</MenuItem>
