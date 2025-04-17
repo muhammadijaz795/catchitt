@@ -16,6 +16,7 @@ import {
     IconButton,
     InputAdornment,
     Divider,
+    Checkbox,
   } from '@mui/material';
   import { ChatBubbleOutline, Check, ExpandMore, FavoriteBorder, FilterList, Search } from '@mui/icons-material';
 import { relative } from 'path';
@@ -45,7 +46,7 @@ function CommentsPage() {
         canLoadMore: boolean;
     }
 
-    const [comments, setComments] = useState<CommentsInterface>(
+    const [commentsa, setComments] = useState<CommentsInterface>(
         {
             items: [],
             page: 1,
@@ -96,24 +97,82 @@ function CommentsPage() {
         // } else {
         // }
     });
-    const filterOptions = {
-        'Posted by all': ['Posted by all', 'Posted by followers', 'Posted by non-followers'],
-      };
-    const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState('Posted by all');
+    const [anchorElAllComments, setAnchorElAllComments] = useState(null);
+    const [anchorElPostedBy, setAnchorElPostedBy] = useState(null);
+  
+    const [selectedAllComments, setSelectedAllComments] = useState('All comments');
+    const [selectedPostedBy, setSelectedPostedBy] = useState('Posted by all');
+  
+    const filterOptionsALLComments = {
+      'All comments': ['All comments', 'Not replied', 'Replied'],
+    };
+  
+    const filterOptionsPostedBy = {
+      'Posted by all': ['Posted by all', 'Posted by admins', 'Posted by users'],
+    };
+  
+    // --- Handlers for All Comments
+    const handleAllCommentsClick = (event) => {
+      setAnchorElAllComments(event.currentTarget);
+    };
+  
+    const handleAllCommentsClose = () => {
+      setAnchorElAllComments(null);
+    };
+  
+    const handleAllCommentsSelect = (option) => {
+      setSelectedAllComments(option);
+      handleAllCommentsClose();
+    };
+  
+    // --- Handlers for Posted By
+    const handlePostedByClick = (event) => {
+      setAnchorElPostedBy(event.currentTarget);
+    };
+  
+    const handlePostedByClose = () => {
+      setAnchorElPostedBy(null);
+    };
+  
+    const handlePostedBySelect = (option) => {
+      setSelectedPostedBy(option);
+      handlePostedByClose();
+    };
 
-  const handleFilterClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    
+// New states for follower count
+const [anchorElFollower, setAnchorElFollower] = useState(null);
+const [selectedFollowerCounts, setSelectedFollowerCounts] = useState([]);
 
-  const handleFilterSelect = (option) => {
-    setSelectedFilter(option);
-    setAnchorEl(null);
-  };
+// Options
+const followerOptions = ['<5K', '5K-10K', '10K-100K', '>100K'];
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+// Handlers
+const handleFollowerClick = (event) => {
+  setAnchorElFollower(event.currentTarget);
+};
+
+const handleFollowerClose = () => {
+  setAnchorElFollower(null);
+};
+
+const handleFollowerSelect = (option) => {
+  if (selectedFollowerCounts.includes(option)) {
+    setSelectedFollowerCounts(selectedFollowerCounts.filter((item) => item !== option));
+  } else {
+    setSelectedFollowerCounts([...selectedFollowerCounts, option]);
+  }
+};
+
+const handleFollowerClear = () => {
+  setSelectedFollowerCounts([]);
+};
+
+const handleFollowerApply = () => {
+  handleFollowerClose();
+};
+
+
 
   const comments = [
     {
@@ -252,42 +311,165 @@ function CommentsPage() {
             <Box p={3}>
       {/* Filters and Search */}
       <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" mb={3} gap={2}>
-        <Box display="flex" gap={1.5} flexWrap="wrap">
-          <Button  startIcon={<FilterList />} sx={{backgroundColor: 'white', color: '#000', border: '1px solid #e4e6eb', borderRadius: '8px', textTransform: 'none' }}>
-            All comments
-          </Button>
+      <Box display="flex" gap={1.5} flexWrap="wrap">
+        
+        {/* All comments filter */}
+        <Button
+          onClick={handleAllCommentsClick}
+          startIcon={<FilterList />}
+          endIcon={<ExpandMore />}
+          sx={{
+            backgroundColor: 'white',
+            color: '#000',
+            border: '1px solid #e4e6eb',
+            borderRadius: '8px',
+            textTransform: 'none',
+          }}
+        >
+          {selectedAllComments}
+        </Button>
 
-          <Button
-           
-            startIcon={<FilterList />}
-            endIcon={<ExpandMore />}
-            onClick={handleFilterClick}
-            sx={{backgroundColor: 'white', color: '#000', border: '1px solid #e4e6eb', borderRadius: '8px', textTransform: 'none' }}
-          >
-            {selectedFilter}
-          </Button>
-          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-            {filterOptions['Posted by all'].map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === selectedFilter}
-                onClick={() => handleFilterSelect(option)}
-                sx={{ justifyContent: 'space-between' }}
-              >
-                {option}
-                {option === selectedFilter && <Check fontSize="small" />}
-              </MenuItem>
-            ))}
-          </Menu>
+        <Menu
+          anchorEl={anchorElAllComments}
+          open={Boolean(anchorElAllComments)}
+          onClose={handleAllCommentsClose}
+          PaperProps={{ sx: { borderRadius: 2, mt: 1, minWidth: 180 } }}
+        >
+          {filterOptionsALLComments['All comments'].map((option) => (
+            <MenuItem
+              key={option}
+              selected={option === selectedAllComments}
+              onClick={() => handleAllCommentsSelect(option)}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              {option}
+              {option === selectedAllComments && <Check fontSize="small" />}
+            </MenuItem>
+          ))}
+        </Menu>
 
-          <Button  startIcon={<FilterList />} sx={{backgroundColor: 'white', color: '#000', border: '1px solid #e4e6eb', borderRadius: '8px', textTransform: 'none' }}>
-            Follower count
-          </Button>
+        {/* Posted by filter */}
+        <Button
+          onClick={handlePostedByClick}
+          startIcon={<FilterList />}
+          endIcon={<ExpandMore />}
+          sx={{
+            backgroundColor: 'white',
+            color: '#000',
+            border: '1px solid #e4e6eb',
+            borderRadius: '8px',
+            textTransform: 'none',
+          }}
+        >
+          {selectedPostedBy}
+        </Button>
 
-          <Button  startIcon={<FilterList />} sx={{backgroundColor: 'white', color: '#000', border: '1px solid #e4e6eb', borderRadius: '8px', textTransform: 'none' }}>
-            Comment date
-          </Button>
-        </Box>
+        <Menu
+          anchorEl={anchorElPostedBy}
+          open={Boolean(anchorElPostedBy)}
+          onClose={handlePostedByClose}
+          PaperProps={{ sx: { borderRadius: 2, mt: 1, minWidth: 180 } }}
+        >
+          {filterOptionsPostedBy['Posted by all'].map((option) => (
+            <MenuItem
+              key={option}
+              selected={option === selectedPostedBy}
+              onClick={() => handlePostedBySelect(option)}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              {option}
+              {option === selectedPostedBy && <Check fontSize="small" />}
+            </MenuItem>
+          ))}
+        </Menu>
+
+        {/* Other static filters */}
+        <Button
+                onClick={handleFollowerClick}
+                startIcon={<FilterList />}
+                endIcon={<ExpandMore />}
+                sx={{
+                    backgroundColor: 'white',
+                    color: '#000',
+                    border: '1px solid #e4e6eb',
+                    borderRadius: '8px',
+                    textTransform: 'none',
+                }}
+                >
+                Follower count
+                </Button>
+
+                <Menu
+                anchorEl={anchorElFollower}
+                open={Boolean(anchorElFollower)}
+                onClose={handleFollowerClose}
+                PaperProps={{ sx: { borderRadius: 2, mt: 1, minWidth: 200 } }}
+                >
+                {followerOptions.map((option) => (
+                    <MenuItem
+                    key={option}
+                    onClick={() => handleFollowerSelect(option)}
+                    sx={{ justifyContent: 'space-between', gap: 1 }}
+                    >
+                    <Checkbox
+                        checked={selectedFollowerCounts.includes(option)}
+                        onChange={() => handleFollowerSelect(option)}
+                        size="small"
+                    />
+                    {option}
+                    </MenuItem>
+                ))}
+
+                <Divider />
+
+                <Box display="flex" justifyContent="space-between" p={1}>
+                    <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={handleFollowerClear}
+                    sx={{
+                        borderColor: '#ccc',
+                        color: '#000',
+                        textTransform: 'none',
+                        px: 2,
+                        borderRadius: '8px',
+                    }}
+                    >
+                    Clear
+                    </Button>
+                    <Button
+                    variant="contained"
+                    size="small"
+                    onClick={handleFollowerApply}
+                    sx={{
+                        backgroundColor: '#ff2c55',
+                        color: '#fff',
+                        textTransform: 'none',
+                        px: 3,
+                        borderRadius: '8px',
+                        '&:hover': {
+                        backgroundColor: '#e6003f',
+                        },
+                    }}
+                    >
+                    Apply
+                    </Button>
+                </Box>
+                </Menu>
+
+        <Button
+          startIcon={<FilterList />}
+          sx={{
+            backgroundColor: 'white',
+            color: '#000',
+            border: '1px solid #e4e6eb',
+            borderRadius: '8px',
+            textTransform: 'none',
+          }}
+        >
+          Comment date
+        </Button>
+      </Box>
 
         {/* Search box */}
         <div style={{
