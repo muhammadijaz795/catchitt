@@ -8,6 +8,8 @@ import style from './index.module.scss';
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { academyOutlineDark, academyOutlineWhite, analyticsOutline, analyticsOutlineWhite, bulbOutlineDark, bulbOutlineWhite, commentOutlineDark, commentOutlineWhite, commentWhite, feedbackQuestionDark, feedbackQuestionWhite, hamburger, hamburgerDark, homeDark, homeIcon } from '../../icons';
+import { Avatar, Box, Typography, Paper } from '@mui/material';
+import Analytics from '../analytics';
 
 function UploadPage() {
     const {
@@ -317,7 +319,35 @@ function UploadPage() {
                     </div>
                 </div>
             </div>
-            {!selectedFile && !isEditMode ? (
+            <div className='homepageMain w-[calc(100%-14rem)] ml-auto px-4 pt-28'>
+            <Paper
+                elevation={1}
+                sx={{
+                    p: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    borderRadius: 1,
+                    mx: 'auto',
+                }}
+                >
+                <Avatar
+                    src="https://i.pravatar.cc/150?img=47" // replace with actual image
+                    alt="Jeniffer Lopes"
+                    sx={{ width: 48, height: 48, mr: 2 }}
+                />
+                <Box>
+                    <Typography sx={{ textAlign: 'left'}} variant="subtitle1" fontWeight="bold">
+                    Jeniffer Lopes
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                    Likes 0 · Followers 45 · Following 193
+                    </Typography>
+                </Box>
+            </Paper>
+                
+                <Analytics />
+            </div>
+            {/* {!selectedFile && !isEditMode ? (
                 <UploadFile  changeFileHandler={handleFileSelect} />
             ) : (
                 <UploadForm
@@ -333,7 +363,8 @@ function UploadPage() {
                     uploadState={uploadState}
                     onCancelUpload={handleCancelUpload}
                 />
-            )}
+            )} */}
+            
         </div>
     );
 }

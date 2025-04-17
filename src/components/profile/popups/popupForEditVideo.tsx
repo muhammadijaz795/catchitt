@@ -379,14 +379,14 @@ useEffect(() => {
                   ></path>
                 </svg>
               </span>
-              <input type="text" className="bg-transparent pl-3" placeholder="Search" value={searchQuery}  onChange={(e) => handleSearch(e.target.value)} />
+              <input type="text" className="bg-transparent pl-3 w-[85%]" placeholder="Search" value={searchQuery}  onChange={(e) => handleSearch(e.target.value)} />
               {searchQuery && (
                   <button 
                       onClick={() => {
                           setSearchQuery('');
                           handleSearch('');
                       }}
-                      className="pr-2"
+                      className="pr-2 btn"
                   >
                       ×
                   </button>

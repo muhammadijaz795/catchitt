@@ -52,7 +52,7 @@ function OverviewTab({ analyticsData, isDarkTheme }: any) {
     }, [analyticsData, activeTab])
 
     return (
-        <div className='max-w-5xl mx-auto mt-8  overflow-hidden'>
+        <div className=' mx-auto mt-8  overflow-hidden'>
             {/* statistics card */}
             <div className={`${isDarkTheme ? 'bg-[#181818]' : 'bg-white'} rounded shadow-sm`}>
                 <div className='inline-flex w-full ' >
