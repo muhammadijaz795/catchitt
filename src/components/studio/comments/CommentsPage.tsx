@@ -40,7 +40,6 @@ function CommentsPage() {
 
     function loadComments()
     {
-        alert(1);
         let endpoint = `${process.env.VITE_API_URL}/media-content/comments?postedBy=${postedBy}&filter=${repliedFilter}&q=${searchQuery}&from=${dateRange.fromDate.toISOString()}&to=${dateRange.toDate.toISOString()}`;
         let requestOptions =
         {
