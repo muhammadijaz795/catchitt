@@ -48,7 +48,7 @@ function CommentsPage() {
         canLoadMore: boolean;
     }
 
-    const [commentsa, setComments] = useState<CommentsInterface>(
+    const [comments, setComments] = useState<CommentsInterface>(
         {
             items: [],
             page: 1,
@@ -98,7 +98,7 @@ function CommentsPage() {
         //     setdarkTheme(style.darkTheme);
         // } else {
         // }
-    });
+    }, []); 
     const [anchorElAllComments, setAnchorElAllComments] = useState(null);
     const [anchorElPostedBy, setAnchorElPostedBy] = useState(null);
   
@@ -176,20 +176,6 @@ const handleFollowerApply = () => {
 
 
 
-  const comments = [
-    {
-      user: 'muhammadas',
-      avatar: 'https://via.placeholder.com/40',
-      comment: 'This is a sample comment here!',
-      thumbnail: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D',
-    },
-    {
-      user: 'johndoe',
-      avatar: 'https://via.placeholder.com/40',
-      comment: 'Another comment from another user.',
-      thumbnail: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bmV3c3xlbnwwfHwwfHx8MA%3D%3D',
-    },
-  ];
 
   
 
@@ -510,7 +496,7 @@ const handleFollowerApply = () => {
       </Box>
 
       {/* Comments List */}
-      {comments.map((comment, idx) => (
+      {comments.items.map((comment, idx) => (
         <Card key={idx} variant="outlined" sx={{
             mb: 2,
             borderRadius: 2,
@@ -526,17 +512,17 @@ const handleFollowerApply = () => {
             },
           }}>
           <CardContent sx={{ display: 'flex', gap: 2, padding: '0.5rem !important' }}>
-            <Avatar src={comment.avatar} alt={comment.user} />
+            <Avatar src={comment.user.avatar} alt={comment.user.name} />
             <Box flexGrow={1}>
                 <Box display="flex" alignItems="center" >
                     <Typography variant="body2" fontSize="0.75rem" textAlign='left' color="text.secondary" mt={0.5}>
-                        MuhammadAsifItz
+                        {comment.user.name}
                     </Typography>
-                    <Typography variant='body2' mx={0.5} borderRadius={0.25} fontWeight={600} px={0.25} bgcolor='#E0F4F8' fontSize="0.75rem" color='#249EB2'>Creator</Typography>
-                    <Typography variant='body2' fontSize="0.75rem" >· 32m ago</Typography>
+                    {/* <Typography variant='body2' mx={0.5} borderRadius={0.25} fontWeight={600} px={0.25} bgcolor='#E0F4F8' fontSize="0.75rem" color='#249EB2'>Creator</Typography> */}
+                    <Typography variant='body2' fontSize="0.75rem" >· {comment.createdTime}</Typography>
                 </Box>
               <Typography fontWeight={600} my={0.5} textAlign='left' fontSize="0.8375rem">
-                {comment.user}
+                {comment.comment}
               </Typography>
               
               <Box display="flex" alignItems="center" gap={1} sx={{ color: 'gray', fontSize: 10 }}>
@@ -615,7 +601,7 @@ const handleFollowerApply = () => {
                 </Box>
 
             <Typography fontWeight={600} textAlign='left' m='auto' fontSize="0.75rem">
-                Videoplay back movie
+                {comment.media.description}
               </Typography>
 
               <div className='w-40 m-auto'>
