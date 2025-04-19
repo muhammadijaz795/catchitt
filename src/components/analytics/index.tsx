@@ -161,9 +161,9 @@ const Analytics = () => {
     'Tech',
   ];
 
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (direction) => {
+  const scroll = (direction: any) => {
     const { current } = scrollRef;
     if (current) {
       const scrollAmount = direction === 'left' ? -200 : 200;
@@ -183,7 +183,7 @@ const Analytics = () => {
   }, []);
   const [tabIndex, setTabIndex] = useState(0);
   
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
   };
     const videos = tabIndex === 0 ? trendingVideos : recommendedVideos;
@@ -298,7 +298,7 @@ const Analytics = () => {
                 <Tabs
                         value={tabIndex}
                         textColor="inherit"
-                        indicatorColor="none"
+                        TabIndicatorProps={{ style: { display: 'none' } }}
                         sx={{ mb: 2,  borderRadius: 2, minHeight: '40px' }}
                         >
                         <Tab
