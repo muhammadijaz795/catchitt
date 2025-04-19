@@ -45,6 +45,7 @@ const ChatComponent = () => {
     //     SEEZITT_VOICE_MESSAGE: 'SeezittVoiceNote',
     //     SEEZITT_LIVE_STREAM: 'SeezittLiveStream',
     // };
+    const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const API_KEY = process.env.VITE_API_URL;
     const [moreOptions, setMoreOptions] = useState<boolean>(false);
@@ -345,6 +346,13 @@ const ChatComponent = () => {
                 const mutableUsers = [...users];
                 mutableUsers[index].unReadMsgs = 0;
                 setUsers(mutableUsers);
+
+                  // Focus input after state updates
+                    setTimeout(() => {
+                        inputRef.current?.focus();
+                        scrollToBottom();
+                    }, 100);
+
             }
         });
 
@@ -912,9 +920,21 @@ const ChatComponent = () => {
 
         setSmsRef('');
         setSmsId('');
-        scrollToBottom();
+        scrollToBottomChat();
         setreplysms(false);
     };
+
+    useEffect(() => {
+        // Focus input when component mounts
+        setTimeout(() => {
+            inputRef.current?.focus();
+            scrollToBottom();
+        }, 500);
+    }, []);
+    
+    useEffect(() => {
+        scrollToBottom();
+    }, [activeChat?.chats]); // Scroll when chats update
 
     const scrollToBottom = () => {
         console.log(
@@ -922,6 +942,14 @@ const ChatComponent = () => {
         )
         if (autoScrolElem.current) {
             autoScrolElem.current.scrollTop = autoScrolElem.current.scrollHeight + 300;
+        }
+    };
+
+    const scrollToBottomChat = () => {
+        if (autoScrolElem.current) {
+            setTimeout(() => {
+                autoScrolElem.current.scrollTop = autoScrolElem.current.scrollHeight;
+            }, 100);
         }
     };
 
@@ -1313,6 +1341,7 @@ const ChatComponent = () => {
                             closeReply={closeReply}
                             currentReplyToMessage={currentReplyToMessage}
                             setMessagesState={setMessagesState}
+                            inputRef={inputRef}
                         />
                     )}
                     {!groupOptions && moreOptions && (
