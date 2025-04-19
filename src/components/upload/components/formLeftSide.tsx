@@ -4,14 +4,27 @@ import style from '../styles.module.scss';
 import CustomPopup from '../../../shared/popups/CustomPopup';
 import React from 'react';
 import PopupForEditVideo from '../../profile/popups/popupForEditVideo';
-import { Tabs, Tab, Box, Paper, Typography } from "@mui/material";
+import { Tabs, Tab, Box, Paper, Typography, IconButton, Grid, Avatar } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import WifiIcon from '@mui/icons-material/Wifi';
+import BatteryFullIcon from '@mui/icons-material/BatteryFull';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo }: any) {
+function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo,state }: any) {
     const [replaceVideoPopup, setReplaceVideoPopup] = React.useState(false);
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const [value, setValue] = React.useState(1); // Default: Profile
 
-  const handleChange = (event, newValue) => {
+    const profileImg = useSelector((state: any) => state?.reducers?.profile?.avatar);
+    const name = useSelector((state: any) => state?.reducers?.profile?.name);
+    const userName = useSelector((state: any) => state?.reducers?.profile?.username);
+    const coverImg = useSelector((state: any) => state?.reducers?.profile?.cover);
+
+  const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
   };
     const MyIcon = (
@@ -82,7 +95,139 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
             <div
                 className={`mx-auto md:mx-0 w-[17.5rem] mt-[1.25rem] mb-[1rem] ${style.emulator}`}
             >
-                <CustomPlayer src={selectedVideoSrc ? selectedVideoSrc : videoInfo?.originalUrl} />
+
+<Box
+      sx={{
+        width: '100%',
+        maxWidth: 375,
+        mx: 'auto',
+        bgcolor: '#fff',
+        border: '1px solid #ddd',
+        borderRadius: 3,
+        overflow: 'hidden',
+        paddingTop: '0.25rem'
+      }}
+    >
+      {/* Top status bar */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          px: 2,
+          pt: 1,
+        }}
+      >
+        <Typography variant="body2">8:00</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <SignalCellularAltIcon sx={{ fontSize: 16 }} />
+          <WifiIcon sx={{ fontSize: 16 }} />
+          <BatteryFullIcon sx={{ fontSize: 16 }} />
+        </Box>
+      </Box>
+
+      {/* Navigation Header */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: 1,
+          py: 1,
+        }}
+      >
+          <ArrowBackIosNewIcon fontSize="small" />
+      
+        <Box width={24} /> {/* spacer */}
+        {/* 3-dot icon */}
+        <Box sx={{ mt: 1 }}>
+            <MoreVertIcon />
+        </Box>
+      </Box>
+
+      {/* Profile Section */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          mt: 1,
+        }}
+      >
+        <Avatar
+          src={profileImg}
+          sx={{ width: 80, height: 80 }}
+        />
+        <Typography
+          variant="subtitle1"
+          sx={{ mt: 1, fontWeight: 'bold', color: '#000' }}
+        >
+          {name}
+        </Typography>
+
+        <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+          <Box
+            sx={{ width: 60, height: 20, bgcolor: '#eee', borderRadius: 1 }}
+          />
+          <Box
+            sx={{ width: 60, height: 20, bgcolor: '#eee', borderRadius: 1 }}
+          />
+        </Box>
+
+        
+      </Box>
+
+      {/* Grid Posts */}
+      <Grid container spacing={0.5} sx={{ mt: 2, px: 1 }}>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
+          <Grid item xs={4} key={index}>
+            <Box
+              sx={{
+                width: '100%',
+                aspectRatio: '1 / 1',
+                bgcolor: index === 0 ? '#ccc' : '#f0f0f0',
+                position: 'relative',
+              }}
+            >
+              {index === 0 && (
+                <>
+                  <Box
+                    component="img"
+                    src={state.thumbnailUrl}
+                    alt="Post"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 4,
+                      left: 4,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.5,
+                      color: '#fff',
+                      backgroundColor: 'rgba(0,0,0,0.6)',
+                      px: 0.5,
+                      borderRadius: 1,
+                      fontSize: 12,
+                    }}
+                  >
+                    <PlayArrowIcon fontSize="inherit" />
+                    <span>1000</span>
+                  </Box>
+                </>
+              )}
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+
+
             </div>
             )}
              {value === 2 && (

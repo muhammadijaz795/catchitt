@@ -1,4 +1,5 @@
 import logo from '../assets/assets/icons/logo.svg';
+import svgTemplate from '../public/images/icons/svgTemplate.svg';
 import logoS from './assets/logo-S.svg';
 import avatar from '../assets/icons/avatar.svg';
 import closeSvg from '../public/images/icons/Close Square.svg';
@@ -195,6 +196,7 @@ import blackHeartOutline from './assets/black_heart_outline.svg'
 import blackCrossHeart from './assets/black_cross_heart.svg'
 
 export {
+    svgTemplate,
     logoS,
     RepostVideo,
     blackHeartOutline,

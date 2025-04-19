@@ -23,6 +23,8 @@ import geoSlice from './reducers/geoServices';
 import autoScrollUserSettings from './reducers/autoScrollUserSettings';
 import volume from './reducers/volumeSlice';
 import currentPostReducer from './reducers/currentPostReducer';
+import currentEditVideoReducer from './reducers/currentEditVideoReducer';
+
 
 
 const followings: any = createSlice({
@@ -340,5 +342,6 @@ export default combineReducers({
     setVideoUrl,
     autoScrollUserSettings, 
     volume,
-    currentPost: currentPostReducer
+    currentPost: currentPostReducer,
+    currentEditVideo: currentEditVideoReducer,
 });

@@ -210,6 +210,10 @@ const ProfileHeader: FunctionComponent<Props> = ({
                         className={styles.bannerImg}
                         src={imgBase64 != '' ? imgBase64 : coverImg}
                         alt="Banner Img"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                            (e.target as HTMLImageElement).src = defaultBanner;  // Set default image if there's an error
+                        }}
                     />
                 </div>
                 <div className={styles.bottomContainer}>

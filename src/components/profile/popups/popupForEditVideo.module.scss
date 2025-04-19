@@ -34,17 +34,18 @@
                     padding:  0.5rem 0.5rem 0 0.5rem;
                     justify-content: space-between;
                     margin-bottom: 1rem;
-                    border-bottom: 1px solid #fff;
+                    border-bottom: 1px solid #bfbfbf;
                     text-align: center;
                     .audioTab{
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
                         width: 50%;
+                        color: #000000A6;
                     }
                     .audioTabSelected{
-                        border-bottom: 2px solid #f50057;
-                        color: #f50057;
+                        border-bottom: 2px solid #000;
+                        color: #000;
                     }
                 }
                 .audioList{

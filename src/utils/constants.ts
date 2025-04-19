@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { appleAuth, defaultAvatar, emailOrPhone, googleAuth, googleIcon, musicBlack, templates } from '../icons';
+import { appleAuth,svgTemplate, defaultAvatar, emailOrPhone, googleAuth, googleIcon, musicBlack, templates } from '../icons';
 
 export const API_KEY = process.env.VITE_API_URL;
 
@@ -18,6 +18,9 @@ export const uploadCategories = [
     '🚘 Autos and Vehicles',
     '😂 Comedy',
 ];
+
+
+  
 
 export const UPLOAD_VIDEO_DETAILS = `${API_KEY}/media-content/directly-from-s3`;
 export const getVideoCategoriesEndPoind = '/media-content/categories';
@@ -254,6 +257,7 @@ export const COMMENTS = [
 
 export const EDIT_VIDEO_ACTIONS = [
     { action: 'SOUND', icon: musicBlack, title: 'Sounds' },
+    { action: 'TEMPLATE', icon: svgTemplate, title: 'Templates' },
     // { action: 'TEMPLATE', icon: templates, title: 'Templates' },
 ];
 

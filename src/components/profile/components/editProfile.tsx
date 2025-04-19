@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkCountryCode, chevronDown, defaultAvatar, search } from '../../../icons';
 import { getProfileData } from '../../../redux/AsyncFuncs';
-import { APP_TEXTS, END_POINTS, METHOD, showToast } from '../../../utils/constants';
+import { APP_TEXTS, END_POINTS, METHOD, showToast,showToastError } from '../../../utils/constants';
+
 import EditProfileIcon from '../svg-components/EditProfileIcon';
 import styles from './editProfile.module.scss';
 import SelectProfileImgPopup from './select-profile-img';
@@ -190,14 +191,21 @@ export default function EditProfile({ onCancel, onSave }: Props) {
                 body: formData,
                 headers: { 'Authorization': `Bearer ${token}` },
             })
-                .then((res) => res.json())
-                .then((res) => {
-                    dispatch(getProfileData());
-                    showToast('Profile Updated Successfully!');
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            .then(async (res) => {
+                const data = await res.json();
+    
+                if (!res.ok) {
+                    throw new Error(data.message || "Something went wrong");
+                }
+    
+                dispatch(getProfileData());
+                showToast('Profile Updated Successfully!');
+                onSave();
+            })
+            .catch((err) => {
+                console.error("Error updating profile:", err);
+                showToastError(err.message || "Failed to update profile");
+            });;
         } catch (error) {
             console.log(error);
         }
