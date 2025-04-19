@@ -22,6 +22,7 @@ import {
   import { PlayArrow, Check, ExpandMore, FavoriteBorder, FilterList, Search } from '@mui/icons-material';
 
 import { relative } from 'path';
+import { formatCustomDate } from '../../../utils/helpers';
 
 type PostedByOptions = "all" | "followers" | "non-followers";
 
@@ -534,7 +535,7 @@ const handleFollowerApply = () => {
                         {comment.user.name}
                     </Typography>
                     {/* <Typography variant='body2' mx={0.5} borderRadius={0.25} fontWeight={600} px={0.25} bgcolor='#E0F4F8' fontSize="0.75rem" color='#249EB2'>Creator</Typography> */}
-                    <Typography variant='body2' fontSize="0.75rem" >· {comment.createdTime}</Typography>
+                    <Typography variant='body2' fontSize="0.75rem" >· {formatCustomDate(comment.createdTime)}</Typography>
                 </Box>
               <Typography fontWeight={600} my={0.5} textAlign='left' fontSize="0.8375rem">
                 {comment.comment}
@@ -545,7 +546,7 @@ const handleFollowerApply = () => {
                 <Box display="flex" alignItems="center" gap={0.5}>
                     <FavoriteBorder  sx={{ color: 'black', fontSize: '12px'}} />
                     <Typography variant="body2" sx={{ fontWeight: 400, fontSize: 12, color: 'black' }}>
-                    0
+                    {comment.likes}
                     </Typography>
                 </Box>
 
@@ -619,7 +620,7 @@ const handleFollowerApply = () => {
                 {comment.media.description}
               </Typography>
 
-              <div className='w-40 m-auto'>
+              <div className='w-40 m-auto' onClick={()=>navigate(`/analytics/comment/${comment.media._id}`)}>
               <Tooltip  componentsProps={{
                 tooltip: {
                 sx: {
