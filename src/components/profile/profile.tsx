@@ -187,7 +187,26 @@ export const Profile = (props: any) => {
     };
 
     const viewItemClickHandler = (index: number) => {
-        console.log('View Item Click : ', index);
+        let user = profileViewsContent[index];
+        
+        if(user.relationWithViewer == 'Follow')
+        {
+            setProfileViewsContent(prev => prev.map((item, i) => i === index ? { ...item, relationWithViewer: 'Following' } : item));
+
+            let endpoint = `${process.env.VITE_API_URL}/profile/follow/${user.viewerId}`;
+            let requestOptions =
+            {
+                method: 'POST',
+                headers:
+                {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            fetch(endpoint, requestOptions)
+            .catch((error) => console.error('Fetch error:', error));
+        }
     };
 
     const fetchData = async (signal: AbortSignal) => {
@@ -389,7 +408,8 @@ export const Profile = (props: any) => {
     const makeProfileViews = (data: any) => {
         const filteredArray = data?.filter((item: any)=> item?._id !== userId);
         const newProfileViewsContent = filteredArray?.map(
-            (viewItem: { avatar: any; name: any; isFollower: any; isFollowing: any }) => {
+            (viewItem: { _id: any; avatar: any; name: any; isFollower: any; isFollowing: any }) => {
+                const viewerId = viewItem?._id;
                 const viewerAvatar =
                     viewItem?.avatar !== '' && viewItem?.avatar
                         ? viewItem?.avatar
@@ -407,6 +427,7 @@ export const Profile = (props: any) => {
                     relationWithViewer = 'Following';
                 }
                 return {
+                    viewerId,
                     viewerAvatar,
                     viewerName,
                     relationWithViewer,
