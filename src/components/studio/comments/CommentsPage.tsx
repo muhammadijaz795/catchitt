@@ -554,7 +554,7 @@ const handleFollowerApply = () => {
                 <Divider orientation="vertical" flexItem sx={{ mx: 0.125, borderColor: '#ccc' }} />
 
                 {/* Reply */}
-                <Typography
+                <Typography onClick={()=>navigate(`/analytics/comment/${comment.media._id}`)}
                     variant="body2"
                     sx={{ fontWeight: 400, fontSize: 12, cursor: 'pointer', color: 'gray' }}
                 >
