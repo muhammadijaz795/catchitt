@@ -34,6 +34,7 @@ import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserT
 const options = [
   { label: 'Everyone', value: 'everyone' },
   { label: 'Followers', value: 'followers' },
+  { label: 'Friends', value: 'friends' },
   { label: 'Only Me', value: 'onlyme' },
 ];
 function FormRightSide(props: any) {
