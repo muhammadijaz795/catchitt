@@ -11,17 +11,17 @@ const dailyScreenTime: React.FC = () => {
         [key: string]: string | undefined;
     }
 const [CustomOpenDropdown, setCustomOpenDropdown] = useState(false);
-const [selectedTime, setSelectedTime] = useState("1h"); // Default
+const [selectedTime, setSelectedTime] = useState("10m"); // Default
 const [selectedHours, setSelectedHours] = useState(1); // Default 1 hour
 const [selectedMinutes, setSelectedMinutes] = useState("00"); // Default 00 minutes
 // const [dropPositionCustom, setDropPositionCustom] = useState("bottom"); // Optional
-
+const [showCustomOptions, setShowCustomOptions] = useState(false);
+const [selectedButton, setSelectedButton] = useState(""); 
 const toggleCustomDropdown = () => setCustomOpenDropdown(prev => !prev);
 
-const selectCustomTime = ( hours: any, minutes: any) => {
-  setSelectedHours(hours);
+const selectCustomTime = (  minutes: any) => {
   setSelectedMinutes(minutes);
-  setSelectedTime(`${hours}h ${minutes !== "00" ? minutes + "m" : ""}`);
+  setSelectedTime(` ${minutes !== "00" ? minutes + "m" : ""}`);
   setCustomOpenDropdown(false);
 };
 
@@ -185,33 +185,95 @@ const selectCustomTime = ( hours: any, minutes: any) => {
         {selectedTimeLimitOption == 'daily' && (
         <div>
             <div className="grid grid-cols-5 gap-2">
-            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "0", "40")}>40m</button>
-            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "1", "00")}>1h</button>
-            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "1", "30")}>1h 30m</button>
-            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={() => selectTime('daily', "2", "00")}>2h</button>
-            <button className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'} border p-[6px] rounded-sm  bg-white focus:text-[#FE2C55]  `} onClick={toggleCustomDropdown}>Custom
+                    <button 
+                    className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-black'} 
+                        border p-[6px] rounded-sm bg-white focus:text-[#FE2C55]
+                        ${selectedButton === '40m' ? '!border-[#FE2C55] !text-[#FE2C55]' : ''}
+                    `}
+                    onClick={() => { 
+                        selectTime('daily', "0", "40"); 
+                        setShowCustomOptions(false);
+                        setSelectedButton('40m');
+                    }}
+                    >
+                    40m
+                    </button>
 
-            </button>
+                    <button 
+                    className={`btn ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-black'} 
+                        border p-[6px] rounded-sm bg-white focus:text-[#FE2C55]
+                        ${selectedButton === '1h' ? '!border-[#FE2C55] !text-[#FE2C55]' : ''}
+                    `}
+                    onClick={() => { 
+                        selectTime('daily', "1", "00"); 
+                        setShowCustomOptions(false);
+                        setSelectedButton('1h');
+                    }}
+                    >
+                    1h
+                    </button>
+
+                    <button 
+                    className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-black'} 
+                        border p-[6px] rounded-sm bg-white focus:text-[#FE2C55]
+                        ${selectedButton === '1h30m' ? '!border-[#FE2C55] !text-[#FE2C55]' : ''}
+                    `}
+                    onClick={() => { 
+                        selectTime('daily', "1", "30"); 
+                        setShowCustomOptions(false);
+                        setSelectedButton('1h30m');
+                    }}
+                    >
+                    1h 30m
+                    </button>
+
+                    <button 
+                    className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-black'} 
+                        border p-[6px] rounded-sm bg-white focus:text-[#FE2C55]
+                        ${selectedButton === '2h' ? '!border-[#FE2C55] !text-[#FE2C55]' : ''}
+                    `}
+                    onClick={() => { 
+                        selectTime('daily', "2", "00"); 
+                        setShowCustomOptions(false);
+                        setSelectedButton('2h');
+                    }}
+                    >
+                    2h
+                    </button>
+
+                    <button 
+                    className={` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-black'} 
+                        border p-[6px] rounded-sm bg-white focus:text-[#FE2C55]
+                        ${selectedButton === 'custom' ? '!border-[#FE2C55] !text-[#FE2C55]' : ''}
+                    `}
+                    onClick={() => { 
+                        setShowCustomOptions(true); 
+                        setSelectedButton('custom');
+                    }}
+                    >
+                    Custom
+                    </button>
+
             
            
              </div>
-             {CustomOpenDropdown && (
+             {showCustomOptions && (
             <div className="relative  w-32 mt-2 ml-auto" ref={(el) => (dropdownRefs.current['custom'] = el)}>
                 
                         <button
                             className={`${ThemeColor === 'dark' ? 'btn-color-white' : 'btn-color-dark'} border px-3 py-2 rounded-sm w-100 bg-white cursor-pointer block text-center`}
                             onClick={toggleCustomDropdown}
                         >
-                            {selectedTime || "1h"}
+                            {selectedTime }
                         </button>
 
                         {/* Dropdown */}
                         {CustomOpenDropdown && (
-                            <div className={`absolute w-40 bg-white shadow-lg rounded-md border z-10 `}>
+                            <div className={`absolute w-20 bg-white shadow-lg rounded-md border z-10 `}>
                             <div className="flex">
                                 
                                 {/* Hours List */}
-                                <div className="h-40 overflow-y-auto w-1/2 border-r">
+                                {/* <div className="h-40 overflow-y-auto w-1/2 border-r">
                                 <ul className="text-center">
                                     {[...Array(6)].map((_, i) => (
                                     <li 
@@ -223,16 +285,16 @@ const selectCustomTime = ( hours: any, minutes: any) => {
                                     </li>
                                     ))}
                                 </ul>
-                                </div>
+                                </div> */}
 
                                 {/* Minutes List */}
-                                <div className="h-40 overflow-y-auto w-1/2">
+                                <div className="h-40 w-20 overflow-y-auto ">
                                 <ul className="text-center">
-                                    {["00", "05", "10", "15", "20", "25", "30"].map((min, i) => (
+                                    {[ "10", "15", "20", "25", "30", "35", "40", "45", "50", "55","60"].map((min, i) => (
                                     <li 
                                         key={i} 
                                         className="p-2 cursor-pointer hover:bg-gray-200"
-                                        onClick={() => selectCustomTime(selectedHours, min)}
+                                        onClick={() => selectCustomTime( min)}
                                     >
                                         {min}
                                     </li>
@@ -294,16 +356,16 @@ const selectCustomTime = ( hours: any, minutes: any) => {
                 {days.map((day) => (
                     <div key={day} className=" items-center justify-between mb-3">
                         {/* Day Button */}
-                        <button className={ ` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'}  border px-4 py-2 w-24 mb-3 rounded-sm bg-white focus:border-[#FE2C55]`}>
+                        <button className={ ` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-black'}  border px-4 py-2 w-24 mb-3 rounded-sm bg-white focus:border-[#FE2C55]`}>
                             {day}
                         </button>
 
                         {/* Time Picker */}
                         <div className="relative w-24" ref={(el) => (dropdownRefs.current[day] = el)}>
                             <button
-                                className={ ` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-dark'}  border px-3 py-2 rounded-sm w-100 bg-white cursor-pointer block text-center`}
+                                className={ ` ${ThemeColor === 'dark' ? 'btn-color-white': 'btn-color-black'}  border px-3 py-2 rounded-sm w-100 bg-white cursor-pointer block text-center     ${selectedButton === day ? '!border-[#FE2C55] !text-[#FE2C55]' : ''}`}
                                 onClick={() => toggleDropdown(day)}
-                            >
+                                >
                                 {selectedTimes[day] || "1h"}
                             </button>
 
