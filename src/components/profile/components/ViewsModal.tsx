@@ -1,5 +1,6 @@
-import settingsIcon from '../svg-components/settings-icon.svg';
+import settingsIcon from '../svg-components/cross-light-icon.svg';
 import ViewItem from './ViewItem';
+import { useEffect } from 'react';
 
 const ViewsModal = ({
     content,
@@ -15,6 +16,19 @@ const ViewsModal = ({
     const handleModalClick = (e: { stopPropagation: () => void }) => {
         e.stopPropagation();
     };
+    useEffect(() =>
+    {
+        function handleKeyDown(event: KeyboardEvent)
+        {
+            if(event.key === 'Escape')
+            {
+                handleOverlayClick();
+            }
+        };
+    
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
     return (
         <div
             onClick={handleOverlayClick}
@@ -25,9 +39,10 @@ const ViewsModal = ({
                 className={`relative w-[40.188rem] h-[43.625rem] ${darkTheme?'bg-dark':'bg-white'} p-8 rounded-lg shadow-lg overflow-auto`}
             >
                 <img
-                    className="h-8 w-8 object-contain cursor-pointer absolute top-8 right-8"
+                    className="h-8 w-8 object-contain cursor-pointer absolute top-8 right-8 rounded-full bg-[#54545480]"
                     src={settingsIcon}
                     alt="settings-icon"
+                    onClick={handleOverlayClick}
                 />
                 <span className="font-semibold text-xl" >Profile Views</span>
                 <p className="font-normal text-sm text-custom-color-999 w-[25rem] text-center mx-auto mt-4">

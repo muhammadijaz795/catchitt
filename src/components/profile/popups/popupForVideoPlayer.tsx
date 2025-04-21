@@ -33,7 +33,7 @@ import { useDispatch } from 'react-redux';
 import { openLoginPopup } from '../../../redux/reducers';
 import EmbedSharePopup from '../../../shared/components/EmbedSharePopup';
 import { BASE_URL_FRONTEND, showToast, showToastSuccess } from '../../../utils/constants';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import PopupForReport from './PopupForReport';
 import { defaultAvatar, linkedInShare, more, moreInWhite, twitterShare } from '../../../icons';
 import { toast, ToastContainer } from 'react-toastify';
@@ -968,6 +968,7 @@ export default function PopupForVideoPlayer({
                                     <div className="bg-[#1b1b1b] rounded-lg p-3.5">
                                         <div className="flex flex-row justify-between items-center">
                                             <div className="flex flex-row justify-center items-center gap-2.5">
+                                                <Link to={`/profile/${info?.user?.username}`} reloadDocument={false}>
                                                 <img
                                                     className="h-10 w-10 object-cover rounded-full"
                                                     src={info?.user?.avatar || defaultAvatar}
@@ -977,9 +978,10 @@ export default function PopupForVideoPlayer({
                                                         (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
                                                     }}
                                                 />
+                                                </Link>
                                                 <div className="text-white">
                                                     <p className="text-base font-bold">
-                                                        {info?.user?.name || 'User'}
+                                                        <Link to={`/profile/${info?.user?.username}`} reloadDocument={false}>{info?.user?.name || 'User'}</Link>
                                                     </p>
                                                     <p className="text-sm font-normal">
                                                         {info?.user?.username} .{' '}

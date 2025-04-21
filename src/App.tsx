@@ -2676,7 +2676,7 @@ function App() {
 
                         {isLogoutPopup && (
 
-                            <div className="w-full z-50 h-full bg-black/50 fixed top-0 flex justify-center items-center">
+                            <div className="w-full z-[1001] h-full bg-black/50 fixed top-0 flex justify-center items-center">
                                 <div
                                     className={`w-[25.688rem] mx-auto mt-3 bg-white rounded-lg relative h-[14rem]  ${lightDarkTheme} `}
                                 >

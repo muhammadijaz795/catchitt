@@ -604,7 +604,7 @@ export const SearchPage = () => {
                             <h6 style={{ fontSize: '2rem' }}>No results found</h6>
                         </div>
                     ) : (
-                        <div className={`${styles.usersList} ${darkTheme}`}>
+                        <div className={`${styles.usersList} ${darkTheme} h-auto`}>
                             {filteredUsersData?.map((user, index) => (
                                 <div
                                     className={styles.userFrame}
@@ -1697,7 +1697,7 @@ export const SearchPage = () => {
                                     Hashtags
                                 </Tab> */}
                             </div>
-                            <div className={styles.container}>
+                            <div className={`${styles.container} d-block`}>
                                 {isLoading ? <CircularProgress /> : renderSearchResults}
                             </div>
                         </div>
