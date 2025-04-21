@@ -217,10 +217,10 @@ function UploadPage() {
                         <img className='w-5 inline-block' src={darkTheme===''?homeDark:homeIcon} alt="" />
                         <span>Home</span>
                     </li>
-                    <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics/content')}>
+                    {/* <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics/content')}>
                         <img className='w-4 inline-block' src={darkTheme===''?hamburgerDark :hamburger} alt="" />
                         <span>&nbsp;Posts</span>
-                    </li>
+                    </li> */}
                     {/* <li className='cursor-pointer flex gap-2'>
                         <img className='w-5 inline-block' src={darkTheme===''?commentOutlineDark:commentOutlineWhite} alt="" />
                         <span>Comments</span>
