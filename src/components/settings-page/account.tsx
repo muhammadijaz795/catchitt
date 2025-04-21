@@ -1715,10 +1715,19 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             </span>
                                             </div>
                                         </div>
-                                       <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M6.73018 5.86844L1.29921 0.437474C1.16905 0.3073 0.957981 0.3073 0.827814 0.437474L0.356414 0.90888C0.226247 1.03905 0.226247 1.25011 0.356414 1.38028L5.31598 6.33984L0.356414 11.2994C0.226247 11.4296 0.226247 11.6406 0.356414 11.7708L0.827814 12.2422C0.957981 12.3724 1.16905 12.3724 1.29921 12.2422L6.73018 6.81124C6.99055 6.55091 6.99055 6.12878 6.73018 5.86844Z" fill="#161823" fill-opacity="0.5"/>
-</svg>
-
+                                        <label 
+                                        className={`toggle-switch !left-1 ${notificationSettings.comments ? 'checkedToggle' : ''}`}
+                                        >
+                                                        <input 
+                                                        style={{zIndex: '9999', height: '2.75rem', width: '4rem', position: 'relative', cursor:'pointer'}}
+                                                            type="checkbox"
+                                                            name="autoScrollCheckbox" 
+                                                            id="autoScrollCheckbox" 
+                                                            checked={notificationSettings.comments || false}
+                                                            onChange={updateNewSettings('comments')} 
+                                                        />
+                                                        <b className={`${themeColor == 'dark' ? '!bg-gray-600': ''} slider`}></b>
+                                                    </label>
                                     </div>
                                 </div>
                                 <div className='w-100 pb-3' onClick={() => toggleVisibility('disconnect_advertisers')}>
