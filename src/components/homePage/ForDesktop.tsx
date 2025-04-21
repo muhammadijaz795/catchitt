@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -20,6 +20,7 @@ import {
     savedBlack,
     moreInWhite
 } from '../../icons';
+import debounce from 'lodash/debounce';
 import { followingsMethod, getHomeVideos, addMoreVideos } from '../../redux/AsyncFuncs';
 import Layout from '../../shared/layout';
 import Action from './components/Action';
@@ -271,8 +272,45 @@ const handleVideoEnd = (endedMediaId: string) => {
         }
     }, [page]);
 
-    const handleScroll = () => {
-        if (scrollableDivRef.current) {
+    const [isFetching, setIsFetching] = useState(false); // Add this state
+
+
+    // const handleScroll = () => {
+        
+    //     if (scrollableDivRef.current) {
+    //         const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef.current;
+    //         console.log(
+    //             'scroll position: ',
+    //             scrollHeight,
+    //             scrollTop + clientHeight + 100,
+    //             scrollTop,
+    //             clientHeight
+    //         );
+    //         if (scrollTop + clientHeight + 100 > scrollHeight && countFlag == true) {
+    //             console.log('scrolling...'+page);
+    //             setLoadingVideo(true);
+    //             setPage((prevPage) => prevPage + 1);
+    //             setCountFlag(false);
+    //             console.log('countFlag', countFlag);
+    //         }
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     if (scrollableDivRef.current) {
+    //         scrollableDivRef.current.addEventListener('scroll', handleScroll);
+    //     }
+
+    //     return () => {
+    //         if (scrollableDivRef.current) {
+    //             scrollableDivRef.current.removeEventListener('scroll', handleScroll);
+    //         }
+    //     };
+    // }, []);
+
+
+    const handleScroll = useCallback(() => {
+        if (scrollableDivRef.current && !isFetching) {
             const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef.current;
             console.log(
                 'scroll position: ',
@@ -281,26 +319,41 @@ const handleVideoEnd = (endedMediaId: string) => {
                 scrollTop,
                 clientHeight
             );
-            if (scrollTop + clientHeight + 500 > scrollHeight && countFlag == true) {
+            
+            // Add a buffer (e.g., 500px) before the bottom to trigger load earlier
+            if (scrollTop + clientHeight + 700 > scrollHeight && countFlag) {
+                console.log('scrolling...'+page);
+                setIsFetching(true);
                 setLoadingVideo(true);
-                setPage((prevPage) => prevPage + 1);
+                setPage(prevPage => prevPage + 1);
                 setCountFlag(false);
-                console.log('countFlag', countFlag);
+                
+                // Set a timeout to allow the fetch to complete
+                setTimeout(() => {
+                    setIsFetching(false);
+                }, 1000); // Adjust this timeout based on your API response time
             }
+        }
+    }, [countFlag, page, isFetching]);
+
+    // Debounced version of handleScroll
+const debouncedScrollHandler = useCallback(
+    debounce(handleScroll, 200),
+    [handleScroll]
+);
+
+useEffect(() => {
+    const scrollRef = scrollableDivRef.current;
+    if (scrollRef) {
+        scrollRef.addEventListener('scroll', debouncedScrollHandler);
+    }
+
+    return () => {
+        if (scrollRef) {
+            scrollRef.removeEventListener('scroll', debouncedScrollHandler);
         }
     };
-
-    useEffect(() => {
-        if (scrollableDivRef.current) {
-            scrollableDivRef.current.addEventListener('scroll', handleScroll);
-        }
-
-        return () => {
-            if (scrollableDivRef.current) {
-                scrollableDivRef.current.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, []);
+}, [debouncedScrollHandler]);
 
  
     // useEffect(() => {
