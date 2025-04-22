@@ -75,7 +75,7 @@ export default function SoundPage() {
     const fetchSoundPosts: any = async (signal: AbortSignal) => {
         try {
             const response = await fetch(
-                `${API_KEY}/media-content/videos/sound/${soundId}?page=${soundPosts.page}`,
+                `${API_KEY}/media-content/v2/videos/sound/${soundId}?page=${soundPosts.page}`,
                 {
                     method: 'GET',
                     headers: {

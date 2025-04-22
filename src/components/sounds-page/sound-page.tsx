@@ -127,7 +127,7 @@ export const SoundPageOld = (className: SoundPageProps) => {
     const navigate = useNavigate();
 
     const handleFetchPosts = async (page?: number) => {
-        const response = await fetch(`${API_KEY}/media-content/videos/sound/${extractedValue}`, {
+        const response = await fetch(`${API_KEY}/media-content/v2/videos/sound/${extractedValue}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
