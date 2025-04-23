@@ -565,7 +565,7 @@ function FormRightSide(props: any) {
                         {isMentioning && (
                                 <div
                                     ref={popupRef}
-                                    className="absolute w-[96%] bottom-[12.25rem]  !left-[2%] bg-white border rounded-lg shadow-lg  z-10 min-h-40 max-h-80 overflow-y-auto "
+                                    className="absolute w-[96%] top-[12.25rem]  !left-[2%] bg-white border rounded-lg shadow-lg  z-10 min-h-40 max-h-80 overflow-y-auto "
                                 >
                                     {filteredUsers.length > 0 ? (
                                         filteredUsers.map(
