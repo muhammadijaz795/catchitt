@@ -20,6 +20,7 @@ const DndContainer = ({
     children,
     crop = false,
     accept = 'image/*',
+    wrapperId
 }: any) => {
     const [fileList, setFileList] = React.useState<any>([]);
 
@@ -44,7 +45,7 @@ const DndContainer = ({
     };
 
     const DndComp = (
-        <Dragger {...coverProps} className={className}>
+        <Dragger {...coverProps} className={className} id={wrapperId}>
             <p className="ant-upload-drag-icon w-[5rem] m-auto">
                 <svg  width="73" height="73" viewBox="0 0 73 73" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="72" height="72" transform="translate(0.970215 0.0976562)" fill="white"/>

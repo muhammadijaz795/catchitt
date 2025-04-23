@@ -43,7 +43,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   const [scrollLeft, setScrollLeft] = useState(0);
   const [linePosition, setLinePosition] = useState(50);
   const [manualSelect, setManualSelect] = useState(false);
-  const dndRef = useRef<{ triggerFileDialog: () => void }>(null);
+  const dndRef = useRef<any>();
 
 
   // console.log('current preview');
@@ -58,10 +58,18 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   };
 
   const handleUploadNewClick = () => {
-    setTab('upload'); // switch to upload tab
+    setTab('upload');
+  
     setTimeout(() => {
-      fileInputRef.current?.click();
-    }, 100); // small delay to ensure the tab updates first
+      console.log(document.querySelector('#my-dnd'));
+      const fileInput = document.querySelector('#my-dnd') as HTMLInputElement;
+      if (fileInput) {
+        console.log('jj')
+        fileInput.click(); // ✅ Triggers native file dialog
+      } else {
+        console.warn('Upload input not found inside DndContainer.');
+      }
+    }, 300); // delay ensures tab switch and component render
   };
 
 
@@ -293,11 +301,13 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               Format='Supported formats: JPG, JPEG, and PNG.'
               onChangeFile={handleCustomUpload}
               aspect={62 / 127}
+              wrapperId="my-dnd"
+              ref={dndRef}
             />
           </div>
         )}
       </DialogContent>
-        <Box sx={{ backgroundColor: '#fff', display: 'flex', p: 2, justifyContent: 'flex-end' }}>
+        {showButtons && <Box sx={{ backgroundColor: '#fff', display: 'flex', p: 2, justifyContent: 'flex-end' }}>
           <Button variant='contained'  onClick={handleUploadNewClick}  sx={{boxShadow: 'none', textTransform: 'capitalize', backgroundColor: '#0000000D', px: 3, mx: 2, color: 'black', borderRadius: '8px', '&:hover': {
               backgroundColor: '#0000000f',
               boxShadow: 'none'
@@ -313,6 +323,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
             Confirm
           </Button>
         </Box>
+        }
       
     </Dialog>
   );

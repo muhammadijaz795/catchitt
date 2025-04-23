@@ -29,7 +29,8 @@ const DndContainer = ({
     setCustomCover,
     updateState,
     selectedThumb,
-    setSelectedThumb
+    setSelectedThumb,
+    wrapperId
 }: any) => {
     const [fileList, setFileList] = useState<any>([]);
 
@@ -55,6 +56,7 @@ const DndContainer = ({
 
     const DndComp = (
 <Dragger
+id={wrapperId}
   {...coverProps}
   style={{
     backgroundColor: 'transparent',
