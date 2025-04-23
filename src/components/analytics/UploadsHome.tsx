@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Divider, MenuItem, Menu, ThemeProvider, createTheme, Box, Typography, Grid, Card, CardMedia, CardContent, Tabs, Tab, Container, Select, Chip, IconButton, Paper, Avatar } from '@mui/material';
 import OverviewTab from './OverviewTab';
 // import ContentTab from './ContentTab';
@@ -375,7 +375,7 @@ const Analytics = () => {
              {/* <ContentTab isDarkTheme={darkTheme} /> */}
                 <Box sx={{ p: 2 }}>
                 <Typography variant="body1" sx={{ display: 'flex'}} fontWeight="bold" mb={2}>
-                    Recent posts 
+                  <Link to="/analytics/content" reloadDocument={false} style={{ textDecoration: 'none' }}>Recent posts</Link> 
                     <svg className='ml-1' width="5" height="10" viewBox="0 0 5 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M0.4758 8.83939C0.376032 8.75408 0.294046 8.64994 0.234525 8.53293C0.175004 8.41593 0.139114 8.28834 0.128904 8.15746C0.118694 8.02658 0.134363 7.89498 0.175018 7.77016C0.215673 7.64533 0.280516 7.52974 0.365846 7.42998L2.80783 4.58117L0.366846 1.73336C0.277126 1.63436 0.208162 1.51839 0.164027 1.39229C0.119893 1.26619 0.101485 1.13252 0.109891 0.99919C0.118297 0.865855 0.153347 0.735557 0.212969 0.615999C0.27259 0.496441 0.355574 0.390048 0.457015 0.303108C0.558456 0.216168 0.676297 0.150445 0.803571 0.109824C0.930846 0.0692029 1.06497 0.0545083 1.19802 0.066608C1.33107 0.0787077 1.46035 0.117356 1.57821 0.18027C1.69607 0.243183 1.80012 0.329086 1.88421 0.432899L4.60408 3.60657C4.83691 3.8783 4.96488 4.22434 4.96488 4.58217C4.96488 4.94 4.83691 5.28604 4.60408 5.55776L1.88521 8.73144C1.71262 8.93264 1.46717 9.05704 1.20286 9.07729C0.938552 9.09754 0.677022 9.01196 0.4758 8.83939Z" fill="black"/>
                     </svg>
