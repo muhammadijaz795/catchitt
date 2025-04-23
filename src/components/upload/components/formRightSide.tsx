@@ -195,46 +195,119 @@ function FormRightSide(props: any) {
       setPermissionDialogOpen(false);
     };
 
-     useEffect(() => {
-            if (isMentioning) {
-                // Filter users based on the current input
-                const query = comment.slice(comment.lastIndexOf('@') + 1).toLowerCase();
-                if (query.length) setIsFetchingUsers(true);
-                if (query.length > 2) {
-                    if (abortController.current) abortController.current.abort();
-                    const controller = new AbortController();
-                    abortController.current = controller;
-                    // const filtered = dummyUsers.filter((user) =>
-                    //     user.username.toLowerCase().includes(query)
-                    // );
-                    // setFilteredUsers(filtered.slice(0, 5)); // Limit to 5 users
-                    (async ()=>{
-                        const searchResultArr = await searchUserToAnnotate(query, controller.signal);
-                        console.log(searchResultArr);
-                        if (!Array.isArray(searchResultArr)) return;
-                        console.log('searchResultArr')
-                        console.log(searchResultArr)
-                        setFilteredUsers(searchResultArr);
-                        setIsFetchingUsers(false);
-                    })()
-                } else {
-                    setFilteredUsers([]);
-                }
-            } else {
-                setFilteredUsers([]);
-                setMentionIndex(0);
-            }
+    //  useEffect(() => {
+    //         if (isMentioning) {
+    //             console.log('is mentioned.. ?')
+    //             // Filter users based on the current input
+    //             const query = comment.slice(comment.lastIndexOf('@') + 1).toLowerCase();
+    //             if (query.length) setIsFetchingUsers(true);
+    //             if (query.length > 2) {
+    //                 if (abortController.current) abortController.current.abort();
+    //                 const controller = new AbortController();
+    //                 abortController.current = controller;
+    //                 // const filtered = dummyUsers.filter((user) =>
+    //                 //     user.username.toLowerCase().includes(query)
+    //                 // );
+    //                 // setFilteredUsers(filtered.slice(0, 5)); // Limit to 5 users
+    //                 (async ()=>{
+    //                     const searchResultArr = await searchUserToAnnotate(query, controller.signal);
+    //                     console.log(searchResultArr);
+    //                     if (!Array.isArray(searchResultArr)) return;
+    //                     console.log('searchResultArr')
+    //                     console.log(searchResultArr)
+    //                     setFilteredUsers(searchResultArr);
+    //                     setIsFetchingUsers(false);
+    //                 })()
+    //             } else {
+    //                 setFilteredUsers([]);
+    //             }
+    //         } else {
+    //             setFilteredUsers([]);
+    //             setMentionIndex(0);
+    //         }
             
-            return () => {
-                if (abortController.current) abortController.current.abort();
-            }
-        }, [comment, isMentioning]);
+    //         return () => {
+    //             if (abortController.current) abortController.current.abort();
+    //         }
+    //     }, [comment, isMentioning]);
 
     // const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //     const newDate = event.target.value;
     //     setDate(newDate);
     // };
 
+    useEffect(() => {
+        if (!isMentioning) {
+          setFilteredUsers([]);
+          setMentionIndex(0);
+          return;
+        }
+      
+        const lastAtIndex = comment.lastIndexOf('@');
+        
+      
+        // If @ doesn't exist, no need to continue
+        if (lastAtIndex === -1) {
+          setFilteredUsers([]);
+          return;
+        }
+      
+        // Slice from the @ symbol to the end
+        const rawQuery = comment.slice(lastAtIndex); // e.g. @, @zoe, #@
+        const cleanQuery = rawQuery.slice(1);        // removes the @ symbol
+        
+        let queryToSearch = '';
+        
+        // Case: Last word is just '@'
+        if (rawQuery === '@') {
+            console.log('herere..')
+            if(comment.charAt(lastAtIndex - 1) === '#'){
+                queryToSearch = '#@';
+                console.log('herere')
+            }else{
+                queryToSearch = '@';
+            }
+          
+        }
+        // Case: Last two chars are '#@'
+        else if (rawQuery === '#@') {
+          queryToSearch = '#@';
+        }
+        // Case: Ends with '@' but has '#' before it (e.g., ##@)
+        else if (rawQuery.endsWith('@') && comment.charAt(lastAtIndex - 1) === '#') {
+          // Find all consecutive # before @
+          const hashPrefixMatch = comment.slice(0, lastAtIndex).match(/#+$/);
+          const hashes = hashPrefixMatch ? hashPrefixMatch[0] : '';
+          queryToSearch = `${hashes}@`;
+        }
+        // Default: Search only the word after '@'
+        else {
+          queryToSearch = cleanQuery;
+        }
+      
+        // You can adjust minimum length here if needed (e.g., queryToSearch.length > 1)
+        setIsFetchingUsers(true);
+        if (abortController.current) abortController.current.abort();
+        console.log('queryToSearch'+queryToSearch)
+        const controller = new AbortController();
+        abortController.current = controller;
+       
+        (async () => {
+          const result = await searchUserToAnnotate(queryToSearch, controller.signal);
+          if (Array.isArray(result)) {
+            setFilteredUsers(result);
+          }
+          setIsFetchingUsers(false);
+        })();
+      
+        return () => {
+          if (abortController.current) abortController.current.abort();
+        };
+      }, [comment, isMentioning]);
+      
+      
+
+      
     useEffect(() => {
         if (postTimeOption === "schedule" && date && time) {
             const localDateTime = new Date(`${date}T${time}`);
@@ -331,18 +404,15 @@ function FormRightSide(props: any) {
     const handleDescriptionChange = (e: any) => {
         const inputValue = e.target.value;
         setComment(inputValue);
-
+      
+        if (inputValue.length <= 2200) {
+          updateState('description', inputValue);
+        }
+      
         const mentionTrigger = inputValue.match(/@(\w*)$/);
-        if (mentionTrigger && mentionTrigger[1].length > 0) {
-            setIsMentioning(true);
-        } else {
-            setIsMentioning(false);
-        }
-
-        if (e.target.value.length <= 2200) {
-            updateState('description', e.target.value);
-        }
-    }
+      
+        setIsMentioning(!!mentionTrigger);
+      };
 
     const handleUserSelect = (user: { username: any }) => {
         setComment((prevComment) => {
@@ -392,11 +462,38 @@ function FormRightSide(props: any) {
         setFilteredFollowers(followers)
     },[tagUsersPopup]);
 
-    const handleCanViewChange = (event: SelectChangeEvent) => {
-        const value = event.target.value;
-        setCanView(value);
-        updateState('canView', value);
-    };
+    // const handleDescriptionChange = (e:any) => {
+    //     updateState('description', e.target.value);
+    //   };
+      
+
+    const insertAtCursor = (symbol: string) => {
+        const input = inputRef.current;
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+      
+        const newValue =
+          (state?.description?.slice(0, start) || '') +
+          symbol +
+          (state?.description?.slice(end) || '');
+      
+        setComment(newValue);
+        console.log(symbol);
+        if (symbol === '@') {
+            console.log('inner')
+          setIsMentioning(true);
+        }
+      
+        if (newValue.length <= 2200) {
+          updateState('description', newValue);
+        }
+      
+        requestAnimationFrame(() => {
+          input.focus();
+          input.setSelectionRange(start + symbol.length, start + symbol.length);
+        });
+      };
+      
 
     // console.log('uploadState');
     // console.log(uploadState);
@@ -431,7 +528,7 @@ function FormRightSide(props: any) {
                             /> */}
                             <textarea ref={inputRef} value={state?.description || ''} onChange={handleDescriptionChange} id="message" name="message" className="w-full  rounded bg-[#0000000D] focus:border-white focus:ring-1 focus:ring-white h-32 text-base outline-none py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" />
                             <p className="text-gray-500 text-sm leading-[1.5rem] text-[1rem] font-normal absolute left-4 bottom-1">
-                                #hashtag @Mention
+                                <span className="cursor-pointer" onClick={() => insertAtCursor('#')}>#hashtag</span> <span className="cursor-pointer" onClick={() => insertAtCursor('@')}>@Mention</span>
                             </p>
 
                             
@@ -840,7 +937,7 @@ function FormRightSide(props: any) {
                             </p>
                             <Select
                                     value={canView}
-                                    onChange={handleCanViewChange}
+                                    // onChange={handleCanViewChange}
                                     IconComponent={KeyboardArrowDownIcon}
                                     renderValue={(selected) => {
                                     const selectedOption = options.find(opt => opt.value === selected);

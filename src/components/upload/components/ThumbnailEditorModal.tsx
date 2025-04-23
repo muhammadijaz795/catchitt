@@ -42,8 +42,8 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   const [scrollLeft, setScrollLeft] = useState(0);
   const [linePosition, setLinePosition] = useState(50);
   const [manualSelect, setManualSelect] = useState(false);
-  console.log('current preview');
-  console.log(preview);
+  // console.log('current preview');
+  // console.log(preview);
  
 
   const handleSelectFrame = (thumbUrl: string, index: number) => {

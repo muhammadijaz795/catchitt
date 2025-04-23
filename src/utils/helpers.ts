@@ -268,9 +268,10 @@ export function getCaretCoordinates(inputElement: HTMLInputElement, cursorPositi
 
 export const searchUserToAnnotate = async (query: string, signal: AbortSignal) => {
     try {
+        console.log('searchUserToAnnotate', query);
         const token = localStorage.getItem('token');
         const response = await fetch(
-            `${API_KEY}/discover/search?searchQuery=${query}&page=${1}&pageSize=30`,
+            `${API_KEY}/discover/search?searchQuery=${encodeURIComponent(query)}&page=1&pageSize=30`,
             {
                 method: 'GET',
                 headers: {
