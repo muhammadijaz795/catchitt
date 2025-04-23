@@ -1,4 +1,4 @@
-import { Box, Chip, CircularProgress, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Stack, styled, SvgIcon, Tooltip, SelectChangeEvent, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
+import { Box, Chip, CircularProgress, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, MenuItem, OutlinedInput, Radio, RadioGroup, Select, Stack, styled, SvgIcon, Tooltip, SelectChangeEvent, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Autocomplete, TextField } from '@mui/material';
 import { useEffect, useMemo, useState,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defaultAvatar, downArrow, search } from '../../../icons';
@@ -37,7 +37,28 @@ const options = [
   { label: 'Friends', value: 'friends' },
   { label: 'Only Me', value: 'onlyme' },
 ];
+
 function FormRightSide(props: any) {
+
+    const CustomAutocomplete = styled(Autocomplete)(({ theme }) => ({
+        '& .MuiInputBase-root': {
+          backgroundColor: '#f2f2f2',
+          borderRadius: '0.75rem',
+          paddingLeft: '0.5rem',
+          paddingRight: '0.5rem',
+          height: '3rem',
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+          border: 'none',
+        },
+        '& .MuiSvgIcon-root': {
+          color: '#000', // dark dropdown icon
+        },
+        '& input': {
+          padding: '0.75rem 0',
+        },
+      }));
+
     const {
         uploadState,
         onCancelUpload,
@@ -244,7 +265,11 @@ function FormRightSide(props: any) {
     }, [date, time]);
 
 
-      
+    const locationOptions = [
+        { label: 'New York', value: 'new_york' },
+        { label: 'Los Angeles', value: 'los_angeles' },
+        { label: 'Chicago', value: 'chicago' },
+      ];
 
     const StyledSelect = styled(Select)(({ theme }) => ({
         backgroundColor: '#f3f3f3',
@@ -714,30 +739,32 @@ function FormRightSide(props: any) {
 
                                 </p>
                             </div>
-                            <FormControl sx={{ width: '18rem', marginBottom: '1rem'}}>
-                                <StyledSelect
-                                    defaultValue=""
-                                    displayEmpty
-                                    IconComponent={KeyboardArrowDownIcon}
-                                    sx={{paddingLeft: '0.75rem'}}
-                                    input={
-                                    <OutlinedInput
-                                        startAdornment={
-                                        <InputAdornment position="start">
-                                            <LocationIcon />
-                                        </InputAdornment>
-                                        }
+            
+                            <FormControl sx={{ width: '18rem', marginBottom: '1rem' }}>
+                                <CustomAutocomplete
+                                    popupIcon={<KeyboardArrowDownIcon />}
+                                    options={locationOptions}
+                                    getOptionLabel={(option) => option.label}
+                                    isOptionEqualToValue={(option, value) => option.value === value.value}
+                                    renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        placeholder="Search locations"
+                                        variant="outlined"
+                                        InputProps={{
+                                        ...params.InputProps,
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                            <LocationIcon sx={{ color: '#777' }} />
+                                            </InputAdornment>
+                                        ),
+                                        }}
                                     />
-                                    }
-                                    renderValue={(selected:any) => {
-                                        return selected ? selected : <span style={{ color: '#999' }}>Search locations</span>;
-                                    }}
-                                >
-                                    <MenuItem value="new_york">New York</MenuItem>
-                                    <MenuItem value="los_angeles">Los Angeles</MenuItem>
-                                    <MenuItem value="chicago">Chicago</MenuItem>
-                                </StyledSelect>
-                            </FormControl>
+                                    )}
+                                />
+                                </FormControl>
+
+                            
                             <Stack direction="row" spacing={2}>
                                 <Chip label="Lahore Fort" sx={{ borderRadius: "8px", fontWeight: 500 }}  variant="outlined" />
                             </Stack>
