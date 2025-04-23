@@ -26,6 +26,7 @@ import { setSelectedFile } from '../../../redux/reducers/upload';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
+import SaveVideoPopup from './scheduleVideoPopup'
 
 import CheckIcon from '@mui/icons-material/Check';
 import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
@@ -96,6 +97,7 @@ function FormRightSide(props: any) {
 
     const [showChecking, setShowChecking] = useState(false);
     const [showResult, setShowResult] = useState(false);
+    const [isAlreadySchedule, setIsAlreadySchedule] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -209,6 +211,8 @@ function FormRightSide(props: any) {
         console.log('hello schedule.')
       setShowSchedule(true);
       setPermissionDialogOpen(false);
+      setIsPopupOpen(false);
+      setIsAlreadySchedule(true);
     };
   
     const handleDenySchedule = () => {
@@ -256,6 +260,15 @@ function FormRightSide(props: any) {
     //     const newDate = event.target.value;
     //     setDate(newDate);
     // };
+
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const handleClose = () => {
+        console.log('User canceled');
+        setIsPopupOpen(false);
+        setShowSchedule(false);
+        setPostTimeOption('now'); // Revert selection
+    };
+
 
     useEffect(() => {
         if (!isMentioning) {
@@ -565,7 +578,7 @@ function FormRightSide(props: any) {
                         {isMentioning && (
                                 <div
                                     ref={popupRef}
-                                    className="absolute w-[96%] bottom-[12.25rem]  !left-[2%] bg-white border rounded-lg shadow-lg  z-10 min-h-40 max-h-80 overflow-y-auto "
+                                    className="absolute w-[96%] top-[12.25rem]  !left-[2%] bg-white border rounded-lg shadow-lg  z-10 min-h-40 max-h-80 overflow-y-auto "
                                 >
                                     {filteredUsers.length > 0 ? (
                                         filteredUsers.map(
@@ -675,44 +688,44 @@ function FormRightSide(props: any) {
                             )} */}
                             {/* {coverTab === 'custom' && !customCover && ( */}
                             <div className="w-full h-[285px]">
-  <div className="w-full h-full relative flex items-start">
-    {state?.thumbnailUrl ? (
-      <div className="relative h-full max-w-[20%]">
-        <img
-          src={state.thumbnailUrl}
-          alt="Video thumbnail"
-          className="h-full w-full object-cover rounded-md"
-        />
-        <button
-            onClick={() => setThumbnailModalOpen(true)}
-            style={{ fontSize: '12px' }}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white w-[6rem] py-1.5 rounded-md shadow-sm hover:bg-black/70 transition-colors">
-            Edit Cover
-        </button>
-      </div>
-    ) : (
-      <div className="w-full h-full flex items-center justify-start border-2 border-dashed border-gray-300 rounded-lg px-4">
-        {/* <button
-          onClick={() => setThumbnailModalOpen(true)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-        >
-          Add Thumbnail
-        </button> */}
-      </div>
-    )}
+                            <div className="w-full h-full relative flex items-start">
+                                {state?.thumbnailUrl ? (
+                                <div className="relative h-full max-w-[20%]">
+                                    <img
+                                    src={state.thumbnailUrl}
+                                    alt="Video thumbnail"
+                                    className="h-full w-full object-cover rounded-md"
+                                    />
+                                    <button
+                                        onClick={() => setThumbnailModalOpen(true)}
+                                        style={{ fontSize: '12px' }}
+                                        className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white w-[6rem] py-1.5 rounded-md shadow-sm hover:bg-black/70 transition-colors">
+                                        Edit Cover
+                                    </button>
+                                </div>
+                                ) : (
+                                <div className="w-full h-full flex items-center justify-start border-2 border-dashed border-gray-300 rounded-lg px-4">
+                                    {/* <button
+                                    onClick={() => setThumbnailModalOpen(true)}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                                    >
+                                    Add Thumbnail
+                                    </button> */}
+                                </div>
+                                )}
 
-    <ThumbnailEditorModal
-      open={thumbnailModalOpen}
-      onClose={() => setThumbnailModalOpen(false)}
-      videoThumbnails={videoThumbnails}
-      selectedThumb={selectedThumb}
-      onSelectThumbnail={handleSelectThumbnail}
-      onCustomThumbnail={handleCustomThumbnail}
-      currentThumbnail={state?.thumbnailUrl}
-    //   aspectRatio={62 / 127}
-    />
-  </div>
-</div>
+                                <ThumbnailEditorModal
+                                open={thumbnailModalOpen}
+                                onClose={() => setThumbnailModalOpen(false)}
+                                videoThumbnails={videoThumbnails}
+                                selectedThumb={selectedThumb}
+                                onSelectThumbnail={handleSelectThumbnail}
+                                onCustomThumbnail={handleCustomThumbnail}
+                                currentThumbnail={state?.thumbnailUrl}
+                                //   aspectRatio={62 / 127}
+                                />
+                            </div>
+                            </div>
 
 
                             {/* )} */}
@@ -905,11 +918,12 @@ function FormRightSide(props: any) {
                                     <FormControlLabel
                                         name="when-to-post1"
                                         value="schedule"
-                                        onClick={handleAllowSchedule}                                        
+                                        // onClick={handleAllowSchedule}       
+                                        onClick={() => isAlreadySchedule ? handleAllowSchedule(): setIsPopupOpen(true)}                                 
                                         control={<Radio sx={{ color: '#ccc', '&.Mui-checked': { color: '#FF2C55' } }} />}
                                         label={
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                Schedule
+                                                Schedule 
                                                 <Tooltip title="Set a time to publish later">
                                                     <IconButton size="small">{/* your icon */}</IconButton>
                                                 </Tooltip>
@@ -919,6 +933,10 @@ function FormRightSide(props: any) {
                                 </RadioGroup>
 
                         </FormControl>
+
+                        <SaveVideoPopup open={isPopupOpen} onClose={handleClose} onAllow={handleAllowSchedule} />
+
+
 
                         {/* Schedule Section */}
                         {showSchedule && (

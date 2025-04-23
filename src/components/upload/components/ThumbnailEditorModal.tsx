@@ -148,7 +148,14 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={handleClose}  PaperProps={{
+      sx: {
+        maxWidth: '800px',
+        width: '100%',
+        minHeight: '30rem',
+        margin: 'auto',
+      },
+    }} >
       <DialogTitle
       sx={{
         px: 1,
@@ -191,7 +198,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
       <DialogContent sx={{ backgroundColor: '#F5F5F5' }}>
         
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', height: '220px', mb: 3 }}>
+        {/* <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', height: '220px', mb: 3 }}>
           {preview && tab == 'select' && (<>
              <img
               src={preview}
@@ -201,11 +208,21 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
           </>
             
           )}
-        </Box>
+        </Box> */}
 
         {tab === 'select' && (
           <>
-         
+           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', height: '220px', mb: 3 }}>
+            {preview && (<>
+                <img
+                src={preview}
+                alt="Preview"
+                style={{ height: '200px', objectFit: 'contain', borderRadius: '4px' }}
+              />
+            </>
+              
+            )}
+          </Box>
           <Box sx={{ position: 'relative', height: 90, mb: 4 }}>
             <Box
               ref={lineRef}
@@ -268,7 +285,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
         )}
 
         {tab === 'upload' && (
-          <Box sx={{ mb: 3 }}>
+          <div style={{ marginBottom: '1rem', height: '50vh', display: 'flex', alignItems: 'center' }}>
             <DndContainer
               crop
               text="Drag and drop a file here"
@@ -277,14 +294,11 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               onChangeFile={handleCustomUpload}
               aspect={62 / 127}
             />
-
-            
-          </Box>
+          </div>
         )}
       </DialogContent>
-
-        {showButtons && <Box sx={{ backgroundColor: '#fff', display: 'flex', p: 2, justifyContent: 'flex-end' }}>
-          <Button variant='contained' onClick={handleUploadNewClick} sx={{boxShadow: 'none', textTransform: 'capitalize', backgroundColor: '#0000000D', px: 3, mx: 2, color: 'black', borderRadius: '8px', '&:hover': {
+        <Box sx={{ backgroundColor: '#fff', display: 'flex', p: 2, justifyContent: 'flex-end' }}>
+          <Button variant='contained'  onClick={handleUploadNewClick}  sx={{boxShadow: 'none', textTransform: 'capitalize', backgroundColor: '#0000000D', px: 3, mx: 2, color: 'black', borderRadius: '8px', '&:hover': {
               backgroundColor: '#0000000f',
               boxShadow: 'none'
             }, }}>Upload new</Button>
@@ -299,7 +313,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
             Confirm
           </Button>
         </Box>
-      }
+      
     </Dialog>
   );
 };
