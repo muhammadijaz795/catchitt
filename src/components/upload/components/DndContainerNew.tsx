@@ -18,6 +18,7 @@ const DndContainer = ({
     className = '',
     text = 'Drag and drop a file here',
     orText = 'Select a file',
+    Format="",
     subtitle = '',
     crop = false,
     accept = 'image/*',
@@ -53,48 +54,28 @@ const DndContainer = ({
     };
 
     const DndComp = (
-        <Dragger {...coverProps} className={className}>
+        <Dragger {...coverProps} className={`${className} border-0 bg-transparent`}>
             <p className="ant-upload-drag-icon w-[5rem] m-auto">
-            <svg  width="73" height="73" viewBox="0 0 73 73" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="72" height="72" transform="translate(0.970215 0.0976562)" fill="white"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M30.3177 7.53836L9.77664 11.9046C4.9147 12.938 1.81108 17.7171 2.84452 22.5791L10.9531 60.7268C11.9865 65.5888 16.7656 68.6924 21.6276 67.659L41.8011 63.3709C40.7238 62.3394 39.6731 60.6702 39.6731 58.4488C39.6731 56.1524 40.796 54.446 41.9107 53.424C42.8827 52.5328 43.9331 52.0609 44.5401 51.8192C45.6137 51.3918 46.9152 51.0888 47.738 50.8972L47.9813 50.8404C48.2326 50.7812 48.4671 50.7251 48.6869 50.6709L40.9923 14.4705C39.9588 9.60854 35.1797 6.50492 30.3177 7.53836ZM34.4071 34.7134C35.9445 35.2129 36.3647 37.1895 35.1633 38.2712L24.1581 48.1804C22.9567 49.2621 21.0349 48.6376 20.6988 47.0564L17.6198 32.571C17.2837 30.9897 18.7854 29.6376 20.3228 30.1371L34.4071 34.7134Z" fill="url(#paint0)"/>
-                <path d="M69.9457 32.5242L64.7529 41.5185C64.6284 41.3572 64.4936 41.1957 64.3474 41.0363C63.4748 40.0847 62.1029 39.1267 60.2905 38.8674L63.5413 20.4317C63.6541 19.7916 63.7064 19.1548 63.7023 18.5273L66.6515 20.23C70.9561 22.7153 72.431 28.2196 69.9457 32.5242Z" fill="url(#paint1)"/>
-                <path d="M58.5889 22.6035L55.5262 39.9729C55.0452 40.3011 54.6348 40.6688 54.2986 41.0355C53.4074 42.0076 52.9354 43.0579 52.6937 43.6649C52.4837 44.1924 52.3037 44.775 52.1523 45.3287L45.3941 13.5341C45.2055 12.6469 44.9338 11.7988 44.5889 10.9961L51.2885 12.1774C56.1835 13.0406 59.4521 17.7085 58.5889 22.6035Z" fill="url(#paint2)"/>
-                <circle cx="54.2202" cy="53.3477" r="18.75" fill="#F7F7F7"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M51.7717 42.1015C53.0315 40.763 55.1589 40.763 56.4187 42.1015L65.6999 51.9627C66.4245 52.7327 66.3878 53.9443 65.6178 54.6689C64.8479 55.3936 63.6363 55.3569 62.9116 54.5869L56.0097 47.2536V64.5709C56.0097 65.6282 55.1525 66.4854 54.0952 66.4854C53.0379 66.4854 52.1807 65.6282 52.1807 64.5709V47.2536L45.2788 54.5869C44.5541 55.3569 43.3425 55.3936 42.5726 54.6689C41.8026 53.9443 41.7659 52.7327 42.4906 51.9627L51.7717 42.1015Z" fill="url(#paint3)"/>
-                <defs>
-                    <linearGradient id="paint0" x1="42.2202" y1="67.5977" x2="42.2202" y2="0.847651" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#BEBEBE"/>
-                    <stop offset="1" stop-color="#EDEDED"/>
-                    </linearGradient>
-                    <linearGradient id="paint1" x1="42.22" y1="67.598" x2="42.22" y2="0.848043" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#BEBEBE"/>
-                    <stop offset="1" stop-color="#EDEDED"/>
-                    </linearGradient>
-                    <linearGradient id="paint2" x1="42.2204" y1="67.5969" x2="42.2204" y2="0.846894" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#BEBEBE"/>
-                    <stop offset="1" stop-color="#EDEDED"/>
-                    </linearGradient>
-                    <linearGradient id="paint3" x1="1.62887" y1="88.879" x2="1.62887" y2="23.881" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#5B5B5B"/>
-                    <stop offset="1" stop-color="#EDEDED"/>
-                    </linearGradient>
-                </defs>
-                </svg>
+            <svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32.4465 47.1592H43.6965C46.6942 47.1515 49.578 46.0103 51.7692 43.9647C53.9605 41.919 55.297 39.1204 55.5106 36.1303C55.7242 33.1402 54.799 30.18 52.9207 27.8437C51.0425 25.5074 48.3501 23.9679 45.384 23.5342C44.7891 19.8075 42.8114 16.4419 39.8452 14.1087C36.879 11.7755 33.1423 10.6461 29.3803 10.9458C25.6183 11.2455 22.1075 12.9523 19.5481 15.7257C16.9887 18.4991 15.5688 22.1353 15.5715 25.9092V25.9217C12.7891 26.0527 10.1694 27.2712 8.27655 29.3146C6.38367 31.3581 5.36895 34.0632 5.45089 36.8475C5.53283 39.6318 6.70487 42.2725 8.71465 44.2011C10.7244 46.1298 13.4112 47.192 16.1965 47.1592H28.6965V32.3092L25.459 35.5467C25.3421 35.6612 25.1851 35.7254 25.0215 35.7254C24.8579 35.7254 24.7008 35.6612 24.584 35.5467L22.809 33.7717C22.6945 33.6549 22.6303 33.4978 22.6303 33.3342C22.6303 33.1706 22.6945 33.0135 22.809 32.8967L29.2465 26.4592C29.598 26.1081 30.0746 25.9109 30.5715 25.9109C31.0684 25.9109 31.5449 26.1081 31.8965 26.4592L38.334 32.8967C38.584 33.1467 38.584 33.5217 38.334 33.7717L36.559 35.5467C36.4422 35.6612 36.2851 35.7254 36.1215 35.7254C35.9579 35.7254 35.8008 35.6612 35.684 35.5467L32.4465 32.3092V47.1592Z" fill="black" fill-opacity="0.34"/>
+            </svg>
             </p>
             {text && (
                 <p className="ant-upload-text flex flex-col items-center justify-center">
                     <span className="text-lg font-semibold">{text}</span>
                     {orText && (
-                        <span className="text-lg py-2">
-                            <span className="text-[#0000007A] text-base font-normal">
-                                Or {orText}
+                        <span className="text-base pr-1 py-2">
+                            Or  
+                            <span className="text-[#2B5DB9] pl-1 text-base font-normal">
+                                {orText}
                             </span>
                         </span>
                     )}
+
                 </p>
             )}
             {subtitle && <p className="ant-upload-hint">{subtitle}</p>}
+            <p>{Format}</p>
         </Dragger>
     );
 

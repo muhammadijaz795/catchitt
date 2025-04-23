@@ -135,7 +135,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
       sx={{
         px: 1,
         pt: 1,
-        pb: 1,
+        pb: 0,
         color: 'black',
         display: 'flex',
         justifyContent: 'space-between',
@@ -146,7 +146,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   value={tab}
   onChange={(_, newVal) => setTab(newVal)}
   sx={{
-    mb: 2,
+    mb: 0,
     '& .MuiTab-root': {
       fontWeight: 'bold',
       color: 'gray', // inactive color
@@ -186,6 +186,18 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
         </Box>
 
         {tab === 'select' && (
+          <>
+           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', height: '220px', mb: 3 }}>
+           {preview && (<>
+              <img
+               src={preview}
+               alt="Preview"
+               style={{ height: '200px', objectFit: 'contain', borderRadius: '4px' }}
+             />
+           </>
+             
+           )}
+         </Box>
           <Box sx={{ position: 'relative', height: 90, mb: 4 }}>
             <Box
               ref={lineRef}
@@ -244,6 +256,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               ))}
             </Box>
           </Box>
+          </>
         )}
 
         {tab === 'upload' && (
@@ -252,6 +265,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               crop
               text="Drag and drop a file here"
               orText="select a file"
+              Format='Supported formats: JPG, JPEG, and PNG.'
               onChangeFile={handleCustomUpload}
               aspect={62 / 127}
             />
@@ -259,12 +273,17 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
         )}
       </DialogContent>
 
-        <Box sx={{ backgroundColor: '#fff', display: 'flex', p: 3, justifyContent: 'flex-end' }}>
+        <Box sx={{ backgroundColor: '#fff', display: 'flex', p: 2, justifyContent: 'flex-end' }}>
+          <Button variant='contained'   sx={{boxShadow: 'none', textTransform: 'capitalize', backgroundColor: '#0000000D', px: 3, mx: 2, color: 'black', borderRadius: '8px', '&:hover': {
+              backgroundColor: '#0000000f',
+              boxShadow: 'none'
+            }, }}>Upload new</Button>
           <Button
             variant="contained"
             onClick={onClose}
-            sx={{backgroundColor: '#FE2C55', px: 4, borderRadius: '8px',  '&:hover': {
+            sx={{textTransform: 'capitalize', boxShadow: 'none', backgroundColor: '#FE2C55', px: 3, borderRadius: '8px',  '&:hover': {
               backgroundColor: '#FE2C40',
+              boxShadow: 'none'
             }, }}
           >
             Confirm
