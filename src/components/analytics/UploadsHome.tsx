@@ -24,6 +24,14 @@ interface RecentPostsInterface
   canLoadMore: boolean;
 }
 
+interface LatestCommentsInterface
+{
+  items: object[];
+  page: number;
+  isLoading: boolean;
+  canLoadMore: boolean;
+}
+
 const creator = {
     name: "ANATOLY",
     description: "Official Anatoly Seezitt accoun",
@@ -36,24 +44,6 @@ const creator = {
     ]
   };
   
-const comments = [
-    {
-      userAvatar: 'https://via.placeholder.com/40', // Replace with user's avatar
-      username: 'numannaseernomi20',
-      timeAgo: '5d ago',
-      comment: 'hmmm nice',
-      likes: 0,
-      postThumbnail: 'https://via.placeholder.com/40', // Replace with post image
-    },
-    {
-      userAvatar: 'https://via.placeholder.com/40', // Replace with user's avatar
-      username: 'numannaseernomi20',
-      timeAgo: '5d ago',
-      comment: 'great',
-      likes: 0,
-      postThumbnail: 'https://via.placeholder.com/40', // Replace with post image
-    },
-  ];
 const articles = [
     {
       title: "Posting Sub-only videos to strengthen the bond with your",
@@ -141,6 +131,15 @@ const Analytics = () => {
     }
   );
 
+  const [latestComments, setLatestComments] = useState<LatestCommentsInterface>(
+    {
+      items: [],
+      page: 1,
+      isLoading: false,
+      canLoadMore: true,
+    }
+  );
+
   const navigate = useNavigate();
   const API_KEY = process.env.VITE_API_URL;
   const token = localStorage.getItem('token');
@@ -215,6 +214,39 @@ const Analytics = () => {
     .catch((error) => console.error('Fetch error:', error));
   };
 
+  function loadLatestComments()
+  {
+    let endpoint = `${process.env.VITE_API_URL}/media-content/comments`;
+    let requestOptions =
+    {
+      method: 'GET',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+            
+    if(!latestComments.canLoadMore) { return; }
+
+    setLatestComments(prev => ({ ...prev, isLoading: true, canLoadMore: false }));
+
+    fetch(endpoint, requestOptions)
+    .then((response) => response.json())
+    .then(
+      (response) =>
+      {
+        if(response.data.data.length)
+        {
+          setLatestComments(prev => ({ ...prev, canLoadMore: true, items: [...prev.items, ...response.data.data] }));
+        }
+
+        setLatestComments(prev => ({ ...prev, page: prev.page + 1, isLoading: false }));
+      }
+    )
+    .catch((error) => console.error('Fetch error:', error));
+  };
+
   useEffect(() => {
     if (tab) {
       switch (tab.toLowerCase()) {
@@ -236,6 +268,7 @@ const Analytics = () => {
     }
 
     loadRecentPosts();
+    loadLatestComments()
   }, [tab]);
 
   const chipLabels = [
@@ -488,17 +521,17 @@ const Analytics = () => {
                         </svg>
                     </Typography>
                     <Card sx={{ p: 2, boxShadow: '0px 0px 9px 0px #e4e6eb' }}>
-                        {comments.map((item, index) => (
+                        {latestComments.items.slice(0, 2).map((item, index) => (
                         <Box key={index}>
                             <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
                             <Box display="flex" textAlign={'left'} flex={1} mr={2}>
-                                <Avatar src={item.userAvatar} alt="User" sx={{ width: 40, height: 40, mr: 2 }} />
+                                <Avatar src={item.user.avatar} alt="User" sx={{ width: 40, height: 40, mr: 2 }} />
                                 <Box>
                                 <Typography variant="caption" mr={1} color="text.secondary">
-                                    {item.username}
+                                    {item.user.username}
                                 </Typography>
                                 <Typography variant="caption" color="text.secondary">
-                                    {item.timeAgo}
+                                    {formatCustomDate(item.createdTime)}
                                 </Typography>
                                 <Typography variant="body2" fontWeight="bold" mt={0.5}>
                                     {item.comment}
@@ -515,14 +548,14 @@ const Analytics = () => {
                             <Box>
                                 <Avatar
                                 variant="rounded"
-                                src={item.postThumbnail}
+                                src={item.media.thumbnailUrl}
                                 alt="Post"
                                 sx={{ width: 50, height: 50 }}
                                 />
                             </Box>
                             </Box>
 
-                            {index < comments.length - 1 && <Divider sx={{ my: 1 }} />}
+                            {index < latestComments.items.length - 1 && <Divider sx={{ my: 1 }} />}
                         </Box>
                         ))}
                     </Card>
