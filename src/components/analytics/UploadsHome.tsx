@@ -10,7 +10,7 @@ import styles from './style.module.scss';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; 
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-
+import CheckIcon from '@mui/icons-material/Check';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -377,51 +377,61 @@ const Analytics = () => {
             >
               Last {selectedPeriod} Days &#129087;
             </button>
-            <Menu
-              id="duration-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={() => setAnchorEl(null)}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-              slotProps={{
-                paper: {
-                  elevation: 0,
-                  sx: {
-                    overflow: 'visible',
-                    padding: '10px',
-                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                    mt: 1.5,
-                    '&::before': {
-                      content: '""',
-                      display: 'block',
-                      position: 'absolute',
-                      top: 0,
-                      right: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: 'background.paper',
-                      transform: 'translateY(-50%) rotate(45deg)',
-                      zIndex: 0,
-                    },
+
+          <Menu
+            id="duration-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={() => setAnchorEl(null)}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            slotProps={{
+              paper: {
+                elevation: 0,
+                sx: {
+                  overflow: 'visible',
+                  padding: '10px',
+                  width: '12rem',
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                  mt: 1.5,
+                  '&::before': {
+                    content: '""',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    zIndex: 0,
                   },
                 },
-              }}
-            >
-              {Object.keys(ANALYTICS_OVERVIEW_TIME_PERIODS).map((period: string, index: number) => (
+              },
+            }}
+          >
+            {Object.keys(ANALYTICS_OVERVIEW_TIME_PERIODS).map((period: string, index: number) => {
+              const value = ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS];
+              const isSelected = value === selectedPeriod;
+
+              return (
                 <MenuItem
                   key={index}
                   onClick={() => {
-                    setSelectedPeriod(ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS]);
+                    setSelectedPeriod(value);
                     setAnchorEl(null);
                   }}
-                >
-                  <span className={`font-bold ${ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS] === selectedPeriod ? 'text-[rgb(255,59,92)]' : ''}`}>
-                    {period}
+                  sx={{ fontWeight: isSelected ? 'bold' : 'normal' }}
+                  >
+                  <span className="flex items-center gap-2 w-full justify-between">
+                    <span>{period}</span>
+                    {isSelected && <CheckIcon sx={{ fontSize: 18, color: '#000' }} />}
                   </span>
                 </MenuItem>
-              ))}
-            </Menu>
+              );
+            })}
+          </Menu>
+
             {/* <button
               className={`inline-flex gap-1 items-center ${darkTheme === '' ? 'bg-gray-100' : 'bg-gray-800'} border-0 py-2 px-3 focus:outline-none ${darkTheme === '' ? 'hover:bg-gray-200' : 'hover:bg-gray-900'} rounded-full text-sm`}
             >
@@ -834,6 +844,18 @@ const Analytics = () => {
                             </Card>
                             </Grid>
                         ) }
+                        {tabIndexRecomded  &&(
+                            <>
+                            <Typography variant='h5'>
+                              No recommendations yet
+                            </Typography>
+                            <Typography variant='body2' >
+                              This tab is only available for creators who have at least 1,000 followers.
+                            </Typography>
+                            </>
+                        )
+
+                        }
                         <button className='w-100 my-4 bg-[#0000000D]'>View More</button>
                     </Container>
             </div>
@@ -856,7 +878,34 @@ const Analytics = () => {
                     ))}
                 </div>
             </div>
+            
         </div>
+        <Box
+                sx={{
+                  backgroundColor: '#f9f9f9',
+                  borderTop: '1px solid #e0e0e0',
+                  py: 2,
+                  px: { xs: 2, sm: 4 },
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '0.875rem',
+                  color: 'text.secondary',
+                }}
+              >
+                <Typography variant="body2">
+                  Copyright © {new Date().getFullYear()} Seezitt
+                </Typography>
+
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Link href="/terms" underline="hover" color="text.secondary">
+                    Terms of Service
+                  </Link>
+                  <Link href="/privacy" underline="hover" color="text.secondary">
+                    Privacy Policy
+                  </Link>
+                </Box>
+              </Box>
         {/* <ViewersTab />
         <FollowersTab /> */}
     </ThemeProvider>
