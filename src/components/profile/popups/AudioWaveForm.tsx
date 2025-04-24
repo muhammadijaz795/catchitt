@@ -3,10 +3,10 @@ import { useWavesurfer } from '@wavesurfer/react'
 // @ts-ignore
 import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js'
 
-const AudioWaveForm = ({ audioUrl }:any) => {
+const AudioWaveForm = ({ audioUrl, isPlaying }:any) => {
     const containerRef = useRef(null)
     
-  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
+  const { wavesurfer, currentTime } = useWavesurfer({
     container: containerRef,
     url: audioUrl,
     plugins: useMemo(() => [Timeline.create()], []),
@@ -16,10 +16,20 @@ const AudioWaveForm = ({ audioUrl }:any) => {
     height: 80, 
     barWidth: 2,
   })
-
+  console.log('isPlaying', isPlaying)
   const onPlayPause = useCallback(() => {
     wavesurfer && wavesurfer.playPause()
   }, [wavesurfer])
+
+  useEffect(() => {
+    if (!wavesurfer) return;
+
+    if (isPlaying) {
+      wavesurfer.play();
+    } else {
+      wavesurfer.pause();
+    }
+  }, [isPlaying, wavesurfer]);
 
   useEffect(() => {
     console.log('audioUrl', audioUrl)
@@ -29,8 +39,8 @@ const AudioWaveForm = ({ audioUrl }:any) => {
   return (
     <>
       <div ref={containerRef} />
-      <div style={{ margin: '1em 0', display: 'flex', gap: '1em' }}>
-        <button onClick={onPlayPause} style={{ minWidth: '5em' }}>
+      <div  style={{ margin: '1em 0', display: 'flex', gap: '1em' }}>
+        <button id="audio-play-btn" onClick={onPlayPause} style={{ minWidth: '5em', display: 'none' }}>
           {isPlaying ? 'Pause' : 'Play'}
         </button>
       </div>

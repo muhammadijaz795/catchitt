@@ -11,13 +11,14 @@ import { useDispatch } from 'react-redux';
 import {setCurrentEditVideo} from '../../../redux/reducers/currentEditVideoReducer'; // Import the action
 
 
-function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelectedAudio, searchQuery, isHighlighted }: any) {
+function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelectedAudio, searchQuery, isHighlighted,  handleAudioManipulation}: any) {
     console.log('isHighlighted'+isHighlighted)
    const dispatch = useDispatch();
     const abortController = useRef<AbortController | null>(null);
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
      const [gallery, setGallery] = useState<any>({ items: [], page: 1, pageSize: 5, isNextpage: true });
+     const [hoveredSoundId, setHoveredSoundId] = useState<string | null>(null);
 
      const fetchPaginatedSounds = async (fromStart = false) => {
         try {
@@ -151,6 +152,8 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                             className={`flex items-center p-2 rounded-lg ${isDarkTheme?'hover:bg-gray-400':'hover:bg-gray-100'} cursor-pointer ${selectedAudio === audio.url ? isDarkTheme?'bg-gray-500':'bg-gray-200' : ''
                                 }`}
                             onClick={() => {setSelectedAudio(audio.url); console.log('new audio',audio);dispatch(setCurrentEditVideo(audio));}}
+                            onMouseEnter={() => setHoveredSoundId(audio._id)}
+                            onMouseLeave={() => setHoveredSoundId(null)}
                         >
                             <img className="w-10 h-10 bg-gray-200 mr-2" src={defaultAvatar} alt="soundImg" />
                             <div className="w-[15rem]">
@@ -158,6 +161,21 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                                 
                                 {/* <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span> */}
                             </div>
+
+                            {hoveredSoundId === audio._id && (
+                <button
+                  className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded transition-opacity duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedAudio(audio.url);
+                    handleAudioManipulation();
+                  }}
+                  title="Use this sound"
+                >
+                  Use
+                </button>
+              )}
+              
                             <button
                                     className="btn text-xl ml-4"
                                     onClick={(e) => {
@@ -168,6 +186,8 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                                 >
                                     {audio.isBookmarked ? '💖' : '🤍'}
                                 </button>
+
+                                
                         {/* <img src={attachMusicInWhite} alt="attach-sound" /> */}
                         </li>
                     ))}
