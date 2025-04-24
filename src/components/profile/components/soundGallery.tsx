@@ -112,7 +112,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
 
     return (
         <div 
-            className={`sound-gallery ${isHighlighted ? 'highlight-effect' : ''}`}
+            className={`sound-gallery ${isHighlighted ? 'highlight-effect' : ''} max-w-sm`}
             style={{
             transition: 'all 0.3s ease',
             border: isHighlighted ? '2px solid #20D5EC' : 'none',
@@ -149,7 +149,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                     {gallery.items.map((audio: any) => (
                         <li
                             key={audio._id}
-                            className={`flex items-center p-2 rounded-lg ${isDarkTheme?'hover:bg-gray-400':'hover:bg-gray-100'} cursor-pointer ${selectedAudio === audio.url ? isDarkTheme?'bg-gray-500':'bg-gray-200' : ''
+                            className={`flex items-center p-2 rounded-lg cursor-pointer ${selectedAudio === audio.url ? isDarkTheme?'bg-gray-500':'bg-gray-200' : ''
                                 }`}
                             onClick={() => {setSelectedAudio(audio.url); console.log('new audio',audio);dispatch(setCurrentEditVideo(audio));}}
                             onMouseEnter={() => setHoveredSoundId(audio._id)}
@@ -161,21 +161,21 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                                 
                                 {/* <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span> */}
                             </div>
-
+                                <span className="w-[5rem]">
                             {hoveredSoundId === audio._id && (
-                <button
-                  className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded transition-opacity duration-200"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedAudio(audio.url);
-                    handleAudioManipulation();
-                  }}
-                  title="Use this sound"
-                >
-                  Use
-                </button>
+                            <button
+                              className="ml-2 bg-[#F1F1F2] text-black text-sm text-capitalize border-0 w-[5rem] py-1 rounded-full transition-opacity duration-200"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedAudio(audio.url);
+                                handleAudioManipulation();
+                              }}
+                              title="Use this sound"
+                            >
+                              Use
+                            </button>
               )}
-              
+              </span>
                             <button
                                     className="btn text-xl ml-4"
                                     onClick={(e) => {
