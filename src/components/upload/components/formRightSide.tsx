@@ -39,6 +39,14 @@ const options = [
   { label: 'Only Me', value: 'onlyme' },
 ];
 
+interface Location
+{
+    value: string;
+    label: string;
+    lat?: string;
+    lon?: string;
+}
+
 function FormRightSide(props: any) {
 
     const CustomAutocomplete = styled(Autocomplete)(({ theme }) => ({
@@ -375,13 +383,6 @@ function FormRightSide(props: any) {
         }
     }, [date, time]);
 
-
-    const locationOptions = [
-        { label: 'New York', value: 'new_york' },
-        { label: 'Los Angeles', value: 'los_angeles' },
-        { label: 'Chicago', value: 'chicago' },
-      ];
-
     const StyledSelect = styled(Select)(({ theme }) => ({
         backgroundColor: '#f3f3f3',
         borderRadius: 12,
@@ -562,6 +563,82 @@ function FormRightSide(props: any) {
     // console.log('uploadState');
     // console.log(uploadState);
 
+    const [locationSearchOptions, setLocationSearchOptions] = useState<Location[]>([]);
+    const [isSearchingLocation, setIsSearchingLocation] = useState(false);
+    const [searchLocationTimer, setSearchLocationTimer] = useState<NodeJS.Timeout | null>(null);
+
+    function handleInputChange(event: React.SyntheticEvent, value: string)
+    {
+        if(searchLocationTimer)
+        {
+            clearTimeout(searchLocationTimer);
+        }
+        
+        if(value.length < 2)
+        {
+            setLocationSearchOptions([]);
+            return;
+        }
+        
+        setIsSearchingLocation(true);
+        
+        const searchLocationTimerTemp = setTimeout(() => {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1&limit=5`)
+            .then(response =>  response.json())
+            .then(data =>
+                {
+                    setLocationSearchOptions(
+                        data.map((item: any) =>
+                            (
+                                {
+                                    value: item.place_id,
+                                    label: item.display_name,
+                                    lat: item.lat,
+                                    lon: item.lon
+                                }
+                            )
+                        )
+                    );
+                }
+            )
+            .catch(error =>
+                {
+                    console.error('Error fetching locations:', error);
+                    setLocationSearchOptions([]);
+                }
+            )
+            .finally(() => { setIsSearchingLocation(false); });
+        }, 300);
+
+        setSearchLocationTimer(searchLocationTimerTemp);
+    }
+  
+    const [locationHistory, setLocationHistory] = useState<Location[]>(() =>
+        {
+            try
+            {
+                const savedHistory = localStorage.getItem('locationHistory');
+                return savedHistory ? JSON.parse(savedHistory) : [];
+            }
+            catch
+            {
+                return [];
+            }
+        }
+    );
+  
+    function handleLocationSelect(event?: React.SyntheticEvent, value?: Location | null)
+    {
+        if(!value) return;
+        
+        const updateHistory = (prev: Location[]) =>
+        {
+            const newHistory = [value, ...prev.filter((item: any) => item.value !== value.value)].slice(0, 5);
+            localStorage.setItem('locationHistory', JSON.stringify(newHistory));
+            return newHistory;
+        };
+        setLocationHistory(updateHistory);
+    }
 
     
     
@@ -877,11 +954,14 @@ function FormRightSide(props: any) {
                             </div>
             
                             <FormControl sx={{ width: '18rem', marginBottom: '1rem' }}>
-                                <CustomAutocomplete
+                                <Autocomplete
                                     popupIcon={<KeyboardArrowDownIcon />}
-                                    options={locationOptions}
+                                    options={locationSearchOptions}
                                     getOptionLabel={(option) => option.label}
                                     isOptionEqualToValue={(option, value) => option.value === value.value}
+                                    loading={isSearchingLocation}
+                                    onInputChange={handleInputChange}
+                                    onChange={handleLocationSelect}
                                     renderInput={(params) => (
                                     <TextField
                                         {...params}
@@ -902,7 +982,9 @@ function FormRightSide(props: any) {
 
                             
                             <Stack direction="row" spacing={2}>
-                                <Chip label="Lahore Fort" sx={{ borderRadius: "8px", fontWeight: 500 }}  variant="outlined" />
+                                {locationHistory.map((location: any) => (
+                                    <Chip label={location.label} key={location.value} onClick={() => { setLocationSearchOptions([location]); handleLocationSelect(undefined, location); }} sx={{ borderRadius: "8px", fontWeight: 500 }}  variant="outlined" />
+                                ))}
                             </Stack>
 {/*                             
                             <BasicInput
