@@ -635,6 +635,7 @@ function FormRightSide(props: any) {
         {
             const newHistory = [value, ...prev.filter((item: any) => item.value !== value.value)].slice(0, 5);
             localStorage.setItem('locationHistory', JSON.stringify(newHistory));
+            updateState('locationPlace', value.label);
             return newHistory;
         };
         setLocationHistory(updateHistory);

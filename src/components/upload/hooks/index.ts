@@ -16,6 +16,7 @@ interface StateInterface {
     thumbnailUrl?: string;
     isOnlyMe?: boolean;
     place?: string;
+    locationPlace?: string;
     allowDuet?: boolean;
     allowStitch?: boolean;
     allowDownload?: boolean;
@@ -158,6 +159,7 @@ function useUpload() {
         postPayload.append('allowDownload', `${state?.allowDownload || false}`);
         postPayload.append('allowStitch', `${state?.allowStitch || false}`);
         postPayload.append('place', state?.place || '');
+        postPayload.append('locationPlace', state?.locationPlace || '');
         if(state?.scheduledAt){
             console.log(state?.scheduledAt);
             postPayload.append('scheduledAt', state?.scheduledAt || '');
