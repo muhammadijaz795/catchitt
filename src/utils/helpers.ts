@@ -266,6 +266,32 @@ export function getCaretCoordinates(inputElement: HTMLInputElement, cursorPositi
     }
 }
 
+export const searchUsersAndHashes = async (query: string, signal: AbortSignal) => {
+    try {
+        console.log('searchUserToAnnotate', query);
+        const token = localStorage.getItem('token');
+        const response = await fetch(
+            `${API_KEY}/discover/search?searchQuery=${encodeURIComponent(query)}&page=1&pageSize=30`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                signal
+            }
+        );
+
+        if (response.ok) {
+            const responseData = await response.json();
+            return responseData.data;
+            // Update the state with the extracted data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const searchUserToAnnotate = async (query: string, signal: AbortSignal) => {
     try {
         console.log('searchUserToAnnotate', query);

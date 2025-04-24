@@ -30,7 +30,8 @@ const DndContainer = ({
     updateState,
     selectedThumb,
     setSelectedThumb,
-    wrapperId
+    wrapperId,
+    handleClose
 }: any) => {
     const [fileList, setFileList] = useState<any>([]);
 
@@ -38,6 +39,7 @@ const DndContainer = ({
         name: 'file',
         multiple: false,
         listType: 'picture',
+        showUploadList: false, // 🚫 Hide file list preview
         accept: accept,
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
@@ -53,6 +55,7 @@ const DndContainer = ({
             console.log(item);
         },
     };
+
 
     const DndComp = (
 <Dragger
@@ -193,6 +196,14 @@ id={wrapperId}
                     aspect={aspect}
                     cropShape={shape}
                     modalTitle={modalTitle}
+                    onModalCancel={() => {
+                        console.log('Crop modal closed (cancelled)');
+                        // You can call any callback or state update here
+                        }}
+                        onModalOk={() => {
+                            handleClose();
+                            //console.log('Image cropped and confirmed');
+                        }}
                 >
                     {DndComp}
                 </ImgCrop>

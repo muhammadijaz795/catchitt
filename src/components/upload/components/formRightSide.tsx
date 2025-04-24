@@ -29,7 +29,7 @@ import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
 import SaveVideoPopup from './scheduleVideoPopup'
 
 import CheckIcon from '@mui/icons-material/Check';
-import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler, searchUsersAndHashes } from '../../../utils/helpers';
 
 
 const options = [
@@ -278,66 +278,91 @@ function FormRightSide(props: any) {
         }
       
         const lastAtIndex = comment.lastIndexOf('@');
+        const lastHashIndex = comment.lastIndexOf('#');
         
-      
-        // If @ doesn't exist, no need to continue
-        if (lastAtIndex === -1) {
+        // Determine if we're searching for users (@) or hashtags (#)
+        const isUserSearch = lastAtIndex > lastHashIndex;
+        const searchIndex = isUserSearch ? lastAtIndex : lastHashIndex;
+        
+        // If no trigger symbol exists, no need to continue
+        if (searchIndex === -1) {
           setFilteredUsers([]);
           return;
         }
       
-        // Slice from the @ symbol to the end
-        const rawQuery = comment.slice(lastAtIndex); // e.g. @, @zoe, #@
-        const cleanQuery = rawQuery.slice(1);        // removes the @ symbol
+        // Get the search query (text after the trigger symbol)
+        const query = comment.slice(searchIndex + 1);
         
-        let queryToSearch = '';
-        
-        // Case: Last word is just '@'
-        if (rawQuery === '@') {
-            console.log('herere..')
-            if(comment.charAt(lastAtIndex - 1) === '#'){
-                queryToSearch = '#@';
-                console.log('herere')
-            }else{
-                queryToSearch = '@';
-            }
-          
-        }
-        // Case: Last two chars are '#@'
-        else if (rawQuery === '#@') {
-          queryToSearch = '#@';
-        }
-        // Case: Ends with '@' but has '#' before it (e.g., ##@)
-        else if (rawQuery.endsWith('@') && comment.charAt(lastAtIndex - 1) === '#') {
-          // Find all consecutive # before @
-          const hashPrefixMatch = comment.slice(0, lastAtIndex).match(/#+$/);
-          const hashes = hashPrefixMatch ? hashPrefixMatch[0] : '';
-          queryToSearch = `${hashes}@`;
-        }
-        // Default: Search only the word after '@'
-        else {
-          queryToSearch = cleanQuery;
+        // Only search if query has at least 1 character
+        if (query.length === 0) {
+          setFilteredUsers([]);
+          return;
         }
       
-        // You can adjust minimum length here if needed (e.g., queryToSearch.length > 1)
         setIsFetchingUsers(true);
         if (abortController.current) abortController.current.abort();
-        console.log('queryToSearch'+queryToSearch)
+        
         const controller = new AbortController();
         abortController.current = controller;
-       
+        
         (async () => {
-          const result = await searchUserToAnnotate(queryToSearch, controller.signal);
-          if (Array.isArray(result)) {
-            setFilteredUsers(result);
+          try {
+            let result;
+            if (isUserSearch) {
+              // Search for users when @ is used
+              result = await searchUsersAndHashes(query, controller.signal);
+              setFilteredUsers(result.users.data);
+                
+            } else {
+              // Search for hashtags when # is used
+              result = await searchUsersAndHashes(query, controller.signal);
+              setFilteredUsers(result.hashtags.data);
+            }
+
+            console.log('Filtered Users:', filteredUsers);
+            
+            
+          } catch (error) {
+            if (error.name !== 'AbortError') {
+              console.error('Search error:', error);
+            }
+          } finally {
+            setIsFetchingUsers(false);
           }
-          setIsFetchingUsers(false);
         })();
       
         return () => {
           if (abortController.current) abortController.current.abort();
         };
-      }, [comment, isMentioning]);
+    }, [comment, isMentioning]);
+    
+    // Handle user/hashtag selection
+    const handleSelect = (item: { username?: string; name?: string; tag?: string }) => {
+        setComment((prevComment) => {
+            // Determine if we're inserting a user (@) or hashtag (#)
+            const isUser = item.username !== undefined;
+    
+            const triggerChar = isUser ? '@' : '#';
+            const triggerIndex = prevComment.lastIndexOf(triggerChar);
+    
+            let insertValue = '';
+    
+            if (isUser) {
+                insertValue = `${triggerChar}${item.username}`;
+            } else {
+                // Strip leading '#' if already present
+                const cleanTag = item.name?.replace(/^#/, '') ?? '';
+                insertValue = `${triggerChar}${cleanTag}`;
+            }
+    
+            const newComment = `${prevComment.slice(0, triggerIndex)}${insertValue} `;
+            updateState('description', newComment);
+            return newComment;
+        });
+    
+        setIsMentioning(false);
+    };
+    
       
       
 
@@ -439,19 +464,20 @@ function FormRightSide(props: any) {
         setPostCategories(filteredCategories);
     };
 
+    
     const handleDescriptionChange = (e: any) => {
         const inputValue = e.target.value;
         setComment(inputValue);
-      
+    
         if (inputValue.length <= 2200) {
-          updateState('description', inputValue);
+            updateState('description', inputValue);
         }
-      
-        const mentionTrigger = inputValue.match(/@(\w*)$/);
-      
-        setIsMentioning(!!mentionTrigger);
-      };
+    
+        const containsMentionOrHashtag = /[@#]/.test(inputValue);
+        setIsMentioning(containsMentionOrHashtag);
+    };
 
+    
     const handleUserSelect = (user: { username: any }) => {
         setComment((prevComment) => {
             const lastMentionStart = prevComment.lastIndexOf('@');
@@ -600,7 +626,7 @@ function FormRightSide(props: any) {
                                                             ? 'rounded-b-lg'
                                                             : ''
                                                         }`}
-                                                    onClick={() => handleUserSelect(user)}
+                                                    onClick={() => handleSelect(user)}
                                                 >
                                                     <img
                                                         className="object-contain w-10 h-10 rounded-full"

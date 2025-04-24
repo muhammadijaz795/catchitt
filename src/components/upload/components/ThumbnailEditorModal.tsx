@@ -303,6 +303,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               aspect={62 / 127}
               wrapperId="my-dnd"
               ref={dndRef}
+              handleClose={handleClose}
             />
           </div>
         )}
