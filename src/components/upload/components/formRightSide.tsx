@@ -953,32 +953,64 @@ function FormRightSide(props: any) {
                                 </p>
                             </div>
             
-                            <FormControl sx={{ width: '18rem', marginBottom: '1rem' }}>
-                                <Autocomplete
-                                    popupIcon={<KeyboardArrowDownIcon />}
-                                    options={locationSearchOptions}
-                                    getOptionLabel={(option) => option.label}
-                                    isOptionEqualToValue={(option, value) => option.value === value.value}
-                                    loading={isSearchingLocation}
-                                    onInputChange={handleInputChange}
-                                    onChange={handleLocationSelect}
-                                    renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        placeholder="Search locations"
-                                        variant="outlined"
-                                        InputProps={{
-                                        ...params.InputProps,
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                            <LocationIcon sx={{ color: '#777' }} />
-                                            </InputAdornment>
-                                        ),
+                            <FormControl
+                                    sx={{
+                                        width: '18rem',
+                                        mb: '1rem',
+                                        backgroundColor: '#f5f5f5', // very light gray
+                                        borderRadius: '8px',
+                                    }}
+                                    >
+                                    <Autocomplete
+                                        popupIcon={<KeyboardArrowDownIcon />}
+                                        options={locationSearchOptions}
+                                        getOptionLabel={(option) => option.label}
+                                        isOptionEqualToValue={(option, value) => option.value === value.value}
+                                        loading={isSearchingLocation}
+                                        onInputChange={handleInputChange}
+                                        onChange={handleLocationSelect}
+                                        sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            padding: '4px 8px', // reduce height
+                                            backgroundColor: '#0000000D',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            fontSize: '0.9rem',
+                                            overflow: 'hidden'
+                                        },
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none',
+                                        },
                                         }}
+                                        renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            placeholder="Search locations"
+                                            variant="outlined"
+                                            InputProps={{
+                                            ...params.InputProps,
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                <LocationIcon sx={{ color: '#777' }} />
+                                                </InputAdornment>
+                                            ),
+                                            }}
+                                            sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                padding: '4px 8px',
+                                                border: 'none',
+                                                borderRadius: '8px'
+                                            },
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none',
+                                                borderRadius: '8px'
+                                            },
+                                            }}
+                                        />
+                                        )}
                                     />
-                                    )}
-                                />
-                                </FormControl>
+                                    </FormControl>
+
 
                             
                             <Stack direction="row" spacing={2}>
