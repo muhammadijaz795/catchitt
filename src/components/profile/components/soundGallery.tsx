@@ -175,7 +175,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                                     </button>
                                     )}
                                 </span>
-                                <button
+                                {hoveredSoundId === audio._id && <button
                                     className="btn text-xl ml-4"
                                     onClick={(e) => {
                                         e.stopPropagation(); // Prevent playing audio on click
@@ -183,7 +183,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                                     }}
                                     title={audio.isBookmarked ? 'Unfavorite' : 'Favorite'}
                                 >
-                                {hoveredSoundId === audio._id && audio.isBookmarked ? (
+                                { audio.isBookmarked ? (
                                     <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M14.5775 4.27995H5.41087C5.30036 4.27995 5.19438 4.32385 5.11624 4.40199C5.0381 4.48013 4.9942 4.58611 4.9942 4.69661V16.6133L8.6817 13.6133C9.05286 13.3122 9.51626 13.1479 9.9942 13.1479C10.4721 13.1479 10.9355 13.3122 11.3067 13.6133L14.9942 16.6133V4.69661C14.9942 4.58611 14.9503 4.48013 14.8722 4.40199C14.794 4.32385 14.688 4.27995 14.5775 4.27995ZM5.41087 2.61328H14.5775C15.1301 2.61328 15.66 2.83277 16.0507 3.22348C16.4414 3.61418 16.6609 4.14408 16.6609 4.69661V18.3633C16.6606 18.5206 16.6158 18.6747 16.5317 18.8076C16.4475 18.9406 16.3275 19.047 16.1854 19.1146C16.0433 19.1821 15.8849 19.2081 15.7287 19.1894C15.5725 19.1707 15.4247 19.1082 15.3025 19.0091L10.2609 14.9091C10.1863 14.8478 10.0928 14.8143 9.99628 14.8143C9.89977 14.8143 9.80625 14.8478 9.7317 14.9091L4.69003 19.0091C4.56791 19.1095 4.41975 19.1731 4.26285 19.1924C4.10595 19.2118 3.94678 19.1861 3.80393 19.1184C3.66107 19.0507 3.54043 18.9437 3.45607 18.81C3.37172 18.6763 3.32714 18.5214 3.32753 18.3633V4.69661C3.32753 4.14408 3.54703 3.61418 3.93773 3.22348C4.32843 2.83277 4.85833 2.61328 5.41087 2.61328Z" fill="black"/>
                                     </svg>
@@ -193,6 +193,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                                         </svg>
                                     )}
                                 </button>
+                                }
 
                                 
                         {/* <img src={attachMusicInWhite} alt="attach-sound" /> */}
