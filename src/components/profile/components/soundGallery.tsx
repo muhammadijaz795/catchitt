@@ -20,6 +20,9 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
      const [gallery, setGallery] = useState<any>({ items: [], page: 1, pageSize: 5, isNextpage: true });
      const [hoveredSoundId, setHoveredSoundId] = useState<string | null>(null);
 
+     const [playingAudio, setPlayingAudio] = useState(null); // Stores current playing audio URL
+    const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null); // Stores the actual audio object
+
      const fetchPaginatedSounds = async (fromStart = false) => {
         try {
           const controller = new AbortController();
@@ -64,6 +67,27 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
           abortController.current = null;
         }
       }
+
+      const handleAudioPlayPause = (url: any) => {
+        if (playingAudio === url && audioElement) {
+            audioElement.pause();
+            setPlayingAudio(null);
+        } else {
+            if (audioElement) {
+                audioElement.pause(); // Pause previous one
+            }
+            const newAudio = new Audio(url);
+            newAudio.play();
+            setAudioElement(newAudio);
+            setPlayingAudio(url);
+    
+            newAudio.onended = () => {
+                setPlayingAudio(null);
+                setAudioElement(null);
+            };
+        }
+    };
+    
 
     useEffect(() => {
         setGallery({
@@ -156,6 +180,26 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                             onMouseLeave={() => setHoveredSoundId(null)}
                         >
                             <img className="w-10 h-10 bg-gray-200 mr-2" src={defaultAvatar} alt="soundImg" />
+                            {hoveredSoundId === audio._id && <button
+                                className="ml-2"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAudioPlayPause(audio.url);
+                                }}
+                                title={playingAudio === audio.url ? 'Pause' : 'Play'}
+                            >
+                                {playingAudio === audio.url ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 9v6m4-6v6" />
+                                    </svg>
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-4.586-2.65A1 1 0 009 9.382v5.236a1 1 0 001.166.986l4.586-2.65a1 1 0 000-1.786z" />
+                                    </svg>
+                                )}
+                            </button>
+                            }
+
                             <div className="w-[15rem]">
                                 <div className="font-medium text-sm">{Object.hasOwn(audio,'title')? audio.title: audio.name}</div>
                                 
