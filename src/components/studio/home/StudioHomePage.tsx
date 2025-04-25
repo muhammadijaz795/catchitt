@@ -1,47 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { setSelectedFile } from '../../redux/reducers/upload';
-import Navbar from '../../shared/navbar';
-import UploadFile from './components/uploadFile';
-import UploadForm from './components/uploadForm';
-import useUpload from './hooks';
+import Navbar from '../../../shared/navbar';
+import UploadsHome from '../../analytics/UploadsHome';
 import style from './index.module.scss';
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { academyOutlineDark, academyOutlineWhite, analyticsOutline, analyticsOutlineWhite, bulbOutlineDark, bulbOutlineWhite, commentOutlineDark, commentOutlineWhite, commentWhite, feedbackQuestionDark, feedbackQuestionWhite, hamburger, hamburgerDark, homeDark, homeIcon } from '../../icons';
-import { Avatar, Box, Typography, Paper } from '@mui/material';
+import { academyOutlineDark, academyOutlineWhite, analyticsOutline, analyticsOutlineWhite, bulbOutlineDark, bulbOutlineWhite, commentOutlineDark, commentOutlineWhite, commentWhite, feedbackQuestionDark, feedbackQuestionWhite, hamburger, hamburgerDark, homeDark, homeIcon } from '../../../icons';
 
 
-function UploadPage() {
-    const {
-        selectedFile,
-        inputElementRef,
-        selectFilesHandler,
-        onChangeFileHandler,
-        selectedVideoSrc,
-        thumbnails,
-        updateState,
-        state,
-        SubmitHandler,
-        updateMediaHandler,
-        isPosting,
-    } = useUpload();
-
-    const dispatch = useDispatch();
+function StudioHomePage() {
     const navigate = useNavigate();
 
     const [darkTheme, setdarkTheme] = useState('');
-    const location = useLocation();
-    const { isEditMode, info } = location.state || { isEditMode: false, info: {} };
-    const uploadInterval = useRef<NodeJS.Timeout | null>(null);
-    const [uploadState, setUploadState] = useState({
-        fileName: "",
-        uploaded: 0, // in KB
-        total: 0,    // in MB
-        duration: "0m00s",
-        timeLeft: "Calculating...",
-        percentage: 0,
-        isUploading: false,
-    });
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -50,156 +18,7 @@ function UploadPage() {
         //     setdarkTheme(style.darkTheme);
         // } else {
         // }
-    });
-
-    // useEffect(() => {
-    //     return () => {
-    //         dispatch(setSelectedFile({ file: null }));
-    //     }
-    // }, [])
-     // Clean up on unmount
-     useEffect(() => {
-        return () => {
-            dispatch(setSelectedFile({ file: null }));
-            if (uploadInterval.current) {
-                clearInterval(uploadInterval.current);
-                uploadInterval.current = null;
-              }
-        };
-    }, [dispatch]);
-
-    // useEffect(() => {
-    //     return () => {
-    //         if (uploadInterval.current) {
-    //             clearInterval(uploadInterval.current);
-    //             uploadInterval.current = null;
-    //         }
-    //     };
-    // }, []);
-
-    useEffect(() => {
-        // console.log("Updated upload state:", uploadState);
-    }, [uploadState]);
-
-     // Handle file selection from UploadFile component
-     const handleFileSelect = (file: File) => {
-        if (!file) return;
-    
-        const fileName = file.name;
-        const totalSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-    
-        const videoElement = document.createElement('video');
-        videoElement.preload = 'metadata';
-    
-        const objectUrl = URL.createObjectURL(file);
-        videoElement.src = objectUrl;
-    
-        videoElement.onloadedmetadata = () => {
-            URL.revokeObjectURL(objectUrl);
-    
-            const durationInSeconds = videoElement.duration;
-    
-            // Format duration into "XmYYs"
-            const minutes = Math.floor(durationInSeconds / 60);
-            const seconds = Math.floor(durationInSeconds % 60);
-            const formattedDuration = `${minutes}m${seconds.toString().padStart(2, '0')}s`;
-    
-            setUploadState({
-                fileName,
-                uploaded: 0,
-                total: parseFloat(totalSizeMB),
-                duration: formattedDuration,
-                timeLeft: '10.0 seconds left',
-                percentage: 0,
-                isUploading: true,
-            });
-    
-            setTimeout(() => startSimulatedUpload(), 0);
-            onChangeFileHandler(file);
-        };
-    
-        videoElement.onerror = () => {
-            console.error('Error loading video metadata');
-            // fallback if duration fails
-            setUploadState({
-                fileName,
-                uploaded: 0,
-                total: parseFloat(totalSizeMB),
-                duration: '0m00s',
-                timeLeft: '10.0 seconds left',
-                percentage: 0,
-                isUploading: true,
-            });
-    
-            setTimeout(() => startSimulatedUpload(), 0);
-            onChangeFileHandler(file);
-        };
-    };
-    
-
-    const uploadStateRef = useRef(uploadState);
-    useEffect(() => {
-        uploadStateRef.current = uploadState;
-    }, [uploadState]);
-
-    // Simulate upload progress
-    
-    const startSimulatedUpload = () => {
-        if (uploadInterval.current) {
-            clearInterval(uploadInterval.current);
-            uploadInterval.current = null;
-        }
-    
-        const startTime = Date.now();
-        const durationMs = 10000;
-    
-        uploadInterval.current = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(100, (elapsed / durationMs) * 100);
-            const totalBytes = uploadStateRef.current.total * 1024 * 1024;
-            const uploadedBytes = (totalBytes * progress) / 100;
-    
-            const uploadedKB = uploadedBytes / 1024;
-            const remainingMs = Math.max(0, durationMs - elapsed);
-            const remainingSeconds = Math.max(0, parseFloat((remainingMs / 1000).toFixed(1)));
-            const timeLeft = `${remainingSeconds} seconds left`;
-    
-            const newState = {
-                ...uploadStateRef.current,
-                uploaded: uploadedKB,
-                percentage: Math.floor(progress),
-                timeLeft,
-                isUploading: progress < 100,
-            };
-    
-            setUploadState(newState);
-    
-            if (progress >= 100 || remainingMs <= 0) {
-                clearInterval(uploadInterval.current!);
-                uploadInterval.current = null;
-            }
-        }, 100);
-    };
-    
-    
-
-    // Cancel upload handler
-    const handleCancelUpload = () => {
-        if (uploadInterval.current) {
-            clearInterval(uploadInterval.current);
-            uploadInterval.current = null;
-        }
-        setUploadState({
-            fileName: "",
-            uploaded: 0,
-            total: 0,
-            duration: "0m00s",
-            timeLeft: "0 seconds left",
-            percentage: 0,
-            isUploading: false,
-        });
-        dispatch(setSelectedFile({ file: null }));
-    };
+    }, []); 
 
     return (
         <div className={`flex flex-col ${darkTheme}`}>
@@ -219,7 +38,7 @@ function UploadPage() {
                             <span>Home</span>
                         </Link>
                     </li>
-                    {/* <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics/content')}>
+                    <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics/content')}>
                         <img className='w-4 inline-block' src={darkTheme===''?hamburgerDark :hamburger} alt="" />
                         <span>&nbsp;Posts</span>
                     </li>
@@ -229,10 +48,6 @@ function UploadPage() {
                             <span>Comments</span>
                         </Link>
                     </li>
-                    {/* <li className='cursor-pointer flex gap-2'>
-                        <img className='w-5 inline-block' src={darkTheme===''?commentOutlineDark:commentOutlineWhite} alt="" />
-                        <span>Comments</span>
-                    </li> */}
                     <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics')}>
                         <img className='w-5 inline-block' src={darkTheme===''?analyticsOutline:analyticsOutlineWhite} alt="" />
                         <span>Analytics</span>
@@ -246,7 +61,6 @@ function UploadPage() {
                         <span>Creator Academy</span>
                     </li> */}
                 </ul>
-
                 <h5 className='text-sm font-semibold text-left text-[#00000057] mt-4'>Tools</h5>
                 <ul className='text-sm space-y-6 mt-3 text-left mx-2'>
                     <li className='cursor-pointer flex gap-2' onClick={() => navigate('/home')}>
@@ -280,6 +94,10 @@ function UploadPage() {
 
                         <span>&nbsp;Creator Academy</span>
                     </li>
+                    {/* <li className='cursor-pointer flex gap-2'>
+                        <img className='w-5 inline-block' src={darkTheme===''?commentOutlineDark:commentOutlineWhite} alt="" />
+                        <span>Comments</span>
+                    </li> */}
                     <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics')}>
                     <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10.4831 0.842248L5.98562 1.59183C5.62432 1.6518 5.35297 1.97412 5.35297 2.34141L5.34548 10.233C4.8937 9.96743 4.37783 9.83055 3.8538 9.83725C3.26079 9.83725 2.68109 10.0131 2.18802 10.3426C1.69495 10.672 1.31064 11.1403 1.0837 11.6882C0.856768 12.236 0.797391 12.8389 0.913082 13.4205C1.02877 14.0021 1.31434 14.5364 1.73366 14.9557C2.15299 15.375 2.68724 15.6606 3.26886 15.7763C3.85048 15.892 4.45334 15.8326 5.00122 15.6057C5.54909 15.3787 6.01737 14.9944 6.34683 14.5014C6.67629 14.0083 6.85214 13.4286 6.85214 12.8356L6.86188 5.9679L10.7125 5.31576C10.7979 5.30227 10.9928 5.24005 11.1622 5.05865C11.2237 4.99744 11.2721 4.92431 11.3043 4.84375C11.3365 4.76319 11.3519 4.6769 11.3496 4.59016V1.59183C11.3496 1.12859 10.9396 0.76579 10.4831 0.842248ZM9.83923 2.46884L9.84297 3.94777L6.85214 4.44924L6.85514 2.96282L9.83923 2.46884ZM3.8538 11.3364C4.05345 11.3319 4.25198 11.3673 4.43775 11.4406C4.62352 11.5139 4.79277 11.6235 4.93558 11.7631C5.07839 11.9027 5.19188 12.0694 5.26937 12.2534C5.34687 12.4375 5.38681 12.6351 5.38686 12.8348C5.38691 13.0345 5.34707 13.2322 5.26966 13.4163C5.19226 13.6004 5.07886 13.7671 4.93612 13.9068C4.79338 14.0464 4.62418 14.1562 4.43844 14.2295C4.25271 14.3029 4.0542 14.3384 3.85455 14.334C3.45695 14.334 3.07563 14.1761 2.79448 13.8949C2.51333 13.6138 2.35539 13.2324 2.35539 12.8348C2.35539 12.4372 2.51333 12.0559 2.79448 11.7748C3.07563 11.4936 3.45695 11.3357 3.85455 11.3357" fill="black" fill-opacity="0.65"/>
@@ -287,20 +105,25 @@ function UploadPage() {
 
                         <span>Unlimited sounds</span>
                     </li>
+                    {/* <li className='cursor-pointer flex gap-2'>
+                        <img className='w-5 inline-block' src={darkTheme===''?bulbOutlineDark:bulbOutlineWhite} alt="" />
+                        <span>Inspirations</span>
+                    </li>
+                    <li className='cursor-pointer flex gap-2'>
+                        <img className='w-5 inline-block' src={darkTheme===''?academyOutlineDark :academyOutlineWhite} alt="" />
+                        <span>Creator Academy</span>
+                    </li> */}
 
                 </ul>
-
                 <h5 className='text-sm font-semibold text-left text-[#00000057] mt-4'>Others</h5>
-
                 <ul>
-
                 <li className='cursor-pointer flex gap-2 mt-3' onClick={() => navigate('/contactus')}>
                     <svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3.60722 0.527344C2.81201 0.527344 2.04937 0.843239 1.48708 1.40554C0.924782 1.96783 0.608887 2.73047 0.608887 3.52568V9.52234C0.608887 10.3176 0.924782 11.0802 1.48708 11.6425C2.04937 12.2048 2.81201 12.5207 3.60722 12.5207H12.6022C13.3974 12.5207 14.1601 12.2048 14.7224 11.6425C15.2847 11.0802 15.6006 10.3176 15.6006 9.52234V3.52568C15.6006 2.73047 15.2847 1.96783 14.7224 1.40554C14.1601 0.843239 13.3974 0.527344 12.6022 0.527344H3.60722ZM3.60722 2.02651H12.6022C13.3578 2.02651 13.9822 2.5812 14.0856 3.3083C13.3675 3.97768 12.3001 4.79922 11.5948 5.30594C9.97193 6.47154 8.54398 7.27359 8.10472 7.27359C7.66546 7.27359 6.23751 6.47154 4.61466 5.30594C3.95516 4.8312 3.31428 4.3311 2.69348 3.80677C2.5163 3.65679 2.34453 3.50053 2.17851 3.33828C2.28196 2.61119 2.85164 2.02651 3.60722 2.02651ZM2.11555 5.2902C4.01799 6.82909 6.80569 8.76377 8.10472 8.77276C8.951 8.77876 10.3984 7.97071 11.8751 6.95052C12.639 6.42207 13.489 5.79467 14.1021 5.27895L14.1014 9.52234C14.1014 9.91995 13.9434 10.3013 13.6623 10.5824C13.3811 10.8636 12.9998 11.0215 12.6022 11.0215H3.60722C3.20962 11.0215 2.8283 10.8636 2.54715 10.5824C2.266 10.3013 2.10805 9.91995 2.10805 9.52234L2.11555 5.2902Z" fill="black" fill-opacity="0.65"/>
                         </svg>
 
                         <span>Feedback</span>
-                    </li>
+                </li>
                 </ul>
                 <div className='mt-auto w-full text-left'>
                     <button className='w-full ring-0 hover:border-transparent text-sm font-semibold px-0 text-left py-2 d-flex justify-start' onClick={() => navigate('/home')}><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -315,54 +138,11 @@ function UploadPage() {
                     </div>
                 </div>
             </div>
-            {/* <div className='homepageMain w-[calc(100%-14rem)] ml-auto px-4 pt-28'>
-            <Paper
-                elevation={1}
-                sx={{
-                    p: 3,
-                    display: 'flex',
-                    alignItems: 'center',
-                    borderRadius: 1,
-                    mx: 'auto',
-                }}
-                >
-                <Avatar
-                    src="https://i.pravatar.cc/150?img=47" // replace with actual image
-                    alt="Jeniffer Lopes"
-                    sx={{ width: 48, height: 48, mr: 2 }}
-                />
-                <Box>
-                    <Typography sx={{ textAlign: 'left'}} variant="subtitle1" fontWeight="bold">
-                    Jeniffer Lopes
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                    Likes 0 · Followers 45 · Following 193
-                    </Typography>
-                </Box>
-                </Paper>
-                
-                <Analytics />
-            </div> */}
-            {!selectedFile && !isEditMode ? (
-                <UploadFile  changeFileHandler={handleFileSelect} />
-            ) : (
-                <UploadForm
-                    selectedVideoSrc={selectedVideoSrc}
-                    selectFilesHandler={selectFilesHandler}
-                    thumbnails={thumbnails}
-                    updateState={updateState}
-                    state={state}
-                    SubmitHandler={SubmitHandler}
-                    updateMediaHandler={updateMediaHandler}
-                    isPosting={isPosting}
-                    videoInfo={info}
-                    uploadState={uploadState}
-                    onCancelUpload={handleCancelUpload}
-                />
-            )}
-            
+            <div className='w-[calc(100%-14rem)] ml-auto px-4'>
+                        <UploadsHome/>
+            </div>
         </div>
     );
 }
 
-export default UploadPage;
+export default StudioHomePage;

@@ -88,6 +88,7 @@ const SleepReminder: React.FC = () => {
               <input
                 type="time"
                 value={time}
+                // onClick={(e) => e.target?.showPicker?.()}
                 onChange={handleTimeChange}
                 className={`${darkTheme ? '' : 'bg-white' } w-full p-2  h-10 border border-gray-300 rounded-sm mt-2 cursor-pointer hover:border-gray-400`}
               />
