@@ -8,11 +8,13 @@ import ContentTab from './ContentTab';
 import ViewersTab from './ViewersTab';
 import FollowersTab from './FollowersTab';
 import styles from './style.module.scss'
-import { Divider, MenuItem, Menu, ThemeProvider, createTheme } from '@mui/material';
+import { Divider, MenuItem, Menu, ThemeProvider, createTheme, Dialog, DialogTitle, DialogContent, Typography, RadioGroup, FormControlLabel, Radio, DialogActions, Button } from '@mui/material';
 import { logo, logoAuth, logoAuthWhite } from '../../icons';
 import React from 'react';
 import Navbar from '../../shared/navbar';
 import { academyOutlineDark, academyOutlineWhite, analyticsOutline, analyticsOutlineWhite, bulbOutlineDark, bulbOutlineWhite, commentOutlineDark, commentOutlineWhite, commentWhite, feedbackQuestionDark, feedbackQuestionWhite, hamburger, hamburgerDark, homeDark, homeIcon } from '../../icons';
+import CheckIcon from '@mui/icons-material/Check'; // import for tick icon
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // chevron
 
 const Analytics = () => {
     const { tab } = useParams();
@@ -84,7 +86,17 @@ const Analytics = () => {
         }
     }, [])
 
-
+    const [openDownload, setOpenDownload] = useState(false);
+    const [fileFormat, setFileFormat] = useState<'XLSX' | 'CSV'>('XLSX');
+    
+    const handleOpen = () => setOpenDownload(true);
+    const handleClose = () => setOpenDownload(false);
+    const handleDownload = () => {
+      console.log("Download as:", fileFormat);
+      // Trigger your export logic here
+      setOpenDownload(false);
+    };
+    
     useEffect(() => {
         getUserAnalytics(selectedPeriod);
     }, [selectedPeriod]);
@@ -254,61 +266,80 @@ const Analytics = () => {
                                 {/* <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a> */}
                             </nav>
                             <div className="inline-flex lg:justify-end ml-5 lg:ml-0 my-2">
-                                <button
-                                    aria-label="duration-period"
-                                    id="duration-period"
-                                    aria-controls={open ? 'duration-menu' : undefined}
-                                    aria-expanded={open ? 'true' : undefined}
-                                    aria-haspopup="true"
-                                    onClick={handleClick}
-                                    className={`inline-flex mx-2 items-center ${darkTheme === '' ? 'bg-gray-100' : 'bg-gray-800'}  border-0 py-2 px-3 focus:outline-none ${darkTheme === '' ? 'hover:bg-gray-200' : 'hover:bg-gray-900'} rounded-full text-sm`}>Last {selectedPeriod} Days &#129087;</button>
-                                <Menu
+                            <button
+                                        aria-label="duration-period"
+                                        id="duration-period"
+                                        aria-controls={open ? 'duration-menu' : undefined}
+                                        aria-expanded={open ? 'true' : undefined}
+                                        aria-haspopup="true"
+                                        onClick={handleClick}
+                                        className={`inline-flex mx-2 items-center gap-1 border border-gray-300 py-2 px-3 focus:outline-none rounded-full text-sm ${
+                                            darkTheme === '' ? 'bg-transparent hover:bg-gray-100 text-black' : 'bg-transparent hover:bg-gray-900 text-white'
+                                        }`}
+                                        >
+                                        Last {selectedPeriod} Days
+                                        <ExpandMoreIcon fontSize="small" />
+                                    </button>
+
+                                    {/* Menu Items */}
+                                    <Menu
                                     id="duration-menu"
                                     MenuListProps={{
                                         'aria-labelledby': 'duration-period',
                                     }}
                                     anchorEl={anchorEl}
                                     open={open}
-                                    onClose={() => {
-                                        setAnchorEl(null);
-                                    }}
+                                    onClose={() => setAnchorEl(null)}
                                     slotProps={{
                                         paper: {
-                                            elevation: 0,
-                                            sx: {
-                                                overflow: 'visible',
-                                                padding: '10px',
-                                                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                                mt: 1.5,
-                                                '& .MuiAvatar-root': {
-                                                    width: 32,
-                                                    height: 32,
-                                                    ml: -0.5,
-                                                    mr: 1,
-                                                },
-                                                '&::before': {
-                                                    content: '""',
-                                                    display: 'block',
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    right: 14,
-                                                    width: 10,
-                                                    height: 10,
-                                                    bgcolor: 'background.paper',
-                                                    transform: 'translateY(-50%) rotate(45deg)',
-                                                    zIndex: 0,
-                                                },
+                                        elevation: 0,
+                                        sx: {
+                                            overflow: 'visible',
+                                            padding: '10px',
+                                            border: '1px solid #ddd',
+                                            mt: 1.5,
+                                            '&::before': {
+                                            content: '""',
+                                            display: 'block',
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 14,
+                                            width: 10,
+                                            height: 10,
+                                            bgcolor: 'background.paper',
+                                            transform: 'translateY(-50%) rotate(45deg)',
+                                            zIndex: 0,
                                             },
+                                        },
                                         },
                                     }}
                                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    {Object.keys(ANALYTICS_OVERVIEW_TIME_PERIODS).map((period: string, index: number) => (
-                                        <MenuItem key={index} onClick={() => { setSelectedPeriod(ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS]); setAnchorEl(null) }}><span className={`font-bold ${ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS] === selectedPeriod ? 'text-[rgb(255,59,92)]' : ''}`}>{period}</span></MenuItem>
-                                    ))}
-                                </Menu>
-                                <button className={`inline-flex gap-1 items-center ${darkTheme === '' ? 'bg-gray-100' : 'bg-gray-800'}  border-0 py-2 px-3 focus:outline-none ${darkTheme === '' ? 'hover:bg-gray-200' : 'hover:bg-gray-900'} rounded-full text-sm`}>
+                                    >
+                                    {Object.keys(ANALYTICS_OVERVIEW_TIME_PERIODS).map((period: string, index: number) => {
+                                        const value = ANALYTICS_OVERVIEW_TIME_PERIODS[period as keyof typeof ANALYTICS_OVERVIEW_TIME_PERIODS];
+                                        const isSelected = value === selectedPeriod;
+                                        return (
+                                        <MenuItem
+                                            key={index}
+                                            onClick={() => {
+                                            setSelectedPeriod(value);
+                                            setAnchorEl(null);
+                                            }}
+                                            sx={{
+                                            fontWeight: isSelected ? 600 : 300,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
+                                            }}
+                                        >
+                                            {isSelected && <CheckIcon fontSize="small" sx={{ color: '#ff3b5c' }} />}
+                                            {period}
+                                        </MenuItem>
+                                        );
+                                    })}
+                                    </Menu>
+                                <button onClick={handleOpen} className={`inline-flex gap-1 items-center ${darkTheme === '' ? 'bg-gray-100' : 'bg-gray-800'}  border-0 py-2 px-3 focus:outline-none ${darkTheme === '' ? 'hover:bg-gray-200' : 'hover:bg-gray-900'} rounded-full text-sm`}>
                                     <svg
                                         fill="#000000"
                                         version="1.1"
@@ -356,6 +387,40 @@ const Analytics = () => {
                                 }
                             })()}
                    </div>
+                   <Dialog open={openDownload} 
+                    PaperProps={{
+                        sx: {
+                        width: '350px',
+                        m: 'auto', 
+                        borderRadius: 2, 
+                        },
+                    }}
+                   onClose={handleClose}>
+                        <DialogTitle component="div" sx={{ fontWeight: 600 }}>Download Overview data</DialogTitle>
+                        <DialogContent>
+                            <Typography sx={{ mb: 1 }}>Select a file format:</Typography>
+                            <RadioGroup
+                            row
+                            value={fileFormat}
+                            onChange={(e) => setFileFormat(e.target.value as 'XLSX' | 'CSV')}
+                            >
+                            <FormControlLabel
+                                value="XLSX"
+                                control={<Radio sx={{ color: '#f50057', '&.Mui-checked': { color: '#f50057' } }} />}
+                                label="XLSX"
+                            />
+                            <FormControlLabel value="CSV" control={<Radio sx={{ color: '#f50057', '&.Mui-checked': { color: '#f50057' } }} />} label="CSV"  />
+                            </RadioGroup>
+                        </DialogContent>
+                        <DialogActions sx={{ px: 3, pb: 2 }}>
+                            <Button onClick={handleClose} variant="contained"  sx={{ mr: 1, backgroundColor: '#0000000D', color: '#000', textTransform: 'capitalize', boxShadow: 'none' }}>
+                            Cancel
+                            </Button>
+                            <Button onClick={handleDownload} variant="contained" sx={{boxShadow: 'none', backgroundColor: '#f50057', color: '#fff', textTransform: 'capitalize'}}>
+                            Download
+                            </Button>
+                        </DialogActions>
+                        </Dialog>
                 </ThemeProvider>
             {/* </Layout> */}
             </div>

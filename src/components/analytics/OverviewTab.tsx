@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { STATISTICSTABS } from '../../utils/constants'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid,  Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,  Legend, ResponsiveContainer } from 'recharts';
 import {
     Box,
     Grid,
     Paper,
-    Tooltip,
     Typography,
   } from '@mui/material';
   import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
