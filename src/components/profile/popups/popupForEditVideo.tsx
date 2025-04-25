@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import style from './popupForEditVideo.module.scss';
 import { EDIT_VIDEO_ACTIONS, TRACKSLOTDIFF, TRACKSLOTPERIODS } from '../../../utils/constants';
 import SoundGallery from '../components/soundGallery';
-import { addIcon, addInWhite, leftArrowCurved, leftArrowCurvedinWhite, minusIcon, minusInwhite, music, svgTemplate, musicBlack, pause, play, rightArrowCurved, rightArrowCurvedinWhite } from '../../../icons';
+import { template1,
+  template2,
+  template3,
+  template4,
+  template5,
+  template6, addIcon, addInWhite, leftArrowCurved, leftArrowCurvedinWhite, minusIcon, minusInwhite, music, svgTemplate, musicBlack, pause, play, rightArrowCurved, rightArrowCurvedinWhite } from '../../../icons';
 import ReactSlider from "react-slider";
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 import { Card, CardContent, CircularProgress } from '@mui/material';
@@ -361,35 +366,24 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
 
   const videoData = [
     {
-      title: "2022 MOVIE RECAP",
-      image: "/images/recap.jpg",
-      count: "1/3",
+      image: template1,
     },
     {
-      title: "TRAVEL VLOG",
-      image: "/images/travel.jpg",
-      count: "1/3",
+      image: template2,
     },
     {
-      title: "TELLING MY STORY",
-      image: "/images/story.jpg",
-      count: "1/3",
+      image: template3,
     },
     {
-      title: "MAKEUP TUTORIAL",
-      image: "/images/makeup.jpg",
-      count: "1/3",
+      image: template4,
     },
     {
-      title: "The secret to content creation",
-      image: "/images/secret.jpg",
-      count: "1/3",
+      image: template5,
     },
     {
-      title: "Try TikTok effect",
-      image: "/images/tiktok.jpg",
-      count: "1/3",
+      image: template6,
     },
+    
   ];
 
   
@@ -471,31 +465,23 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
         </div>
       ),
     },
-    {
+    { 
       title: 'Template',
       icon: svgTemplate,
       content: 
       <div className="grid grid-cols-3 gap-2 p-4 border-r">
       {videoData.map((item, index) => (
-        <Card
-          key={index}
-          className="relative h-[200px] overflow-hidden rounded-xl shadow-md"
-          sx={{
-            backgroundImage: `url(${item.image})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            color: "#fff",
-          }}
-        >
-          <CardContent className="flex flex-col justify-between h-full bg-black/30 backdrop-blur-sm p-4">
-            <Typography className="font-bold uppercase">
-              {item.title}
-            </Typography>
-            <Typography className="self-end bg-black/50 rounded px-2 py-1 text-sm">
-              {item.count}
-            </Typography>
-          </CardContent>
-        </Card>
+       <Card
+       key={index}
+       className="relative h-[200px] overflow-hidden rounded-xl shadow-md"
+     >
+       <img
+         src={item.image}
+         alt={`Card image ${index}`}  // Add an alt attribute for accessibility
+         className="w-full h-full object-cover"
+       />
+     </Card>
+     
       ))}
     </div>,
     },
@@ -517,7 +503,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
         open={open}
         PaperProps={{
           style: {
-            width: '900px',
+            width: '940px',
             maxWidth: '90%',
             borderRadius: '10px',
           },
@@ -529,7 +515,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
           </div>
           <div className={`${style.modalBody} relative overflow-y-auto h-[calc(100vh-13rem)]`}>
             {isInProcess&&<div className={`absolute top-0 left-0 right-0 bottom-0 z-10 opacity-60 ${isDarkTheme?'bg-black':'bg-white'} flex justify-center items-center`}> <CircularProgress style={{width:'30px',height:'30px',color:'#f50057'}} /> </div>}
-            <div className={`${style.content} border-b border-gray-200`}>
+            <div className={`${style.content} border-b border-gray-200 grid `} style={{ gridTemplateColumns: '1fr 4fr 4fr'}}>
               {/* LEFT ACTION BAR */}
               <div className={`${style.actions} border-r border-gray-200`}>
               {EDIT_VIDEO_ACTIONS.map((action, index) => (

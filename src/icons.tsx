@@ -1,3 +1,10 @@
+
+import template1 from '../src/assets/template/template1.png';
+import template2 from '../src/assets/template/template2.png';
+import template3 from '../src/assets/template/template3.png';
+import template4 from '../src/assets/template/template4.png';
+import template5 from '../src/assets/template/template5.png';
+import template6 from '../src/assets/template/template6.png';
 import logo from '../assets/assets/icons/logo.svg';
 import svgTemplate from '../public/images/icons/svgTemplate.svg';
 import logoS from './assets/logo-S.svg';
@@ -196,6 +203,12 @@ import blackHeartOutline from './assets/black_heart_outline.svg'
 import blackCrossHeart from './assets/black_cross_heart.svg'
 
 export {
+    template1,
+    template2,
+    template3,
+    template4,
+    template5,
+    template6,
     svgTemplate,
     logoS,
     RepostVideo,

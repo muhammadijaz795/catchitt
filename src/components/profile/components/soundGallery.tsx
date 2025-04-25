@@ -7,6 +7,7 @@ import { defaultAvatar } from "../../../icons";
 import audioFile1 from '../../../assets/audio1.mp3';
 import audioFile2 from '../../../assets/audio2.mp3';
 import { useDispatch } from 'react-redux';
+import PauseIcon from '@mui/icons-material/Pause';
 
 import {setCurrentEditVideo} from '../../../redux/reducers/currentEditVideoReducer'; // Import the action
 
@@ -179,28 +180,36 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                             onMouseEnter={() => setHoveredSoundId(audio._id)}
                             onMouseLeave={() => setHoveredSoundId(null)}
                         >
-                            <img className="w-10 h-10 bg-gray-200 mr-2" src={defaultAvatar} alt="soundImg" />
-                            {hoveredSoundId === audio._id && <button
-                                className="ml-2"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAudioPlayPause(audio.url);
-                                }}
-                                title={playingAudio === audio.url ? 'Pause' : 'Play'}
-                            >
-                                {playingAudio === audio.url ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 9v6m4-6v6" />
+                            <div className="relative block">
+                                <img className= "min-w-11 w-11 h-11 bg-gray-200  rounded-md" src={audio?.owner?.avatar || defaultAvatar} alt="soundImg" />
+                                {hoveredSoundId === audio._id && <button
+                                    className="ml-2 absolute border-0 left-[35%] top-[45%] -translate-x-1/2 -translate-y-1/2 z-50"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAudioPlayPause(audio.url);
+                                    }}
+                                    title={playingAudio === audio.url ? 'Pause' : 'Play'}
+                                >
+                                    {playingAudio === audio.url ? (
+                                        <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 13 16"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                        d="M0 1.33357V14.6669C0 14.8152 0.0395 14.9608 0.1145 15.0887C0.1895 15.2166 0.2973 15.3222 0.4267 15.3945C0.5561 15.4669 0.7025 15.5034 0.8507 15.5003C0.999 15.4972 1.1437 15.4546 1.27 15.3769L12.1033 8.71024C12.2247 8.63568 12.3249 8.53127 12.3944 8.40697C12.4639 8.28268 12.5004 8.14265 12.5004 8.00024C12.5004 7.85782 12.4639 7.71779 12.3944 7.5935C12.3249 7.4692 12.2247 7.36479 12.1033 7.29023L1.27 0.623568C1.1437 0.545872 0.999 0.503278 0.8507 0.500182C0.7025 0.497085 0.5561 0.533598 0.4267 0.605952C0.2973 0.678307 0.1895 0.783883 0.1145 0.911787C0.0395 1.03969 0 1.18529 0 1.33357Z"
+                                        fill="white"
+                                        />
                                     </svg>
-                                ) : (
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-4.586-2.65A1 1 0 009 9.382v5.236a1 1 0 001.166.986l4.586-2.65a1 1 0 000-1.786z" />
-                                    </svg>
-                                )}
-                            </button>
-                            }
-
-                            <div className="w-[15rem]">
+                                    ) : (
+                                        <PauseIcon sx={{ fontSize: 24, color: 'white' }} />
+                                    )}
+                                </button>
+                                }
+                            </div>
+                            <div className="w-[15rem] pl-2">
                                 <div className="font-medium text-sm">{Object.hasOwn(audio,'title')? audio.title: audio.name}</div>
                                 
                                 {/* <span className="text-sm text-gray-500">{audio.duration || '00:15'}</span> */}
@@ -220,7 +229,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                                     )}
                                 </span>
                                 {hoveredSoundId === audio._id && <button
-                                    className="btn text-xl ml-4"
+                                    className="btn border-0 text-xl ml-4"
                                     onClick={(e) => {
                                         e.stopPropagation(); // Prevent playing audio on click
                                         toggleFavorite(audio._id);
