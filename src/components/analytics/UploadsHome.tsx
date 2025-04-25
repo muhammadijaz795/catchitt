@@ -33,6 +33,14 @@ interface LatestCommentsInterface
   canLoadMore: boolean;
 }
 
+interface MediaCategoriesInterface
+{
+  items: object[];
+  page: number;
+  isLoading: boolean;
+  canLoadMore: boolean;
+}
+
 const creator = {
     name: "ANATOLY",
     description: "Official Anatoly Seezitt accoun",
@@ -134,6 +142,15 @@ const Analytics = () => {
   );
 
   const [latestComments, setLatestComments] = useState<LatestCommentsInterface>(
+    {
+      items: [],
+      page: 1,
+      isLoading: false,
+      canLoadMore: true,
+    }
+  );
+
+  const [mediaCategories, setMediaCategories] = useState<MediaCategoriesInterface>(
     {
       items: [],
       page: 1,
@@ -249,6 +266,39 @@ const Analytics = () => {
     .catch((error) => console.error('Fetch error:', error));
   };
 
+  function loadMediaCategories()
+  {
+    let endpoint = `${process.env.VITE_API_URL}/media-content/categories`;
+    let requestOptions =
+    {
+      method: 'GET',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+            
+    if(!mediaCategories.canLoadMore) { return; }
+
+    setMediaCategories(prev => ({ ...prev, isLoading: true, canLoadMore: false }));
+
+    fetch(endpoint, requestOptions)
+    .then((response) => response.json())
+    .then(
+      (response) =>
+      {
+        if(response.data.length)
+        {
+          setMediaCategories(prev => ({ ...prev, canLoadMore: true, items: [...prev.items, ...response.data] }));
+        }
+
+        setMediaCategories(prev => ({ ...prev, page: prev.page + 1, isLoading: false }));
+      }
+    )
+    .catch((error) => console.error('Fetch error:', error));
+  };
+  
   useEffect(() => {
     if (tab) {
       switch (tab.toLowerCase()) {
@@ -270,7 +320,8 @@ const Analytics = () => {
     }
 
     loadRecentPosts();
-    loadLatestComments()
+    loadLatestComments();
+    loadMediaCategories();
   }, [tab]);
 
   const chipLabels = [
@@ -582,7 +633,7 @@ const Analytics = () => {
                         {/* Tabs */}
                         <Tabs value={tabIndex} onChange={handleTabChange} sx={{ mb: 2, borderBottom: '1px solid #00000014' }}>
                             <Tab label="Trending" sx={{textTransform: 'capitalize'}} />
-                            <Tab label="Recommended" sx={{textTransform: 'capitalize'}} />
+                            {/* <Tab label="Recommended" sx={{textTransform: 'capitalize'}} /> */}
                         </Tabs>
                         {tabIndex === 0 && (
                             <>
@@ -607,7 +658,7 @@ const Analytics = () => {
                                 mx: 1,
                                 }}
                             />
-                            <Tab
+                            {/* <Tab
                                 label="Creator"
                                 sx={{
                                 textTransform: 'none',
@@ -619,7 +670,7 @@ const Analytics = () => {
                                 px: 3,
                                 mx: 1,
                                 }}
-                            />
+                            /> */}
                             </Tabs>
                             <Select
                                 size="small"
@@ -636,8 +687,8 @@ const Analytics = () => {
                                 displayEmpty
                                 >
                                 <MenuItem value="all">All regions</MenuItem>
-                                <MenuItem value="us">United States</MenuItem>
-                                <MenuItem value="asia">Asia</MenuItem>
+                                {/* <MenuItem value="us">United States</MenuItem>
+                                <MenuItem value="asia">Asia</MenuItem> */}
                             </Select>
                             </Box>
                         {/* Filter Chips */}
@@ -655,8 +706,8 @@ const Analytics = () => {
                                     '&::-webkit-scrollbar': { display: 'none' }, // Chrome
                                     }}
                                 >
-                                    {chipLabels.map((label, idx) => (
-                                    <Chip sx={{ border: 'none'}} key={idx} label={label} clickable variant="outlined" />
+                                    {mediaCategories.items.map((item, idx) => (
+                                    <Chip sx={{ border: 'none'}} key={idx} label={item.name} clickable variant="outlined" />
                                     ))}
                                 </Box>
                                 <IconButton sx={{ backgroundColor: 'white' , boxShadow: '0px 0px 9px 0px #e4e6eb'}} onClick={() => scroll('right')}>
