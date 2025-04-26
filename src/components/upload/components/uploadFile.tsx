@@ -28,9 +28,9 @@ function UploadFile({ changeFileHandler }: any) {
 
     return (
         <div className="w-full h-[100vh] flex flex-col items-center justify-center px-5 gap-2.5">
-            <div className={`w-[calc(100%-14rem)] ml-auto bg-white h-4/6 flex flex-col items-center px-[1rem] py-[1.5rem] gap-4 justify-center shadow-sm cursor-pointer rounded-2xl`}>
+            <div className={`w-[calc(100%-14rem)] ml-auto bg-white h-4/6 flex flex-col items-center px-[1rem] py-[1.5rem] gap-4 justify-center shadow-sm rounded-2xl`}>
                 <DndContainer
-                    className="w-full h-full"
+                    className="w-full h-full cursor-pointer"
                     text="Select video to upload"
                     orText="drag and drop it here"
                     accept="video/*"

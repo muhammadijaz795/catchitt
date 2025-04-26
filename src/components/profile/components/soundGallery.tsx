@@ -179,7 +179,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
                             onMouseEnter={() => setHoveredSoundId(audio._id)}
                             onMouseLeave={() => setHoveredSoundId(null)}
                         >
-                            <img className="w-10 h-10 bg-gray-200 mr-2" src={defaultAvatar} alt="soundImg" />
+                            <img className="w-10 h-10 bg-gray-200 mr-2" src={audio?.owner?.avatar || defaultAvatar} alt="soundImg" />
                             {hoveredSoundId === audio._id && <button
                                 className="ml-2"
                                 onClick={(e) => {
