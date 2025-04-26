@@ -416,8 +416,10 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   ];
 
   const [selectedTemplate, setSelectedTemplate] = useState<{
+    image: string;
     background: string;
     className: string;
+    position: string;
   } | null>(null);
 
 

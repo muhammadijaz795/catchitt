@@ -331,7 +331,7 @@ function FormRightSide(props: any) {
             
             
           } catch (error) {
-            if (error.name !== 'AbortError') {
+            if (error instanceof Error && error.name !== 'AbortError') {
               console.error('Search error:', error);
             }
           } finally {
@@ -994,7 +994,9 @@ function FormRightSide(props: any) {
                                             ...params.InputProps,
                                             startAdornment: (
                                                 <InputAdornment position="start">
-                                                <LocationIcon sx={{ color: '#777' }} />
+                                                <Box sx={{ color: '#777' }}>
+                                                    <LocationIcon />
+                                                </Box>
                                                 </InputAdornment>
                                             ),
                                             }}
