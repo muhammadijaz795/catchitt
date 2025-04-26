@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 interface RecentPostsInterface
 {
-  items: object[];
+  items: any[];
   page: number;
   isLoading: boolean;
   canLoadMore: boolean;
@@ -27,7 +27,7 @@ interface RecentPostsInterface
 
 interface LatestCommentsInterface
 {
-  items: object[];
+  items: any[];
   page: number;
   isLoading: boolean;
   canLoadMore: boolean;
@@ -35,7 +35,7 @@ interface LatestCommentsInterface
 
 interface MediaCategoriesInterface
 {
-  items: object[];
+  items: any[];
   page: number;
   isLoading: boolean;
   canLoadMore: boolean;
@@ -124,7 +124,7 @@ const articles = [
   ];
 
 const Analytics = () => {
-  const profile = useSelector((store) => store?.reducers?.profile);
+  const profile = useSelector((store: any) => store?.reducers?.profile);
   const { tab } = useParams();
   const [currentTab, setCurrentTab] = useState(ANALYTICSTABS.OVERVIEW);
   const [analyticsData, setAnalyticsData] = useState<any>('');
@@ -951,10 +951,10 @@ const Analytics = () => {
                 </Typography>
 
                 <Box sx={{ display: 'flex', gap: 2 }}>
-                  <Link href="/terms" underline="hover" color="text.secondary">
+                  <Link to="/terms" color="text.secondary">
                     Terms of Service
                   </Link>
-                  <Link href="/privacy" underline="hover" color="text.secondary">
+                  <Link to="/privacy" color="text.secondary">
                     Privacy Policy
                   </Link>
                 </Box>

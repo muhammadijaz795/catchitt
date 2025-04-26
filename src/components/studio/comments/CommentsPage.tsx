@@ -41,7 +41,7 @@ function CommentsPage() {
 
     interface CommentsInterface
     {
-        items: object[];
+        items: any[];
         page: number;
         isLoading: boolean;
         canLoadMore: boolean;
@@ -115,8 +115,8 @@ function CommentsPage() {
     const [anchorElAllComments, setAnchorElAllComments] = useState(null);
     const [anchorElPostedBy, setAnchorElPostedBy] = useState(null);
   
-    const [selectedAllComments, setSelectedAllComments] = useState('all');
-    const [selectedPostedBy, setSelectedPostedBy] = useState('all');
+    const [selectedAllComments, setSelectedAllComments] = useState<'all' | 'not_replied' | 'replied'>('all');
+    const [selectedPostedBy, setSelectedPostedBy] = useState<'all' | 'followers' | 'non-followers'>('all');
   
     const filterOptionsALLComments = {
         all: 'All comments', not_replied: 'Not replied', replied: 'Replied',
@@ -127,7 +127,7 @@ function CommentsPage() {
     };
   
     // --- Handlers for All Comments
-    const handleAllCommentsClick = (event) => {
+    const handleAllCommentsClick = (event: any) => {
       setAnchorElAllComments(event.currentTarget);
     };
   
@@ -135,14 +135,14 @@ function CommentsPage() {
       setAnchorElAllComments(null);
     };
   
-    const handleAllCommentsSelect = (option) => {
+    const handleAllCommentsSelect = (option: any) => {
       setSelectedAllComments(option);
       handleAllCommentsClose();
       reloadComments();
     };
   
     // --- Handlers for Posted By
-    const handlePostedByClick = (event) => {
+    const handlePostedByClick = (event: any) => {
       setAnchorElPostedBy(event.currentTarget);
     };
   
@@ -150,7 +150,7 @@ function CommentsPage() {
       setAnchorElPostedBy(null);
     };
   
-    const handlePostedBySelect = (option) => {
+    const handlePostedBySelect = (option: any) => {
       setSelectedPostedBy(option);
       handlePostedByClose();
       reloadComments();
@@ -159,13 +159,13 @@ function CommentsPage() {
     
 // New states for follower count
 const [anchorElFollower, setAnchorElFollower] = useState(null);
-const [selectedFollowerCounts, setSelectedFollowerCounts] = useState([]);
+const [selectedFollowerCounts, setSelectedFollowerCounts] = useState<any[]>([]);
 
 // Options
 const followerOptions = ['<5K', '5K-10K', '10K-100K', '>100K'];
 
 // Handlers
-const handleFollowerClick = (event) => {
+const handleFollowerClick = (event: any) => {
   setAnchorElFollower(event.currentTarget);
 };
 
@@ -173,7 +173,7 @@ const handleFollowerClose = () => {
   setAnchorElFollower(null);
 };
 
-const handleFollowerSelect = (option) => {
+const handleFollowerSelect = (option: string) => {
   if (selectedFollowerCounts.includes(option)) {
     setSelectedFollowerCounts(selectedFollowerCounts.filter((item) => item !== option));
   } else {
