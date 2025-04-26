@@ -4,12 +4,23 @@ import { useEffect, useRef, useState } from 'react';
 import style from './popupForEditVideo.module.scss';
 import { EDIT_VIDEO_ACTIONS, TRACKSLOTDIFF, TRACKSLOTPERIODS } from '../../../utils/constants';
 import SoundGallery from '../components/soundGallery';
-import { template1,
-  template2,
-  template3,
-  template4,
-  template5,
-  template6, addIcon, addInWhite, leftArrowCurved, leftArrowCurvedinWhite, minusIcon, minusInwhite, music, svgTemplate, musicBlack, pause, play, rightArrowCurved, rightArrowCurvedinWhite } from '../../../icons';
+
+
+import { 
+    Trecap,
+    Tstory,
+    TTutorial,
+    Tvlog,
+    Tcreation,
+    Teffect,
+    recap,
+    story,
+    Tutorial,
+    vlog,
+    creation,
+    effect,
+    addIcon, addInWhite, leftArrowCurved, leftArrowCurvedinWhite, minusIcon, minusInwhite, music, svgTemplate, musicBlack, pause, play, rightArrowCurved, rightArrowCurvedinWhite, 
+    back} from '../../../icons';
 import ReactSlider from "react-slider";
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 import { Card, CardContent, CircularProgress } from '@mui/material';
@@ -366,25 +377,49 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
 
   const videoData = [
     {
-      image: template1,
+      image: Trecap,
+      background: recap,
+      className: "template-select",
+       position: "1/1"
     },
     {
-      image: template2,
+      image: Tvlog,
+      background: vlog,
+      className: "template-select",
+      position: "1/1"
     },
     {
-      image: template3,
+      image: Tstory,
+      background: story,
+      className: "template-select",
+      position: "1/1"
     },
     {
-      image: template4,
+      image: TTutorial,
+      background: Tutorial,
+      className: "template-select",
+      position: "1/1"
     },
     {
-      image: template5,
+      image: Tcreation,
+      background: creation,
+      className: "template-select",
+      position: "1/1"
     },
     {
-      image: template6,
+      image: Teffect,
+      background: effect,
+      className: "template-select",
+      position: "1/1"
     },
     
   ];
+
+  const [selectedTemplate, setSelectedTemplate] = useState<{
+    background: string;
+    className: string;
+  } | null>(null);
+
 
   
 
@@ -470,18 +505,23 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
       icon: svgTemplate,
       content: 
       <div className="grid grid-cols-3 gap-2 w-[90%] p-4 border-r">
-      {videoData.map((item, index) => (
-       <Card
-       key={index}
-       className="relative h-[200px] overflow-hidden rounded-xl shadow-md"
-     >
-       <img
-         src={item.image}
-         alt={`Card image ${index}`}  // Add an alt attribute for accessibility
-         className="w-full h-full object-cover"
-       />
-     </Card>
-     
+     {videoData.map((template, index) => (
+        <Card
+          key={index}
+          className="relative h-[200px] overflow-hidden rounded-xl shadow-md cursor-pointer"
+          onClick={() => setSelectedTemplate(template)}
+          style={{
+            border: selectedTemplate?.image === template.image 
+              ? '2px solid #f50057' 
+              : '1px solid #e0e0e0'
+          }}
+        >
+          <img
+            src={template.image}
+            alt={`Template ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </Card>
       ))}
     </div>,
     },
@@ -555,9 +595,44 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
                 {selectedAudio && <button onClick={handleAudioManipulation} className="bg-red-500 rounded-full w-[90%] block mx-auto p-2 absolute bottom-1 left-1/2 -translate-x-1/2 hover:bg-red-700 border-0">Add Sound</button>}
               </div> */}
               {/* RIGHT VIDEO CONTAINER */}
-              <div className={` ${style.videoContainer}`}>
-                <video ref={videoRef} onLoadedMetadata={getMediaInfo} onTimeUpdate={getCurrentTime} onEnded={endedVideoHandler} src={video} style={{ width: '200px', height: '350px', backgroundColor: '#2C2C2C', borderRadius: '10px' }} />
-              </div>
+              <div className={`${style.videoContainer}`}>
+  <div 
+    className="relative" 
+    style={
+      selectedTemplate 
+        ? { 
+            backgroundImage: `url(${selectedTemplate.background})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            width: '200px',
+            height: '350px'
+          } 
+        : {}
+    }
+  >
+    <video 
+      ref={videoRef}
+      className={
+        selectedTemplate 
+          ? `h-[150px] w-full object-cover absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${selectedTemplate.className}`
+          : 'w-[200px] h-[350px]'
+      }
+      onLoadedMetadata={getMediaInfo}
+      onTimeUpdate={getCurrentTime}
+      onEnded={endedVideoHandler}
+      src={video}
+      style={{
+        backgroundColor: '#2C2C2C',
+        borderRadius: '10px'
+      }}
+    />
+     {selectedTemplate && (
+      <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+        {selectedTemplate.position}
+      </div>
+    )}
+  </div>
+</div>
 
             </div>
             {/* bottom controls bar */}
