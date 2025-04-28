@@ -8,6 +8,7 @@ import PopupForDeleteVideo from '../profile/popups/popupForDeleteVideo';
 import { useNavigate } from 'react-router-dom';
 import {CircularProgress, Tabs, Tab, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Avatar, Tooltip } from "@mui/material";
 import { HTML5_FMT } from 'moment';
+import PostsAnalytics from './PostsAnalytics';
 
 
 
@@ -197,6 +198,7 @@ function ContentTab({ isDarkTheme }: any) {
           <option>All privacy</option>
         </select>
       </div> */}
+      <PostsAnalytics />
       {/* Posts Table */}
       <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} shadow rounded-lg`}>
         <table className="w-full text-left">
