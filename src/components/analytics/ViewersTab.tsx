@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Card, CardContent, Typography, LinearProgress, Box, Grid, Tab,Tabs, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, LinearProgress, Box, Grid, Tab,Tabs, IconButton, Tooltip, Avatar, Paper, CircularProgress,
+   CardHeader } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid,  ResponsiveContainer, BarChart, Bar,Cell} from 'recharts';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -56,6 +57,37 @@ const totalViewersData = [
     "July", "August", "September", "October", "November", "December"
   ];
 
+  
+const creators = [
+    {
+      name: "Paityn Saris",
+      followers: "983k followers",
+      avatar: "https://via.placeholder.com/64", 
+    },
+    {
+      name: "Kaylynn",
+      followers: "983k followers",
+      avatar: "https://via.placeholder.com/64", 
+    },
+    {
+      name: "Ahmad Stanton",
+      followers: "983k followers",
+      avatar: "https://via.placeholder.com/64", 
+    },
+  ];
+
+  const posts = [
+    {
+      id: 1,
+      thumbnail: "https://via.placeholder.com/60x100", // Replace with your actual image URL
+      duration: "00:11",
+      title: "Gym_workout_Bellyfat",
+      code: "9ad564vd_6d",
+      creatorName: "Al Hilal",
+      creatorAvatar: "https://via.placeholder.com/24", // Replace with actual creator avatar URL
+    },
+  ];
+
 function ViewersTab({isDarkThemes}: any) {
   const value = 70;
   const [tabIndex, setTabIndex] = useState(0);
@@ -80,235 +112,464 @@ function ViewersTab({isDarkThemes}: any) {
     setMonthIndex((prev) => (prev < months.length - 1 ? prev + 1 : prev));
   };
 
+
+
+  
+  const dash = '–';                
+  
+  const PlaceholderLinear = ({ value }: { value: number }) => (
+    <LinearProgress
+      variant="determinate"
+      value={value}
+      sx={{
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: 'action.hover',
+        '& .MuiLinearProgress-bar': {
+          borderRadius: 4,
+          backgroundColor: 'primary.main',
+        },
+      }}
+    />
+  );
+  const ArcGauge = ({ percent = 0 }: { percent?: number }) => {
+    const size = 150;              // full diameter
+    const half = size / 2;         // height = half for clipping
+  
+    return (
+      <Box
+        sx={{
+          position: 'relative',
+          width: size,
+          height: half,
+          overflow: 'hidden',      // <‑‑ hides lower half
+        }}
+      >
+        {/* grey track */}
+        <CircularProgress
+          variant="determinate"
+          value={100}
+          size={size}
+          sx={{ color: 'action.hover', transform: 'rotate(180deg)' }}
+        />
+        {/* coloured value */}
+        <CircularProgress
+          variant="determinate"
+          value={percent}
+          size={size}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            color: 'primary.main',
+            transform: 'rotate(180deg)',
+          }}
+        />
+      </Box>
+    );
+  };
+  
+  
+  const CardHeader = ({ title }: { title: string }) => (
+    <Box
+      sx={{
+        py: 1,
+        px: 2,
+        borderBottom: 1,
+        borderColor: 'divider',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 0.5,
+      }}
+    >
+      <Typography fontSize={15} fontWeight={600}>
+        {title}
+      </Typography>
+      <Tooltip
+          title="Your hint text"
+  
+          placement="top"
+          slotProps={{
+            tooltip: {
+              sx: {
+                bgcolor: '#000',
+                fontSize: '1rem',
+                color: '#fff',
+              },
+            },
+          }}
+        >
+          <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
+        </Tooltip>
+  
+    </Box>
+  );
+
   return (
     <div className='mt-3'>
-          <Card elevation={3} >
-            <CardContent sx={{ p: 0 }}>
-                <Tabs value={tabIndex} onChange={handleChange} 
-                TabIndicatorProps={{
-                    sx: {
-                    top: 0,            // Move indicator to top
-                    height: 3,         // Make it a little thicker (optional)
-                    backgroundColor: '#1976d2', // Indicator color
-                    },
-                }}
-                variant="fullWidth"
-                sx={{
-                    '& .MuiTabs-flexContainer': {
-                    position: 'relative',
-                    },
-                    '& .MuiTab-root': {
-                    textTransform: 'initial',
-                    fontWeight: 500,
-                    fontSize: '1rem',
-                    color: '#4B5563', // gray-700
-                    paddingBottom: '12px',
-                    
-                    },
-                    '& .Mui-selected': {
-                    color: '#000 !important',
-                    fontWeight: 700,
-                    },
-                }}
-                >
-                <Tab label="Total viewers" />
-                <Tab label="New viewers" />
-                </Tabs>
+            <Card elevation={3} >
+                <CardContent sx={{ p: 0 }}>
+                    <Tabs value={tabIndex} onChange={handleChange} 
+                    TabIndicatorProps={{
+                        sx: {
+                        top: 0,            // Move indicator to top
+                        height: 3,         // Make it a little thicker (optional)
+                        backgroundColor: '#1976d2', // Indicator color
+                        },
+                    }}
+                    variant="fullWidth"
+                    sx={{
+                        '& .MuiTabs-flexContainer': {
+                        position: 'relative',
+                        },
+                        '& .MuiTab-root': {
+                        textTransform: 'initial',
+                        fontWeight: 500,
+                        fontSize: '1rem',
+                        color: '#4B5563', // gray-700
+                        paddingBottom: '12px',
+                        
+                        },
+                        '& .Mui-selected': {
+                        color: '#000 !important',
+                        fontWeight: 700,
+                        },
+                    }}
+                    >
+                    <Tab label="Total viewers" />
+                    <Tab label="New viewers" />
+                    </Tabs>
 
-                <Box sx={{ mt: 4, display: 'flex' }} >
-                <Typography variant="body2" align="center" width={'50%'} color="primary">
-                    0
-                </Typography>
-                <Typography variant="body2" align="center" width={'50%'} color="textSecondary">
-                    0 (--)
-                </Typography>
-                </Box>
+                    <Box sx={{ mt: 4, display: 'flex' }} >
+                    <Typography variant="body2" align="center" width={'50%'} color="primary">
+                        0
+                    </Typography>
+                    <Typography variant="body2" align="center" width={'50%'} color="textSecondary">
+                        0 (--)
+                    </Typography>
+                    </Box>
 
-                <Box height={250} mt={4} mr={2}>
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="viewers" stroke="#1976d2" strokeWidth={2} dot={{ r: 3 }} />
-                    </LineChart>
-                </ResponsiveContainer>
-                </Box>
-            </CardContent>
-           </Card>
-            <div className="grid grid-cols-2 mt-3 gap-4">
-            <Card variant="outlined" sx={{ borderRadius: 3, p: 2 }}>
-      <CardContent>
-      <Box display="flex" alignItems="center" mb={2}>
-            <Typography variant="h6" fontWeight="bold" mr={1}>
-            Most active times
-            </Typography>
-            <Tooltip title="Shows when your viewers are most active." arrow>
-            <IconButton size="small" sx={{ p: 0.5 }}>
-                <InfoOutlinedIcon fontSize="small" />
-            </IconButton>
-            </Tooltip>
-        </Box>
+                    <Box height={250} mt={4} mr={2}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Line type="monotone" dataKey="viewers" stroke="#1976d2" strokeWidth={2} dot={{ r: 3 }} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                    </Box>
+                </CardContent>
+            </Card>
 
+    <Grid container spacing={3}>
+        {/* --- Left column -------------------------------------------------- */}
+        <Grid item xs={12} md={7}>
 
-        <Tabs
-            value={tab}
-            onChange={handleChangetimeTabs}
-            variant="standard"
-            TabIndicatorProps={{ style: { display: 'none' } }} // hide underline
-            sx={{
-            minHeight: '32px',
-            '& .MuiTab-root': {
-                minHeight: '32px',
-                textTransform: 'none',
-                fontSize: '14px',
-                paddingX: 1,
-                paddingY: 0,
-                borderRadius: '5px',
-                backgroundColor: '#0000000D',
-                color: '#0000007A'
-            },
-            '& .Mui-selected': {
-                backgroundColor: '#0075DC1A',
-                color: '#0075DB',
-                fontWeight: 'bold',
-            },
-            }}
-        >
-            <Tab label="Hour" />
-            <Tab label="Day" />
-        </Tabs>
+            <Card variant="outlined" sx={{ borderRadius: 3, my:3,  p: 0 }}>
+                <CardContent sx={{p:0}}>
+                    <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
+                        <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
+                        Most active times
+                        </Typography>
+                        <Tooltip title="Shows when your viewers are most active." arrow>
+                        <IconButton size="small" sx={{ p: 0.5 }}>
+                            <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
+                        </IconButton>
+                        </Tooltip>
+                    </Box>
 
+                    <Box className="pl-5">
+                    <Tabs
+                        value={tab}
+                        onChange={handleChangetimeTabs}
+                        variant="standard"
+                        TabIndicatorProps={{ style: { display: 'none' } }} // hide underline
+                        sx={{
+                        minHeight: '32px',
+                        '& .MuiTab-root': {
+                            minHeight: '32px',
+                            textTransform: 'none',
+                            fontSize: '14px',
+                            paddingX: 1,
+                            paddingY: 1,
+                            borderRadius: '5px',
+                            backgroundColor: '#0000000D',
+                            color: '#0000007A',
+                            marginRight: '0.5rem',
+                            marginBottom: '1rem'
 
+                        },
+                        '& .Mui-selected': {
+                            backgroundColor: '#0075DC1A',
+                            color: '#0075DB',
+                        },
+                        }}
+                    >
+                        <Tab label="Hour" />
+                        <Tab label="Day" />
+                    </Tabs>
+                    {tab === 1 ? (
+                    // Day View
+                    <ResponsiveContainer width="100%" height={200}>
+                    <BarChart
+                        data={dayData}
+                        barSize={16}
+                        barCategoryGap={20}
+                        margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
+                    >
+                        <CartesianGrid vertical={false} stroke="#f0f0f0" />
+                        <XAxis
+                        dataKey="date"
+                        tickLine={false}
+                        axisLine={{ stroke: "#e0e0e0" }}
+                        tick={{ fontSize: 11, fill: "#757575" }}
+                        />
+                        <YAxis
+                            orientation="right"
+                            allowDecimals={false}
+                            domain={[0, 4]}
+                            ticks={[1, 2, 3, 4]}
+                            tickLine={false}
+                            axisLine={false} // <--- remove border
+                            tick={{ fontSize: 11, fill: "#757575" }}
+                            />
 
-        {tab === 1 ? (
-          // Day View
-          <ResponsiveContainer width="100%" height={200}>
-
-            <BarChart data={dayData}>
-              <XAxis dataKey="date" tickLine={false} axisLine={{ stroke: "#e0e0e0" }} />
-              <YAxis
-                allowDecimals={false}
-                domain={[0, 4]}
-                ticks={[1, 2, 3, 4]}
-                tickLine={false}
-                axisLine={{ stroke: "#e0e0e0" }}
-              />
-              <Tooltip />
-              <Bar dataKey="activity" radius={[4, 4, 0, 0]}>
-                {dayData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.date === "Apr 2" ? "#1976d2" : "#90caf9"}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          // Hour View
-          <Box>
-            <Typography
-              variant="body2"
-              sx={{ textAlign: "center", mb: 3 }}
-            >
-              In the last 7 days, your viewers were most active on Apr 4,
-              between 0am to 1am
-            </Typography>
-                {/* Month Slider */}
-                <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
-                            <IconButton size="small" onClick={handlePrevMonth} disabled={monthIndex === 0}>
-                                <ChevronLeft fontSize="small" />
-                            </IconButton>
-                            <Typography variant="body2" mx={1}>
-                                {months[monthIndex]}
+                        <Tooltip
+                        contentStyle={{
+                            backgroundColor: "white",
+                            border: "1px solid #ddd",
+                            fontSize: "12px",
+                            borderRadius: "4px",
+                        }}
+                        cursor={{ fill: "rgba(25, 118, 210, 0.1)" }}
+                        />
+                        <Bar dataKey="activity" radius={[4, 4, 0, 0]}>
+                        {dayData.map((entry, index) => (
+                            <Cell
+                            key={`cell-${index}`}
+                            fill={entry.date === "Apr 2" ? "#1976d2" : "#e3f2fd"}
+                            />
+                        ))}
+                        </Bar>
+                    </BarChart>
+                    </ResponsiveContainer>
+                    ) : (
+                    // Hour View
+                        <Box>
+                            <Typography
+                            variant="body2"
+                            sx={{ textAlign: "center", mb: 3 }}
+                            >
+                            In the last 7 days, your viewers were most active on Apr 4,
+                            between 0am to 1am
                             </Typography>
-                            <IconButton size="small" onClick={handleNextMonth} disabled={monthIndex === months.length - 1}>
-                                <ChevronRight fontSize="small" />
-                            </IconButton>
-                </Box>
-                <ResponsiveContainer width="100%" height={120}>
-  <BarChart data={hourData} barCategoryGap={5}>
-    <XAxis 
-      dataKey="hour" 
-      tickLine={false} 
-      axisLine={{ stroke: "#e0e0e0" }}
-      interval={0}
-      style={{ fontSize: 10 }}
-    />
-    <YAxis hide />
-    <Tooltip />
-    <Bar 
-      dataKey="value" 
-      fill="#1976d2" 
-      radius={[4, 4, 0, 0]}
-      barSize={8} // <-- Make bars slim
-    />
-  </BarChart>
-</ResponsiveContainer>
+                            {/* Month Slider */}
+                            <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+                                        <IconButton size="small" onClick={handlePrevMonth} disabled={monthIndex === 0}>
+                                            <ChevronLeft fontSize="small" />
+                                        </IconButton>
+                                        <Typography variant="body2" mx={1}>
+                                            {months[monthIndex]}
+                                        </Typography>
+                                        <IconButton size="small" onClick={handleNextMonth} disabled={monthIndex === months.length - 1}>
+                                            <ChevronRight fontSize="small" />
+                                        </IconButton>
+                            </Box>
+                            <ResponsiveContainer width="100%" height={120}>
+                            <BarChart data={hourData} barCategoryGap={5}>
+                                <XAxis 
+                                dataKey="hour" 
+                                tickLine={false} 
+                                axisLine={{ stroke: "#e0e0e0" }}
+                                interval={0}
+                                style={{ fontSize: 10 }}
+                                />
+                                <YAxis hide />
+                                <Tooltip />
+                                <Bar 
+                                dataKey="value" 
+                                fill="#1976d2" 
+                                radius={[4, 4, 0, 0]}
+                                barSize={8} // <-- Make bars slim
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
 
-          </Box>
-        )}
-      </CardContent>
-    </Card>
-                <div className={`${isDarkThemes?'bg-[#181818]':'bg-white'} shadow-sm rounded`}>
-                    <div className='py-2 px-4 border-b mb-4 text-left'>
-                        <span className={`${isDarkThemes?'text-gray-300':'text-black'} text-[15px] font-semibold`}>Retention rate</span>
-                    </div>
-                    {/* <p className="text-gray-400 text-sm">
-                        Most viewers stopped watching at 0:04. play the video below to see when they lost interest.
-                    </p> */}
-                    <div className="mt-4 space-y-2 px-4 pb-4 ">
-                        {/* <video onLoadedMetadata={getMediaInfo} className='w-44 h-80 m-auto' controls src={post?.reducedVideoUrl?.length > 0? post?.reducedVideoUrl: post?.originalUrl} /> */}
-                    </div>
-                </div>
-                <div className={`${isDarkThemes?'bg-[#181818]':'bg-white'} shadow-sm text-left rounded`}>
-                    <div className='py-2 px-3 border-b mb-4 '>
-                        <span className={`${isDarkThemes?'text-gray-300':'text-black'} text-[15px] font-semibold mb-2`}>Traffic source</span>
-                    </div>
-                    <p className="text-gray-400 px-3 text-sm">
+                                </Box>
+                                )}
+                    </Box>
+                </CardContent>
+            </Card>
+               
+            <Card variant="outlined" sx={{ p: 0, borderRadius: 2 }}>
+            
+                <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
+                        <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
+                        Posts your viewers also viewed
+                        </Typography>
+                        <Tooltip title="Shows when your viewers are most active." arrow>
+                        <IconButton size="small" sx={{ p: 0.5 }}>
+                            <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
+                        </IconButton>
+                        </Tooltip>
+                    </Box>
+
+                {posts.map((post) => (
+                    <Box key={post.id} display="flex" alignItems="center" py={1} borderBottom="1px solid #eee">
+                    <Typography variant="body1" sx={{ width: 24, mr: 2 }}>
+                        {post.id}
+                    </Typography>
+
+                    <Box position="relative" mr={2}>
+                        <img
+                        src={post.thumbnail}
+                        alt={post.title}
+                        style={{
+                            width: 60,
+                            height: 100,
+                            objectFit: "cover",
+                            borderRadius: 4,
+                        }}
+                        />
+                        <Box
+                        position="absolute"
+                        bottom={4}
+                        left="50%"
+                        sx={{
+                            transform: "translateX(-50%)",
+                            backgroundColor: "rgba(0, 0, 0, 0.7)",
+                            color: "white",
+                            padding: "2px 6px",
+                            fontSize: "10px",
+                            borderRadius: "4px",
+                        }}
+                        >
+                        {post.duration}
+                        </Box>
+                    </Box>
+
+                    <Box>
+                        <Typography variant="body2" fontWeight="bold" noWrap>
+                        {post.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" noWrap>
+                        {post.code}
+                        </Typography>
+                        <Box display="flex" alignItems="center" mt={0.5}>
+                        <Avatar src={post.creatorAvatar} alt={post.creatorName} sx={{ width: 16, height: 16, mr: 0.5 }} />
+                        <Typography variant="caption" color="text.secondary">
+                            {post.creatorName}
+                        </Typography>
+                        </Box>
+                    </Box>
+                    </Box>
+                ))}
+                </Card>
+        </Grid>
+
+        {/* --- Right column ------------------------------------------------- */}
+        <Grid item xs={12} md={5}>
+           <Card variant="outlined" sx={{ p: 0, my: 3, borderRadius: 2 }}>
+                    <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
+                        <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
+                        Creators your viewers also watched
+                        </Typography>
+                        <Tooltip title="Shows when your viewers are most active." arrow>
+                        <IconButton size="small" sx={{ p: 0.5 }}>
+                        <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
+                        </IconButton>
+                        </Tooltip>
+                    </Box>
+
+                    <Box display="flex" gap={4} justifyContent="center">
+                        {creators.map((creator, index) => (
+                        <Box key={index} display="flex" flexDirection="column" alignItems="center">
+                            <Avatar
+                            src={creator.avatar}
+                            alt={creator.name}
+                            sx={{ width: 64, height: 64, mb: 1 }}
+                            />
+                            <Typography variant="body1" fontWeight="500" textAlign="center">
+                            {creator.name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" textAlign="center">
+                            {creator.followers}
+                            </Typography>
+                        </Box>
+                        ))}
+                    </Box>
+           </Card> 
+          {/* Gender */}
+          <Paper variant="outlined" sx={{ mb: 3 }}>
+            <CardHeader title="Gender" />
+            <Typography color="text.secondary" fontSize={14} m={2}>
+                Data will show when video views reach 100
+              </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 3, mt: 2, p: 3 }}>
+              <ArcGauge percent={0} />
+              {/* legend */}
+              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 1 }}>
+                {[0, 1, 2].map((i) => (
+                  <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1,  }}>
+                    <Box sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: 1,
+                        bgcolor:
+                          i === 0 ? 'primary.dark' : i === 1 ? 'primary.main' : 'primary.light',}}
+                    />
+                    <Typography fontSize={14}>{dash}</Typography>
+                    <Typography sx={{ ml: 8 }} fontSize={14}>
+                      ‑%
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Paper>
+
+          {/* Locations */}
+          <Paper variant="outlined" sx={{ mb: 3 }}>
+            <CardHeader title="Locations" />
+            <Box sx={{ p: 2 }}>
+              <Typography color="text.secondary" fontSize={14} mb={2}>
+                Data will show when video views reach 100
+              </Typography>
+
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Box key={i} mb={2}>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography>{dash}</Typography>
+                    <Typography>‑%</Typography>
+                  </Box>
+                  <PlaceholderLinear value={0} />
+                </Box>
+              ))}
+            </Box>
+          </Paper>
+          {/* Age */}
+          <Paper variant="outlined">
+                    <CardHeader title="Age" />
+                    <Box sx={{ p: 2 }}>
+                    <Typography color="text.secondary" fontSize={14} mb={2}>
                         Data will show when video views reach 100
-                    </p>
-                    <ul className="mt-4 space-y-2 px-4 pb-4">
-                        <li className=" text-black text-sm">
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
-                                <span>-</span>
-                                <span>{value}%</span>
-                            </Box>
-                            <Box sx={{ width: '100%', position: 'relative', py: 1 }}>
-                                <LinearProgress
-                                    sx={{
-                                    height: 8,
-                                    borderRadius: 4,
-                                    backgroundColor: '#f5f5f5',
-                                    '& .MuiLinearProgress-bar': {
-                                        borderRadius: 4,
-                                        backgroundColor: '#3B82F6',
-                                    },
-                                    }}
-                                variant="determinate" value={value} />
-                            </Box>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                    </Typography>
+
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <Box key={i} mb={2}>
+                        <Box display="flex" justifyContent="space-between">
+                            <Typography>{dash}</Typography>
+                            <Typography>‑%</Typography>
+                        </Box>
+                        <PlaceholderLinear value={0} />
+                        </Box>
+                    ))}
+                    </Box>
+            </Paper>
+        </Grid>
+      </Grid>
     </div>
   )
 }
