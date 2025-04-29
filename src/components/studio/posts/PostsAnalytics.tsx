@@ -21,6 +21,7 @@ import {
   } from "@mui/material";
   import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
   import EditIcon from "@mui/icons-material/Edit";
+  import DeleteIcon from "@mui/icons-material/Delete";
   import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
   import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
   import PublicIcon from "@mui/icons-material/Public";
@@ -28,7 +29,7 @@ import {
   import { useEffect, useState, useRef } from 'react';
   import Header from "../header/Header";
   import { head } from "lodash";
-  import { PlayArrow, Check, ExpandMore, FavoriteBorder, FilterList, Search } from '@mui/icons-material';
+  import { PlayArrow, Pause, Check, ExpandMore, FavoriteBorder, FilterList, Search } from '@mui/icons-material';
   import { API_KEY } from '../../../utils/constants';
   import { formatCustomDate } from '../../../utils/helpers';
   import ReactPaginate from 'react-paginate';
@@ -38,7 +39,10 @@ import {
   import LockIcon from '@mui/icons-material/Lock';
   import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
   import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+  import PushPinIcon from '@mui/icons-material/PushPin';
+  import { InputAdornment, TextField } from "@mui/material";
+  import SearchIcon from "@mui/icons-material/Search";
+  import PopupForDeleteVideo from '../../profile/popups/popupForDeleteVideo'; 
 
   
   const posts1 = [
@@ -75,6 +79,23 @@ import {
   ];
   
   export default function PostsAnalytics() {
+
+
+    // For the 3-dot "More Options" menu
+const [anchorElMoreOptions, setAnchorElMoreOptions] = useState<null | HTMLElement>(null);
+const isMoreOptionsOpen = Boolean(anchorElMoreOptions);
+
+const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  setAnchorElMoreOptions(event.currentTarget);
+};
+
+const handleMoreOptionsClose = () => {
+  setAnchorElMoreOptions(null);
+};
+
+
+
+
     const [darkTheme, setdarkTheme] = useState<any>('');
     const abortController = useRef<AbortController | null>(null);
     
@@ -98,8 +119,29 @@ import {
     const [selectedCommentCounts, setSelectedCommentCounts] = useState<string[]>([]);
     const [selectedLikeCounts, setSelectedLikeCounts] = useState<string[]>([]);
     const [selectedPrivacyCounts, setSelectedPrivacyCounts] = useState<string[]>([]);
-    const [posts, setPosts] = useState<any>({ items: [], page: 1, pageSize: 10, totalItems: 0, isLoading: true });
-    const [sortColumn, setSortColumn] = useState<string>(''); // e.g., 'likesCount'
+    interface Post {
+      _id: string;
+      thumbnailUrl?: string;
+      category?: { name: string };
+      createdTime?: string;
+      watched_users?: any[];
+      likes?: any[];
+      commentsCount?: number;
+      privacyOptions?: { canView: string };
+    }
+    
+    const [posts, setPosts] = useState<{ items: Post[]; page: number; pageSize: number; totalItems: number; isLoading: boolean }>({
+      items: [],
+      page: 1,
+      pageSize: 10,
+      totalItems: 0,
+      isLoading: true,
+    });
+    const [sortConfig, setSortConfig] = useState<{key: string; direction: 'asc' | 'desc'} | null>(null);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+
+    const [mediaToDelete, setMediaToDelete] = useState<any>(null);
+    const [sortColumn, setSortColumn] = useState<string | null>(null);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     // Options
@@ -120,26 +162,203 @@ import {
     ];
 
     const buildQueryString = () => {
-      const query = new URLSearchParams();
+      let query = [];
     
       if (selectedViewsCounts.length)
-        query.append('viewsCount', selectedViewsCounts.join(','));
+        query.push(`viewsCount=${selectedViewsCounts.join(',')}`);
       if (selectedLikeCounts.length)
-        query.append('likesCount', selectedLikeCounts.join(','));
+        query.push(`likesCount=${selectedLikeCounts.join(',')}`);
       if (selectedCommentCounts.length)
-        query.append('commentsCount', selectedCommentCounts.join(','));
+        query.push(`commentsCount=${selectedCommentCounts.join(',')}`);
       if (selectedPrivacyCounts.length)
-        query.append('privacy', selectedPrivacyCounts.join(','));
+        query.push(`privacy=${selectedPrivacyCounts.join(',')}`);
     
-      query.append('page', posts.page.toString());
-      query.append('pageSize', posts.pageSize.toString());
-
-      if (sortColumn) {
-        query.append('sortBy', sortColumn);
-        query.append('sortOrder', sortOrder); // 'asc' or 'desc'
+      query.push(`page=${posts.page}`);
+      query.push(`pageSize=${posts.pageSize}`);
+    
+      if (searchQuery.trim()) {
+        query.push(`q=${encodeURIComponent(searchQuery.trim())}`);
       }
     
-      return query.toString();
+      return query.join('&');
+    };
+    
+
+    
+    const requestSort = (key: string) => {
+      let direction: 'asc' | 'desc' = 'asc';
+      if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+        direction = 'desc';
+      }
+      setSortConfig({ key, direction });
+    };
+
+    // Add sorted items calculation
+    const getSortedItems = () => {
+      if (!sortConfig) return posts.items;
+      
+      return [...posts.items].sort((a, b) => {
+        // Get the values to compare based on sort key
+        let aValue, bValue;
+    
+        switch (sortConfig.key) {
+          case 'viewsCount':
+            aValue = a.watched_users?.length || 0;
+            bValue = b.watched_users?.length || 0;
+            break;
+          case 'likesCount':
+            aValue = a.likes?.length || 0;
+            bValue = b.likes?.length || 0;
+            break;
+          case 'commentsCount':
+            aValue = a.commentsCount || 0;
+            bValue = b.commentsCount || 0;
+            break;
+          case 'createdTime':
+            aValue = a.createdTime ? new Date(a.createdTime).getTime() : 0;
+            bValue = b.createdTime ? new Date(b.createdTime).getTime() : 0;
+            break;
+          default:
+            aValue = a[sortConfig.key as keyof Post];
+            bValue = b[sortConfig.key as keyof Post];
+        }
+    
+        // Numeric comparison for counts
+        if (sortConfig.key === 'viewsCount' || sortConfig.key === 'likesCount' || sortConfig.key === 'commentsCount') {
+          const aNum = typeof aValue === 'number' ? aValue : 0;
+          const bNum = typeof bValue === 'number' ? bValue : 0;
+          return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+        
+        // Date comparison for createdTime
+        if (sortConfig.key === 'createdTime') {
+          const aNum = typeof aValue === 'number' ? aValue : 0;
+          const bNum = typeof bValue === 'number' ? bValue : 0;
+          return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+    
+        // Default string comparison
+        if (aValue !== undefined && bValue !== undefined && aValue < bValue) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if ((aValue ?? 0) > (bValue ?? 0)) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    };
+
+    const deletePost = (post:any) => {
+      setMediaToDelete(post);
+    }
+
+    const VideoThumbnail = ({ src, originalUrl }: { src: string; originalUrl: string }) => {
+      const [isPlaying, setIsPlaying] = useState(false);
+      const [hasInteracted, setHasInteracted] = useState(false);
+      const videoRef = useRef<HTMLVideoElement>(null);
+    
+      const togglePlayPause = () => {
+        if (!videoRef.current) return;
+        
+        setHasInteracted(true); // Mark that user has interacted
+        
+        if (isPlaying) {
+          videoRef.current.pause();
+        } else {
+          // First ensure the video is loaded
+          if (videoRef.current.readyState < 3) { // 3 = HAVE_FUTURE_DATA
+            videoRef.current.load();
+          }
+          
+          videoRef.current.play()
+            .then(() => setIsPlaying(true))
+            .catch(e => {
+              console.error("Video play failed:", e);
+              // Fallback to showing thumbnail if play fails
+              setIsPlaying(false);
+              videoRef.current?.pause();
+            });
+        }
+        setIsPlaying(!isPlaying);
+      };
+    
+      return (
+        <Box 
+          position="relative" 
+          sx={{
+            width: 56,
+            height: 56,
+            overflow: 'hidden',
+            borderRadius: '4px',
+            backgroundColor: '#000',
+            cursor: 'pointer'
+          }}
+          onClick={togglePlayPause}
+        >
+          {/* Always render video element but control visibility */}
+          <video
+            ref={videoRef}
+            src={originalUrl}
+            muted
+            playsInline
+            preload="metadata"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: isPlaying && hasInteracted ? 'block' : 'none'
+            }}
+          />
+          
+          {/* Thumbnail image */}
+          <img
+            src={src}
+            alt="Video thumbnail"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: !isPlaying || !hasInteracted ? 'block' : 'none'
+            }}
+          />
+          
+          {/* Play/Pause overlay */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              color: 'white',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              borderRadius: '50%',
+              width: 24,
+              height: 24,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {isPlaying && hasInteracted ? <Pause fontSize="small" /> : <PlayArrow fontSize="small" />}
+          </Box>
+          
+          {/* Duration indicator */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              bgcolor: "rgba(0,0,0,0.7)",
+              color: "#fff",
+              fontSize: "10px",
+              px: 0.5,
+              borderRadius: "2px",
+            }}
+          >
+            {/* Duration can go here if needed */}
+          </Box>
+        </Box>
+      );
     };
 
 
@@ -242,6 +461,44 @@ import {
 
     const handlePrivacyClose = () => {
       setAnchorElPrivacy(null);
+    };
+
+    const updatePrivacy = async (postId: string, canView: string) => {
+      try {
+        const response = await fetch(`${API_KEY}/media-content/${postId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            privacyOptions: {
+              canView: canView
+            }
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to update privacy settings');
+        }
+    
+        // Optionally refresh the data or update local state
+        const updatedPost = await response.json();
+        
+        // Update local state without refetching
+        setPosts((prev: typeof posts) => ({
+          ...prev,
+          items: prev.items.map(post => 
+            post._id === postId 
+              ? { ...post, privacyOptions: { ...post.privacyOptions, canView } } 
+              : post
+          )
+        }));
+    
+      } catch (error) {
+        console.error('Error updating privacy:', error);
+        // Optionally show error to user
+      }
     };
 
     const fetchPosts = async () => {
@@ -644,70 +901,105 @@ import {
             </Box>
           </Menu>
         </Box>
+
+        <TextField
+          placeholder="Search posts..."
+          size="small"
+          variant="outlined"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              // Explicit search on Enter
+              fetchPosts();
+            } else {
+              // Search on other keys too
+              fetchPosts();
+            }
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            style: { borderRadius: 8, backgroundColor: "#fff" },
+          }}
+          sx={{ width: 250 }}
+        />
+
       </Box>
-
-        <Card sx={{ borderRadius: 3, boxShadow: 1 }}>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                  <TableSortLabel
-                      active={sortColumn === 'description'}
-                      direction={sortColumn === 'description' ? sortOrder : 'asc'}
-                      onClick={() => handleSort('description')}
-                    >
-                  Posts (Created on) 
-                  </TableSortLabel>
-                  </TableCell>
-                  <TableCell>Privacy</TableCell>
-                  <TableCell align="center">
-                  <TableSortLabel
-                      active={sortColumn === 'viewsCount'}
-                      direction={sortColumn === 'viewsCount' ? sortOrder : 'asc'}
-                      onClick={() => handleSort('viewsCount')}
-                    >
-                  Views
-                  </TableSortLabel>
-
-                  </TableCell>
-                  <TableCell align="center">
-                  <TableSortLabel
-                    active={sortColumn === 'likesCount'}
-                    direction={sortColumn === 'likesCount' ? sortOrder : 'asc'}
-                    onClick={() => handleSort('likesCount')}
-                  >
-                    Likes
-                  </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="center">
-                  <TableSortLabel
-                    active={sortColumn === 'commentsCount'}
-                    direction={sortColumn === 'commentsCount' ? sortOrder : 'asc'}
-                    onClick={() => handleSort('commentsCount')}
-                  >
-                    Comments
-                  </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="center">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-  
-              <TableBody>
-              {posts.items.map((post:any, index:any) => (
-                  <TableRow
-                    key={index}
-                    
-                  >
+          <Card sx={{ borderRadius: 3, boxShadow: 1 }}>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
                     <TableCell>
-                      <Box display="flex" alignItems="center">
-                        <Box position="relative" mr={2}>
-                          <Avatar
-                            variant="rounded"
-                            src={post.thumbnailUrl}
-                            sx={{ width: 56, height: 56 }}
-                          />
-                          <Box
+                    <TableSortLabel
+                        active={sortConfig?.key === 'createdTime'}
+                        direction={sortConfig?.key === 'createdTime' ? sortConfig.direction : 'asc'}
+                        onClick={() => requestSort('createdTime')}
+                      >
+                    Posts (Created on) 
+                    </TableSortLabel>
+                    </TableCell>
+                    <TableCell>Privacy</TableCell>
+                    <TableCell align="center">
+                    <TableSortLabel
+                        active={sortConfig?.key === 'viewsCount'}
+                        direction={sortConfig?.key === 'viewsCount' ? sortConfig.direction : 'asc'}
+                        onClick={() => requestSort('viewsCount')}
+                      >
+                    Views
+                    </TableSortLabel>
+
+                    </TableCell>
+                    <TableCell align="center">
+                    <TableSortLabel
+                      active={sortConfig?.key === 'likesCount'}
+                      direction={sortConfig?.key === 'likesCount' ? sortConfig.direction : 'asc'}
+                      onClick={() => requestSort('likesCount')}
+                    >
+                      Likes
+                    </TableSortLabel>
+                    </TableCell>
+                    <TableCell align="center">
+                    <TableSortLabel
+                     active={sortConfig?.key === 'commentsCount'}
+                     direction={sortConfig?.key === 'commentsCount' ? sortConfig.direction : 'asc'}
+                     onClick={() => requestSort('commentsCount')}
+                    >
+                      Comments
+                    </TableSortLabel>
+                    </TableCell>
+                    <TableCell align="center">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+    
+                <TableBody>
+                {getSortedItems().map((post:any, index:any) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        backgroundColor: index === 0 ? "#f5f5f5" : "inherit",
+                        "&:hover": {
+                          backgroundColor: "#f5f5f5",
+                        },
+                      }}
+                    >
+                      <TableCell>
+                        <Box display="flex" alignItems="center">
+                          <Box position="relative" mr={2}>
+                            {/* <Avatar
+                              variant="rounded"
+                              src={post.thumbnailUrl}
+                              sx={{ width: 56, height: 56 }}
+                            /> */}
+                             <VideoThumbnail 
+                                src={post.thumbnailUrl} 
+                                originalUrl={post.originalUrl} 
+                              />
+                            <Box
                               sx={{
                                 position: "absolute",
                                 bottom: 2,
@@ -837,13 +1129,45 @@ import {
                           </IconButton>
                         </Tooltip>
   
-                        <Tooltip title="More Options">
-                          <IconButton size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
+                          <IconButton onClick={handleMoreOptionsClick} size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M1.6665 7.9974C1.6665 7.64377 1.80698 7.30464 2.05703 7.05459C2.30708 6.80454 2.64622 6.66406 2.99984 6.66406C3.35346 6.66406 3.6926 6.80454 3.94265 7.05459C4.19269 7.30464 4.33317 7.64377 4.33317 7.9974C4.33317 8.35102 4.19269 8.69016 3.94265 8.9402C3.6926 9.19025 3.35346 9.33073 2.99984 9.33073C2.64622 9.33073 2.30708 9.19025 2.05703 8.9402C1.80698 8.69016 1.6665 8.35102 1.6665 7.9974ZM6.6665 7.9974C6.6665 7.64377 6.80698 7.30464 7.05703 7.05459C7.30708 6.80454 7.64622 6.66406 7.99984 6.66406C8.35346 6.66406 8.6926 6.80454 8.94265 7.05459C9.19269 7.30464 9.33317 7.64377 9.33317 7.9974C9.33317 8.35102 9.19269 8.69016 8.94265 8.9402C8.6926 9.19025 8.35346 9.33073 7.99984 9.33073C7.64622 9.33073 7.30708 9.19025 7.05703 8.9402C6.80698 8.69016 6.6665 8.35102 6.6665 7.9974ZM11.6665 7.9974C11.6665 7.64377 11.807 7.30464 12.057 7.05459C12.3071 6.80454 12.6462 6.66406 12.9998 6.66406C13.3535 6.66406 13.6926 6.80454 13.9426 7.05459C14.1927 7.30464 14.3332 7.64377 14.3332 7.9974C14.3332 8.35102 14.1927 8.69016 13.9426 8.9402C13.6926 9.19025 13.3535 9.33073 12.9998 9.33073C12.6462 9.33073 12.3071 9.19025 12.057 8.9402C11.807 8.69016 11.6665 8.35102 11.6665 7.9974Z" fill="black"/>
                           </svg>
                           </IconButton>
-                        </Tooltip>
+                          <Menu
+                            anchorEl={anchorElMoreOptions}
+                            open={isMoreOptionsOpen}
+                            onClose={handleMoreOptionsClose}
+                            PaperProps={{
+                              sx: {
+                                borderRadius: 2,
+                                boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                                mt: 1,
+                                minWidth: 160,
+                              },
+                            }}
+                            anchorOrigin={{
+                              vertical: 'bottom',
+                              horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                              vertical: 'top',
+                              horizontal: 'right',
+                            }}
+                          >
+                            <MenuItem onClick={handleMoreOptionsClose}>
+                              <PushPinIcon sx={{ fontSize: 18, mr: 1, color: '#000' }} />
+                              <Typography variant="body2" color="text.primary">
+                                Pin to top
+                              </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={handleMoreOptionsClose}>
+                              <DeleteIcon sx={{ fontSize: 18, mr: 1, color: '#f44336' }} />
+                              <Typography variant="body2" sx={{ color: '#f44336' }}>
+                                Delete
+                              </Typography>
+                            </MenuItem>
+                          </Menu>
                       </Box>
                     </TableCell>
                   </TableRow>

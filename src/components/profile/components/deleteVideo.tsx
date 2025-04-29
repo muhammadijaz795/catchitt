@@ -5,7 +5,11 @@ function DeleteVideo({ entity, onclose, popupH, userId, info, darkTheme }: any) 
     const token = localStorage.getItem('token');
 
     const deleteVideo = async () => {
-        const res: any = await fetch(`${API_KEY}/media-content/${info?.mediaId}`, {
+        let deletedId = info?.mediaId;
+        if(deletedId === undefined){
+            deletedId = info?._id;
+        }
+        const res: any = await fetch(`${API_KEY}/media-content/${deletedId}`, {
             method: 'DELETE',
             headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
         });
