@@ -547,10 +547,9 @@ const handleMoreOptionsClose = (post:any = null) => {
             onClick={handleViewsClick}
             startIcon={<FilterList />}
             endIcon={<ExpandMore />}
-            sx={{
+                        sx={{
               backgroundColor: 'white',
               color: '#000',
-              border: '1px solid #e4e6eb',
               borderRadius: '8px',
               textTransform: 'none',
             }}
@@ -923,32 +922,41 @@ const handleMoreOptionsClose = (post:any = null) => {
                         }}
                       >
                         Posts (Created on)
-                        <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
-                          <ChevronUpIcon
+                        <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                              <ChevronUpIcon
                             sx={{
                               fontSize: 18,
+                              height: '18px',
+                              width: '18px',
+                              position: 'absolute',
+                              top: -4,
                               color:
                                 sortConfig?.key === 'createdTime' && sortConfig.direction === 'asc'
                                   ? 'primary.main'
                                   : 'text.disabled',
                             }}
                           />
+
                           <ChevronDownIcon
                             sx={{
                               fontSize: 18,
+                              height: '18px',
+                              width: '18px',
+                              position: 'absolute',
+                              bottom: -4,
                               color:
                                 sortConfig?.key === 'createdTime' && sortConfig.direction === 'desc'
                                   ? 'primary.main'
                                   : 'text.disabled',
                             }}
                           />
+
                         </span>
                       </Typography>
                     </TableSortLabel>
                   </TableCell>
                     <TableCell>Privacy</TableCell>
                     <TableCell align="center">
-                    <TableCell>
                       <TableSortLabel
                         active={sortConfig?.key === 'viewsCount'}
                         direction={sortConfig?.direction === 'desc' ? 'desc' : 'asc'}
@@ -964,10 +972,14 @@ const handleMoreOptionsClose = (post:any = null) => {
                           }}
                         >
                           Views
-                          <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
-                            <ChevronUpIcon
-                              sx={{
-                                fontSize: 18,
+                          <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                              <ChevronUpIcon
+                            sx={{
+                              fontSize: 18,
+                              height: '18px',
+                              width: '18px',
+                              position: 'absolute',
+                              top: -4,
                                 color:
                                   sortConfig?.key === 'viewsCount' && sortConfig.direction === 'asc'
                                     ? 'primary.main'
@@ -977,6 +989,10 @@ const handleMoreOptionsClose = (post:any = null) => {
                             <ChevronDownIcon
                               sx={{
                                 fontSize: 18,
+                                height: '18px',
+                                width: '18px',
+                                position: 'absolute',
+                                bottom: -4,
                                 color:
                                   sortConfig?.key === 'viewsCount' && sortConfig.direction === 'desc'
                                     ? 'primary.main'
@@ -987,10 +1003,7 @@ const handleMoreOptionsClose = (post:any = null) => {
                         </Typography>
                       </TableSortLabel>
                     </TableCell>
-
-                    </TableCell>
                     <TableCell align="center">
-                    <TableCell>
                       <TableSortLabel
                         active={sortConfig?.key === 'likesCount'}
                         direction={sortConfig?.direction === 'desc' ? 'desc' : 'asc'}
@@ -1006,10 +1019,14 @@ const handleMoreOptionsClose = (post:any = null) => {
                           }}
                         >
                           Likes
-                          <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
-                            <ChevronUpIcon
-                              sx={{
-                                fontSize: 18,
+                          <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                              <ChevronUpIcon
+                            sx={{
+                              fontSize: 18,
+                              height: '18px',
+                              width: '18px',
+                              position: 'absolute',
+                              top: -4,
                                 color:
                                   sortConfig?.key === 'likesCount' && sortConfig.direction === 'asc'
                                     ? 'primary.main'
@@ -1019,6 +1036,10 @@ const handleMoreOptionsClose = (post:any = null) => {
                             <ChevronDownIcon
                               sx={{
                                 fontSize: 18,
+                                height: '18px',
+                                width: '18px',
+                                position: 'absolute',
+                                bottom: -4,
                                 color:
                                   sortConfig?.key === 'likesCount' && sortConfig.direction === 'desc'
                                     ? 'primary.main'
@@ -1028,7 +1049,6 @@ const handleMoreOptionsClose = (post:any = null) => {
                           </span>
                         </Typography>
                       </TableSortLabel>
-                    </TableCell>
                     </TableCell>
                     <TableCell align="center">
                       <TableSortLabel
@@ -1047,10 +1067,14 @@ const handleMoreOptionsClose = (post:any = null) => {
                           }}
                         >
                           Comments
-                          <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
-                            <ChevronUpIcon
-                              sx={{
-                                fontSize: 18,
+                          <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                              <ChevronUpIcon
+                            sx={{
+                              fontSize: 18,
+                              height: '18px',
+                              width: '18px',
+                              position: 'absolute',
+                              top: -4,
                                 color:
                                   sortConfig?.key === 'commentsCount' && sortConfig.direction === 'asc'
                                     ? 'primary.main'
@@ -1059,7 +1083,10 @@ const handleMoreOptionsClose = (post:any = null) => {
                             />
                             <ChevronDownIcon
                               sx={{
-                                fontSize: 18,
+                                height: '18px',
+                                width: '18px',
+                                position: 'absolute',
+                                bottom: -4,
                                 color:
                                   sortConfig?.key === 'commentsCount' && sortConfig.direction === 'desc'
                                     ? 'primary.main'
