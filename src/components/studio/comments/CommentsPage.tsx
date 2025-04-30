@@ -304,12 +304,12 @@ const handleFollowerApply = () => {
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M8.83712 3.06017C8.95293 3.16229 9.02351 3.30618 9.03334 3.46028C9.04318 3.61437 8.99147 3.76607 8.88958 3.88208L6.1522 6.99486L8.89074 10.1076C8.94308 10.1648 8.98347 10.2319 9.00957 10.3049C9.03566 10.3779 9.04693 10.4554 9.04271 10.5328C9.0385 10.6102 9.01888 10.686 8.98501 10.7558C8.95114 10.8255 8.9037 10.8878 8.84546 10.939C8.78723 10.9901 8.71937 11.0292 8.64585 11.0538C8.57234 11.0785 8.49465 11.0882 8.41734 11.0824C8.34002 11.0766 8.26463 11.0555 8.19558 11.0203C8.12653 10.985 8.06521 10.9363 8.0152 10.8771L5.2242 7.70485C5.0511 7.50885 4.95557 7.25636 4.95557 6.99486C4.95557 6.73336 5.0511 6.48087 5.2242 6.28487L8.0152 3.11205C8.06578 3.05453 8.1272 3.00754 8.19595 2.97377C8.2647 2.94 8.33943 2.92012 8.41587 2.91524C8.49231 2.91037 8.56896 2.92061 8.64144 2.94538C8.71392 2.97015 8.78081 3.00896 8.83828 3.05959" fill="black" fill-opacity="0.65"/>
                         </svg> Back to Seezitt
                     </button>
-                    <hr/>
+                    {/* <hr/>
                     <div className='text-xs opacity-60 mt-2 flex flex-col gap-2'>
                         <span className='cursor-pointer' onClick={() => navigate('/about/terms-conditions')}>Terms of Service</span>
                         <span className='cursor-pointer' onClick={() => navigate('/about/privacy-policy')}>Privacy Policy</span>
                         <span className='cursor-pointer'>Copyright &copy; {(new Date()).getFullYear()} Seezitt</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className='w-[calc(100%-14rem)]  ml-auto pt-20'>
