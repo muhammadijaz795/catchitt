@@ -925,7 +925,7 @@ const handleMoreOptionsClose = () => {
             ),
             style: { borderRadius: 8, backgroundColor: "#fff" },
           }}
-          sx={{ width: 250 }}
+          sx={{ width: 300 }}
         />
 
       </Box>
@@ -1144,6 +1144,8 @@ const handleMoreOptionsClose = () => {
                                 boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
                                 mt: 1,
                                 minWidth: 160,
+                                paddingX: 0.5,
+                                paddingY: 1,
                               },
                             }}
                             anchorOrigin={{
