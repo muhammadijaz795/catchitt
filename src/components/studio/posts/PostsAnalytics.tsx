@@ -552,6 +552,8 @@ const handleMoreOptionsClose = (post:any = null) => {
               color: '#000',
               borderRadius: '8px',
               textTransform: 'none',
+              border: '1px solid #e4e6eb',
+
             }}
           >
             Views
