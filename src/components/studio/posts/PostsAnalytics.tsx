@@ -43,40 +43,10 @@ import {
   import { InputAdornment, TextField } from "@mui/material";
   import SearchIcon from "@mui/icons-material/Search";
   import PopupForDeleteVideo from '../../profile/popups/popupForDeleteVideo'; 
+  import CheckIcon from '@mui/icons-material/Check';
+  import ChevronUpIcon from '@mui/icons-material/ExpandLess';
+  import ChevronDownIcon from '@mui/icons-material/ExpandMore';
 
-  
-  const posts1 = [
-    {
-      thumbnail: "thumbnail_url_1", // replace with real URL
-      title: "Quran pak with Urdu translation... #ahsanadventure #muslimcontent",
-      date: "Apr 23, 5:04 PM",
-      duration: "00:17",
-      privacy: "Everyone",
-      views: 0,
-      likes: 0,
-      comments: 0,
-    },
-    {
-      thumbnail: "thumbnail_url_2",
-      title: "Rishtay Bewafa Hotay Hain... Emotional Reminder",
-      date: "Apr 22, 11:35 AM",
-      duration: "00:57",
-      privacy: "Everyone",
-      views: 0,
-      likes: 0,
-      comments: 0,
-    },
-    {
-      thumbnail: "thumbnail_url_3",
-      title: "videoplayback",
-      date: "Feb 24, 11:40 AM",
-      duration: "00:49",
-      privacy: "Everyone",
-      views: 0,
-      likes: 0,
-      comments: 0,
-    },
-  ];
   
   export default function PostsAnalytics() {
 
@@ -89,8 +59,10 @@ const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
   setAnchorElMoreOptions(event.currentTarget);
 };
 
-const handleMoreOptionsClose = () => {
+const handleMoreOptionsClose = (post:any = null) => {
   setAnchorElMoreOptions(null);
+  if(post)
+    deletePost(post);
 };
 
 
@@ -443,6 +415,7 @@ const handleMoreOptionsClose = () => {
     };
 
     const handlePrivacySelect = (option: string) => {
+      console.log('psots analytics...')
       if (selectedPrivacyCounts.includes(option)) {
         setSelectedPrivacyCounts(selectedPrivacyCounts.filter((item) => item !== option));
       } else {
@@ -484,7 +457,7 @@ const handleMoreOptionsClose = () => {
     
         // Optionally refresh the data or update local state
         const updatedPost = await response.json();
-        
+        // fetchPosts();
         // Update local state without refetching
         setPosts((prev: typeof posts) => ({
           ...prev,
@@ -934,43 +907,168 @@ const handleMoreOptionsClose = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>
+                  <TableCell>
                     <TableSortLabel
-                        active={sortConfig?.key === 'createdTime'}
-                        direction={sortConfig?.key === 'createdTime' ? sortConfig.direction : 'asc'}
-                        onClick={() => requestSort('createdTime')}
+                      active={sortConfig?.key === 'createdTime'}
+                      direction={sortConfig?.direction === 'desc' ? 'desc' : 'asc'}
+                      onClick={() => requestSort('createdTime')}
+                      IconComponent={() => null} // Disable default icon
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                        }}
                       >
-                    Posts (Created on) 
+                        Posts (Created on)
+                        <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                          <ChevronUpIcon
+                            sx={{
+                              fontSize: 18,
+                              color:
+                                sortConfig?.key === 'createdTime' && sortConfig.direction === 'asc'
+                                  ? 'primary.main'
+                                  : 'text.disabled',
+                            }}
+                          />
+                          <ChevronDownIcon
+                            sx={{
+                              fontSize: 18,
+                              color:
+                                sortConfig?.key === 'createdTime' && sortConfig.direction === 'desc'
+                                  ? 'primary.main'
+                                  : 'text.disabled',
+                            }}
+                          />
+                        </span>
+                      </Typography>
                     </TableSortLabel>
-                    </TableCell>
+                  </TableCell>
                     <TableCell>Privacy</TableCell>
                     <TableCell align="center">
-                    <TableSortLabel
+                    <TableCell>
+                      <TableSortLabel
                         active={sortConfig?.key === 'viewsCount'}
-                        direction={sortConfig?.key === 'viewsCount' ? sortConfig.direction : 'asc'}
+                        direction={sortConfig?.direction === 'desc' ? 'desc' : 'asc'}
                         onClick={() => requestSort('viewsCount')}
+                        IconComponent={() => null} // Disable default arrow
                       >
-                    Views
-                    </TableSortLabel>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                          }}
+                        >
+                          Views
+                          <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                            <ChevronUpIcon
+                              sx={{
+                                fontSize: 18,
+                                color:
+                                  sortConfig?.key === 'viewsCount' && sortConfig.direction === 'asc'
+                                    ? 'primary.main'
+                                    : 'text.disabled',
+                              }}
+                            />
+                            <ChevronDownIcon
+                              sx={{
+                                fontSize: 18,
+                                color:
+                                  sortConfig?.key === 'viewsCount' && sortConfig.direction === 'desc'
+                                    ? 'primary.main'
+                                    : 'text.disabled',
+                              }}
+                            />
+                          </span>
+                        </Typography>
+                      </TableSortLabel>
+                    </TableCell>
 
                     </TableCell>
                     <TableCell align="center">
-                    <TableSortLabel
-                      active={sortConfig?.key === 'likesCount'}
-                      direction={sortConfig?.key === 'likesCount' ? sortConfig.direction : 'asc'}
-                      onClick={() => requestSort('likesCount')}
-                    >
-                      Likes
-                    </TableSortLabel>
+                    <TableCell>
+                      <TableSortLabel
+                        active={sortConfig?.key === 'likesCount'}
+                        direction={sortConfig?.direction === 'desc' ? 'desc' : 'asc'}
+                        onClick={() => requestSort('likesCount')}
+                        IconComponent={() => null} // Disable default MUI icon
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                          }}
+                        >
+                          Likes
+                          <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                            <ChevronUpIcon
+                              sx={{
+                                fontSize: 18,
+                                color:
+                                  sortConfig?.key === 'likesCount' && sortConfig.direction === 'asc'
+                                    ? 'primary.main'
+                                    : 'text.disabled',
+                              }}
+                            />
+                            <ChevronDownIcon
+                              sx={{
+                                fontSize: 18,
+                                color:
+                                  sortConfig?.key === 'likesCount' && sortConfig.direction === 'desc'
+                                    ? 'primary.main'
+                                    : 'text.disabled',
+                              }}
+                            />
+                          </span>
+                        </Typography>
+                      </TableSortLabel>
+                    </TableCell>
                     </TableCell>
                     <TableCell align="center">
-                    <TableSortLabel
-                     active={sortConfig?.key === 'commentsCount'}
-                     direction={sortConfig?.key === 'commentsCount' ? sortConfig.direction : 'asc'}
-                     onClick={() => requestSort('commentsCount')}
-                    >
-                      Comments
-                    </TableSortLabel>
+                      <TableSortLabel
+                        active={sortConfig?.key === 'commentsCount'}
+                        direction={sortConfig?.direction === 'desc' ? 'desc' : 'asc'}
+                        onClick={() => requestSort('commentsCount')}
+                        IconComponent={() => null} // Hide default MUI sort icon
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 1,
+                          }}
+                        >
+                          Comments
+                          <span style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
+                            <ChevronUpIcon
+                              sx={{
+                                fontSize: 18,
+                                color:
+                                  sortConfig?.key === 'commentsCount' && sortConfig.direction === 'asc'
+                                    ? 'primary.main'
+                                    : 'text.disabled',
+                              }}
+                            />
+                            <ChevronDownIcon
+                              sx={{
+                                fontSize: 18,
+                                color:
+                                  sortConfig?.key === 'commentsCount' && sortConfig.direction === 'desc'
+                                    ? 'primary.main'
+                                    : 'text.disabled',
+                              }}
+                            />
+                          </span>
+                        </Typography>
+                      </TableSortLabel>
                     </TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>
@@ -1039,9 +1137,9 @@ const handleMoreOptionsClose = () => {
                     <TableCell>
                       <Select
                         size="small"
-                        value={post.privacy || 'everyone'}
-                        onChange={(event) => handlePrivacyUpdate(post._id, event.target.value)}
-                        IconComponent={() => <ExpandMoreIcon sx={{ fontSize: 18, color: '#555' }} />}
+                        value={post?.privacyOptions?.canView || 'everyone'}
+                        onChange={(event) => updatePrivacy(post._id, event.target.value)}
+                        IconComponent={(props) => <ExpandMoreIcon {...props} sx={{ fontSize: 18, color: '#555' }} />}
                         sx={{
                           border: '1px solid #0000000D',
                           borderRadius: '4px',
@@ -1056,8 +1154,8 @@ const handleMoreOptionsClose = () => {
                             padding: '6px 12px'
                           }
                         }}
-                        renderValue={(selected) => {
-                          const privacyMap: { [key: string]: { icon: JSX.Element; label: string } } = {
+                        renderValue={(selected: 'everyone' | 'friends' | 'only_me' | 'followers') => {
+                          const privacyMap = {
                             everyone: { icon: <PublicIcon sx={{ fontSize: 16 }} />, label: 'Everyone' },
                             friends: { icon: <GroupIcon sx={{ fontSize: 16 }} />, label: 'Friends' },
                             only_me: { icon: <LockIcon sx={{ fontSize: 16 }} />, label: 'Only Me' },
@@ -1065,28 +1163,25 @@ const handleMoreOptionsClose = () => {
                           };
                           return (
                             <>
-                              {privacyMap[selected].icon}
-                              {privacyMap[selected].label}
+                              {privacyMap[selected]?.icon}
+                              {privacyMap[selected]?.label}
                             </>
                           );
                         }}
                       >
-                        <MenuItem value="everyone" sx={{ gap: 2 }}>
-                          <PublicIcon sx={{ fontSize: 16, color: 'inherit' }} />
-                          Everyone
-                        </MenuItem>
-                        <MenuItem value="friends" sx={{ gap: 2 }}>
-                          <GroupIcon sx={{ fontSize: 16, color: 'inherit' }} />
-                          Friends
-                        </MenuItem>
-                        <MenuItem value="only_me" sx={{ gap: 2 }}>
-                          <LockIcon sx={{ fontSize: 16, color: 'inherit' }} />
-                          Only Me
-                        </MenuItem>
-                        <MenuItem value="followers" sx={{ gap: 2 }}>
-                          <PeopleAltIcon sx={{ fontSize: 16, color: 'inherit' }} />
-                          Followers
-                        </MenuItem>
+                        {[
+                          { value: 'everyone', label: 'Everyone', icon: <PublicIcon /> },
+                          { value: 'friends', label: 'Friends', icon: <GroupIcon /> },
+                          { value: 'only_me', label: 'Only Me', icon: <LockIcon /> },
+                          { value: 'followers', label: 'Followers', icon: <PeopleAltIcon /> }
+                        ].map((option) => (
+                          <MenuItem key={option.value} value={option.value} sx={{ gap: 2 }}>
+                            {option.label}
+                            {post?.privacyOptions?.canView === option.value && (
+                              <CheckIcon sx={{ fontSize: 16, color: '#000000', marginLeft: 'auto' }} />
+                            )}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </TableCell>
 
@@ -1161,7 +1256,7 @@ const handleMoreOptionsClose = () => {
                                 Pin to top
                               </Typography>
                             </MenuItem>
-                            <MenuItem onClick={handleMoreOptionsClose}>
+                            <MenuItem onClick={()=> handleMoreOptionsClose(post)}>
                               <DeleteIcon sx={{ fontSize: 18, mr: 1, color: '#f44336' }} />
                               <Typography variant="body2" sx={{ color: '#f44336' }}>
                                 Delete
@@ -1200,6 +1295,16 @@ const handleMoreOptionsClose = () => {
               activeClassName={"active"}
             />
           </div>
+
+          <PopupForDeleteVideo
+              openBlock={Boolean(mediaToDelete)}
+              onBlockClose={() => setMediaToDelete(null)}
+              info={mediaToDelete}
+              darkTheme={false}
+              // @ts-ignore
+              userId={{ id: userId, name: '' }}
+            />
+
                   
         </Card>
 
