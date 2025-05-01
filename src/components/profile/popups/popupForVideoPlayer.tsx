@@ -75,6 +75,9 @@ export default function PopupForVideoPlayer({
         setAnchorEl(event.currentTarget);
     };
 
+    // console.log('popup for video player component...')
+    // console.log(info?.user?.avatar);
+
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 

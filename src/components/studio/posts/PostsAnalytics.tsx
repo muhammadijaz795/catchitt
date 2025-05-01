@@ -43,6 +43,7 @@ import {
   import { InputAdornment, TextField } from "@mui/material";
   import SearchIcon from "@mui/icons-material/Search";
   import PopupForDeleteVideo from '../../profile/popups/popupForDeleteVideo'; 
+  import PopupForVideoPlayer from "../../profile/popups/popupForVideoPlayer";
   import CheckIcon from '@mui/icons-material/Check';
   import ChevronUpIcon from '@mui/icons-material/ExpandLess';
   import ChevronDownIcon from '@mui/icons-material/ExpandMore';
@@ -91,15 +92,22 @@ const handleMoreOptionsClose = (post:any = null) => {
     const [selectedCommentCounts, setSelectedCommentCounts] = useState<string[]>([]);
     const [selectedLikeCounts, setSelectedLikeCounts] = useState<string[]>([]);
     const [selectedPrivacyCounts, setSelectedPrivacyCounts] = useState<string[]>([]);
+    const [selectedVideo, setSelectedVideo] = useState<Post | null>(null);
     interface Post {
+      user_id?: { username: string }; 
+      user?: { username: string; _id?: string; avatar?: string };
       _id: string;
+      mediaId?: string;
       thumbnailUrl?: string;
+      originalUrl?: string;
       category?: { name: string };
       createdTime?: string;
       watched_users?: any[];
       likes?: any[];
       commentsCount?: number;
       privacyOptions?: { canView: string };
+      isPinned?: boolean;
+      description?: string;
     }
     
     const [posts, setPosts] = useState<{ items: Post[]; page: number; pageSize: number; totalItems: number; isLoading: boolean }>({
@@ -115,6 +123,7 @@ const handleMoreOptionsClose = (post:any = null) => {
     const [mediaToDelete, setMediaToDelete] = useState<any>(null);
     const [sortColumn, setSortColumn] = useState<string | null>(null);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [videoModal, setVideoModal] = useState<boolean>(false);
 
     // Options
     const followerOptions = ['<5K', '5K-10K', '10K-100K', '>100Klikes'];
@@ -265,7 +274,7 @@ const handleMoreOptionsClose = (post:any = null) => {
             backgroundColor: '#000',
             cursor: 'pointer'
           }}
-          onClick={togglePlayPause}
+          // onClick={togglePlayPause}
         >
           {/* Always render video element but control visibility */}
           <video
@@ -526,6 +535,41 @@ const handleMoreOptionsClose = (post:any = null) => {
         }
         // Re-fetch data after sort
         fetchPosts();
+      };
+
+      const pinVideo = async (postId: string, currentPinStatus: boolean) => {
+        try {
+          const response = await fetch(`${API_KEY}/media-content/pin-video/${postId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              isPinned: !currentPinStatus // Toggle the current status
+            }),
+          });
+      
+          if (!response.ok) {
+            throw new Error('Failed to update pin status');
+          }
+      
+          // Update local state immediately for better UX
+          setPosts(prev => ({
+            ...prev,
+            items: prev.items.map(post => 
+              post._id === postId 
+                ? { ...post, isPinned: !currentPinStatus } 
+                : post
+            )
+          }));
+      
+          // Optional: Refresh the list from server
+          fetchPosts();
+        } catch (error) {
+          console.error('Error updating pin status:', error);
+          // Optionally show error to user
+        }
       };
       
     
@@ -1095,7 +1139,33 @@ const handleMoreOptionsClose = (post:any = null) => {
                             /> */}
                              <VideoThumbnail 
                                 src={post.thumbnailUrl} 
-                                originalUrl={post.originalUrl} 
+                                originalUrl={post.originalUrl}
+                                />
+                              <Box
+                                onClick={() => {
+                                  // console.log('new post...');
+                                  // console.log(post);
+                                  let newPost: Post = {
+                                    _id: post._id,
+                                    mediaId: post._id,
+                                    thumbnailUrl: post.thumbnailUrl,
+                                    originalUrl: post.originalUrl,
+                                    category: post.category,
+                                    createdTime: post.createdTime,
+                                    watched_users: post.watched_users,
+                                    likes: post.likes,
+                                    commentsCount: post.commentsCount,
+                                    privacyOptions: post.privacyOptions,
+                                    description: post.description,
+                                    user: { username: post.user_id?.username || '', _id: post.user_id?._id || '', avatar: post.user_id?.avatar || '' },
+                                    
+                                  };
+                                  console.log('new post...');
+                                  console.log(newPost);
+                                  setSelectedVideo(newPost);
+                                  setVideoModal(true);
+                                }}
+                                sx={{ cursor: 'pointer', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
                               />
                             <Box
                               sx={{
@@ -1121,7 +1191,8 @@ const handleMoreOptionsClose = (post:any = null) => {
                             fontWeight={600}
                             noWrap
                             width={200}>
-                            {post?.category?.name}
+                              {post?.description || post?.category?.name}
+                            {/* {post?._id} */}
                           </Typography>
                           <Typography
                             variant="caption"
@@ -1184,7 +1255,7 @@ const handleMoreOptionsClose = (post:any = null) => {
                         ))}
                       </Select>
                     </TableCell>
-
+                    
   
                     {/* Views */}
                     <TableCell align="center">{post?.watched_users && post?.watched_users?.length}</TableCell>
@@ -1250,10 +1321,13 @@ const handleMoreOptionsClose = (post:any = null) => {
                               horizontal: 'right',
                             }}
                           >
-                            <MenuItem onClick={handleMoreOptionsClose}>
+                            <MenuItem onClick={() => {
+                              handleMoreOptionsClose();
+                              pinVideo(post._id, post.isPinned);
+                            }}>
                               <PushPinIcon sx={{ fontSize: 18, mr: 1, color: '#000' }} />
                               <Typography variant="body2" color="text.primary">
-                                Pin to top
+                                {post.isPinned ? 'Unpin from top' : 'Pin to top'}
                               </Typography>
                             </MenuItem>
                             <MenuItem onClick={()=> handleMoreOptionsClose(post)}>
@@ -1304,6 +1378,17 @@ const handleMoreOptionsClose = (post:any = null) => {
               // @ts-ignore
               userId={{ id: userId, name: '' }}
             />
+
+            <PopupForVideoPlayer
+                onBlockPopup={true}
+                onReportPopup={true}
+                videoModal={videoModal}
+                onclose={() => setVideoModal(false)}
+                info={selectedVideo}
+                gifts={true}
+            />
+
+                
 
                   
         </Card>
