@@ -1168,6 +1168,7 @@ function App() {
                             <Route path="/:username/video/:videoId" element={<VideoPage />} />
                             <Route path="/:username/post/:postId" element={<PostPage />} />
                             <Route path="/upload" element={<UploadPage />} />
+                            <Route path="/upload/:id" element={<UploadPage />} />
                             <Route path="/create-story" element={<CreateStoryPage />} />
                             <Route path="/golive" element={<GoLive />} />
                             <Route path="/myreports" element={<MyReports />} />

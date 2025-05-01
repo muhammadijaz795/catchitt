@@ -34,7 +34,8 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
 
       );
     return (
-        <div className="flex-[0.6] p-[2.5rem] flex flex-col gap-[1rem]">
+        // <div className="flex-[0.6] p-[2.5rem] flex flex-col gap-[1rem]">
+           <div className="flex-[0.6] p-[6.5rem] flex flex-col gap-[1rem]">
             {/* <p className="text-start text-[1.25rem] font-semibold leading-[1.5rem] text-custom-dark-222">
                 Upload video
             </p>
@@ -50,7 +51,7 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
           borderRadius: "8px",
           overflow: "hidden",
           width: "fit-content",
-          height: '2.21rem',
+           height: '2.21rem',
           mx: "auto", // center horizontally
         }}
       >

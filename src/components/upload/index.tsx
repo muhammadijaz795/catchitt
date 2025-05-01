@@ -6,9 +6,10 @@ import UploadForm from './components/uploadForm';
 import useUpload from './hooks';
 import style from './index.module.scss';
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 import { academyOutlineDark, academyOutlineWhite, analyticsOutline, analyticsOutlineWhite, bulbOutlineDark, bulbOutlineWhite, commentOutlineDark, commentOutlineWhite, commentWhite, feedbackQuestionDark, feedbackQuestionWhite, hamburger, hamburgerDark, homeDark, homeIcon } from '../../icons';
 import { Avatar, Box, Typography, Paper } from '@mui/material';
+
 
 import StudioLeftSidebar from '../studio/StudioLeftSidebar';
 
@@ -29,11 +30,21 @@ function UploadPage() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    // console.log('my state', state);
 
     const [darkTheme, setdarkTheme] = useState('');
     const location = useLocation();
-    const { isEditMode, info } = location.state || { isEditMode: false, info: {} };
+    let { isEditMode, info } = location.state || { isEditMode: false, info: {} };
     const uploadInterval = useRef<NodeJS.Timeout | null>(null);
+    const [postData, setPostData] = useState<any>(null);
+    const { id: postId } = useParams(); 
+    const token = localStorage.getItem('token');
+    const API_KEY = process.env.VITE_API_URL;
+    if(postId) {
+        isEditMode = true;
+        info = state; 
+    }
+
     const [uploadState, setUploadState] = useState({
         fileName: "",
         uploaded: 0, // in KB
@@ -44,6 +55,7 @@ function UploadPage() {
         isUploading: false,
     });
 
+
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
         setdarkTheme('');
@@ -52,6 +64,7 @@ function UploadPage() {
         // } else {
         // }
     });
+      
 
     // useEffect(() => {
     //     return () => {
@@ -206,11 +219,11 @@ function UploadPage() {
         <div className={`flex flex-col ${darkTheme}`}>
             <Navbar />
             <StudioLeftSidebar />
-            {!selectedFile && !isEditMode ? (
+            {(!selectedFile && !isEditMode && !postId) ? (
                 <UploadFile  changeFileHandler={handleFileSelect} />
             ) : (
                 <UploadForm
-                    selectedVideoSrc={selectedVideoSrc}
+                    selectedVideoSrc={isEditMode ? info?.originalUrl : selectedVideoSrc}
                     selectFilesHandler={selectFilesHandler}
                     thumbnails={thumbnails}
                     updateState={updateState}
@@ -218,9 +231,10 @@ function UploadPage() {
                     SubmitHandler={SubmitHandler}
                     updateMediaHandler={updateMediaHandler}
                     isPosting={isPosting}
-                    videoInfo={info}
+                    videoInfo={isEditMode ? info : {}}
                     uploadState={uploadState}
                     onCancelUpload={handleCancelUpload}
+                    isEditMode={isEditMode}
                 />
             )}
             

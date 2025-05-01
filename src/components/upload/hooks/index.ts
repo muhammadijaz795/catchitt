@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { get, patch,post } from '../../../axios/axiosClient';
 import { setSelectedFile, updateUploadingStatus } from '../../../redux/reducers/upload';
 import { STATUS_CODE, UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
@@ -40,8 +40,14 @@ function useUpload() {
     const location = useLocation();
     const mainFileRef = useRef<File | null>(null);
 
-    const { isEditMode, info } = location.state || { isEditMode: false, info: {} };
-    
+    let { isEditMode, info } = location.state || { isEditMode: false, info: {} };
+    const { id: postId } = useParams(); 
+    if(postId){
+        isEditMode = true;
+    }
+
+    console.log(isEditMode, 'isEditMode', info, 'info', postId, 'postId');
+
     // console.log(isEditMode,'isEditMode', info, 'info');
     const [state, setState] = useState<StateInterface>({
         category: {},
@@ -52,7 +58,9 @@ function useUpload() {
         isOnlyMe: info?.privacyOptions?.isOnlyMe,
         allowDownload: info?.privacyOptions?.allowDownload,
         allowAddStory: info?.privacyOptions?.allowAddStory,
-        canView: info?.canView
+        canView: info?.canView,
+        thumbnailUrl: info?.thumbnailUrl || '',
+        locationPlace: info?.locationPlace || '',
     });
     // const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -83,20 +91,129 @@ function useUpload() {
         }
     };
 
-    const videoCoverHandler = async () => {
-        if (selectedFile) {
-            setThumbnails([]);
-            const fileUrl = URL.createObjectURL(selectedFile);
-            const frames = await VideoToFrames.getFrames(
-                fileUrl,
-                10,
-                VideoToFramesMethod.totalFrames
-            );
-            console.log('videoCoverHandler', frames);
-            setThumbnails(frames);
-            updateState('thumbnailUrl', frames?.[0]);
+    useEffect(() => {
+        if (isEditMode && postId) {
+            fetchPost();
+        }
+    }, [isEditMode, postId]);
+
+    const fetchPost = async () => {
+        try {
+            const response = await fetch(`${API_KEY}/media-content/videos/${postId}`, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token}` },
+            });
+            console.log('fetch post response', response);
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('fetch post response data', responseData);
+                
+                // Update the state with fetched data
+                setState(prev => ({
+                    ...prev,
+                    description: responseData.data.description || '',
+                    thumbnailUrl: responseData.data.thumbnailUrl || '',
+                    isOnlyMe: responseData.data.privacyOptions?.isOnlyMe || false,
+                    allowDownload: responseData.data.privacyOptions?.allowDownload || true,
+                    canView: responseData.data.privacyOptions?.canView || 'everyone',
+                    allowDuet: responseData.data.allowDuet || false,
+                    allowStitch: responseData.data.allowStitch || false,
+                    locationPlace: responseData.data.locationPlace || '',
+                    videoId: responseData.data.mediaId || '',
+                    originalUrl: responseData.data.originalUrl || '',
+                    category: responseData.data.category || {},
+                }));
+
+                // Set the selected file (though we won't actually upload it again)
+                if (responseData.data.originalUrl) {
+                    console.log(responseData.data.originalUrl, 'originalUrl of the file');
+                    // This simulates having a selected file for the preview
+                    dispatch(setSelectedFile({ 
+                        file: { 
+                            name: 'existing_video.mp4',
+                            preview: responseData.data.originalUrl 
+                        } 
+                    }));
+                   // Use backend-provided thumbnails if available
+                    if (responseData.data.thumbnails?.length) {
+                        setThumbnails(responseData.data.thumbnails);
+                        updateState('thumbnailUrl', responseData.data.thumbnails[0]);
+                    } else {
+                        videoCoverHandler(); // Fallback to client-side generation
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
     };
+
+    // const videoCoverHandler = async () => {
+    //     console.log('selected file', selectedFile[0]);
+    //     if (selectedFile) {
+    //         setThumbnails([]);
+    //         const fileUrl = URL.createObjectURL(selectedFile);
+    //         const frames = await VideoToFrames.getFrames(
+    //             fileUrl,
+    //             10,
+    //             VideoToFramesMethod.totalFrames
+    //         );
+    //         console.log('videoCoverHandler', frames);
+    //         setThumbnails(frames);
+    //         updateState('thumbnailUrl', frames?.[0]);
+    //     }
+    // };
+
+    const videoCoverHandler = async () => {
+        if (!selectedFile) return;
+    
+        console.log('return from here...');
+        console.log(selectedFile);
+        console.log('return from here end...');
+    
+        // Handle edit mode with existing thumbnail
+        if (isEditMode && info?.thumbnailUrl) {
+            setThumbnails([info.thumbnailUrl]);
+            updateState('thumbnailUrl', info.thumbnailUrl);
+            return;
+        }
+    
+        // If the preview is a URL (e.g., from API), download it to blob first
+        if (typeof selectedFile.preview === 'string' && selectedFile.preview.endsWith('.mp4')) {
+            try {
+                const response = await fetch(selectedFile.preview);
+                const blob = await response.blob();
+    
+                const blobUrl = URL.createObjectURL(blob);
+    
+                const frames = await VideoToFrames.getFrames(
+                    blobUrl,
+                    10,
+                    VideoToFramesMethod.totalFrames
+                );
+    
+                setThumbnails(frames);
+                updateState('thumbnailUrl', frames?.[0]);
+                URL.revokeObjectURL(blobUrl);
+            } catch (err) {
+                console.error('Error generating frames from remote video URL:', err);
+            }
+    
+            return;
+        }
+    
+        // Handle standard File object upload
+        if (selectedFile instanceof File) {
+            const fileUrl = URL.createObjectURL(selectedFile);
+            const frames = await VideoToFrames.getFrames(fileUrl, 10, VideoToFramesMethod.totalFrames);
+            setThumbnails(frames);
+            updateState('thumbnailUrl', frames?.[0]);
+            URL.revokeObjectURL(fileUrl);
+        }
+    };
+    
+    
+      
 
     const updateState = (inputName: any, inputValue: any) => {
         setState((prevState: any) => ({ ...prevState, [inputName]: inputValue }));
@@ -124,6 +241,11 @@ function useUpload() {
 
     const SubmitHandler = async () => {
         if(currentEditVideo && currentEditVideo?._id) {
+            SubmitHandlerWhenEditVideoCase();
+            return false;
+        }
+
+        if(isEditMode){
             SubmitHandlerWhenEditVideoCase();
             return false;
         }

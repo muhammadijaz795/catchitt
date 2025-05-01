@@ -26,7 +26,9 @@ import { setSelectedFile } from '../../../redux/reducers/upload';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
-import SaveVideoPopup from './scheduleVideoPopup'
+import SaveVideoPopup from './scheduleVideoPopup';
+import { useParams } from 'react-router-dom';
+
 
 import CheckIcon from '@mui/icons-material/Check';
 import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler, searchUsersAndHashes } from '../../../utils/helpers';
@@ -48,6 +50,11 @@ interface Location
 }
 
 function FormRightSide(props: any) {
+    let isEditMode = false;
+    const { id: postId } = useParams(); 
+    if(postId) {
+        isEditMode = true;
+    }
 
     const CustomAutocomplete = styled(Autocomplete)(({ theme }) => ({
         '& .MuiInputBase-root': {
@@ -1064,6 +1071,7 @@ function FormRightSide(props: any) {
                                     name="when-to-post"
                                 >
                                     <FormControlLabel
+                                     disabled={isEditMode}
                                         name="when-to-post1"
                                         value="now"
                                         onClick={() => setShowSchedule(false)}
@@ -1071,6 +1079,7 @@ function FormRightSide(props: any) {
                                         label="Now"
                                     />
                                     <FormControlLabel
+                                     disabled={isEditMode}
                                         name="when-to-post1"
                                         value="schedule"
                                         // onClick={handleAllowSchedule}       
@@ -1184,6 +1193,7 @@ function FormRightSide(props: any) {
                             <div className="flex gap-10">
                                 <div className="flex gap-2 items-center">
                                     <BasicCheckBox
+                                        disabled={isEditMode}
                                         onChange={(e: any) =>
                                             updateState('replyOnComment', e?.target?.checked)
                                         }
@@ -1195,6 +1205,7 @@ function FormRightSide(props: any) {
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <BasicCheckBox
+                                        disabled={isEditMode}
                                         onChange={(e: any) =>
                                             updateState('allowDuet', e?.target?.checked)
                                         }
@@ -1206,6 +1217,7 @@ function FormRightSide(props: any) {
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <BasicCheckBox
+                                        disabled={isEditMode}
                                         onChange={(e: any) =>
                                             updateState('allowStitch', e?.target?.checked)
                                         }
@@ -1217,7 +1229,7 @@ function FormRightSide(props: any) {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-start items-center pt-3 gap-[1.5rem]">
+                        {!isEditMode && ( <><div className="flex justify-start items-center pt-3 gap-[1.5rem]">
                             <p className="text-[13px] font-medium text-custom-dark-222 leading-[1.7rem]">
                                 Save video to device
                             </p>
@@ -1251,11 +1263,12 @@ function FormRightSide(props: any) {
                                 Allow other people to download your videos and share to other platforms.
                                 If this setting is off, a link to your video can still be shared.
                             </p>
-                        </div>
+                        </div></>
+                        )}
                     </div>
 
 
-                    <p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">Checks</p>
+                    {!isEditMode && ( <><p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">Checks</p>
 
                     <div className='bg-white p-3 rounded-md shadow-sm'>                        
                         <div className="flex flex-col items-start justify-between">
@@ -1290,6 +1303,8 @@ function FormRightSide(props: any) {
                             )}
                         </div>
                     </div>
+                    </>
+                    )}
 
 
                     {/* <div className="flex justify-start items-center gap-[1rem]">

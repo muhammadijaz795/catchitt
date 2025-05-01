@@ -19,7 +19,7 @@ function UploadForm(props: any) {
     } = props;
     const [darkTheme, setdarkTheme] = useState('');
     const [lightTheme, setlightTheme] = useState('bg-custom-light');
-
+    
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
         setlightTheme('bg-custom-light');
