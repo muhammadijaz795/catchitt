@@ -23,6 +23,7 @@ import PopupForBlock from '../profile/popups/popupForBlock';
 import Gifts from '../discover/popups/gifts';
 import { useSelector } from 'react-redux';
 import { useUpdateEffect } from 'react-use';
+import { useSocket } from '../../hooks/useSocket';
 
 interface User {
     _id: string;
@@ -182,6 +183,7 @@ export const SearchPage = () => {
     const [usersFilter, setUsersFilter] = useState({ limit: 0, category: 'all' });
     const [soundsFilter, setSoundsFilter] = useState({ filter: 'title', sort: 'relevance' });
     const searches = useRef([]);
+    const socket = useSocket();
 
 
      useEffect(() => {
@@ -325,6 +327,19 @@ export const SearchPage = () => {
         }
     };
 
+    function logStats(postId: string)
+    {
+        let payload =
+        {
+            "media_id": postId,
+            "user_id": localStorage.getItem('userId'),
+            "clientUTCTime": new Date().toISOString(),
+            "trafficSource": "search",
+        };
+
+        socket.emit('watch-time', payload);
+    };
+
     useEffect(() => {
         // handleFetchSearch();
         if (loggedUserId) handleFetchFollowedUsers(loggedUserId);
@@ -366,6 +381,7 @@ export const SearchPage = () => {
                                     onClick={() => {
                                         setVideoModalInfo(video);
                                         setVideoModal(true);
+                                        logStats(video.mediaId);
                                     }}
                                 />
                                 <p className={styles.videoDescription}>{video.description}</p>
