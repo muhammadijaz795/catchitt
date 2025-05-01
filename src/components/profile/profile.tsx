@@ -135,8 +135,21 @@ export const Profile = (props: any) => {
         setFollowModal(null);
     };
 
+    function logStats(post: any)
+    {
+        let payload =
+        {
+            "media_id": post?.mediaId,
+            "user_id": localStorage.getItem('userId'),
+            "clientUTCTime": new Date().toISOString(),
+            "trafficSource": "profile"
+        };
+
+        socket.emit('watch-time', payload);
+    };
+
     const onVideoModal = (video: any) => {
-        socket.emit('tempEvent', 12345);
+        logStats(video);
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
         markVideoDisplayed(video?.mediaId);
