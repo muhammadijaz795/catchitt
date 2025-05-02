@@ -52,6 +52,13 @@ const PostAnalytics = () => {
         }
     );
 
+    const [postAnalyticsDetails, setPostAnalyticsDetails] = useState<any>(
+        {
+            details: [],
+            isLoading: false,
+        }
+    );
+
     function loadPosts()
     {
         let endpoint = `${process.env.VITE_API_URL}/profile/${localStorage.getItem('userId')}/videos?page=${posts.page}`;
@@ -82,6 +89,27 @@ const PostAnalytics = () => {
                 setPosts(prev => ({ ...prev, page: prev.page + 1, isLoading: false }));
             }
         )
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
+    function loadPostAnalyticsDetails()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/analytics/v2/media-analytics?mediaId=${postId}`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        setPostAnalyticsDetails(prev => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setPostAnalyticsDetails(prev => ({ ...prev, details: response.data.data, isLoading: false })))
         .catch((error) => console.error('Fetch error:', error));
     };
 
@@ -130,6 +158,7 @@ const PostAnalytics = () => {
         getPostAnalytics();
         fetchPost();
         loadPosts();
+        loadPostAnalyticsDetails();
     }, [postId]);
     const [logo, setLogo] = useState(logoAuth);
 
@@ -200,7 +229,7 @@ const PostAnalytics = () => {
                 {(()=>{
                 switch(currentTab){
                     case POSTANALYTICSTABS.OVERVIEW:
-                        return <OverviewTab postAnalytics={postAnalytics} post={postData} isDarkTheme={darkTheme} />    
+                        return <OverviewTab postAnalyticsDetails={postAnalyticsDetails} postAnalytics={postAnalytics} post={postData} isDarkTheme={darkTheme} />    
                     case POSTANALYTICSTABS.VIEWERS:
                         return <ViewersTab isDarkTheme={darkTheme} />
                     // switch‑case inside PostAnalytics
@@ -208,7 +237,7 @@ const PostAnalytics = () => {
                         return <EngagementTab isDarkTheme={darkTheme} />;
   
                     default:
-                        return <OverviewTab postAnalytics={postAnalytics} />
+                        return <OverviewTab postAnalyticsDetails={postAnalyticsDetails} postAnalytics={postAnalytics} />
                 }
             })()}
             </div>
