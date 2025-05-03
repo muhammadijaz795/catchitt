@@ -192,17 +192,17 @@ const ViewersTab = ({postAnalyticsDetails, isDarkTheme}: any) => {
           <Paper variant="outlined">
             <CardHeader title="Age" />
             <Box sx={{ p: 2 }}>
-              {/* <Typography color="text.secondary" fontSize={14} mb={2}>
+              <Typography color="text.secondary" fontSize={14} mb={2}>
                 Data will show when video views reach 100
-              </Typography> */}
+              </Typography>
 
-              {postAnalyticsDetails?.details?.genderPercentages && Object.entries(postAnalyticsDetails?.details?.genderPercentages).map(([gender, percentage]) => (
-                <Box key={gender} mb={2}>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Box key={i} mb={2}>
                   <Box display="flex" justifyContent="space-between">
-                    <Typography>{gender.charAt(0).toUpperCase() + gender.slice(1)}</Typography>
-                    <Typography>{percentage}</Typography>
+                    <Typography>{dash}</Typography>
+                    <Typography>‑%</Typography>
                   </Box>
-                  <PlaceholderLinear value={parseInt(percentage)} />
+                  <PlaceholderLinear value={0} />
                 </Box>
               ))}
             </Box>
