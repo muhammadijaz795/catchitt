@@ -248,17 +248,18 @@ const ViewersTab = ({postAnalyticsDetails, isDarkTheme}: any) => {
           <Paper variant="outlined">
             <CardHeader title="Locations" />
             <Box sx={{ p: 2 }}>
+            {(!postAnalyticsDetails?.details?.countryPercentages || Object.values(postAnalyticsDetails.details.countryPercentages).every(p => p === "0%")) && (
               <Typography color="text.secondary" fontSize={14} mb={2}>
-                Data will show when video views reach 100
+                You’ll be able to see this information once there’s enough data for analysis.
               </Typography>
-
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Box key={i} mb={2}>
+              )}
+              {Object.entries(postAnalyticsDetails?.details?.countryPercentages).map(([country, percentage]) => (
+                <Box key={country} mb={2}>
                   <Box display="flex" justifyContent="space-between">
-                    <Typography>{dash}</Typography>
-                    <Typography>‑%</Typography>
+                    <Typography>{country.charAt(0).toUpperCase() + country.slice(1).replace(/_/g, ' ')}</Typography>
+                    <Typography>{percentage}</Typography>
                   </Box>
-                  <PlaceholderLinear value={0} />
+                  <PlaceholderLinear value={parseFloat(percentage)} />
                 </Box>
               ))}
             </Box>
