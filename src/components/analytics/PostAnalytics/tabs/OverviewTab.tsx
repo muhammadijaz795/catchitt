@@ -170,13 +170,14 @@ function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }:
                     <div className='py-2 px-3 border-b mb-4 '>
                         <span className={`${isDarkTheme?'text-gray-300':'text-black'} text-[15px] font-semibold mb-2`}>Traffic source</span>
                     </div>
-                    <p className="text-gray-400 px-3 text-sm">
+                    {/* <p className="text-gray-400 px-3 text-sm">
                         Data will show when video views reach 100
-                    </p>
+                    </p> */}
                     <ul className="mt-4 space-y-2 px-4 pb-4">
+                        {postAnalyticsDetails?.details?.trafficSourcePercentages && Object.entries(postAnalyticsDetails?.details?.trafficSourcePercentages).map(([key, value]) => (
                         <li className=" text-black text-sm">
                             <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
-                                <span>-</span>
+                                <span>{key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>
                                 <span>{value}%</span>
                             </Box>
                             <Box sx={{ width: '100%', position: 'relative', py: 1 }}>
@@ -193,22 +194,7 @@ function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }:
                                 variant="determinate" value={value} />
                             </Box>
                         </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
+                        ))}
                     </ul>
                 </div>
             </div>
