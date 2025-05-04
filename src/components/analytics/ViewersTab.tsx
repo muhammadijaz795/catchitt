@@ -591,7 +591,7 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
                     <CardHeader title="Age" />
                     <Box sx={{ p: 2 }}>
                     <Typography color="text.secondary" fontSize={14} mb={2}>
-                        Data will show when video views reach 100
+                        You’ll be able to see this information once there’s enough data for analysis.
                     </Typography>
 
                     {Array.from({ length: 6 }).map((_, i) => (
