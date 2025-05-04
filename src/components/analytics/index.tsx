@@ -408,7 +408,7 @@ const Analytics = () => {
                                     case ANALYTICSTABS.CONTENT:
                                         return <ContentTab isDarkTheme={darkTheme} />
                                     case ANALYTICSTABS.VIEWERS:
-                                        return <ViewersTab />
+                                        return <ViewersTab analyticsDetails={analyticsDetails} />
                                     case ANALYTICSTABS.FOLLOWERS:
                                         return <FollowersTab />
                                     default:

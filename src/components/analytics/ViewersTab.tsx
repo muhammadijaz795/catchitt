@@ -88,7 +88,7 @@ const creators = [
     },
   ];
 
-function ViewersTab({isDarkThemes}: any) {
+function ViewersTab({analyticsDetails, isDarkThemes}: any) {
   const value = 70;
   const [tabIndex, setTabIndex] = useState(0);
   const [tab, setTab] = useState(0);
@@ -536,25 +536,29 @@ function ViewersTab({isDarkThemes}: any) {
           {/* Gender */}
           <Paper variant="outlined" sx={{ mb: 3 }}>
             <CardHeader title="Gender" />
-            <Typography color="text.secondary" fontSize={14} m={2}>
+            {/* <Typography color="text.secondary" fontSize={14} m={2}>
                 Data will show when video views reach 100
-              </Typography>
+              </Typography> */}
             <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 3, mt: 2, p: 3 }}>
               <ArcGauge percent={0} />
               {/* legend */}
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 1 }}>
-                {[0, 1, 2].map((i) => (
+                {[
+                  { label: "Male", value: analyticsDetails?.details?.genderPercentages?.male, color: 'primary.dark' },
+                  { label: "Female", value: analyticsDetails?.details?.genderPercentages?.female, color: 'primary.main' },
+                  { label: "Other", value: analyticsDetails?.details?.genderPercentages?.other, color: 'primary.light' }
+                ].map((item, i) => (
                   <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1,  }}>
                     <Box sx={{
                         width: 8,
                         height: 8,
                         borderRadius: 1,
-                        bgcolor:
-                          i === 0 ? 'primary.dark' : i === 1 ? 'primary.main' : 'primary.light',}}
+                        bgcolor: item.color,
+                          }}
                     />
-                    <Typography fontSize={14}>{dash}</Typography>
+                    <Typography fontSize={14}>{item.label}</Typography>
                     <Typography sx={{ ml: 8 }} fontSize={14}>
-                      ‑%
+                      {item.value}%
                     </Typography>
                   </Box>
                 ))}
