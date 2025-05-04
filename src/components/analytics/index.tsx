@@ -404,7 +404,7 @@ const Analytics = () => {
                         {(() => {
                                 switch (currentTab) {
                                     case ANALYTICSTABS.OVERVIEW:
-                                        return <OverviewTab analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
+                                        return <OverviewTab analyticsDetails={analyticsDetails} analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
                                     case ANALYTICSTABS.CONTENT:
                                         return <ContentTab isDarkTheme={darkTheme} />
                                     case ANALYTICSTABS.VIEWERS:
@@ -412,7 +412,7 @@ const Analytics = () => {
                                     case ANALYTICSTABS.FOLLOWERS:
                                         return <FollowersTab />
                                     default:
-                                        return <OverviewTab analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
+                                        return <OverviewTab analyticsDetails={analyticsDetails} analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
                                 }
                             })()}
                    </div>
