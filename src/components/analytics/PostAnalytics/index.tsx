@@ -67,7 +67,7 @@ const PostAnalytics = () => {
                 
         if(!posts.canLoadMore) { return; }
 
-        setPosts(prev => ({ ...prev, isLoading: true, canLoadMore: false }));
+        setPosts((prev: any) => ({ ...prev, isLoading: true, canLoadMore: false }));
 
         fetch(endpoint, requestOptions)
         .then((response) => response.json())
@@ -76,10 +76,10 @@ const PostAnalytics = () => {
             {
                 if(response.data.data.length)
                 {
-                    setPosts(prev => ({ ...prev, canLoadMore: true, items: [...prev.items, ...response.data.data] }));
+                    setPosts((prev: any) => ({ ...prev, canLoadMore: true, items: [...prev.items, ...response.data.data] }));
                 }
 
-                setPosts(prev => ({ ...prev, page: prev.page + 1, isLoading: false }));
+                setPosts((prev: any) => ({ ...prev, page: prev.page + 1, isLoading: false }));
             }
         )
         .catch((error) => console.error('Fetch error:', error));
@@ -175,7 +175,7 @@ const PostAnalytics = () => {
                         Back
                     </Typography>
                     <List dense>
-                    {posts.items.map((item, idx) => (
+                    {posts.items.map((item: any, idx: number) => (
                         <ListItem onClick={()=>navigate(`/analytics/post/${item.mediaId}`)} key={idx} sx={{ display: 'flex', gap: 1.5, borderRadius: 2, mb: 1, width: '90%', mx: 'auto', cursor: 'pointer','&:hover': {
                         backgroundColor: '#0000000D',
                         }, py: 1 }}>

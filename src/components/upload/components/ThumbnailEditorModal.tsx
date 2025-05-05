@@ -7,6 +7,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { Cropper } from 'react-advanced-cropper';
 import 'react-advanced-cropper/dist/style.css';
+import { CropperRef } from 'react-advanced-cropper';
 
 interface ThumbnailEditorModalProps {
   open: boolean;
@@ -35,7 +36,8 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   const [linePosition, setLinePosition] = useState(50);
   const [manualSelect, setManualSelect] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const cropperRef = useRef(null);
+  
+  const cropperRef = useRef<CropperRef | null>(null);
   const thumbnailsRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,7 +80,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
       try {
         const canvas = cropperRef.current.getCanvas();
         if (canvas) {
-          canvas.toBlob((blob) => {
+          canvas.toBlob((blob: any) => {
             if (blob) {
               const file = new File([blob], 'thumbnail.jpg', { type: 'image/jpeg' });
               onCustomThumbnail(file);

@@ -105,12 +105,14 @@ import { useEffect, useState } from 'react';
                             <img className='w-[90px] h-[36px]' src={logo} alt="" />
                         </div> */}
                       <div className='pb-3 px-3'>
+                      <Link to="/upload" reloadDocument={false} style={{ textDecoration: 'none' }} className='cursor-pointer flex gap-2'>
                       <button className={`${darkTheme === '' ? 'bg-[#FE2C55] hover:bg-[#FE2C69]' : 'bg-[#FE2C55]'} w-full ring-0 hover:border-transparent rounded-md my-3 py-1.5 text-white opacity-80 d-flex`} > 
                             <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.75473 3.46875C9.21443 3.46875 9.58752 3.84184 9.58752 4.30154V8.13238H13.4184C13.6392 8.13238 13.8511 8.22012 14.0072 8.3763C14.1634 8.53248 14.2512 8.74431 14.2512 8.96518C14.2512 9.18605 14.1634 9.39787 14.0072 9.55405C13.8511 9.71023 13.6392 9.79797 13.4184 9.79797H9.58752V13.6288C9.58752 13.8497 9.49978 14.0615 9.3436 14.2177C9.18742 14.3739 8.9756 14.4616 8.75473 14.4616C8.53386 14.4616 8.32203 14.3739 8.16585 14.2177C8.00967 14.0615 7.92193 13.8497 7.92193 13.6288V9.79797H4.09109C3.87022 9.79797 3.6584 9.71023 3.50222 9.55405C3.34604 9.39787 3.2583 9.18605 3.2583 8.96518C3.2583 8.74431 3.34604 8.53248 3.50222 8.3763C3.6584 8.22012 3.87022 8.13238 4.09109 8.13238H7.92193V4.30154C7.92193 3.84184 8.29502 3.46875 8.75473 3.46875Z" fill="white"/>
                             </svg> 
                             Upload
                         </button>
+                        </Link>
                         <h5 className='text-[10px] uppercase font-semibold text-left text-[#00000057]'>Manage</h5>
                         <ul className='text-sm space-y-6 mt-3 text-left mx-2'>
                             <li className='cursor-pointer flex gap-2'>
