@@ -6,6 +6,8 @@ import { setSelectedFile, updateUploadingStatus } from '../../../redux/reducers/
 import { STATUS_CODE, UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 import { setCurrentEditVideo } from '../../../redux/reducers/currentEditVideoReducer';
+import axios from 'axios';
+
 
 interface StateInterface {
     canView: string;
@@ -40,6 +42,8 @@ function useUpload() {
     const API_KEY = process.env.VITE_API_URL;
     const location = useLocation();
     const mainFileRef = useRef<File | null>(null);
+    const abortController = useRef<AbortController | null>(null);
+
 
     let { isEditMode, info } = location.state || { isEditMode: false, info: {} };
     const { id: postId } = useParams(); 
@@ -242,6 +246,31 @@ function useUpload() {
         }
     }, [selectedFile]);
 
+    function base64ToFile(base64String: string, filename: string): File {
+        // If it's a raw base64 string, add the default prefix
+        if (!base64String.startsWith('data:')) {
+          base64String = 'data:image/png;base64,' + base64String;
+        }
+      
+        const arr = base64String.split(',');
+        const mimeMatch = arr[0].match(/:(.*?);/);
+      
+        if (!mimeMatch) {
+          throw new Error('Invalid base64 mime type');
+        }
+      
+        const mime = mimeMatch[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+      
+        return new File([u8arr], filename, { type: mime });
+    }
+      
+
     const SubmitHandlerWhenUpdateVideoCase = async () => {
         if (!postId) return;
       
@@ -271,12 +300,62 @@ function useUpload() {
         if(state?.locationPlace)
             updatePayload.append('locationPlace', state?.locationPlace || '');
 
-        if(state?.thumbnailUrl) 
-            updatePayload.append('thumbnailUrl', state?.thumbnailUrl || '');
+       
         // if (state?.scheduledAt) {
         //   updatePayload.append('scheduledAt', state?.scheduledAt || '');
         // }
-      
+        let messageURL = '';
+        if (state?.thumbnailUrl) {
+            console.log('state?.thumbnailUrl', state?.thumbnailUrl);
+          
+            const file = base64ToFile(state.thumbnailUrl, 'thumbnail.png'); // Convert base64 to File
+            const formData = new FormData();
+            formData.append('file', file); // append File object
+            const controller = new AbortController();
+            abortController.current = controller;
+            const config = {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Only this
+                },
+                signal: controller.signal,
+                onUploadProgress: (progressEvent: any) => {
+                  const progress = Math.round(
+                    (100 * progressEvent.loaded) / progressEvent.total
+                  );
+                  console.log('Upload progress:', progress, '%');
+                },
+              };
+
+            for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]); // Debugging
+            }
+          
+            try {
+                console.log('Token being used:', token);
+              
+                for (let pair of formData.entries()) {
+                  console.log(pair[0], pair[1]);
+                }
+              
+                const response = await axios.post(`${API_KEY}/util/file`, formData, config);
+                console.log('Upload success:', response);
+                messageURL = response.data.data;
+              } catch (error: any) {
+                if (axios.isCancel(error)) {
+                  console.log("Upload canceled");
+                } else {
+                  console.error("Error during upload:", error.response || error);
+                }
+              } finally {
+                abortController.current = null;
+              }
+        }
+
+        console.log('messageURL', messageURL);
+
+        if(messageURL !='') 
+            updatePayload.append('thumbnailUrl', messageURL);
+
         try {
           await fetch(`${API_KEY}/media-content/${postId}`, {
             method: 'PATCH', // Or 'PUT' depending on your API design
@@ -286,7 +365,7 @@ function useUpload() {
             body: updatePayload,
           });
       
-        //   navigate('/home');
+          navigate('/studio/posts');
         } catch (error) {
           console.error('Error updating video:', error);
         }
