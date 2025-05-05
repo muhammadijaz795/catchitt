@@ -257,9 +257,9 @@ const ViewersTab = ({postAnalyticsDetails, isDarkTheme}: any) => {
                 <Box key={country} mb={2}>
                   <Box display="flex" justifyContent="space-between">
                     <Typography>{country.charAt(0).toUpperCase() + country.slice(1).replace(/_/g, ' ')}</Typography>
-                    <Typography>{percentage}</Typography>
+                    <Typography>{percentage as React.ReactNode}</Typography>
                   </Box>
-                  <PlaceholderLinear value={parseFloat(percentage)} />
+                  <PlaceholderLinear value={parseFloat(percentage as string)} />
                 </Box>
               ))}
             </Box>

@@ -36,7 +36,7 @@ import {
       >
         {title}
       </Typography>
-      <Tooltip
+      {/* <Tooltip
         title={tooltipText}
         placement="top"
         slotProps={{
@@ -56,7 +56,7 @@ import {
             color: isDark ? 'grey.400' : 'text.secondary',
           }}
         />
-      </Tooltip>
+      </Tooltip> */}
     </Box>
   );
   
@@ -205,7 +205,7 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
                                 <PlaceholderLine isDark={isDarkTheme} />
                             </Box>
                             <Typography fontSize={14} color={isDarkTheme ? 'grey.300' : 'text.primary'}>
-                                {value}%
+                                {value as React.ReactNode}%
                             </Typography>
                             </Box>
                         ))}

@@ -185,7 +185,7 @@ function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }:
                         <li className=" text-black text-sm">
                             <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
                                 <span>{key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>
-                                <span>{value}%</span>
+                                <span>{value as React.ReactNode}%</span>
                             </Box>
                             <Box sx={{ width: '100%', position: 'relative', py: 1 }}>
                                 <LinearProgress
@@ -198,7 +198,7 @@ function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }:
                                       backgroundColor: '#3B82F6',
                                     },
                                   }}
-                                variant="determinate" value={value} />
+                                variant="determinate" value={value as number} />
                             </Box>
                         </li>
                         ))}

@@ -172,7 +172,7 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
 
         if (!selectedState.canLoadMore) return;
       
-        setSelectedState(prev => ({ ...prev, isLoading: true, canLoadMore: false  }));
+        setSelectedState((prev: any) => ({ ...prev, isLoading: true, canLoadMore: false  }));
 
         fetch(endpoint, requestOptions)
         .then((response) => response.json())
@@ -181,10 +181,10 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
             {
                 if(response.data.length)
                 {
-                    setSelectedState(prev => ({ ...prev, canLoadMore: true, items: [...prev.items, ...response.data] }));
+                    setSelectedState((prev: any) => ({ ...prev, canLoadMore: true, items: [...prev.items, ...response.data] }));
                 }
 
-                setSelectedState(prev => ({ ...prev, page: prev.page + 1, isLoading: false }));
+                setSelectedState((prev: any) => ({ ...prev, page: prev.page + 1, isLoading: false }));
             }
         )
         .catch((error) => console.error('Fetch error:', error));

@@ -59,11 +59,11 @@ const Analytics = () => {
             },
         };
 
-        setAnalyticsDetails(prev => ({ ...prev, isLoading: true }));
+        setAnalyticsDetails((prev: any) => ({ ...prev, isLoading: true }));
 
         fetch(endpoint, requestOptions)
         .then((response) => response.json())
-        .then((response) => setAnalyticsDetails(prev => ({ ...prev, details: response.data, isLoading: false })))
+        .then((response) => setAnalyticsDetails((prev: any) => ({ ...prev, details: response.data, isLoading: false })))
         .catch((error) => console.error('Fetch error:', error));
     };
 

@@ -93,11 +93,11 @@ function FollowersTab({analyticsDetails}: any) {
   const [tabIndex, setTabIndex] = useState(0);
   const [tab, setTab] = useState(0);
 
-  const handleChangetimeTabs = (event, newValue) => {
+  const handleChangetimeTabs = (event: any, newValue: any) => {
     setTab(newValue);
   };
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (event: any, newValue: any) => {
     setTabIndex(newValue);
   }
   const chartData = tabIndex === 0 ? totalViewersData : newViewersData;
@@ -269,7 +269,7 @@ function FollowersTab({analyticsDetails}: any) {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                 <XAxis dataKey="date" fontSize={12} axisLine={false} tickLine={false} />
                 <YAxis orientation="right" fontSize={12} axisLine={false} tickLine={false} />
-                <Tooltip />
+                {/* <Tooltip /> */}
 
                 {/* Light blue Area under Line */}
                 <Area
@@ -374,9 +374,9 @@ function FollowersTab({analyticsDetails}: any) {
                 <Box key={country} mb={2}>
                   <Box display="flex" justifyContent="space-between">
                     <Typography>{country.charAt(0).toUpperCase() + country.slice(1).replace(/_/g, ' ')}</Typography>
-                    <Typography>{percentage}%</Typography>
+                    <Typography>{percentage as number}%</Typography>
                   </Box>
-                  <PlaceholderLinear value={parseFloat(percentage)} />
+                  <PlaceholderLinear value={parseFloat(percentage as string)} />
                 </Box>
               ))}
             </Box>
@@ -472,7 +472,7 @@ function FollowersTab({analyticsDetails}: any) {
                           tick={{ fontSize: 11, fill: "#757575" }}
                           />
 
-                      <Tooltip
+                      {/* <Tooltip
                       contentStyle={{
                           backgroundColor: "white",
                           border: "1px solid #ddd",
@@ -480,7 +480,7 @@ function FollowersTab({analyticsDetails}: any) {
                           borderRadius: "4px",
                       }}
                       cursor={{ fill: "rgba(25, 118, 210, 0.1)" }}
-                      />
+                      /> */}
                       <Bar dataKey="activity" radius={[4, 4, 0, 0]}>
                       {dayData.map((entry, index) => (
                           <Cell
@@ -523,7 +523,7 @@ function FollowersTab({analyticsDetails}: any) {
                               style={{ fontSize: 10 }}
                               />
                               <YAxis hide />
-                              <Tooltip />
+                              {/* <Tooltip /> */}
                               <Bar 
                               dataKey="value" 
                               fill="#1976d2" 
