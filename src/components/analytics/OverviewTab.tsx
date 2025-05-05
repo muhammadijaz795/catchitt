@@ -93,7 +93,7 @@ import {
 const isDark = Boolean(isDarkTheme); // optional if using inside helper
 
 
-function OverviewTab({ analyticsData, isDarkTheme }: any) {
+function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
 
     const [activeTab, setActiveTab] = useState(STATISTICSTABS.VIDEO_VIEWS)
     const [chartData, setChartData] = useState<any>([])
@@ -187,25 +187,25 @@ function OverviewTab({ analyticsData, isDarkTheme }: any) {
                         tooltipText="It shows the places where your viewers discover your posts. The main source types on Seezitt are the For You feed, the feed, pages, profile pages, search pages, and direct messages. The other types are grouped into 'Other'."
                         />                        
                         <Box sx={{ p: 2 }}>
-                        <Typography color={isDarkTheme ? 'grey.400' : 'text.secondary'} fontSize={14}>
+                        {/* <Typography color={isDarkTheme ? 'grey.400' : 'text.secondary'} fontSize={14}>
                             You’ll be able to see this information once there’s enough data for analysis.
-                        </Typography>
-                        {Array.from({ length: 5 }).map((_, i) => (
+                        </Typography> */}
+                        {analyticsDetails?.details?.trafficSourcePercentages && Object.entries(analyticsDetails?.details?.trafficSourcePercentages).map(([key, value]) => (
                             <Box
-                            key={i}
+                            key={key}
                             mt={2}
                             display="flex"
                             justifyContent="space-between"
                             alignItems="center"
                             >
                             <Typography fontSize={14} color={isDarkTheme ? 'grey.300' : 'text.primary'}>
-                                –
+                                {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                             </Typography>
                             <Box sx={{ flexGrow: 1, mx: 2 }}>
                                 <PlaceholderLine isDark={isDarkTheme} />
                             </Box>
                             <Typography fontSize={14} color={isDarkTheme ? 'grey.300' : 'text.primary'}>
-                                –%
+                                {value}%
                             </Typography>
                             </Box>
                         ))}

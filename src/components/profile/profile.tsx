@@ -33,6 +33,7 @@ import PopupForEditVideo from './popups/popupForEditVideo';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import { activeLike, commentWhite, likeWhite, musicBlack, shareWhite } from '../../icons';
 import { showToastSuccess, STATUS_CODE } from '../../utils/constants';
+import { useSocket } from '../../hooks/useSocket';
 
 export const Profile = (props: any) => {
     const [activeSort, setActiveSort] = useState('latest');
@@ -77,6 +78,7 @@ export const Profile = (props: any) => {
     };
 
     // @ts-ignore
+    const socket = useSocket();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const tabs = [
@@ -133,7 +135,21 @@ export const Profile = (props: any) => {
         setFollowModal(null);
     };
 
+    function logPostStats(post: any)
+    {
+        let payload =
+        {
+            "media_id": post?.mediaId,
+            "user_id": localStorage.getItem('userId'),
+            "clientUTCTime": new Date().toISOString(),
+            "trafficSource": "profile"
+        };
+
+        socket.emit('watch-time', payload);
+    };
+
     const onVideoModal = (video: any) => {
+        logPostStats(video);
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
         markVideoDisplayed(video?.mediaId);

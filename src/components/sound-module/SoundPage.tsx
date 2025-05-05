@@ -24,7 +24,7 @@ import ShareClicked from '../sounds-page/svg-components/shareClicked.png';
 import Share from '../sounds-page/svg-components/Default.png';
 import styles from '../sounds-page/sound-page.module.scss';
 import COPY_AND_SEND_MENU_MULTIPLE from '../../shared/Menu/copyAndSendForMultiple';
-
+import { useSocket } from '../../hooks/useSocket';
 import MORE_MENU_HOME from '../../shared/Menu/more/ReportMenu';
 
 
@@ -45,7 +45,7 @@ export default function SoundPage() {
     const [soundData, setSoundData] = useState<any>();
     const [linkCopied, setLinkCopied] = useState(false);
     const [isOpenShare, setIsOpenShare] = useState(false);
-
+    const socket = useSocket();
     // theme
     const [darkTheme, setdarkTheme] = useState('');
 
@@ -105,10 +105,23 @@ export default function SoundPage() {
         }
     }
 
+    function logPostStats(postId: string)
+    {
+        let payload =
+        {
+            "media_id": postId,
+            "user_id": localStorage.getItem('userId'),
+            "clientUTCTime": new Date().toISOString(),
+            "trafficSource": "sounds",
+        };
+
+        socket.emit('watch-time', payload);
+    };
 
     const openVideoModal = (video: any) => {
         setVideoModalInfo(video);
         setVideoModal(true);
+        logPostStats(video.mediaId);
     };
 
     useEffect(() => {

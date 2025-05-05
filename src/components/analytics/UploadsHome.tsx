@@ -539,6 +539,7 @@ const Analytics = () => {
                 <Card  sx={{ p: 2, boxShadow: '0px 0px 9px 0px #e4e6eb' }}>
                     {recentPosts.items.slice(0, 2).map((post, index) => (
                     <Box key={index}>
+                      <Link to={`/analytics/post/${post.mediaId}`} reloadDocument={false} style={{ textDecoration: 'none' }}>
                         <Box display="flex" alignItems="center" mb={2}>
                         <Box sx={{ position: 'relative', width: 80, height: 80, mr: 2 }}>
                             <Avatar
@@ -599,6 +600,7 @@ const Analytics = () => {
                         </Box>
                         </Box>
                         {index < recentPosts.items.length - 1 && <Divider sx={{ my: 1 }} />}
+                    </Link>
                     </Box>
                     ))}
                 </Card>
@@ -613,6 +615,7 @@ const Analytics = () => {
                     <Card sx={{ p: 2, boxShadow: '0px 0px 9px 0px #e4e6eb' }}>
                         {latestComments.items.slice(0, 2).map((item, index) => (
                         <Box key={index}>
+                            <Link to={`/analytics/comment/${item.media._id}`} reloadDocument={false} style={{ textDecoration: 'none' }}>
                             <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
                             <Box display="flex" textAlign={'left'} flex={1} mr={2}>
                                 <Avatar src={item.user.avatar} alt="User" sx={{ width: 40, height: 40, mr: 2 }} />
@@ -646,6 +649,7 @@ const Analytics = () => {
                             </Box>
 
                             {index < latestComments.items.length - 1 && <Divider sx={{ my: 1 }} />}
+                            </Link>
                         </Box>
                         ))}
                     </Card>
@@ -826,7 +830,7 @@ const Analytics = () => {
                                 >
                                     {/* <img style={{ height: '2.5rem'}} src="data:image/png;base64,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" alt="" /> */}
                                     <img style={{ height: '2.5rem'}} src="https://s3-alpha-sig.figma.com/img/ab49/e101/99d8c7ae2f0bea8d5cb521ab02cf4a97?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=izb7yJKI3MxrbnmjISi9UIP4UCRvlC1e3wLo874eW-~sKtrumeBW2gRlJjxTVbgXjEX-5yeF6pr7x77S1XmI5BP7fiag195L9kqPB0Gqq7YWmmRoI2jPfyONiQPS9oAwi8AO4F-Ipt9eBqFJXEUvbHZYNGNMBfUeZldZ1Ep7fjItb60bTQz59009iISIMMPE06KC3Vu9Z6Rf4k7RkD8s8Nzr4UNZhaPaqO9Wc9BfDEyEDxC4P43ZFTI~3sLskTR2lbwD6OJGQGJexKXNuUnWL3AXv4tMs19POoEDWzD00Lkd5xBFE7UnUWmgSstUdmP2F0isKJm3unj5P8ELyUlU-w__" alt="" />
-                                    <span className='position-absolute text-lg text-[#47494F] font-semibold'>1</span>
+                                    <span className='position-absolute text-lg text-[#47494F] font-semibold'>{index + 1}</span>
                                 </Box>
                                 <Box
                                     sx={{

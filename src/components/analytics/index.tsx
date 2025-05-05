@@ -27,6 +27,12 @@ const Analytics = () => {
     const [selectedPeriod, setSelectedPeriod] = useState(7);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [logo, setLogo] = useState(logoAuth);
+    const [analyticsDetails, setAnalyticsDetails] = useState<any>(
+        {
+            details: [],
+            isLoading: false,
+        }
+    );
 
     const open = Boolean(anchorEl);
 
@@ -39,6 +45,27 @@ const Analytics = () => {
     const switchTab = (event: React.MouseEvent<HTMLAnchorElement>) => {
         setCurrentTab(Number(event.currentTarget.id));
     }
+
+    function loadAnalyticsDetails()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/profile/v2/media-analytics?day=${selectedPeriod}`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        setAnalyticsDetails(prev => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setAnalyticsDetails(prev => ({ ...prev, details: response.data, isLoading: false })))
+        .catch((error) => console.error('Fetch error:', error));
+    };
 
 
     const getUserAnalytics = async (period = 7) => {
@@ -99,6 +126,7 @@ const Analytics = () => {
     
     useEffect(() => {
         getUserAnalytics(selectedPeriod);
+        loadAnalyticsDetails();
     }, [selectedPeriod]);
 
     const [darkTheme, setdarkTheme] = useState<any>('');
@@ -376,15 +404,15 @@ const Analytics = () => {
                         {(() => {
                                 switch (currentTab) {
                                     case ANALYTICSTABS.OVERVIEW:
-                                        return <OverviewTab analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
+                                        return <OverviewTab analyticsDetails={analyticsDetails} analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
                                     case ANALYTICSTABS.CONTENT:
-                                        return <ContentTab isDarkTheme={darkTheme} />
+                                        return <ContentTab isDarkTheme={darkTheme} selectedPeriod={selectedPeriod} key={selectedPeriod} />
                                     case ANALYTICSTABS.VIEWERS:
-                                        return <ViewersTab />
+                                        return <ViewersTab analyticsDetails={analyticsDetails} />
                                     case ANALYTICSTABS.FOLLOWERS:
-                                        return <FollowersTab />
+                                        return <FollowersTab analyticsDetails={analyticsDetails} />
                                     default:
-                                        return <OverviewTab analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
+                                        return <OverviewTab analyticsDetails={analyticsDetails} analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
                                 }
                             })()}
                    </div>
