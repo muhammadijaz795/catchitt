@@ -21,18 +21,6 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
     "July", "August", "September", "October", "November", "December"
   ];
 
-  const posts = [
-    // {
-    //   id: 1,
-    //   thumbnail: "https://via.placeholder.com/60x100", // Replace with your actual image URL
-    //   duration: "00:11",
-    //   title: "Gym_workout_Bellyfat",
-    //   code: "9ad564vd_6d",
-    //   creatorName: "Al Hilal",
-    //   creatorAvatar: "https://via.placeholder.com/24", // Replace with actual creator avatar URL
-    // },
-  ];
-
 function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
   const value = 70;
   const [tabIndex, setTabIndex] = useState(0);
@@ -406,7 +394,7 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                         </Tooltip>
                     </Box>
 
-                {analyticsDetails?.details?.watchedPostsByMyPostViewers?.map((post) => (
+                {analyticsDetails?.details?.watchedPostsByMyPostViewers?.map((post: any) => (
                     <Box key={post._id} display="flex" alignItems="center" py={1} borderBottom="1px solid #eee">
                     <Typography variant="body1" sx={{ width: 24, mr: 2 }}>
                         {post._id}
@@ -474,7 +462,7 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                     </Box>
 
                     <Box display="flex" gap={4} justifyContent="center">
-                        {analyticsDetails?.details?.othersPostsViewers?.map((creator, index) => (
+                        {analyticsDetails?.details?.othersPostsViewers?.map((creator: any, index: number) => (
                         <Box key={index} display="flex" flexDirection="column" alignItems="center">
                             <Avatar
                             src={creator.avatar}
