@@ -99,7 +99,7 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
     const [chartData, setChartData] = useState<any>(
       [...Array(7)].map((_, i) => ({
         date: new Date(Date.now() - (6 - i) * 864e5).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        viewers: 0
+        value: 0
       }))
     );
 
@@ -160,22 +160,7 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                {(() => {
-                                    switch (activeTab) {
-                                        case STATISTICSTABS.VIDEO_VIEWS:
-                                            return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.PROFILE_VIEWS:
-                                            return <Line type="monotone" dataKey="profileViews" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.LIKES:
-                                            return <Line type="monotone" dataKey="likes" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.COMMENTS:
-                                            return <Line type="monotone" dataKey="comments" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case STATISTICSTABS.SHARES:
-                                            return <Line type="monotone" dataKey="shares" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        default:
-                                            return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                    }
-                                })()}
+                                <Line type="monotone" dataKey="value" stroke="#82ca9d" activeDot={{ r: 8 }} />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
