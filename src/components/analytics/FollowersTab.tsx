@@ -275,7 +275,7 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
 
         {/* --- left column ------------------------------------------------- */}
       <Grid item xs={12} md={5}>
-        <Card variant="outlined" sx={{ p: 0, my: 3, borderRadius: 2 }}>
+        {/* <Card variant="outlined" sx={{ p: 0, my: 3, borderRadius: 2 }}>
             <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
                 <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
                 Creators your viewers also watched
@@ -304,7 +304,7 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
                 </Box>
                 ))}
             </Box>
-        </Card> 
+        </Card>  */}
           {/* Gender */}
           <Paper variant="outlined" sx={{ mb: 3 }}>
             <CardHeader title="Gender" />
