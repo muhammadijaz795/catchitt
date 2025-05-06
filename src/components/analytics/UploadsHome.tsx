@@ -324,6 +324,12 @@ const Analytics = () => {
   {
     return mediaByCategory.items.filter(item => mediaByCategory.selectedCategory === '' || item.category === mediaByCategory.selectedCategory);
   };
+
+  useEffect(() => {
+    if (mediaByCategory.selectedCategory) {
+      loadMediaByCategory();
+    }
+  }, [mediaByCategory.selectedCategory]);
   
   useEffect(() => {
     if (tab) {
@@ -733,9 +739,23 @@ const Analytics = () => {
                                     '&::-webkit-scrollbar': { display: 'none' }, // Chrome
                                     }}
                                 >
-                                  <Chip sx={{ border: 'none'}} label="All" clickable variant="outlined" onClick={ () => { setMediaByCategory(prev => ({ ...prev, selectedCategory: '' })); loadMediaByCategory(); }} />
+                                  {/* <Chip sx={{ border: 'none'}} label="All" onClick={() => {
+                                      setMediaByCategory(prev => ({
+                                        ...prev,
+                                        selectedCategory: 'all',
+                                        items: [], // optional: clear old media
+                                        page: 1    // optional: reset page
+                                      }));
+                                    }} clickable variant="outlined"/> */}
                                     {mediaCategories.items.map((item, idx) => (
-                                    <Chip sx={{ border: 'none'}} key={idx} label={item.name} clickable variant="outlined" onClick={ () => { setMediaByCategory(prev => ({ ...prev, selectedCategory: item.name })); loadMediaByCategory(); }} />
+                                    <Chip sx={{ border: 'none'}} key={idx} label={item.name} clickable variant="outlined" onClick={() => {
+                                      setMediaByCategory(prev => ({
+                                        ...prev,
+                                        selectedCategory: item.name,
+                                        items: [], // optional: clear old media
+                                        page: 1    // optional: reset page
+                                      }));
+                                    }} />
                                     ))}
                                 </Box>
                                 <IconButton sx={{ backgroundColor: 'white' , boxShadow: '0px 0px 9px 0px #e4e6eb'}} onClick={() => scroll('right')}>
@@ -800,6 +820,11 @@ const Analytics = () => {
                         </>
                         )}
                         {/* Video Grid */}
+                        {videos.length === 0 ? (
+                            <Typography variant="h6" color="text.secondary" align="center" sx={{ width: '100%', mt: 4 }}>
+                              No data found
+                            </Typography>
+                          ) : (
                         <Grid container spacing={2}>
                             {videos.map((video, index) => (
                             <Grid item xs={12} sm={6} md={3} key={index}>
@@ -861,6 +886,7 @@ const Analytics = () => {
                             </Grid>
                             ))}
                         </Grid>
+                        )}  
                         {tabIndexCreator == 1 &&(
                             <Grid container spacing={2} md={6} sm={12}>
                             <Card sx={{ p: 2, borderRadius: 4, position: 'relative', overflow: 'visible' }}>
@@ -925,18 +951,16 @@ const Analytics = () => {
                             </Card>
                             </Grid>
                         ) }
-                        {tabIndexRecomded  &&(
-                            <>
-                            <Typography variant='h5'>
-                              No recommendations yet
-                            </Typography>
-                            <Typography variant='body2' >
+                        {tabIndexRecomded === 0 ? (
+                          <Typography variant="body1"></Typography>
+                        ) : (
+                          <>
+                            <Typography variant="h5">No recommendations yet</Typography>
+                            <Typography variant="body2">
                               This tab is only available for creators who have at least 1,000 followers.
                             </Typography>
-                            </>
-                        )
-
-                        }
+                          </>
+                        )}
                         <button className='w-100 my-4 bg-[#0000000D]'>View More</button>
                     </Container>
             </div>

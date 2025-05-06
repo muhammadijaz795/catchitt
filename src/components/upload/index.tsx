@@ -11,7 +11,8 @@ import { academyOutlineDark, academyOutlineWhite, analyticsOutline, analyticsOut
 import { Avatar, Box, Typography, Paper } from '@mui/material';
 
 
-import StudioLeftSidebar from '../studio/StudioLeftSidebar';
+// import StudioLeftSidebar from '../studio/StudioLeftSidebar';
+import UploadSidebar from '../studio/UploadSidebar';
 
 function UploadPage() {
     const {
@@ -218,7 +219,7 @@ function UploadPage() {
     return (
         <div className={`flex flex-col ${darkTheme}`}>
             <Navbar />
-            <StudioLeftSidebar />
+            <UploadSidebar />
             {(!selectedFile && !isEditMode && !postId) ? (
                 <UploadFile  changeFileHandler={handleFileSelect} />
             ) : (

@@ -170,7 +170,7 @@ import { useEffect, useState } from 'react';
                         </ul>
                         <h5 className='text-[10px] uppercase font-semibold text-left text-[#00000057] mt-4'>Tools</h5>
                         <ul className='text-sm space-y-6 mt-3 text-left mx-2'>
-                            <li className='cursor-pointer flex gap-2' onClick={() => navigate('/home')}>
+                            <li className='cursor-pointer flex gap-2' onClick={() => navigate('/studio')}>
                             <span className="w-5">
 
                                 <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
