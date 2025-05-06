@@ -170,7 +170,7 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
             },
         };
 
-        if (!selectedState.canLoadMore) return;
+        if (!selectedState.canLoadMore || selectedState.items.length > 0) return;
       
         setSelectedState((prev: any) => ({ ...prev, isLoading: true, canLoadMore: false  }));
 
