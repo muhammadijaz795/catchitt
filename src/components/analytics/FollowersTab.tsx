@@ -15,30 +15,6 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
     { date: 'Apr 12', viewers: 0 },
     { date: 'Apr 13', viewers: 0 },
   ];
-  const dayData = [
-    { date: "Mar 31", activity: 0 },
-    { date: "Apr 1", activity: 0 },
-    { date: "Apr 2", activity: 4 },
-    { date: "Apr 3", activity: 3 },
-    { date: "Apr 4", activity: 2 },
-    { date: "Apr 5", activity: 0 },
-    { date: "Apr 6", activity: 0 },
-  ];
-  
-  const hourData = [
-    { hour: "0a", value: 1 },
-    { hour: "2a", value: 0 },
-    { hour: "4a", value: 0 },
-    { hour: "6a", value: 0 },
-    { hour: "8a", value: 0 },
-    { hour: "10a", value: 0 },
-    { hour: "12p", value: 0 },
-    { hour: "2p", value: 0 },
-    { hour: "4p", value: 0 },
-    { hour: "6p", value: 0 },
-    { hour: "8p", value: 0 },
-    { hour: "10p", value: 0 },
-  ];
 
   const months = [
     "January", "February", "March", "April", "May", "June",
@@ -76,7 +52,7 @@ const creators = [
     },
   ];
 
-function FollowersTab({analyticsDetails}: any) {
+function FollowersTab({analyticsDetails, selectedPeriod}: any) {
   const value = 70;
   const [tabIndex, setTabIndex] = useState(0);
   const [tab, setTab] = useState(0);
@@ -91,6 +67,19 @@ function FollowersTab({analyticsDetails}: any) {
   const chartData = tabIndex === 0 ? analyticsDetails.details.netFollowersGraph : newViewersData;
   const [monthIndex, setMonthIndex] = useState(3); // April is index 3
 
+  const [dayData, setDayData] = useState<any>(
+    [...Array(selectedPeriod)].map((_, i) => ({
+      date: new Date(Date.now() - (6 - i) * 864e5).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      activity: 0
+    }))
+  );
+
+  const [hourData, setHourData] = useState<any>(
+    [...Array(12)].map((_, i) => ({
+      hour: new Date(Date.now() - (11 - i) * 3600000).toLocaleTimeString('en-US', {hour: 'numeric', hour12: true}),
+      value: 0
+    }))
+  );
 
   const handlePrevMonth = () => {
     setMonthIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -482,13 +471,13 @@ function FollowersTab({analyticsDetails}: any) {
                   ) : (
                   // Hour View
                       <Box>
-                          <Typography
+                          {/* <Typography
                           variant="body2"
                           sx={{ textAlign: "center", mb: 3 }}
                           >
                           In the last 7 days, your viewers were most active on Apr 4,
                           between 0am to 1am
-                          </Typography>
+                          </Typography> */}
                           {/* Month Slider */}
                           <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
                                       <IconButton size="small" onClick={handlePrevMonth} disabled={monthIndex === 0}>
