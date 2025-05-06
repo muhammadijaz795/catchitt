@@ -5,18 +5,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid,  ResponsiveContainer, Bar
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-
-const totalViewersData = [
-    { date: 'Apr 6', viewers: 55 },
-    { date: 'Apr 7', viewers: 20 },
-    { date: 'Apr 8', viewers: 10 },
-    { date: 'Apr 9', viewers: 5 },
-    { date: 'Apr 10', viewers: 0 },
-    { date: 'Apr 11', viewers: 0 },
-    { date: 'Apr 12', viewers: 0 },
-    { date: 'Apr 13', viewers: 0 },
-  ];
-  
   const newViewersData = [
     { date: 'Apr 6', viewers: 30 },
     { date: 'Apr 7', viewers: 15 },
