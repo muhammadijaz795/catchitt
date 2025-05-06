@@ -367,13 +367,13 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                     ) : (
                     // Hour View
                         <Box>
-                            <Typography
+                            {/* <Typography
                             variant="body2"
                             sx={{ textAlign: "center", mb: 3 }}
                             >
                             In the last 7 days, your viewers were most active on Apr 4,
                             between 0am to 1am
-                            </Typography>
+                            </Typography> */}
                             {/* Month Slider */}
                             <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
                                         <IconButton size="small" onClick={handlePrevMonth} disabled={monthIndex === 0}>
