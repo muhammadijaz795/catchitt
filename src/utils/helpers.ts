@@ -339,3 +339,28 @@ export const getLatestMsgDateFormat = (timeStamp: any) => {
     }
     return conversationTimeStamp;
 }
+
+export function logPostStats(params: any)
+{
+    let endpoint = `${process.env.VITE_API_URL}/analytics/v2/watch-time`;
+    let payload =
+    {
+        "media_id": params.postId,
+        "user_id": localStorage.getItem('userId'),
+        "clientUTCTime": new Date().toISOString(),
+        "trafficSource": params.trafficSource,
+    };
+    let requestOptions =
+    {
+        method: 'POST',
+        headers:
+        {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    };
+
+    fetch(endpoint, requestOptions)
+    .catch((error) => console.error('Fetch error:', error));
+};
