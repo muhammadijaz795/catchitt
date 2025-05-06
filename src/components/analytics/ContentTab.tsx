@@ -246,8 +246,8 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
 
   return (
     <>
-    <Box className="text-left">
-        <h5 className="font-bold text-[19px] flex mb-4 cursor-pointer">
+    <Box className="text-left mt-6">
+        <h5 className="font-semibold text-[19px] flex mb-4 cursor-pointer">
           Your top posts
           <Tooltip slotProps={{
           tooltip: {
