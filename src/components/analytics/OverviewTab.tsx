@@ -96,7 +96,12 @@ const isDark = Boolean(isDarkTheme); // optional if using inside helper
 function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
 
     const [activeTab, setActiveTab] = useState(STATISTICSTABS.VIDEO_VIEWS)
-    const [chartData, setChartData] = useState<any>([])
+    const [chartData, setChartData] = useState<any>(
+      [...Array(7)].map((_, i) => ({
+        date: new Date(Date.now() - (6 - i) * 864e5).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        viewers: 0
+      }))
+    );
 
     const switchTab = (event: React.MouseEvent<HTMLDivElement>) => {
         setActiveTab(Number(event.currentTarget.id));
@@ -122,8 +127,9 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
     }
 
     useEffect(() => {
-        if (analyticsData && activeTab) setChartData(prepareData(analyticsData[possibleGraphs[activeTab]]));
-    }, [analyticsData, activeTab])
+      const selectedChartData = analyticsDetails?.details?.[['dailyViewsGraph','dailyProfileViewsGraph','dailyLikesGraph','dailyCommentsGraph','dailyRepostsGraph'][activeTab]];
+      selectedChartData && setChartData(selectedChartData);
+    }, [analyticsData, activeTab, analyticsDetails])
 
     return (
         <div className=' mx-auto mt-8  overflow-hidden'>
