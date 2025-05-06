@@ -23,21 +23,21 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
   
 const creators = [
-    {
-      name: "Paityn Saris",
-      followers: "983k followers",
-      avatar: "https://via.placeholder.com/64", 
-    },
-    {
-      name: "Kaylynn",
-      followers: "983k followers",
-      avatar: "https://via.placeholder.com/64", 
-    },
-    {
-      name: "Ahmad Stanton",
-      followers: "983k followers",
-      avatar: "https://via.placeholder.com/64", 
-    },
+    // {
+    //   name: "Paityn Saris",
+    //   followers: "983k followers",
+    //   avatar: "https://via.placeholder.com/64", 
+    // },
+    // {
+    //   name: "Kaylynn",
+    //   followers: "983k followers",
+    //   avatar: "https://via.placeholder.com/64", 
+    // },
+    // {
+    //   name: "Ahmad Stanton",
+    //   followers: "983k followers",
+    //   avatar: "https://via.placeholder.com/64", 
+    // },
   ];
 
   const posts = [
