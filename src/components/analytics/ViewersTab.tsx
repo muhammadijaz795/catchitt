@@ -100,7 +100,7 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
   }
-  const chartData = tabIndex === 0 ? totalViewersData : newViewersData;
+  const chartData = tabIndex === 0 ? analyticsDetails.details.dailyViewsGraph : newViewersData;
   const [monthIndex, setMonthIndex] = useState(3); // April is index 3
 
 
