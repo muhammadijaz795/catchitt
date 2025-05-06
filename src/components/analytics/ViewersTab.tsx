@@ -5,18 +5,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid,  ResponsiveContainer, Bar
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-
-const totalViewersData = [
-    { date: 'Apr 6', viewers: 55 },
-    { date: 'Apr 7', viewers: 20 },
-    { date: 'Apr 8', viewers: 10 },
-    { date: 'Apr 9', viewers: 5 },
-    { date: 'Apr 10', viewers: 0 },
-    { date: 'Apr 11', viewers: 0 },
-    { date: 'Apr 12', viewers: 0 },
-    { date: 'Apr 13', viewers: 0 },
-  ];
-  
   const newViewersData = [
     { date: 'Apr 6', viewers: 30 },
     { date: 'Apr 7', viewers: 15 },
@@ -27,68 +15,13 @@ const totalViewersData = [
     { date: 'Apr 12', viewers: 0 },
     { date: 'Apr 13', viewers: 0 },
   ];
-  const dayData = [
-    { date: "Mar 31", activity: 0 },
-    { date: "Apr 1", activity: 0 },
-    { date: "Apr 2", activity: 4 },
-    { date: "Apr 3", activity: 3 },
-    { date: "Apr 4", activity: 2 },
-    { date: "Apr 5", activity: 0 },
-    { date: "Apr 6", activity: 0 },
-  ];
-  
-  const hourData = [
-    { hour: "0a", value: 1 },
-    { hour: "2a", value: 0 },
-    { hour: "4a", value: 0 },
-    { hour: "6a", value: 0 },
-    { hour: "8a", value: 0 },
-    { hour: "10a", value: 0 },
-    { hour: "12p", value: 0 },
-    { hour: "2p", value: 0 },
-    { hour: "4p", value: 0 },
-    { hour: "6p", value: 0 },
-    { hour: "8p", value: 0 },
-    { hour: "10p", value: 0 },
-  ];
 
   const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
 
-  
-const creators = [
-    // {
-    //   name: "Paityn Saris",
-    //   followers: "983k followers",
-    //   avatar: "https://via.placeholder.com/64", 
-    // },
-    // {
-    //   name: "Kaylynn",
-    //   followers: "983k followers",
-    //   avatar: "https://via.placeholder.com/64", 
-    // },
-    // {
-    //   name: "Ahmad Stanton",
-    //   followers: "983k followers",
-    //   avatar: "https://via.placeholder.com/64", 
-    // },
-  ];
-
-  const posts = [
-    // {
-    //   id: 1,
-    //   thumbnail: "https://via.placeholder.com/60x100", // Replace with your actual image URL
-    //   duration: "00:11",
-    //   title: "Gym_workout_Bellyfat",
-    //   code: "9ad564vd_6d",
-    //   creatorName: "Al Hilal",
-    //   creatorAvatar: "https://via.placeholder.com/24", // Replace with actual creator avatar URL
-    // },
-  ];
-
-function ViewersTab({analyticsDetails, isDarkThemes}: any) {
+function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
   const value = 70;
   const [tabIndex, setTabIndex] = useState(0);
   const [tab, setTab] = useState(0);
@@ -100,9 +33,22 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
   const handleChange = (event: any, newValue: any) => {
     setTabIndex(newValue);
   }
-  const chartData = tabIndex === 0 ? totalViewersData : newViewersData;
+  const chartData = tabIndex === 0 ? analyticsDetails.details.dailyViewsGraph : analyticsDetails.details.newViewersGraph;
   const [monthIndex, setMonthIndex] = useState(3); // April is index 3
 
+  const [dayData, setDayData] = useState<any>(
+    [...Array(selectedPeriod)].map((_, i) => ({
+      date: new Date(Date.now() - (6 - i) * 864e5).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      activity: 0
+    }))
+  );
+
+  const [hourData, setHourData] = useState<any>(
+    [...Array(12)].map((_, i) => ({
+      hour: new Date(Date.now() - (11 - i) * 3600000).toLocaleTimeString('en-US', {hour: 'numeric', hour12: true}),
+      value: 0
+    }))
+  );
 
   const handlePrevMonth = () => {
     setMonthIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -275,7 +221,7 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
                         {/* Light blue Area under Line */}
                         <Area
                             type="monotone"
-                            dataKey="viewers"
+                            dataKey="value"
                             stroke="none"
                             fill="rgba(25, 118, 210, 0.1)" // Light blue transparent
                         />
@@ -283,7 +229,7 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
                         {/* Main Line */}
                         <Line
                             type="monotone"
-                            dataKey="viewers"
+                            dataKey="value"
                             stroke="#1976d2"
                             strokeWidth={2}
                             dot={{ r: 4 }}
@@ -378,7 +324,7 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
                         cursor={{ fill: "rgba(25, 118, 210, 0.1)" }}
                         /> */}
                         <Bar dataKey="activity" radius={[4, 4, 0, 0]}>
-                        {dayData.map((entry, index) => (
+                        {dayData.map((entry: any, index: number) => (
                             <Cell
                             key={`cell-${index}`}
                             fill={entry.date === "Apr 2" ? "#1976d2" : "#e3f2fd"}
@@ -390,13 +336,13 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
                     ) : (
                     // Hour View
                         <Box>
-                            <Typography
+                            {/* <Typography
                             variant="body2"
                             sx={{ textAlign: "center", mb: 3 }}
                             >
                             In the last 7 days, your viewers were most active on Apr 4,
                             between 0am to 1am
-                            </Typography>
+                            </Typography> */}
                             {/* Month Slider */}
                             <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
                                         <IconButton size="small" onClick={handlePrevMonth} disabled={monthIndex === 0}>
@@ -448,16 +394,16 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
                         </Tooltip>
                     </Box>
 
-                {posts.map((post) => (
-                    <Box key={post.id} display="flex" alignItems="center" py={1} borderBottom="1px solid #eee">
+                {analyticsDetails?.details?.watchedPostsByMyPostViewers?.map((post: any) => (
+                    <Box key={post._id} display="flex" alignItems="center" py={1} borderBottom="1px solid #eee">
                     <Typography variant="body1" sx={{ width: 24, mr: 2 }}>
-                        {post.id}
+                        {post._id}
                     </Typography>
 
                     <Box position="relative" mr={2}>
                         <img
-                        src={post.thumbnail}
-                        alt={post.title}
+                        src={post.thumbnailUrl}
+                        alt={post.description}
                         style={{
                             width: 60,
                             height: 100,
@@ -484,11 +430,11 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
 
                     <Box>
                         <Typography variant="body2" fontWeight="bold" noWrap>
-                        {post.title}
+                        {post.description}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" noWrap>
+                        {/* <Typography variant="body2" color="text.secondary" noWrap>
                         {post.code}
-                        </Typography>
+                        </Typography> */}
                         <Box display="flex" alignItems="center" mt={0.5}>
                         <Avatar src={post.creatorAvatar} alt={post.creatorName} sx={{ width: 16, height: 16, mr: 0.5 }} />
                         <Typography variant="caption" color="text.secondary">
@@ -516,7 +462,7 @@ function ViewersTab({analyticsDetails, isDarkThemes}: any) {
                     </Box>
 
                     <Box display="flex" gap={4} justifyContent="center">
-                        {creators.map((creator, index) => (
+                        {analyticsDetails?.details?.othersPostsViewers?.map((creator: any, index: number) => (
                         <Box key={index} display="flex" flexDirection="column" alignItems="center">
                             <Avatar
                             src={creator.avatar}
