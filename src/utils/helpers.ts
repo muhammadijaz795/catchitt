@@ -339,3 +339,29 @@ export const getLatestMsgDateFormat = (timeStamp: any) => {
     }
     return conversationTimeStamp;
 }
+
+export function logPostStats(params: any)
+{
+    let allowedTrafficSource = ['for_you', 'following_feed', 'sound_pages', 'profile_pages', 'search_pages', 'direct_messages', 'others'];
+    let endpoint = `${process.env.VITE_API_URL}/analytics/v2/watch-time`;
+    let payload =
+    {
+        "media_id": params.postId,
+        "user_id": localStorage.getItem('userId'),
+        "clientUTCTime": new Date().toISOString(),
+        "trafficSource": allowedTrafficSource.includes(params.trafficSource) ? params.trafficSource : 'others',
+    };
+    let requestOptions =
+    {
+        method: 'POST',
+        headers:
+        {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    };
+
+    fetch(endpoint, requestOptions)
+    .catch((error) => console.error('Fetch error:', error));
+};

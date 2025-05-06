@@ -33,7 +33,7 @@ import { openLoginPopup, updateHomeVideos } from '../../redux/reducers';
 import {toggleMute} from '../../redux/reducers/volumeSlice'
 import VideoNavigation from '../../shared/navigation/VideoNavigation';
 // import { Toast } from 'react-toastify/dist/components';
-import { useSocket } from '../../hooks/useSocket';
+import { logPostStats } from '../../utils/helpers';
 
 
 function ForDesktop(props: any) {
@@ -70,7 +70,6 @@ function ForDesktop(props: any) {
     const suggestedUsers = useSelector((store) => store.reducers.suggestedAccounts);
     const profile = useSelector((store: any) => store?.reducers?.profile);
 
-    const socket = useSocket();
     const dispatch = useDispatch();
     const userActions: any = [
         { img: moreInHome, actionType: 'more' },
@@ -207,21 +206,8 @@ const handleVideoEnd = (endedMediaId: string) => {
         // }
     }, [videoes, activeMediaId]); // This will run on initial load or when `videoes` changes
 
-    function logPostStats(postId: string)
-    {
-        let payload =
-        {
-            "media_id": postId,
-            "user_id": localStorage.getItem('userId'),
-            "clientUTCTime": new Date().toISOString(),
-            "trafficSource": "forYouFeed",
-        };
-
-        socket.emit('watch-time', payload);
-    };
-
     const handleMediaPlay = (mediaId: string) => {
-        logPostStats(mediaId);
+        logPostStats({postId: mediaId, trafficSource: 'for_you'});
         console.log("Playing media with ID:", mediaId);
         setActiveMediaId(mediaId);
         setTotalPostComments(0);

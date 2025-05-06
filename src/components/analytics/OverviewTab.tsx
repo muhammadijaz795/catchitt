@@ -1,64 +1,69 @@
 import React, { useEffect, useState } from 'react'
 import { STATISTICSTABS } from '../../utils/constants'
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,  Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Area, Line, XAxis, YAxis,  CartesianGrid , Legend, ResponsiveContainer } from 'recharts';
 import {
+    LinearProgress,
     Box,
     Grid,
     Paper,
     Typography,
+    Tooltip
   } from '@mui/material';
   import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+  import dayjs from 'dayjs'; // If you want date formatting
+
   
-  const CardHeader = ({
-    title,
-    isDark,
-    tooltipText,
-  }: {
-    title: string;
-    isDark: boolean;
-    tooltipText: string;
-  }) => (
-    <Box
-      sx={{
-        py: 1,
-        px: 2,
-        borderBottom: 1,
-        borderColor: 'divider',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 0.5,
-      }}
+    
+const CardHeader = ({
+  title,
+  isDark,
+  tooltipText,
+}: {
+  title: string;
+  isDark: boolean;
+  tooltipText: string;
+}) => (
+  <Box
+    sx={{
+      py: 1,
+      px: 2,
+      borderBottom: 1,
+      borderColor: 'divider',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0.5,
+    }}
+  >
+    <Typography
+      fontSize={15}
+      fontWeight={600}
+      color={isDark ? 'grey.300' : 'text.primary'}
     >
-      <Typography
-        fontSize={15}
-        fontWeight={600}
-        color={isDark ? 'grey.300' : 'text.primary'}
-      >
-        {title}
-      </Typography>
-      {/* <Tooltip
-        title={tooltipText}
-        placement="top"
-        slotProps={{
-          tooltip: {
-            sx: {
-              bgcolor: isDark ? '#fff' : '#000',
-              color: isDark ? '#000' : '#fff',
-              fontSize: '1rem',
-            },
-          },
-        }}
-      >
-        <InfoOutlinedIcon
-          sx={{
-            fontSize: 14,
-            cursor: 'help',
-            color: isDark ? 'grey.400' : 'text.secondary',
-          }}
-        />
-      </Tooltip> */}
-    </Box>
-  );
+      {title}
+    </Typography>
+    <Tooltip
+  title={tooltipText}
+  placement="top"
+  slotProps={{
+    tooltip: {
+      sx: {
+        bgcolor: isDark ? '#fff' : '#000',
+        color: isDark ? '#000' : '#fff',
+        fontSize: '1rem',
+      },
+    },
+  }}
+>
+  <InfoOutlinedIcon
+    sx={{
+      fontSize: 14,
+      cursor: 'help',
+      color: isDark ? 'grey.400' : 'text.secondary',
+    }}
+  />
+</Tooltip>
+</Box>
+);
   
   const PlaceholderLine = ({ isDark }: { isDark: boolean }) => (
     <Box
@@ -143,28 +148,52 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
                     <div onClick={switchTab} id={STATISTICSTABS.SHARES.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.SHARES ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} rounded-tr-md`}>Shares <br /> <span className={`${activeTab === STATISTICSTABS.SHARES ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.repostCounts || 0}</span></div>
                 </div>
                 {/* Chart Section */}
-                <div className="m-4 border-t pt-6 mb-6 ">
-                    <div className={`${chartData.length ? 'h-64' : 'h-32'} flex items-center justify-center text-gray-400`}>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart
-                                data={chartData}
-                                margin={{
-                                    top: 5,
-                                    right: 30,
-                                    left: 20,
-                                    bottom: 5,
-                                }}
-                            >
-                                {chartData.length && <CartesianGrid strokeDasharray="3 3" />}
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line type="monotone" dataKey="value" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+                <div className="m-4 border-t pt-6 mb-6">
+  <div className={`${chartData.length ? 'h-64' : 'h-32'} flex items-center justify-center text-gray-400`}>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart
+        data={chartData}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        {chartData.length > 0 && <CartesianGrid strokeDasharray="3 3" />}
+        <defs>
+          <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#00b0ff" stopOpacity={0.4} />
+            <stop offset="100%" stopColor="#00b0ff" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <XAxis
+          dataKey="date"
+          tickFormatter={(str) => dayjs(str).format('MMM D')}
+          textAnchor="end"
+          tick={{ textAnchor: 'end' }}
+          interval="preserveStartEnd"
+        />
+         <YAxis
+          orientation="right"
+          tick={{ fill: '#666' }}
+          axisLine={false}
+          tickLine={false}
+        />
+        <Tooltip />
+        <Line
+          type="monotone"
+          dataKey="value"
+          stroke="#00b0ff"
+          strokeWidth={2}
+          dot={{ stroke: '#00b0ff', strokeWidth: 2, fill: 'white', r: 4 }}
+          activeDot={{ r: 6 }}
+        />
+        <Area
+          type="monotone"
+          dataKey="value"
+          stroke="none"
+          fill="url(#colorBlue)"
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+</div>
 
             </div>
             {/* Bottom Metrics Section */}
@@ -193,7 +222,15 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
                                 {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                             </Typography>
                             <Box sx={{ flexGrow: 1, mx: 2 }}>
-                                <PlaceholderLine isDark={isDarkTheme} />
+                                <LinearProgress variant="determinate" value={value as number} sx={{
+                                    height: 8,
+                                    borderRadius: 4,
+                                    backgroundColor: '#f5f5f5',
+                                    '& .MuiLinearProgress-bar': {
+                                      borderRadius: 4,
+                                      backgroundColor: '#3B82F6',
+                                    },
+                                  }} />
                             </Box>
                             <Typography fontSize={14} color={isDarkTheme ? 'grey.300' : 'text.primary'}>
                                 {value as React.ReactNode}%
