@@ -215,7 +215,7 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
     <TableBody>
       {data.map((post, index) => (
         <TableRow className='font-bold' key={index}>
-          <TableCell>1</TableCell>
+          <TableCell>{index + 1}</TableCell>
           <TableCell align="center">
             <Box display="flex" alignItems="center">
               <Avatar
@@ -229,7 +229,7 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
             </Box>
           </TableCell>
           <TableCell align="center"  sx={{fontWeight: '600'}} >{post.viewsLast7Days}</TableCell>
-          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.allViews}</TableCell>
+          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.views}</TableCell>
           <TableCell align="center" sx={{fontWeight: '600'}} >{post.postedOn}{moment(post.createdTime).format('D-MM')}</TableCell>
           <TableCell align="center">
             <Button variant="contained" sx={{backgroundColor: '#F2F2F2', px: 2, boxShadow: 'none', py: 1, color: 'black', textTransform: 'capitalize', fontWeight: '700'}}  size="small">
