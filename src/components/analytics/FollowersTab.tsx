@@ -215,8 +215,8 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
                 },
             }}
             >
-            <Tab label="Total viewers" />
-            <Tab label="New viewers" />
+            <Tab label="Total followers" />
+            <Tab label="Net followers" />
             </Tabs>
 
             {/* Top Section */}
@@ -459,7 +459,7 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
                       cursor={{ fill: "rgba(25, 118, 210, 0.1)" }}
                       /> */}
                       <Bar dataKey="activity" radius={[4, 4, 0, 0]}>
-                      {dayData.map((entry, index) => (
+                      {dayData.map((entry: any, index: number) => (
                           <Cell
                           key={`cell-${index}`}
                           fill={entry.date === "Apr 2" ? "#1976d2" : "#e3f2fd"}
