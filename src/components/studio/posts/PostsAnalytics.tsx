@@ -53,18 +53,17 @@ import {
 
 
     // For the 3-dot "More Options" menu
-const [anchorElMoreOptions, setAnchorElMoreOptions] = useState<null | HTMLElement>(null);
-const isMoreOptionsOpen = Boolean(anchorElMoreOptions);
+const [anchorElMoreOptions, setAnchorElMoreOptions] = useState<null | {postId: string, element: HTMLElement}>(null);
 
-const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-  setAnchorElMoreOptions(event.currentTarget);
+const isMoreOptionsOpen = (postId: string) => Boolean(anchorElMoreOptions && anchorElMoreOptions.postId === postId);
+
+const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>, postId: string) => {
+  setAnchorElMoreOptions({postId, element: event.currentTarget});
 };
 
-const handleMoreOptionsClose = (post:any = null) => {
+const handleMoreOptionsClose = () => {
   setAnchorElMoreOptions(null);
-    
 };
-
 
 
 
@@ -1334,14 +1333,14 @@ const handleMoreOptionsClose = (post:any = null) => {
                           </IconButton>
                         </Tooltip>
   
-                          <IconButton onClick={handleMoreOptionsClick} size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
+                          <IconButton onClick={(e) => handleMoreOptionsClick(e, post._id)}  size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M1.6665 7.9974C1.6665 7.64377 1.80698 7.30464 2.05703 7.05459C2.30708 6.80454 2.64622 6.66406 2.99984 6.66406C3.35346 6.66406 3.6926 6.80454 3.94265 7.05459C4.19269 7.30464 4.33317 7.64377 4.33317 7.9974C4.33317 8.35102 4.19269 8.69016 3.94265 8.9402C3.6926 9.19025 3.35346 9.33073 2.99984 9.33073C2.64622 9.33073 2.30708 9.19025 2.05703 8.9402C1.80698 8.69016 1.6665 8.35102 1.6665 7.9974ZM6.6665 7.9974C6.6665 7.64377 6.80698 7.30464 7.05703 7.05459C7.30708 6.80454 7.64622 6.66406 7.99984 6.66406C8.35346 6.66406 8.6926 6.80454 8.94265 7.05459C9.19269 7.30464 9.33317 7.64377 9.33317 7.9974C9.33317 8.35102 9.19269 8.69016 8.94265 8.9402C8.6926 9.19025 8.35346 9.33073 7.99984 9.33073C7.64622 9.33073 7.30708 9.19025 7.05703 8.9402C6.80698 8.69016 6.6665 8.35102 6.6665 7.9974ZM11.6665 7.9974C11.6665 7.64377 11.807 7.30464 12.057 7.05459C12.3071 6.80454 12.6462 6.66406 12.9998 6.66406C13.3535 6.66406 13.6926 6.80454 13.9426 7.05459C14.1927 7.30464 14.3332 7.64377 14.3332 7.9974C14.3332 8.35102 14.1927 8.69016 13.9426 8.9402C13.6926 9.19025 13.3535 9.33073 12.9998 9.33073C12.6462 9.33073 12.3071 9.19025 12.057 8.9402C11.807 8.69016 11.6665 8.35102 11.6665 7.9974Z" fill="black"/>
                           </svg>
                           </IconButton>
                           <Menu
-                            anchorEl={anchorElMoreOptions}
-                            open={isMoreOptionsOpen}
+                            anchorEl={anchorElMoreOptions?.element || null}
+                            open={isMoreOptionsOpen(post._id)}
                             onClose={handleMoreOptionsClose}
                             PaperProps={{
                               sx: {
@@ -1369,6 +1368,7 @@ const handleMoreOptionsClose = (post:any = null) => {
                               <PushPinIcon sx={{ fontSize: 18, mr: 1, color: '#000' }} />
                               <Typography variant="body2" color="text.primary">
                                 {post.isPinned ? 'Unpin from top' : 'Pin to top'}
+
                               </Typography>
                             </MenuItem>
                             <MenuItem onClick={()=> deletePost(post)}>
