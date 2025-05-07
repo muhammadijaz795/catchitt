@@ -99,6 +99,7 @@ function FormRightSide(props: any) {
         isPosting,
         // videoInfo,
         // updateMediaHandler,
+        fileName
     } = props;
     const [dropDown, setdropDown] = useState(false);
     const [videoThumbnails, setVideoThumbnails] = useState<any[]>([]);
@@ -128,7 +129,7 @@ function FormRightSide(props: any) {
     const [isAlreadySchedule, setIsAlreadySchedule] = useState(false);
     const [showDraftPopup, setShowDraftPopup] = useState(false);
 
-
+    // updateState('description', fileName);
     const dispatch = useDispatch();
 
     const isEditExpired = useMemo(() => {
@@ -164,6 +165,16 @@ function FormRightSide(props: any) {
           setThumbnailUrl(state.thumbnailUrl);
         }
       }, [state?.thumbnailUrl]);
+
+      useEffect(() => {
+        // Check if fileName exists in props and is not empty
+        if (fileName && fileName.trim() !== '') {
+          // Update the description state with the fileName
+          updateState('description', fileName);
+          // Also update the local comment state to keep them in sync
+          setComment(fileName);
+        }
+      }, [fileName]); // This effect runs whenever fileName changes
 
     // Add this function to handle file selection
     const handleFileSelect = (file: File) => {

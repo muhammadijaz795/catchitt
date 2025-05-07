@@ -153,6 +153,7 @@ function UploadForm(props: any) {
                     uploadState={uploadState}
                     onCancelUpload={onCancelUpload}
                     onReplaceFile={selectFilesHandler}
+                    fileName={uploadState.fileName}
                 />
                 <FormLeftSide
                     // videoInfo={videoInfo}

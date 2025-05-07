@@ -13,7 +13,7 @@ import {setCurrentEditVideo} from '../../../redux/reducers/currentEditVideoReduc
 
 
 function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelectedAudio, searchQuery, isHighlighted,  handleAudioManipulation}: any) {
-    console.log('isHighlighted'+isHighlighted)
+    console.log('isHighlighted'+isHighlighted);
    const dispatch = useDispatch();
     const abortController = useRef<AbortController | null>(null);
     const token = localStorage.getItem('token');
@@ -109,6 +109,7 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
             }
         }
     }, [isFavoriteSounds])
+    
 
     useEffect(() => {
         console.log('🚀🚀🚀gallery', gallery);
@@ -132,6 +133,17 @@ function SoundGallery({ isDarkTheme, isFavoriteSounds, selectedAudio, setSelecte
             console.error('Failed to toggle favorite:', error);
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                setAudioElement(null);
+                setPlayingAudio(null);
+            }
+        };
+    }, [audioElement]);
     
     
 
