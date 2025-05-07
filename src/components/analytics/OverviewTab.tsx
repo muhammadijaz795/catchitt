@@ -152,7 +152,7 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
         data={chartData}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 0, left: 20, bottom: 5 }}
       >
         {chartData.length > 0 && <CartesianGrid strokeDasharray="3 3" />}
         <defs>
@@ -162,12 +162,24 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
           </linearGradient>
         </defs>
         <XAxis
-          dataKey="date"
-          tickFormatter={(str) => dayjs(str).format('MMM D')}
-          textAnchor="end"
-          tick={{ textAnchor: 'end' }}
-          interval="preserveStartEnd"
-        />
+  dataKey="date"
+  tickFormatter={(str) => dayjs(str).format('MMM D')}
+  tick={({ x, y, payload, index }) => {
+    return (
+      <text
+        x={x}
+        y={y + 10}
+        textAnchor="middle"
+        fontSize={12}
+        fill={isDarkTheme ? '#ccc' : '#666'}
+      >
+        {dayjs(payload.value).format('MMM D')}
+      </text>
+    );
+  }}
+  interval={0}
+/>
+
          <YAxis
           orientation="right"
           tick={{ fill: '#666' }}
