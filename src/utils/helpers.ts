@@ -342,13 +342,14 @@ export const getLatestMsgDateFormat = (timeStamp: any) => {
 
 export function logPostStats(params: any)
 {
+    let allowedTrafficSource = ['for_you', 'following_feed', 'sound_pages', 'profile_pages', 'search_pages', 'direct_messages', 'others'];
     let endpoint = `${process.env.VITE_API_URL}/analytics/v2/watch-time`;
     let payload =
     {
         "media_id": params.postId,
         "user_id": localStorage.getItem('userId'),
         "clientUTCTime": new Date().toISOString(),
-        "trafficSource": params.trafficSource,
+        "trafficSource": allowedTrafficSource.includes(params.trafficSource) ? params.trafficSource : 'others',
     };
     let requestOptions =
     {

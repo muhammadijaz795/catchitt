@@ -106,7 +106,7 @@ export default function SoundPage() {
     const openVideoModal = (video: any) => {
         setVideoModalInfo(video);
         setVideoModal(true);
-        logPostStats({postId: video.mediaId, trafficSource: "sounds"});
+        logPostStats({postId: video.mediaId, trafficSource: "sound_pages"});
     };
 
     useEffect(() => {

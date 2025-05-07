@@ -5,7 +5,7 @@ import style from './contentTab.module.scss';
 import { formatCustomDate } from '../../utils/helpers';
 import ReactPaginate from 'react-paginate';
 import PopupForDeleteVideo from '../profile/popups/popupForDeleteVideo';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {CircularProgress, Tabs, Tab, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Avatar, Tooltip } from "@mui/material";
 import moment from 'moment';
 
@@ -170,7 +170,7 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
             },
         };
 
-        if (!selectedState.canLoadMore) return;
+        if (!selectedState.canLoadMore || selectedState.items.length > 0) return;
       
         setSelectedState((prev: any) => ({ ...prev, isLoading: true, canLoadMore: false  }));
 
@@ -215,7 +215,7 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
     <TableBody>
       {data.map((post, index) => (
         <TableRow className='font-bold' key={index}>
-          <TableCell>1</TableCell>
+          <TableCell>{index + 1}</TableCell>
           <TableCell align="center">
             <Box display="flex" alignItems="center">
               <Avatar
@@ -229,12 +229,14 @@ function ContentTab({ isDarkTheme, selectedPeriod }: any) {
             </Box>
           </TableCell>
           <TableCell align="center"  sx={{fontWeight: '600'}} >{post.viewsLast7Days}</TableCell>
-          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.allViews}</TableCell>
+          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.views}</TableCell>
           <TableCell align="center" sx={{fontWeight: '600'}} >{post.postedOn}{moment(post.createdTime).format('D-MM')}</TableCell>
           <TableCell align="center">
+            <Link to={`/analytics/post/${post.mediaId}`} reloadDocument={false} style={{ textDecoration: 'none' }}>
             <Button variant="contained" sx={{backgroundColor: '#F2F2F2', px: 2, boxShadow: 'none', py: 1, color: 'black', textTransform: 'capitalize', fontWeight: '700'}}  size="small">
               View data
             </Button>
+            </Link>
           </TableCell>
         </TableRow>
       ))}

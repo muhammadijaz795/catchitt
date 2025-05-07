@@ -135,7 +135,7 @@ export const Profile = (props: any) => {
     };
 
     const onVideoModal = (video: any) => {
-        logPostStats({postId: video.mediaId, trafficSource: "profile"});
+        logPostStats({postId: video.mediaId, trafficSource: "profile_pages"});
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
         markVideoDisplayed(video?.mediaId);

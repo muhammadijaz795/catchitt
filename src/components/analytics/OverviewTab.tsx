@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { STATISTICSTABS } from '../../utils/constants'
 import { LineChart, Area, Line, XAxis, YAxis,  CartesianGrid , Legend, ResponsiveContainer } from 'recharts';
 import {
+    LinearProgress,
     Box,
     Grid,
     Paper,
@@ -233,7 +234,15 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
                                 {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                             </Typography>
                             <Box sx={{ flexGrow: 1, mx: 2 }}>
-                                <PlaceholderLine isDark={isDarkTheme} />
+                                <LinearProgress variant="determinate" value={value as number} sx={{
+                                    height: 8,
+                                    borderRadius: 4,
+                                    backgroundColor: '#f5f5f5',
+                                    '& .MuiLinearProgress-bar': {
+                                      borderRadius: 4,
+                                      backgroundColor: '#3B82F6',
+                                    },
+                                  }} />
                             </Box>
                             <Typography fontSize={14} color={isDarkTheme ? 'grey.300' : 'text.primary'}>
                                 {value as React.ReactNode}%

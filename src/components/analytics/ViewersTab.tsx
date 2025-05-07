@@ -196,7 +196,7 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                         <Typography variant="body1" fontSize={'1.5rem'} 
                         color={tabIndex === 0 ? "#1976d2" : "inherit"}
                         fontWeight="bold" lineHeight={1}>
-                        0
+                        {analyticsDetails.details.totalViewers}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                         0 (-- )
@@ -207,7 +207,7 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                         variant="body1" fontSize={'1.5rem'} 
                         color={tabIndex === 1 ? "#1976d2" : "inherit"}
                         fontWeight="bold" lineHeight={1}>
-                        0
+                        {analyticsDetails.details.newViewers}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                         0 (-- )

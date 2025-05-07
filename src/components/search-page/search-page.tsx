@@ -366,7 +366,7 @@ export const SearchPage = () => {
                                     onClick={() => {
                                         setVideoModalInfo(video);
                                         setVideoModal(true);
-                                        logPostStats({postId: video.mediaId, trafficSource: "search"});
+                                        logPostStats({postId: video.mediaId, trafficSource: "search_pages"});
                                     }}
                                 />
                                 <p className={styles.videoDescription}>{video.description}</p>
