@@ -8,13 +8,13 @@ import { Tabs, Tab, Box, Paper, Typography, IconButton, Grid, Avatar } from "@mu
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
-import WifiIcon from '@mui/icons-material/Wifi';
-import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import WifiIcon from '@mui/icons-material/Wifi';
+import BatteryFullIcon from '@mui/icons-material/BatteryFull';
+import SearchIcon from '@mui/icons-material/Search';
 
 function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo,state }: any) {
     const [replaceVideoPopup, setReplaceVideoPopup] = React.useState(false);
@@ -43,7 +43,7 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
       );
     return (
         // <div className="flex-[0.6] p-[2.5rem] flex flex-col gap-[1rem]">
-           <div className="flex-[0.6] p-[6.5rem] flex flex-col gap-[1rem]">
+           <div className="flex-[0.6] pt-[2.85rem] flex flex-col gap-[1rem]">
             {/* <p className="text-start text-[1.25rem] font-semibold leading-[1.5rem] text-custom-dark-222">
                 Upload video
             </p>
@@ -97,6 +97,7 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
             <div
                 className={`mx-auto md:mx-0 w-[17.5rem] mt-[1.25rem] mb-[1rem] bg-[#2C2C2C] ${style.emulator}`}
             >
+               
                 <CustomPlayer src={selectedVideoSrc ? selectedVideoSrc : videoInfo?.originalUrl} />
             </div>
             )}
@@ -105,136 +106,136 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
                 className={`mx-auto md:mx-0 w-[17.5rem] mt-[1.25rem] mb-[1rem] ${style.emulator}`}
             >
 
-<Box
-      sx={{
-        width: '100%',
-        maxWidth: 375,
-        mx: 'auto',
-        bgcolor: '#fff',
-        border: '1px solid #ddd',
-        borderRadius: 3,
-        overflow: 'hidden',
-        paddingTop: '0.25rem'
-      }}
-    >
-      {/* Top status bar */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          px: 2,
-          pt: 1,
-        }}
-      >
-        <Typography variant="body2">8:00</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <SignalCellularAltIcon sx={{ fontSize: 16 }} />
-          <WifiIcon sx={{ fontSize: 16 }} />
-          <BatteryFullIcon sx={{ fontSize: 16 }} />
-        </Box>
-      </Box>
-
-      {/* Navigation Header */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          px: 1,
-          py: 1,
-        }}
-      >
-          <ArrowBackIosNewIcon fontSize="small" />
-      
-        <Box width={24} /> {/* spacer */}
-        {/* 3-dot icon */}
-        <Box sx={{ mt: 1 }}>
-            <MoreVertIcon />
-        </Box>
-      </Box>
-
-      {/* Profile Section */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'column',
-          mt: 1,
-        }}
-      >
-        <Avatar
-          src={profileImg}
-          sx={{ width: 80, height: 80 }}
-        />
-        <Typography
-          variant="subtitle1"
-          sx={{ mt: 1, fontWeight: 'bold', color: '#000' }}
-        >
-          {name}
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
           <Box
-            sx={{ width: 60, height: 20, bgcolor: '#eee', borderRadius: 1 }}
-          />
-          <Box
-            sx={{ width: 60, height: 20, bgcolor: '#eee', borderRadius: 1 }}
-          />
-        </Box>
-
-        
-      </Box>
-
-      {/* Grid Posts */}
-      <Grid container spacing={0.5} sx={{ mt: 2, px: 1 }}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
-          <Grid item xs={4} key={index}>
+            sx={{
+              width: '100%',
+              maxWidth: 375,
+              mx: 'auto',
+              bgcolor: '#fff',
+              border: '1px solid #ddd',
+              borderRadius: 3,
+              overflow: 'hidden',
+              paddingTop: '0.25rem'
+            }}
+          >
+            {/* Top status bar */}
             <Box
               sx={{
-                width: '100%',
-                aspectRatio: '1 / 1',
-                bgcolor: index === 0 ? '#ccc' : '#f0f0f0',
-                position: 'relative',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                px: 2,
+                pt: 1,
               }}
             >
-              {index === 0 && (
-                <>
+              <Typography variant="body2">8:00</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <SignalCellularAltIcon sx={{ fontSize: 16 }} />
+                <WifiIcon sx={{ fontSize: 16 }} />
+                <BatteryFullIcon sx={{ fontSize: 16 }} />
+              </Box>
+            </Box>
+
+            {/* Navigation Header */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                px: 1,
+                py: 1,
+              }}
+            >
+                <ArrowBackIosNewIcon fontSize="small" />
+            
+              <Box width={24} /> {/* spacer */}
+              {/* 3-dot icon */}
+              <Box sx={{ mt: 1 }}>
+                  <MoreVertIcon />
+              </Box>
+            </Box>
+
+            {/* Profile Section */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                mt: 1,
+              }}
+            >
+              <Avatar
+                src={profileImg}
+                sx={{ width: 80, height: 80 }}
+              />
+              <Typography
+                variant="subtitle1"
+                sx={{ mt: 1, fontWeight: 'bold', color: '#000' }}
+              >
+                {name}
+              </Typography>
+
+              <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                <Box
+                  sx={{ width: 60, height: 20, bgcolor: '#eee', borderRadius: 1 }}
+                />
+                <Box
+                  sx={{ width: 60, height: 20, bgcolor: '#eee', borderRadius: 1 }}
+                />
+              </Box>
+
+              
+            </Box>
+
+            {/* Grid Posts */}
+            <Grid container spacing={0.5} sx={{ mt: 2, px: 1 }}>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
+                <Grid item xs={4} key={index}>
                   <Box
-                    component="img"
-                    src={state.thumbnailUrl}
-                    alt="Post"
                     sx={{
                       width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 4,
-                      left: 4,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 0.5,
-                      color: '#fff',
-                      backgroundColor: 'rgba(0,0,0,0.6)',
-                      px: 0.5,
-                      borderRadius: 1,
-                      fontSize: 12,
+                      aspectRatio: '1 / 1',
+                      bgcolor: index === 0 ? '#ccc' : '#f0f0f0',
+                      position: 'relative',
                     }}
                   >
-                    <PlayArrowIcon fontSize="inherit" />
-                    <span>1000</span>
+                    {index === 0 && (
+                      <>
+                        <Box
+                          component="img"
+                          src={state.thumbnailUrl}
+                          alt="Post"
+                          sx={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            bottom: 4,
+                            left: 4,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
+                            color: '#fff',
+                            backgroundColor: 'rgba(0,0,0,0.6)',
+                            px: 0.5,
+                            borderRadius: 1,
+                            fontSize: 12,
+                          }}
+                        >
+                          <PlayArrowIcon fontSize="inherit" />
+                          <span>1000</span>
+                        </Box>
+                      </>
+                    )}
                   </Box>
-                </>
-              )}
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
 
 
             </div>
@@ -245,7 +246,9 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
                 <CustomPlayer src={selectedVideoSrc ? selectedVideoSrc : videoInfo?.originalUrl} />
             </div>
             )}
-            {!isEditMode && <CustomButton
+            {!isEditMode && 
+            <span className='px-4'>
+            <CustomButton
                 onClick={() => setOpenEditModal(true)}
                 textSize="14px"
                 islight
@@ -254,7 +257,9 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
                 color="black"
                 icon={MyIcon}
 
-            />}
+            />
+            </span>
+            }
             {/* <CustomButton
                 onClick={() => setReplaceVideoPopup(true)}
                 textSize="14px"

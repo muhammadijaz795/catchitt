@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import CustomButton from '../../../shared/buttons/CustomButton';
 import style from '../index.module.scss';
 import DndContainer from './DndContainer';
+import { Box, Button, Typography, Paper } from '@mui/material';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import {
     VideocamOutlined,
     VideoFileOutlined,
@@ -95,6 +97,39 @@ function UploadFile({ changeFileHandler }: any) {
                         </div>
                     </div>
                 </div>
+                
+            </div>
+            <div className="w-[calc(100%-14rem)] text-left ml-auto">
+                <Paper 
+                        elevation={0}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            p: 2,
+                            borderRadius: 2,
+                            border: '1px solid #eee',
+                            backgroundColor: '#fff',
+                        }}
+                        >
+                        <Box>
+                            <Typography variant="subtitle2" fontWeight={600}>
+                            Create high quality videos on CapCut Online
+                            </Typography>
+                            <Typography fontSize={'12px'} color="text.secondary">
+                            Automatically shorten your videos and create videos from scripts with AI-powered features.
+                            </Typography>
+                        </Box>
+                        <Button 
+                            sx={{ textTransform: 'none', fontWeight: 500, backgroundColor: '#0000000D', color: '#000', px: 2 }}
+                        >
+                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.9616 5.25653V3.45437L11.7297 4.59363V4.52701C11.7297 3.80415 11.2001 3.37109 10.4339 3.37109H3.36516C2.55902 3.37109 2.06934 3.80415 2.06934 4.52368V6.34583L5.19064 7.91814L2.06934 9.50044V11.3193C2.06934 12.0321 2.55902 12.4652 3.36849 12.4652H10.4306C11.1967 12.4652 11.7297 12.0321 11.7297 11.3259V11.2326L13.9616 12.3852V10.5531L8.77497 7.92147L13.9583 5.25987L13.9616 5.25653ZM6.97281 8.81422L10.8037 10.7663H3.13198L6.97948 8.81422H6.97281ZM10.777 5.06666L6.97281 7.00873L3.12532 5.06666H10.777Z" fill="black"/>
+                            </svg>
+
+                            Try now
+                        </Button>
+                </Paper>
             </div>
         </div>
     );

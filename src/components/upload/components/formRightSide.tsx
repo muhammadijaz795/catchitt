@@ -697,7 +697,7 @@ function FormRightSide(props: any) {
     
 
     return (
-        <div className="flex-[1.7] flex flex-col items-start pl-[2.5rem] md:pl-0 pr-[2.5rem] "
+        <div className="flex-[1.7] flex flex-col items-start pl-[2.5rem] md:pl-0 pr-[0rem] "
         style={isEditMode ? { marginTop: '6rem' } : {}}
         >
             <div className="w-[100%]">
