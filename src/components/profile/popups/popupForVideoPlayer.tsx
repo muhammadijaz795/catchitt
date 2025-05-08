@@ -42,7 +42,7 @@ import Forwardusers from '../../../shared/popups/shareTo/Forwardusers';
 import CountUp from 'react-countup';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { set } from 'lodash';
-import { copyLinkHandlerWithId, copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+import { copyLinkHandlerWithId, copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler, logPostStats } from '../../../utils/helpers';
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import PopupForPrivacySettings from './popupForPrivacySettings';
 import { useUpdateEffect } from 'react-use';
@@ -81,7 +81,7 @@ export default function PopupForVideoPlayer({
 
 
     const abortController = useRef<AbortController | null>(null);
-
+    const videoRef = useRef<any>(null);
     // const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
     const [videoLikes, setVideoLikes] = useState<number>(0);
     const [videoComments, setVideoComments] = useState<any>({ items: [], totalItems: null, pageSize: 5, currentPage: 1 });
@@ -798,6 +798,7 @@ export default function PopupForVideoPlayer({
         setCommentEmojiIndex(-1);
         setPrivacyPrivilege(null);
         onclose();
+        videoRef.current.currentTime && logPostStats({postId: info.mediaId, videoWatchTime: videoRef.current.currentTime});
     };
 
     useEffect(() => {
@@ -938,6 +939,7 @@ export default function PopupForVideoPlayer({
                                     
 
                                     <video
+                                        ref={videoRef}
                                         className="relative w-3/5 h-full"
                                         loop={true}
                                         controls={true}
