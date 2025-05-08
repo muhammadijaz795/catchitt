@@ -3,6 +3,7 @@ import CustomPlayer from '../../homePage/components/CustomPlayer';
 import style from '../styles.module.scss';
 import CustomPopup from '../../../shared/popups/CustomPopup';
 import React from 'react';
+import { useRef } from 'react';
 import PopupForEditVideo from '../../profile/popups/popupForEditVideo';
 import { Tabs, Tab, Box, Paper, Typography, IconButton, Grid, Avatar } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -14,6 +15,7 @@ import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { defaultAvatar, music, musicBlack, shareInHome } from '../../../icons';
 
 
 function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo,state }: any) {
@@ -31,6 +33,83 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
     const name = useSelector((state: any) => state?.reducers?.profile?.name);
     const userName = useSelector((state: any) => state?.reducers?.profile?.username);
     const coverImg = useSelector((state: any) => state?.reducers?.profile?.cover);
+
+    const videoRef = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(true);
+
+    const [isMuted, setIsMuted] = useState(true);
+    const [progress, setProgress] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [isSeeking, setIsSeeking] = useState(false);
+
+
+    const handleVideoClick = () => {
+        if (!videoRef.current) return;
+
+        if (videoRef.current.paused) {
+            videoRef.current.play();
+            setIsPlaying(true);
+        } else {
+            videoRef.current.pause();
+            setIsPlaying(false);
+        }
+    };
+
+    const togglePlayPause = () => {
+      if (videoRef.current) {
+          if (videoRef.current.paused) {
+              videoRef.current.play();
+              setIsPlaying(true);
+          } else {
+              videoRef.current.pause();
+              setIsPlaying(false);
+          }
+      }
+  };
+
+  const enterFullscreen = () => {
+    if (videoRef.current) {
+        if (videoRef.current.requestFullscreen) {
+            videoRef.current.requestFullscreen();
+        } else if (videoRef.current.webkitRequestFullscreen) {
+            videoRef.current.webkitRequestFullscreen();
+        } else if (videoRef.current.msRequestFullscreen) {
+            videoRef.current.msRequestFullscreen();
+        }
+    }
+};
+
+const toggleMute = () => {
+  if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+  }
+};
+
+const handleTimeUpdate = () => {
+  const video = videoRef.current;
+  if (video && video.duration) {
+      const currentProgress = (video.currentTime / video.duration) * 100;
+      setProgress(currentProgress);
+  }
+};
+
+const handleLoadedMetadata = () => {
+  if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+  }
+};
+
+const handleSeek = (e) => {
+  if (!videoRef.current) return;
+
+  const rect = e.currentTarget.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const seekTime = (clickX / rect.width) * videoRef.current.duration;
+
+  videoRef.current.currentTime = seekTime;
+  setProgress((seekTime / videoRef.current.duration) * 100);
+};
 
   const handleChange = (event: any, newValue: any) => {
     setValue(newValue);
@@ -94,11 +173,168 @@ function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoIn
 
 
       {value === 0 && (
-            <div
-                className={`mx-auto md:mx-0 w-[17.5rem] mt-[1.25rem] mb-[1rem] bg-[#2C2C2C] ${style.emulator}`}
+            // <div
+            //     className={`mx-auto md:mx-0 w-[17.5rem] mt-[1.25rem] mb-[1rem] bg-[#2C2C2C] ${style.emulator}`}
+            // >
+            //     <CustomPlayer src={selectedVideoSrc ? selectedVideoSrc : videoInfo?.originalUrl} />
+            // </div>
+
+             <div className={'h-fit w-1/3 relative border border-gray-100 rounded-md'}>
+                 <div className="absolute top-2 left-2 z-10 flex gap-2">
+                <button
+                    onClick={togglePlayPause}
+                    className="bg-black bg-opacity-50 text-white px-3 py-1 rounded"
+                >
+                    {isPlaying ? "Pause" : "Play"}
+                </button>
+                <button
+                    onClick={enterFullscreen}
+                    className="bg-black bg-opacity-50 text-white px-3 py-1 rounded"
+                >
+                    Fullscreen
+                </button>
+
+                <button
+                onClick={toggleMute}
+                className="absolute top-2 right-2 z-10 bg-black bg-opacity-50 text-white px-3 py-1 rounded"
             >
-                <CustomPlayer src={selectedVideoSrc ? selectedVideoSrc : videoInfo?.originalUrl} />
+                {isMuted ? "Unmute" : "Mute"}
+            </button>
+
+         
+
             </div>
+                <video
+                    className="h-[350px] w-full rounded-t-md object-cover"
+                    loop={true}
+                    controls={false}
+                    autoPlay={true}
+                    width="300px"
+                    preload="auto"
+                    playsInline
+                    ref={videoRef}
+                    onClick={handleVideoClick}
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}    
+                    src={selectedVideoSrc ? selectedVideoSrc : videoInfo?.originalUrl}
+                />
+
+<div
+                className="absolute bottom-0 left-0 w-full h-3 bg-gray-400 cursor-pointer"
+                onClick={handleSeek}
+                onMouseDown={() => setIsSeeking(true)}
+                onMouseUp={() => setIsSeeking(false)}
+            >
+                <div
+                    className="h-full bg-blue-500"
+                    style={{ width: `${progress}%` }}
+                ></div>
+            </div>
+            
+                <div className="text-left px-1 py-2">
+                    <p className="font-medium text-[0.8rem]">@{name}</p>
+                    <p className="font-medium text-[0.6rem] mt-[0.2rem]">
+                        {state.category.name?.length > 50
+                            ? `${state.category.name?.slice(0, 60)}... See more`
+                            : state.category.name}
+                    </p>
+                    <div className="mt-[0.1rem] leading-3" >
+                        <img
+                            className={`w-2.5 h-2.5 object-contain inline-block mr-1`}
+                            src={musicBlack}
+                            alt="music-icon"
+                        />
+                        <span className="font-normal text-[0.6rem]">
+                            {userName}
+                        </span>
+                    </div>
+                </div>
+                <div className="absolute flex flex-col justify-between items-center gap-2.5 top-32 right-2 w-10 text-white">
+                    {/* Video next and previous */}
+                    <div className="text-center flex flex-col justify-between items-center gap-3 rounded-full px-2">
+                        {/* <img
+                            className="h-5 w-5 object-contain cursor-pointer"
+                            src={chevronUpIconVideo}
+                        /> */}
+                        <div className={style.DivAvatarActionItemContainer}>
+                            <a
+                                className="e1g2yhv83 css-1w9wqra-StyledLink-AvatarLink er1vbsz0"
+                                href="#"
+                            >
+                                <div
+                                    className={style.AvatarDivContainer}
+                                    style={{ width: '35px', height: '35px' }}
+                                >
+                                    <span
+                                        className={style.SpanAvatarContainer}
+                                        style={{
+                                            width: '35px',
+                                            height: '35px',
+                                        }}
+                                    >
+                                        <img
+                                            loading="lazy"
+                                            alt="sherjangkhan5"
+                                            src={ profileImg ||
+                                                defaultAvatar
+                                            }
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                (e.target as HTMLImageElement).src = defaultAvatar;  // Set default image if there's an error
+                                            }}
+                                            className="css-1zpj2q-ImgAvatar e1e9er4e1"
+                                        />
+                                    </span>
+                                </div>
+                            </a>
+
+                            <button
+                                className={style.AvatarFollowButton}
+                                data-e2e="feed-follow"
+                            >
+                                <span className={style.ColorButtonContent}>
+                                   
+                                        <svg
+                                            fill="white"
+                                            viewBox="0 0 48 48"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="1em"
+                                            height="1em"
+                                        >
+                                            <path d="m19.71 36.03 19.73-30.5a1 1 0 0 1 1.39-.3l2.35 1.53c.46.3.6.92.3 1.38L22.01 41.3a2.4 2.4 0 0 1-3.83.28L4.85 26.33a1 1 0 0 1 .1-1.4l2.1-1.85a1 1 0 0 1 1.42.1L19.7 36.02Z"></path>
+                                        </svg>
+                                        <svg
+                                            fill="white"
+                                            viewBox="0 0 48 48"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="1em"
+                                            height="1em"
+                                        >
+                                            <path d="M26 7a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v15H7a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h15v15a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V26h15a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H26V7Z"></path>
+                                        </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    {/* <div className="text-center">
+                        <img
+                            className="h-5 w-5 object-contain"
+                            src={isLiked ? redHeartIcon : whiteHeartIcon}
+                        />
+                        <p className="font-bold text-[0.5rem] mt-1 text-white">
+                            {videoLikes}
+                        </p>
+                    </div> */}
+                    
+                    <div className="text-center relative">
+                        <img className="h-5 w-5 object-contain" src={shareInHome} />
+                        <p className="font-bold text-[0.5rem] mt-1 text-white">
+                            {/* {videoShares} */}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             )}
             {value === 1 && (
             <div
