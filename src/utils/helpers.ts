@@ -344,7 +344,7 @@ export function logPostStats(params: any)
 {
     let allowedTrafficSource = ['for_you', 'following_feed', 'sound_pages', 'profile_pages', 'search_pages', 'direct_messages', 'others'];
     let endpoint = `${process.env.VITE_API_URL}/analytics/v2/watch-time`;
-    let payload =
+    let payload: Record<string, any> =
     {
         "media_id": params.postId,
         "user_id": localStorage.getItem('userId'),
