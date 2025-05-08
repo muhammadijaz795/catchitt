@@ -13,6 +13,7 @@ import { Avatar, Box, Typography, Paper } from '@mui/material';
 
 // import StudioLeftSidebar from '../studio/StudioLeftSidebar';
 import UploadSidebar from '../studio/UploadSidebar';
+import Header from '../studio/header/Header';
 
 function UploadPage() {
     const {
@@ -218,7 +219,8 @@ function UploadPage() {
 
     return (
         <div className={`flex flex-col ${darkTheme}`}>
-            <Navbar />
+            {/* <Navbar /> */}
+            <Header />
             <UploadSidebar />
             {(!selectedFile && !isEditMode && !postId) ? (
                 <UploadFile  changeFileHandler={handleFileSelect} />

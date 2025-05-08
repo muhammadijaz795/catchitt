@@ -33,22 +33,31 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const [linePosition, setLinePosition] = useState(50);
+  const [linePercent, setLinePercent] = useState(50); // 0-100
   const [manualSelect, setManualSelect] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  
+  const [showButtons, setShowButtons] = useState(false);
   const cropperRef = useRef<CropperRef | null>(null);
   const thumbnailsRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [showButtons, setShowButtons] = useState(false);
+  const isDraggingRef = useRef(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  // Set initial preview when currentThumbnail changes
   useEffect(() => {
     if (currentThumbnail) {
       setPreview(currentThumbnail);
     }
   }, [currentThumbnail]);
 
+  // Initialize preview image based on linePercent
+ useEffect(() => {
+    const index = Math.round((linePercent / 100) * (videoThumbnails.length - 1));
+    setPreviewImage(videoThumbnails[index]);
+  }, [linePercent, videoThumbnails]);
+
+  // Handle select frame
   const handleSelectFrame = (thumbUrl: string, index: number) => {
     setPreview(thumbUrl);
     onSelectThumbnail(index);
@@ -56,6 +65,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
     setTimeout(() => setManualSelect(false), 1000);
   };
 
+  // File input handlers
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -75,6 +85,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
     }
   };
 
+  // Save cropped image
   const handleSaveCroppedImage = async () => {
     if (cropperRef.current) {
       try {
@@ -85,7 +96,6 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               const file = new File([blob], 'thumbnail.jpg', { type: 'image/jpeg' });
               onCustomThumbnail(file);
               const imageUrl = URL.createObjectURL(blob);
-              console.log('Cropped image URL:', imageUrl);
               setPreview(imageUrl);
               setTab('select');
               setShowButtons(false);
@@ -99,64 +109,35 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
     }
   };
 
+  // Drag handling for the line
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.target !== lineRef.current) return;
-    setIsDragging(true);
-    setStartX(e.clientX);
-    if (thumbnailsRef.current) {
-      setScrollLeft(thumbnailsRef.current.scrollLeft);
-    }
+    e.preventDefault();
+    isDraggingRef.current = true;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !thumbnailsRef.current) return;
-    const moveX = e.clientX - startX;
-    thumbnailsRef.current.scrollLeft = scrollLeft - moveX;
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDraggingRef.current || !thumbnailsRef.current) return;
+    const container = thumbnailsRef.current;
+    const rect = container.getBoundingClientRect();
+    let newPercent = ((e.clientX - rect.left) / rect.width) * 100;
+    newPercent = Math.max(0, Math.min(100, newPercent));
+    setLinePercent(newPercent);
+
+    // Find closest thumbnail
+    const totalThumbnails = videoThumbnails.length;
+    const index = Math.round((newPercent / 100) * (totalThumbnails - 1));
+    const thumbUrl = videoThumbnails[index];
+    setPreviewImage(thumbUrl);
+    onSelectThumbnail(index);
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
+    isDraggingRef.current = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
   };
-
-  const handleScroll = () => {
-    if (thumbnailsRef.current) {
-      const container = thumbnailsRef.current;
-      const scrollLeft = container.scrollLeft;
-      const centerX = scrollLeft + container.offsetWidth / 2;
-
-      let closestIndex = -1;
-      let closestDistance = Number.MAX_VALUE;
-      let closestCenter = 0;
-
-      for (let i = 0; i < container.children.length; i++) {
-        const thumb = container.children[i] as HTMLElement;
-        const thumbCenterX = thumb.offsetLeft + thumb.offsetWidth / 2;
-        const distance = Math.abs(thumbCenterX - centerX);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = i;
-          closestCenter = thumbCenterX;
-        }
-      }
-
-      if (closestIndex !== -1 && !manualSelect) {
-        const selectedThumbnail = videoThumbnails[closestIndex];
-        setPreview(selectedThumbnail);
-        onSelectThumbnail(closestIndex);
-        setLinePosition((closestCenter / container.scrollWidth) * 100);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const container = thumbnailsRef.current;
-    if (!container) return;
-
-    container.addEventListener('scroll', handleScroll);
-    return () => {
-      container.removeEventListener('scroll', handleScroll);
-    };
-  }, [manualSelect, videoThumbnails]);
 
   return (
     <Dialog 
@@ -172,6 +153,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
         },
       }}
     >
+      {/* Header with tabs and close button */}
       <DialogTitle
         sx={{
           p: 0,
@@ -210,11 +192,11 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
         </IconButton>
       </DialogTitle>
       
+      {/* Content */}
       <DialogContent sx={{ p: 0 }}>
-        
-        
         {tab === 'select' && (
           <>
+            {/* Preview Image */}
             <Box sx={{ 
               display: 'flex', 
               justifyContent: 'center', 
@@ -236,8 +218,15 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
                 />
               )}
             </Box>
-            
+            {/* Slider with draggable line */}
             <Box sx={{ position: 'relative', height: 90, mb: 4 }}>
+              {/* Top preview of current slide */}
+              {/* {previewImage && (
+                <Box sx={{ position: 'absolute', bottom: '100%', mb: 1, width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <img src={previewImage} alt="Preview" style={{ height: '80px', objectFit: 'contain', borderRadius: '4px' }} />
+                </Box>
+              )} */}
+              {/* Draggable line */}
               <Box
                 ref={lineRef}
                 sx={{
@@ -246,18 +235,16 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
                   bottom: 0,
                   width: '2px',
                   backgroundColor: '#00BCD4',
-                  left: `${linePosition}%`,
+                  left: `${linePercent}%`,
                   transform: 'translateX(-50%)',
                   zIndex: 2,
-                  transition: 'left 0s',
                   cursor: 'ew-resize',
                 }}
                 onMouseDown={handleMouseDown}
               />
+              {/* Thumbnails container */}
               <Box
                 ref={thumbnailsRef}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
                 sx={{
                   display: 'flex',
                   overflowX: 'auto',
@@ -265,7 +252,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
                   height: '100%',
                   scrollbarWidth: 'none',
                   '&::-webkit-scrollbar': { display: 'none' },
-                  cursor: isDragging ? 'grabbing' : 'grab',
+                  cursor: 'grab',
                 }}
               >
                 {videoThumbnails.map((thumb, idx) => (
@@ -297,7 +284,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
             </Box>
           </>
         )}
-        
+
         {tab === 'upload' && (
           <Box sx={{ 
             position: 'relative',
@@ -333,12 +320,12 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
                 height: '100%',
                 textAlign: 'center'
               }}>
+                {/* Drag and drop icon */}
                 <svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M32.4465 47.1592H43.6965C46.6942 47.1515 49.578 46.0103 51.7692 43.9647C53.9605 41.919 55.297 39.1204 55.5106 36.1303C55.7242 33.1402 54.799 30.18 52.9207 27.8437C51.0425 25.5074 48.3501 23.9679 45.384 23.5342C44.7891 19.8075 42.8114 16.4419 39.8452 14.1087C36.879 11.7755 33.1423 10.6461 29.3803 10.9458C25.6183 11.2455 22.1075 12.9523 19.5481 15.7257C16.9887 18.4991 15.5688 22.1353 15.5715 25.9092V25.9217C12.7891 26.0527 10.1694 27.2712 8.27655 29.3146C6.38367 31.3581 5.36895 34.0632 5.45089 36.8475C5.53283 39.6318 6.70487 42.2725 8.71465 44.2011C10.7244 46.1298 13.4112 47.192 16.1965 47.1592H28.6965V32.3092L25.459 35.5467C25.3421 35.6612 25.1851 35.7254 25.0215 35.7254C24.8579 35.7254 24.7008 35.6612 24.584 35.5467L22.809 33.7717C22.6945 33.6549 22.6303 33.4978 22.6303 33.3342C22.6303 33.1706 22.6945 33.0135 22.809 32.8967L29.2465 26.4592C29.598 26.1081 30.0746 25.9109 30.5715 25.9109C31.0684 25.9109 31.5449 26.1081 31.8965 26.4592L38.334 32.8967C38.584 33.1467 38.584 33.5217 38.334 33.7717L36.559 35.5467C36.4422 35.6612 36.2851 35.7254 36.1215 35.7254C35.9579 35.7254 35.8008 35.6612 35.684 35.5467L32.4465 32.3092V47.1592Z" fill="black" fill-opacity="0.34"/>
+                <path d="M32.4465 47.1592H43.6965C46.6942 47.1515 49.578 46.0103 51.7692 43.9647C53.9605 41.919 55.297 39.1204 55.5106 36.1303C55.7242 33.1402 54.799 30.18 52.9207 27.8437C51.0425 25.5074 48.3501 23.9679 45.384 23.5342C44.7891 19.8075 42.8114 16.4419 39.8452 14.1087C36.879 11.7755 33.1423 10.6461 29.3803 10.9458C25.6183 11.2455 22.1075 12.9523 19.5481 15.7257C16.9887 18.4991 15.5688 22.1353 15.5715 25.9092V25.9217C12.7891 26.0527 10.1694 27.2712 8.27655 29.3146C6.38367 31.3581 5.36895 34.0632 5.45089 36.8475C5.53283 39.6318 6.70487 42.2725 8.71465 44.2011C10.7244 46.1298 13.4112 47.192 16.1965 47.1592H28.6965V32.3092L25.459 35.5467C25.3421 35.6612 25.1851 35.7254 25.0215 35.7254C24.8579 35.7254 24.7008 35.6612 24.584 35.5467L22.809 33.7717C22.6945 33.6549 22.6303 33.4978 22.6303 33.3342C22.6303 33.1706 22.6945 33.0135 22.809 32.8967L29.2465 26.4592C29.598 26.1081 30.0746 25.9109 30.5715 25.9109C31.0684 25.9109 31.5449 26.1081 31.8965 26.4592L38.334 32.8967C38.584 33.1467 38.584 33.5217 38.334 33.7717L36.559 35.5467C36.4422 35.6612 36.2851 35.7254 36.1215 35.7254C35.9579 35.7254 35.8008 35.6612 35.684 35.5467L32.4465 32.3092V47.1592Z" fill="black" fillOpacity="0.34"/>
                 </svg>
-
                 <Typography variant="h5" sx={{ mb: 0, color: '#000 !important' }}>
-                Drag and drop a file here
+                  Drag and drop a file here
                 </Typography>
                 <Button
                   sx={{textTransform: 'lowercase'}}
@@ -352,7 +339,6 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
             )}
           </Box>
         )}
-        
         <input
           type="file"
           ref={fileInputRef}
@@ -362,6 +348,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
         />
       </DialogContent>
 
+      {/* Buttons at bottom */}
       <Box sx={{ 
         backgroundColor: '#fff', 
         display: 'flex', 

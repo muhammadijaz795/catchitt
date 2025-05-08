@@ -48,7 +48,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any) {
 
-  const { onChangeFileHandler } = useUpload();
+  const { onChangeFileHandler, updateTemplate  } = useUpload();
 
   const [loaded, setLoaded] = useState(false);
   const [isInProcess, setIsInProcess] = useState(false);
@@ -70,10 +70,12 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   const [isGalleryHighlighted, setIsGalleryHighlighted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const dispatch = useDispatch();
+
+  const handleTemplateSelect = (template: any) => {
+    updateTemplate(template);
+    setSelectedTemplate(template); // optional, if you want local state too
+  };
   
-
-
-
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (query: string) => {
@@ -358,6 +360,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
 
     console.log('saveEdit 🚀🚀🚀👩‍🚀', file);
     onChangeFileHandler({ target: { files: [file] } });
+    updateTemplate(selectedTemplate);
     // setIsInProcess(false);
     handleClose();
   }
@@ -511,7 +514,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
         <Card
           key={index}
           className="relative h-[200px] overflow-hidden rounded-xl shadow-md cursor-pointer"
-          onClick={() => setSelectedTemplate(template)}
+          onClick={() => handleTemplateSelect(template)}
           style={{
             border: selectedTemplate?.image === template.image 
               ? '2px solid #f50057' 

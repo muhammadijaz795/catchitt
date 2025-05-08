@@ -1396,7 +1396,16 @@ function FormRightSide(props: any) {
                                 </div>
                             </div>
                         </div>
-                        {!isEditMode && ( <><div className="flex justify-start items-center pt-3 gap-[1.5rem]">
+                        <div className="flex justify-start items-center pt-3 gap-[1.5rem]">
+                            <p className="text-[13px] font-medium text-custom-dark-222 leading-[1.7rem]">
+                                Disclose post content
+                            </p>
+                            <BasicSwitch
+                                checked={state?.disclosePost || false}
+                                onChange={(e: any) => updateState('disclosePost', e?.target?.checked)}
+                            />
+                        </div>
+                        {/* {!isEditMode && ( <><div className="flex justify-start items-center pt-3 gap-[1.5rem]">
                             <p className="text-[13px] font-medium text-custom-dark-222 leading-[1.7rem]">
                                 Save video to device
                             </p>
@@ -1431,7 +1440,7 @@ function FormRightSide(props: any) {
                                 If this setting is off, a link to your video can still be shared.
                             </p>
                         </div></>
-                        )}
+                        )} */}
                     </div>
 
 
@@ -1500,6 +1509,20 @@ function FormRightSide(props: any) {
                             onClick={SubmitHandler}
                             loading={isPosting}
                         />
+                        <CustomButton
+                            rounded="16px"
+                            textSize="16px "
+                            width="169px !important"
+                            height="40px !important"
+                            backgroundColor='#0000000D'
+                            color='#000000'
+                            islight
+                            text="Save draft" //{videoInfo ? 'Update' : 'Post'}
+                            onClick={() => {
+                                setShowDraftPopup(false);
+                                SubmitHandler(true);
+                            }}
+                        />
                         {/* <CustomButton
                             width="169px !important"
                             textSize="16px "
@@ -1524,17 +1547,7 @@ function FormRightSide(props: any) {
                         />
 
                         
-                            <CustomButton
-                                width="100px !important"
-                                textSize="16px "
-                                islight
-                                backgroundColor='#0000000D'
-                                border='0'
-                                color="black"
-                                text="Cancel"
-                                height="40px !important"
-                                onClick={() => setShowDraftPopup(true)}
-                            />
+                            
                         
                     </div>
                 </div>
