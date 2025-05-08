@@ -39,7 +39,7 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
             {
                 logPostStats({postId: post.mediaId, videoWatchTime: videoRef.current.currentTime});
             }
-        }
+        },
     });
 
   const { level } = useSelector((state: any) => state?.reducers?.volume);
