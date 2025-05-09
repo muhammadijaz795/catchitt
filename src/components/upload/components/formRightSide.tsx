@@ -1329,7 +1329,7 @@ function FormRightSide(props: any) {
                                     Who can watch this video
                                 </p>
                                 <Select
-                                        value={state?.canView || ''}
+                                        value={state?.canView || 'followers'}
                                         onChange={handleCanViewChange}
                                         IconComponent={KeyboardArrowDownIcon}
                                         renderValue={(selected) => {

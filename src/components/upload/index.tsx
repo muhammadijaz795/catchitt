@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { setSelectedFile } from '../../redux/reducers/upload';
+import { setSelectedFile, setSelectedTemplate } from '../../redux/reducers/upload';
 import Navbar from '../../shared/navbar';
 import UploadFile from './components/uploadFile';
 import UploadForm from './components/uploadForm';
@@ -101,6 +101,7 @@ function UploadPage() {
 
      // Handle file selection from UploadFile component
      const handleFileSelect = (file: File) => {
+        dispatch(setSelectedTemplate(null));
         if (!file) return;
     
         const fileName = file.name;

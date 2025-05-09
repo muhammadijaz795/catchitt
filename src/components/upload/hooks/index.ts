@@ -7,6 +7,7 @@ import { STATUS_CODE, UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 import { setCurrentEditVideo } from '../../../redux/reducers/currentEditVideoReducer';
 import axios from 'axios';
+import { boolean } from 'mathjs';
 
 
 interface StateInterface {
@@ -435,16 +436,25 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
     const SubmitHandler = async (isDraft = false) => {
         if (postId) { //calling only whne we're updating the video
             await SubmitHandlerWhenUpdateVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return;
         }
 
         if(currentEditVideo && currentEditVideo?._id) {
             SubmitHandlerWhenEditVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return false;
         }
 
         if(isEditMode) {
             SubmitHandlerWhenEditVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return false;
         }
         
@@ -546,7 +556,9 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
                 isUploading: true,
             })
         );
-
+        setTemplate(null);
+        updateState('templateImage', null);
+        dispatch(setSelectedTemplate(null));
         navigate('/home');
         // Do put request for upload video file
         try {
@@ -714,7 +726,8 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
         postPayload.append('allowDownload', `${state?.allowDownload || false}`);
         postPayload.append('allowStitch', `${state?.allowStitch || false}`);
         postPayload.append('place', state?.place || '');
-        postPayload.append('disclosePost', String(state?.disclosePost || false));
+        console.log(typeof state?.disclosePost+'type of ')
+        postPayload.append('disclosePost', `${state?.disclosePost || false}`);
         if(state?.scheduledAt){
             console.log(state?.scheduledAt);
             postPayload.append('scheduledAt', state?.scheduledAt || '');
