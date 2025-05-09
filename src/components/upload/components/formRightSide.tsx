@@ -167,6 +167,17 @@ function FormRightSide(props: any) {
         }
       }, [state?.thumbnailUrl]);
 
+      
+
+      useEffect(() => {
+        console.log('video length on right side '+uploadState.videoLength)
+        if (uploadState.videoLength !== '') {
+          updateState('videoLength',  Math.round(uploadState.videoLength));
+          console.log('here length '+uploadState.videoLength)
+        }
+      }, [uploadState.videoLength]);
+
+
       useEffect(() => {
         // Check if fileName exists in props and is not empty
         if (fileName && fileName.trim() !== '') {
@@ -1409,7 +1420,7 @@ function FormRightSide(props: any) {
                                 </p>
                                 <BasicSwitch
                                     checked={state?.disclosePost || false}
-                                    onChange={(e) => updateState('disclosePost', e.target.checked)}
+                                    onChange={(e:any) => updateState('disclosePost', e.target.checked)}
                                 />
                                 </div></>
                             )}

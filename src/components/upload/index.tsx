@@ -39,6 +39,7 @@ function UploadPage() {
     let { isEditMode, info } = location.state || { isEditMode: false, info: {} };
     const uploadInterval = useRef<NodeJS.Timeout | null>(null);
     const [postData, setPostData] = useState<any>(null);
+    const [videoLength, setVideoLength] = useState(0);
     const { id: postId } = useParams(); 
     const token = localStorage.getItem('token');
     const API_KEY = process.env.VITE_API_URL;
@@ -55,6 +56,7 @@ function UploadPage() {
         timeLeft: "Calculating...",
         percentage: 0,
         isUploading: false,
+        videoLength: videoLength || 0, // Ensure videoLength is included
     });
 
 
@@ -114,6 +116,7 @@ function UploadPage() {
             URL.revokeObjectURL(objectUrl);
     
             const durationInSeconds = videoElement.duration;
+            setVideoLength(durationInSeconds);
     
             // Format duration into "XmYYs"
             const minutes = Math.floor(durationInSeconds / 60);
@@ -128,6 +131,7 @@ function UploadPage() {
                 timeLeft: '10.0 seconds left',
                 percentage: 0,
                 isUploading: true,
+                videoLength: videoLength
             });
     
             setTimeout(() => startSimulatedUpload(), 0);
@@ -145,6 +149,7 @@ function UploadPage() {
                 timeLeft: '10.0 seconds left',
                 percentage: 0,
                 isUploading: true,
+                videoLength:videoLength
             });
     
             setTimeout(() => startSimulatedUpload(), 0);
@@ -213,6 +218,7 @@ function UploadPage() {
             timeLeft: "0 seconds left",
             percentage: 0,
             isUploading: false,
+            videoLength:videoLength
         });
         dispatch(setSelectedFile({ file: null }));
     };

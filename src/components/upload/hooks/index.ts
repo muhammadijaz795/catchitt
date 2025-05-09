@@ -30,6 +30,7 @@ interface StateInterface {
     createdTime?: string;
     disclosePost?: boolean;
     templateImage?: string;
+    videoLength?: number;
 }
 
 function useUpload() {
@@ -90,6 +91,7 @@ function useUpload() {
         thumbnailUrl: info?.thumbnailUrl || '',
         locationPlace: info?.locationPlace || '',
         createdTime: info?.createdTime || '',
+        videoLength: info?.videoLength || 0
     });
     // const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -154,6 +156,7 @@ function useUpload() {
                     originalUrl: responseData.data.originalUrl || '',
                     category: responseData.data.category || {},
                     createdTime: responseData.data.createdTime || '',
+                    videoLength: responseData.data.videoLength || 0,
                 }));
 
                 // Set the selected file (though we won't actually upload it again)
@@ -490,6 +493,11 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
         }
         if(selectedTemplate){
             postPayload.append('templateImage', selectedTemplate || '');
+        }
+
+        if(state?.videoLength){
+            console.log('my video lentth'+String(state?.videoLength || 0))
+            postPayload.append('videoLength', String(state?.videoLength || 0));
         }
 
         // console.log(getLinks?.data?.data?.thumbnailUrl?.split('?')[0]);

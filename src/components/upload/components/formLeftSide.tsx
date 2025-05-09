@@ -357,7 +357,7 @@ const handleSeekWeb = (e: any) => {
                   </Box>
 
                   {/* <img src={selectedTemplate} /> */}
-
+{/* {post.videoLength} */}
                 <video
 
                     className= {`w-full rounded-t-md object-cover ${
