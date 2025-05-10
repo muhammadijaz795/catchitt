@@ -48,7 +48,7 @@ const Analytics = () => {
 
     function loadAnalyticsDetails()
     {
-        let endpoint = `${process.env.VITE_API_URL}/profile/v2/media-analytics?day=${selectedPeriod}`;
+        let endpoint = `${process.env.VITE_API_URL}/profile/v2/media-analytics?days=${selectedPeriod}`;
         let requestOptions =
         {
             method: 'GET',
