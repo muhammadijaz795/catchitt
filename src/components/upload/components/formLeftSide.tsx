@@ -357,7 +357,7 @@ const handleSeekWeb = (e: any) => {
                   </Box>
 
                   {/* <img src={selectedTemplate} /> */}
-
+{/* {post.videoLength} */}
                 <video
 
                     className= {`w-full rounded-t-md object-cover ${
@@ -382,20 +382,20 @@ const handleSeekWeb = (e: any) => {
                   {/* Controls */}
                   <div
                     className="w-full h-[2px] bg-gray-400 cursor-pointer"
-                    onClick={handleSeek}
+                    onClick={(e: any)=>{e.stopPropagation(); handleSeek(e);}}
                     onMouseDown={() => setIsSeeking(true)}
                     onMouseUp={() => setIsSeeking(false)}
                   >
                     <div
                       className="h-full bg-white"
-                      style={{ width: `${progressWeb}%` }}
+                      style={{ width: `${progress}%` }}
                     ></div>
                   </div>
 
                   <div className="z-10 flex justify-between my-1">
                     <div className='flex'>
                       <button
-                        onClick={togglePlayPause}
+                        onClick={(e:any)=>{e.stopPropagation(); togglePlayPause()}}
                         className="btn p-0.5 rounded flex items-center hover:bg-gray-500"
                       >
                         {isPlaying ? <PauseIcon sx={{ color: '#fff' }} fontSize="small" /> : <PlayArrowIcon sx={{ color: '#fff' }} fontSize="small" />}
@@ -403,13 +403,13 @@ const handleSeekWeb = (e: any) => {
                     </div>
                     <div className='flex gap-2'>
                       <button
-                        onClick={toggleMute}
+                        onClick={(e: any)=> {e.stopPropagation(); toggleMute()}}
                         className="btn p-0.5 rounded flex items-center gap-1 hover:bg-gray-500"
                       >
                         {isMuted ? <VolumeOffIcon sx={{ color: '#fff' }} fontSize="small" /> : <VolumeUpIcon sx={{ color: '#fff' }} fontSize="small" />}
                       </button>
                       <button
-                        onClick={enterFullscreen}
+                        onClick={(e: any)=> {e.stopPropagation(); enterFullscreen();}}
                         className="btn p-0.5 rounded flex items-center hover:bg-gray-500"
                       >
                         <FullscreenIcon sx={{ color: '#fff' }} fontSize="small" />
@@ -694,7 +694,7 @@ const handleSeekWeb = (e: any) => {
               {/* Controls */}
               <div
                 className="w-full h-[2px] bg-gray-400 cursor-pointer"
-                onClick={handleSeekWeb}
+                onClick={(e: any)=> {e.stopPropagation(); handleSeekWeb(e)}}
                 onMouseDown={() => setIsSeekingWeb(true)}
                 onMouseUp={() => setIsSeekingWeb(false)}
               >
@@ -707,7 +707,7 @@ const handleSeekWeb = (e: any) => {
               <div className="z-10 flex justify-between my-1">
                 <div className='flex'>
                   <button
-                    onClick={togglePlayPauseWeb}
+                    onClick={(e: any)=> {e.stopPropagation(); togglePlayPauseWeb()}}
                     className="btn p-0.5 rounded flex items-center hover:bg-gray-500"
                   >
                     {isPlayingWeb ? <PauseIcon sx={{ color: '#fff' }} fontSize="small" /> : <PlayArrowIcon sx={{ color: '#fff' }} fontSize="small" />}
@@ -715,13 +715,13 @@ const handleSeekWeb = (e: any) => {
                 </div>
                 <div className='flex gap-2'>
                   <button
-                    onClick={toggleMuteWeb}
+                    onClick={(e: any) => {e.stopPropagation(); toggleMuteWeb()}}
                     className="btn p-0.5 rounded flex items-center gap-1 hover:bg-gray-500"
                   >
                     {isMutedWeb ? <VolumeOffIcon sx={{ color: '#fff' }} fontSize="small" /> : <VolumeUpIcon sx={{ color: '#fff' }} fontSize="small" />}
                   </button>
                   <button
-                    onClick={enterFullscreenWeb}
+                    onClick={(e:any) => {e.stopPropagation(); enterFullscreenWeb()}}
                     className="btn p-0.5 rounded flex items-center hover:bg-gray-500"
                   >
                     <FullscreenIcon sx={{ color: '#fff' }} fontSize="small" />

@@ -530,6 +530,12 @@ const handleMoreOptionsClose = () => {
         }
       }, [posts.page]);
 
+      const formatDuration = (seconds: number): string => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      };
+
       const handleSort = (column: string) => {
         if (sortColumn === column) {
           // Toggle sort direction
@@ -1228,7 +1234,8 @@ const handleMoreOptionsClose = () => {
                               }}
                             >
                               
-                            {post.duration}
+                              <div className="flex justify-center items-center h-full">
+                              <span>{post.videoLength ? formatDuration(post.videoLength):''}</span></div>
                           </Box>
 
                         </Box>

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { setSelectedFile } from '../../redux/reducers/upload';
+import { setSelectedFile, setSelectedTemplate } from '../../redux/reducers/upload';
 import Navbar from '../../shared/navbar';
 import UploadFile from './components/uploadFile';
 import UploadForm from './components/uploadForm';
@@ -39,6 +39,7 @@ function UploadPage() {
     let { isEditMode, info } = location.state || { isEditMode: false, info: {} };
     const uploadInterval = useRef<NodeJS.Timeout | null>(null);
     const [postData, setPostData] = useState<any>(null);
+    const [videoLength, setVideoLength] = useState(0);
     const { id: postId } = useParams(); 
     const token = localStorage.getItem('token');
     const API_KEY = process.env.VITE_API_URL;
@@ -55,6 +56,7 @@ function UploadPage() {
         timeLeft: "Calculating...",
         percentage: 0,
         isUploading: false,
+        videoLength: videoLength || 0, // Ensure videoLength is included
     });
 
 
@@ -99,6 +101,7 @@ function UploadPage() {
 
      // Handle file selection from UploadFile component
      const handleFileSelect = (file: File) => {
+        dispatch(setSelectedTemplate(null));
         if (!file) return;
     
         const fileName = file.name;
@@ -114,6 +117,7 @@ function UploadPage() {
             URL.revokeObjectURL(objectUrl);
     
             const durationInSeconds = videoElement.duration;
+            setVideoLength(durationInSeconds);
     
             // Format duration into "XmYYs"
             const minutes = Math.floor(durationInSeconds / 60);
@@ -128,6 +132,7 @@ function UploadPage() {
                 timeLeft: '10.0 seconds left',
                 percentage: 0,
                 isUploading: true,
+                videoLength: videoLength
             });
     
             setTimeout(() => startSimulatedUpload(), 0);
@@ -145,6 +150,7 @@ function UploadPage() {
                 timeLeft: '10.0 seconds left',
                 percentage: 0,
                 isUploading: true,
+                videoLength:videoLength
             });
     
             setTimeout(() => startSimulatedUpload(), 0);
@@ -213,6 +219,7 @@ function UploadPage() {
             timeLeft: "0 seconds left",
             percentage: 0,
             isUploading: false,
+            videoLength:videoLength
         });
         dispatch(setSelectedFile({ file: null }));
     };

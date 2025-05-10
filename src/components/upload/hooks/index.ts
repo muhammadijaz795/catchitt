@@ -7,6 +7,7 @@ import { STATUS_CODE, UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 import { setCurrentEditVideo } from '../../../redux/reducers/currentEditVideoReducer';
 import axios from 'axios';
+import { boolean } from 'mathjs';
 
 
 interface StateInterface {
@@ -30,6 +31,7 @@ interface StateInterface {
     createdTime?: string;
     disclosePost?: boolean;
     templateImage?: string;
+    videoLength?: number;
 }
 
 function useUpload() {
@@ -90,6 +92,7 @@ function useUpload() {
         thumbnailUrl: info?.thumbnailUrl || '',
         locationPlace: info?.locationPlace || '',
         createdTime: info?.createdTime || '',
+        videoLength: info?.videoLength || 0
     });
     // const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -154,6 +157,7 @@ function useUpload() {
                     originalUrl: responseData.data.originalUrl || '',
                     category: responseData.data.category || {},
                     createdTime: responseData.data.createdTime || '',
+                    videoLength: responseData.data.videoLength || 0,
                 }));
 
                 // Set the selected file (though we won't actually upload it again)
@@ -316,6 +320,7 @@ function useUpload() {
 
         payload.allowDuet = !!state?.allowDuet;
         payload.allowStitch = !!state?.allowStitch;
+        payload.disclosePost = !!state?.disclosePost;
 
         if (state?.place) payload.place = state.place;
         if (state?.locationPlace) payload.locationPlace = state.locationPlace;
@@ -432,16 +437,25 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
     const SubmitHandler = async (isDraft = false) => {
         if (postId) { //calling only whne we're updating the video
             await SubmitHandlerWhenUpdateVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return;
         }
 
         if(currentEditVideo && currentEditVideo?._id) {
             SubmitHandlerWhenEditVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return false;
         }
 
         if(isEditMode) {
             SubmitHandlerWhenEditVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return false;
         }
         
@@ -492,6 +506,11 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
             postPayload.append('templateImage', selectedTemplate || '');
         }
 
+        if(state?.videoLength){
+            console.log('my video lentth'+String(state?.videoLength || 0))
+            postPayload.append('videoLength', String(state?.videoLength || 0));
+        }
+
         // console.log(getLinks?.data?.data?.thumbnailUrl?.split('?')[0]);
         // console.log(state?.canView);
         // console.log(state?.description)
@@ -538,7 +557,9 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
                 isUploading: true,
             })
         );
-
+        setTemplate(null);
+        updateState('templateImage', null);
+        dispatch(setSelectedTemplate(null));
         navigate('/home');
         // Do put request for upload video file
         try {
@@ -706,7 +727,8 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
         postPayload.append('allowDownload', `${state?.allowDownload || false}`);
         postPayload.append('allowStitch', `${state?.allowStitch || false}`);
         postPayload.append('place', state?.place || '');
-        postPayload.append('disclosePost', String(state?.disclosePost || false));
+        console.log(typeof state?.disclosePost+'type of ')
+        postPayload.append('disclosePost', `${state?.disclosePost || false}`);
         if(state?.scheduledAt){
             console.log(state?.scheduledAt);
             postPayload.append('scheduledAt', state?.scheduledAt || '');
@@ -841,6 +863,7 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
                         isOnlyMe: state?.isOnlyMe,
                         disclosePost: state?.disclosePost,
                     },
+                    disclosePost: state?.disclosePost,
                     lat: info?.location?.coordinates[0],
                     lng: info?.location?.coordinates[1],
                     place: '',
