@@ -346,7 +346,7 @@ const UploadsHome = () => {
   function loadMediaByCategory()
   {
     let selectedCategoryDetails = mediaCategories.items.find(category => category.name == mediaByCategory.selectedCategory);
-    let endpoint = `${process.env.VITE_API_URL}/discover/videos-by-category?categoryId=${selectedCategoryDetails?._id}`;
+    let endpoint = `${process.env.VITE_API_URL}/discover/videos-by-category${selectedCategoryDetails?._id ? `?categoryId=${selectedCategoryDetails._id}` : ''}`;
     let requestOptions =
     {
       method: 'GET',
@@ -403,8 +403,11 @@ const UploadsHome = () => {
     loadRecentPosts();
     loadLatestComments();
     loadMediaCategories();
-    loadMediaByCategory();
   }, [tab]);
+
+  useEffect(() => {
+    loadMediaByCategory();
+  }, [mediaByCategory.selectedCategory]);
 
   const chipLabels = [
     'All',
@@ -796,9 +799,9 @@ const UploadsHome = () => {
                                     '&::-webkit-scrollbar': { display: 'none' }, // Chrome
                                     }}
                                 >
-                                  <Chip sx={{ border: 'none'}} label="All" clickable variant="outlined" onClick={ () => { setMediaByCategory(prev => ({ ...prev, selectedCategory: '' })); loadMediaByCategory(); }} />
+                                  <Chip sx={{ border: 'none'}} label="All" clickable variant="outlined" onClick={ () => { setMediaByCategory(prev => ({ ...prev, selectedCategory: '' })); }} />
                                     {mediaCategories.items.map((item, idx) => (
-                                    <Chip sx={{ border: 'none'}} key={idx} label={item.name} clickable variant="outlined" onClick={ () => { setMediaByCategory(prev => ({ ...prev, selectedCategory: item.name })); loadMediaByCategory(); }} />
+                                    <Chip sx={{ border: 'none'}} key={idx} label={item.name} clickable variant="outlined" onClick={ () => { setMediaByCategory(prev => ({ ...prev, selectedCategory: item.name })); }} />
                                     ))}
                                 </Box>
                                 <IconButton sx={{ backgroundColor: 'white' , boxShadow: '0px 0px 9px 0px #e4e6eb'}} onClick={() => scroll('right')}>
