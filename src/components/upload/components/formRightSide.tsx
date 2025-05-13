@@ -34,6 +34,8 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CheckIcon from '@mui/icons-material/Check';
 import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler, searchUsersAndHashes } from '../../../utils/helpers';
 
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const options = [
   { label: 'Everyone', value: 'everyone' },
@@ -57,7 +59,7 @@ function FormRightSide(props: any) {
         isEditMode = true;
     }
 
-
+    const [showMore, setShowMore] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const scroll = (direction: 'left' | 'right') => {
@@ -99,6 +101,7 @@ function FormRightSide(props: any) {
         isPosting,
         // videoInfo,
         // updateMediaHandler,
+        fileName
     } = props;
     const [dropDown, setdropDown] = useState(false);
     const [videoThumbnails, setVideoThumbnails] = useState<any[]>([]);
@@ -127,8 +130,7 @@ function FormRightSide(props: any) {
     const [showResult, setShowResult] = useState(false);
     const [isAlreadySchedule, setIsAlreadySchedule] = useState(false);
     const [showDraftPopup, setShowDraftPopup] = useState(false);
-
-
+    // updateState('description', fileName);
     const dispatch = useDispatch();
 
     const isEditExpired = useMemo(() => {
@@ -164,6 +166,27 @@ function FormRightSide(props: any) {
           setThumbnailUrl(state.thumbnailUrl);
         }
       }, [state?.thumbnailUrl]);
+
+      
+
+      useEffect(() => {
+        console.log('video length on right side '+uploadState.videoLength)
+        if (uploadState.videoLength !== '') {
+          updateState('videoLength',  Math.round(uploadState.videoLength));
+          console.log('here length '+uploadState.videoLength)
+        }
+      }, [uploadState.videoLength]);
+
+
+      useEffect(() => {
+        // Check if fileName exists in props and is not empty
+        if (fileName && fileName.trim() !== '') {
+          // Update the description state with the fileName
+          updateState('description', fileName);
+          // Also update the local comment state to keep them in sync
+          setComment(fileName);
+        }
+      }, [fileName]); // This effect runs whenever fileName changes
 
     // Add this function to handle file selection
     const handleFileSelect = (file: File) => {
@@ -334,8 +357,12 @@ function FormRightSide(props: any) {
         }
       
         // Get the search query (text after the trigger symbol)
-        const query = comment.slice(searchIndex + 1);
-        
+        let query = comment.slice(searchIndex + 1);
+        // If only "@" is present at the end, assign default 'a'
+        if (isUserSearch && query.trim() === "" && comment.endsWith("@")) {
+            query = "a";
+        }
+                
         // Only search if query has at least 1 character
         if (query.length === 0) {
           setFilteredUsers([]);
@@ -686,7 +713,7 @@ function FormRightSide(props: any) {
     
 
     return (
-        <div className="flex-[1.7] flex flex-col items-start pl-[2.5rem] md:pl-0 pr-[2.5rem] "
+        <div className="flex-[1.7] flex flex-col items-start pl-[2.5rem] md:pl-0 pr-[0rem] "
         style={isEditMode ? { marginTop: '6rem' } : {}}
         >
             <div className="w-[100%]">
@@ -1204,188 +1231,209 @@ function FormRightSide(props: any) {
 
                     <p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">Settings</p>
 
-                    <div className='bg-white p-3 rounded-md shadow-sm'>
-                    <div className="text-left mb-2">
-                        <FormControl>
-                                <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
-                                    When to post
-                                </p>
-                                <RadioGroup
-                                    row
-                                    value={postTimeOption}
-                                    onChange={(e) => setPostTimeOption(e.target.value)}
-                                    name="when-to-post"
-                                >
-                                    <FormControlLabel
-                                     disabled={isEditMode}
-                                        name="when-to-post1"
-                                        value="now"
-                                        onClick={() => setShowSchedule(false)}
-                                        control={<Radio sx={{ color: '#FF2C55', '&.Mui-checked': { color: '#FF2C55' } }} />}
-                                        label="Now"
-                                    />
-                                    <FormControlLabel
-                                     disabled={isEditMode}
-                                        name="when-to-post1"
-                                        value="schedule"
-                                        // onClick={handleAllowSchedule}       
-                                        onClick={() => {
-                                            if (isEditMode) return;
-                                            isAlreadySchedule ? handleAllowSchedule() : setIsPopupOpen(true);
-                                          }}                                 
-                                        control={<Radio sx={{ color: '#ccc', '&.Mui-checked': { color: '#FF2C55' } }} />}
-                                        label={
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                Schedule 
-                                                <Tooltip componentsProps={{
-                                                    tooltip: {
-                                                    sx: {
-                                                        backgroundColor: "black",
-                                                        fontSize: "1rem",
-                                                    },
-                                                    },
-                                                }} title="Set a time to publish later">
-                                                    <IconButton size="small">{/* your icon */}</IconButton>
-                                                </Tooltip>
-                                            </Box>
-                                        }
-                                    />
-                                </RadioGroup>
+                    <div className='bg-white rounded-md shadow-sm'>
+                        <div className=' p-3'>
+                            <div className="text-left mb-2">
+                            <FormControl>
+                                    <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
+                                        When to post
+                                    </p>
+                                    <RadioGroup
+                                        row
+                                        value={postTimeOption}
+                                        onChange={(e) => setPostTimeOption(e.target.value)}
+                                        name="when-to-post"
+                                    >
+                                        <FormControlLabel
+                                        disabled={isEditMode}
+                                            name="when-to-post1"
+                                            value="now"
+                                            onClick={() => setShowSchedule(false)}
+                                            control={<Radio sx={{ color: '#FF2C55', '&.Mui-checked': { color: '#FF2C55' } }} />}
+                                            label="Now"
+                                        />
+                                        <FormControlLabel
+                                        disabled={isEditMode}
+                                            name="when-to-post1"
+                                            value="schedule"
+                                            // onClick={handleAllowSchedule}       
+                                            onClick={() => {
+                                                if (isEditMode) return;
+                                                isAlreadySchedule ? handleAllowSchedule() : setIsPopupOpen(true);
+                                            }}                                 
+                                            control={<Radio sx={{ color: '#ccc', '&.Mui-checked': { color: '#FF2C55' } }} />}
+                                            label={
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                    Schedule 
+                                                    <Tooltip componentsProps={{
+                                                        tooltip: {
+                                                        sx: {
+                                                            backgroundColor: "black",
+                                                            fontSize: "1rem",
+                                                        },
+                                                        },
+                                                    }} title="Set a time to publish later">
+                                                        <IconButton size="small">{/* your icon */}</IconButton>
+                                                    </Tooltip>
+                                                </Box>
+                                            }
+                                        />
+                                    </RadioGroup>
 
-                        </FormControl>
+                            </FormControl>
 
-                        <SaveVideoPopup open={isPopupOpen} onClose={handleClose} onAllow={handleAllowSchedule} />
+                            <SaveVideoPopup open={isPopupOpen} onClose={handleClose} onAllow={handleAllowSchedule} />
 
 
 
-                        {/* Schedule Section */}
-                        {showSchedule && (
-                            <div className='flex gap-2'>
-                            <input
-                                type="time"
-                                value={time}
-                                onChange={handleTimeChange}
-                                className="w-auto p-2 h-10 border bg-transparent  border-gray-300 rounded-md mt-2 cursor-pointer hover:border-gray-400"
-                            />
-                            <input
-                                type="date"
-                                value={date}
-                                onChange={handleDateChange}
-                                className="w-auto p-2 h-10 border bg-transparent border-gray-300 rounded-md mt-2 cursor-pointer hover:border-gray-400"
-                            />
+                            {/* Schedule Section */}
+                            {showSchedule && (
+                                <div className='flex gap-2'>
+                                <input
+                                    type="time"
+                                    value={time}
+                                    onChange={handleTimeChange}
+                                    className="w-auto p-2 h-10 border bg-transparent  border-gray-300 rounded-md mt-2 cursor-pointer hover:border-gray-400"
+                                />
+                                <input
+                                    type="date"
+                                    value={date}
+                                    onChange={handleDateChange}
+                                    className="w-auto p-2 h-10 border bg-transparent border-gray-300 rounded-md mt-2 cursor-pointer hover:border-gray-400"
+                                />
+                                </div>
+                            )}
+
+                            {/* Permission Popup */}
+                            <Dialog
+                                open={permissionDialogOpen}
+                                onClose={handleDenySchedule}
+                            >
+                                <DialogTitle>Enable Scheduling</DialogTitle>
+                                <DialogContent>
+                                <DialogContentText>
+                                    Scheduling posts requires permission. Would you like to allow it?
+                                </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                <Button sx={{backgroundColor: 'lightgray', color: '#000', width: '6rem'}} onClick={handleDenySchedule}>Cancel</Button>
+                                <Button sx={{backgroundColor: '#ff3b5c',width: '6rem'}}  onClick={handleAllowSchedule} variant="contained" >
+                                    Allow
+                                </Button>
+                                </DialogActions>
+                            </Dialog>
                             </div>
-                        )}
-
-                        {/* Permission Popup */}
-                        <Dialog
-                            open={permissionDialogOpen}
-                            onClose={handleDenySchedule}
-                        >
-                            <DialogTitle>Enable Scheduling</DialogTitle>
-                            <DialogContent>
-                            <DialogContentText>
-                                Scheduling posts requires permission. Would you like to allow it?
-                            </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                            <Button sx={{backgroundColor: 'lightgray', color: '#000', width: '6rem'}} onClick={handleDenySchedule}>Cancel</Button>
-                            <Button sx={{backgroundColor: '#ff3b5c',width: '6rem'}}  onClick={handleAllowSchedule} variant="contained" >
-                                Allow
-                            </Button>
-                            </DialogActions>
-                        </Dialog>
-                        </div>
-                        <div className='text-left mb-2'>
-                        <FormControl fullWidth>
-                            <p className="text-sm font-medium pb-2 text-custom-dark-222 leading-[1.7rem]">
-                                Who can watch this video
-                            </p>
-                            <Select
-                                    value={state?.canView || ''}
-                                    onChange={handleCanViewChange}
-                                    IconComponent={KeyboardArrowDownIcon}
-                                    renderValue={(selected) => {
-                                        const selectedOption = options.find(opt => {return opt.value === selected});
-                                        return selectedOption?.label || '';
-                                    }}
-                                    sx={{
-                                    width: '15rem',
-                                    backgroundColor: '#f3f3f3',
-                                    borderRadius: 2,
-                                    height: 48,
-                                    boxShadow: 'none',
-                                    '.MuiOutlinedInput-notchedOutline': {
-                                        border: 'none',
-                                    },
-                                    '.MuiSelect-icon': {
-                                        color: '#000',
-                                        right: 12,
-                                    },
-                                    }}
-                                >
-                                    {options.map((option) => (
-                                    <MenuItem
-                                        key={option.value}
-                                        value={option.value}
+                            <div className='text-left mb-2'>
+                            <FormControl fullWidth>
+                                <p className="text-sm font-medium pb-2 text-custom-dark-222 leading-[1.7rem]">
+                                    Who can watch this video
+                                </p>
+                                <Select
+                                        value={state?.canView || 'followers'}
+                                        onChange={handleCanViewChange}
+                                        IconComponent={KeyboardArrowDownIcon}
+                                        renderValue={(selected) => {
+                                            const selectedOption = options.find(opt => {return opt.value === selected});
+                                            return selectedOption?.label || '';
+                                        }}
                                         sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
+                                        width: '15rem',
+                                        backgroundColor: '#f3f3f3',
+                                        borderRadius: 2,
+                                        height: 48,
+                                        boxShadow: 'none',
+                                        '.MuiOutlinedInput-notchedOutline': {
+                                            border: 'none',
+                                        },
+                                        '.MuiSelect-icon': {
+                                            color: '#000',
+                                            right: 12,
+                                        },
                                         }}
                                     >
-                                        <span>{option.label}</span>
-                                        {canView === option.value && <CheckIcon fontSize="small" />}
-                                    </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div className="w-[100%] flex flex-col gap-[0.5rem]">
-                            <div className="flex justify-between w-[100%]">
-                                <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
-                                    Allow users to:
+                                        {options.map((option) => (
+                                        <MenuItem
+                                            key={option.value}
+                                            value={option.value}
+                                            sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            }}
+                                        >
+                                            <span>{option.label}</span>
+                                            {canView === option.value && <CheckIcon fontSize="small" />}
+                                        </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            {showMore && (<><div className="w-[100%] flex flex-col gap-[0.5rem]">
+                                <div className="flex justify-between w-[100%]">
+                                    <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
+                                        Allow users to:
+                                    </p>
+                                </div>
+                                <div className="flex gap-10">
+                                    <div className="flex gap-2 items-center">
+                                        <BasicCheckBox
+                                            // disabled={isEditMode}
+                                            onChange={(e: any) =>
+                                                updateState('allowComments', e?.target?.checked)
+                                            }
+                                            checked={state?.allowComments}
+                                        />
+                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
+                                            Comment
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-2 items-center">
+                                        <BasicCheckBox
+                                            // disabled={isEditMode}
+                                            onChange={(e: any) =>
+                                                updateState('allowDuet', e?.target?.checked)
+                                            }
+                                            checked={state?.allowDuet}
+                                        />
+                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
+                                            Duet
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-2 items-center">
+                                        <BasicCheckBox
+                                            // disabled={isEditMode}
+                                            onChange={(e: any) =>
+                                                updateState('allowStitch', e?.target?.checked)
+                                            }
+                                            checked={state?.allowStitch || false}
+                                        />
+                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
+                                            Stitch
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                <div className="flex justify-start items-center pt-3 gap-[1.5rem]">
+                                <p className="text-[13px] font-medium text-custom-dark-222 leading-[1.7rem]">
+                                    Disclose post content
                                 </p>
-                            </div>
-                            <div className="flex gap-10">
-                                <div className="flex gap-2 items-center">
-                                    <BasicCheckBox
-                                        // disabled={isEditMode}
-                                        onChange={(e: any) =>
-                                            updateState('allowComments', e?.target?.checked)
-                                        }
-                                        checked={state?.allowComments}
-                                    />
-                                    <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
-                                        Comment
-                                    </p>
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <BasicCheckBox
-                                        // disabled={isEditMode}
-                                        onChange={(e: any) =>
-                                            updateState('allowDuet', e?.target?.checked)
-                                        }
-                                        checked={state?.allowDuet}
-                                    />
-                                    <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
-                                        Duet
-                                    </p>
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <BasicCheckBox
-                                        // disabled={isEditMode}
-                                        onChange={(e: any) =>
-                                            updateState('allowStitch', e?.target?.checked)
-                                        }
-                                        checked={state?.allowStitch || false}
-                                    />
-                                    <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
-                                        Stitch
-                                    </p>
-                                </div>
-                            </div>
+                                <BasicSwitch
+                                    checked={state?.disclosePost || false}
+                                    onChange={(e:any) => updateState('disclosePost', e.target.checked)}
+                                />
+                                </div></>
+                            )}
                         </div>
-                        {!isEditMode && ( <><div className="flex justify-start items-center pt-3 gap-[1.5rem]">
+                        <button
+                            onClick={() => setShowMore(!showMore)}
+                            className="w-100 outline-none py-2.5 rounded-none border-none text-black text-sm mt-2"
+                            style={{ borderTop: '1px solid #e4e6eb'}}
+                        >
+                            {showMore ? 'Show Less' : 'Show More'}
+                            {showMore ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                        </button>
+                        {/* {!isEditMode && ( <><div className="flex justify-start items-center pt-3 gap-[1.5rem]">
                             <p className="text-[13px] font-medium text-custom-dark-222 leading-[1.7rem]">
                                 Save video to device
                             </p>
@@ -1420,7 +1468,7 @@ function FormRightSide(props: any) {
                                 If this setting is off, a link to your video can still be shared.
                             </p>
                         </div></>
-                        )}
+                        )} */}
                     </div>
 
 
@@ -1489,6 +1537,20 @@ function FormRightSide(props: any) {
                             onClick={SubmitHandler}
                             loading={isPosting}
                         />
+                        <CustomButton
+                            rounded="16px"
+                            textSize="16px "
+                            width="169px !important"
+                            height="40px !important"
+                            backgroundColor='#0000000D'
+                            color='#000000'
+                            islight
+                            text="Save draft" //{videoInfo ? 'Update' : 'Post'}
+                            onClick={() => {
+                                setShowDraftPopup(false);
+                                SubmitHandler(true);
+                            }}
+                        />
                         {/* <CustomButton
                             width="169px !important"
                             textSize="16px "
@@ -1513,17 +1575,7 @@ function FormRightSide(props: any) {
                         />
 
                         
-                            <CustomButton
-                                width="100px !important"
-                                textSize="16px "
-                                islight
-                                backgroundColor='#0000000D'
-                                border='0'
-                                color="black"
-                                text="Cancel"
-                                height="40px !important"
-                                onClick={() => setShowDraftPopup(true)}
-                            />
+                            
                         
                     </div>
                 </div>

@@ -48,7 +48,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any) {
 
-  const { onChangeFileHandler } = useUpload();
+  const { onChangeFileHandler, updateTemplate  } = useUpload();
 
   const [loaded, setLoaded] = useState(false);
   const [isInProcess, setIsInProcess] = useState(false);
@@ -70,10 +70,19 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
   const [isGalleryHighlighted, setIsGalleryHighlighted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const dispatch = useDispatch();
+
+  const handleTemplateSelect = (template: any) => {
+   
+    if(selectedTemplate && selectedTemplate.image == template.image){
+      updateTemplate(null);
+      setSelectedTemplate(null); 
+    }else{
+      updateTemplate(template);
+      setSelectedTemplate(template); // optional, if you want local state too
+    }
+   
+  };
   
-
-
-
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (query: string) => {
@@ -93,35 +102,35 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
     },
   });
 
-  const load = async () => {
-    try {
-      const baseURL = "https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm";
-      const ffmpeg = ffmpegRef.current;
-      console.log('check first this is called or note')
-      ffmpeg.on("log", ({ message }) => {
-        console.log(message);
-        if (messageRef.current) messageRef.current.innerHTML = message;
-      });
-      // toBlobURL is used to bypass CORS issue, urls with the same
-      // domain can be used directly.
-      const isLoaded = await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-        wasmURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.wasm`,
-          "application/wasm"
-        ),
-        workerURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.worker.js`,
-          "text/javascript"
-        ),
-      });
-      // await ffmpeg.load();
-      console.log('loadded 👩‍🦳💖🤑', isLoaded)
-      setLoaded(true);
-    } catch (error) {
-      console.log('check ffmpeg load error', error);
-    }
-  }
+  // const load = async () => {
+  //   try {
+  //     const baseURL = "https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm";
+  //     const ffmpeg = ffmpegRef.current;
+  //     console.log('check first this is called or note')
+  //     ffmpeg.on("log", ({ message }) => {
+  //       console.log(message);
+  //       if (messageRef.current) messageRef.current.innerHTML = message;
+  //     });
+  //     // toBlobURL is used to bypass CORS issue, urls with the same
+  //     // domain can be used directly.
+  //     const isLoaded = await ffmpeg.load({
+  //       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+  //       wasmURL: await toBlobURL(
+  //         `${baseURL}/ffmpeg-core.wasm`,
+  //         "application/wasm"
+  //       ),
+  //       workerURL: await toBlobURL(
+  //         `${baseURL}/ffmpeg-core.worker.js`,
+  //         "text/javascript"
+  //       ),
+  //     });
+  //     // await ffmpeg.load();
+  //     console.log('loadded 👩‍🦳💖🤑', isLoaded)
+  //     setLoaded(true);
+  //   } catch (error) {
+  //     console.log('check ffmpeg load error', error);
+  //   }
+  // }
 
   function formatTime(seconds: number) {
     const date = new Date(0);
@@ -249,13 +258,13 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
     // if (targetVideo) videoCoverHandler();
   }, [targetVideo])
 
-  useEffect(() => {
-    load();
-  }, []);
+  // useEffect(() => {
+  //   load();
+  // }, []);
 
-  useEffect(() => {
-    console.log(loaded);
-  }, [loaded]);
+  // useEffect(() => {
+  //   console.log(loaded);
+  // }, [loaded]);
   
   useUpdateEffect(()=>{
     setSelectedAudio(null);
@@ -265,7 +274,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
    
     
     try {
-      setIsInProcess(true);
+      //setIsInProcess(true);
       // await ffmpeg.exec([
       //   '-i', 'input.mp4', // Input video
       //   '-stream_loop', '-1', // Loop video
@@ -358,7 +367,8 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
 
     console.log('saveEdit 🚀🚀🚀👩‍🚀', file);
     onChangeFileHandler({ target: { files: [file] } });
-    // setIsInProcess(false);
+    updateTemplate(selectedTemplate);
+    setIsInProcess(false);
     handleClose();
   }
 
@@ -511,7 +521,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
         <Card
           key={index}
           className="relative h-[200px] overflow-hidden rounded-xl shadow-md cursor-pointer"
-          onClick={() => setSelectedTemplate(template)}
+          onClick={() => handleTemplateSelect(template)}
           style={{
             border: selectedTemplate?.image === template.image 
               ? '2px solid #f50057' 

@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { get, patch,post } from '../../../axios/axiosClient';
-import { setSelectedFile, updateUploadingStatus } from '../../../redux/reducers/upload';
+import { setSelectedFile, setSelectedTemplate, updateUploadingStatus } from '../../../redux/reducers/upload';
 import { STATUS_CODE, UPLOAD_VIDEO_DETAILS } from '../../../utils/constants';
 import { VideoToFrames, VideoToFramesMethod } from '../../../utils/videoToFrame';
 import { setCurrentEditVideo } from '../../../redux/reducers/currentEditVideoReducer';
 import axios from 'axios';
+import { boolean } from 'mathjs';
 
 
 interface StateInterface {
@@ -28,11 +29,15 @@ interface StateInterface {
     allowComments?:boolean;
     scheduledAt?: string;
     createdTime?: string;
+    disclosePost?: boolean;
+    templateImage?: string;
+    videoLength?: number;
 }
 
 function useUpload() {
     const selectedFile = useSelector((store: any) => store?.reducers?.isuploading?.selectedFile);
     const selectedVideoSrc = useSelector((store: any) => store?.reducers?.isuploading?.selectedVideoSrc);
+    const selectedTemplate = useSelector((store: any) => store?.reducers?.isuploading?.selectedTemplate);
     // const [selectedFile, setselectedFile] = useState(null);
     const [isPosting, setIsPosting] = useState(false);
     const [selectedThumbnail, setSelectedThumbnail] = useState(null);
@@ -44,6 +49,23 @@ function useUpload() {
     const location = useLocation();
     const mainFileRef = useRef<File | null>(null);
     const abortController = useRef<AbortController | null>(null);
+    interface Template {
+        image: string;
+    }
+    const [template, setTemplate] = useState<Template | null>(null);
+
+    const updateTemplate = (tpl: any) => {
+        if(tpl && tpl.background){
+            setTemplate(tpl);
+            updateState('templateImage', tpl.background);
+            dispatch(setSelectedTemplate(tpl.background));
+        }else{
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
+        }
+        
+      };
 
 
     let { isEditMode, info } = location.state || { isEditMode: false, info: {} };
@@ -65,10 +87,12 @@ function useUpload() {
         allowDownload: info?.privacyOptions?.allowDownload,
         allowAddStory: info?.privacyOptions?.allowAddStory,
         allowComments: info?.privacyOptions?.allowComments,
+        disclosePost:  info?.privacyOptions?.disclosePost,
         canView: info?.privacyOptions?.canView,
         thumbnailUrl: info?.thumbnailUrl || '',
         locationPlace: info?.locationPlace || '',
         createdTime: info?.createdTime || '',
+        videoLength: info?.videoLength || 0
     });
     // const [selectedVideoSrc, setSelectedVideoSrc] = useState('');
     const token = useSelector((store: any) => store?.reducers?.profile?.token);
@@ -124,6 +148,7 @@ function useUpload() {
                     isOnlyMe: responseData.data.privacyOptions?.isOnlyMe || false,
                     allowDownload: responseData.data.privacyOptions?.allowDownload || true,
                     allowComments: responseData.data.privacyOptions?.allowComments || false,
+                    disclosePost: responseData.data.privacyOptions?.disclosePost || false,
                     canView: responseData.data.privacyOptions?.canView || 'everyone',
                     allowDuet: responseData.data.allowDuet || false,
                     allowStitch: responseData.data.allowStitch || false,
@@ -132,6 +157,7 @@ function useUpload() {
                     originalUrl: responseData.data.originalUrl || '',
                     category: responseData.data.category || {},
                     createdTime: responseData.data.createdTime || '',
+                    videoLength: responseData.data.videoLength || 0,
                 }));
 
                 // Set the selected file (though we won't actually upload it again)
@@ -288,11 +314,13 @@ function useUpload() {
             canView: state?.canView || 'everyone',
             allowComments: !!state?.allowComments,
             allowDownload: !!state?.allowDownload,
+            disclosePost: !!state?.disclosePost,
 
         };
 
         payload.allowDuet = !!state?.allowDuet;
         payload.allowStitch = !!state?.allowStitch;
+        payload.disclosePost = !!state?.disclosePost;
 
         if (state?.place) payload.place = state.place;
         if (state?.locationPlace) payload.locationPlace = state.locationPlace;
@@ -409,21 +437,31 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
     const SubmitHandler = async (isDraft = false) => {
         if (postId) { //calling only whne we're updating the video
             await SubmitHandlerWhenUpdateVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return;
         }
 
         if(currentEditVideo && currentEditVideo?._id) {
             SubmitHandlerWhenEditVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return false;
         }
 
         if(isEditMode) {
             SubmitHandlerWhenEditVideoCase();
+            setTemplate(null);
+            updateState('templateImage', null);
+            dispatch(setSelectedTemplate(null));
             return false;
         }
         
-    
-        setIsPosting(true);
+        if(!isDraft)
+            setIsPosting(true);
+
         let getLinks: any = {};
         let postPayload = new FormData();
         let postURL = '/media-content/v2/request-video-upload';
@@ -456,12 +494,21 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
         postPayload.append('privacy', `${state?.isOnlyMe || false}`); // only_me, followers, everyone
         postPayload.append('allowDuet', `${state?.allowDuet || false}`);
         postPayload.append('allowDownload', `${state?.allowDownload || false}`);
+        postPayload.append('disclosePost', `${state?.disclosePost || false}`);
         postPayload.append('allowStitch', `${state?.allowStitch || false}`);
         postPayload.append('place', state?.place || '');
         postPayload.append('locationPlace', state?.locationPlace || '');
         if(state?.scheduledAt){
             console.log(state?.scheduledAt);
             postPayload.append('scheduledAt', state?.scheduledAt || '');
+        }
+        if(selectedTemplate){
+            postPayload.append('templateImage', selectedTemplate || '');
+        }
+
+        if(state?.videoLength){
+            console.log('my video lentth'+String(state?.videoLength || 0))
+            postPayload.append('videoLength', String(state?.videoLength || 0));
         }
 
         // console.log(getLinks?.data?.data?.thumbnailUrl?.split('?')[0]);
@@ -510,7 +557,9 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
                 isUploading: true,
             })
         );
-
+        setTemplate(null);
+        updateState('templateImage', null);
+        dispatch(setSelectedTemplate(null));
         navigate('/home');
         // Do put request for upload video file
         try {
@@ -678,9 +727,15 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
         postPayload.append('allowDownload', `${state?.allowDownload || false}`);
         postPayload.append('allowStitch', `${state?.allowStitch || false}`);
         postPayload.append('place', state?.place || '');
+        console.log(typeof state?.disclosePost+'type of ')
+        postPayload.append('disclosePost', `${state?.disclosePost || false}`);
         if(state?.scheduledAt){
             console.log(state?.scheduledAt);
             postPayload.append('scheduledAt', state?.scheduledAt || '');
+        }
+
+        if(selectedTemplate){
+            postPayload.append('templateImage', selectedTemplate || '');
         }
         
         // postPayload.append('taggedUsers', state?.taggedUsers || []);
@@ -806,7 +861,9 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
                     privacyOptions: {
                         allowDownload: state?.allowDownload,
                         isOnlyMe: state?.isOnlyMe,
+                        disclosePost: state?.disclosePost,
                     },
+                    disclosePost: state?.disclosePost,
                     lat: info?.location?.coordinates[0],
                     lng: info?.location?.coordinates[1],
                     place: '',
@@ -852,6 +909,8 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
         SubmitHandler,
         updateMediaHandler,
         isPosting,
+        updateTemplate,
+        template,
     };
 }
 

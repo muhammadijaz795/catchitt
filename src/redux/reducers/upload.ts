@@ -5,6 +5,7 @@ type uploadStateTypes = {
     isUploading: boolean;
     selectedFile: any;
     selectedVideoSrc: any;
+    selectedTemplate:any;
 }
 
 export const isUploading: any = createSlice({
@@ -14,6 +15,8 @@ export const isUploading: any = createSlice({
         isUploading: false,
         selectedFile: null,
         selectedVideoSrc: '',
+        selectedTemplate: null, // <-- initialize it
+
     } as uploadStateTypes,
     reducers: {
         updateUploadingStatus: (state, action) => {
@@ -34,10 +37,15 @@ export const isUploading: any = createSlice({
             }
             state.selectedFile = null;
             return state;
+        },
+        setSelectedTemplate: (state, action) => {
+            // payload should contain the template object
+            state.selectedTemplate = action.payload; // assign the new template
+            return state;
         }
     },
 });
 
-export const { updateUploadingStatus, setSelectedFile } = isUploading.actions;
+export const { updateUploadingStatus, setSelectedFile, setSelectedTemplate } = isUploading.actions;
 
 export default isUploading.reducer;

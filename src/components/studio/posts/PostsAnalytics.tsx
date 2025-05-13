@@ -34,6 +34,7 @@ import {
   import { formatCustomDate } from '../../../utils/helpers';
   import ReactPaginate from 'react-paginate';
   import { useNavigate } from 'react-router-dom';
+  import { useDispatch, useSelector } from 'react-redux';
   import { TableSortLabel } from "@mui/material";
   import GroupIcon from '@mui/icons-material/Group';
   import LockIcon from '@mui/icons-material/Lock';
@@ -47,24 +48,25 @@ import {
   import CheckIcon from '@mui/icons-material/Check';
   import ChevronUpIcon from '@mui/icons-material/ExpandLess';
   import ChevronDownIcon from '@mui/icons-material/ExpandMore';
+import { setSelectedTemplate } from "../../../redux/reducers/upload";
+  // import { setSelectedTemplate } from "../../../redux/reducers/upload";
 
-  
   export default function PostsAnalytics() {
+    const dispatch = useDispatch();
 
 
     // For the 3-dot "More Options" menu
-const [anchorElMoreOptions, setAnchorElMoreOptions] = useState<null | HTMLElement>(null);
-const isMoreOptionsOpen = Boolean(anchorElMoreOptions);
+const [anchorElMoreOptions, setAnchorElMoreOptions] = useState<null | {postId: string, element: HTMLElement}>(null);
 
-const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-  setAnchorElMoreOptions(event.currentTarget);
+const isMoreOptionsOpen = (postId: string) => Boolean(anchorElMoreOptions && anchorElMoreOptions.postId === postId);
+
+const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>, postId: string) => {
+  setAnchorElMoreOptions({postId, element: event.currentTarget});
 };
 
-const handleMoreOptionsClose = (post:any = null) => {
+const handleMoreOptionsClose = () => {
   setAnchorElMoreOptions(null);
-    
 };
-
 
 
 
@@ -107,6 +109,7 @@ const handleMoreOptionsClose = (post:any = null) => {
       privacyOptions?: { canView: string };
       isPinned?: boolean;
       description?: string;
+      templateImage?: string; // Added property
     }
     
     const [posts, setPosts] = useState<{ items: Post[]; page: number; pageSize: number; totalItems: number; isLoading: boolean }>({
@@ -123,6 +126,9 @@ const handleMoreOptionsClose = (post:any = null) => {
     const [sortColumn, setSortColumn] = useState<string | null>(null);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [videoModal, setVideoModal] = useState<boolean>(false);
+
+        const selectedTemplate = useSelector((store: any) => store?.reducers?.isuploading?.selectedTemplate);
+    
 
     // Options
     const followerOptions = ['<5K', '5K-10K', '10K-100K', '>100Klikes'];
@@ -523,6 +529,12 @@ const handleMoreOptionsClose = (post:any = null) => {
           }
         }
       }, [posts.page]);
+
+      const formatDuration = (seconds: number): string => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      };
 
       const handleSort = (column: string) => {
         if (sortColumn === column) {
@@ -1163,12 +1175,24 @@ const handleMoreOptionsClose = (post:any = null) => {
                             {/* <Avatar
                               variant="rounded"
                               src={post.thumbnailUrl}
-                              sx={{ width: 56, height: 56 }}
+                              sx={{ width: 56, height: 56 }}'
                             /> */}
-                             <VideoThumbnail 
-                                src={post.thumbnailUrl} 
-                                originalUrl={post.originalUrl}
+                                      {/* <img src={post.templateImage} /> */}
+
+                             <div
+                                className={`w-fit ${post.templateImage ? 'relative h-[200%] bg-cover bg-center' : ''}`}
+                                style={
+                                  post.templateImage
+                                    ? { backgroundImage: `url(${post.templateImage})` }
+                                    : {}
+                                }
+                              >
+                                <VideoThumbnail 
+                                  src={post.thumbnailUrl} 
+                                  originalUrl={post.originalUrl}
                                 />
+                              </div>
+
                               <Box
                                 onClick={() => {
                                   // console.log('new post...');
@@ -1185,6 +1209,7 @@ const handleMoreOptionsClose = (post:any = null) => {
                                     commentsCount: post.commentsCount,
                                     privacyOptions: post.privacyOptions,
                                     description: post.description,
+                                    templateImage: post.templateImage,
                                     user: { username: post.user_id?.username || '', _id: post.user_id?._id || '', avatar: post.user_id?.avatar || '' },
                                     
                                   };
@@ -1209,7 +1234,8 @@ const handleMoreOptionsClose = (post:any = null) => {
                               }}
                             >
                               
-                            {post.duration}
+                              <div className="flex justify-center items-center h-full">
+                              <span>{post.videoLength ? formatDuration(post.videoLength):''}</span></div>
                           </Box>
 
                         </Box>
@@ -1308,7 +1334,7 @@ const handleMoreOptionsClose = (post:any = null) => {
                     {/* Actions */}
                     <TableCell align="center">
                       <Box display="flex" justifyContent="center" gap={1}>
-                        <Tooltip title="Edit" onClick={()=>navigate(`/upload/${post._id}`)}>
+                        <Tooltip title="Edit" onClick={()=>{dispatch(setSelectedTemplate(post.templateImage)); navigate(`/upload/${post._id}`)}}>
                           <IconButton size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path fill-rule="evenodd" clip-rule="evenodd" d="M1.3335 14.0339C1.3335 13.857 1.40373 13.6875 1.52876 13.5624C1.65378 13.4374 1.82335 13.3672 2.00016 13.3672H11.3335C11.5103 13.3672 11.6799 13.4374 11.8049 13.5624C11.9299 13.6875 12.0002 13.857 12.0002 14.0339C12.0002 14.2107 11.9299 14.3802 11.8049 14.5053C11.6799 14.6303 11.5103 14.7005 11.3335 14.7005H2.00016C1.82335 14.7005 1.65378 14.6303 1.52876 14.5053C1.40373 14.3802 1.3335 14.2107 1.3335 14.0339Z" fill="black"/>
@@ -1334,14 +1360,14 @@ const handleMoreOptionsClose = (post:any = null) => {
                           </IconButton>
                         </Tooltip>
   
-                          <IconButton onClick={handleMoreOptionsClick} size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
+                          <IconButton onClick={(e) => handleMoreOptionsClick(e, post._id)}  size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M1.6665 7.9974C1.6665 7.64377 1.80698 7.30464 2.05703 7.05459C2.30708 6.80454 2.64622 6.66406 2.99984 6.66406C3.35346 6.66406 3.6926 6.80454 3.94265 7.05459C4.19269 7.30464 4.33317 7.64377 4.33317 7.9974C4.33317 8.35102 4.19269 8.69016 3.94265 8.9402C3.6926 9.19025 3.35346 9.33073 2.99984 9.33073C2.64622 9.33073 2.30708 9.19025 2.05703 8.9402C1.80698 8.69016 1.6665 8.35102 1.6665 7.9974ZM6.6665 7.9974C6.6665 7.64377 6.80698 7.30464 7.05703 7.05459C7.30708 6.80454 7.64622 6.66406 7.99984 6.66406C8.35346 6.66406 8.6926 6.80454 8.94265 7.05459C9.19269 7.30464 9.33317 7.64377 9.33317 7.9974C9.33317 8.35102 9.19269 8.69016 8.94265 8.9402C8.6926 9.19025 8.35346 9.33073 7.99984 9.33073C7.64622 9.33073 7.30708 9.19025 7.05703 8.9402C6.80698 8.69016 6.6665 8.35102 6.6665 7.9974ZM11.6665 7.9974C11.6665 7.64377 11.807 7.30464 12.057 7.05459C12.3071 6.80454 12.6462 6.66406 12.9998 6.66406C13.3535 6.66406 13.6926 6.80454 13.9426 7.05459C14.1927 7.30464 14.3332 7.64377 14.3332 7.9974C14.3332 8.35102 14.1927 8.69016 13.9426 8.9402C13.6926 9.19025 13.3535 9.33073 12.9998 9.33073C12.6462 9.33073 12.3071 9.19025 12.057 8.9402C11.807 8.69016 11.6665 8.35102 11.6665 7.9974Z" fill="black"/>
                           </svg>
                           </IconButton>
                           <Menu
-                            anchorEl={anchorElMoreOptions}
-                            open={isMoreOptionsOpen}
+                            anchorEl={anchorElMoreOptions?.element || null}
+                            open={isMoreOptionsOpen(post._id)}
                             onClose={handleMoreOptionsClose}
                             PaperProps={{
                               sx: {
@@ -1369,6 +1395,7 @@ const handleMoreOptionsClose = (post:any = null) => {
                               <PushPinIcon sx={{ fontSize: 18, mr: 1, color: '#000' }} />
                               <Typography variant="body2" color="text.primary">
                                 {post.isPinned ? 'Unpin from top' : 'Pin to top'}
+
                               </Typography>
                             </MenuItem>
                             <MenuItem onClick={()=> deletePost(post)}>

@@ -350,7 +350,7 @@ export const SuggestedActivity = memo(
                                       See All
                                   </p>
                               {/* </div> */}
-                           </div>
+                            </div>
                       )}
 
                 {/* {showActivity && isLoggedIn && (

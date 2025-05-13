@@ -61,6 +61,7 @@ export default function VideoesMaping({ videos, fetchMore, openVideoModal, setEd
                     onClick={() => openVideoModal(item)}
                     className={`${styles.post} cursor-pointer`}
                 >
+                    <img src={item.templateImage} />
                     <video
                         className={`${styles.thumbnail} ${hoveredIndex === i ? 'block' : 'hidden'
                             }`}

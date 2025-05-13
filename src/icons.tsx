@@ -1,4 +1,5 @@
 
+import FooterUploadMobile from '../src/assets/FooterUploadMobile.svg';
 import Trecap from '../src/assets/template/Trecap.png';
 import Tvlog from '../src/assets/template/Tvlog.png';
 import Tstory from '../src/assets/template/Tstory.png';
@@ -211,6 +212,7 @@ import crossCloseDark from './assets/cross_close_dark.svg'
 import blackHeartOutline from './assets/black_heart_outline.svg'
 import blackCrossHeart from './assets/black_cross_heart.svg'
 export {
+    FooterUploadMobile,
     Trecap,
     Tstory,
     TTutorial,

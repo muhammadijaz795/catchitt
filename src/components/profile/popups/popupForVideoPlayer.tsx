@@ -939,7 +939,7 @@ export default function PopupForVideoPlayer({
                                     )}
 
                                     
-
+                                    {/* {info?.templateImage && <img src={info?.templateImage} /> } */}
                                     <video
                                         className="relative w-3/5 h-full"
                                         loop={true}
