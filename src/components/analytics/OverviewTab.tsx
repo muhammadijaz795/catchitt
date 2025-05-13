@@ -175,7 +175,7 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
           axisLine={false}
           tickLine={false}
         />
-        <Tooltip />
+        {/* <Tooltip /> */}
         <Line
           type="monotone"
           dataKey="value"

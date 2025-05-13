@@ -168,8 +168,8 @@ import { useEffect, useState } from 'react';
                                 <span>Creator Academy</span>
                             </li> */}
                         </ul>
-                        <h5 className='text-[10px] uppercase font-semibold text-left text-[#00000057] mt-4'>Tools</h5>
-                        <ul className='text-sm space-y-6 mt-3 text-left mx-2'>
+                        {/* <h5 className='text-[10px] uppercase font-semibold text-left text-[#00000057] mt-4'>Tools</h5> */}
+                        {/* <ul className='text-sm space-y-6 mt-3 text-left mx-2'>
                             <li className='cursor-pointer flex gap-2' onClick={() => navigate('/studio')}>
                             <span className="w-5">
 
@@ -209,7 +209,7 @@ import { useEffect, useState } from 'react';
                             {/* <li className='cursor-pointer flex gap-2'>
                                 <img className='w-5 inline-block' src={darkTheme===''?commentOutlineDark:commentOutlineWhite} alt="" />
                                 <span>Comments</span>
-                            </li> */}
+                            </li> * /}
                             <li className='cursor-pointer flex gap-2' onClick={() => navigate('/analytics')}>
                             <span className="w-5">
 
@@ -226,9 +226,9 @@ import { useEffect, useState } from 'react';
                             <li className='cursor-pointer flex gap-2'>
                                 <img className='w-5 inline-block' src={darkTheme===''?academyOutlineDark :academyOutlineWhite} alt="" />
                                 <span>Creator Academy</span>
-                            </li> */}
+                            </li> * /}
         
-                        </ul>
+                        </ul> */}
                             <h5 className='text-[10px] uppercase font-semibold text-left text-[#00000057] mt-4'>Others</h5>
                         <ul className="mx-2">
                         <li className='cursor-pointer flex gap-2 mt-3 align-items-center' onClick={() => navigate('/contactus')}>
