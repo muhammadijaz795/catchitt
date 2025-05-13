@@ -416,10 +416,10 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                         </Tooltip>
                     </Box>
 
-                {analyticsDetails?.details?.watchedPostsByMyPostViewers?.map((post: any) => (
+                {analyticsDetails?.details?.watchedPostsByMyPostViewers?.map((post: any, index: number) => (
                     <Box key={post._id} display="flex" alignItems="center" py={1} borderBottom="1px solid #eee">
                     <Typography variant="body1" sx={{ width: 24, mr: 2 }}>
-                        {post._id}
+                        {index + 1}
                     </Typography>
 
                     <Box position="relative" mr={2}>
