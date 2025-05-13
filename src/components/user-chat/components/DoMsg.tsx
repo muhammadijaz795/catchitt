@@ -32,7 +32,7 @@ import coinsOnly from '../../../assets/gifts/coinsSingle.svg';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,currentReplyToMessage,closeReply, setMessagesState, inputRef }: any) => {
+const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,currentReplyToMessage,closeReply, setMessagesState, inputRef, setSelectedGift, selectedGift }: any) => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -47,6 +47,13 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false); 
   const [isDivVisible, setIsDivVisible] = useState(false);
+  interface Gift {
+    imageUrl: string;
+    name?: string; // Optional property to avoid errors if not always present
+    price?: number; // Optional property to include the price
+  }
+
+  const [gifts, setGifts] = useState<Gift[]>([]);
 
   const abortController = useRef<AbortController | null>(null);
 
@@ -233,6 +240,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
   }
 
   useEffect(() => {
+    getGifts();
       // Focus input on mount
     inputRef.current?.focus();
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -244,6 +252,25 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
       }
     }
   }, [])
+
+      const getGifts = async () => {
+          try {
+              const response: any = await fetch(`${API_KEY}/gift/`, {
+                  method: 'GET',
+                  headers: {
+                      'Content-type': 'application/json',
+                      Authorization: `Bearer ${token}`,
+                  },
+              });
+              const finalRes: any = await response.json();
+              console.log(finalRes);
+              console.log('total gifts...')
+              setGifts(finalRes?.data);
+              console.log(gifts);
+          } catch (error) {
+              console.log('error', error);
+          }
+      };
 
   const appendCustomEmoji = () => {
     setMessage(msg + data.emoji);
@@ -285,7 +312,18 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
           )}
 
          
-          
+      {selectedGift && (
+        <div className={style.selectedGiftPreview} >
+          <img src={selectedGift.imageUrl} alt={selectedGift.name || 'Selected gift'} style={{ height: '50px' }} />
+          {/* <span>{selectedGift.name}</span> */}
+          <span>${(selectedGift.price ?? 0).toLocaleString()}</span>
+          <button className={style.selectedGiftButton} onClick={() => setSelectedGift(null)}>
+          <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="CloseIcon">
+            <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+            </svg>
+          </button>
+        </div>
+      )}
       <div className={`${style.doMsgContainer} ${isDarkTheme ? 'bg-[#282828]' : 'bg-white'}`}>
         <form onSubmit={onSubmit} style={{ padding: '0px' }}>
           {/* <InputEmoji 
@@ -319,6 +357,8 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
             </div>
           </Modal>
 
+         
+
           <input
            onChange={handleChange}
             // onChange={(e: any) => { setMessage(e.target.value), setMessageType('Text') }}
@@ -341,17 +381,25 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
         {isDivVisible && (
           <div className={style.imagePopupInner} >
             <div className={style.BtnsaddRemove}>
-              <button className={style.btnAddMore}>
+              {/* <button className={style.btnAddMore}>
                 <img src={coinsOnly} alt="" />
                 400
                 <AddCircleIcon />
-              </button>
+              </button> */}
               <button className={style.btnHide} onClick={hideGiftPopup}>
               <CloseIcon />
               </button>
             </div>
             <div className={style.gridImages}>
-              <div>
+            {gifts.map((gift, index) => (
+              gift.imageUrl && /\.(svg|jpe?g|png|gif)$/i.test(gift.imageUrl) ? (
+                <div key={index} onClick={() => {setSelectedGift(gift); setIsDivVisible(false); setMessageType('gift')}} style={{ cursor: 'pointer' }}>
+                  <img src={gift.imageUrl} alt={gift.name || 'gift'} />
+                  <span>${(gift.price ?? 0).toLocaleString()}</span>
+                </div>
+              ) : null
+            ))}
+              {/* <div>
                 <img src={bird} alt="" />
               </div>
               <div>
@@ -393,7 +441,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
               </div>
               <div>
                 <img src={bootle} alt="" />
-              </div>
+              </div> */}
               
             </div>
           </div>

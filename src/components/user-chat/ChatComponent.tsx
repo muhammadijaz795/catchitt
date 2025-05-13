@@ -70,6 +70,8 @@ const ChatComponent = () => {
     const [DangerText, setDengerText] = useState<string>('');
     const [msg, setMsg] = useState<string>('');
     const [msgType, setMsgType] = useState<string>('');
+    const [selectedGift, setSelectedGift] = useState<{ _id: string } | null>(null);
+
     const [activeUser, setActiveUser] = useState<any>({});
     const [activeChat, setActiveChat] = useState<any>({});
     const socketRef = useRef();
@@ -797,15 +799,26 @@ const ChatComponent = () => {
             e.preventDefault();
         }
         e.stopPropagation();
+        let messageType = msgType;
+        if(selectedGift){
+            console.log('start of gift..')
+            // setMsgType('Gift');
+            messageType = 'Gift';
+        }
+       
         let messageData = {
             to: loggedUserId != receiver ? receiver : sender,
             message: msg,
             from: loggedUserId == sender ? sender : sender,
-            type: msgType,
+            type: messageType,
             accessToken: token,
             ...(currentReplyToMessage && { repliedMessageId: currentReplyToMessage.id }),
+            ...(selectedGift ? { giftId: selectedGift._id } : {})
 
         };
+       
+        console.log('messageData');
+        console.log(messageData);
         // Get current time
         const currentTime = moment();
         // console.log(messageData)
@@ -916,6 +929,7 @@ const ChatComponent = () => {
             // console.log('Current socket : ', socketRef.current);
             setMsg('');
             setMsgType('');
+            setSelectedGift(null);
         }
 
         setSmsRef('');
@@ -1342,6 +1356,8 @@ const ChatComponent = () => {
                             currentReplyToMessage={currentReplyToMessage}
                             setMessagesState={setMessagesState}
                             inputRef={inputRef}
+                            setSelectedGift={setSelectedGift}
+                            selectedGift={selectedGift}
                         />
                     )}
                     {!groupOptions && moreOptions && (
