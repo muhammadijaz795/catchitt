@@ -346,7 +346,7 @@ const UploadsHome = () => {
   function loadMediaByCategory()
   {
     let selectedCategoryDetails = mediaCategories.items.find(category => category.name == mediaByCategory.selectedCategory);
-    let endpoint = `${process.env.VITE_API_URL}/discover/videos-by-category?categoryId=${selectedCategoryDetails?._id}`;
+    let endpoint = `${process.env.VITE_API_URL}/discover/videos-by-category${selectedCategoryDetails?._id ? `?categoryId=${selectedCategoryDetails._id}` : ''}`;
     let requestOptions =
     {
       method: 'GET',
@@ -409,8 +409,11 @@ const UploadsHome = () => {
     loadRecentPosts();
     loadLatestComments();
     loadMediaCategories();
-    loadMediaByCategory();
   }, [tab]);
+
+  useEffect(() => {
+    loadMediaByCategory();
+  }, [mediaByCategory.selectedCategory]);
 
   const chipLabels = [
     'All',
