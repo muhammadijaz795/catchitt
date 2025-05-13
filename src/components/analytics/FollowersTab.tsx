@@ -4,6 +4,7 @@ import { Card, CardContent, Typography, LinearProgress, Box, Grid, Tab,Tabs, Ico
 import { LineChart, Line, XAxis, YAxis, CartesianGrid,  ResponsiveContainer, BarChart, Bar,Cell, Area} from 'recharts';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+  import dayjs from 'dayjs'; // If you want date formatting
 
   const newViewersData = [
     { date: 'Apr 6', viewers: 30 },
@@ -232,7 +233,7 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
             </Box>
             <Box flex={1} p={2} textAlign="center">
                 <Typography variant="body1" fontSize={'1.5rem'} 
-                        color={tabIndex === 0 ? "#1976d2" : "inherit"} fontWeight="bold" lineHeight={1}>
+                        color={tabIndex === 1 ? "#1976d2" : "inherit"} fontWeight="bold" lineHeight={1}>
                 {analyticsDetails.details.netFollowers}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -244,9 +245,24 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
             {/* Chart */}
             <Box height={250} pl={5}>
             <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                <LineChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                <XAxis dataKey="date" fontSize={12} axisLine={false} tickLine={false} />
+                <XAxis dataKey="date"
+                                          tickFormatter={(str) => dayjs(str).format('MMM D')}
+                                          tick={({ x, y, payload, index }) => {
+                                            return (
+                                              <text
+                                                x={x}
+                                                y={y + 10}
+                                                textAnchor="middle"
+                                                fontSize={12}
+                                                // fill={isDarkTheme ? '#ccc' : '#666'}
+                                              >
+                                                {dayjs(payload.value).format('MMM D')}
+                                              </text>
+                                            );
+                                          }}
+                                          interval={0} />
                 <YAxis orientation="right" fontSize={12} axisLine={false} tickLine={false} />
                 {/* <Tooltip /> */}
 

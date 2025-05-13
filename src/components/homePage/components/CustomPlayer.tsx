@@ -3,7 +3,7 @@ import { useInView } from 'react-intersection-observer';
 import style from './customPlayer.module.scss';
 import { setVideoUrl } from '../../../redux/reducers';
 import {setCurrentPost} from '../../../redux/reducers/currentPostReducer'; // Import the action
-
+import { logPostStats } from '../../../utils/helpers';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setVolume, toggleMute } from '../../../redux/reducers/volumeSlice';
@@ -33,6 +33,13 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
     const dispatch = useDispatch();
     const { ref, inView, entry } = useInView({
         rootMargin: '-400px 0px -200px 0px',
+        onChange(isInView)
+        {
+            if(!isInView && videoRef.current)
+            {
+                logPostStats({postId: post.mediaId, videoWatchTime: videoRef.current.currentTime});
+            }
+        },
     });
 
   const { level } = useSelector((state: any) => state?.reducers?.volume);
