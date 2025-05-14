@@ -103,11 +103,11 @@ function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }:
                     </div>
                 </div>
                 <div className='flex gap-12 mr-3'>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? playOutlineWhite : play} alt="like" /> <span>{postAnalytics?.views || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledHeartWhite : filledHeart} alt="like" /> <span>{postAnalytics?.likes || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledCommentWhite : filledComment} alt="like" /> <span>{postAnalytics?.comments || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledShareWhite : filledShare} alt="like" /> <span>{postAnalytics?.shares || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledSaveWhite : filledSave} alt="like" /> <span>{postAnalytics?.saves || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? playOutlineWhite : play} alt="like" /> <span>{postAnalyticsDetails?.details?.videoViews || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledHeartWhite : filledHeart} alt="like" /> <span>{postAnalyticsDetails?.details?.likesCount || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledCommentWhite : filledComment} alt="like" /> <span>{postAnalyticsDetails?.details?.commentsCount || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledShareWhite : filledShare} alt="like" /> <span>{postAnalyticsDetails?.details?.sharesCount || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledSaveWhite : filledSave} alt="like" /> <span>{postAnalyticsDetails?.details?.savesCount || 0}</span></div>
                 </div>
             </div>
             {/* statistics card */}
