@@ -313,7 +313,7 @@ function Actions(props: any) {
                                             </div>
                                         ) : (
                                             <>
-                                                {item?.type == 'Text' &&
+                                                {(item?.type == 'Text' || item?.type == 'Gift') &&
                                                     <p
                                                         onClick={(e) => e.stopPropagation()}
                                                         className={`${item.receiverId == loggedInUserId
@@ -327,6 +327,12 @@ function Actions(props: any) {
                                                 {['Image', 'Sticker', 'Gif'].some(type => type === item?.type) &&
                                                     <div className="bg-white p-2">
                                                         <img src={item.msg} style={{ height: '14rem' }} />
+                                                    </div>
+                                                }
+                                                {['Gift'].some(type => type === item?.type) &&
+                                                    <div className="bg-white p-2">
+                                                        <img src={item?.gift?.imageUrl} style={{ height: '14rem' }} />
+                                                        <span>${item?.gift?.price}</span>
                                                     </div>
                                                 }
 

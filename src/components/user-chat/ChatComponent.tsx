@@ -224,6 +224,7 @@ const ChatComponent = () => {
                             stared: message?.isStarred,
                             isRead: message?.isRead,
                             type: message?.type,
+                            gift: message?.gift,
                             // replysms: false,
                             recieverName: message.receiverId.name,
                             replysms: message?.repliedMessage?.message ? message?.repliedMessage?.message : '', // Use an empty string if repliedMessage is null
@@ -460,6 +461,8 @@ const ChatComponent = () => {
                     // If message exists, return the current state without changes
 
                     // Otherwise, add the new message to chats
+                    console.log(element?.gift);
+                    console.log('element gift')
                     return {
                         ...currentChat,
                         userId: user.userId,   // Replace with the desired value
@@ -480,6 +483,7 @@ const ChatComponent = () => {
                                 stared: element?.isStarred,
                                 isRead: element?.isRead,
                                 type: element?.type,
+                                gift:element?.gift,
                                 reactions: element?.reactions,
                                 replysms: element?.repliedMessage
                                     ? element?.repliedMessage?.message
@@ -816,6 +820,8 @@ const ChatComponent = () => {
             ...(selectedGift ? { giftId: selectedGift._id } : {})
 
         };
+
+        
        
         console.log('messageData');
         console.log(messageData);
@@ -855,7 +861,7 @@ const ChatComponent = () => {
                             to: loggedUserId != receiver ? receiver : sender,
                             from: loggedUserId == sender ? sender : sender,
                             msg: msg,
-                            type: msgType,
+                            type: messageType,
                             time: formattedTime,
                             emojis: false,
                             dropdown: false,
@@ -866,6 +872,7 @@ const ChatComponent = () => {
                                 receiverId: currentReplyToMessage.receiverId,
                                 recieverName: currentReplyToMessage.recieverName,
                             }),
+                            gift:selectedGift
                         },
                     ],
                 });
@@ -890,22 +897,41 @@ const ChatComponent = () => {
                         {
                             to: loggedUserId != receiver ? receiver : sender,
                             from: loggedUserId == sender ? sender : sender,
-                            type: msgType,
+                            type: messageType,
                             msg: msg,
                             time: formattedTime,
                             emojis: false,
                             dropdown: false,
                             id: new Date().getTime(),
+                            gift: selectedGift,
                             // Only include these values if currentReplyToMessage exists
                             ...(currentReplyToMessage && {
                                 replysms: currentReplyToMessage.msg,
                                 receiverId: loggedUserId != receiver ? receiver : sender,
-                                recieverName: currentReplyToMessage.recieverName,
+                                recieverName: currentReplyToMessage.recieverName
                             }),
                         },
                     ],
                 });
-
+                console.log('active chat message');
+                console.log({
+                    to: loggedUserId != receiver ? receiver : sender,
+                    from: loggedUserId == sender ? sender : sender,
+                    type: messageType,
+                    msg: msg,
+                    time: formattedTime,
+                    emojis: false,
+                    dropdown: false,
+                    id: new Date().getTime(),
+                    gift: selectedGift,
+                    // Only include these values if currentReplyToMessage exists
+                    ...(currentReplyToMessage && {
+                        replysms: currentReplyToMessage.msg,
+                        receiverId: loggedUserId != receiver ? receiver : sender,
+                        recieverName: currentReplyToMessage.recieverName
+                    }),
+                });
+                console.log('active object..')
                 console.log('messageData', messageData);
                 // (socketRef.current as any).emit('send-msg', JSON.stringify(messageData));
                 // Emit the 'send-msg' event and pass a callback function to receive a response
