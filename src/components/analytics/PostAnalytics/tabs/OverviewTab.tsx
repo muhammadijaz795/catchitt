@@ -87,7 +87,9 @@ function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }:
 
     useEffect(() => {
         // if(postAnalytics && activeTab) setChartData(prepareData(postAnalytics[possibleGraphs[activeTab]]));
-    }, [activeTab])
+        const selectedChartData = postAnalyticsDetails?.details?.[['dailyViewsGraph','dailyWatchTimeGraph','averageDailyWatchTimeGraph','watchedFullVideoDailyGraph','dailyFollowersGraph'][activeTab]];
+      selectedChartData && setChartData(Object.keys(selectedChartData).map(date => ({date, value: selectedChartData[date]})));
+    }, [activeTab, postAnalyticsDetails])
 
     return (
         <div className='w-[calc(100%-14rem)] px-3 mt-8  overflow-hidden'>
@@ -137,22 +139,7 @@ function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }:
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                {(() => {
-                                    switch (activeTab) {
-                                        case POSTSTATISTICSTABS.VIDEO_VIEWS:
-                                            return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.TOTAL_PLAY_TIME:
-                                            return <Line type="monotone" dataKey="playtime" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.AVERAGE_WATCH_TIME:
-                                            return <Line type="monotone" dataKey="watchtime" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE:
-                                            return <Line type="monotone" dataKey="fullwatched" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.NEW_FOLLOWERS:
-                                            return <Line type="monotone" dataKey="newfollowers" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        default:
-                                            return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                    }
-                                })()}
+                                <Line type="monotone" dataKey="value" stroke="#82ca9d" activeDot={{ r: 8 }} />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
