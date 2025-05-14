@@ -248,7 +248,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
     
 
     return (
-        <div className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? styles.OverlayOpenMain : ''} ${classNames(styles.root, className)} ${darkTheme} w-[16rem]`}>
+        <div className={`${isOpenOverlay === true || isOpenOverlaySearch === true || isOpenOverlayActivity === true ? styles.OverlayOpenMain : ''} ${classNames(styles.root, className)} ${darkTheme} w-[16rem] fixed`}>
             <div className={isDropdownOpen === true ? styles.cardDivOpened : styles.cardDiv}>
                 
             <div onClick={() => navigate('/')} className={styles.sec1}>
