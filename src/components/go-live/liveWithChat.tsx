@@ -137,7 +137,13 @@ const secondRowGifts = [
 const [expanded, setExpanded] = useState(false);
 
 
-const renderGiftRow = (gifts) => (
+type Gift = {
+  label: string;
+  emoji: string;
+  price: number;
+};
+
+const renderGiftRow = (gifts: Gift[]) => (
     <Box
       sx={{
         display: 'flex',
