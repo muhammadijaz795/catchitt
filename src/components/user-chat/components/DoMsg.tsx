@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { emoji, mic, paperClip } from '../../../icons';
 import InputEmoji from 'react-input-emoji'
 import style from './DoMsg.module.scss';
@@ -47,6 +47,15 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false); 
   const [isDivVisible, setIsDivVisible] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const giftsContainerRef = useRef<HTMLDivElement>(null);
+  const initialGiftsLoaded = useRef(false);
+
+  
+
   interface Gift {
     imageUrl: string;
     name?: string; // Optional property to avoid errors if not always present
@@ -63,8 +72,10 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
 
   // Function to hide the div
   const hideGiftPopup = () => {
-      setIsDivVisible(false);
+    setIsDivVisible(false);
+    initialGiftsLoaded.current = false; // Allow it to reload next time it's opened
   };
+  
 
   // Function to check if the message contains an image extension
   const isImage = (url:any) => {
@@ -240,7 +251,6 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
   }
 
   useEffect(() => {
-    getGifts();
       // Focus input on mount
     inputRef.current?.focus();
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -253,25 +263,63 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
     }
   }, [])
 
-      const getGifts = async () => {
-          try {
-              const response: any = await fetch(`${API_KEY}/gift/`, {
-                  method: 'GET',
-                  headers: {
-                      'Content-type': 'application/json',
-                      Authorization: `Bearer ${token}`,
-                  },
-              });
-              const finalRes: any = await response.json();
-              console.log(finalRes);
-              console.log('total gifts...')
-              setGifts(finalRes?.data);
-              console.log(gifts);
-          } catch (error) {
-              console.log('error', error);
-          }
-      };
+  const getGifts = useCallback(async (loadMore: boolean) => {
+    if (isLoading) return;
+  
+    setIsLoading(true);
+    try {
+      const nextPage = loadMore ? Math.ceil(gifts.length / 15) + 1 : 1; // Calculate page based on current gifts
+      const response = await axios.get(`${API_KEY}/gift/?pageSize=15&page=${nextPage}`, {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      const newGifts = response.data?.data || [];
+      
+      setGifts(prev => loadMore ? [...prev, ...newGifts] : newGifts);
+      setHasMore(newGifts.length >= 15);
+    } catch (error) {
+      console.error('Error loading gifts:', error);
+      toast.error('Failed to load gifts');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [API_KEY, token, isLoading, gifts.length]);
 
+  
+  
+
+  useEffect(() => {
+    if (isDivVisible && !initialGiftsLoaded.current) {
+      getGifts(false);
+      initialGiftsLoaded.current = true;
+    }
+  
+    const container = giftsContainerRef.current;
+    const handleScroll = () => {
+      if (!container || isLoading || !hasMore) return;
+  
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isNearBottom = scrollHeight - (scrollTop + clientHeight) < 100;
+  
+      if (isNearBottom) {
+        getGifts(true);
+      }
+    };
+  
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+    }
+  
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [isDivVisible, isLoading, hasMore, getGifts]);
+  
   const appendCustomEmoji = () => {
     setMessage(msg + data.emoji);
     setMessageType('Text');
@@ -312,18 +360,47 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
           )}
 
          
-      {selectedGift && (
-        <div className={style.selectedGiftPreview} >
-          <img src={selectedGift.imageUrl} alt={selectedGift.name || 'Selected gift'} style={{ height: '50px' }} />
-          {/* <span>{selectedGift.name}</span> */}
-          <span>${(selectedGift.price ?? 0).toLocaleString()}</span>
-          <button className={style.selectedGiftButton} onClick={() => setSelectedGift(null)}>
-          <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="CloseIcon">
-            <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
-            </svg>
-          </button>
-        </div>
-      )}
+{selectedGift && (
+  <div className={style.selectedGiftPreview}>
+    {/\.(jpe?g|png|gif|svg|webp)$/i.test(selectedGift.imageUrl) ? (
+      <img
+        src={selectedGift.imageUrl}
+        alt={selectedGift.name || 'Selected gift'}
+        style={{ height: '50px', objectFit: 'contain' }}
+      />
+    ) : /\.(mp4|webm|ogg)$/i.test(selectedGift.imageUrl) ? (
+      <video
+        src={selectedGift.imageUrl}
+        muted
+        playsInline
+        preload="metadata"
+        style={{ height: '50px', objectFit: 'contain' }}
+        // Disable interaction
+        onContextMenu={(e) => e.preventDefault()}
+        onClick={(e) => e.preventDefault()}
+      />
+    ) : (
+      <span>Unsupported format</span>
+    )}
+
+    <span>${(selectedGift.price ?? 0).toLocaleString()}</span>
+    <button
+      className={style.selectedGiftButton}
+      onClick={() => setSelectedGift(null)}
+    >
+      <svg
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+        focusable="false"
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        data-testid="CloseIcon"
+      >
+        <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+      </svg>
+    </button>
+  </div>
+)}
+
       <div className={`${style.doMsgContainer} ${isDarkTheme ? 'bg-[#282828]' : 'bg-white'}`}>
         <form onSubmit={onSubmit} style={{ padding: '0px' }}>
           {/* <InputEmoji 
@@ -377,7 +454,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
           <SendIcon className={style.sendIcon} onClick={onSubmit} style={{ fontSize: '23px', }} />
         </form>
         {isDivVisible && (
-          <div className={style.imagePopupInner} >
+          <div className={style.imagePopupInner}  ref={giftsContainerRef} >
             <div className={style.BtnsaddRemove}>
               {/* <button className={style.btnAddMore}>
                 <img src={coinsOnly} alt="" />
@@ -389,14 +466,50 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
               </button>
             </div>
             <div className={style.gridImages}>
-            {gifts.map((gift, index) => (
-              gift.imageUrl && /\.(svg|jpe?g|png|gif)$/i.test(gift.imageUrl) ? (
-                <div key={index} onClick={(e) => {e.preventDefault(); setSelectedGift(gift); setIsDivVisible(false); setMessageType('gift')}} style={{ cursor: 'pointer' }}>
-                  <img src={gift.imageUrl} alt={gift.name || 'gift'} />
-                  <span>${(gift.price ?? 0).toLocaleString()}</span>
+            {gifts.map((gift, index) => {
+              const isImage = gift.imageUrl && /\.(svg|jpe?g|png|gif)$/i.test(gift.imageUrl);
+              const isVideo = gift.imageUrl && /\.mp4$/i.test(gift.imageUrl);
+
+              return (
+                (isImage || isVideo) && (
+                  <div
+                    key={index}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedGift(gift);
+                      setIsDivVisible(false);
+                      setMessageType("gift");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {isImage ? (
+                      <img src={gift.imageUrl} alt={gift.name || "gift"} style={{height:'130px'}} />
+                    ) : (
+                      <video
+                        src={gift.imageUrl}
+                        muted
+                        playsInline
+                        preload="metadata"
+                        style={{ pointerEvents: "none",height:'130px' }}
+                      />
+                    )}
+                    <span>${(gift.price ?? 0).toLocaleString()}</span>
+                  </div>
+                )
+              );
+            })}
+
+            {isLoading && (
+                <div className={style.loadingIndicator}>
+                  <CircularProgress size={24} />
                 </div>
-              ) : null
-            ))}
+              )}
+              
+              {/* {!hasMore && (
+                <div className={style.endMessage}>
+                  No more gifts to load
+                </div>
+              )} */}
               {/* <div>
                 <img src={bird} alt="" />
               </div>
