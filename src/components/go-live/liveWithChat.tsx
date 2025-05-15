@@ -1,16 +1,146 @@
 import { SideNavBar } from './goLiveSidebar';
 import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { Box, IconButton, Chip, AppBar, Typography, Collapse, CardMedia, Stack, Avatar, Grid, CardContent, Button, Toolbar, Paper, Divider, TextField, InputAdornment } from '@mui/material';
+import { Box,  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl, IconButton, Chip, AppBar, Typography, Collapse, CardMedia, Stack, Avatar, Grid, CardContent, Button, Toolbar, Paper, Divider, TextField, InputAdornment, Menu, MenuItem, ListItemIcon, ListItemText, 
+  Modal,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import {
+  WhatsApp, Facebook, Telegram, LinkedIn, Pinterest, Email, Reddit
+} from '@mui/icons-material';
+import XIcon from '@mui/icons-material/Close'; // 
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import RankingSettingsModal from './popuprating';
+
+
+const reasons = [
+  'Violent extremism',
+  'Hateful behavior',
+  'Illegal activities and regulated goods',
+  'Frauds and scams',
+  'Violent and graphic content',
+  'Suicide, self-harm, and dangerous acts',
+  'Harassment or bullying',
+  'Adult nudity and sexual activity',
+  'Minor safety',
+  'Spam and fake engagement',
+  'False information',
+  'Intellectual property infringement',
+];
+
+
+const shareOptions = [
+  { label: 'Share on WhatsApp', icon: <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.0897 25.4557C19.9702 25.4557 25.548 19.8779 25.548 12.9974C25.548 6.11688 19.9702 0.539062 13.0897 0.539062C6.20916 0.539062 0.631348 6.11688 0.631348 12.9974C0.631348 19.8779 6.20916 25.4557 13.0897 25.4557Z" fill="#25D366"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M16.8289 13.871C16.6541 13.7836 15.7951 13.361 15.635 13.3026C15.4749 13.2443 15.3584 13.2152 15.2419 13.39C15.1254 13.565 14.7906 13.9585 14.6887 14.0752C14.5868 14.1917 14.4849 14.2063 14.3102 14.1189C14.1354 14.0314 13.5725 13.8469 12.9051 13.2517C12.3858 12.7884 12.0351 12.2163 11.9332 12.0414C11.8313 11.8665 11.9223 11.7719 12.0098 11.6848C12.0884 11.6065 12.1846 11.4807 12.2719 11.3787C12.3592 11.2767 12.3884 11.2038 12.4466 11.0872C12.5048 10.9706 12.4758 10.8686 12.432 10.7812C12.3883 10.6937 12.039 9.83368 11.8934 9.48382C11.7515 9.14317 11.6075 9.18932 11.5003 9.18395C11.3984 9.17886 11.2819 9.17778 11.1654 9.17778C11.049 9.17778 10.8596 9.22149 10.6995 9.3964C10.5394 9.5713 10.088 9.99402 10.088 10.8539C10.088 11.714 10.714 12.5447 10.8014 12.6613C10.8888 12.778 12.0334 14.5427 13.786 15.2994C14.2029 15.4795 14.5283 15.5869 14.7821 15.6674C15.2006 15.8005 15.5815 15.7817 15.8825 15.7367C16.2182 15.6866 16.9162 15.3141 17.0618 14.906C17.2074 14.4978 17.2074 14.148 17.1637 14.0752C17.1201 14.0022 17.0035 13.9585 16.8289 13.871ZM13.6412 18.223H13.6388C12.5959 18.2226 11.5731 17.9424 10.6807 17.4129L10.4685 17.2869L8.2689 17.8639L8.85601 15.7193L8.71784 15.4994C8.13609 14.5741 7.8288 13.5047 7.82923 12.4065C7.83053 9.20215 10.4377 6.59517 13.6434 6.59517C15.1958 6.59571 16.6549 7.20102 17.7523 8.29958C18.8495 9.39808 19.4535 10.8583 19.4529 12.4112C19.4516 15.6158 16.8444 18.223 13.6412 18.223ZM18.5872 7.4647C17.267 6.14304 15.5114 5.41482 13.6409 5.41406C9.78676 5.41406 6.64997 8.55064 6.64845 12.4059C6.64796 13.6383 6.96993 14.8412 7.5818 15.9017L6.58984 19.525L10.2966 18.5527C11.3179 19.1097 12.4678 19.4034 13.6381 19.4037H13.6409C17.4947 19.4037 20.6317 16.2668 20.6333 12.4115C20.634 10.5432 19.9073 8.78637 18.5872 7.4647Z" fill="white"/>
+</svg>
+ },
+  { label: 'Share on Facebook', icon: <Facebook sx={{ color: '#1877F2' }} /> },
+  { label: 'Share on X', icon: <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_2018_20200" maskUnits="userSpaceOnUse" x="0" y="0" width="27" height="26">
+<path d="M0.0898438 0H26.0898V26H0.0898438V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_2018_20200)">
+<path d="M13.0898 26C20.2695 26 26.0898 20.1797 26.0898 13C26.0898 5.8203 20.2695 0 13.0898 0C5.91014 0 0.0898438 5.8203 0.0898438 13C0.0898438 20.1797 5.91014 26 13.0898 26Z" fill="black"/>
+<path d="M17.2932 6.39062H19.5357L14.639 11.9915L20.4023 19.6073H15.8903L12.3532 14.9869L8.31234 19.6073H6.06443L11.3078 13.6219L5.77734 6.39062H10.4032L13.599 10.6156L17.2932 6.39062ZM16.5078 18.264H17.7536L9.73151 7.66354H8.39359L16.5078 18.264Z" fill="white"/>
+</g>
+</svg>
+ },
+  { label: 'Copy link', icon: 
+    <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.0898 26C20.2695 26 26.0898 20.1797 26.0898 13C26.0898 5.8203 20.2695 0 13.0898 0C5.91014 0 0.0898438 5.8203 0.0898438 13C0.0898438 20.1797 5.91014 26 13.0898 26Z" fill="#FE2C55"/>
+<path d="M12.3345 16.483C11.4577 17.3599 10.1697 17.3507 9.45439 16.6353C8.73914 15.9201 8.7299 14.632 9.60676 13.7552C9.90537 13.4566 9.90537 12.9724 9.60676 12.6738C9.30814 12.3751 8.82399 12.3751 8.52538 12.6738C7.13099 14.0683 6.98384 16.3276 8.37301 17.7168C9.76219 19.106 12.0215 18.9589 13.4159 17.5644L14.525 16.4553C15.6972 15.2831 15.9838 13.5203 15.2334 12.1532C15.0302 11.7829 14.5655 11.6475 14.1952 11.8507C13.825 12.0539 13.6896 12.5187 13.8928 12.889C14.2917 13.6159 14.1717 14.6458 13.4437 15.3739L12.3345 16.483ZM13.8451 9.51697C14.722 8.6401 16.0101 8.64933 16.7253 9.3646C17.4405 10.0799 17.4498 11.368 16.573 12.2448C16.2743 12.5434 16.2743 13.0276 16.573 13.3262C16.8715 13.6249 17.3557 13.6249 17.6544 13.3262C19.0487 11.9317 19.1958 9.67241 17.8067 8.2832C16.4175 6.89399 14.1582 7.04113 12.7638 8.43557L11.6546 9.54471C10.4825 10.7169 10.1959 12.4797 10.9463 13.8468C11.1495 14.2171 11.6142 14.3525 11.9845 14.1493C12.3547 13.9461 12.4901 13.4812 12.2869 13.111C11.888 12.3841 12.008 11.3542 12.736 10.6261L13.8451 9.51697Z" fill="white"/>
+</svg>
+
+   },
+  { label: 'Share on Telegram', icon: <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.0898 26C20.2695 26 26.0898 20.1797 26.0898 13C26.0898 5.82032 20.2695 0 13.0898 0C5.91016 0 0.0898438 5.82032 0.0898438 13C0.0898438 20.1797 5.91016 26 13.0898 26Z" fill="#37AEE2"/>
+<path d="M8.25342 13.5944L9.97814 18.1839C9.97814 18.1839 10.1937 18.6126 10.4241 18.6126C10.6545 18.6126 14.0891 15.1779 14.0891 15.1779L17.908 8.08594L8.31376 12.4089L8.25342 13.5944Z" fill="#C8DAEA"/>
+<path d="M10.5412 14.7734L10.2098 18.156C10.2098 18.156 10.0719 19.1923 11.1486 18.156C12.2253 17.1197 13.2589 16.3202 13.2589 16.3202" fill="#A9C6D8"/>
+<path d="M8.28504 13.7613L4.73707 12.6503C4.73707 12.6503 4.31328 12.4845 4.45003 12.1103C4.47836 12.0332 4.53503 11.9669 4.7038 11.8532C5.48978 11.3262 19.2529 6.57096 19.2529 6.57096C19.2529 6.57096 19.6422 6.4454 19.8713 6.52833C19.976 6.56624 20.0438 6.61006 20.0992 6.76758C20.1202 6.8244 20.1312 6.94758 20.13 7.06837C20.1288 7.15601 20.1177 7.23656 20.1091 7.3645C20.0253 8.66493 17.5171 18.3696 17.5171 18.3696C17.5171 18.3696 17.3668 18.9369 16.8297 18.957C16.6338 18.9641 16.3961 18.9263 16.1115 18.6906C15.0557 17.8177 11.4092 15.4608 10.6035 14.9432C10.5579 14.9136 10.5456 14.8757 10.537 14.839C10.5259 14.7845 10.5875 14.717 10.5875 14.717C10.5875 14.717 16.9381 9.29029 17.1069 8.72056C17.1204 8.67674 17.0711 8.65426 17.0046 8.67322C16.5833 8.82245 9.27055 13.2615 8.46368 13.7518C8.41683 13.7802 8.28504 13.7613 8.28504 13.7613Z" fill="white"/>
+</svg>
+ },
+  { label: 'Share on LinkedIn', icon: <LinkedIn sx={{ color: '#0077b5' }} /> },
+  { label: 'Share on Reddit', icon: <Reddit sx={{ color: '#FF4500' }} /> },
+  { label: 'Share on Pinterest', icon: <Pinterest sx={{ color: '#E60023' }} /> },
+  { label: 'Share on Line', icon: <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.0897 25.4557C19.9703 25.4557 25.548 19.8779 25.548 12.9974C25.548 6.11683 19.9703 0.539062 13.0897 0.539062C6.20916 0.539062 0.631348 6.11683 0.631348 12.9974C0.631348 19.8779 6.20916 25.4557 13.0897 25.4557Z" fill="#00B900"/>
+<path d="M21.7567 12.1503C21.7567 8.27222 17.869 5.11719 13.09 5.11719C8.31153 5.11719 4.42334 8.27222 4.42334 12.1503C4.42334 15.627 7.50661 18.5386 11.6714 19.0892C11.9537 19.15 12.3378 19.2753 12.435 19.5165C12.5224 19.7357 12.4922 20.0789 12.4629 20.3002C12.4629 20.3002 12.3612 20.9118 12.3393 21.0421C12.3016 21.2612 12.1652 21.899 13.09 21.5093C14.0151 21.1195 18.0812 18.5703 19.8995 16.4774C21.1555 15.1001 21.7567 13.7024 21.7567 12.1503Z" fill="white"/>
+<path d="M11.3291 10.2734H10.7212C10.628 10.2734 10.5522 10.3491 10.5522 10.4419V14.2183C10.5522 14.3113 10.628 14.3868 10.7212 14.3868H11.3291C11.4223 14.3868 11.4979 14.3113 11.4979 14.2183V10.4419C11.4979 10.3491 11.4223 10.2734 11.3291 10.2734Z" fill="#00B900"/>
+<path d="M15.5134 10.2734H14.9055C14.8123 10.2734 14.7367 10.3491 14.7367 10.4419V12.6855L13.0061 10.3484C13.0022 10.3424 12.9977 10.3368 12.993 10.3313L12.9919 10.3303C12.9885 10.3265 12.9852 10.3231 12.9817 10.3198C12.9807 10.3188 12.9797 10.318 12.9786 10.317C12.9757 10.3143 12.9728 10.3118 12.9696 10.3095C12.9683 10.3082 12.9667 10.3072 12.9653 10.306C12.9623 10.304 12.9594 10.3019 12.9565 10.3C12.9548 10.2989 12.9532 10.2979 12.9513 10.2971C12.9483 10.2952 12.9454 10.2934 12.9423 10.2919C12.9405 10.291 12.9389 10.2901 12.937 10.2894C12.9339 10.2879 12.9307 10.2864 12.9274 10.2852C12.9254 10.2846 12.9237 10.2839 12.9219 10.2832C12.9186 10.2821 12.9153 10.2809 12.9118 10.2801C12.9099 10.2795 12.908 10.2791 12.906 10.2784C12.9026 10.2778 12.8995 10.277 12.8963 10.2763C12.894 10.2759 12.8915 10.2756 12.8892 10.2754C12.8862 10.2748 12.8832 10.2746 12.8802 10.2743C12.8774 10.274 12.8746 10.274 12.8716 10.2738C12.8694 10.2738 12.8677 10.2734 12.8656 10.2734H12.2578C12.1646 10.2734 12.0889 10.3491 12.0889 10.4419V14.2183C12.0889 14.3113 12.1646 14.3868 12.2578 14.3868H12.8656C12.9589 14.3868 13.0346 14.3113 13.0346 14.2183V11.9754L14.7672 14.3155C14.7792 14.3325 14.794 14.3462 14.8101 14.3572L14.8118 14.3585C14.8152 14.3607 14.8188 14.3629 14.8222 14.3649C14.8239 14.3658 14.8254 14.3665 14.827 14.3674C14.8295 14.3689 14.8324 14.3702 14.835 14.3714C14.8379 14.3725 14.8404 14.3737 14.8434 14.3748C14.845 14.3755 14.8467 14.3762 14.8483 14.3767C14.8523 14.3781 14.856 14.3793 14.8598 14.3805L14.8623 14.381C14.8761 14.3846 14.8905 14.3868 14.9055 14.3868H15.5134C15.6068 14.3868 15.6822 14.3113 15.6822 14.2183V10.4419C15.6822 10.3491 15.6068 10.2734 15.5134 10.2734Z" fill="#00B900"/>
+<path d="M9.86341 13.4413H8.21165V10.4422C8.21165 10.3491 8.13603 10.2734 8.04297 10.2734H7.4349C7.34173 10.2734 7.26611 10.3491 7.26611 10.4422V14.218C7.26611 14.2634 7.2842 14.3047 7.31329 14.335C7.31394 14.3358 7.31465 14.3366 7.31562 14.3375C7.31643 14.3383 7.3173 14.3389 7.31811 14.3398C7.3485 14.369 7.3894 14.387 7.43473 14.387H9.86341C9.95663 14.387 10.0319 14.3112 10.0319 14.218V13.6101C10.0319 13.5169 9.95663 13.4413 9.86341 13.4413Z" fill="#00B900"/>
+<path d="M18.8702 11.2191C18.9634 11.2191 19.0387 11.1437 19.0387 11.0503V10.4424C19.0387 10.3492 18.9634 10.2734 18.8702 10.2734H16.4417C16.3962 10.2734 16.3548 10.2917 16.3244 10.3211C16.3238 10.3218 16.3229 10.3223 16.3225 10.3229C16.3214 10.3239 16.3206 10.3249 16.3198 10.3259C16.2909 10.3561 16.2729 10.397 16.2729 10.4422V14.2181C16.2729 14.2635 16.291 14.3047 16.3201 14.335C16.3208 14.3358 16.3216 14.3368 16.3225 14.3375C16.3231 14.3383 16.3241 14.3391 16.3249 14.3398C16.3552 14.3688 16.3962 14.387 16.4414 14.387H18.8702C18.9634 14.387 19.0387 14.3112 19.0387 14.2181V13.6101C19.0387 13.517 18.9634 13.4413 18.8702 13.4413H17.2186V12.803H18.8702C18.9634 12.803 19.0387 12.7274 19.0387 12.6341V12.0262C19.0387 11.933 18.9634 11.8573 18.8702 11.8573H17.2186V11.2191H18.8702Z" fill="#00B900"/>
+</svg>
+ },
+  { label: 'Share on Email', icon: <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.0898 26C20.2695 26 26.0898 20.1797 26.0898 13C26.0898 5.82032 20.2695 0 13.0898 0C5.91016 0 0.0898438 5.82032 0.0898438 13C0.0898438 20.1797 5.91016 26 13.0898 26Z" fill="#0DBEF3"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7.47442 8.07031C6.8489 8.07031 6.3418 8.57737 6.3418 9.20288V16.8006C6.3418 17.4261 6.8489 17.9331 7.47442 17.9331H18.7058C19.3313 17.9331 19.8383 17.4261 19.8383 16.8006V9.20288C19.8383 8.57737 19.3313 8.07031 18.7058 8.07031H7.47442ZM18.3558 9.41646L13.0901 13.0637L7.82439 9.41646C7.6366 9.28635 7.38001 9.4208 7.38001 9.64922V10.3446L13.0901 14.2996L18.8002 10.3446V9.64922C18.8002 9.4208 18.5436 9.28635 18.3558 9.41646Z" fill="white"/>
+</svg>
+ },
+];
 
 function LiveWithChat() {
+const [openRating, setOpenRating] = useState(false);
 
+    // model popup report
+    
+
+    const [openReport, setOpenReport] = useState(false);
+  const [selectedReason, setSelectedReason] = useState('');
+
+  const handleOpenReport = () => {
+        setAnchorEl(null);
+        setOpenReport(true);
+  }
+  const handleCloseReport = () => setOpenReport(false);
+  const handleReasonChange = (event) => setSelectedReason(event.target.value);
+
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
+const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
+  const isMoreMenuOpen = Boolean(moreAnchorEl);
+
+  const handleMoreClick = (event: React.MouseEvent<HTMLElement>) => {
+    setMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleMoreClose = () => {
+    setMoreAnchorEl(null);
+  };
+
+  const style = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  borderRadius: '12px',
+  boxShadow: 24,
+  p: 0,
+};
 
   type LiveStream = {
     id: string;
@@ -136,45 +266,92 @@ const secondRowGifts = [
 ];
 const [expanded, setExpanded] = useState(false);
 
-
 const renderGiftRow = (gifts) => (
-    <Box
-      sx={{
-        display: 'flex',
-        overflowX: 'auto',
-        pb: 2,
-      }}
-    >
-      {gifts.map((gift, index) => (
+  <Box
+    sx={{
+      display: 'flex',
+      overflowX: 'auto',
+      pb: 2,
+    }}
+  >
+    {gifts.map((gift, index) => (
+      <Box
+        key={index}
+        sx={{
+          minWidth: 100,
+          mx: 1,
+          textAlign: 'center',
+          flexShrink: 0,
+          position: 'relative',
+          bgcolor: '#1c1c1c',
+          borderRadius: 2,
+          height: '7.8rem',
+          overflow: 'hidden',
+          cursor: 'pointer',
+          pt: 1,
+          pb: 0,
+          '&:hover': { background:'rgba(59, 59, 59, 1)' },
+          '&:hover .coin-info': { display: 'none' },
+          '&:hover .send-button': { visibility: 'visible', position: 'relative' },
+        }}
+      >
+        <Box sx={{ fontSize: 32 }}>{gift.emoji}</Box>
+        <Typography className="coin-info"  sx={{ fontSize: 14, mt: 0.5, whiteSpace: 'nowrap' }}>
+          {gift.label}
+        </Typography>
+
+        {/* Coin Info */}
         <Box
-          key={index}
+          
           sx={{
-            minWidth: 100,
-            mx: 1,
-            textAlign: 'center',
-            flexShrink: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            mt: 0.5,
           }}
         >
-          <Box sx={{ fontSize: 32 }}>{gift.emoji}</Box>
-          <Typography sx={{ fontSize: 14, mt: 0.5, whiteSpace: 'nowrap' }}>
-            {gift.label}
-          </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 0.5 }}>
-            <Box
-              component="span"
-              sx={{ color: 'gold', fontSize: 16, mr: 0.5 }}
-            >
-                <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.77006 13.4193C11.3139 13.4193 14.1867 10.5464 14.1867 7.0026C14.1867 3.45878 11.3139 0.585938 7.77006 0.585938C4.22623 0.585938 1.35339 3.45878 1.35339 7.0026C1.35339 10.5464 4.22623 13.4193 7.77006 13.4193Z" fill="#FFEC9B"/>
-                    <path d="M7.76998 11.9557C10.5084 11.9557 12.7283 9.73581 12.7283 6.9974C12.7283 4.25898 10.5084 2.03906 7.76998 2.03906C5.03157 2.03906 2.81165 4.25898 2.81165 6.9974C2.81165 9.73581 5.03157 11.9557 7.76998 11.9557Z" fill="#FACE15"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7093 7.4349C12.7219 7.29075 12.7283 7.14483 12.7283 6.9974C12.7283 4.259 10.5084 2.03906 7.76998 2.03906C5.03158 2.03906 2.81165 4.259 2.81165 6.9974C2.81165 7.14483 2.81808 7.29075 2.83068 7.4349C3.05217 4.90139 5.17899 2.91406 7.76998 2.91406C10.361 2.91406 12.4878 4.90139 12.7093 7.4349Z" fill="#FABC15"/>
-                </svg>
-            </Box>
-            <Typography sx={{ fontSize: 14 }}>{gift.price}</Typography>
+          <Box
+            component="span"
+            sx={{ color: 'gold', fontSize: 16, mr: 0.5 }}
+          >
+            <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.77006 13.4193C11.3139 13.4193 14.1867 10.5464 14.1867 7.0026C14.1867 3.45878 11.3139 0.585938 7.77006 0.585938C4.22623 0.585938 1.35339 3.45878 1.35339 7.0026C1.35339 10.5464 4.22623 13.4193 7.77006 13.4193Z" fill="#FFEC9B"/>
+              <path d="M7.76998 11.9557C10.5084 11.9557 12.7283 9.73581 12.7283 6.9974C12.7283 4.25898 10.5084 2.03906 7.76998 2.03906C5.03157 2.03906 2.81165 4.25898 2.81165 6.9974C2.81165 9.73581 5.03157 11.9557 7.76998 11.9557Z" fill="#FACE15"/>
+              <path fillRule="evenodd" clipRule="evenodd" d="M12.7093 7.4349C12.7219 7.29075 12.7283 7.14483 12.7283 6.9974C12.7283 4.259 10.5084 2.03906 7.76998 2.03906C5.03158 2.03906 2.81165 4.259 2.81165 6.9974C2.81165 7.14483 2.81808 7.29075 2.83068 7.4349C3.05217 4.90139 5.17899 2.91406 7.76998 2.91406C10.361 2.91406 12.4878 4.90139 12.7093 7.4349Z" fill="#FABC15"/>
+            </svg>
           </Box>
+          <Typography  sx={{ fontSize: 14 }}>{gift.price}</Typography>
         </Box>
-      ))}
-    </Box>
+
+        {/* Send Button on Hover */}
+            <Button
+            className="send-button"
+            variant="contained"
+            sx={{
+                position: 'absolute',
+                visibility: 'hidden',
+                bottom: '-9%',
+                bgcolor: '#FE2C55',
+                color: '#fff',
+                fontSize: 12,
+                borderRadius: 0,
+                width: '100%',
+                px: 2,
+                textTransform: 'none',
+                minHeight: 28,
+                '&:hover': {
+                bgcolor: '#d62949',
+
+                },
+            }}
+            onClick={() => console.log('Send gift:', gift)}
+            >
+            Send
+            </Button>
+      </Box>
+    ))}
+  </Box>
+
   );
 
 
@@ -241,7 +418,9 @@ const renderGiftRow = (gifts) => (
 
                     {/* Right Side: Buttons */}
                     <Stack direction="row" spacing={1}>
-                      <IconButton sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F'}}>
+                      <IconButton 
+                      onClick={handleClick}
+                      sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F'}}>
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <mask id="mask0_2018_18635"  maskUnits="userSpaceOnUse" x="0" y="0" width="21" height="20">
                             <path d="M20.6599 0H0.659912V20H20.6599V0Z" fill="white"/>
@@ -254,10 +433,82 @@ const renderGiftRow = (gifts) => (
                         </svg>
 
                       </IconButton>
-                      <IconButton sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', padding: '7.5px 6px'}}>
+                      <Menu
+                              anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            PaperProps={{
+                            sx: {
+                                mt: 1,
+                                borderRadius: '12px',
+                                px: 1,
+                                py: 0.5,
+                                boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
+                                width: 220,
+                            }
+                            }}
+                            anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right'
+                            }}
+                            transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right'
+                            }}
+                        >
+                            {shareOptions.map((option, index) => (
+                            <MenuItem key={index} onClick={handleClose}>
+                                <ListItemIcon>{option.icon}</ListItemIcon>
+                                <ListItemText>{option.label}</ListItemText>
+                            </MenuItem>
+                            ))}
+                        </Menu>
+                      <IconButton
+                              onClick={handleMoreClick}
+                                sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', padding: '7.5px 6px'}}>
                           <svg width="25" height="20" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path fill-rule="evenodd" clip-rule="evenodd" d="M2.65991 12C2.65991 10.8954 3.55534 10 4.65991 10C5.76446 10 6.65991 10.8954 6.65991 12C6.65991 13.1045 5.76446 14 4.65991 14C3.55534 14 2.65991 13.1045 2.65991 12ZM10.6599 12C10.6599 10.8954 11.5554 10 12.6599 10C13.7645 10 14.6599 10.8954 14.6599 12C14.6599 13.1045 13.7645 14 12.6599 14C11.5554 14 10.6599 13.1045 10.6599 12ZM18.6599 12C18.6599 10.8954 19.5554 10 20.6599 10C21.7645 10 22.6599 10.8954 22.6599 12C22.6599 13.1045 21.7645 14 20.6599 14C19.5554 14 18.6599 13.1045 18.6599 12Z" fill="#161823"/>
                           </svg>
+                          <Menu
+                                anchorEl={moreAnchorEl}
+                                open={isMoreMenuOpen}
+                                onClose={handleMoreClose}
+                                PaperProps={{
+                                sx: {
+                                    mt: 1.75,
+                                    borderRadius: '6px',
+                                    py: 2,
+                                    px: 1,
+                                    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
+                                }
+                                }}
+                                anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right'
+                                }}
+                            >
+                                <MenuItem onClick={handleOpenReport}>
+                                <ListItemIcon>
+                                    <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.74528 5.04475V14.6592C6.27982 14.4833 6.92828 14.3026 7.64696 14.1695C9.59734 13.8083 12.2551 13.7653 14.5 15.3688C16.0468 16.4736 17.9932 16.5166 19.699 16.2007C20.536 16.0457 21.2696 15.812 21.7943 15.6162C21.8654 15.5896 21.9325 15.5639 21.9953 15.5392V5.92471C21.4607 6.1007 20.8123 6.2814 20.0936 6.41448C18.1432 6.77567 15.4855 6.81868 13.2406 5.21518C11.6938 4.11035 9.74738 4.06733 8.04151 4.38324C7.20453 4.53824 6.471 4.77197 5.94627 4.96776C5.87512 4.9943 5.80804 5.02007 5.74528 5.04475ZM22.5947 3.36438C22.9304 3.19678 23.329 3.21482 23.6482 3.4121C23.9675 3.60949 24.1619 3.95818 24.1619 4.33364V16.2503C24.1619 16.6607 23.9301 17.0358 23.5631 17.2193L23.0786 16.2503C23.5631 17.2193 23.5624 17.2196 23.5624 17.2196L23.5616 17.22L23.5595 17.2211L23.5539 17.2238L23.5369 17.2322C23.5287 17.2361 23.5189 17.2409 23.5073 17.2464C23.499 17.2504 23.4897 17.2548 23.4795 17.2596C23.4312 17.2824 23.363 17.314 23.2765 17.3522C23.1039 17.4286 22.8576 17.532 22.5517 17.6462C21.9424 17.8735 21.0847 18.1476 20.0936 18.3312C18.1432 18.6923 15.4855 18.7353 13.2406 17.1318C11.6938 16.027 9.74738 15.984 8.04151 16.2999C7.20453 16.4549 6.471 16.6887 5.94627 16.8844C5.87512 16.911 5.80804 16.9367 5.74528 16.9614V23.8337C5.74528 24.1328 5.50277 24.3753 5.20361 24.3753H4.12028C3.82113 24.3753 3.57861 24.1328 3.57861 23.8337V4.33364C3.57861 3.9233 3.81045 3.54818 4.17747 3.36467L4.66195 4.33364C4.17747 3.36467 4.17817 3.36432 4.17817 3.36432L4.17901 3.3639L4.18105 3.36289L4.18663 3.36013L4.20372 3.35176C4.21771 3.34495 4.2369 3.33572 4.26104 3.32431C4.30933 3.30151 4.37756 3.26998 4.46399 3.23176C4.63672 3.15538 4.883 3.05191 5.18883 2.9378C5.79822 2.71042 6.65582 2.43634 7.64696 2.2528C9.59734 1.89163 12.2551 1.84861 14.5 3.45209C16.0468 4.55693 17.9932 4.59994 19.699 4.28403C20.536 4.12903 21.2696 3.8953 21.7943 3.69951C22.0555 3.60204 22.2621 3.51508 22.4003 3.45392C22.4695 3.42338 22.5213 3.39937 22.5542 3.38382C22.5706 3.37605 22.5823 3.37041 22.5891 3.36713L22.5941 3.36467L22.5947 3.36438Z" fill="#161823"/>
+                                    </svg>
+                                </ListItemIcon>
+                                <ListItemText>Report</ListItemText>
+                                </MenuItem>
+
+                                <MenuItem onClick={() => setOpenRating(true)}>
+                                <ListItemIcon>
+                                    <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.86249 15.0773C9.7522 15.0773 9.64455 15.1109 9.55391 15.1739L5.62842 17.8949C5.44881 18.0193 5.20329 17.8909 5.20329 17.6723V6.04449C5.20329 5.74534 5.44581 5.50282 5.74496 5.50282H18.7449C19.0442 5.50282 19.2866 5.74534 19.2866 6.04449V14.5357C19.2866 14.8348 19.0442 15.0773 18.7449 15.0773H9.86249ZM19.2866 17.3302H10.3491L4.29982 21.5233C3.75988 21.8976 3.03662 21.4952 3.03662 20.8204V5.50282C3.03662 4.25862 4.00668 3.25 5.20329 3.25H19.2866C20.4833 3.25 21.4533 4.25862 21.4533 5.50282V10.2372H23.3491C24.5458 10.2372 25.5158 11.2003 25.5158 12.3883V22.4841C25.5158 23.0585 24.9284 23.4489 24.3935 23.2298L20.4165 21.0599H13.0575C11.8608 21.0599 10.8908 20.0968 10.8908 18.9088V17.3333H13.0575V18.3671C13.0575 18.6663 13.3 18.9088 13.5991 18.9088H20.6901C20.7918 18.9088 20.8913 18.9374 20.9774 18.9913L23.1834 20.3717C23.2555 20.4169 23.3491 20.365 23.3491 20.2799V12.93C23.3491 12.6308 23.1067 12.3883 22.8074 12.3883H21.4533V15.0773C21.4533 16.3215 20.4833 17.3302 19.2866 17.3302Z" fill="#161823"/>
+                                    </svg>
+                                </ListItemIcon>
+                                <ListItemText>Ranking settings</ListItemText>
+                                </MenuItem>
+                            </Menu>
                       </IconButton>
                       <Button variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
                       <Button variant="contained" sx={{ background: '#FE2C55', color: '#fff' , textTransform : 'capitalize'}} >
@@ -270,6 +521,8 @@ const renderGiftRow = (gifts) => (
                       </Button>
                     </Stack>
                 </Box>
+
+
                 <Box sx={{ width: '100%', height: '95%' }}>
                     {/* Placeholder for Video */}
                     <Typography color="white" align="center" >
@@ -759,8 +1012,67 @@ const renderGiftRow = (gifts) => (
              
             </Grid>
           </Grid>
+            {/* model popup report */}
+           <Modal open={openReport} onClose={handleCloseReport}>
+                <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 500,
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 0,
+                    borderRadius: 2,
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
+                }}
+                >
+                <Typography variant="h6" textAlign={'center'} sx={{ mb: 2, fontWeight: 'bold', p:2 }}>
+                    Report
+                </Typography>
 
-          
+                <FormControl component="fieldset" >
+                    <RadioGroup value={selectedReason} onChange={handleReasonChange}>
+                    <Grid container spacing={1} sx={{border: '1px solid #ccc'}}>
+                        {reasons.map((reason, index) => (
+                        <Grid 
+                            sx={{
+                                    borderTop: index > 1 ? '1px solid #ccc' : 'none',
+                                    borderLeft: index % 2 === 1 ? '1px solid #ccc' : 'none',
+                                    padding: 1.5,
+                                    
+                                }}
+                                    item xs={12} sm={6} key={index}>
+                                    <FormControlLabel
+                                    sx={{paddingLeft: 2}}
+                                    value={reason}
+                                    control={<Radio size="small" />}
+                                    label={reason}
+                                    />
+                        </Grid>
+                        ))}
+                    </Grid>
+                    </RadioGroup>
+                </FormControl>
+
+                <Typography variant="caption" color="text.secondary" sx={{ p: 2, display: 'flex', textAlign: 'center' }}>
+                    If you know someone that is in immediate physical danger, contact local law enforcement right away.
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Box display="flex" justifyContent="space-between " borderTop={'1px solid #ccc'}>
+                    <Button variant="outlined" sx={{color: '#000',width: '50%', borderRadius: 0, border: 'none', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} onClick={handleCloseReport}>
+                    Cancel
+                    </Button>
+                    <Button variant="contained"  sx={{width: '50%', borderRadius: 0, backgroundColor: 'rgba(22, 24, 35, 0.12)', color: '#000', fontWeight: '600', height: '100%', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} disabled={!selectedReason}>
+                    Next
+                    </Button>
+                </Box>
+                </Box>
+           </Modal>
+
+           <RankingSettingsModal open={openRating} onClose={() => setOpenRating(false)} />
         </Box>
 
 

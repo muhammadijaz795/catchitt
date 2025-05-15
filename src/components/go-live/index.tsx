@@ -202,8 +202,8 @@ function GoLive() {
     <div className='flex' style={{ background: '#000' }}>
       <SideNavBar />
       <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
-        {/* <div className='py-3 px-10'>  */}
-          {/* <div>
+        <div className='py-3 px-10 d-none'> 
+          <div>
             <Box display="flex" alignItems="center" mb={3} gap={1}>
               <IconButton
                 sx={{ backgroundColor: 'white', boxShadow: '0px 0px 9px 0px #e4e6eb' }}
@@ -245,10 +245,10 @@ function GoLive() {
                 <ChevronRight />
               </IconButton>
             </Box>
-          </div> */}
+          </div>
 
-          {/* <LiveStreaming  style={{display:'none'}}/> */}
-          {/* <hr className='my-4'/>
+          <LiveStreaming  />
+          <hr className='my-4'/>
           <Box>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
@@ -265,9 +265,9 @@ function GoLive() {
                       </Grid>
                   ))}
               </Grid>
-          </Box> */}
+          </Box>
           {/* recommended streams */}
-          {/* <Box  sx={{ mt: 4 }}>
+          <Box  sx={{ mt: 4 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                   Recommended categories
@@ -284,9 +284,9 @@ function GoLive() {
                 ))}
               </Box>
 
-          </Box> */}
+          </Box>
 
-          {/* <Box  sx={{ mt: 4 }}>
+          <Box  sx={{ mt: 4 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                   LIVE Events
@@ -343,10 +343,10 @@ function GoLive() {
                   </Card>
                 </Grid>
               </Grid>
-          </Box> */}
+          </Box>
 
           {/* Esports streams */}
-          {/* <Box  sx={{ mt: 4 }}>
+          <Box  sx={{ mt: 4 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                   Esports
@@ -362,10 +362,10 @@ function GoLive() {
                       </Grid>
                   ))}
               </Grid>
-          </Box> */}
+          </Box>
 
           {/* mobile legends streams */}
-          {/* <Box  sx={{ mt: 4 }}>
+          <Box  sx={{ mt: 4 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                   Esports
@@ -381,10 +381,9 @@ function GoLive() {
                       </Grid>
                   ))}
               </Grid>
-          </Box> */}
-      {/* </div> */}
+          </Box>
+        </div>
         <LiveWithChat />
-
 
       </div>
       <button className='bg-[#FE2C55] rounded-full p-1 fixed right-2 bottom-2'>
