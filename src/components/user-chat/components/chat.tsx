@@ -20,6 +20,7 @@ import PopupForReport from '../../../components/profile/popups/PopupForReport';
 import BlockPopup from '../../../shared/popups/BlockPopup';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import AvatarUser from './avatarUser';
 
 const options = [
     { text: 'Mute', icon: <NotificationsOffOutlinedIcon /> },
@@ -100,6 +101,7 @@ function UserChat(props: any) {
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token');
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [imageError, setImageError] = useState(false);
     const open = Boolean(anchorEl);
     const [muteN, setmuteN] = useState(false);
     const [reportPopup, setreportPopup] = useState(false);
@@ -242,14 +244,25 @@ function UserChat(props: any) {
                 {lastMsg ? (
                     <div>
                         {isGroup ? (
-                            <img
-                                style={{ padding: 8, background: '#EAEAEA' }}
-                                src={groupDefaultIcon}
-                                alt=""
-                            />
-                        ) : (
-                            <img src={userImage != "" ? userImage : defaultAvatar} alt="" />
-                        )}
+        <img
+          style={{ padding: 8, background: '#EAEAEA' }}
+          src={groupDefaultIcon}
+          alt="Group"
+        />
+      ) : userImage && userImage !== '' && !imageError ? (
+        <img
+          src={userImage}
+          alt="User"
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <AvatarUser userName={userName} useImage={true} />
+
+        // <AvatarUser userName={userName} />
+      )}
+
+                        {/* <div className={style.avatar}>{userName}</div> */}
+
                         <div>
                             <p className={style.nameText}>{userName}</p>
                             <p className={style.msgText}>{lastMsg}</p>
