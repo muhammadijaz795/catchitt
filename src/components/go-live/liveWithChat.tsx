@@ -274,6 +274,24 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     .catch((error) => console.error('Fetch error:', error));
   };
 
+  function sendGift(giftId: string)
+  {
+      let endpoint = `${process.env.VITE_API_URL}/media-content/comment/{mediaId}`;
+      let requestOptions =
+      {
+        method: 'POST',
+        headers:
+        {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ giftId }),
+      };
+      
+      fetch(endpoint, requestOptions)
+      .catch((error) => console.error('Fetch error:', error));
+  };
+
   useEffect(() => {
     loadGiftsDetails();
   }, []);
@@ -359,7 +377,7 @@ const renderGiftRow = (gifts) => (
 
                 },
             }}
-            onClick={() => console.log('Send gift:', gift)}
+            onClick={() => sendGift(gift._id)}
             >
             Send
             </Button>
