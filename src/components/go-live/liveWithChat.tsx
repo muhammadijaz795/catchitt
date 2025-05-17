@@ -152,35 +152,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     userAvatar: string;
   };
   
-  const dummyData: LiveStream[] = [
-    {
-      id: '1',
-      title: 'Watch now and interact with others in real time!',
-      username: '🔥G u j  ج ﻟ آ r x S I M B 🔺🔥',
-      viewers: 9,
-      imageUrl: 'https://images.unsplash.com/photo-1542332213-9b5a5a3fad35?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      userAvatar: 'https://images.unsplash.com/profile-1533004581829-aab5b0d67147?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    },
-    {
-      id: '2',
-      title: 'lag ke',
-      username: 'jia ( ͡° ͜ʖ ͡°)',
-      viewers: 4,
-      imageUrl: 'https://images.unsplash.com/photo-1542640244-7e672d6cef4e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      userAvatar: 'https://images.unsplash.com/profile-fb-1492571002-e2c96d7a6823.jpg?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    },
-    {
-      id: '3',
-      title: 'Event ws 9.50k',
-      username: 'ROOM TARKAM MAS R',
-      viewers: 7,
-      imageUrl: 'https://images.unsplash.com/photo-1543946207-39bd91e70ca7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      userAvatar: 'https://images.unsplash.com/profile-1611689283666-173278c4384eimage?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    },
-  ];
-
-
-  
   const Esports: LiveStream[] = [
     {
       id: '1',
@@ -207,14 +178,14 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
       userAvatar: 'https://images.unsplash.com/profile-1611689283666-173278c4384eimage?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     },
   ];
-  const LiveStreamCard = ({ stream }: { stream: LiveStream }) => (
+  const LiveStreamCard = ({ stream }: { stream: any }) => (
     <Box sx={{ borderRadius: 2, width: "100%", position: 'relative', mr: 2, textAlign: 'left' }}>
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           component="img"
-          image={stream.imageUrl}
+          image={stream.thumbnail}
           height="160"
-          alt={stream.title}
+          alt={stream.streamTitle}
           sx={{ borderRadius: 2, maxHeight: 260 }}
         />
         <Box sx={{ position: 'absolute', top: 8, left: 8, display: 'flex', alignItems: 'center', gap: 0 }}>
@@ -227,19 +198,19 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
             style={{borderRadius: 'none', background: '#00000080', fontSize: '13px', color: 'white', height: 20, display: 'flex', alignItems: 'center' }}
           >
             <PersonIcon sx={{ fontSize: 14 }} />
-            {stream.viewers}
+            {/* {stream.viewers} */}
             </span>
         </Box>
       </Box>
       <Box sx={{ mt: 1, px: 0.5, pb: 1.5 }}>
       <Stack direction="row" spacing={1} mt={0.5}>
-        <Avatar src={stream.userAvatar} sx={{ width: 24, height: 24 }} />
+        <Avatar src={stream.owner.photo} sx={{ width: 24, height: 24 }} />
         <Box>
             <Typography variant="body2" fontWeight={500} noWrap>
-            {stream.title}
+            {stream.streamTitle}
             </Typography>
             <Typography variant="caption" color="text.secondary" noWrap>
-            {stream.username}
+            {stream.owner.name}
             </Typography>
         </Box>
         </Stack>
@@ -275,6 +246,34 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     .catch((error) => console.error('Fetch error:', error));
   };
 
+  const [recommendedLiveVideos, setRecommendedLiveVideos] = useState<any>(
+    {
+      items: [],
+      isLoading: false,
+    }
+  );
+
+  function loadRecommendedLiveVideos()
+  {
+    let endpoint = `${process.env.VITE_API_URL}/live-stream`;
+    let requestOptions =
+    {
+      method: 'GET',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    setRecommendedLiveVideos((prev: any) => ({ ...prev, isLoading: true }));
+
+    fetch(endpoint, requestOptions)
+    .then((response) => response.json())
+    .then((response) => setRecommendedLiveVideos((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
+    .catch((error) => console.error('Fetch error:', error));
+  };
+
   function sendGift(giftId: string)
   {
       let endpoint = `${process.env.VITE_API_URL}/media-content/comment/{mediaId}`;
@@ -295,6 +294,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     loadGiftsDetails();
+    loadRecommendedLiveVideos();
   }, []);
 const [expanded, setExpanded] = useState(false);
 
@@ -663,7 +663,7 @@ const renderGiftRow = (gifts) => (
                     
                     </Box>
                     <Grid container spacing={2}>
-                        {dummyData.map((stream) => (
+                        {recommendedLiveVideos.items.map((stream) => (
                             <Grid item xs={12} sm={6} key={stream.id}>
                                 <LiveStreamCard stream={stream} />
                             </Grid>
