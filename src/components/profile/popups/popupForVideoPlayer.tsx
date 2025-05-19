@@ -1309,7 +1309,7 @@ export default function PopupForVideoPlayer({
                                     </div>
 
                                     {/* All comments section */}
-                                    {Boolean(privacyPrivilege)? privacyPrivilege?.privacyOptions?.allowComments?<InfiniteScroll
+                                    {Boolean(info)? info?.privacyOptions?.allowComments?<InfiniteScroll
                                         dataLength={videoComments?.items?.length}
                                         next={paginateComments}
                                         hasMore={videoComments.items.length < videoComments?.totalItems || videoComments?.totalItems === null}
@@ -1906,7 +1906,7 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     )} */}
                                     {/* Add comment section */}
-                                    {privacyPrivilege?.privacyOptions?.allowComments && <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{ zIndex: 99 }}>
+                                    {info?.privacyOptions?.allowComments && <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{ zIndex: 99 }}>
                                          <div className="flex flex-row items-center">
                                             <div
                                                 className={`bg-[#FFFFFF1F] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn()
