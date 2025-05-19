@@ -992,6 +992,7 @@ export default function PopupForVideoPlayer({
                                         <CustomContextMenu
                                             x={contextMenuPosition.x}
                                             y={contextMenuPosition.y}
+                                            post={info}
                                             onClose={handleCloseContextMenu}
                                             onDownload={handleDownload}
                                             onCopyLink={handleCopyLink}
