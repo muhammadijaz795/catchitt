@@ -115,6 +115,9 @@ function LiveWithChat() {
 
     const [openRating, setOpenRating] = useState(false);
     const [unfollowAnchorEl, setUnfollowAnchorEl] = useState(null);
+    const [currentStream, setCurrentStream] = useState(null);
+    const [isSwitchingStreams, setIsSwitchingStreams] = useState(false);
+
 
   const handleUnfollowClick = (event) => {
     setUnfollowAnchorEl(event.currentTarget);
@@ -239,9 +242,9 @@ function LiveWithChat() {
         (socketRef.current as any).emit('joinRoom', '651c880a8ac697cffc082dbf', (response:any) => {
           console.log('Callback Response:', response);
         });
-        (socketRef.current as any).emit('leaveRoom', '651c880a8ac697cffc082dbf', (response:any) => {
-          console.log('Callback Response:', response);
-        });
+        // (socketRef.current as any).emit('leaveRoom', '651c880a8ac697cffc082dbf', (response:any) => {
+        //   console.log('Callback Response:', response);
+        // });
     });
 
     (socketRef.current as any).on('connect_error', (error: any) => {
@@ -263,9 +266,9 @@ function LiveWithChat() {
     startSocket();
   }, []);
       
-  const LiveStreamCard = ({ stream }: { stream: any }) => (
+  const LiveStreamCard = ({ stream, onClick }: { stream: any, onClick: (streamId: string) => void }) => (
     <Box sx={{ borderRadius: 2, width: "100%", position: 'relative', mr: 2, textAlign: 'left' }}>
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{ position: 'relative' }}  onClick={() => onClick(stream._id)}>
         <CardMedia
           component="img"
           image={stream.thumbnail}
@@ -795,7 +798,32 @@ const [openFaq, setOpenFaq] = useState(false);
                     <Grid container spacing={2}>
                         {recommendedLiveVideos.items.map((stream) => (
                             <Grid item xs={12} sm={6} key={stream.id}>
-                                <LiveStreamCard stream={stream} />
+                                <LiveStreamCard 
+                                  stream={stream} 
+                                  onClick={(streamId) => {
+                                    setIsSwitchingStreams(true);
+  
+                                    if (!socketRef.current || !isConnected) {
+                                      console.log('Socket not connected, reconnecting...');
+                                      startSocket();
+                                      setIsSwitchingStreams(false);
+                                      return;
+                                    }
+                                    // First leave the current room
+                                    (socketRef.current as any).emit('leaveRoom', currentStream?._id || '651c880a8ac697cffc082dbf', (response: any) => {
+                                      console.log('Left room response:', response);
+                                    });
+
+                                    (socketRef.current as any).emit('joinRoom', streamId, (response: any) => {
+                                      console.log('Joined new room response:', response);
+                                      // Update the current stream
+                                      setCurrentStream(stream);
+                                      // You might want to update your UI state here to reflect the new stream
+                                      // For example, update the current stream being displayed
+                                    });
+
+                                  }}
+                                />
                             </Grid>
                         ))}
                     </Grid>
