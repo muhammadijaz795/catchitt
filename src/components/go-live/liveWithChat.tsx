@@ -1,5 +1,5 @@
 import { SideNavBar } from './goLiveSidebar';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Box,  Radio,
   RadioGroup,
@@ -23,6 +23,8 @@ import {
 import XIcon from '@mui/icons-material/Close'; // 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RankingSettingsModal from './popuprating';
+import { io } from 'socket.io-client';
+
 
 
 const reasons = [
@@ -206,6 +208,59 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
       userAvatar: 'https://images.unsplash.com/profile-1611689283666-173278c4384eimage?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     },
   ];
+
+  const socketRef = useRef();
+  const SERVER_URL = 'https://prodapi.seezitt.com';
+  const [isConnected, setIsConnected] = useState(false);
+
+  function startSocket() {
+    if ((socketRef.current as any) && (socketRef.current as any).connected) {
+        console.log('Socket already connected.');
+        return;
+    }
+    (socketRef.current as any) = io(SERVER_URL, {
+        // transports: ['websocket'],
+        transports: ['websocket'], // Use WebSocket transport
+        upgrade: false,            // Prevent transport upgrades
+        reconnection: true, // Enable reconnection (default is true)
+        reconnectionAttempts: 5, // Number of reconnection attempts before giving up
+        reconnectionDelay: 1000, // Time (ms) to wait before trying to reconnect
+    });
+
+    (socketRef.current as any).on('connect', () => {
+        setIsConnected(true);
+        console.log('Connected to socket server.', (socketRef.current as any));
+        // let addUserObject = { userId: sender, accessToken: token };
+        // let newAddUserObject = JSON.stringify(addUserObject);
+           
+        // (socketRef.current as any).emit('joinRoom', '651c880a8ac697cffc082dbf');
+        (socketRef.current as any).emit('joinRoom', '651c880a8ac697cffc082dbf', (response:any) => {
+          console.log('Callback Response:', response);
+        });
+        (socketRef.current as any).emit('leaveRoom', '651c880a8ac697cffc082dbf', (response:any) => {
+          console.log('Callback Response:', response);
+        });
+    });
+
+    (socketRef.current as any).on('connect_error', (error: any) => {
+        console.error('Connection Error:', error);
+    });
+
+    (socketRef.current as any).on('disconnect', () => {
+        setIsConnected(false);
+        console.log('Disconnected from socket server.');
+    });
+
+    (socketRef.current as any).onclose = (event: any) => {
+        console.error('WebSocket closed:', event);
+    };
+
+  }
+
+  useEffect(() => {
+    startSocket();
+  }, []);
+      
   const LiveStreamCard = ({ stream }: { stream: LiveStream }) => (
     <Box sx={{ borderRadius: 2, width: "100%", position: 'relative', mr: 2, textAlign: 'left' }}>
       <Box sx={{ position: 'relative' }}>
