@@ -70,6 +70,8 @@ const ChatComponent = () => {
     const [DangerText, setDengerText] = useState<string>('');
     const [msg, setMsg] = useState<string>('');
     const [msgType, setMsgType] = useState<string>('');
+    const [selectedGift, setSelectedGift] = useState<{ _id: string } | null>(null);
+
     const [activeUser, setActiveUser] = useState<any>({});
     const [activeChat, setActiveChat] = useState<any>({});
     const socketRef = useRef();
@@ -222,6 +224,7 @@ const ChatComponent = () => {
                             stared: message?.isStarred,
                             isRead: message?.isRead,
                             type: message?.type,
+                            gift: message?.gift,
                             // replysms: false,
                             recieverName: message.receiverId.name,
                             replysms: message?.repliedMessage?.message ? message?.repliedMessage?.message : '', // Use an empty string if repliedMessage is null
@@ -458,6 +461,8 @@ const ChatComponent = () => {
                     // If message exists, return the current state without changes
 
                     // Otherwise, add the new message to chats
+                    console.log(element?.gift);
+                    console.log('element gift')
                     return {
                         ...currentChat,
                         userId: user.userId,   // Replace with the desired value
@@ -478,6 +483,7 @@ const ChatComponent = () => {
                                 stared: element?.isStarred,
                                 isRead: element?.isRead,
                                 type: element?.type,
+                                gift:element?.gift,
                                 reactions: element?.reactions,
                                 replysms: element?.repliedMessage
                                     ? element?.repliedMessage?.message
@@ -797,15 +803,28 @@ const ChatComponent = () => {
             e.preventDefault();
         }
         e.stopPropagation();
+        let messageType = msgType;
+        if(selectedGift){
+            console.log('start of gift..')
+            // setMsgType('Gift');
+            messageType = 'Gift';
+        }
+       
         let messageData = {
             to: loggedUserId != receiver ? receiver : sender,
             message: msg,
             from: loggedUserId == sender ? sender : sender,
-            type: msgType,
+            type: messageType,
             accessToken: token,
             ...(currentReplyToMessage && { repliedMessageId: currentReplyToMessage.id }),
+            ...(selectedGift ? { giftId: selectedGift._id } : {})
 
         };
+
+        
+       
+        console.log('messageData');
+        console.log(messageData);
         // Get current time
         const currentTime = moment();
         // console.log(messageData)
@@ -842,7 +861,7 @@ const ChatComponent = () => {
                             to: loggedUserId != receiver ? receiver : sender,
                             from: loggedUserId == sender ? sender : sender,
                             msg: msg,
-                            type: msgType,
+                            type: messageType,
                             time: formattedTime,
                             emojis: false,
                             dropdown: false,
@@ -853,6 +872,7 @@ const ChatComponent = () => {
                                 receiverId: currentReplyToMessage.receiverId,
                                 recieverName: currentReplyToMessage.recieverName,
                             }),
+                            gift:selectedGift
                         },
                     ],
                 });
@@ -877,22 +897,41 @@ const ChatComponent = () => {
                         {
                             to: loggedUserId != receiver ? receiver : sender,
                             from: loggedUserId == sender ? sender : sender,
-                            type: msgType,
+                            type: messageType,
                             msg: msg,
                             time: formattedTime,
                             emojis: false,
                             dropdown: false,
                             id: new Date().getTime(),
+                            gift: selectedGift,
                             // Only include these values if currentReplyToMessage exists
                             ...(currentReplyToMessage && {
                                 replysms: currentReplyToMessage.msg,
                                 receiverId: loggedUserId != receiver ? receiver : sender,
-                                recieverName: currentReplyToMessage.recieverName,
+                                recieverName: currentReplyToMessage.recieverName
                             }),
                         },
                     ],
                 });
-
+                console.log('active chat message');
+                console.log({
+                    to: loggedUserId != receiver ? receiver : sender,
+                    from: loggedUserId == sender ? sender : sender,
+                    type: messageType,
+                    msg: msg,
+                    time: formattedTime,
+                    emojis: false,
+                    dropdown: false,
+                    id: new Date().getTime(),
+                    gift: selectedGift,
+                    // Only include these values if currentReplyToMessage exists
+                    ...(currentReplyToMessage && {
+                        replysms: currentReplyToMessage.msg,
+                        receiverId: loggedUserId != receiver ? receiver : sender,
+                        recieverName: currentReplyToMessage.recieverName
+                    }),
+                });
+                console.log('active object..')
                 console.log('messageData', messageData);
                 // (socketRef.current as any).emit('send-msg', JSON.stringify(messageData));
                 // Emit the 'send-msg' event and pass a callback function to receive a response
@@ -916,6 +955,7 @@ const ChatComponent = () => {
             // console.log('Current socket : ', socketRef.current);
             setMsg('');
             setMsgType('');
+            setSelectedGift(null);
         }
 
         setSmsRef('');
@@ -1342,6 +1382,8 @@ const ChatComponent = () => {
                             currentReplyToMessage={currentReplyToMessage}
                             setMessagesState={setMessagesState}
                             inputRef={inputRef}
+                            setSelectedGift={setSelectedGift}
+                            selectedGift={selectedGift}
                         />
                     )}
                     {!groupOptions && moreOptions && (

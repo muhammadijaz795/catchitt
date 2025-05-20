@@ -169,3 +169,22 @@
 .darkReply{
   background: #a9a9a9;
 }
+
+.selectedGiftPreview {
+  width: 8rem;
+  position: relative;
+  box-shadow: 1px 1px 1px #e4e6eb;
+  border: 1px solid #e4e6eb;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.selectedGiftButton{
+  position: absolute;
+  top: -5px;
+  right: 0px;
+  padding: 0;
+  border: 0;
+}
