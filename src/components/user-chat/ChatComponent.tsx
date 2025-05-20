@@ -716,6 +716,19 @@ const ChatComponent = () => {
         (socketRef.current as any).emit('remove-react', { from: sender, messageId });
     };
 
+    const deleteForEveryone = async (item: any) => {
+        let dataObj: { senderId?: string; messageId?: string; receiverId?: string; accessToken?: string } = {};
+        dataObj.messageId = item.id;
+        dataObj.senderId = loggedUserId ?? '';
+        dataObj.receiverId = item.receiverId;
+        dataObj.accessToken = token ?? undefined;
+        const data = JSON.stringify(dataObj);
+
+        console.log('deleteForEveryone', data);
+        (socketRef.current as any).emit('delete-message-for-everyone', { data });
+        setSelectedMsg(null);
+    }
+
     const deleteH = async (item: any) => {
         const tempArr: any[] = [];
         activeChat?.chats.forEach((msg: any) => {
@@ -1231,7 +1244,7 @@ const ChatComponent = () => {
         >
             <img onClick={()=>navigate('/')} className='float-left mt-3 ml-4 cursor-pointer' src={isDarkTheme?leftArrowCurvedinWhite:leftArrowCurved} alt="" />
             <div className={`${style.parent} ${isDarkTheme}`}>
-                <ConfirmDelete deleteHandler={deleteH} isDarkTheme={isDarkTheme} msg={selectedMsg} handleClose={()=>setSelectedMsg(null)} />
+                <ConfirmDelete deleteHandler={deleteH} deleteForEveryone={deleteForEveryone} isDarkTheme={isDarkTheme} msg={selectedMsg} handleClose={()=>setSelectedMsg(null)} />
                 <UserChats
                     // onUsersInputChangeHandler={onUsersInputChangeHandler}
                     id={activeUser?.userId}
