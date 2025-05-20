@@ -726,7 +726,7 @@ const ChatComponent = () => {
         const data = JSON.stringify(dataObj);
 
         console.log('deleteForEveryone', data);
-        (socketRef.current as any).emit('delete-message-for-everyone', { data });
+        (socketRef.current as any).emit('delete-message-for-everyone', data);
         setSelectedMsg(null);
     }
 
