@@ -476,6 +476,30 @@ function LiveWithChat() {
     }
   );
 
+  const loadRoomMessages = () => {
+    const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
+    let endpoint = `${process.env.VITE_API_URL}/live-stream/${liveStreamRoomId}`;
+    let requestOptions =
+    {
+      method: 'GET',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+  console.log('endpoint', endpoint);
+  console.log('requestOptions', requestOptions);  
+  fetch(endpoint, requestOptions)
+    .then((response) => response.json())
+    .then((response) => { 
+      console.log('response from live-stream get rooms', response);
+      console.log(response.data);
+      // Handle the response data here
+    })
+    .catch((error) => console.error('Fetch error:', error));
+  }
+  
   function loadRecommendedLiveVideos()
   {
     let endpoint = `${process.env.VITE_API_URL}/live-stream`;
@@ -521,6 +545,12 @@ function LiveWithChat() {
     loadGiftsDetails();
     loadRecommendedLiveVideos();
   }, []);
+  useEffect(() => {
+    if (currentStream?._id || streamIdFromUrl) {
+      loadRoomMessages();
+    }
+  }, [currentStream, streamIdFromUrl]);
+
 const [expanded, setExpanded] = useState(false);
 
 const renderGiftRow = (gifts) => (
@@ -957,8 +987,22 @@ const [openFaq, setOpenFaq] = useState(false);
                                     setCurrentStream(stream);
                                     (socketRef.current as any).emit('joinRoom', joinRoomInput, (response: any) => {
                                       console.log('Joined new room response:', response);
-                                      
                                     });
+
+                                    let joinLiveStreamRoom: { liveStreamRoomId: string; accesstoken: string; name?: string; userName?: string; email?: string; userImage?: string } = {
+                                      liveStreamRoomId: streamId,
+                                      accesstoken: token ?? '',
+                                      name: profileData?.name,
+                                      userName: profileData?.username, 
+                                      email: profileData?.email,
+                                      userImage: profileData?.avatar || profileData?.cover,
+                                    };
+
+                                    (socketRef.current as any).emit('joinLiveStreamRoom', joinLiveStreamRoom, (response: any) => {
+                                      console.log('Joined live stream room response:', response);
+                                    });
+
+
 
                                     // Navigate to the new stream page
                                     navigate(`/golive?streamId=${streamId}`);

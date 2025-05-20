@@ -704,7 +704,8 @@ const ChatComponent = () => {
             messageId: messageId,
             react: reaction,
             type: 'emoji',
-            accessToken: token
+            accessToken: token,
+            conversationId
         }));
         valuesH(item, 'showEmogis');
     };
@@ -1015,6 +1016,7 @@ const ChatComponent = () => {
 
     useEffect(() => {
         if (Object.keys(activeUser).length == 0 && users.length > 0) {
+            setConversationId(users[0]?.conversationId);
             loadChatMessages(users[0]?.senderId, users[0]?.receiverId, users[0]?.conversationId, users[0]);
             if (valueReceived) {
                 chatSwitchH(valueReceived);
