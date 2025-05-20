@@ -561,7 +561,7 @@ const [openFaq, setOpenFaq] = useState(false);
                             }}
                         >
                             {shareOptions.map((option, index) => (
-                            <MenuItem key={index} onClick={() => { shareProfileby[option.action]('liveStreamLink'); handleClose(); }}>
+                            <MenuItem key={index} onClick={() => { shareProfileby[option.action as keyof typeof shareProfileby](selectedLiveVideo?.details?.owner?.username); handleClose(); }}>
                                 <ListItemIcon>{option.icon}</ListItemIcon>
                                 <ListItemText>{option.label}</ListItemText>
                             </MenuItem>
@@ -775,7 +775,7 @@ const [openFaq, setOpenFaq] = useState(false);
                     
                     </Box>
                     <Grid container spacing={2}>
-                        {recommendedLiveVideos.items.map((stream) => (
+                        {recommendedLiveVideos.items.map((stream: any) => (
                             <Grid item xs={12} sm={6} key={stream.id} onClick={() => { navigate(`/golive?streamId=${stream.id}`); setSelectedLiveVideo((prev: any) => ({ ...prev, details: stream }));}}>
                                 <LiveStreamCard stream={stream} />
                             </Grid>
