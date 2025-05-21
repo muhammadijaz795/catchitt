@@ -1,5 +1,5 @@
 import { SideNavBar } from './goLiveSidebar';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Box, IconButton, Chip, AppBar, Typography, Card, CardMedia, Stack, Avatar, Grid, CardContent, Button, Toolbar, Paper } from '@mui/material';
 import LiveStreaming from './liveStream';
@@ -9,6 +9,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ShareIcon from '../profile/svg-components/ShareIcon';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import LiveWithChat from './liveWithChat';
+import  styles  from './GoLive.module.scss';
 
 function GoLive() {
   const chipLabels = [
@@ -198,10 +199,31 @@ function GoLive() {
       </Box>
     </Box>
   );
+ const [darkTheme, setdarkTheme] = useState('');
+    const [darkThemeblack, setdarkThemeblack] = useState('');
+    const [textColor, setTextColor] = useState('black');
+    const [textColorClass, setTextColorClass] = useState(styles.textBlackColor);
+
+  useEffect(() => {
+          var themeColor = window.localStorage.getItem('theme');
+          
+          if(themeColor == "dark"){ 
+              setdarkTheme(styles.darkTheme);
+              setdarkThemeblack(styles.darkThemeblack);
+              setTextColor("white");
+              setTextColorClass(styles.textWhiteColor);
+          }else{
+              // setdarkTheme(style.lightTheme);
+              setTextColor("black");
+              setTextColorClass(styles.textBlackColor);
+          }
+      });
+  
+
   return (
     <div className='flex' style={{ background: '#000' }}>
       <SideNavBar />
-      <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
+      <div className={`${darkTheme} w-[calc(100%-16rem)] ml-auto bg-white `}>
         <div className='py-3 px-10 d-none'> 
           <div>
             <Box display="flex" alignItems="center" mb={3} gap={1}>
