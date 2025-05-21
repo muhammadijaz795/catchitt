@@ -14,7 +14,11 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react';
 
-export default function RankingSettingsModal({ open, onClose }) {
+interface RankingSettingsModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+export default function RankingSettingsModal({ open, onClose }: RankingSettingsModalProps) {
   const [value, setValue] = useState('show');
 
   return (
