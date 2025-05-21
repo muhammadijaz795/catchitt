@@ -1,5 +1,5 @@
 import { SideNavBar } from './goLiveSidebar';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Box, IconButton, Chip, AppBar, Typography, Card, CardMedia, Stack, Avatar, Grid, CardContent, Button, Toolbar, Paper } from '@mui/material';
 import LiveStreaming from './liveStream';
@@ -9,7 +9,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ShareIcon from '../profile/svg-components/ShareIcon';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import LiveWithChat from './liveWithChat';
-import  styles  from './GoLive.module.scss';
 
 function GoLive() {
   const chipLabels = [
@@ -199,212 +198,10 @@ function GoLive() {
       </Box>
     </Box>
   );
- const [darkTheme, setdarkTheme] = useState('');
-    const [darkThemeblack, setdarkThemeblack] = useState('');
-    const [textColor, setTextColor] = useState('black');
-    const [textColorClass, setTextColorClass] = useState(styles.textBlackColor);
-
-  useEffect(() => {
-          var themeColor = window.localStorage.getItem('theme');
-          
-          if(themeColor == "dark"){ 
-              setdarkTheme(styles.darkTheme);
-              setdarkThemeblack(styles.darkThemeblack);
-              setTextColor("white");
-              setTextColorClass(styles.textWhiteColor);
-          }else{
-              // setdarkTheme(style.lightTheme);
-              setTextColor("black");
-              setTextColorClass(styles.textBlackColor);
-          }
-      });
-  
-
   return (
     <div className='flex' style={{ background: '#000' }}>
       <SideNavBar />
-      <div className={`${darkTheme} w-[calc(100%-16rem)] ml-auto bg-white `}>
-        <div className='py-3 px-10 d-none'> 
-          <div>
-            <Box display="flex" alignItems="center" mb={3} gap={1}>
-              <IconButton
-                sx={{ backgroundColor: 'white', boxShadow: '0px 0px 9px 0px #e4e6eb' }}
-                onClick={() => scroll('left')}
-              >
-                <ChevronLeft />
-              </IconButton>
-              <Box
-                ref={scrollRef}
-                sx={{
-                  display: 'flex',
-                  overflowX: 'auto',
-                  gap: 1,
-                  scrollbarWidth: 'none',
-                  '&::-webkit-scrollbar': { display: 'none' },
-                }}
-              >
-                {chipLabels.map((label, idx) => (
-                  <Chip
-                    sx={{ border: 'none', borderRadius: '8px', backgroundColor: '#1618230F', fontSize: '14px' }}
-                    key={idx}
-                    label={label}
-                    clickable
-                    variant="outlined"
-                    onClick={() => {
-                      setMediaByCategory({
-                        selectedCategory: label.toLowerCase(),
-                        items: [],
-                        page: 1,
-                      });
-                    }}
-                  />
-                ))}
-              </Box>
-              <IconButton
-                sx={{ backgroundColor: 'white', boxShadow: '0px 0px 9px 0px #e4e6eb' }}
-                onClick={() => scroll('right')}
-              >
-                <ChevronRight />
-              </IconButton>
-            </Box>
-          </div>
-
-          <LiveStreaming  />
-          <hr className='my-4'/>
-          <Box>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
-                  Gaming
-                  </Typography>
-                  <Typography fontWeight={400} variant="body2" color="#16182399" sx={{ cursor: 'pointer' }}>
-                  View all
-                  </Typography>
-              </Box>
-              <Grid container spacing={2}>
-                  {dummyData.map((stream) => (
-                      <Grid item xs={12} sm={6} md={4} key={stream.id}>
-                          <LiveStreamCard stream={stream} />
-                      </Grid>
-                  ))}
-              </Grid>
-          </Box>
-          {/* recommended streams */}
-          <Box  sx={{ mt: 4 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
-                  Recommended categories
-                  </Typography>
-                  <Typography fontWeight={400} variant="body2" color="#16182399" sx={{ cursor: 'pointer' }}>
-                  View all
-                  </Typography>
-              </Box>
-              <Box display="flex" flexWrap="wrap" gap={3}>
-                {dummyData2.map((stream) => (
-                  <Box key={stream.id} sx={{ width: 'calc((100% - 144px) / 7)' }}>
-                    <RecomendedCard stream={stream} />
-                  </Box>
-                ))}
-              </Box>
-
-          </Box>
-
-          <Box  sx={{ mt: 4 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
-                  LIVE Events
-                  </Typography>
-                  <Typography fontWeight={400} variant="body2" color="#16182399" sx={{ cursor: 'pointer' }}>
-                  View all
-                  </Typography>
-              </Box>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6} >
-                  <Card sx={{ borderRadius: 3, boxShadow: 0, textAlign: 'left', background: '#16182308' }}>
-                    <CardContent>
-                      <Stack spacing={2}>
-                        <Box display="flex" alignItems="center" gap={1}>
-                        <span   className='w-16 rounded-sm text-xs py-0.5 text-center text-white ' style={{ background: 'linear-gradient(113.02deg, #FF1764 0%, #ED3495 94.15%)'}}>
-                            Live Event
-                        </span>
-                          <Typography variant="subtitle1" fontWeight="bold">
-                            Welcome to my LIVE
-                          </Typography>
-                        </Box>
-
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Avatar
-                            src="/path-to-avatar.jpg" // Replace with actual path
-                            alt="Yakout"
-                            sx={{ width: 32, height: 32 }}
-                          />
-                          <Typography variant="body1" fontWeight="bold">
-                            YAKOUT
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            1.1M Followers
-                          </Typography>
-                        </Box>
-
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <CalendarTodayIcon fontSize="small" color="action" />
-                          <Typography variant="body2">Wednesday, Apr 30, 2025</Typography>
-                        </Box>
-
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <AccessTimeIcon fontSize="small" color="action" />
-                          <Typography variant="body2">9:00 PM – 9:30 PM</Typography>
-                        </Box>
-
-                        <Box>
-                          <Button variant="contained"  sx={{ borderRadius: 2, background: '#FE2C55', }}>
-                            Register
-                          </Button>
-                        </Box>
-                      </Stack>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-          </Box>
-
-          {/* Esports streams */}
-          <Box  sx={{ mt: 4 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
-                  Esports
-                  </Typography>
-                  <Typography fontWeight={400} variant="body2" color="#16182399" sx={{ cursor: 'pointer' }}>
-                  View all
-                  </Typography>
-              </Box>
-              <Grid container spacing={2}>
-                  {Esports.map((stream) => (
-                      <Grid item xs={12} sm={6} md={4} key={stream.id}>
-                          <LiveStreamCard stream={stream} />
-                      </Grid>
-                  ))}
-              </Grid>
-          </Box>
-
-          {/* mobile legends streams */}
-          <Box  sx={{ mt: 4 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
-                  Esports
-                  </Typography>
-                  <Typography fontWeight={400} variant="body2" color="#16182399" sx={{ cursor: 'pointer' }}>
-                  View all
-                  </Typography>
-              </Box>
-              <Grid container spacing={2}>
-                  {Esports.map((stream) => (
-                      <Grid item xs={12} sm={6} md={4} key={stream.id}>
-                          <LiveStreamCard stream={stream} />
-                      </Grid>
-                  ))}
-              </Grid>
-          </Box>
-        </div>
+      <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
         <LiveWithChat />
 
       </div>
