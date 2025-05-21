@@ -14,7 +14,8 @@ import { Box,  Radio,
   Tooltip,
   Accordion,
   AccordionSummary,
-  AccordionDetails} from '@mui/material';
+  AccordionDetails,
+  Popper} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -22,9 +23,7 @@ import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import {
-  WhatsApp, Facebook, Telegram, LinkedIn, Pinterest, Email, Reddit
-} from '@mui/icons-material';
+import { WhatsApp, Facebook, Telegram, LinkedIn, Pinterest, Email, Reddit} from '@mui/icons-material';
 import XIcon from '@mui/icons-material/Close'; // 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RankingSettingsModal from './popuprating';
@@ -35,7 +34,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import  styles  from './GoLive.module.scss';
-
+import { caesium } from '../../icons';
 
 const reasons = [
   'Violent extremism',
@@ -103,7 +102,7 @@ const shareOptions = [
  },
 ];
 
-function LiveWithChat() {
+function LiveWithChat({ darkTheme }) {
   const navigate = useNavigate();
   const [showTopViewers, setShowTopViewers] = useState(false);
 
@@ -400,7 +399,6 @@ const renderGiftRow = (gifts: any[]) => (
         <Typography className="coin-info"  sx={{ fontSize: 13, mt: 0.5, whiteSpace: 'nowrap' }}>
           {gift.name}
         </Typography>
-
         {/* Coin Info */}
         <Box
           
@@ -409,21 +407,14 @@ const renderGiftRow = (gifts: any[]) => (
             justifyContent: 'center',
             alignItems: 'center',
             mt: 0.5,
-          }}
-        >
+          }}>
           <Box
             component="span"
-            sx={{ color: 'gold', fontSize: 13, mr: 0.5 }}
-          >
-            <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M7.77006 13.4193C11.3139 13.4193 14.1867 10.5464 14.1867 7.0026C14.1867 3.45878 11.3139 0.585938 7.77006 0.585938C4.22623 0.585938 1.35339 3.45878 1.35339 7.0026C1.35339 10.5464 4.22623 13.4193 7.77006 13.4193Z" fill="#FFEC9B"/>
-              <path d="M7.76998 11.9557C10.5084 11.9557 12.7283 9.73581 12.7283 6.9974C12.7283 4.25898 10.5084 2.03906 7.76998 2.03906C5.03157 2.03906 2.81165 4.25898 2.81165 6.9974C2.81165 9.73581 5.03157 11.9557 7.76998 11.9557Z" fill="#FACE15"/>
-              <path fillRule="evenodd" clipRule="evenodd" d="M12.7093 7.4349C12.7219 7.29075 12.7283 7.14483 12.7283 6.9974C12.7283 4.259 10.5084 2.03906 7.76998 2.03906C5.03158 2.03906 2.81165 4.259 2.81165 6.9974C2.81165 7.14483 2.81808 7.29075 2.83068 7.4349C3.05217 4.90139 5.17899 2.91406 7.76998 2.91406C10.361 2.91406 12.4878 4.90139 12.7093 7.4349Z" fill="#FABC15"/>
-            </svg>
+            sx={{ color: 'gold', fontSize: 13, mr: 0.5 }}>
+            <img style={{height: '15px'}} src={caesium} alt="Coin Icon" />
           </Box>
           <Typography  sx={{ fontSize: 13 }}>{gift.price}</Typography>
         </Box>
-
         {/* Send Button on Hover */}
             <Button
             className="send-button"
@@ -483,8 +474,24 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
     setGiftMenuAnchorEl(null);
   };
 
+
+  
+  const [anchorElProfile, setAnchorElProfile] = useState(null);
+  const openProfile = Boolean(anchorElProfile);
+
+
+  const handleToggle = (event) => {
+        setAnchorElProfile(event.currentTarget);
+  };
+
+  const handleCloseProfile = () => {
+      setAnchorElProfile(null);
+  };
+
+
+
   return (
-        <Box sx={{display: 'flex', flexDirection: 'column' }}>
+        <Box className={`${darkTheme}`} sx={{display: 'flex', flexDirection: 'column' }}>
           {/* Main Content Grid */}
           <Grid container sx={{ display: 'flex',}}>
             
@@ -513,7 +520,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                         sx={{ width: 48, height: 48 }}
                       />
                       <Box>
-                        <Typography variant="subtitle1" fontWeight="bold">{selectedLiveVideo?.details?.owner?.name}</Typography>
+                        <Typography variant="subtitle2"  textAlign={'left'} fontWeight="bold">{selectedLiveVideo?.details?.owner?.name}</Typography>
                         <Typography variant="body2"sx={{ display: 'flex', alignItems: 'center' }} color="text.secondary">
                           {selectedLiveVideo?.details?.streamTitle} &nbsp;&nbsp;
                           <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -528,12 +535,11 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                         </Typography>
                       </Box>
                     </Stack>
-
                     {/* Right Side: Buttons */}
                     <Stack direction="row" spacing={1}>
                       <IconButton 
-                      onClick={handleClick}
-                      sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F'}}>
+                        onClick={handleClick}
+                        sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F'}}>
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <mask id="mask0_2018_18635"  maskUnits="userSpaceOnUse" x="0" y="0" width="21" height="20">
                             <path d="M20.6599 0H0.659912V20H20.6599V0Z" fill="white"/>
@@ -544,138 +550,136 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                             <path opacity="0.09" fill-rule="evenodd" clip-rule="evenodd" d="M11.5974 6.22916V13.5265C11.5974 13.5265 4.91355 12.5847 2.82022 15.7719C0.805979 18.8387 0.990969 12.3084 4.02327 9.05644C7.05557 5.80443 11.5974 6.22916 11.5974 6.22916Z" fill="#161823"/>
                             </g>
                         </svg>
-
-                      </IconButton>
-                      <Menu
-                              anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            PaperProps={{
-                            sx: {
-                                mt: 1,
-                                borderRadius: '12px',
-                                px: 1,
-                                py: 0.5,
-                                boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
-                                width: 220,
-                            }
-                            }}
-                            anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right'
-                            }}
-                            transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right'
-                            }}
-                        >
-                            {shareOptions.map((option, index) => (
-                            <MenuItem key={index} onClick={() => { shareProfileby[option.action as keyof typeof shareProfileby](selectedLiveVideo?.details?.owner?.username); handleClose(); }}>
-                                <ListItemIcon>{option.icon}</ListItemIcon>
-                                <ListItemText>{option.label}</ListItemText>
-                            </MenuItem>
-                            ))}
-                        </Menu>
-                      <IconButton
-                              onClick={handleMoreClick}
-                                sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', padding: '7.5px 6px'}}>
-                          <svg width="25" height="20" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M2.65991 12C2.65991 10.8954 3.55534 10 4.65991 10C5.76446 10 6.65991 10.8954 6.65991 12C6.65991 13.1045 5.76446 14 4.65991 14C3.55534 14 2.65991 13.1045 2.65991 12ZM10.6599 12C10.6599 10.8954 11.5554 10 12.6599 10C13.7645 10 14.6599 10.8954 14.6599 12C14.6599 13.1045 13.7645 14 12.6599 14C11.5554 14 10.6599 13.1045 10.6599 12ZM18.6599 12C18.6599 10.8954 19.5554 10 20.6599 10C21.7645 10 22.6599 10.8954 22.6599 12C22.6599 13.1045 21.7645 14 20.6599 14C19.5554 14 18.6599 13.1045 18.6599 12Z" fill="#161823"/>
-                          </svg>
-                          <Menu
-                                anchorEl={moreAnchorEl}
-                                open={isMoreMenuOpen}
-                                onClose={handleMoreClose}
-                                PaperProps={{
-                                sx: {
-                                    mt: 1.75,
-                                    borderRadius: '6px',
-                                    py: 2,
-                                    px: 1,
-                                    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
-                                }
-                                }}
-                                anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right'
-                                }}
-                                transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right'
-                                }}
-                            >
-                                <MenuItem onClick={handleOpenReport}>
-                                <ListItemIcon>
-                                    <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.74528 5.04475V14.6592C6.27982 14.4833 6.92828 14.3026 7.64696 14.1695C9.59734 13.8083 12.2551 13.7653 14.5 15.3688C16.0468 16.4736 17.9932 16.5166 19.699 16.2007C20.536 16.0457 21.2696 15.812 21.7943 15.6162C21.8654 15.5896 21.9325 15.5639 21.9953 15.5392V5.92471C21.4607 6.1007 20.8123 6.2814 20.0936 6.41448C18.1432 6.77567 15.4855 6.81868 13.2406 5.21518C11.6938 4.11035 9.74738 4.06733 8.04151 4.38324C7.20453 4.53824 6.471 4.77197 5.94627 4.96776C5.87512 4.9943 5.80804 5.02007 5.74528 5.04475ZM22.5947 3.36438C22.9304 3.19678 23.329 3.21482 23.6482 3.4121C23.9675 3.60949 24.1619 3.95818 24.1619 4.33364V16.2503C24.1619 16.6607 23.9301 17.0358 23.5631 17.2193L23.0786 16.2503C23.5631 17.2193 23.5624 17.2196 23.5624 17.2196L23.5616 17.22L23.5595 17.2211L23.5539 17.2238L23.5369 17.2322C23.5287 17.2361 23.5189 17.2409 23.5073 17.2464C23.499 17.2504 23.4897 17.2548 23.4795 17.2596C23.4312 17.2824 23.363 17.314 23.2765 17.3522C23.1039 17.4286 22.8576 17.532 22.5517 17.6462C21.9424 17.8735 21.0847 18.1476 20.0936 18.3312C18.1432 18.6923 15.4855 18.7353 13.2406 17.1318C11.6938 16.027 9.74738 15.984 8.04151 16.2999C7.20453 16.4549 6.471 16.6887 5.94627 16.8844C5.87512 16.911 5.80804 16.9367 5.74528 16.9614V23.8337C5.74528 24.1328 5.50277 24.3753 5.20361 24.3753H4.12028C3.82113 24.3753 3.57861 24.1328 3.57861 23.8337V4.33364C3.57861 3.9233 3.81045 3.54818 4.17747 3.36467L4.66195 4.33364C4.17747 3.36467 4.17817 3.36432 4.17817 3.36432L4.17901 3.3639L4.18105 3.36289L4.18663 3.36013L4.20372 3.35176C4.21771 3.34495 4.2369 3.33572 4.26104 3.32431C4.30933 3.30151 4.37756 3.26998 4.46399 3.23176C4.63672 3.15538 4.883 3.05191 5.18883 2.9378C5.79822 2.71042 6.65582 2.43634 7.64696 2.2528C9.59734 1.89163 12.2551 1.84861 14.5 3.45209C16.0468 4.55693 17.9932 4.59994 19.699 4.28403C20.536 4.12903 21.2696 3.8953 21.7943 3.69951C22.0555 3.60204 22.2621 3.51508 22.4003 3.45392C22.4695 3.42338 22.5213 3.39937 22.5542 3.38382C22.5706 3.37605 22.5823 3.37041 22.5891 3.36713L22.5941 3.36467L22.5947 3.36438Z" fill="#161823"/>
-                                    </svg>
-                                </ListItemIcon>
-                                <ListItemText>Report</ListItemText>
-                                </MenuItem>
-
-                                <MenuItem onClick={() => {
-                                    handleMoreClose();
-                                    setOpenRating(true);
-                                }}>
-                                <ListItemIcon>
-                                    <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.86249 15.0773C9.7522 15.0773 9.64455 15.1109 9.55391 15.1739L5.62842 17.8949C5.44881 18.0193 5.20329 17.8909 5.20329 17.6723V6.04449C5.20329 5.74534 5.44581 5.50282 5.74496 5.50282H18.7449C19.0442 5.50282 19.2866 5.74534 19.2866 6.04449V14.5357C19.2866 14.8348 19.0442 15.0773 18.7449 15.0773H9.86249ZM19.2866 17.3302H10.3491L4.29982 21.5233C3.75988 21.8976 3.03662 21.4952 3.03662 20.8204V5.50282C3.03662 4.25862 4.00668 3.25 5.20329 3.25H19.2866C20.4833 3.25 21.4533 4.25862 21.4533 5.50282V10.2372H23.3491C24.5458 10.2372 25.5158 11.2003 25.5158 12.3883V22.4841C25.5158 23.0585 24.9284 23.4489 24.3935 23.2298L20.4165 21.0599H13.0575C11.8608 21.0599 10.8908 20.0968 10.8908 18.9088V17.3333H13.0575V18.3671C13.0575 18.6663 13.3 18.9088 13.5991 18.9088H20.6901C20.7918 18.9088 20.8913 18.9374 20.9774 18.9913L23.1834 20.3717C23.2555 20.4169 23.3491 20.365 23.3491 20.2799V12.93C23.3491 12.6308 23.1067 12.3883 22.8074 12.3883H21.4533V15.0773C21.4533 16.3215 20.4833 17.3302 19.2866 17.3302Z" fill="#161823"/>
-                                    </svg>
-                                </ListItemIcon>
-                                <ListItemText>Ranking settings</ListItemText>
-                                </MenuItem>
-                            </Menu>
-                      </IconButton>
-                      <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
-                      <Button variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
-                        Follow&nbsp;
-                        <Box className={`${styles.components}`} component="span" sx={{ bgcolor: '#fff', color: '#000', borderRadius: '50%', px: 0.5,py: 0.5, fontSize: 12, ml: 0.5 }}>
-                          <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M8.45422 4.32C8.25155 3.94667 7.95822 3.664 7.57422 3.472C7.20089 3.26933 6.75822 3.168 6.24622 3.168C5.36089 3.168 4.65155 3.46133 4.11822 4.048C3.58489 4.624 3.31822 5.39733 3.31822 6.368C3.31822 7.40267 3.59555 8.21333 4.15022 8.8C4.71555 9.376 5.48889 9.664 6.47022 9.664C7.14222 9.664 7.70755 9.49333 8.16622 9.152C8.63555 8.81067 8.97689 8.32 9.19022 7.68H5.71822V5.664H11.6702V8.208C11.4676 8.89067 11.1209 9.52533 10.6302 10.112C10.1502 10.6987 9.53689 11.1733 8.79022 11.536C8.04355 11.8987 7.20089 12.08 6.26222 12.08C5.15289 12.08 4.16089 11.84 3.28622 11.36C2.42222 10.8693 1.74489 10.192 1.25422 9.328C0.774221 8.464 0.534221 7.47733 0.534221 6.368C0.534221 5.25867 0.774221 4.272 1.25422 3.408C1.74489 2.53333 2.42222 1.856 3.28622 1.376C4.15022 0.885333 5.13689 0.639999 6.24622 0.639999C7.59022 0.639999 8.72089 0.965333 9.63822 1.616C10.5662 2.26667 11.1796 3.168 11.4782 4.32H8.45422Z" fill="#323442" fill-opacity="0.8"/>
-                          </svg>
-                        </Box>
-                      </Button>
-                      <Button onClick={handleUnfollowClick} sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', padding: '7.5px 0px'}}>
-                        <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.07713 5.41667C6.07713 4.03595 7.19642 2.91667 8.57713 2.91667C9.95788 2.91667 11.0771 4.03595 11.0771 5.41667C11.0771 6.79738 9.95788 7.91667 8.57713 7.91667C7.19642 7.91667 6.07713 6.79738 6.07713 5.41667ZM8.57713 1.25C6.27596 1.25 4.41048 3.11548 4.41048 5.41667C4.41048 7.71783 6.27596 9.58333 8.57713 9.58333C10.8783 9.58333 12.7438 7.71783 12.7438 5.41667C12.7438 3.11548 10.8783 1.25 8.57713 1.25ZM2.82473 17.07C3.45272 14.7977 4.864 13.4313 6.45884 12.8075C8.04063 12.1888 9.842 12.2847 11.3298 13.0203C11.536 13.1223 11.7909 13.0575 11.9075 12.8591L12.3301 12.1409C12.4468 11.9425 12.381 11.686 12.1764 11.5807C10.2503 10.5891 7.91184 10.4495 5.85171 11.2554C3.73303 12.0841 1.94933 13.896 1.19721 16.7036C1.13767 16.9259 1.27947 17.1497 1.50398 17.2002L2.31698 17.3831C2.54149 17.4337 2.76344 17.2918 2.82473 17.07ZM19.2885 12.5505C19.4512 12.3878 19.4512 12.124 19.2885 11.9613L18.6993 11.372C18.5365 11.2093 18.2727 11.2093 18.11 11.372L13.1605 16.3215L11.1278 14.2887C10.965 14.126 10.7012 14.126 10.5385 14.2887L9.94925 14.8779C9.7865 15.0406 9.7865 15.3045 9.94925 15.4672L12.5713 18.0892C12.8967 18.4147 13.4243 18.4147 13.7498 18.0892L19.2885 12.5505Z" fill="#161823"/>
-                      </svg>
-                      </Button>
-                        
-                      <Popover
-                            id={id}
-                            open={openUnfollow}
-                            anchorEl={unfollowAnchorEl}
-                            onClose={handleUnfollowClose}
-                            anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "center",
-                            }}
-                            transformOrigin={{
-                            vertical: "top",
-                            horizontal: "center",
-                            }}
-                            PaperProps={{
-                            sx: { borderRadius: 2, p: 2, boxShadow: 3, mt: 1.5 },
-                            }}
-                        >
-                            <Typography sx={{ mb: 1 }}>Unfollow kalean__x777?</Typography>
-                            <Button 
-                            variant="outlined" 
-                            fullWidth 
-                            onClick={handleUnfollowClose}
-                            sx={{ textTransform: "none", borderRadius: 2, color: "#000", fontWeight: 500 }}
-                            >
-                            Unfollow
-                            </Button>
-                      </Popover>
-
-                      {!showSidebar && (
-                                <IconButton
-                                    onClick={handleShowSidebar}
+                            </IconButton>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    PaperProps={{
+                                    sx: {
+                                        mt: 1,
+                                        borderRadius: '12px',
+                                        px: 1,
+                                        py: 0.5,
+                                        boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
+                                        width: 220,
+                                    }
+                                    }}
+                                    anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right'
+                                    }}
+                                    transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right'
+                                    }}
                                 >
-                                    <svg width="16" height="16" viewBox="0 0 48 48" fill="#000" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M33.4132 39.1714L21.2417 26.9999L44.9991 26.9999C45.5514 26.9999 45.9991 26.5522 45.9991 25.9999V21.9999C45.9991 21.4476 45.5514 20.9999 44.9991 20.9999L21.2416 20.9999L33.4132 8.82825C33.8038 8.43773 33.8038 7.80456 33.4132 7.41404L30.5848 4.58562C30.1943 4.19509 29.5611 4.19509 29.1706 4.58562L11.8777 21.8785C10.7061 23.0501 10.7061 24.9496 11.8777 26.1211L29.1706 43.414C29.5611 43.8046 30.1943 43.8046 30.5848 43.414L33.4132 40.5856C33.8038 40.1951 33.8038 39.5619 33.4132 39.1714ZM6.99902 7.99978C6.99902 7.44749 6.55131 6.99978 5.99902 6.99978L1.99902 6.99978C1.44674 6.99978 0.999023 7.4475 0.999023 7.99978V39.9998C0.999023 40.5521 1.44674 40.9998 1.99902 40.9998H5.99902C6.55131 40.9998 6.99902 40.5521 6.99902 39.9998L6.99902 7.99978Z"></path></svg>
-                                </IconButton>
-                                )}
+                                    {shareOptions.map((option, index) => (
+                                    <MenuItem key={index} onClick={() => { shareProfileby[option.action as keyof typeof shareProfileby](selectedLiveVideo?.details?.owner?.username); handleClose(); }}>
+                                        <ListItemIcon>{option.icon}</ListItemIcon>
+                                        <ListItemText>{option.label}</ListItemText>
+                                    </MenuItem>
+                                    ))}
+                                </Menu>
+                            <IconButton
+                                    onClick={handleMoreClick}
+                                        sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', padding: '7.5px 6px'}}>
+                                <svg width="25" height="20" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2.65991 12C2.65991 10.8954 3.55534 10 4.65991 10C5.76446 10 6.65991 10.8954 6.65991 12C6.65991 13.1045 5.76446 14 4.65991 14C3.55534 14 2.65991 13.1045 2.65991 12ZM10.6599 12C10.6599 10.8954 11.5554 10 12.6599 10C13.7645 10 14.6599 10.8954 14.6599 12C14.6599 13.1045 13.7645 14 12.6599 14C11.5554 14 10.6599 13.1045 10.6599 12ZM18.6599 12C18.6599 10.8954 19.5554 10 20.6599 10C21.7645 10 22.6599 10.8954 22.6599 12C22.6599 13.1045 21.7645 14 20.6599 14C19.5554 14 18.6599 13.1045 18.6599 12Z" fill="#161823"/>
+                                </svg>
+                                <Menu
+                                        anchorEl={moreAnchorEl}
+                                        open={isMoreMenuOpen}
+                                        onClose={handleMoreClose}
+                                        PaperProps={{
+                                        sx: {
+                                            mt: 1.75,
+                                            borderRadius: '6px',
+                                            py: 2,
+                                            px: 1,
+                                            boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
+                                        }
+                                        }}
+                                        anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right'
+                                        }}
+                                        transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right'
+                                        }}
+                                    >
+                                        <MenuItem onClick={handleOpenReport}>
+                                        <ListItemIcon>
+                                            <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.74528 5.04475V14.6592C6.27982 14.4833 6.92828 14.3026 7.64696 14.1695C9.59734 13.8083 12.2551 13.7653 14.5 15.3688C16.0468 16.4736 17.9932 16.5166 19.699 16.2007C20.536 16.0457 21.2696 15.812 21.7943 15.6162C21.8654 15.5896 21.9325 15.5639 21.9953 15.5392V5.92471C21.4607 6.1007 20.8123 6.2814 20.0936 6.41448C18.1432 6.77567 15.4855 6.81868 13.2406 5.21518C11.6938 4.11035 9.74738 4.06733 8.04151 4.38324C7.20453 4.53824 6.471 4.77197 5.94627 4.96776C5.87512 4.9943 5.80804 5.02007 5.74528 5.04475ZM22.5947 3.36438C22.9304 3.19678 23.329 3.21482 23.6482 3.4121C23.9675 3.60949 24.1619 3.95818 24.1619 4.33364V16.2503C24.1619 16.6607 23.9301 17.0358 23.5631 17.2193L23.0786 16.2503C23.5631 17.2193 23.5624 17.2196 23.5624 17.2196L23.5616 17.22L23.5595 17.2211L23.5539 17.2238L23.5369 17.2322C23.5287 17.2361 23.5189 17.2409 23.5073 17.2464C23.499 17.2504 23.4897 17.2548 23.4795 17.2596C23.4312 17.2824 23.363 17.314 23.2765 17.3522C23.1039 17.4286 22.8576 17.532 22.5517 17.6462C21.9424 17.8735 21.0847 18.1476 20.0936 18.3312C18.1432 18.6923 15.4855 18.7353 13.2406 17.1318C11.6938 16.027 9.74738 15.984 8.04151 16.2999C7.20453 16.4549 6.471 16.6887 5.94627 16.8844C5.87512 16.911 5.80804 16.9367 5.74528 16.9614V23.8337C5.74528 24.1328 5.50277 24.3753 5.20361 24.3753H4.12028C3.82113 24.3753 3.57861 24.1328 3.57861 23.8337V4.33364C3.57861 3.9233 3.81045 3.54818 4.17747 3.36467L4.66195 4.33364C4.17747 3.36467 4.17817 3.36432 4.17817 3.36432L4.17901 3.3639L4.18105 3.36289L4.18663 3.36013L4.20372 3.35176C4.21771 3.34495 4.2369 3.33572 4.26104 3.32431C4.30933 3.30151 4.37756 3.26998 4.46399 3.23176C4.63672 3.15538 4.883 3.05191 5.18883 2.9378C5.79822 2.71042 6.65582 2.43634 7.64696 2.2528C9.59734 1.89163 12.2551 1.84861 14.5 3.45209C16.0468 4.55693 17.9932 4.59994 19.699 4.28403C20.536 4.12903 21.2696 3.8953 21.7943 3.69951C22.0555 3.60204 22.2621 3.51508 22.4003 3.45392C22.4695 3.42338 22.5213 3.39937 22.5542 3.38382C22.5706 3.37605 22.5823 3.37041 22.5891 3.36713L22.5941 3.36467L22.5947 3.36438Z" fill="#161823"/>
+                                            </svg>
+                                        </ListItemIcon>
+                                        <ListItemText>Report</ListItemText>
+                                        </MenuItem>
+
+                                        <MenuItem onClick={() => {
+                                            handleMoreClose();
+                                            setOpenRating(true);
+                                        }}>
+                                        <ListItemIcon>
+                                            <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.86249 15.0773C9.7522 15.0773 9.64455 15.1109 9.55391 15.1739L5.62842 17.8949C5.44881 18.0193 5.20329 17.8909 5.20329 17.6723V6.04449C5.20329 5.74534 5.44581 5.50282 5.74496 5.50282H18.7449C19.0442 5.50282 19.2866 5.74534 19.2866 6.04449V14.5357C19.2866 14.8348 19.0442 15.0773 18.7449 15.0773H9.86249ZM19.2866 17.3302H10.3491L4.29982 21.5233C3.75988 21.8976 3.03662 21.4952 3.03662 20.8204V5.50282C3.03662 4.25862 4.00668 3.25 5.20329 3.25H19.2866C20.4833 3.25 21.4533 4.25862 21.4533 5.50282V10.2372H23.3491C24.5458 10.2372 25.5158 11.2003 25.5158 12.3883V22.4841C25.5158 23.0585 24.9284 23.4489 24.3935 23.2298L20.4165 21.0599H13.0575C11.8608 21.0599 10.8908 20.0968 10.8908 18.9088V17.3333H13.0575V18.3671C13.0575 18.6663 13.3 18.9088 13.5991 18.9088H20.6901C20.7918 18.9088 20.8913 18.9374 20.9774 18.9913L23.1834 20.3717C23.2555 20.4169 23.3491 20.365 23.3491 20.2799V12.93C23.3491 12.6308 23.1067 12.3883 22.8074 12.3883H21.4533V15.0773C21.4533 16.3215 20.4833 17.3302 19.2866 17.3302Z" fill="#161823"/>
+                                            </svg>
+                                        </ListItemIcon>
+                                        <ListItemText>Ranking settings</ListItemText>
+                                        </MenuItem>
+                                    </Menu>
+                            </IconButton>
+                            <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
+                            <Button variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
+                                Follow&nbsp;
+                                <Box className={`${styles.components}`} component="span" sx={{ bgcolor: '#fff', color: '#000', borderRadius: '50%', px: 0.5,py: 0.5, fontSize: 12, ml: 0.5 }}>
+                                <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.45422 4.32C8.25155 3.94667 7.95822 3.664 7.57422 3.472C7.20089 3.26933 6.75822 3.168 6.24622 3.168C5.36089 3.168 4.65155 3.46133 4.11822 4.048C3.58489 4.624 3.31822 5.39733 3.31822 6.368C3.31822 7.40267 3.59555 8.21333 4.15022 8.8C4.71555 9.376 5.48889 9.664 6.47022 9.664C7.14222 9.664 7.70755 9.49333 8.16622 9.152C8.63555 8.81067 8.97689 8.32 9.19022 7.68H5.71822V5.664H11.6702V8.208C11.4676 8.89067 11.1209 9.52533 10.6302 10.112C10.1502 10.6987 9.53689 11.1733 8.79022 11.536C8.04355 11.8987 7.20089 12.08 6.26222 12.08C5.15289 12.08 4.16089 11.84 3.28622 11.36C2.42222 10.8693 1.74489 10.192 1.25422 9.328C0.774221 8.464 0.534221 7.47733 0.534221 6.368C0.534221 5.25867 0.774221 4.272 1.25422 3.408C1.74489 2.53333 2.42222 1.856 3.28622 1.376C4.15022 0.885333 5.13689 0.639999 6.24622 0.639999C7.59022 0.639999 8.72089 0.965333 9.63822 1.616C10.5662 2.26667 11.1796 3.168 11.4782 4.32H8.45422Z" fill="#323442" fill-opacity="0.8"/>
+                                </svg>
+                                </Box>
+                            </Button>
+                            <Button onClick={handleUnfollowClick} sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', padding: '7.5px 0px'}}>
+                                <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.07713 5.41667C6.07713 4.03595 7.19642 2.91667 8.57713 2.91667C9.95788 2.91667 11.0771 4.03595 11.0771 5.41667C11.0771 6.79738 9.95788 7.91667 8.57713 7.91667C7.19642 7.91667 6.07713 6.79738 6.07713 5.41667ZM8.57713 1.25C6.27596 1.25 4.41048 3.11548 4.41048 5.41667C4.41048 7.71783 6.27596 9.58333 8.57713 9.58333C10.8783 9.58333 12.7438 7.71783 12.7438 5.41667C12.7438 3.11548 10.8783 1.25 8.57713 1.25ZM2.82473 17.07C3.45272 14.7977 4.864 13.4313 6.45884 12.8075C8.04063 12.1888 9.842 12.2847 11.3298 13.0203C11.536 13.1223 11.7909 13.0575 11.9075 12.8591L12.3301 12.1409C12.4468 11.9425 12.381 11.686 12.1764 11.5807C10.2503 10.5891 7.91184 10.4495 5.85171 11.2554C3.73303 12.0841 1.94933 13.896 1.19721 16.7036C1.13767 16.9259 1.27947 17.1497 1.50398 17.2002L2.31698 17.3831C2.54149 17.4337 2.76344 17.2918 2.82473 17.07ZM19.2885 12.5505C19.4512 12.3878 19.4512 12.124 19.2885 11.9613L18.6993 11.372C18.5365 11.2093 18.2727 11.2093 18.11 11.372L13.1605 16.3215L11.1278 14.2887C10.965 14.126 10.7012 14.126 10.5385 14.2887L9.94925 14.8779C9.7865 15.0406 9.7865 15.3045 9.94925 15.4672L12.5713 18.0892C12.8967 18.4147 13.4243 18.4147 13.7498 18.0892L19.2885 12.5505Z" fill="#161823"/>
+                            </svg>
+                            </Button>
+                                
+                            <Popover
+                                    id={id}
+                                    open={openUnfollow}
+                                    anchorEl={unfollowAnchorEl}
+                                    onClose={handleUnfollowClose}
+                                    anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "center",
+                                    }}
+                                    transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "center",
+                                    }}
+                                    PaperProps={{
+                                    sx: { borderRadius: 2, p: 2, boxShadow: 3, mt: 1.5 },
+                                    }}
+                                >
+                                    <Typography sx={{ mb: 1 }}>Unfollow kalean__x777?</Typography>
+                                    <Button 
+                                    variant="outlined" 
+                                    fullWidth 
+                                    onClick={handleUnfollowClose}
+                                    sx={{ textTransform: "none", borderRadius: 2, color: "#000", fontWeight: 500 }}
+                                    >
+                                    Unfollow
+                                    </Button>
+                            </Popover>
+
+                                {!showSidebar && (
+                                    <IconButton
+                                        onClick={handleShowSidebar}>
+                                        <svg width="16" height="16" viewBox="0 0 48 48" fill="#000" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M33.4132 39.1714L21.2417 26.9999L44.9991 26.9999C45.5514 26.9999 45.9991 26.5522 45.9991 25.9999V21.9999C45.9991 21.4476 45.5514 20.9999 44.9991 20.9999L21.2416 20.9999L33.4132 8.82825C33.8038 8.43773 33.8038 7.80456 33.4132 7.41404L30.5848 4.58562C30.1943 4.19509 29.5611 4.19509 29.1706 4.58562L11.8777 21.8785C10.7061 23.0501 10.7061 24.9496 11.8777 26.1211L29.1706 43.414C29.5611 43.8046 30.1943 43.8046 30.5848 43.414L33.4132 40.5856C33.8038 40.1951 33.8038 39.5619 33.4132 39.1714ZM6.99902 7.99978C6.99902 7.44749 6.55131 6.99978 5.99902 6.99978L1.99902 6.99978C1.44674 6.99978 0.999023 7.4475 0.999023 7.99978V39.9998C0.999023 40.5521 1.44674 40.9998 1.99902 40.9998H5.99902C6.55131 40.9998 6.99902 40.5521 6.99902 39.9998L6.99902 7.99978Z"></path></svg>
+                                    </IconButton>
+                                    )}
                     </Stack>
                 </Box>
                 <Box sx={{ width: '100%', height: '95%' }}>
@@ -745,15 +749,12 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                             {renderGiftRow(giftsDetails.details.slice(6))}
                                         </Menu>
                                 </Box>
-                                
 
                                 {/* {expanded && (
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1 }}>
                                         {renderGiftRow(giftsDetails.details.slice(6))}
                                     </Box>
                                 )} */}
-                               
-
 
                             {/* Bottom: Coin Balance and Get Coins */}
                             <Box
@@ -773,11 +774,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     component="span"
                                     sx={{ color: 'gold', fontSize: 18, mx: 0.5 }}
                                 >
-                                    <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M7.77006 13.4193C11.3139 13.4193 14.1867 10.5464 14.1867 7.0026C14.1867 3.45878 11.3139 0.585938 7.77006 0.585938C4.22623 0.585938 1.35339 3.45878 1.35339 7.0026C1.35339 10.5464 4.22623 13.4193 7.77006 13.4193Z" fill="#FFEC9B"/>
-                                        <path d="M7.76998 11.9557C10.5084 11.9557 12.7283 9.73581 12.7283 6.9974C12.7283 4.25898 10.5084 2.03906 7.76998 2.03906C5.03157 2.03906 2.81165 4.25898 2.81165 6.9974C2.81165 9.73581 5.03157 11.9557 7.76998 11.9557Z" fill="#FACE15"/>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7093 7.4349C12.7219 7.29075 12.7283 7.14483 12.7283 6.9974C12.7283 4.259 10.5084 2.03906 7.76998 2.03906C5.03158 2.03906 2.81165 4.259 2.81165 6.9974C2.81165 7.14483 2.81808 7.29075 2.83068 7.4349C3.05217 4.90139 5.17899 2.91406 7.76998 2.91406C10.361 2.91406 12.4878 4.90139 12.7093 7.4349Z" fill="#FABC15"/>
-                                    </svg>
+                                    <img style={{height: '15px'}} src={caesium} alt="Coin Icon" />
 
                                 </Box>
                                 <Typography variant="body2" fontWeight="500">
@@ -814,7 +811,6 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                         <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                         Recommended LIVE videos
                         </Typography>
-                    
                     </Box>
                     <Grid container spacing={2}>
                         {recommendedLiveVideos.items.map((stream: any) => (
@@ -825,10 +821,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     </Grid>
                 </Box> 
             </Grid>
-
             {/* Right Sidebar */}
             {showSidebar &&(
-            <Grid item  sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', maxWidth: '20.35rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
+            <Grid item  sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', maxWidth: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
               <Box
                 sx={{
                     bgcolor: '#fff',
@@ -896,11 +891,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                                         <Typography sx={{fontSize: 14}}>Name</Typography>
                                         <Typography sx={{ display: "flex", alignItems: "center", fontSize: 14 }}>
-                                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.80013 15.8307C12.8502 15.8307 16.1335 12.5475 16.1335 8.4974C16.1335 4.44731 12.8502 1.16406 8.80013 1.16406C4.75004 1.16406 1.4668 4.44731 1.4668 8.4974C1.4668 12.5475 4.75004 15.8307 8.80013 15.8307Z" fill="#FFEC9B"/>
-                                                <path d="M8.79948 14.1693C11.9291 14.1693 14.4661 11.6322 14.4661 8.5026C14.4661 5.37299 11.9291 2.83594 8.79948 2.83594C5.66987 2.83594 3.13281 5.37299 3.13281 8.5026C3.13281 11.6322 5.66987 14.1693 8.79948 14.1693Z" fill="#FACE15"/>
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.4444 9.0026C14.4588 8.83787 14.4661 8.6711 14.4661 8.5026C14.4661 5.373 11.9291 2.83594 8.79948 2.83594C5.66988 2.83594 3.13281 5.373 3.13281 8.5026C3.13281 8.6711 3.14017 8.83787 3.15457 9.0026C3.4077 6.10717 5.83835 3.83594 8.79948 3.83594C11.7606 3.83594 14.1912 6.10717 14.4444 9.0026Z" fill="#FABC15"/>
-                                            </svg>
+                                             <img style={{height: '15px'}} src={caesium} alt="Coin Icon" />
                                             Coins
                                         </Typography>
                                     </Box>
@@ -940,7 +931,6 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                 : index === 2
                                                 ? "#eab308" // more gold
                                                 : "#000"; // default black
-
                                             return (
                                             <Box
                                                 key={index}
@@ -952,13 +942,13 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                 }}
                                             >
                                                 <Typography
-                                                sx={{
+                                                    sx={{
                                                     textAlign: "left",
                                                     color: numberColor,
                                                     fontWeight: 400,
-                                                }}
-                                                >
-                                                {index + 1}
+                                                    }}
+                                                    >
+                                                    {index + 1}
                                                 </Typography>
                                                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
                                                 <Typography sx={{ color: "#000", fontWeight:  400 }}>
@@ -966,13 +956,12 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                 </Typography>
                                                 </Box>
                                                 <Typography sx={{ fontSize: 14, textAlign: "right" }} fontWeight={500}>
-                                                {coins}
+                                                    {coins}
                                                 </Typography>
                                             </Box>
                                             );
                                         })}
                                         </Stack>
-
                                 </Box>
                                 ) : (
                                 <Box>
@@ -1072,14 +1061,13 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                 </Typography>
                                                 <Box display="flex" justifyContent="center" alignItems="center" mt={0.2}>
                                                     <Box component="span" sx={{ color: 'gold', fontSize: 16, mr: 0.5 }}>
-                                                        <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M7.29997 13.9193C10.8438 13.9193 13.7166 11.0464 13.7166 7.5026C13.7166 3.95878 10.8438 1.08594 7.29997 1.08594C3.75614 1.08594 0.883301 3.95878 0.883301 7.5026C0.883301 11.0464 3.75614 13.9193 7.29997 13.9193Z" fill="#FFEC9B"/>
-                                                            <path d="M7.30013 12.4557C10.0385 12.4557 12.2585 10.2358 12.2585 7.4974C12.2585 4.75898 10.0385 2.53906 7.30013 2.53906C4.56172 2.53906 2.3418 4.75898 2.3418 7.4974C2.3418 10.2358 4.56172 12.4557 7.30013 12.4557Z" fill="#FACE15"/>
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2394 7.9349C12.252 7.79075 12.2585 7.64483 12.2585 7.4974C12.2585 4.759 10.0385 2.53906 7.30013 2.53906C4.56173 2.53906 2.3418 4.759 2.3418 7.4974C2.3418 7.64483 2.34823 7.79075 2.36083 7.9349C2.58232 5.40139 4.70914 3.41406 7.30013 3.41406C9.89112 3.41406 12.0179 5.40139 12.2394 7.9349Z" fill="#FABC15"/>
-                                                        </svg>
+                                                          <img style={{height: '15px'}} src={caesium} alt="Coin Icon" />
                                                     </Box>
                                                     <Typography fontSize={13}>1</Typography>
                                                 </Box>
+
+
+
                                         </Box>
                                     </Box>
 
@@ -1121,11 +1109,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                     
                                                         <Box display="flex" justifyContent="center" alignItems="center" mt={0.2}>
                                                             <Box component="span" sx={{ color: 'gold', fontSize: 16, mr: 0.5 }}>
-                                                                <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="M7.29997 13.9193C10.8438 13.9193 13.7166 11.0464 13.7166 7.5026C13.7166 3.95878 10.8438 1.08594 7.29997 1.08594C3.75614 1.08594 0.883301 3.95878 0.883301 7.5026C0.883301 11.0464 3.75614 13.9193 7.29997 13.9193Z" fill="#FFEC9B"/>
-                                                                    <path d="M7.30013 12.4557C10.0385 12.4557 12.2585 10.2358 12.2585 7.4974C12.2585 4.75898 10.0385 2.53906 7.30013 2.53906C4.56172 2.53906 2.3418 4.75898 2.3418 7.4974C2.3418 10.2358 4.56172 12.4557 7.30013 12.4557Z" fill="#FACE15"/>
-                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2394 7.9349C12.252 7.79075 12.2585 7.64483 12.2585 7.4974C12.2585 4.759 10.0385 2.53906 7.30013 2.53906C4.56173 2.53906 2.3418 4.759 2.3418 7.4974C2.3418 7.64483 2.34823 7.79075 2.36083 7.9349C2.58232 5.40139 4.70914 3.41406 7.30013 3.41406C9.89112 3.41406 12.0179 5.40139 12.2394 7.9349Z" fill="#FABC15"/>
-                                                                </svg>
+                                                                <img style={{height: '15px'}} src={caesium} alt="Coin Icon" />
                                                             </Box>
                                                             <Typography fontSize={13}>1</Typography>
                                                         </Box>
@@ -1172,11 +1156,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                     
                                                         <Box display="flex" justifyContent="center" alignItems="center" mt={0.2}>
                                                             <Box component="span" sx={{ color: 'gold', fontSize: 16, mr: 0.5 }}>
-                                                                <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="M7.29997 13.9193C10.8438 13.9193 13.7166 11.0464 13.7166 7.5026C13.7166 3.95878 10.8438 1.08594 7.29997 1.08594C3.75614 1.08594 0.883301 3.95878 0.883301 7.5026C0.883301 11.0464 3.75614 13.9193 7.29997 13.9193Z" fill="#FFEC9B"/>
-                                                                    <path d="M7.30013 12.4557C10.0385 12.4557 12.2585 10.2358 12.2585 7.4974C12.2585 4.75898 10.0385 2.53906 7.30013 2.53906C4.56172 2.53906 2.3418 4.75898 2.3418 7.4974C2.3418 10.2358 4.56172 12.4557 7.30013 12.4557Z" fill="#FACE15"/>
-                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2394 7.9349C12.252 7.79075 12.2585 7.64483 12.2585 7.4974C12.2585 4.759 10.0385 2.53906 7.30013 2.53906C4.56173 2.53906 2.3418 4.759 2.3418 7.4974C2.3418 7.64483 2.34823 7.79075 2.36083 7.9349C2.58232 5.40139 4.70914 3.41406 7.30013 3.41406C9.89112 3.41406 12.0179 5.40139 12.2394 7.9349Z" fill="#FABC15"/>
-                                                                </svg>
+                                                              <img style={{height: '15px'}} src={caesium} alt="Coin Icon" />
                                                             </Box>
                                                             <Typography fontSize={12}>2</Typography>
                                                         </Box>
@@ -1195,7 +1175,68 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         </Typography>
 
                                         <Box display="flex" alignItems="flex-start" mb={1}>
-                                            <Avatar src="https://i.pravatar.cc/50?img=2" sx={{ width: 24, height: 24, mr: 1 }} />
+                                            <Avatar  onClick={handleToggle} src="https://i.pravatar.cc/50?img=2" sx={{ width: 24, height: 24, mr: 1 }} />
+
+                                                           <Menu
+                                                                anchorEl={anchorElProfile}
+                                                                open={openProfile}
+                                                                onClose={handleCloseProfile}
+                                                                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                                                                transformOrigin={{ vertical: "top", horizontal: "left" }}
+                                                                PaperProps={{
+                                                                elevation: 3,
+                                                                sx: {
+                                                                    width: 300,
+                                                                    borderRadius: 2,
+                                                                    p: 2,
+                                                                    overflow: "visible",
+                                                                },
+                                                                }}
+                                                            >
+                                                                <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                                    <Box display="flex" alignItems="center">
+                                                                    <Avatar
+                                                                        src="https://i.pravatar.cc/40"
+                                                                        alt="Profile"
+                                                                        sx={{ width: 40, height: 40, mr: 1 }}
+                                                                    />
+                                                                    <Box>
+                                                                        <Typography fontWeight="bold">prihartono20</Typography>
+                                                                        <Typography variant="body2" color="text.secondary">
+                                                                        PRIHARTONO
+                                                                        </Typography>
+                                                                    </Box>
+                                                                    </Box>
+                                                                    <IconButton size="small" onClick={handleCloseProfile}>
+                                                                    <CloseIcon />
+                                                                    </IconButton>
+                                                                </Box>
+
+                                                                <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
+                                                                    <Typography fontWeight="bold">269</Typography>
+                                                                    <Typography color="text.secondary">Followers</Typography>
+                                                                    <Typography fontWeight="bold">33</Typography>
+                                                                    <Typography color="text.secondary">Likes</Typography>
+                                                                </Box>
+
+                                                                <Box display="flex" gap={2}>
+                                                                    <Button
+                                                                    fullWidth
+                                                                    variant="contained"
+                                                                    sx={{ bgcolor: "#ff2d55", "&:hover": { bgcolor: "#e6264f" } }}
+                                                                    >
+                                                                    Follow
+                                                                    </Button>
+                                                                    <Button fullWidth variant="outlined">
+                                                                    Report
+                                                                    </Button>
+                                                                </Box>
+                                                            </Menu>
+
+
+
+
+
                                             <Box>
                                                 <Typography fontSize={13} fontWeight={600}>Mk6</Typography>
                                                 <Typography fontSize={13}>Uai</Typography>

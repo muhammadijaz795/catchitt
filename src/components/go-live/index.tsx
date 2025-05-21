@@ -223,8 +223,8 @@ function GoLive() {
   return (
     <div className='flex' style={{ background: '#000' }}>
       <SideNavBar />
-      <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
-        <LiveWithChat />
+      <div className={`${darkTheme} w-[calc(100%-16rem)] ml-auto bg-white `}>
+        <LiveWithChat darkTheme={darkTheme} />
 
       </div>
       <button className='bg-[#FE2C55] rounded-full p-1 fixed right-2 bottom-2'>
