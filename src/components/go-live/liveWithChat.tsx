@@ -30,7 +30,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RankingSettingsModal from './popuprating';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { shareProfileby } from '../../utils/helpers';
+import { socialShareText } from '../../utils/helpers';
 import FlagIcon from '@mui/icons-material/Flag';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -233,7 +233,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
             style={{borderRadius: 'none', background: '#00000080', fontSize: '13px', color: 'white', height: 20, display: 'flex', alignItems: 'center' }}
           >
             <PersonIcon sx={{ fontSize: 14 }} />
-            {/* {stream.viewers} */}
+            {stream.consumers.length}
             </span>
         </Box>
       </Box>
@@ -570,7 +570,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                             }}
                         >
                             {shareOptions.map((option, index) => (
-                            <MenuItem key={index} onClick={() => { shareProfileby[option.action as keyof typeof shareProfileby](selectedLiveVideo?.details?.owner?.username); handleClose(); }}>
+                            <MenuItem key={index} onClick={() => { socialShareText[option.action as keyof typeof socialShareText](`${window.location.origin}/golive?streamId=${selectedLiveVideo?.details?.id}`); handleClose(); }}>
                                 <ListItemIcon>{option.icon}</ListItemIcon>
                                 <ListItemText>{option.label}</ListItemText>
                             </MenuItem>
