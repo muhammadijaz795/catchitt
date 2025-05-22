@@ -310,7 +310,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
 
   function sendGift(giftId: string)
   {
-      let endpoint = `${process.env.VITE_API_URL}/media-content/comment/{mediaId}`;
+      let endpoint = `${process.env.VITE_API_URL}/media-content/comment/${selectedLiveVideo?.details?._id}`;
       let requestOptions =
       {
         method: 'POST',
