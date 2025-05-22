@@ -401,8 +401,10 @@ function Actions(props: any) {
                                     {item?.reactions?.length > 0 ? (
                                         item.reactions.map((reaction: any, index: number) => (
                                             <span style={{ cursor: 'pointer' }} className={style.emojiShowed} key={index} onClick={(e) => {
-                                                (e.currentTarget as HTMLElement).remove();
-                                                removeReaction(item);
+                                                if(item.receiverId != loggedInUserId){
+                                                    (e.currentTarget as HTMLElement).remove();
+                                                    removeReaction(item);
+                                                }
                                               }}>{reaction.react} </span>
                                         ))
                                         ) : null}
