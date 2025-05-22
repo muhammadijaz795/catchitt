@@ -400,7 +400,10 @@ function Actions(props: any) {
 
                                     {item?.reactions?.length > 0 ? (
                                         item.reactions.map((reaction: any, index: number) => (
-                                            <span className={style.emojiShowed} key={index}>{reaction.react} </span>
+                                            <span style={{ cursor: 'pointer' }} className={style.emojiShowed} key={index} onClick={(e) => {
+                                                (e.currentTarget as HTMLElement).remove();
+                                                removeReaction(item);
+                                              }}>{reaction.react} </span>
                                         ))
                                         ) : null}
                                 </div>

@@ -713,8 +713,17 @@ const ChatComponent = () => {
 
     
 
-    const removeReaction = (messageId: any) => {
-        (socketRef.current as any).emit('remove-react', { from: sender, messageId });
+    const removeReaction = (item: any) => {
+        let dataObj: { from?: string; messageId?: string; userId?: string; accessToken?: string } = {};
+        dataObj.messageId = item.id;
+        dataObj.from = loggedUserId ?? '';
+        dataObj.userId = item.receiverId;
+        dataObj.accessToken = token ?? undefined;
+        const data = JSON.stringify(dataObj);
+
+        console.log('remvoe reaction', data);
+        (socketRef.current as any).emit('remove-react', data);
+        setSelectedMsg(null);
     };
 
     const deleteForEveryone = async (item: any) => {
