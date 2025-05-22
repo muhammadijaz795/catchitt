@@ -1,5 +1,6 @@
 
 import caesium from '../src/assets/caesium.png';
+import coinsImage from '../src/assets/coinsImage.png';
 import FooterUploadMobile from '../src/assets/FooterUploadMobile.svg';
 import Trecap from '../src/assets/template/Trecap.png';
 import Tvlog from '../src/assets/template/Tvlog.png';
@@ -214,6 +215,7 @@ import blackHeartOutline from './assets/black_heart_outline.svg'
 import blackCrossHeart from './assets/black_cross_heart.svg'
 export {
     caesium,
+    coinsImage,
     FooterUploadMobile,
     Trecap,
     Tstory,
