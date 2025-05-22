@@ -54,6 +54,34 @@ function DiscoverLive() {
     .catch((error) => console.error('Fetch error:', error));
   };
 
+  const [postCategories, setPostCategories] = useState<any>(
+    {
+      items: [],
+      isLoading: false,
+    }
+  );
+
+  function loadPostCategories()
+  {
+    let endpoint = `${process.env.VITE_API_URL}/category`;
+    let requestOptions =
+    {
+      method: 'GET',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    setPostCategories((prev: any) => ({ ...prev, isLoading: true }));
+
+    fetch(endpoint, requestOptions)
+    .then((response) => response.json())
+    .then((response) => setPostCategories((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
+    .catch((error) => console.error('Fetch error:', error));
+  };
+
   const groupedStreams = recommendedLiveVideos.items.reduce((acc: any, stream: any) => {
   const topicName = stream.topic.topicName;
   if (!acc[topicName]) {
@@ -65,6 +93,7 @@ function DiscoverLive() {
 
   useEffect(() => {
     loadRecommendedLiveVideos();
+    loadPostCategories();
   }, []);
 
   let postsBySelectedCategory = recommendedLiveVideos.items;
@@ -199,16 +228,16 @@ function DiscoverLive() {
                   '&::-webkit-scrollbar': { display: 'none' },
                 }}
               >
-                {chipLabels.map((label, idx) => (
+                {postCategories.items.map((item) => (
                   <Chip
                     sx={{ border: 'none', borderRadius: '8px', backgroundColor: '#1618230F', fontSize: '14px' }}
-                    key={idx}
-                    label={label}
+                    key={item._id}
+                    label={item.name}
                     clickable
                     variant="outlined"
                     onClick={() => {
                       setMediaByCategory({
-                        selectedCategory: label.toLowerCase(),
+                        selectedCategory: item.name.toLowerCase(),
                         items: [],
                         page: 1,
                       });
