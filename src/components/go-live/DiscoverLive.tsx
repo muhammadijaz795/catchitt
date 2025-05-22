@@ -131,7 +131,7 @@ function DiscoverLive() {
             style={{borderRadius: 'none', background: '#00000080', fontSize: '13px', color: 'white', height: 20, display: 'flex', alignItems: 'center' }}
           >
             <PersonIcon sx={{ fontSize: 14 }} />
-            {stream.viewers}
+            {stream?.consumers?.length}
             </span>
         </Box>
       </Box>

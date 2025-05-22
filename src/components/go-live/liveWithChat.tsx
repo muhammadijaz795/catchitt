@@ -29,7 +29,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RankingSettingsModal from './popuprating';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { shareProfileby } from '../../utils/helpers';
+import { socialShareText } from '../../utils/helpers';
 import FlagIcon from '@mui/icons-material/Flag';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -232,7 +232,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
             style={{borderRadius: 'none', background: '#00000080', fontSize: '13px', color: 'white', height: 20, display: 'flex', alignItems: 'center' }}
           >
             <PersonIcon sx={{ fontSize: 14 }} />
-            {/* {stream.viewers} */}
+            {stream.consumers.length}
             </span>
         </Box>
       </Box>

@@ -70,7 +70,7 @@ const LiveStreaming = ({posts}: any) => {
         <Typography variant="subtitle2" color="green">
           {currentVideo?.owner?.name}
         </Typography>
-        <Typography variant="caption">0 watching</Typography>
+        <Typography variant="caption">{currentVideo?.consumers?.length} watching</Typography>
       </Box>
 
       {/* Center button overlay */}
