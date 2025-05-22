@@ -180,25 +180,25 @@ function DiscoverLive() {
     </Box>
   );
 
-  const RecomendedCard = ({ stream }: { stream: LiveStream }) => (
+  const RecommendedCard = ({ stream }: { stream: any }) => (
     <Box sx={{ borderRadius: 2, width: "100%", position: 'relative', mr: 2, textAlign: 'left' }}>
       <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
         <CardMedia
           component="img"
-          image={stream.imageUrl}
-          alt={stream.title}
+          image={stream.icon}
+          alt={stream.name}
           sx={{ borderRadius: 2, maxHeight: 185, height: 185 }}
         />
       </Box>
       <Box sx={{ mt: 1, px: 0.5, pb: 1.5 }}>
       <Stack direction="row" spacing={1} mt={0.5}>
-        <Avatar src={stream.userAvatar} sx={{ width: 24, height: 24 }} />
+        {/* <Avatar src={stream.userAvatar} sx={{ width: 24, height: 24 }} /> */}
         <Box>
             <Typography variant="body2" fontWeight={500} >
-            {stream.title}
+            {stream.name}
             </Typography>
             <Typography variant="caption" color="text.secondary" >
-            {stream.username}
+            {stream.consumers?.length || 0} watching
             </Typography>
         </Box>
         </Stack>
@@ -288,9 +288,9 @@ function DiscoverLive() {
                   </Typography>
               </Box>
               <Box display="flex" flexWrap="wrap" gap={3}>
-                {dummyData2.map((stream) => (
-                  <Box key={stream.id} sx={{ width: 'calc((100% - 144px) / 7)' }}>
-                    <RecomendedCard stream={stream} />
+                {postCategories.items.map((item) => (
+                  <Box key={item._id} sx={{ width: 'calc((100% - 144px) / 7)' }}>
+                    <RecommendedCard stream={item} />
                   </Box>
                 ))}
               </Box>
