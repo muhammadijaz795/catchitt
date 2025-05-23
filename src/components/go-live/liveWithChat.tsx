@@ -439,14 +439,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           console.log(`Received message of joinedliveStreamRoom: ${JSON.stringify(data)}`);
           // handleNewMessage(data); // Handle the incoming message
         });
-           
-        // (socketRef.current as any).emit('joinRoom', '651c880a8ac697cffc082dbf');
-        // (socketRef.current as any).emit('joinRoom', '651c880a8ac697cffc082dbf', (response:any) => {
-        //   console.log('Callback Response:', response);
-        // });
-        // (socketRef.current as any).emit('leaveRoom', '651c880a8ac697cffc082dbf', (response:any) => {
-        //   console.log('Callback Response:', response);
-        // });
     });
 
     (socketRef.current as any).on('connect_error', (error: any) => {
@@ -584,8 +576,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     .then((response) => response.json())
     .then((response) => { 
       console.log('response from live-stream get rooms', response);
-      console.log(response.data);
-      // Handle the response data here
+      setMessages(response.data.data);
     })
     .catch((error) => console.error('Fetch error:', error));
   }
