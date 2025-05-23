@@ -310,7 +310,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
 
   function sendGift(giftId: string)
   {
-      let endpoint = `${process.env.VITE_API_URL}/media-content/comment/${selectedLiveVideo?.details?._id}`;
+      let endpoint = `${process.env.VITE_API_URL}/gift/live-stream/send`;
       let requestOptions =
       {
         method: 'POST',
@@ -319,7 +319,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ giftId }),
+        body: JSON.stringify({ giftId, roomId:  selectedLiveVideo?.details?._id}),
       };
       
       fetch(endpoint, requestOptions)
