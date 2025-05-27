@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -46,7 +47,9 @@ export default function Coins() {
         {/* Header */}
         <Box display="flex" justifyContent="space-between" mb={4}>
           <Typography variant="h6" fontWeight="bold">Get Coins</Typography>
+          <Link to="/settings/account/transaction-history" reloadDocument={false} style={{ textDecoration: 'none' }}>
           <Button color="inherit" sx={{fontWeight: 'bold'}} size="small">View transaction history</Button>
+          </Link>
         </Box>
 
         {/* User info */}
