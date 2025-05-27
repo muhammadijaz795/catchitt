@@ -59,6 +59,7 @@ function Actions(props: any) {
     const isVideo = (url:any) => {
         return /\.(mp4|webm|ogg)$/i.test(url);
     };
+    
 
     // Render logic for replysms
     const renderContent = (replysms:any) => {
@@ -79,6 +80,15 @@ function Actions(props: any) {
             return <TextHighlighter searchQuery={searchQuery} text={replysms} />;
         }
     };
+
+    const getMediaUrl = (text: string) => {
+        const imageMatch = text.match(/https?:\/\/[^\s]+?\.(png|jpg|jpeg|gif)/i);
+        const videoMatch = text.match(/https?:\/\/[^\s]+?\.(mp4|webm|ogg)/i);
+        return {
+          image: imageMatch ? imageMatch[0] : null,
+          video: videoMatch ? videoMatch[0] : null,
+        };
+      };
 
     const getMediaInfo = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
         const videoElement = (event.target as HTMLVideoElement);
@@ -322,6 +332,23 @@ function Actions(props: any) {
                                                             } ${item.isForwarded ? 'py-0 bg-transparent border-0' : ''} ${item.receiverId == loggedInUserId ? (activeUser.themeColor? activeUser.themeColor: isDarkTheme ? 'bg-[#262626]' : 'bg-slate-100') : (activeUser.themeColor?activeUser.themeColor+' bg-opacity-75':isDarkTheme ? 'bg-[#414141]' : 'bg-gray-100')}`}
                                                     >
                                                         <TextHighlighter searchQuery={searchQuery} text={item.msg} />
+                                                        {getMediaUrl(item.msg).image && (
+                                                            <img
+                                                            src={getMediaUrl(item.msg).image ?? undefined}
+                                                            alt="attachment"
+                                                            style={{ maxWidth: '100%', marginTop: 8, borderRadius: '8px' }}
+                                                            />
+                                                        )}
+
+                                                        {getMediaUrl(item.msg).video && (
+                                                            <video
+                                                            controls
+                                                            style={{ maxWidth: '100%', marginTop: 8, borderRadius: '8px' }}
+                                                            >
+                                                            <source src={getMediaUrl(item.msg).video ?? undefined} type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                            </video>
+                                                        )}
                                                     </p>}
 
                                                 {['Image', 'Sticker', 'Gif'].some(type => type === item?.type) &&
@@ -397,10 +424,14 @@ function Actions(props: any) {
                                             </>
                                         )}
                                     </LongPressButton>
-
                                     {item?.reactions?.length > 0 ? (
                                         item.reactions.map((reaction: any, index: number) => (
-                                            <span className={style.emojiShowed} key={index}>{reaction.react} </span>
+                                            <span style={{ cursor: 'pointer' }} className={style.emojiShowed} key={index} onClick={(e) => {
+                                                if(item && item.receiverId && item.receiverId != loggedInUserId){
+                                                    // (e.currentTarget as HTMLElement).remove();
+                                                    removeReaction(item, reaction.userId);
+                                                }
+                                              }}>{reaction.react} </span>
                                         ))
                                         ) : null}
                                 </div>

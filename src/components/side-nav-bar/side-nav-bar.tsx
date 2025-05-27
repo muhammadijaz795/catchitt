@@ -591,8 +591,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
                     </Link>
                 ):null }
-                {/* { isUserLoggedIn() ? (
-                    <Link to="/live" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                { isUserLoggedIn() ? (
+                    <Link to="/live/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
 
                         <div
                             className={classNames(
@@ -617,7 +617,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
 
                     </Link>
-                ):null } */}
+                ):null }
 
                 { isUserLoggedIn() ? (
                     <div   style={{ textDecoration: 'none', cursor: 'pointer' }}>

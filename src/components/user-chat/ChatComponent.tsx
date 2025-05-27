@@ -199,6 +199,84 @@ const ChatComponent = () => {
             console.error('WebSocket closed:', event);
         };
 
+        
+        (socketRef.current as any).on('removed-react', (data: any) => {
+            const { messageId, from } = data;
+            console.log('Reaction removed data:', data);
+            
+            setActiveChat((currentActiveChat: typeof activeChat) => {
+                if (!currentActiveChat?.chats) return currentActiveChat;
+                
+                const updatedChats = currentActiveChat.chats.map((chat: any) => {
+                    if (chat._id !== messageId && chat.id !== messageId) return chat;
+                    if (!chat.reactions || chat.reactions.length === 0) return chat;
+                    
+                    const newReactions = chat.reactions.filter(
+                        (r: any) => r.userId !== from
+                    );
+                    
+                    return {
+                        ...chat,
+                        reactions: newReactions,
+                    };
+                });
+                
+                return {
+                    ...currentActiveChat,
+                    chats: updatedChats,
+                };
+            });
+        });
+
+        (socketRef.current as any).on('reacted-msg', (data: any) => {
+            const { messageId, react, from } = data;
+            console.log('Reacted message data:', data);
+            
+            // Use functional update to avoid stale state
+            setActiveChat((currentActiveChat: typeof activeChat) => {
+                if (!currentActiveChat?.chats) return currentActiveChat;
+                
+                const updatedChats = currentActiveChat.chats.map((chat: any) => {
+                    if (chat._id !== messageId && chat.id !== messageId) return chat;
+                    
+                    // Clone existing reactions or initialize empty array
+                    const existingReactions = chat.reactions ? [...chat.reactions] : [];
+                    
+                    // Find if this user already reacted
+                    const reactionIndex = existingReactions.findIndex(
+                        (r: any) => r.userId === from
+                    );
+                    
+                    let newReactions;
+                    
+                    if (reactionIndex !== -1) {
+                        // Update existing reaction
+                        newReactions = [...existingReactions];
+                        newReactions[reactionIndex].react = react;
+                    } else {
+                        // Add new reaction
+                        newReactions = [
+                            ...existingReactions,
+                            { react, userId: from, _id: messageId },
+                        ];
+                    }
+                    
+                    return {
+                        ...chat,
+                        reactions: newReactions,
+                    };
+                });
+                
+                return {
+                    ...currentActiveChat,
+                    chats: updatedChats,
+                };
+            });
+            
+            console.log('Reaction updated:', data);
+        });
+          
+
         (socketRef.current as any).on('receive-msg', (message: any) => {
             let chatActiveUser = localStorage.getItem('chatActiveUser');
             activeUser?.userId
@@ -671,24 +749,31 @@ const ChatComponent = () => {
     const reactToMessage = (messageId: any, reaction: any,item: any) => {
         // Find the message in activeChat.chats that matches the given messageId
         const updatedChats = activeChat.chats.map((msg :any) => {
-            if (msg.id == messageId) {
-                // Check if the reaction already exists in the reactions array
-                const existingReactionIndex = msg.reactions.findIndex((r :any) => r.userId === sender); // assuming sender is the user who is reacting
-                if (existingReactionIndex !== -1) {
-                    // Update the existing reaction if it exists
-                    msg.reactions[existingReactionIndex] = {
-                        ...msg.reactions[existingReactionIndex],
-                        react:reaction // Update the reaction (like emoji)
-                    };
-                } else {
-                    // Insert a new reaction if it doesn't exist
-                    msg.reactions.push({
-                        userId: sender, // assuming 'sender' is the user ID of the person reacting
-                        react:reaction // Add the new reaction (like emoji)
-                    });
+            if (msg.id === messageId) {
+                // Ensure reactions array is initialized
+                if (!Array.isArray(msg.reactions)) {
+                  msg.reactions = [];
                 }
-            }
-            return msg; // Return the updated message or the unchanged one
+              
+                const existingReactionIndex = msg.reactions.findIndex(
+                  (r: any) => r.userId === sender
+                );
+              
+                if (existingReactionIndex !== -1) {
+                  // Update the existing reaction
+                  msg.reactions[existingReactionIndex] = {
+                    ...msg.reactions[existingReactionIndex],
+                    react: reaction,
+                  };
+                } else {
+                  // Add a new reaction
+                  msg.reactions.push({
+                    userId: sender,
+                    react: reaction,
+                  });
+                }
+              }
+              return msg;
         });
 
         // Update your state with the modified chats array
@@ -704,7 +789,8 @@ const ChatComponent = () => {
             messageId: messageId,
             react: reaction,
             type: 'emoji',
-            accessToken: token
+            accessToken: token,
+            conversationId
         }));
         valuesH(item, 'showEmogis');
     };
@@ -712,9 +798,111 @@ const ChatComponent = () => {
 
     
 
-    const removeReaction = (messageId: any) => {
-        (socketRef.current as any).emit('remove-react', { from: sender, messageId });
-    };
+    // const removeReaction = (item: any) => {
+    //     let dataObj: { from?: string; messageId?: string; userId?: string; accessToken?: string } = {};
+    //     dataObj.messageId = item.id;
+    //     dataObj.from = loggedUserId ?? '';
+    //     dataObj.userId = item.receiverId;
+    //     dataObj.accessToken = token ?? undefined;
+    //     const data = JSON.stringify(dataObj);
+
+    //     console.log('remvoe reaction', data);
+    //     (socketRef.current as any).emit('remove-react', data);
+    //     setSelectedMsg(null);
+    // };
+
+    interface Reaction {
+        userId: string;
+        react: string;
+        _id?: string;
+      }
+      
+      interface ChatMessage {
+        id: string;
+        _id?: string;
+        reactions?: Reaction[];
+        // ... other message properties
+      }
+      
+      interface ActiveChat {
+        chats: ChatMessage[];
+        // ... other chat properties
+      }
+      
+      const removeReaction = (item: ChatMessage,userId: any) => {
+        // 1. Verify the item has reactions
+        console.log(item.reactions);
+        // if (!item.reactions?.some(r => r.userId === loggedUserId)) {
+        //   console.warn('No reaction to remove for this user');
+        //   return;
+        // }
+      
+        // 2. Prepare server data
+        const dataObj = {
+          messageId: item.id,
+          from: loggedUserId ?? '',
+          conversationId: conversationId,
+          accessToken: token ?? undefined
+        };
+        
+        console.log('Removing reaction', dataObj);
+        (socketRef.current as any).emit('remove-react', JSON.stringify(dataObj));
+      
+        // 3. Optimistic UI update
+        setActiveChat((currentActiveChat: ActiveChat | null) => {
+          if (!currentActiveChat?.chats) return currentActiveChat;
+          
+          const updatedChats = currentActiveChat.chats.map((chat: ChatMessage) => {
+            // Debug logging
+            console.log('Comparing:', {
+              chatId: chat.id,
+              itemId: item.id,
+              matches: chat.id === item.id || chat._id === item.id
+            });
+      
+            // Check if this is the target message
+            if (chat.id !== item.id && chat._id !== item.id) return chat;
+            console.log('chat reactions...')
+            console.log(chat.reactions);
+            console.log('loggedUserId', loggedUserId);
+            // Create new reactions array without user's reaction
+            const updatedReactions = (chat.reactions || []).filter(reaction => {
+                const reactionUserId = typeof reaction.userId === 'string' 
+                  ? reaction.userId 
+                  : reaction.userId;
+                  
+                return reactionUserId !== userId;
+              });
+      
+            console.log('Updated reactions:', updatedReactions);
+            
+            return {
+              ...chat,
+              reactions: updatedReactions.length > 0 ? updatedReactions : undefined
+            };
+          });
+          
+          return {
+            ...currentActiveChat,
+            chats: updatedChats
+          };
+        });
+      
+        setSelectedMsg(null);
+      };
+
+    const deleteForEveryone = async (item: any) => {
+        let dataObj: { senderId?: string; messageId?: string; receiverId?: string; accessToken?: string } = {};
+        dataObj.messageId = item.id;
+        dataObj.senderId = loggedUserId ?? '';
+        dataObj.receiverId = item.receiverId;
+        dataObj.accessToken = token ?? undefined;
+        const data = JSON.stringify(dataObj);
+
+        console.log('deleteForEveryone', data);
+        (socketRef.current as any).emit('delete-message-for-everyone', data);
+        setSelectedMsg(null);
+    }
 
     const deleteH = async (item: any) => {
         const tempArr: any[] = [];
@@ -1002,6 +1190,7 @@ const ChatComponent = () => {
 
     useEffect(() => {
         if (Object.keys(activeUser).length == 0 && users.length > 0) {
+            setConversationId(users[0]?.conversationId);
             loadChatMessages(users[0]?.senderId, users[0]?.receiverId, users[0]?.conversationId, users[0]);
             if (valueReceived) {
                 chatSwitchH(valueReceived);
@@ -1231,7 +1420,7 @@ const ChatComponent = () => {
         >
             <img onClick={()=>navigate('/')} className='float-left mt-3 ml-4 cursor-pointer' src={isDarkTheme?leftArrowCurvedinWhite:leftArrowCurved} alt="" />
             <div className={`${style.parent} ${isDarkTheme}`}>
-                <ConfirmDelete deleteHandler={deleteH} isDarkTheme={isDarkTheme} msg={selectedMsg} handleClose={()=>setSelectedMsg(null)} />
+                <ConfirmDelete deleteHandler={deleteH} deleteForEveryone={deleteForEveryone} isDarkTheme={isDarkTheme} msg={selectedMsg} handleClose={()=>setSelectedMsg(null)} />
                 <UserChats
                     // onUsersInputChangeHandler={onUsersInputChangeHandler}
                     id={activeUser?.userId}

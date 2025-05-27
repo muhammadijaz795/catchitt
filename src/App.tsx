@@ -40,6 +40,7 @@ import PostsAnalytics from './components/studio/posts/PostsAnalytics';
 import { useAuthStore } from './store/authStore';
 import useApp from './useApp';
 import GoLive from './components/go-live';
+import DiscoverLive from './components/go-live/DiscoverLive';
 import { LastPageRounded, Visibility, VisibilityOff } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -1171,6 +1172,7 @@ function App() {
                             <Route path="/upload/:id" element={<UploadPage />} />
                             <Route path="/create-story" element={<CreateStoryPage />} />
                             <Route path="/golive" element={<GoLive />} />
+                            <Route path="/live/discover" element={<DiscoverLive />} />
                             <Route path="/myreports" element={<MyReports />} />
                             <Route path="/analytics/:tab?" element={<Analytics />} />
                             <Route path="/analytics/post/:postId" element={<PostAnalytics />} />

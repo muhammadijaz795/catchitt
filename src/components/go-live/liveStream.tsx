@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Button, IconButton, Badge } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
+import { Link } from 'react-router-dom';
 
-const LiveStreaming = () => {
+const LiveStreaming = ({posts}: any) => {
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  
+  function handleNext()
+  {
+    setCurrentVideoIndex(prev => prev === posts.length - 1 ? 0 : prev + 1);
+  };
+  
+  function handlePrevious()
+  {
+    setCurrentVideoIndex(prev => prev === 0 ? posts.length - 1 : prev - 1);
+  };
+
+  const currentVideo = posts[currentVideoIndex];
+
   return (
     <Box
       sx={{
@@ -24,7 +39,7 @@ const LiveStreaming = () => {
       <Box
         sx={{
           flex: 1,
-          backgroundImage: `url('/your-image-path.jpg')`,
+          backgroundImage: `url(${currentVideo?.thumbnail})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -50,15 +65,16 @@ const LiveStreaming = () => {
             Live
         </span>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
-          Watch now and interact with others in real...
+          {currentVideo?.streamTitle}
         </Typography>
         <Typography variant="subtitle2" color="green">
-          🍀 TOSHA 🍀
+          {currentVideo?.owner?.name}
         </Typography>
-        <Typography variant="caption">7 watching</Typography>
+        <Typography variant="caption">{currentVideo?.consumers?.length} watching</Typography>
       </Box>
 
       {/* Center button overlay */}
+      <Link to={`/golive?streamId=${currentVideo?.id}`} reloadDocument={false} style={{ textDecoration: 'none' }}>
       <Button
         variant="contained"
         sx={{
@@ -85,6 +101,7 @@ const LiveStreaming = () => {
 
         Click to watch LIVE
       </Button>
+      </Link>
 
       {/* Bottom-left Play icon */}
       <IconButton
@@ -127,12 +144,12 @@ const LiveStreaming = () => {
 
       {/* Right top/bottom controls */}
       <Box sx={{ position: 'absolute', right: 20, top: '45%', display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <IconButton sx={{ backgroundColor: '#54545480', color: '#fff' }}>
+        <IconButton sx={{ backgroundColor: '#54545480', color: '#fff' }} onClick={() => handlePrevious()}>
         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9.99997 8.7432L15.4875 14.2307C15.5262 14.2698 15.5723 14.3007 15.6231 14.3219C15.6738 14.3431 15.7283 14.3539 15.7833 14.3539C15.8383 14.3539 15.8928 14.3431 15.9435 14.3219C15.9943 14.3007 16.0404 14.2698 16.0791 14.2307L17.2541 13.0557C17.2932 13.017 17.3242 12.9709 17.3453 12.9201C17.3665 12.8693 17.3774 12.8149 17.3774 12.7599C17.3774 12.7049 17.3665 12.6504 17.3453 12.5996C17.3242 12.5489 17.2932 12.5028 17.2541 12.464L10.4416 5.65153C10.3245 5.53449 10.1656 5.46875 9.99997 5.46875C9.83435 5.46875 9.6755 5.53449 9.55831 5.65153L2.74581 12.464C2.70675 12.5028 2.67576 12.5489 2.6546 12.5996C2.63345 12.6504 2.62256 12.7049 2.62256 12.7599C2.62256 12.8149 2.63345 12.8693 2.6546 12.9201C2.67576 12.9709 2.70675 13.017 2.74581 13.0557L3.91664 14.2265C3.95538 14.2656 4.00146 14.2966 4.05223 14.3177C4.10301 14.3389 4.15747 14.3498 4.21247 14.3498C4.26748 14.3498 4.32194 14.3389 4.37271 14.3177C4.42349 14.2966 4.46957 14.2656 4.50831 14.2265L9.99997 8.7432Z" fill="white"/>
         </svg>
         </IconButton>
-        <IconButton sx={{ backgroundColor: '#54545480', color: '#fff' }}>
+        <IconButton sx={{ backgroundColor: '#54545480', color: '#fff' }} onClick={() => handleNext()}>
         <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9.99997 11.8764L15.4875 6.38887C15.5262 6.34982 15.5723 6.31882 15.6231 6.29767C15.6738 6.27652 15.7283 6.26562 15.7833 6.26562C15.8383 6.26562 15.8928 6.27652 15.9435 6.29767C15.9943 6.31882 16.0404 6.34982 16.0791 6.38887L17.2541 7.56387C17.2932 7.60261 17.3242 7.64869 17.3453 7.69947C17.3665 7.75024 17.3774 7.8047 17.3774 7.85971C17.3774 7.91471 17.3665 7.96917 17.3453 8.01995C17.3242 8.07072 17.2932 8.11681 17.2541 8.15554L10.4416 14.968C10.3245 15.0851 10.1656 15.1508 9.99997 15.1508C9.83435 15.1508 9.6755 15.0851 9.55831 14.968L2.74581 8.15554C2.70675 8.11681 2.67576 8.07072 2.6546 8.01995C2.63345 7.96917 2.62256 7.91471 2.62256 7.85971C2.62256 7.8047 2.63345 7.75024 2.6546 7.69947C2.67576 7.64869 2.70675 7.60261 2.74581 7.56387L3.91664 6.39304C3.95538 6.35399 4.00146 6.32299 4.05223 6.30184C4.10301 6.28068 4.15747 6.26979 4.21247 6.26979C4.26748 6.26979 4.32194 6.28068 4.37271 6.30184C4.42349 6.32299 4.46957 6.35399 4.50831 6.39304L9.99997 11.8764Z" fill="white"/>
         </svg>

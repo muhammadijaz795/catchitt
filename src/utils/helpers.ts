@@ -134,6 +134,29 @@ export const shareProfileby = {
     }
 }
 
+export const socialShareText = {
+    whatsapp: (text: string) => {
+        window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    },
+    facebook: (text: string) => {
+        window.open(`https://www.facebook.com/share/share.php?u=${text}`, '_blank');
+    },
+    twitter: (text: string) => {
+        window.open(`https://twitter.com/intent/tweet?url=${text}`, '_blank');
+    },
+    linkedin: (text: string) => {
+        window.open(`https://www.linkedin.com/shareArticle?url=${text}`, '_blank');
+    },
+    copyLink: async (text: string): Promise<boolean> => {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch {
+            return false;
+        }
+    },
+}
+
 export const createOpenDialog = (type: string | string[] = 'image', mode: string = 'file', multiple: boolean = false) => {
     let input = document.createElement('input');
     input.type = mode;

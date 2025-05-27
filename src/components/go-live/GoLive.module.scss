@@ -108,8 +108,10 @@ div.darkTheme {
   
 }
 
-div.darkTheme > p > h1, h2, h3, h4 , h6 {
+.darkTheme  {
+    p , h1, h2, h3, h4 , h6 {
   color:white !important;
+}
 }
 
 div.darkTheme p{

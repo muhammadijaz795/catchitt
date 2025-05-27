@@ -22,7 +22,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function ConfirmDelete({ isDarkTheme, msg, handleClose, deleteHandler }: any) {
+export default function ConfirmDelete({ isDarkTheme, msg, handleClose, deleteHandler, deleteForEveryone}: any) {
   const API_KEY = process.env.VITE_API_URL;
   const [PrivacyValue, setPrivacyValue] = useState('Friends');
   const token = localStorage.getItem('token');
@@ -80,7 +80,7 @@ export default function ConfirmDelete({ isDarkTheme, msg, handleClose, deleteHan
           Deleting a message for yourself allows you to delete your copy of messages you've sent or received This has no effect on your recipients' chats          </Typography>
         </DialogContent>
         <DialogActions style={{ maxWidth: 'fit-content', marginLeft: 'auto', padding: '10px', gap:'15px' }}>
-          {msg?.receiverId !== loggedUserId &&<button className='py-2' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '100px' }} autoFocus>Delete for everyone</button>}
+          {msg?.receiverId !== loggedUserId &&<button onClick={() => {deleteForEveryone(msg)}} className='py-2' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '100px' }} autoFocus>Delete for everyone</button>}
           <button onClick={()=>deleteHandler(msg)} className='py-2' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '100px' }} autoFocus>Delete for me</button>
           <button className='py-2' style={{ color: isDarkTheme?'#fff':'rgb(22, 24, 35)', backgroundColor: isDarkTheme?'#282828':'', borderColor: 'rgba(22, 24, 35, 0.12)', minWidth: '100px', }} onClick={handleClose}>Cancel</button>
         </DialogActions>
