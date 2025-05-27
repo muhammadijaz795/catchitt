@@ -129,8 +129,16 @@ function LiveWithChat({ darkTheme }) {
     };
 
     const [isFollowed, setIsFollowed] = useState(false);
-    const [showFollowDiv, setShowFollowDiv] = useState(true);
+    const [showFollowDiv, setShowFollowDiv] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setShowFollowDiv(true);
+      }, 10000); // 10 seconds (10000 ms)
+  
+      return () => clearTimeout(timer); // cleanup on unmount
+    }, []);
+  
 
       const handleFollow = async () => {
         let userId = selectedLiveVideo?.details?.owner?.id;
