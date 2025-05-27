@@ -115,7 +115,7 @@ const shareOptions = [
  },
 ];
 
-function LiveWithChat({ darkTheme }) {
+function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
   const navigate = useNavigate();
   const [showTopViewers, setShowTopViewers] = useState(false);
 
@@ -314,7 +314,7 @@ function LiveWithChat({ darkTheme }) {
 
 
 
-  const handleUnfollowClick = (event) => {
+  const handleUnfollowClick = (event: any) => {
     setUnfollowAnchorEl(event.currentTarget);
   };
 
@@ -873,7 +873,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
   const openProfile = Boolean(anchorElProfile);
 
 
-  const handleToggle = (event) => {
+  const handleToggle = (event: any) => {
         setAnchorElProfile(event.currentTarget);
   };
 
@@ -1207,7 +1207,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                         </Typography>
                     </Box>
                     <Grid container spacing={2}>
-                        {recommendedLiveVideos.items.map((stream) => (
+                        {recommendedLiveVideos.items.map((stream: any) => (
                             <Grid item xs={12} sm={6} key={stream.id}>
                                 <LiveStreamCard 
                                   stream={stream} 
@@ -1848,7 +1848,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                               mb: 2,
                                           }}
                                         >
-                                          {newJoiner && <Typography fontSize={12} color="text.secondary">🌿 {newJoiner.name} joined</Typography>}
+                                          {newJoiner && <Typography fontSize={12} color="text.secondary">🌿 {(newJoiner as {name: string}).name} joined</Typography>}
                                         <Typography fontSize={12} fontWeight={500}>
                                         {newJoiner && <>💲 Welcome to Seezitt LIVE! Have fun interacting with others in real time. Creators must be 18 or older to go LIVE. Viewers must be 18 or older to recharge and send Gifts. Remember to follow our Community Guidelines.</>}
                                         </Typography>
