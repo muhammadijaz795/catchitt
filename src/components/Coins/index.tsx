@@ -16,6 +16,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InvitationCodeModal from './inviteModel';
 import CashBackWaveDialog from './cashbackModelDetails';
 import CashBackWaveDialogDetails from './cashbackModelDetails';
+import Navbar from '../../shared/navbar';
 
 const coinOptions = [
   { coins: '30', price: '$0.37' },
@@ -38,7 +39,9 @@ export default function Coins() {
   const userProfile = useSelector((state: any) => state?.reducers?.profile);
 
   return (
-    <Box maxWidth="1200px" mx="auto" textAlign={'left'} p={6} position="relative">
+    <>
+    <Navbar/>
+    <Box maxWidth="1200px" mx="auto" mt={8} textAlign={'left'} p={6} position="relative">
       <Card sx={{ borderRadius: 3, p: 4 }}>
         {/* Header */}
         <Box display="flex" justifyContent="space-between" mb={4}>
@@ -230,5 +233,6 @@ export default function Coins() {
       <InvitationCodeModal open={openInviteModel} onClose={handleCloseInviteModel} />
       <CashBackWaveDialogDetails open={opencashInviteModel} onClose={() => setOpencashInviteModel(false)} />
     </Box>
+    </>
   );
 }
