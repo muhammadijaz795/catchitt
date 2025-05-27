@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Box,
   Button,
@@ -34,6 +35,7 @@ export default function Coins() {
   const handleCloseInviteModel = () => setOpenInviteModel(false);
   const [opencashInviteModel, setOpencashInviteModel] = useState(false);
 
+  const userProfile = useSelector((state: any) => state?.reducers?.profile);
 
   return (
     <Box maxWidth="1200px" mx="auto" textAlign={'left'} p={6} position="relative">
@@ -54,14 +56,14 @@ export default function Coins() {
         >
           <Box
             component="img"
-            src="/avatar.jpg"
-            alt="User"
+            src={userProfile?.avatar}
+            alt={userProfile?.username}
             width={40}
             height={40}
             sx={{ borderRadius: '50%' }}
           />
           <Box>
-            <Typography fontWeight="medium">Jeniffer.lofez</Typography>
+            <Typography fontWeight="medium">{userProfile?.username}</Typography>
             <Typography color="text.secondary" fontSize="0.875rem">🪙 0</Typography>
           </Box>
         </Box>
