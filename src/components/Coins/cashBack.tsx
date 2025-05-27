@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import InvitationCodeModal from './inviteModel';
 
 const CashbackCard = () => {
+  const [openInviteModel, setOpenInviteModel] = useState(false);
+  const handleOpenInvitationCodeModal = () => setOpenInviteModel(true);
+  const handleCloseInviteModel = () => setOpenInviteModel(false);
+
   return (
+    <>
     <Card
       variant="outlined"
       sx={{
@@ -40,12 +46,14 @@ const CashbackCard = () => {
 
         <Typography variant="body2" sx={{ color: 'text.secondary', display: 'flex', alignItems: 'center', mt: 0.5 }}>
           Code auto-filled,&nbsp;
-          <Link href="#" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
+          <Link onClick={handleOpenInvitationCodeModal} underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
             Change code <EditOutlinedIcon sx={{ fontSize: 16, ml: 0.5 }} />
           </Link>
         </Typography>
       </Box>
     </Card>
+    <InvitationCodeModal open={openInviteModel} onClose={handleCloseInviteModel} />
+    </>
   );
 };
 

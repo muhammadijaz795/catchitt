@@ -18,6 +18,7 @@ import InvitationCodeModal from './inviteModel';
 import CashBackWaveDialog from './cashbackModelDetails';
 import CashBackWaveDialogDetails from './cashbackModelDetails';
 import Navbar from '../../shared/navbar';
+import { useAuthStore } from '../../store/authStore';
 
 const coinOptions = [
   { coins: '30', price: '$0.37' },
@@ -32,12 +33,10 @@ const coinOptions = [
 
 export default function Coins() {
   const [selected, setSelected] = useState(coinOptions[0]);
-  const [openInviteModel, setOpenInviteModel] = useState(false);
-  const handleOpenInvitationCodeModal = () => setOpenInviteModel(true);
-  const handleCloseInviteModel = () => setOpenInviteModel(false);
   const [opencashInviteModel, setOpencashInviteModel] = useState(false);
 
   const userProfile = useSelector((state: any) => state?.reducers?.profile);
+  const { balance } = useAuthStore();
 
   return (
     <>
@@ -70,7 +69,7 @@ export default function Coins() {
           />
           <Box>
             <Typography fontWeight="medium">{userProfile?.username}</Typography>
-            <Typography color="text.secondary" fontSize="0.875rem">🪙 0</Typography>
+            <Typography color="text.secondary" fontSize="0.875rem">🪙 {balance}</Typography>
           </Box>
         </Box>
 
@@ -190,7 +189,6 @@ export default function Coins() {
 
         <Button
           variant="contained"
-           onClick={handleOpenInvitationCodeModal}
           sx={{ py: 1.25,  px: 7,fontSize: '1rem', textTransform: 'none', borderRadius: 2, bgcolor: 'rgba(254, 44, 85, 1)', '&:hover': { bgcolor: 'rgba(254, 44, 85, 0.9)' } }}
         >
           Recharge
@@ -233,7 +231,6 @@ export default function Coins() {
        <Button variant="outlined" onClick={() => setOpencashInviteModel(true)}>
         Open Campaign
       </Button>
-      <InvitationCodeModal open={openInviteModel} onClose={handleCloseInviteModel} />
       <CashBackWaveDialogDetails open={opencashInviteModel} onClose={() => setOpencashInviteModel(false)} />
     </Box>
     </>
