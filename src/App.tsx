@@ -1894,12 +1894,13 @@ function App() {
                                             {isMainLoginOption && (
                                                 <div className="mt-14  w-[21.888rem] mx-auto">
                                                     <p className="font-normal text-[0.688rem] text-policy">
-                                                        Byy continuing with an account located in{' '}
+                                                        By continuing with an account
+                                                         {/* located in
                                                         <span
                                                             className={` ${textColor} cursor-pointer`}
                                                         >
                                                             {country_name}
-                                                        </span>
+                                                        </span> */}
                                                         , you agree to our{' '}
                                                         <span
                                                             className={` ${textColor} cursor-pointer hover:underline`}
