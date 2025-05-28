@@ -52,7 +52,7 @@ const CoinsCartModal = ({ coinData:{coinsAmount, coinsPrice}, darkTheme = '', pa
                                     <p className={darkTheme ? 'text-white' : ''}>{coinsAmount} Cesium</p>
                                 </div>
                                 <div className={styles.itemPrice}>
-                                    <p className={darkTheme ? 'text-white' : ''}>QAR {coinsPrice}</p>
+                                    <p className={darkTheme ? 'text-white' : ''}>${coinsPrice}</p>
                                 </div>
                             </div>
 
@@ -79,7 +79,8 @@ const CoinsCartModal = ({ coinData:{coinsAmount, coinsPrice}, darkTheme = '', pa
                                     <p className={darkTheme? 'text-white':''}>Subtotal</p>
                                 </div>
                                 <div className={styles.itemPrice}>
-                                    <p className={darkTheme? 'text-white':''}>QAR {coinsPrice}</p>
+                                    <p className={darkTheme? 'text-white':''}>${coinsPrice
+                                }</p>
                                 </div>
                             </div>
 
@@ -89,7 +90,7 @@ const CoinsCartModal = ({ coinData:{coinsAmount, coinsPrice}, darkTheme = '', pa
                                     <p className={darkTheme? 'text-white':''}>Tax</p>
                                 </div>
                                 <div className={styles.itemPrice}>
-                                    <p className={darkTheme? 'text-white':''}>QAR 0</p>
+                                    <p className={darkTheme? 'text-white':''}>$0</p>
                                 </div>
                             </div>
 
@@ -105,7 +106,7 @@ const CoinsCartModal = ({ coinData:{coinsAmount, coinsPrice}, darkTheme = '', pa
                                     <p className={darkTheme? 'text-white':''}>Subtotal</p>
                                 </div>
                                 <div className={styles.itemPrice}>
-                                    <p className={darkTheme? 'text-white':''}>QAR {coinsPrice}</p>
+                                    <p className={darkTheme? 'text-white':''}>${coinsPrice}</p>
                                 </div>
                             </div>
 

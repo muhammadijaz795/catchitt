@@ -87,7 +87,7 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
                 {/* footer */}
                 <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
                     <button onClick={paymentMethodSelected} className={styles.btnFullWidth}>
-                      {isProceedToBuy?<CircularProgress style={{width:'1.5rem',height:'1.5rem',color:'white',margin:'0 0.5rem'}} />:<p>Pay QAR {coinsPrice}</p>}
+                      {isProceedToBuy?<CircularProgress style={{width:'1.5rem',height:'1.5rem',color:'white',margin:'0 0.5rem'}} />:<p>Pay ${coinsPrice}</p>}
                     </button>
                 </div>
             </Box>
