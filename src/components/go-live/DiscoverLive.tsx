@@ -187,9 +187,10 @@ function DiscoverLive() {
       <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
         <CardMedia
           component="img"
-          image={stream.icon}
+          image={stream.icon || defaultGreyBackground}
           alt={stream.name}
           sx={{ borderRadius: 2, maxHeight: 185, height: 185 }}
+          onError={(event: any) => event.target.src != defaultGreyBackground && (event.target.src = defaultGreyBackground)}
         />
       </Box>
       <Box sx={{ mt: 1, px: 0.5, pb: 1.5 }}>
