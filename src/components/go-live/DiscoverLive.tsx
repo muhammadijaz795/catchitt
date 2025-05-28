@@ -9,6 +9,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ShareIcon from '../profile/svg-components/ShareIcon';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Link } from 'react-router-dom';
+import { defaultGreyBackground } from '../../icons';
 
 function DiscoverLive() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -145,10 +146,11 @@ function DiscoverLive() {
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           component="img"
-          image={stream.thumbnail}
+          image={stream.thumbnail || defaultGreyBackground}
           height="160"
           alt={stream.streamTitle}
           sx={{ borderRadius: 2, maxHeight: 260 }}
+          onError={(event: any) => event.target.src != defaultGreyBackground && (event.target.src = defaultGreyBackground)}
         />
         <Box sx={{ position: 'absolute', top: 8, left: 8, display: 'flex', alignItems: 'center', gap: 0 }}>
             <span   className='w-9 rounded-sm text-sm ml-3 text-center text-white ' style={{ background: 'linear-gradient(113.02deg, #FF1764 0%, #ED3495 94.15%)'}}>
