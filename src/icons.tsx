@@ -1,5 +1,9 @@
 
 import caesium from '../src/assets/caesium.png';
+import bgModelIcon from '../src/assets/bgmodelCoins.png';
+import modelCoins from '../src/assets/modelCoins.png';
+import modelDiscountDivider from '../src/assets/modelDiscountDivider.png';
+import modelMininon from '../src/assets/modelMininon.png';
 import coinsImage from '../src/assets/coinsImage.png';
 import FooterUploadMobile from '../src/assets/FooterUploadMobile.svg';
 import Trecap from '../src/assets/template/Trecap.png';
@@ -8,7 +12,6 @@ import Tstory from '../src/assets/template/Tstory.png';
 import TTutorial from '../src/assets/template/TTutorial.png';
 import Tcreation from '../src/assets/template/Tcreation.png';
 import Teffect from '../src/assets/template/Teffect.png';
-
 import recap from '../src/assets/template/recap.png';
 import vlog from '../src/assets/template/vlog.png';
 import story from '../src/assets/template/story.png';
@@ -215,6 +218,7 @@ import blackHeartOutline from './assets/black_heart_outline.svg'
 import blackCrossHeart from './assets/black_cross_heart.svg'
 export {
     caesium,
+     modelMininon, modelDiscountDivider, modelCoins, bgModelIcon,
     coinsImage,
     FooterUploadMobile,
     Trecap,
