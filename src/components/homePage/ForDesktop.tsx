@@ -33,6 +33,7 @@ import { openLoginPopup, updateHomeVideos } from '../../redux/reducers';
 import {toggleMute} from '../../redux/reducers/volumeSlice'
 import VideoNavigation from '../../shared/navigation/VideoNavigation';
 // import { Toast } from 'react-toastify/dist/components';
+import { logPostStats } from '../../utils/helpers';
 
 
 function ForDesktop(props: any) {
@@ -206,7 +207,7 @@ const handleVideoEnd = (endedMediaId: string) => {
     }, [videoes, activeMediaId]); // This will run on initial load or when `videoes` changes
 
     const handleMediaPlay = (mediaId: string) => {
-        // alert('mediaId='+mediaId);
+        logPostStats({postId: mediaId, trafficSource: 'for_you'});
         console.log("Playing media with ID:", mediaId);
         setActiveMediaId(mediaId);
         setTotalPostComments(0);

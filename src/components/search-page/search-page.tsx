@@ -23,6 +23,7 @@ import PopupForBlock from '../profile/popups/popupForBlock';
 import Gifts from '../discover/popups/gifts';
 import { useSelector } from 'react-redux';
 import { useUpdateEffect } from 'react-use';
+import { logPostStats } from '../../utils/helpers';
 
 interface User {
     _id: string;
@@ -182,7 +183,6 @@ export const SearchPage = () => {
     const [usersFilter, setUsersFilter] = useState({ limit: 0, category: 'all' });
     const [soundsFilter, setSoundsFilter] = useState({ filter: 'title', sort: 'relevance' });
     const searches = useRef([]);
-
 
      useEffect(() => {
         if (!token) {
@@ -366,6 +366,7 @@ export const SearchPage = () => {
                                     onClick={() => {
                                         setVideoModalInfo(video);
                                         setVideoModal(true);
+                                        logPostStats({postId: video.mediaId, trafficSource: "search_pages"});
                                     }}
                                 />
                                 <p className={styles.videoDescription}>{video.description}</p>

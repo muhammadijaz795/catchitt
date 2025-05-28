@@ -25,10 +25,16 @@ import { Box, LinearProgress } from '@mui/material';
 //     }
 //   }
 
-function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
+function OverviewTab({ postAnalyticsDetails, postAnalytics, post, isDarkTheme }: any) {
 
     const [activeTab, setActiveTab] = useState(POSTSTATISTICSTABS.VIDEO_VIEWS);
-    const [chartData, setChartData] = useState<any>([])
+    const [chartData, setChartData] = useState<any>(
+        [...Array(7)].map((_, i) => ({
+            date: new Date(Date.now() - (6 - i) * 864e5)
+              .toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            viewers: 0
+          }))
+    )
     const [totalPlayTime, setTotalPlayTime] = useState('0s')
     const switchTab = (event: React.MouseEvent<HTMLDivElement>) => {
         setActiveTab(Number(event.currentTarget.id));
@@ -81,7 +87,9 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
 
     useEffect(() => {
         // if(postAnalytics && activeTab) setChartData(prepareData(postAnalytics[possibleGraphs[activeTab]]));
-    }, [activeTab])
+        const selectedChartData = postAnalyticsDetails?.details?.[['dailyViewsGraph','dailyWatchTimeGraph','averageDailyWatchTimeGraph','watchedFullVideoDailyGraph','dailyFollowersGraph'][activeTab]];
+      selectedChartData && setChartData(Object.keys(selectedChartData).map(date => ({date, value: selectedChartData[date]})));
+    }, [activeTab, postAnalyticsDetails])
 
     return (
         <div className='w-[calc(100%-14rem)] px-3 mt-8  overflow-hidden'>
@@ -97,24 +105,24 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
                     </div>
                 </div>
                 <div className='flex gap-12 mr-3'>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? playOutlineWhite : play} alt="like" /> <span>{postAnalytics?.views || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledHeartWhite : filledHeart} alt="like" /> <span>{postAnalytics?.likes || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledCommentWhite : filledComment} alt="like" /> <span>{postAnalytics?.comments || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledShareWhite : filledShare} alt="like" /> <span>{postAnalytics?.shares || 0}</span></div>
-                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledSaveWhite : filledSave} alt="like" /> <span>{postAnalytics?.saves || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? playOutlineWhite : play} alt="like" /> <span>{postAnalyticsDetails?.details?.videoViews || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledHeartWhite : filledHeart} alt="like" /> <span>{postAnalyticsDetails?.details?.likesCount || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledCommentWhite : filledComment} alt="like" /> <span>{postAnalyticsDetails?.details?.commentsCount || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledShareWhite : filledShare} alt="like" /> <span>{postAnalyticsDetails?.details?.sharesCount || 0}</span></div>
+                    <div className="text-gray-400 flex-col text-sm"><img className='w-5 invert' src={isDarkTheme ? filledSaveWhite : filledSave} alt="like" /> <span>{postAnalyticsDetails?.details?.savesCount || 0}</span></div>
                 </div>
             </div>
             {/* statistics card */}
             <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} rounded shadow-sm mb-4`}>
                 <div className='inline-flex w-full ' >
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'border-t-blue-500 border-t-4' : 'border-t border-b rounded-bl-md'} rounded-tl-md`}>Video views <br /><span className={`${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{postAnalytics?.views || 0}</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.TOTAL_PLAY_TIME.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Total play time <br /> <span className={`${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'text-blue-500' : ''} text-2xl font-semibold`}>{totalPlayTime}</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.AVERAGE_WATCH_TIME.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Share Video <br /> <span className={`${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'text-blue-500' : ''} text-2xl font-semibold`}>{postAnalytics?.shares || 0}</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Watched full video <br /> <span className={`${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'text-blue-500' : ''} text-2xl font-semibold`}>{postAnalytics?.watchedFullVideo?.percentage || 100}%</span></div>
-                    <div onClick={switchTab} id={POSTSTATISTICSTABS.NEW_FOLLOWERS.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'border-t-blue-500 border-t-4' : 'border-t border-b rounded-br-md'} rounded-tr-md`}>New followers <br /> <span className={`${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'text-blue-500' : ''}  text-2xl font-semibold`}>{postAnalytics?.reachedAudience?.count || 0}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'border-t-blue-500 border-t-4' : 'border-t border-b rounded-bl-md'} rounded-tl-md`}>Video views <br /><span className={`${activeTab === POSTSTATISTICSTABS.VIDEO_VIEWS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{postAnalyticsDetails?.details?.videoViews || 0}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.TOTAL_PLAY_TIME.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Total play time <br /> <span className={`${activeTab === POSTSTATISTICSTABS.TOTAL_PLAY_TIME ? 'text-blue-500' : ''} text-2xl font-semibold`}>{postAnalyticsDetails?.details?.videoWatchTime || "0h:0m:0s"}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.AVERAGE_WATCH_TIME.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Average watch time <br /> <span className={`${activeTab === POSTSTATISTICSTABS.AVERAGE_WATCH_TIME ? 'text-blue-500' : ''} text-2xl font-semibold`}>{postAnalyticsDetails?.details?.averageWatchTime || "0s"}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Watched full video <br /> <span className={`${activeTab === POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE ? 'text-blue-500' : ''} text-2xl font-semibold`}>{postAnalyticsDetails?.details?.watchedFullPercentage || "0%"}</span></div>
+                    <div onClick={switchTab} id={POSTSTATISTICSTABS.NEW_FOLLOWERS.toString()} className={`cursor-pointer w-1/5 py-16 font-semibold ${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'border-t-blue-500 border-t-4' : 'border-t border-b rounded-br-md'} rounded-tr-md`}>New followers <br /> <span className={`${activeTab === POSTSTATISTICSTABS.NEW_FOLLOWERS ? 'text-blue-500' : ''}  text-2xl font-semibold`}>{postAnalyticsDetails?.details?.newFollowers || 0}</span></div>
                 </div>
                 {/* Chart Section */}
-                {/* <div className="m-4 border-t pt-6 mb-6 ">
+                <div className="m-4 border-t pt-6 mb-6 ">
                     <div className={`${chartData.length ? 'h-64' : 'h-32'} flex items-center justify-center text-gray-400`}>
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart
@@ -131,26 +139,11 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                {(() => {
-                                    switch (activeTab) {
-                                        case POSTSTATISTICSTABS.VIDEO_VIEWS:
-                                            return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.TOTAL_PLAY_TIME:
-                                            return <Line type="monotone" dataKey="playtime" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.AVERAGE_WATCH_TIME:
-                                            return <Line type="monotone" dataKey="watchtime" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.FULL_WATCH_PERCENTAGE:
-                                            return <Line type="monotone" dataKey="fullwatched" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        case POSTSTATISTICSTABS.NEW_FOLLOWERS:
-                                            return <Line type="monotone" dataKey="newfollowers" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                        default:
-                                            return <Line type="monotone" dataKey="views" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                                    }
-                                })()}
+                                <Line type="monotone" dataKey="value" stroke="#82ca9d" activeDot={{ r: 8 }} />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
-                </div> */}
+                </div>
 
             </div>
             {/* Bottom Metrics Section */}
@@ -159,25 +152,27 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
                     <div className='py-2 px-4 border-b mb-4 text-left'>
                         <span className={`${isDarkTheme?'text-gray-300':'text-black'} text-[15px] font-semibold`}>Retention rate</span>
                     </div>
+                    <p className="text-gray-400 text-sm text-left px-4">You’ll be able to see this information once there’s enough data for analysis.</p>
                     {/* <p className="text-gray-400 text-sm">
                         Most viewers stopped watching at 0:04. play the video below to see when they lost interest.
                     </p> */}
-                    <div className="mt-4 space-y-2 px-4 pb-4 ">
+                    {/* <div className="mt-4 space-y-2 px-4 pb-4 ">
                         <video onLoadedMetadata={getMediaInfo} className='w-44 h-80 m-auto' controls src={post?.reducedVideoUrl?.length > 0? post?.reducedVideoUrl: post?.originalUrl} />
-                    </div>
+                    </div> */}
                 </div>
                 <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} shadow-sm text-left rounded`}>
                     <div className='py-2 px-3 border-b mb-4 '>
                         <span className={`${isDarkTheme?'text-gray-300':'text-black'} text-[15px] font-semibold mb-2`}>Traffic source</span>
                     </div>
-                    <p className="text-gray-400 px-3 text-sm">
+                    {/* <p className="text-gray-400 px-3 text-sm">
                         Data will show when video views reach 100
-                    </p>
+                    </p> */}
                     <ul className="mt-4 space-y-2 px-4 pb-4">
+                        {postAnalyticsDetails?.details?.trafficSourcePercentages && Object.entries(postAnalyticsDetails?.details?.trafficSourcePercentages).map(([key, value]) => (
                         <li className=" text-black text-sm">
                             <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
-                                <span>-</span>
-                                <span>{value}%</span>
+                                <span>{key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>
+                                <span>{value as React.ReactNode}</span>
                             </Box>
                             <Box sx={{ width: '100%', position: 'relative', py: 1 }}>
                                 <LinearProgress
@@ -190,25 +185,10 @@ function OverviewTab({ postAnalytics, post, isDarkTheme }: any) {
                                       backgroundColor: '#3B82F6',
                                     },
                                   }}
-                                variant="determinate" value={value} />
+                                variant="determinate" value={Math.round(parseFloat((value as string).replace('%', '') || '0'))} />
                             </Box>
                         </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
-                        <li className="flex justify-between text-black text-sm">
-                            <span>-</span>
-                            <span>-%</span>
-                        </li>
+                        ))}
                     </ul>
                 </div>
             </div>

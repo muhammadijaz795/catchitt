@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { copyLink, notAllowed, report, saveVideo, send, repost, blackHeartOutline, blackCrossHeart } from '../../../icons';
 
 
-function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler, onVideoDetail,isSharedVideo }: any) {
+function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler, onVideoDetail,isSharedVideo, post = {} }: any) {
 
     useEffect(() => {
         // Close context menu when clicking outside
@@ -31,6 +31,7 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
                 minWidth: '10rem'
             }}
         >
+            {post?.privacyOptions?.allowDownload && (
             <div
                 style={{
                     padding: '8px 16px',
@@ -76,6 +77,7 @@ function CustomContextMenu({ x, y, onClose, onDownload, onCopyLink,popupHandler,
 
                 <span className='pl-2'>Download video</span>
             </div>
+            )}
             <div
                 style={{
                     padding: '8px 16px',

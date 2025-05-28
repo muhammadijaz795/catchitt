@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../../../../shared/layout';
-import { Box, FormControl, InputBase, MenuItem, Paper, Select } from '@mui/material';
+import { Box, FormControl, InputBase, MenuItem, Paper, Select, SelectChangeEvent } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 

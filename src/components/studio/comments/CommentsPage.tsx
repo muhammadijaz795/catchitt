@@ -477,7 +477,7 @@ const handleFollowerApply = () => {
                 >
                 {/* Image */}
                 <img
-                    src={comment.thumbnail}
+                    src={comment.media.thumbnailUrl}
                     alt="Thumbnail"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />

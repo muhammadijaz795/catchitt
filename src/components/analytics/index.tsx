@@ -28,6 +28,12 @@ const Analytics = () => {
     const [selectedPeriod, setSelectedPeriod] = useState(7);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [logo, setLogo] = useState(logoAuth);
+    const [analyticsDetails, setAnalyticsDetails] = useState<any>(
+        {
+            details: [],
+            isLoading: false,
+        }
+    );
 
     const open = Boolean(anchorEl);
 
@@ -40,6 +46,27 @@ const Analytics = () => {
     const switchTab = (event: React.MouseEvent<HTMLAnchorElement>) => {
         setCurrentTab(Number(event.currentTarget.id));
     }
+
+    function loadAnalyticsDetails()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/profile/v2/media-analytics?days=${selectedPeriod}`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        setAnalyticsDetails((prev: any) => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setAnalyticsDetails((prev: any) => ({ ...prev, details: response.data, isLoading: false })))
+        .catch((error) => console.error('Fetch error:', error));
+    };
 
 
     const getUserAnalytics = async (period = 7) => {
@@ -100,6 +127,7 @@ const Analytics = () => {
     
     useEffect(() => {
         getUserAnalytics(selectedPeriod);
+        loadAnalyticsDetails();
     }, [selectedPeriod]);
 
     const [darkTheme, setdarkTheme] = useState<any>('');
@@ -144,8 +172,8 @@ const Analytics = () => {
                             <nav className="flex flex-wrap items-center text-base text-gray-400">
                                 <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.OVERVIEW ? 'text-black font-semibold border-b-2 border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.OVERVIEW.toString()}>Overview</a>
                                 <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.CONTENT ? 'text-black font-semibold border-b-2 border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.CONTENT.toString()}>Content</a>
-                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.VIEWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.VIEWERS.toString()}>Viewers</a>
-                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a>
+                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.VIEWERS ? 'text-black font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.VIEWERS.toString()}>Viewers</a>
+                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-black font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a>
                             </nav>
                             <div className="inline-flex lg:justify-end ml-5 lg:ml-0 my-2">
                             <button
@@ -258,15 +286,15 @@ const Analytics = () => {
                         {(() => {
                                 switch (currentTab) {
                                     case ANALYTICSTABS.OVERVIEW:
-                                        return <OverviewTab analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
+                                        return <OverviewTab analyticsDetails={analyticsDetails} analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
                                     case ANALYTICSTABS.CONTENT:
-                                        return <ContentTab isDarkTheme={darkTheme} />
+                                        return <ContentTab isDarkTheme={darkTheme} selectedPeriod={selectedPeriod} key={selectedPeriod} />
                                     case ANALYTICSTABS.VIEWERS:
-                                        return <ViewersTab />
+                                        return <ViewersTab analyticsDetails={analyticsDetails} selectedPeriod={selectedPeriod} />
                                     case ANALYTICSTABS.FOLLOWERS:
-                                        return <FollowersTab />
+                                        return <FollowersTab analyticsDetails={analyticsDetails} selectedPeriod={selectedPeriod} />
                                     default:
-                                        return <OverviewTab analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
+                                        return <OverviewTab analyticsDetails={analyticsDetails} analyticsData={analyticsData} isDarkTheme={!!darkTheme} />
                                 }
                             })()}
                    </div>

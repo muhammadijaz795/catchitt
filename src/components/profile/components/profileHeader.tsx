@@ -239,6 +239,11 @@ const ProfileHeader: FunctionComponent<Props> = ({
                     </div>
 
                     <button
+                     onClick={(e) =>
+                        window.dispatchEvent(
+                          new CustomEvent('openShareMenu', { detail: e.currentTarget })
+                        )
+                      }
                         style={{
                             position: 'relative',
                         }}

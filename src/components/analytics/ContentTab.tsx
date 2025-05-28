@@ -5,19 +5,64 @@ import style from './contentTab.module.scss';
 import { formatCustomDate } from '../../utils/helpers';
 import ReactPaginate from 'react-paginate';
 import PopupForDeleteVideo from '../profile/popups/popupForDeleteVideo';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {CircularProgress, Tabs, Tab, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Avatar, Tooltip } from "@mui/material";
-import { HTML5_FMT } from 'moment';
+// import { HTML5_FMT } from 'moment';
 // import PostsAnalytics from './PostsAnalytics';
+import moment from 'moment';
 
 
 
-function ContentTab({ isDarkTheme }: any) {
+function ContentTab({ isDarkTheme, selectedPeriod }: any) {
+    const [mostViewedPosts, setMostViewedPosts] = useState<any>(
+        {
+            items: [],
+            page: 1,
+            isLoading: false,
+            canLoadMore: true,
+        }
+    );
+
+    const [mostNewViewedPosts, setMostNewViewedPosts] = useState<any>(
+        {
+            items: [],
+            page: 1,
+            isLoading: false,
+            canLoadMore: true,
+        }
+    );
+
+    const [mostLikedPosts, setMostLikedPosts] = useState<any>(
+        {
+            items: [],
+            page: 1,
+            isLoading: false,
+            canLoadMore: true,
+        }
+    );
+
+    const [mostFollowedPosts, setMostFollowedPosts] = useState<any>(
+        {
+            items: [],
+            page: 1,
+            isLoading: false,
+            canLoadMore: true,
+        }
+    );
   
   const [tabValue, setTabValue] = useState(0);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
+
+    const states =
+    [
+        { selectedState: mostViewedPosts, setSelectedState: setMostViewedPosts },
+        { selectedState: mostNewViewedPosts, setSelectedState: setMostNewViewedPosts },
+        { selectedState: mostLikedPosts, setSelectedState: setMostLikedPosts },
+        { selectedState: mostFollowedPosts, setSelectedState: setMostFollowedPosts }
+    ];
+    const { selectedState, setSelectedState} = states[tabValue];
 
   const postData = [
     {
@@ -65,7 +110,7 @@ function ContentTab({ isDarkTheme }: any) {
     { label: "New followers", data: postData },
   ];
 
-  const tabTexts = ["Most views", "Most new viewers", "Most likes", "New followers"];
+  let types = ['viewers', 'new_viewers', 'likes', 'new_followers'];
 
   const abortController = useRef<AbortController | null>(null);
 
@@ -114,14 +159,47 @@ function ContentTab({ isDarkTheme }: any) {
     }
   }
 
+    function loadPosts()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/profile/v2/top-posts?page=${posts.page}&type=${types[tabValue]}&days=${selectedPeriod}`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        if (!selectedState.canLoadMore || selectedState.items.length > 0) return;
+      
+        setSelectedState((prev: any) => ({ ...prev, isLoading: true, canLoadMore: false  }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then(
+            (response) =>
+            {
+                if(response.data.length)
+                {
+                    setSelectedState((prev: any) => ({ ...prev, canLoadMore: true, items: [...prev.items, ...response.data] }));
+                }
+
+                setSelectedState((prev: any) => ({ ...prev, page: prev.page + 1, isLoading: false }));
+            }
+        )
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
   useEffect(() => {
-    fetchPosts();
+    loadPosts()
     return () => {
       if (abortController.current) {
         abortController.current.abort();
       }
     }
-  }, [posts.page]);
+  }, [tabValue]);
   const renderTable = (data: any[]) => (
     <TableContainer sx={{ mt: 2 }}>
   <Table>
@@ -129,7 +207,7 @@ function ContentTab({ isDarkTheme }: any) {
     <TableRow >
       <TableCell sx={{ fontSize: '12px', color: '#0000007A' }}></TableCell>
       <TableCell sx={{ fontSize: '12px', color: '#0000007A' }}>Posts</TableCell>
-      <TableCell align="center" sx={{ fontSize: '12px', color: '#0000007A' }}>Views in the last 7 days</TableCell>
+      <TableCell align="center" sx={{ fontSize: '12px', color: '#0000007A' }}>{types[tabValue].charAt(0).toUpperCase() + types[tabValue].slice(1).replace(/_/g, ' ')} in the last {selectedPeriod} days</TableCell>
       <TableCell align="center" sx={{ fontSize: '12px', color: '#0000007A' }}>All views</TableCell>
       <TableCell align="center" sx={{ fontSize: '12px', color: '#0000007A' }}>Posted on</TableCell>
       <TableCell align="center" sx={{ fontSize: '12px', color: '#0000007A' }}>Action</TableCell>
@@ -139,12 +217,12 @@ function ContentTab({ isDarkTheme }: any) {
     <TableBody>
       {data.map((post, index) => (
         <TableRow className='font-bold' key={index}>
-          <TableCell>1</TableCell>
+          <TableCell>{index + 1}</TableCell>
           <TableCell align="center">
             <Box display="flex" alignItems="center">
               <Avatar
                 variant="square"
-                src={post.thumbnail}
+                src={post.thumbnailUrl}
                 sx={{ width: 56, height: 56, mr: 2 }}
               />
               <Typography variant="body2" fontWeight={600}>
@@ -152,13 +230,15 @@ function ContentTab({ isDarkTheme }: any) {
               </Typography>
             </Box>
           </TableCell>
-          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.viewsLast7Days}</TableCell>
-          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.allViews}</TableCell>
-          <TableCell align="center" sx={{fontWeight: '600'}} >{post.postedOn}</TableCell>
+          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.viewsLast7Days ?? 0}</TableCell>
+          <TableCell align="center"  sx={{fontWeight: '600'}} >{post.views}</TableCell>
+          <TableCell align="center" sx={{fontWeight: '600'}} >{post.postedOn}{moment(post.createdTime).format('D-MM')}</TableCell>
           <TableCell align="center">
+            <Link to={`/analytics/post/${post.mediaId}`} reloadDocument={false} style={{ textDecoration: 'none' }}>
             <Button variant="contained" sx={{backgroundColor: '#F2F2F2', px: 2, boxShadow: 'none', py: 1, color: 'black', textTransform: 'capitalize', fontWeight: '700'}}  size="small">
               View data
             </Button>
+            </Link>
           </TableCell>
         </TableRow>
       ))}
@@ -170,140 +250,8 @@ function ContentTab({ isDarkTheme }: any) {
 
   return (
     <>
-    <div className="p-6 min-h-screen">
-      {/* Header */}
-      {/* <div className="flex justify-between items-center mb-6"> */}
-        {/* <h1 className="text-2xl font-semibold">Manage your posts</h1> */}
-        {/* <input
-          type="text"
-          placeholder="Search for post description"
-          className={`border border-gray-300 rounded-lg p-2 w-64 ${isDarkTheme?'':'bg-white'}`}
-        /> */}
-      {/* </div> */}
-      {/* Filters */}
-      {/* <div className="flex space-x-4 mb-4">
-        <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
-          <option>Sort by</option>
-        </select>
-        <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
-          <option>All video views</option>
-        </select>
-        <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
-          <option>All comments</option>
-        </select>
-        <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
-          <option>All likes</option>
-        </select>
-        <select className={`border border-gray-300 rounded-lg p-2 ${isDarkTheme?'':'bg-white'}`}>
-          <option>All privacy</option>
-        </select>
-      </div> */}
-      {/* Posts Table */}
-      <div className={`${isDarkTheme?'bg-[#181818]':'bg-white'} shadow rounded-lg`}>
-        <table className="w-full text-left">
-          {/* <thead className="border-b text-gray-400">
-            <tr>
-              <th className="p-4">Posts</th>
-              <th className="p-4">Time posted</th>
-              <th className="p-4">Privacy</th>
-              <th className="p-4">Actions</th>
-            </tr>
-          </thead> */}
-          <tbody>
-            {posts.isLoading === false ? posts.items.map((post: any, index: number) => (
-              <tr key={index} className={`border-b ${isDarkTheme?'hover:bg-gray-900':'hover:bg-gray-50'}`}>
-                
-                <td className="p-4 flex items-center space-x-4">
-                  <div className="w-24 h-24 bg-gray-200 rounded overflow-hidden">
-                    <img src={post.thumbnailUrl||'https://placehold.co/67x67'} className='w-full h-full' alt="post-thumbnail" />
-                  </div>
-                  <div className="p-4 w-full">
-                    <p>No description</p>
-                    <span>{formatCustomDate(post.createdTime)}</span>
-                  </div>
-                  <div>
-                    <span>{post.description.length > 30 ? post.description.slice(0, 30) + '...' : ''}</span>
-                    <div className='flex justify-between gap-4 w-60 pr-10'>
-                      <div className="text-gray-400 flex flex-column align-items-center "><img src={isDarkTheme ? playOutlineWhite : playOutline} alt="like" /> {post.views}</div>
-                      <div className="text-gray-400 flex flex-column align-items-center"><img src={isDarkTheme ? heartOutlineWhite : heartOutline} alt="like" /> {post.likes}</div>
-                      <div className="text-gray-400 flex flex-column align-items-center"><img src={isDarkTheme ? commentOutlineWhite : commentOutline} alt="like" /> {post.comments.length}</div>
-                    </div>
-                  </div>
-                </td>
-                {/* <td className="p-4">Nov 3, 2024, 9:57 PM</td> */}
-                {/* write down td in with post createdTime in above time format */}
-                
-                {/* <td className="p-4">
-                  <span className="flex items-center space-x-2">
-                    <span className="w-4 h-4 rounded-full bg-gray-300 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-3 h-3"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 3c3.5 0 7 2.5 7 6s-3.5 6-7 6-7-2.5-7-6 3.5-6 7-6z"
-                        />
-                      </svg>
-                    </span>
-                    Everyone
-                  </span>
-                </td>
-                <td className="p-4">
-                  <div className='h-full flex items-center space-x-6'>
-                    <img onClick={()=>deletePost(post)} className='cursor-pointer h-5' src={isDarkTheme ? deleteVideoIconWhite : deleteVideoIcon} alt="edit" />
-                    <img onClick={()=>navigate(`/analytics/post/${post.mediaId}`)} className='cursor-pointer' src={isDarkTheme ? analyticsOutlineWhite : analyticsOutline} alt="analytics" />
-                    <img onClick={()=>navigate(`/analytics/comment/${post.mediaId}`)} className='cursor-pointer w-5' src={isDarkTheme ? commentOutlineWhite : commentOutlineDark} alt="comments" />
-                  </div>
-                </td> */}
-              </tr>
-            )):
-            <tr>
-              <td colSpan={4} className="text-center p-4"><CircularProgress /></td>
-            </tr>
-            }
-          </tbody>
-        </table>
-        <div className='py-4'>
-          <ReactPaginate
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
-            breakLabel={"..."}
-            pageCount={Math.ceil(posts.totalItems / posts.pageSize)}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={3}
-            onPageChange={(data) => {
-              setPosts((prev: any) => ({ ...prev, page: data.selected + 1, isLoading: true }))
-            }}
-            containerClassName={"pagination justify-content-center"}
-            pageClassName={"page-item"}
-            pageLinkClassName={"page-link"}
-            previousClassName={"page-item"}
-            previousLinkClassName={"page-link"}
-            nextClassName={"page-item"}
-            nextLinkClassName={"page-link"}
-            breakClassName={"page-item"}
-            breakLinkClassName={"page-link"}
-            activeClassName={"active"}
-          />
-        </div>
-      </div>
-      <PopupForDeleteVideo
-        openBlock={Boolean(mediaToDelete)}
-        onBlockClose={() => setMediaToDelete(null)}
-        info={mediaToDelete}
-        darkTheme={!!isDarkTheme}
-        // @ts-ignore
-        userId={{ id: userId, name: '' }}
-      />
-    </div>
-    <Box className="text-left">
-        <h5 className="font-bold text-[19px] flex mb-4 cursor-pointer">
+    <Box className="text-left mt-6">
+        <h5 className="font-semibold text-[19px] flex mb-4 cursor-pointer">
           Your top posts
           <Tooltip slotProps={{
           tooltip: {
@@ -370,13 +318,13 @@ function ContentTab({ isDarkTheme }: any) {
             {tabs[tabValue].label}
           </Typography> */}
 
-            {tabValue === 0 && renderTable(postData)}
-          {tabValue === 1 && renderTable(newViewersData)}
-          {tabValue === 2 && renderTable(mostLikesData)}
-          {tabValue === 3 && renderTable(newFollowersData)}
+            {tabValue === 0 && renderTable(mostViewedPosts.items)}
+          {tabValue === 1 && renderTable(mostNewViewedPosts.items)}
+          {tabValue === 2 && renderTable(mostNewViewedPosts.items)}
+          {tabValue === 3 && renderTable(mostFollowedPosts.items)}
           <Box textAlign={'center'} my={3}>
-          <h5 className='text-lg font-semibold'>No top posts</h5>
-          <p className='text-sm text-[#0000007A]'>Your posts haven't received an increase in likes during the selected period.</p>
+          {!selectedState.isLoading && selectedState.items.length == 0 && <h5 className='text-lg font-semibold'>No top posts</h5>}
+          {/* <p className='text-sm text-[#0000007A]'>Your posts haven't received an increase in likes during the selected period.</p> */}
         </Box>
         </div>
       </Box>

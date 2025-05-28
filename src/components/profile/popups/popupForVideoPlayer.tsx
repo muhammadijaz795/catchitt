@@ -42,7 +42,7 @@ import Forwardusers from '../../../shared/popups/shareTo/Forwardusers';
 import CountUp from 'react-countup';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { set } from 'lodash';
-import { copyLinkHandlerWithId, copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler } from '../../../utils/helpers';
+import { copyLinkHandlerWithId, copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler, logPostStats } from '../../../utils/helpers';
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import PopupForPrivacySettings from './popupForPrivacySettings';
 import { useUpdateEffect } from 'react-use';
@@ -84,7 +84,7 @@ export default function PopupForVideoPlayer({
 
 
     const abortController = useRef<AbortController | null>(null);
-
+    const videoRef = useRef<any>(null);
     // const [selectedVideoId, setSelectedVideoId] = useState<any>(null);
     const [videoLikes, setVideoLikes] = useState<number>(0);
     const [videoComments, setVideoComments] = useState<any>({ items: [], totalItems: null, pageSize: 5, currentPage: 1 });
@@ -345,6 +345,9 @@ export default function PopupForVideoPlayer({
     const saveVideoToggler = async () => {
         if (isUserLoggedIn()) {
             try {
+                isSaved ? setVideoSaves(videoSaves - 1) : setVideoSaves(videoSaves + 1);
+                setIsSaved(!isSaved);
+                
                 const likeUnlikeVideo = await fetch(
                     `${API_KEY}/media-content/collections/${info?.mediaId}`,
                     {
@@ -356,7 +359,8 @@ export default function PopupForVideoPlayer({
                     }
                 );
                 const resp = await likeUnlikeVideo.json();
-                if (resp.message === "Success") {
+                console.log(resp.message);
+                if (resp.status === 200) {
                     fetchMediaById(info?.mediaId);
                 }
                 // fetchMediaById(selectedVideoId);
@@ -475,6 +479,7 @@ export default function PopupForVideoPlayer({
                 }
             );
             const { data } = await fetchMediaResponse.json();
+            console.log('data info',data);
             setIsVideoLoaded(false);
             setUserId(data?.user?._id);
             setName(data?.user?.name);
@@ -756,6 +761,38 @@ export default function PopupForVideoPlayer({
         }
     };
 
+    function addGiftComment(giftId: string)
+    {
+        let endpoint = `${process.env.VITE_API_URL}/media-content/comment/${info?.mediaId}`;
+        let requestOptions =
+        {
+            method: 'POST',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ giftId }),
+        };
+
+        if (addCommentLoading) return;
+        setAddCommentLoading(true);
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then(
+            (response) =>
+                {
+                    setComment('');
+                    showToastSuccess('Comment posted');
+                    setAddCommentLoading(false);
+                    paginateComments(true);
+                    setCommentEmojiIndex(-1);
+                }
+        )
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
     const handleFollowClick = async () => {
         if (!userId) toast.error('Try again later');
         setFollowLoading(true); // Set loading state before API call
@@ -770,6 +807,34 @@ export default function PopupForVideoPlayer({
             setUserIsFollowed(!isFollowed);
         }
         setFollowLoading(false); // Set loading state back to false after API call
+    };
+
+    const [giftsDetails, setGiftsDetails] = useState<any>(
+        {
+          details: [],
+          isLoading: false,
+        }
+    );
+
+    function loadGiftsDetails()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/gift`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        setGiftsDetails((prev: any) => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setGiftsDetails((prev: any) => ({ ...prev, details: response.data, isLoading: false })))
+        .catch((error) => console.error('Fetch error:', error));
     };
 
     const onCloseCleanUp = () => {
@@ -801,6 +866,7 @@ export default function PopupForVideoPlayer({
         setCommentEmojiIndex(-1);
         setPrivacyPrivilege(null);
         onclose();
+        videoRef.current.currentTime && logPostStats({postId: info.mediaId, videoWatchTime: videoRef.current.currentTime});
     };
 
     useEffect(() => {
@@ -826,6 +892,7 @@ export default function PopupForVideoPlayer({
             // paginateComments();
             loadUserProfile();
             fetchMediaById(info?.mediaId);
+            loadGiftsDetails();
         }
     }, [videoModal]);
 
@@ -930,6 +997,7 @@ export default function PopupForVideoPlayer({
                                         <CustomContextMenu
                                             x={contextMenuPosition.x}
                                             y={contextMenuPosition.y}
+                                            post={info}
                                             onClose={handleCloseContextMenu}
                                             onDownload={handleDownload}
                                             onCopyLink={handleCopyLink}
@@ -941,6 +1009,7 @@ export default function PopupForVideoPlayer({
                                     
                                     {/* {info?.templateImage && <img src={info?.templateImage} /> } */}
                                     <video
+                                        ref={videoRef}
                                         className="relative w-3/5 h-full"
                                         loop={true}
                                         controls={true}
@@ -1208,27 +1277,33 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     </div>
                                     {/* recieved gifts section */}
-                                    {/* <div className={style.gifts}>
+                                    <div className={style.gifts}>
                                         <p className={style.receivedGifftsText}>Gifts received</p>
                                         <div>
-                                            <img
-                                                src="../../../../public/images/icons/commentSec/CoinChestPNG.svg"
-                                                alt=""
-                                            />
-                                            <img
-                                                src="../../../../public/images/icons/commentSec/CrystalPNG.svg"
-                                                alt=""
-                                            />
-                                            <img src="../../../../public/images//icons/commentSec/Gift2.svg" alt="" />
-                                            <img src="../../../../public/images/icons/commentSec/Mjolnir.svg" alt="" />
-                                            <img
-                                                src="../../../../public/images/icons/commentSec/RamdanLantern.svg"
-                                                alt=""
-                                            />
-                                            <img src="../../../../public/images/icons/commentSec/Roses.svg" alt="" />
-                                            <img src="../../../../public/images/icons/commentSec/StarPNG.svg" alt="" />
+                                        {giftsDetails.details.map((item: any) => {
+                                            const isVideo = item.imageUrl?.endsWith('.mp4') || item.imageUrl?.endsWith('.webm') || item.imageUrl?.endsWith('.ogg');
+
+                                            return isVideo ? (
+                                                <video
+                                                key={item._id}
+                                                src={item.imageUrl + '#t=0.1'}
+                                                muted
+                                                controls={false}
+                                                onClick={() => addGiftComment(item._id)}
+                                                />
+                                            ) : (
+                                                <img
+                                                src={item.imageUrl}
+                                                alt={item.name}
+                                                key={item._id}
+                                                onClick={() => addGiftComment(item._id)}
+                                                />
+                                            );
+                                            })}
+
+
                                         </div>
-                                    </div> */}
+                                    </div>
                                     {/* Comment and creator video tab */}
                                     <div className="flex flex-row justify-center items-center mt-2.5 w-full px-3">
                                         <div
@@ -1258,7 +1333,7 @@ export default function PopupForVideoPlayer({
                                     </div>
 
                                     {/* All comments section */}
-                                    {Boolean(privacyPrivilege)? privacyPrivilege?.privacyOptions?.allowComments?<InfiniteScroll
+                                    {Boolean(info)? info?.privacyOptions?.allowComments?<InfiniteScroll
                                         dataLength={videoComments?.items?.length}
                                         next={paginateComments}
                                         hasMore={videoComments.items.length < videoComments?.totalItems || videoComments?.totalItems === null}
@@ -1855,7 +1930,7 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     )} */}
                                     {/* Add comment section */}
-                                    {privacyPrivilege?.privacyOptions?.allowComments && <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{ zIndex: 99 }}>
+                                    {info?.privacyOptions?.allowComments && <div className="py-3 border-t border-t-[#252525] cursor-pointer gap-2.5 w-[37%] px-6   bottom-0 fixed right-0 bg-[#121212]" style={{ zIndex: 99 }}>
                                          <div className="flex flex-row items-center">
                                             <div
                                                 className={`bg-[#FFFFFF1F] flex flex-row items-center justify-between border-[0.063rem] border-transparent ${isUserLoggedIn()

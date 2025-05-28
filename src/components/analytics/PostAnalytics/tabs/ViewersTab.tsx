@@ -132,7 +132,7 @@ const CardHeader = ({ title }: { title: string }) => (
   </Box>
 );
 
-const ViewersTab = ({isDarkTheme}: any) => {
+const ViewersTab = ({postAnalyticsDetails, isDarkTheme}: any) => {
   return (
     <Box sx={{ width: 'calc(100% - 14rem)', textAlign: 'left', px: 3, mt: 4 }}>
       <Grid container spacing={3}>
@@ -163,10 +163,10 @@ const ViewersTab = ({isDarkTheme}: any) => {
               {/* Returning vs new */}
               <Box mb={3}>
                 <Box display="flex" justifyContent="space-between">
-                  <Typography>{dash}</Typography>
-                  <Typography>{value}%</Typography>
+                  <Typography>{postAnalyticsDetails?.details?.viewerTypePercentages?.returning_viewer}</Typography>
+                  <Typography>{postAnalyticsDetails?.details?.viewerTypePercentages?.new_viewer}</Typography>
                 </Box>
-                <PlaceholderLinear value={value} />
+                <PlaceholderLinear value={parseInt(postAnalyticsDetails?.details?.viewerTypePercentages?.returning_viewer)} />
                 <Box display="flex" justifyContent="space-between" mt={0.5}>
                   <Typography fontSize={13}>Returning viewers</Typography>
                   <Typography fontSize={13}>New viewers</Typography>
@@ -176,10 +176,10 @@ const ViewersTab = ({isDarkTheme}: any) => {
               {/* Followers vs non‑followers */}
               <Box>
                 <Box display="flex" justifyContent="space-between">
-                  <Typography>{dash}</Typography>
-                  <Typography>0%</Typography>
+                  <Typography>{postAnalyticsDetails?.details?.viewerTypePercentages?.follower}</Typography>
+                  <Typography>{postAnalyticsDetails?.details?.viewerTypePercentages?.non_follower}</Typography>
                 </Box>
-                <PlaceholderLinear value={0} />
+                <PlaceholderLinear value={parseInt(postAnalyticsDetails?.details?.viewerTypePercentages?.follower)} />
                 <Box display="flex" justifyContent="space-between" mt={0.5}>
                   <Typography fontSize={13}>Followers</Typography>
                   <Typography fontSize={13}>Non‑followers</Typography>
@@ -193,7 +193,7 @@ const ViewersTab = ({isDarkTheme}: any) => {
             <CardHeader title="Age" />
             <Box sx={{ p: 2 }}>
               <Typography color="text.secondary" fontSize={14} mb={2}>
-                Data will show when video views reach 100
+                You’ll be able to see this information once there’s enough data for analysis.
               </Typography>
 
               {Array.from({ length: 6 }).map((_, i) => (
@@ -214,25 +214,29 @@ const ViewersTab = ({isDarkTheme}: any) => {
           {/* Gender */}
           <Paper variant="outlined" sx={{ mb: 3 }}>
             <CardHeader title="Gender" />
-            <Typography color="text.secondary" fontSize={14} m={2}>
+            {/* <Typography color="text.secondary" fontSize={14} m={2}>
                 Data will show when video views reach 100
-              </Typography>
+              </Typography> */}
             <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 3, mt: 2, p: 3 }}>
               <ArcGauge percent={0} />
               {/* legend */}
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 1 }}>
-                {[0, 1, 2].map((i) => (
+              {[
+                { label: "Male", value: postAnalyticsDetails?.details?.genderPercentages?.male, color: 'primary.dark' },
+                { label: "Female", value: postAnalyticsDetails?.details?.genderPercentages?.female, color: 'primary.main' },
+                { label: "Other", value: postAnalyticsDetails?.details?.genderPercentages?.other, color: 'primary.light' }
+              ].map((item, i) => (
                   <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1,  }}>
                     <Box sx={{
                         width: 8,
                         height: 8,
                         borderRadius: 1,
-                        bgcolor:
-                          i === 0 ? 'primary.dark' : i === 1 ? 'primary.main' : 'primary.light',}}
+                        bgcolor: item.color,
+                          }}
                     />
-                    <Typography fontSize={14}>{dash}</Typography>
+                    <Typography fontSize={14}>{item.label}</Typography>
                     <Typography sx={{ ml: 8 }} fontSize={14}>
-                      ‑%
+                      {item.value}
                     </Typography>
                   </Box>
                 ))}
@@ -244,17 +248,18 @@ const ViewersTab = ({isDarkTheme}: any) => {
           <Paper variant="outlined">
             <CardHeader title="Locations" />
             <Box sx={{ p: 2 }}>
+            {(!postAnalyticsDetails?.details?.countryPercentages || Object.values(postAnalyticsDetails.details.countryPercentages).every(p => p === "0%")) && (
               <Typography color="text.secondary" fontSize={14} mb={2}>
-                Data will show when video views reach 100
+                You’ll be able to see this information once there’s enough data for analysis.
               </Typography>
-
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Box key={i} mb={2}>
+              )}
+              {Object.entries(postAnalyticsDetails?.details?.countryPercentages).map(([country, percentage]) => (
+                <Box key={country} mb={2}>
                   <Box display="flex" justifyContent="space-between">
-                    <Typography>{dash}</Typography>
-                    <Typography>‑%</Typography>
+                    <Typography>{country.charAt(0).toUpperCase() + country.slice(1).replace(/_/g, ' ')}</Typography>
+                    <Typography>{percentage as React.ReactNode}</Typography>
                   </Box>
-                  <PlaceholderLinear value={0} />
+                  <PlaceholderLinear value={parseFloat(percentage as string)} />
                 </Box>
               ))}
             </Box>

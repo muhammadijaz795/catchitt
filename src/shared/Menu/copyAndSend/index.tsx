@@ -4,6 +4,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
+import {useEffect} from 'react';
 import {
     copyLink,
     send,
@@ -22,6 +23,7 @@ const options = ['View profile', 'Make admin', 'Remove from group', 'Block', 'Re
 export default function COPY_AND_SEND_MENU({ setIsEmbedModalOpen, copyHandler, BASE_URL_FRONTEND, profileData, userName }: any) {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const [isDarkTheme, setIsDarkTheme] = React.useState<boolean>(false);
 
@@ -35,6 +37,42 @@ export default function COPY_AND_SEND_MENU({ setIsEmbedModalOpen, copyHandler, B
         setSelectedIndex(index);
         setAnchorEl(null);
     };
+
+    
+    useEffect(() => {
+        const handleTrigger = (event: any) => {
+          const buttonEl = event.detail;
+      
+          // Toggle: If already open with same anchor, close it
+          if (anchorEl === buttonEl) {
+            setAnchorEl(null);
+          } else {
+            setAnchorEl(buttonEl);
+          }
+        };
+      
+        window.addEventListener('openShareMenu', handleTrigger);
+      
+        return () => {
+          window.removeEventListener('openShareMenu', handleTrigger);
+        };
+      }, [anchorEl]);
+
+      useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+          if (anchorEl && !anchorEl.contains(event.target as Node)) {
+            setAnchorEl(null);
+          }
+        };
+      
+        if (anchorEl) {
+          document.addEventListener('mousedown', handleClickOutside);
+        }
+      
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, [anchorEl]);
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -121,7 +159,7 @@ export default function COPY_AND_SEND_MENU({ setIsEmbedModalOpen, copyHandler, B
         >
             <ThemeProvider theme={isDarkTheme ? darkThemePalette : lightThemePalette}>
 
-                <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper' }}>
+                <List component="nav" aria-label="Device settings" sx={{ bgcolor: 'background.paper', width: '100%', height: '100%' }}>
                     <ListItemButton
                         id="lock-button"
                         aria-haspopup="listbox"
@@ -129,7 +167,7 @@ export default function COPY_AND_SEND_MENU({ setIsEmbedModalOpen, copyHandler, B
                         //   aria-label="when device is locked"
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClickListItem}
-                        style={{ background: 'transparent' }}
+                        style={{ background: 'transparent', width: '100%', height: '100%' }}
                     ></ListItemButton>
                 </List>
                 <StyledMenu

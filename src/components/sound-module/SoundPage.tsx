@@ -13,7 +13,7 @@ import { useUpdateEffect } from 'react-use';
 import { useNavigate, useParams } from 'react-router-dom';
 import Gifts from '../discover/popups/gifts';
 import VideoPanel from '../discover/components/videoPanel';
-import { isValidDocId } from '../../utils/helpers';
+import { isValidDocId, logPostStats } from '../../utils/helpers';
 import { ClickAwayListener, IconButton, Tooltip } from '@mui/material';
 import { TopBar } from '../top-bar/top-bar';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
@@ -24,7 +24,6 @@ import ShareClicked from '../sounds-page/svg-components/shareClicked.png';
 import Share from '../sounds-page/svg-components/Default.png';
 import styles from '../sounds-page/sound-page.module.scss';
 import COPY_AND_SEND_MENU_MULTIPLE from '../../shared/Menu/copyAndSendForMultiple';
-
 import MORE_MENU_HOME from '../../shared/Menu/more/ReportMenu';
 
 
@@ -45,7 +44,6 @@ export default function SoundPage() {
     const [soundData, setSoundData] = useState<any>();
     const [linkCopied, setLinkCopied] = useState(false);
     const [isOpenShare, setIsOpenShare] = useState(false);
-
     // theme
     const [darkTheme, setdarkTheme] = useState('');
 
@@ -105,10 +103,10 @@ export default function SoundPage() {
         }
     }
 
-
     const openVideoModal = (video: any) => {
         setVideoModalInfo(video);
         setVideoModal(true);
+        logPostStats({postId: video.mediaId, trafficSource: "sound_pages"});
     };
 
     useEffect(() => {

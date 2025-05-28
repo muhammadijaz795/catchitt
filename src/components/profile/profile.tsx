@@ -33,6 +33,7 @@ import PopupForEditVideo from './popups/popupForEditVideo';
 import EmbedSharePopup from '../../shared/components/EmbedSharePopup';
 import { activeLike, commentWhite, likeWhite, musicBlack, shareWhite } from '../../icons';
 import { showToastSuccess, STATUS_CODE } from '../../utils/constants';
+import { logPostStats } from '../../utils/helpers';
 
 export const Profile = (props: any) => {
     const [activeSort, setActiveSort] = useState('latest');
@@ -134,6 +135,7 @@ export const Profile = (props: any) => {
     };
 
     const onVideoModal = (video: any) => {
+        logPostStats({postId: video.mediaId, trafficSource: "profile_pages"});
         setVideoModal(!videoModal);
         setVideoModalInfo(video);
         markVideoDisplayed(video?.mediaId);

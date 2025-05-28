@@ -267,7 +267,7 @@ function DiscoverLive() {
                   </Typography> */}
               </Box>
               <Grid container spacing={2}>
-                  {streams.map((stream: any) => (
+                  {(streams as any[]).map((stream: any) => (
                       <Grid item xs={12} sm={6} md={4} key={stream._id}>
                         <Link to={`/golive?streamId=${stream.id}`} reloadDocument={false} style={{ textDecoration: 'none' }}>
                           <LiveStreamCard stream={stream} />
