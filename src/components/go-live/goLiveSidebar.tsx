@@ -257,7 +257,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                     <img className="w-40 px-3" src={logo} alt="" />
                 )}
             </div>
-                <div className='flex gap-2 items-center cursor-pointer px-3 pt-4 pb-2' >
+                <div className='flex gap-2 items-center cursor-pointer px-3 pt-4 pb-2' onClick={() => navigate(-1)}>
                     <span>
                     <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12.0508" cy="13.0195" r="12.0508" fill="#F2F2F2"/>
