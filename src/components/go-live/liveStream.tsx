@@ -35,6 +35,21 @@ const LiveStreaming = ({posts}: any) => {
         aspectRatio: '832 / 382', // Maintain original ratio
       }}
     >
+      {!currentVideo ? (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+          }}
+        >
+          <Typography variant="h6">No LIVE streams for you yet</Typography>
+        </Box>
+      ) : (
+      <>
       {/* Background image / video */}
       <Box
         sx={{
@@ -155,6 +170,8 @@ const LiveStreaming = ({posts}: any) => {
         </svg>
         </IconButton>
       </Box>
+      </>
+    )}
     </Box>
   );
 };
