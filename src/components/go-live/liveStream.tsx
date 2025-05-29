@@ -37,17 +37,39 @@ const LiveStreaming = ({posts}: any) => {
     >
       {!currentVideo ? (
         <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-          }}
-        >
-          <Typography variant="h6">No LIVE streams for you yet</Typography>
-        </Box>
+                      sx={{
+                        minHeight: "90vh",
+                        backgroundColor: "#0f0f0f",
+                        color: "white",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        minWidth: "100%",
+                      }}
+                    >
+                      <Typography variant="h6" fontWeight="bold" mb={1}>
+                        No LIVE streams for you yet
+                      </Typography>
+                      <Typography variant="body2" color="#aaa" mb={3}>
+                        Go back to explore more videos
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: "#2c2c2c",
+                          color: "white",
+                          textTransform: "none",
+                          fontWeight: "bold",
+                          "&:hover": {
+                            backgroundColor: "#3a3a3a",
+                          },
+                        }}
+                      >
+                        Go back
+                      </Button>
+                    </Box>
       ) : (
       <>
       {/* Background image / video */}

@@ -1169,6 +1169,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     <Typography color="white" align="center" height="100%" >
                       Video Player Area
                     </Typography>
+                    
 
                     {/* Gift Bar */}
                     <Box sx={{ position: 'absolute', bottom: 0, width: '100%', bgcolor: '#111', p: 1, display: 'flex', justifyContent: 'space-around' }}>
