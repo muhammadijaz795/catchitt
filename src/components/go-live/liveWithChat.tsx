@@ -1579,7 +1579,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                     border: '2px solid rgba(245, 214, 151, 1)',
                                                     }}
                                                 />
-                                                <Typography fontSize={13} fontWeight={600} mt={0.5}>
+                                                <Typography onClick={handleToggle}
+ fontSize={13} fontWeight={600} mt={0.5}>
                                                     Alinuska
                                                 </Typography>
                                                 <Box display="flex" justifyContent="center" alignItems="center" mt={0.2}>
@@ -1588,7 +1589,61 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                     </Box>
                                                     <Typography fontSize={13}>1</Typography>
                                                 </Box>
+                                                            <Menu
+                                                                anchorEl={anchorElProfile}
+                                                                open={openProfile}
+                                                                onClose={handleCloseProfile}
+                                                                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                                                                transformOrigin={{ vertical: "top", horizontal: "left" }}
+                                                                PaperProps={{
+                                                                elevation: 3,
+                                                                sx: {
+                                                                    width: 300,
+                                                                    borderRadius: 2,
+                                                                    p: 2,
+                                                                    overflow: "visible",
+                                                                },
+                                                                }}
+                                                            >
+                                                                <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                                    <Box display="flex" alignItems="center">
+                                                                    <Avatar
+                                                                        src="https://i.pravatar.cc/40"
+                                                                        alt="Profile"
+                                                                        sx={{ width: 40, height: 40, mr: 1 }}
+                                                                    />
+                                                                    <Box>
+                                                                        <Typography fontWeight="bold">prihartono20</Typography>
+                                                                        <Typography variant="body2" color="text.secondary">
+                                                                        PRIHARTONO
+                                                                        </Typography>
+                                                                    </Box>
+                                                                    </Box>
+                                                                    <IconButton size="small" onClick={handleCloseProfile}>
+                                                                    <CloseIcon />
+                                                                    </IconButton>
+                                                                </Box>
 
+                                                                <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
+                                                                    <Typography fontWeight="bold">269</Typography>
+                                                                    <Typography color="text.secondary">Followers</Typography>
+                                                                    <Typography fontWeight="bold">33</Typography>
+                                                                    <Typography color="text.secondary">Likes</Typography>
+                                                                </Box>
+
+                                                                <Box display="flex" gap={2}>
+                                                                    <Button
+                                                                    fullWidth
+                                                                    variant="contained"
+                                                                    sx={{ bgcolor: "#ff2d55", "&:hover": { bgcolor: "#e6264f" } }}
+                                                                    >
+                                                                    Follow
+                                                                    </Button>
+                                                                    <Button fullWidth variant="outlined">
+                                                                    Report
+                                                                    </Button>
+                                                                </Box>
+                                                            </Menu>
 
 
                                         </Box>
@@ -1769,7 +1824,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                       </g>
                                     </svg>
                               </Box>       */}
-                            <Box sx={{ px: 2, py: 1, height: 'calc(100vh - 14.5rem)', overflowY: 'auto' }}>
+                            <Box sx={{  height: 'calc(100vh - 14.5rem)', overflowY: 'auto' }}>
                                       <Box sx={{ px: 2, py: 1, height: 'calc(100vh - 14.5rem)', overflowY: 'auto' }}>
                                         <>
                                           {messages && messages.map((msg: any) => (
@@ -1786,9 +1841,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                               }}
                                             >
                                               
-                                              <Avatar src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
+                                              <Avatar onClick={handleToggle} src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
                                               <Box flex="1" sx={{textAlign: 'left', wordBreak: 'break-word'}}>
-                                                <Typography fontSize={13} fontWeight={600}>{msg.name}</Typography>
+                                                <Typography  fontSize={13} fontWeight={600}>{msg.name}</Typography>
                                                 <Typography fontSize={13}>{msg.text}</Typography>
                                               </Box>
 
@@ -1804,6 +1859,61 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                               >
                                                 <MoreVertIcon fontSize="small" />
                                               </IconButton> */}
+                                              <Menu
+                                                        anchorEl={anchorElProfile}
+                                                        open={openProfile}
+                                                        onClose={handleCloseProfile}
+                                                        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                                                        transformOrigin={{ vertical: "top", horizontal: "left" }}
+                                                        PaperProps={{
+                                                        elevation: 3,
+                                                        sx: {
+                                                            width: 300,
+                                                            borderRadius: 2,
+                                                            p: 2,
+                                                            overflow: "visible",
+                                                        },
+                                                        }}
+                                                    >
+                                                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                            <Box display="flex" alignItems="center">
+                                                            <Avatar
+                                                                src="https://i.pravatar.cc/40"
+                                                                alt="Profile"
+                                                                sx={{ width: 40, height: 40, mr: 1 }}
+                                                            />
+                                                            <Box>
+                                                                <Typography fontWeight="bold">prihartono20</Typography>
+                                                                <Typography variant="body2" color="text.secondary">
+                                                                PRIHARTONO
+                                                                </Typography>
+                                                            </Box>
+                                                            </Box>
+                                                            <IconButton size="small" onClick={handleCloseProfile}>
+                                                            <CloseIcon />
+                                                            </IconButton>
+                                                        </Box>
+
+                                                        <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
+                                                            <Typography fontWeight="bold">269</Typography>
+                                                            <Typography color="text.secondary">Followers</Typography>
+                                                            <Typography fontWeight="bold">33</Typography>
+                                                            <Typography color="text.secondary">Likes</Typography>
+                                                        </Box>
+
+                                                        <Box display="flex" gap={2}>
+                                                            <Button
+                                                            fullWidth
+                                                            variant="contained"
+                                                            sx={{ bgcolor: "#ff2d55", "&:hover": { bgcolor: "#e6264f" } }}
+                                                            >
+                                                            Follow
+                                                            </Button>
+                                                            <Button fullWidth variant="outlined">
+                                                            Report
+                                                            </Button>
+                                                        </Box>
+                                                    </Menu>
 
                                               <Box
                                                 className="options-button"
@@ -1862,67 +1972,61 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
 
                                         {/* <Box display="flex" alignItems="flex-start" mb={1}>
                                             <Avatar  onClick={handleToggle} src="https://i.pravatar.cc/50?img=2" sx={{ width: 24, height: 24, mr: 1 }} />
+                                                    <Menu
+                                                        anchorEl={anchorElProfile}
+                                                        open={openProfile}
+                                                        onClose={handleCloseProfile}
+                                                        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                                                        transformOrigin={{ vertical: "top", horizontal: "left" }}
+                                                        PaperProps={{
+                                                        elevation: 3,
+                                                        sx: {
+                                                            width: 300,
+                                                            borderRadius: 2,
+                                                            p: 2,
+                                                            overflow: "visible",
+                                                        },
+                                                        }}
+                                                    >
+                                                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                            <Box display="flex" alignItems="center">
+                                                            <Avatar
+                                                                src="https://i.pravatar.cc/40"
+                                                                alt="Profile"
+                                                                sx={{ width: 40, height: 40, mr: 1 }}
+                                                            />
+                                                            <Box>
+                                                                <Typography fontWeight="bold">prihartono20</Typography>
+                                                                <Typography variant="body2" color="text.secondary">
+                                                                PRIHARTONO
+                                                                </Typography>
+                                                            </Box>
+                                                            </Box>
+                                                            <IconButton size="small" onClick={handleCloseProfile}>
+                                                            <CloseIcon />
+                                                            </IconButton>
+                                                        </Box>
 
-                                                           <Menu
-                                                                anchorEl={anchorElProfile}
-                                                                open={openProfile}
-                                                                onClose={handleCloseProfile}
-                                                                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                                                                transformOrigin={{ vertical: "top", horizontal: "left" }}
-                                                                PaperProps={{
-                                                                elevation: 3,
-                                                                sx: {
-                                                                    width: 300,
-                                                                    borderRadius: 2,
-                                                                    p: 2,
-                                                                    overflow: "visible",
-                                                                },
-                                                                }}
+                                                        <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
+                                                            <Typography fontWeight="bold">269</Typography>
+                                                            <Typography color="text.secondary">Followers</Typography>
+                                                            <Typography fontWeight="bold">33</Typography>
+                                                            <Typography color="text.secondary">Likes</Typography>
+                                                        </Box>
+
+                                                        <Box display="flex" gap={2}>
+                                                            <Button
+                                                            fullWidth
+                                                            variant="contained"
+                                                            sx={{ bgcolor: "#ff2d55", "&:hover": { bgcolor: "#e6264f" } }}
                                                             >
-                                                                <Box display="flex" justifyContent="space-between" alignItems="center">
-                                                                    <Box display="flex" alignItems="center">
-                                                                    <Avatar
-                                                                        src="https://i.pravatar.cc/40"
-                                                                        alt="Profile"
-                                                                        sx={{ width: 40, height: 40, mr: 1 }}
-                                                                    />
-                                                                    <Box>
-                                                                        <Typography fontWeight="bold">prihartono20</Typography>
-                                                                        <Typography variant="body2" color="text.secondary">
-                                                                        PRIHARTONO
-                                                                        </Typography>
-                                                                    </Box>
-                                                                    </Box>
-                                                                    <IconButton size="small" onClick={handleCloseProfile}>
-                                                                    <CloseIcon />
-                                                                    </IconButton>
-                                                                </Box>
-
-                                                                <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
-                                                                    <Typography fontWeight="bold">269</Typography>
-                                                                    <Typography color="text.secondary">Followers</Typography>
-                                                                    <Typography fontWeight="bold">33</Typography>
-                                                                    <Typography color="text.secondary">Likes</Typography>
-                                                                </Box>
-
-                                                                <Box display="flex" gap={2}>
-                                                                    <Button
-                                                                    fullWidth
-                                                                    variant="contained"
-                                                                    sx={{ bgcolor: "#ff2d55", "&:hover": { bgcolor: "#e6264f" } }}
-                                                                    >
-                                                                    Follow
-                                                                    </Button>
-                                                                    <Button fullWidth variant="outlined">
-                                                                    Report
-                                                                    </Button>
-                                                                </Box>
-                                                            </Menu>
-
-
-
-
-
+                                                            Follow
+                                                            </Button>
+                                                            <Button fullWidth variant="outlined">
+                                                            Report
+                                                            </Button>
+                                                        </Box>
+                                                    </Menu>
                                             <Box>
                                                 <Typography fontSize={13} fontWeight={600}>Mk6</Typography>
                                                 <Typography fontSize={13}>Uai</Typography>
