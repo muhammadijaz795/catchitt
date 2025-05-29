@@ -188,6 +188,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
     const [isImageModalOpen, setIsImageModalOpen] = useState(false); 
     const [isDivVisible, setIsDivVisible] = useState(false);
     const [messageType, setMessageType] = useState('text');
+    const loggedInUserId = localStorage.getItem('userId');
 
     useEffect(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -528,7 +529,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           setNewJoiner(data);
           setTimeout(()=>{
             setNewJoiner(null);
-          },5000)
+          },10000)
           console.log(`Received message of joinedliveStreamRoom: ${JSON.stringify(data)}`);
           // handleNewMessage(data); // Handle the incoming message
         });
@@ -774,7 +775,7 @@ const [flyingGifts, setFlyingGifts] = useState<any[]>([]);
     // Remove the animated gift after 5 seconds
     setTimeout(() => {
       setFlyingGifts(prev => prev.filter(g => g.flyingId !== flyingId));
-    }, 50000);
+    }, 5000);
   };
 
 const renderGiftRow = (gifts: any[]) => (
@@ -1111,7 +1112,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     )}
                     </Stack>
                 </Box>
-                <Box sx={{ width: '100%', height: '95%', background:'grey' }}>
+                <Box sx={{ width: '100%', height: '95%', background:'black' }}>
                     {/* Placeholder for Video */}
                     <Typography color="white" align="center" >
                     Video Player Area
@@ -1929,9 +1930,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                               mb: 2,
                                           }}
                                         >
-                                          {newJoiner && <Typography fontSize={12} color="text.secondary">🌿 {(newJoiner as {name: string}).name} joined</Typography>}
+                                        {newJoiner && <Typography fontSize={12} color="text.secondary">🌿 {(newJoiner as {name: string}).name} joined</Typography>}
                                         <Typography fontSize={12} fontWeight={500}>
-                                        {newJoiner && <>💲 Welcome to Seezitt LIVE! Have fun interacting with others in real time. Creators must be 18 or older to go LIVE. Viewers must be 18 or older to recharge and send Gifts. Remember to follow our Community Guidelines.</>}
+                                        {newJoiner && (newJoiner as { from: string })?.from == loggedInUserId && <>💲 Welcome to Seezitt LIVE! Have fun interacting with others in real time. Creators must be 18 or older to go LIVE. Viewers must be 18 or older to recharge and send Gifts. Remember to follow our Community Guidelines.</>}
                                         </Typography>
                                         
                                         </Box>}
