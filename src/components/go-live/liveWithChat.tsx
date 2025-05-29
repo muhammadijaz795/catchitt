@@ -267,6 +267,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
       console.log(localStorage.getItem('token'));
       console.log('profileData', profileData);
       const userData = {
+        userId: profileData?._id || '',
         userFullName: profileData?.name || '',
         name: profileData?.name,
         userName: profileData?.username, 
@@ -456,8 +457,10 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
   useEffect(() => {
     const joinRoom = () => {
       if (!profileData) return;
+      console.log('profileData',profileData);
   
       const joinLiveStreamRoom = {
+        userId: profileData?._id || '',
         liveStreamRoomId: streamIdFromUrl || '',
         accessToken: token ?? '',
         userFullName: profileData?.name || '',
@@ -1311,8 +1314,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     //   console.log('Joined new room response:', response);
                                     // });
 
-                                    let joinLiveStreamRoom: { id: string, userFullName:string, userEmail:string, liveStreamRoomId: string; accessToken: string; name?: string; userName?: string; email?: string; userImage?: string } = {
-                                       id: stream.id,
+                                    let joinLiveStreamRoom: { userId: string, id: string, userFullName:string, userEmail:string, liveStreamRoomId: string; accessToken: string; name?: string; userName?: string; email?: string; userImage?: string } = {
+                                      id: stream.id,
+                                      userId: profileData?._id || '',
                                       liveStreamRoomId: streamId,
                                       accessToken: token ?? '',
                                       userFullName: profileData?.name || '',
