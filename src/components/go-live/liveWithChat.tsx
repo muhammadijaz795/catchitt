@@ -923,7 +923,6 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
   return (
 
         <Box className={`${darkTheme}`} sx={{display: 'flex', flexDirection: 'column' }}>
-          <GamingLiveUI />
           {/* Main Content Grid */}
           <Grid container sx={{ display: 'flex',}}>
             
@@ -1117,8 +1116,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                 </Box>
                 <Box sx={{ width: '100%', height: '95%', background:'black' }}>
                     {/* Placeholder for Video */}
-                    <Typography color="white" align="center" >
-                    Video Player Area
+                    <Typography color="white" align="center" height="100%" >
+                      Video Player Area
                     </Typography>
 
                     {/* Gift Bar */}
