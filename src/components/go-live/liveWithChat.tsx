@@ -45,6 +45,7 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import  styles  from './GoLive.module.scss';
 import { caesium,defaultGreyBackground } from '../../icons';
+import { abs } from 'mathjs';
 
 
 
@@ -924,7 +925,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
           <Grid container sx={{ display: 'flex',}}>
             
             {/* Video Section */}
-            <Grid item sx={{ position: 'relative',
+            <Grid item sx={{ height: '100vh', position: 'relative',
                 width: showSidebar ? "calc(100% - 20rem)" : "100%",
                 transition: "width 0.4s ease", }}>
                 {selectedLiveVideo?.details && (
@@ -1111,7 +1112,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     )}
                     </Stack>
                 </Box>
-                <Box sx={{ width: '100%', height: '95%', background:'grey' }}>
+                <Box sx={{ width: '100%', height: '90%', background:'grey' }}>
                     {/* Placeholder for Video */}
                     <Typography color="white" align="center" >
                     Video Player Area
@@ -1126,7 +1127,6 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     borderRadius: 2,
                                     p: 0.5,
                                     width: '100%',
-                                    maxWidth: 1100,
                                     mx: 'auto',
                                 }}
                                 >
@@ -1170,8 +1170,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                             elevation: 4,
                                             sx: {
                                                 pt: 1,
-                                                mt: 1,
-                                                borderRadius: 2,
+                                                mt: -2.25,
+                                                borderRadius: 1,
                                                 minWidth: 350,
                                                 maxHeight: 300,
                                                 overflowY: 'auto',
@@ -1250,7 +1250,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                 </>
                 )}
                 <Box sx={{px: 2}}>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mt={3} mb={2}>
                         <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                         Recommended LIVE videos
                         </Typography>
@@ -1296,8 +1296,6 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     (socketRef.current as any).emit('joinLiveStreamRoom', joinLiveStreamRoom, (response: any) => {
                                       console.log('Joined live stream room response:', response);
                                     });
-
-
                                     setSelectedLiveVideo((prev: any) => ({ ...prev, details: stream }));
                                     // Navigate to the new stream page
                                     navigate(`/golive?streamId=${streamId}`);
@@ -1313,7 +1311,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
             </Grid>
             {/* Right Sidebar */}
             {showSidebar &&(
-            <Grid item  sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', maxWidth: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
+            <Grid item  sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
               <Box
                 sx={{
                     bgcolor: '#fff',
@@ -1657,10 +1655,35 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                             </Box>
 
                             <Box sx={{ bgcolor: '#fff', height: '100%', fontFamily: 'sans-serif' }}>
-                                    </Box>
-                                    
-                                    <Box sx={{ px: 2, py: 1, maxHeight: 'calc(100vh - 17.5rem)', overflowY: 'auto' }}>
-                                      <Box sx={{ px: 2, py: 1, maxHeight: 'calc(100vh - 17.5rem)', overflowY: 'auto' }}>
+                            </Box>
+                              <Box className='cursor-pointer absolute bottom-20 bg-white h-16 flex items-center justify-center w-16 shadow-xl rounded-full right-3 '>
+                                  <svg style={{ transform:' scale(1.25)'}} width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <defs>
+                                        <filter id="filter0_d_2018_18602" x="0" y="0" width="80" height="80" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                          <feOffset dy="2"/>
+                                          <feGaussianBlur stdDeviation="4"/>
+                                          <feComposite in2="hardAlpha" operator="out"/>
+                                          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0"/>
+                                          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2018_18602"/>
+                                          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2018_18602" result="shape"/>
+                                        </filter>
+                                        <linearGradient id="paint0_linear_2018_18602" x1="39.9999" y1="25" x2="39.9999" y2="54.9843" gradientUnits="userSpaceOnUse">
+                                          <stop stop-color="#CF4C49"/>
+                                          <stop offset="1" stop-color="#CE201B"/>
+                                        </linearGradient>
+                                      </defs>
+
+                                      <g filter="url(#filter0_d_2018_18602)">
+                                        <rect x="8" y="6" width="64" height="64" rx="32" fill="white" fill-opacity="0.75" shape-rendering="crispEdges"/>
+                                        <rect x="8.5" y="6.5" width="63" height="63" rx="31.5" stroke="#F2F2F2" shape-rendering="crispEdges"/>
+                                        <path d="M40.6499 54.7851C40.458 54.9149 40.2316 54.9843 39.9999 54.9843C39.7682 54.9843 39.5418 54.9149 39.3499 54.7851C36.2733 52.7301 23.3333 43.5851 23.3333 34.9567C23.3333 23.8234 36.4166 22.04 39.9999 29.5401C43.5833 22.04 56.6666 23.8234 56.6666 34.9567C56.6666 43.5867 43.7266 52.7301 40.6499 54.7817V54.7851Z" fill="url(#paint0_linear_2018_18602)"/>
+                                      </g>
+                                    </svg>
+                              </Box>      
+                            <Box sx={{ px: 2, py: 1, height: 'calc(100vh - 14.5rem)', overflowY: 'auto' }}>
+                                      <Box sx={{ px: 2, py: 1, height: 'calc(100vh - 14.5rem)', overflowY: 'auto' }}>
                                         <>
                                           {messages && messages.map((msg: any) => (
                                             <Box
@@ -1675,6 +1698,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                 },
                                               }}
                                             >
+                                              test
                                               <Avatar src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
                                               <Box flex="1" sx={{textAlign: 'left', wordBreak: 'break-word'}}>
                                                 <Typography fontSize={13} fontWeight={600}>{msg.name}</Typography>
@@ -1695,16 +1719,16 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                               </IconButton> */}
 
                                               <Box
-                                              className="options-button"
-                                                sx={{
-                                                  cursor: 'pointer',
-                                                  ml: 1,
-                                                  visibility: 'hidden', // hidden by default
-                                                }} ml="auto"  onClick={(e:any) => handleMenuOpen(e, msg.name)}>
-                                                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2.66016 12C2.66016 10.8954 3.55559 10 4.66016 10C5.76471 10 6.66016 10.8954 6.66016 12C6.66016 13.1045 5.76471 14 4.66016 14C3.55559 14 2.66016 13.1045 2.66016 12ZM10.6602 12C10.6602 10.8954 11.5556 10 12.6602 10C13.7647 10 14.6602 10.8954 14.6602 12C14.6602 13.1045 13.7647 14 12.6602 14C11.5556 14 10.6602 13.1045 10.6602 12ZM18.6602 12C18.6602 10.8954 19.5556 10 20.6602 10C21.7647 10 22.6602 10.8954 22.6602 12C22.6602 13.1045 21.7647 14 20.6602 14C19.5556 14 18.6602 13.1045 18.6602 12Z" fill="#161823"/>
-                                                </svg>
-                                            </Box>
+                                                className="options-button"
+                                                  sx={{
+                                                    cursor: 'pointer',
+                                                    ml: 1,
+                                                    visibility: 'hidden', // hidden by default
+                                                  }} ml="auto"  onClick={(e:any) => handleMenuOpen(e, msg.name)}>
+                                                  <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.66016 12C2.66016 10.8954 3.55559 10 4.66016 10C5.76471 10 6.66016 10.8954 6.66016 12C6.66016 13.1045 5.76471 14 4.66016 14C3.55559 14 2.66016 13.1045 2.66016 12ZM10.6602 12C10.6602 10.8954 11.5556 10 12.6602 10C13.7647 10 14.6602 10.8954 14.6602 12C14.6602 13.1045 13.7647 14 12.6602 14C11.5556 14 10.6602 13.1045 10.6602 12ZM18.6602 12C18.6602 10.8954 19.5556 10 20.6602 10C21.7647 10 22.6602 10.8954 22.6602 12C22.6602 13.1045 21.7647 14 20.6602 14C19.5556 14 18.6602 13.1045 18.6602 12Z" fill="#161823"/>
+                                                  </svg>
+                                              </Box>
 
                                             </Box>
                                           ))}
@@ -1995,7 +2019,20 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
 
                                     {/* Chat Input */}
                                   
-                                    <Box px={2} pb={2} sx={{display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <Box
+                                        px={2}
+                                        pb={2}
+                                        sx={{
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          position: 'absolute',
+                                          bottom: 0,
+                                          left: 0,
+                                          background: '#fff',
+                                          pt: 2,
+                                          gap: 1,
+                                        }}
+                                      >
                                         <TextField
                                           fullWidth
                                           placeholder="Say something nice"
@@ -2007,25 +2044,25 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                           InputProps={{
                                             endAdornment: (
                                               <InputAdornment position="end">
-                                                <IconButton onClick={handleSendMessage}>
-                                                  <SendIcon />
+                                                {/* Emoji button inside TextField */}
+                                                <IconButton onClick={() => setIsPickerVisible(!isPickerVisible)}>
+                                                  <img
+                                                    className="w-6 h-6 object-contain rounded-full"
+                                                    src={emoji}
+                                                    alt="emoji-icon"
+                                                  />
                                                 </IconButton>
                                               </InputAdornment>
                                             ),
                                             sx: { borderRadius: 2 },
                                           }}
-                                        /> 
-                                          <div onClick={() => setIsPickerVisible(!isPickerVisible)} className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] mx-[0.5rem]">
-                                                      <img
-                                                        className={`w-6 h-6 object-contain rounded-full`}
-                                                        src={emoji}
-                                                        alt="comment-icon"
-                                                      />
-                                                    </div>
-                                        {/* <IconButton>
-                                            <SendIcon />
-                                        </IconButton> */}
-                                    </Box>
+                                        />
+
+                                        {/* Send button outside TextField */}
+                                        <IconButton onClick={handleSendMessage}>
+                                          <SendIcon />
+                                        </IconButton>
+                                      </Box>
                             </Box>
                         </Box>  
                         )}
