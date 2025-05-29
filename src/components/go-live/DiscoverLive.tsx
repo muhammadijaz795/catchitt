@@ -297,7 +297,7 @@ function DiscoverLive() {
                   </Link>
               </Box>
               <Box display="flex" flexWrap="wrap" gap={3}>
-                {postCategories.items.map((item: any) => (
+                {postCategories.items.slice(0, 14).map((item: any) => (
                   <Box key={item._id} sx={{ width: 'calc((100% - 144px) / 7)' }}>
                     <RecommendedCard stream={item} />
                   </Box>
