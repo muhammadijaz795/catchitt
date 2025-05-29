@@ -1143,9 +1143,42 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                 </Box>
                 <Box sx={{ width: '100%', height: '95%', background:'black' }}>
                     {/* Placeholder for Video */}
-                    <Typography color="white" align="center" height="100%" >
+                    {/* <Typography color="white" align="center" height="100%" >
                       Video Player Area
-                    </Typography>
+                    </Typography> */}
+                    <Box
+                      sx={{
+                        minHeight: "90vh",
+                        backgroundColor: "#0f0f0f",
+                        color: "white",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                      }}
+                    >
+                      <Typography variant="h6" fontWeight="bold" mb={1}>
+                        No LIVE streams for you yet
+                      </Typography>
+                      <Typography variant="body2" color="#aaa" mb={3}>
+                        Go back to explore more videos
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: "#2c2c2c",
+                          color: "white",
+                          textTransform: "none",
+                          fontWeight: "bold",
+                          "&:hover": {
+                            backgroundColor: "#3a3a3a",
+                          },
+                        }}
+                      >
+                        Go back
+                      </Button>
+                    </Box>
 
                     {/* Gift Bar */}
                     <Box sx={{ position: 'absolute', bottom: 0, width: '100%', bgcolor: '#111', p: 1, display: 'flex', justifyContent: 'space-around' }}>
