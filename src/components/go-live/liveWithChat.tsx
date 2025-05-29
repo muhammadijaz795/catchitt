@@ -142,8 +142,10 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
     }, []);
   
 
-      const handleFollow = async () => {
-        let userId = selectedLiveVideo?.details?.owner?.id;
+      const handleFollow = async (userId:any='') => {
+        if(userId == '')
+          userId = selectedLiveVideo?.details?.owner?.id;
+
         try {
           const res = await post(`/profile/follow/${userId}`);
           console.log("handleFollow", res);
@@ -232,6 +234,25 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
           }
       }
   };
+  const [currentMessageUserData, setCurrentMessageUserData] = useState<any>({});
+
+  const fetchProfileData = async (msg: any) => {
+    console.log('Fetching profile data for:', msg);
+    try {
+        const profileResponse = await fetch(`${API_KEY}/profile/public/${msg.userName}`, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const profileData = await profileResponse.json();
+        setCurrentMessageUserData(profileData.data);
+        console.log('Fetched profile data:', profileData.data);
+    } catch (error) {
+        console.log(error);
+    }
+};
 
     const loadProfile = async () => {
       try {
@@ -936,8 +957,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
   const openProfile = Boolean(anchorElProfile);
 
 
-  const handleToggle = (event: any) => {
-        setAnchorElProfile(event.currentTarget);
+  const handleToggle = (event: any, msg={}) => {
+    fetchProfileData(msg);    
+    setAnchorElProfile(event.currentTarget);
+
   };
 
   const handleCloseProfile = () => {
@@ -1608,14 +1631,14 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                                 <Box display="flex" justifyContent="space-between" alignItems="center">
                                                                     <Box display="flex" alignItems="center">
                                                                     <Avatar
-                                                                        src="https://i.pravatar.cc/40"
-                                                                        alt="Profile"
-                                                                        sx={{ width: 40, height: 40, mr: 1 }}
-                                                                    />
+                                                                src={currentMessageUserData?.avatar}
+                                                                alt="Profile"
+                                                                sx={{ width: 40, height: 40, mr: 1 }}
+                                                            />
                                                                     <Box>
-                                                                        <Typography fontWeight="bold">prihartono20</Typography>
+                                                                        <Typography fontWeight="bold">{currentMessageUserData?.username ||''}</Typography>
                                                                         <Typography variant="body2" color="text.secondary">
-                                                                        PRIHARTONO
+                                                                        {currentMessageUserData?.name ||''}
                                                                         </Typography>
                                                                     </Box>
                                                                     </Box>
@@ -1625,9 +1648,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                                 </Box>
 
                                                                 <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
-                                                                    <Typography fontWeight="bold">269</Typography>
+                                                                    <Typography fontWeight="bold">{currentMessageUserData?.followersNumber ||0}</Typography>
                                                                     <Typography color="text.secondary">Followers</Typography>
-                                                                    <Typography fontWeight="bold">33</Typography>
+                                                                    <Typography fontWeight="bold">{currentMessageUserData?.likesNum ||0}</Typography>
                                                                     <Typography color="text.secondary">Likes</Typography>
                                                                 </Box>
 
@@ -1636,10 +1659,11 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                                     fullWidth
                                                                     variant="contained"
                                                                     sx={{ bgcolor: "#ff2d55", "&:hover": { bgcolor: "#e6264f" } }}
+                                                                    onClick={()=>handleFollow(currentMessageUserData?._id)}
                                                                     >
-                                                                    Follow
+                                                                    {currentMessageUserData?.isFollowed ? 'UnFollow':'Follow'}
                                                                     </Button>
-                                                                    <Button fullWidth variant="outlined">
+                                                                    <Button fullWidth variant="outlined" onClick={()=> submitReport()}>
                                                                     Report
                                                                     </Button>
                                                                 </Box>
@@ -1841,7 +1865,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                               }}
                                             >
                                               
-                                              <Avatar onClick={handleToggle} src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
+                                              <Avatar onClick={(e:any) => handleToggle(e, msg)} src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
                                               <Box flex="1" sx={{textAlign: 'left', wordBreak: 'break-word'}}>
                                                 <Typography  fontSize={13} fontWeight={600}>{msg.name}</Typography>
                                                 <Typography fontSize={13}>{msg.text}</Typography>
@@ -1877,15 +1901,16 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                     >
                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                                             <Box display="flex" alignItems="center">
+                                                          
                                                             <Avatar
-                                                                src="https://i.pravatar.cc/40"
+                                                                src={currentMessageUserData?.avatar}
                                                                 alt="Profile"
                                                                 sx={{ width: 40, height: 40, mr: 1 }}
                                                             />
                                                             <Box>
-                                                                <Typography fontWeight="bold">prihartono20</Typography>
+                                                                <Typography fontWeight="bold">{currentMessageUserData?.username ||''}</Typography>
                                                                 <Typography variant="body2" color="text.secondary">
-                                                                PRIHARTONO
+                                                                {currentMessageUserData?.name ||''}
                                                                 </Typography>
                                                             </Box>
                                                             </Box>
@@ -1894,22 +1919,26 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                             </IconButton>
                                                         </Box>
 
-                                                        <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
-                                                            <Typography fontWeight="bold">269</Typography>
-                                                            <Typography color="text.secondary">Followers</Typography>
-                                                            <Typography fontWeight="bold">33</Typography>
-                                                            <Typography color="text.secondary">Likes</Typography>
-                                                        </Box>
-
+                                                        
+                                                          <Box display="flex" alignItems="center" gap={2} mt={2} mb={2}>
+                                                              <Typography fontWeight="bold">{currentMessageUserData?.followersNumber ||0}</Typography>
+                                                              <Typography color="text.secondary">Followers</Typography>
+                                                              <Typography fontWeight="bold">{currentMessageUserData?.likesNum ||0}</Typography>
+                                                              <Typography color="text.secondary">Likes</Typography>
+                                                          </Box>
                                                         <Box display="flex" gap={2}>
                                                             <Button
                                                             fullWidth
                                                             variant="contained"
                                                             sx={{ bgcolor: "#ff2d55", "&:hover": { bgcolor: "#e6264f" } }}
+                                                            onClick={()=> {
+                                                              handleFollow(currentMessageUserData?._id); 
+                                                              setCurrentMessageUserData({...currentMessageUserData, isFollowed: !currentMessageUserData?.isFollowed}); 
+                                                              }}
                                                             >
-                                                            Follow
+                                                            {currentMessageUserData?.isFollowed ? 'UnFollow':'Follow'}
                                                             </Button>
-                                                            <Button fullWidth variant="outlined">
+                                                            <Button fullWidth variant="outlined" onClick={()=> setOpenReport(true)}>
                                                             Report
                                                             </Button>
                                                         </Box>
