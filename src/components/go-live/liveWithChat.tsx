@@ -532,7 +532,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           console.log(`Received message: ${JSON.stringify(data)}`);
           setMessages(prev => [...prev, {
             id: Date.now().toString(),
-            name: data?.name,
+            name: data?.userFullName,
             userName: data?.userName,
             userImage: data?.userImage,
             text: data.message,
@@ -1114,7 +1114,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     </Menu>
                             </IconButton>
                             <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
-                            <Button onClick={() => handleFollow(selectedLiveVideo?.details?.owner?.id)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
+                            {!isFollowed && <Button onClick={() => handleFollow(selectedLiveVideo?.details?.owner?.id)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
                                 {isFollowed ? 'Followed': 'Follow'}&nbsp;
                                 <Box className={`${styles.components}`} component="span" sx={{ bgcolor: '#fff', color: '#000', borderRadius: '50%', px: 0.5,py: 0.5, fontSize: 12, ml: 0.5 }}>
                                 <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1122,6 +1122,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                 </svg>
                                 </Box>
                             </Button>
+                            }
                             {isFollowed && <Button onClick={handleUnfollowClick} sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', padding: '7.5px 0px'}}>
                                 <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.07713 5.41667C6.07713 4.03595 7.19642 2.91667 8.57713 2.91667C9.95788 2.91667 11.0771 4.03595 11.0771 5.41667C11.0771 6.79738 9.95788 7.91667 8.57713 7.91667C7.19642 7.91667 6.07713 6.79738 6.07713 5.41667ZM8.57713 1.25C6.27596 1.25 4.41048 3.11548 4.41048 5.41667C4.41048 7.71783 6.27596 9.58333 8.57713 9.58333C10.8783 9.58333 12.7438 7.71783 12.7438 5.41667C12.7438 3.11548 10.8783 1.25 8.57713 1.25ZM2.82473 17.07C3.45272 14.7977 4.864 13.4313 6.45884 12.8075C8.04063 12.1888 9.842 12.2847 11.3298 13.0203C11.536 13.1223 11.7909 13.0575 11.9075 12.8591L12.3301 12.1409C12.4468 11.9425 12.381 11.686 12.1764 11.5807C10.2503 10.5891 7.91184 10.4495 5.85171 11.2554C3.73303 12.0841 1.94933 13.896 1.19721 16.7036C1.13767 16.9259 1.27947 17.1497 1.50398 17.2002L2.31698 17.3831C2.54149 17.4337 2.76344 17.2918 2.82473 17.07ZM19.2885 12.5505C19.4512 12.3878 19.4512 12.124 19.2885 11.9613L18.6993 11.372C18.5365 11.2093 18.2727 11.2093 18.11 11.372L13.1605 16.3215L11.1278 14.2887C10.965 14.126 10.7012 14.126 10.5385 14.2887L9.94925 14.8779C9.7865 15.0406 9.7865 15.3045 9.94925 15.4672L12.5713 18.0892C12.8967 18.4147 13.4243 18.4147 13.7498 18.0892L19.2885 12.5505Z" fill="#161823"/>
