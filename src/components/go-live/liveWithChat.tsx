@@ -1114,7 +1114,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     </Menu>
                             </IconButton>
                             <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
-                            <Button onClick={handleFollow} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
+                            <Button onClick={() => handleFollow(selectedLiveVideo?.details?.owner?.id)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
                                 {isFollowed ? 'Followed': 'Follow'}&nbsp;
                                 <Box className={`${styles.components}`} component="span" sx={{ bgcolor: '#fff', color: '#000', borderRadius: '50%', px: 0.5,py: 0.5, fontSize: 12, ml: 0.5 }}>
                                 <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1145,11 +1145,11 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     sx: { borderRadius: 2, p: 2, boxShadow: 3, mt: 1.5 },
                                     }}
                                 >
-                                    <Typography sx={{ mb: 1 }}>Unfollow {currentStream?.owner?.name}?</Typography>
+                                    <Typography sx={{ mb: 1 }}>Unfollow {selectedLiveVideo?.details?.owner?.name}?</Typography>
                                     <Button 
                                     variant="outlined" 
                                     fullWidth 
-                                    onClick={()=> {handleUnfollowClose(); handleFollow()}}
+                                    onClick={()=> {handleUnfollowClose(); handleFollow(selectedLiveVideo?.details?.owner?.id)}}
                                     sx={{ textTransform: "none", borderRadius: 2, color: "#000", fontWeight: 500 }}
                                     >
                                     Unfollow
@@ -2215,7 +2215,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                             </IconButton>
                                         </Box>
 
-                                         <Box px={2} mb={1} width={'100%'} m={'auto'} onClick={handleFollow}>
+                                         <Box px={2} mb={1} width={'100%'} m={'auto'} onClick={()=>handleFollow(selectedLiveVideo?.details?.owner?.id)}>
                                             <Box
                                             sx={{
                                                 bgcolor: '#ff2e63',
