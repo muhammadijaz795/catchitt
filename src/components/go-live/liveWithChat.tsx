@@ -1520,9 +1520,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                             {/* Footer */}
                             <Box sx={{bgcolor: "#fff", position: "absolute", bottom: '2.5rem', width: "100%", p: 2, borderTop: "1px solid #eee" }}>
                                 <Typography variant="body2" fontWeight={500} gutterBottom>
-                                Jeniffer
+                                {selectedLiveVideo?.details?.owner?.name || ''}
                                 </Typography>
-                                <Button
+                                <Button onClick={() => setShowTopViewers(false)}
                                 variant="outlined"
                                 fullWidth
                                 sx={{ textTransform: "none", borderColor: "#f33", color: "#f33" }}
