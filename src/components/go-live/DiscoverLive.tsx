@@ -299,7 +299,9 @@ function DiscoverLive() {
               <Box display="flex" flexWrap="wrap" gap={3}>
                 {postCategories.items.slice(0, 14).map((item: any) => (
                   <Box key={item._id} sx={{ width: 'calc((100% - 144px) / 7)' }}>
+                  <Link to={`/live/category/${item.name}`} reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <RecommendedCard stream={item} />
+                  </Link>
                   </Box>
                 ))}
               </Box>
