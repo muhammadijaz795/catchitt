@@ -1,6 +1,6 @@
 import { SideNavBar } from './goLiveSidebar';
 import { useRef, useState, useEffect } from 'react';
-import { Box, Typography, CardMedia, Stack, Avatar, Grid } from '@mui/material';
+import { Box, Typography, CardMedia, Stack, Avatar, Grid, Chip } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useParams } from 'react-router-dom';
 import { defaultGreyBackground } from '../../icons';
@@ -138,43 +138,76 @@ function LiveCategoryPosts() {
     </Box>
   );
 
-  const RecommendedCard = ({ stream }: { stream: any }) => (
-    <Box sx={{ borderRadius: 2, width: "100%", position: 'relative', mr: 2, textAlign: 'left' }}>
-      <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-        <CardMedia
-          component="img"
-          image={stream.icon || defaultGreyBackground}
-          alt={stream.name}
-          sx={{ borderRadius: 2, maxHeight: 185, height: 185 }}
-          onError={(event: any) => event.target.src != defaultGreyBackground && (event.target.src = defaultGreyBackground)}
-        />
-      </Box>
-      <Box sx={{ mt: 1, px: 0.5, pb: 1.5 }}>
-      <Stack direction="row" spacing={1} mt={0.5}>
-        {/* <Avatar src={stream.userAvatar} sx={{ width: 24, height: 24 }} /> */}
-        <Box>
-            <Typography variant="body2" fontWeight={500} >
-            {stream.name}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" >
-            {stream.watching} watching
-            </Typography>
-        </Box>
-        </Stack>
+ const RecommendedCard = ({ stream }: { stream: any }) => {
+  return (
+    <Box
+      sx={{
+        borderRadius: 2,
+        width: "100%",
+        position: "relative",
+        mr: 2,
+        textAlign: "left",
+        display: "flex",
+        gap: 2,
+      }}
+    >
+      <CardMedia
+        component="img"
+        image={stream.icon || defaultGreyBackground}
+        alt={stream.name}
+        sx={{
+          borderRadius: 2,
+          height: 220,
+          width: 150,
+          objectFit: "cover",
+        }}
+        onError={(event: any) =>
+          event.target.src !== defaultGreyBackground &&
+          (event.target.src = defaultGreyBackground)
+        }
+      />
+      <Box>
+        <Typography variant="h6" fontWeight="bold" gutterBottom>
+          {stream.name || "Mobile Legends: Bang Bang"}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          {stream.watching || "45.2k"} watching
+        </Typography>
+        <Chip label="RPG" size="small" sx={{ mb: 1 }} />
+        <Typography variant="body2" color="text.secondary">
+          {stream.description ||
+            `Mobile Legends: Bang Bang (MLBB) is a mobile multiplayer online
+            battle arena (MOBA) game developed and published by Moonton, a
+            subsidiary of ByteDance. Released in 2016, the game grew in
+            popularity; most...`}
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          View on{" "}
+          <Link to={"https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang"} >
+            Wikipedia
+          </Link>{" "}
+          or view{" "}
+          <Link to={"https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang"} >
+            license
+          </Link>
+        </Typography>
       </Box>
     </Box>
   );
+};
   return (
     <div className='flex' style={{ background: '#000' }}>
       <SideNavBar />
       <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
         <div className='py-3 px-10'>
           <Box  sx={{ mt: 4 }}>
-              <Box display="flex" flexWrap="wrap" gap={3}>
+              <Box display="flex" flexWrap="wrap" gap={3} mb={3}>
                 {postCategories.items.slice(0, 1).map((item: any) => (
-                  <Box key={item._id} sx={{ width: 'calc((100% - 144px) / 7)' }}>
+                  <Box key={item._id} sx={{ maxWidth: 'calc(100% - 25vw)', width: '100%' }}>
                     <RecommendedCard stream={item} />
+                    
                   </Box>
+                  
                 ))}
               </Box>
           </Box>
