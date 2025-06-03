@@ -291,7 +291,7 @@ export const Profile = (props: any) => {
                         if (STATUS_CODE.OK !== data.status) { return setUserLikedVideos((prev: any) => ({...prev, totalItems: -2})) }
                         setUserLikedVideos((prev: any) => ({
                             ...prev,
-                            items: [...prev.items, ...data.data.data],
+                            items: [...new Map([...prev.items, ...data.data.data].map(item => [item.mediaId, item])).values()],
                             totalItems: data.data.total,
                         }));
                     })
@@ -463,6 +463,11 @@ export const Profile = (props: any) => {
         setUserLikedVideos((prev: any) => ({ ...prev, items: sortVideos(userlikedVideos.items) }));
         setUserTaggedVideos((prev: any) => ({ ...prev, items: sortVideos(usertaggedVideos.items) }));
         setRepostsVideos((prev: any) => ({ ...prev, items: sortVideos(repostVideos.items) }));
+    };
+
+    function togglePostLike(post: any, isLiked: boolean)
+    {
+        setUserLikedVideos((prev: any) => ({ ...prev, items: isLiked ? [...prev.items.filter((item: any) => item.mediaId != post.mediaId), post] : prev.items.filter((item: any) => item.mediaId != post.mediaId) }));
     };
 
     useEffect(() => {
@@ -660,6 +665,7 @@ export const Profile = (props: any) => {
                     }
                     videoModal={videoModal}
                     onclose={() => setVideoModal(false)}
+                    onToggleLikePost={(post: any, isLiked: boolean) => togglePostLike(post, isLiked)}
                     info={videoModalInfo}
                 />
                 <PopupForReport

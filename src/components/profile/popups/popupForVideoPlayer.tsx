@@ -64,6 +64,7 @@ export default function PopupForVideoPlayer({
     sendPopupHandler,
     deleteVideoPopup,
     editVideoHandler,
+    onToggleLikePost,
 }: any) {
     const { balance } = useAuthStore();
     const token = localStorage.getItem('token');
@@ -887,6 +888,7 @@ export default function PopupForVideoPlayer({
         setCommentEmojiIndex(-1);
         setPrivacyPrivilege(null);
         onclose();
+        onToggleLikePost(info, isLiked);
         videoRef.current.currentTime && logPostStats({postId: info.mediaId, videoWatchTime: videoRef.current.currentTime});
     };
 
