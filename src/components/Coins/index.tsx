@@ -32,14 +32,14 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const coinOptions = [
-  { coins: '30', price: '0.37', unit: '$' },
-  { coins: '350', price: '4.45', unit: '$' },
-  { coins: '700', price: '8.85', unit: '$' },
-  { coins: '1,400', price: '17.69', unit: '$' },
-  { coins: '3,500', price: '44.25', unit: '$' },
-  { coins: '7,000', price: '88.45', unit: '$' },
-  { coins: '17,500', price: '221.05', unit: '$' },
-  { coins: 'Custom', price: 'Large amount supported', unit: '$', isCustom: true },
+  { index: 1, coins: '30', price: '0.37', unit: '$' },
+  { index: 2, coins: '350', price: '4.45', unit: '$' },
+  { index: 3, coins: '700', price: '8.85', unit: '$' },
+  { index: 4, coins: '1,400', price: '17.69', unit: '$' },
+  { index: 5, coins: '3,500', price: '44.25', unit: '$' },
+  { index: 6, coins: '7,000', price: '88.45', unit: '$' },
+  { index: 7, coins: '17,500', price: '221.05', unit: '$' },
+  { index: 8, coins: 'Custom', price: 'Large amount supported', unit: '', isCustom: true },
 ];
 const InfoItem = ({ icon, title, description, iconColor }) => (
   <Stack direction="row" spacing={2} alignItems="flex-start">
@@ -200,7 +200,7 @@ export default function Coins() {
           mb={4}
         >
           {coinOptions.map(option => {
-            const isChosen = selected.coins === option.coins;
+            const isChosen = selected.index === option.index;
             return (
               <Paper
                 key={option.coins}
@@ -233,9 +233,29 @@ export default function Coins() {
                     <path d="M28.1001 17.5024C28.2354 15.8496 28.0267 14.1866 27.487 12.6185C26.9474 11.0504 26.0886 9.61118 24.9648 8.39164C23.841 7.1721 22.4766 6.19873 20.9577 5.53295C19.4389 4.86717 17.7985 4.52344 16.1401 4.52344C14.4818 4.52344 12.8414 4.86717 11.3225 5.53295C9.80369 6.19873 8.43931 7.1721 7.31552 8.39164C6.19173 9.61118 5.33291 11.0504 4.79326 12.6185C4.25361 14.1866 4.04485 15.8496 4.18014 17.5024C4.42595 14.4993 5.79253 11.6986 8.00834 9.65678C10.2241 7.61493 13.127 6.4814 16.1401 6.4814C19.1533 6.4814 22.0561 7.61493 24.2719 9.65678C26.4877 11.6986 27.8543 14.4993 28.1001 17.5024Z" fill="#F09207"/>
                     </g>
                   </svg>
-                  <Typography fontWeight="semibold" fontSize="1.125rem">{option.coins}</Typography>
+                  {isChosen && option.isCustom ? (
+                    <input
+                      type="number"
+                      placeholder="Enter amount"
+                      style={{
+                        padding: '4px 8px',
+                        fontSize: '0.875rem',
+                        width: '100%',
+                        borderRadius: 4,
+                        borderBottom: '1px solid #ccc',
+                        backgroundColor: 'transparent',
+                      }}
+                      onChange={(e) => setSelected(prevState => ({ ...prevState, coins: e.target.value, price: (e.target.value * 0.0116).toFixed(2), unit: '$' }))}
+                    />
+                  ) : (
+                    <Typography sx={{color: '#000'}} fontWeight={600} fontSize="0.875rem">
+                      {option.coins}
+                    </Typography>
+                  )}
                 </Box>
-                <Typography color="text.secondary" fontSize="0.875rem">{selected.unit}{option.price}</Typography>
+                  <Typography sx={{color: '#000'}} fontSize="0.875rem">
+                      {option.unit}{option.price}
+                    </Typography>
               </Paper>
             );
           })}
@@ -273,6 +293,7 @@ export default function Coins() {
           onClick={handleOpenPaymentModal}
           variant="contained"
           sx={{ py: 1.25,  px: 7,fontSize: '1rem', textTransform: 'none', borderRadius: 2, bgcolor: 'rgba(254, 44, 85, 1)', '&:hover': { bgcolor: 'rgba(254, 44, 85, 0.9)' } }}
+          disabled={parseFloat(selected.price) < 0.01 || selected.price == 'Large amount supported' }
         >
           Recharge
         </Button>
