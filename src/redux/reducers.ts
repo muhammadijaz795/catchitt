@@ -230,8 +230,8 @@ const homeVideos: any = createSlice({
             return filteredData;
         });
         builder.addCase(videoRepostHandle.fulfilled, (state: any, action: any) => {
-            console.log(' 🚀 >>>>>> action.payload 🚀', action.payload);
-            return state;
+            const { post } = action.payload;
+            return state.map((video: any) => video.mediaId === post.id ? { ...video, shares: video.shares + 1 } : video);
         });
         builder.addCase(getUpdatedVideoState.fulfilled, (state: any, action: any) => {
             // first get the index of the video in the state

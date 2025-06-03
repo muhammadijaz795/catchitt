@@ -191,9 +191,9 @@ export const videoRepostHandle: any = createAsyncThunk(
             const res = await post(`/media-content/repost/${postMediaId}`);
 
             if (res?.data) {
-                return res?.data;
+                return { post: {id: postMediaId}, ...res?.data};
             } else {
-                return false;
+                return { post: {id: postMediaId} };
             }
         } catch (error) {
             console.log(error);
