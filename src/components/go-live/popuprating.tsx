@@ -22,6 +22,25 @@ interface RankingSettingsModalProps {
 }
 export default function RankingSettingsModal({ open, onClose, rankingClick, isShowRanking }: RankingSettingsModalProps) {
   const [value, setValue] = useState(isShowRanking ? 'show' : 'hide');
+  const API_KEY = process.env.VITE_API_URL;
+  const token = localStorage.getItem('token');
+
+  const rankingClickInternal = async () => {
+    try {
+        const response = await fetch(`${API_KEY}/profile/privacy-settings`, {
+            method: 'PATCH',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ rankingSetting: value }),
+        });
+        const res = await response.json();
+        rankingClick();
+    } catch (error) {
+        console.log('error blocking user', error);
+    }
+  }
 
   return (
     <Dialog
@@ -73,7 +92,7 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
         <Button onClick={onClose} variant="outlined"  color="inherit" sx={{ textTransform: 'capitalize', px: 3, borderColor: '#ccc' }}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={() => { onClose(); rankingClick(); }}   sx={{px:4, backgroundColor: '#F9184C', textTransform: 'capitalize' }}>
+        <Button variant="contained" onClick={() => { onClose(); rankingClickInternal(); }}   sx={{px:4, backgroundColor: '#F9184C', textTransform: 'capitalize' }}>
           Save
         </Button>
       </DialogActions>

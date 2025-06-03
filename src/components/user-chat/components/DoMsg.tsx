@@ -27,6 +27,7 @@ import fishPri from '../../../assets/gifts/fishPri.svg';
 import hook from '../../../assets/gifts/hook.svg';
 import shark from '../../../assets/gifts/shark.svg';
 import coinsOnly from '../../../assets/gifts/coinsSingle.svg';
+import { caesium } from '../../../icons';
 
 // import commentEmoji from '../../../icons/commentEmoji.svg';
 import CloseIcon from '@mui/icons-material/Close';
@@ -383,7 +384,9 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
       <span>Unsupported format</span>
     )}
 
-    <span>${(selectedGift.price ?? 0).toLocaleString()}</span>
+    <span><Box component="span" sx={{ color: 'gold', fontSize: 9, mr: 0.5, mt:1, display: 'inline-block' }}>
+                            <img style={{ height: '13px' }} src={caesium} alt="Coin Icon" />
+                          </Box>{(selectedGift.price ?? 0).toLocaleString()}</span>
     <button
       className={style.selectedGiftButton}
       onClick={() => setSelectedGift(null)}
@@ -493,7 +496,12 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
                         style={{ pointerEvents: "none",height:'130px' }}
                       />
                     )}
-                    <span>${(gift.price ?? 0).toLocaleString()}</span>
+                    <span>
+                          <Box component="span" sx={{ color: 'gold', fontSize: 9, mr: 0.5, mt:1, display: 'inline-block' }}>
+                            <img style={{ height: '13px' }} src={caesium} alt="Coin Icon" />
+                          </Box>
+                          {(gift.price ?? 0).toLocaleString()}
+                    </span>
                   </div>
                 )
               );

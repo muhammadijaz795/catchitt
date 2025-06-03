@@ -1478,7 +1478,8 @@ export default function PopupForVideoPlayer({
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div
+                                                                                    {isUserLoggedIn() && (comment?.length > 0 || commentReply?.length > 0) && (
+                                                                                        <div
                                                                                         onClick={() =>
                                                                                             replyToCommentHandler(
                                                                                                 comment?.id
@@ -1496,6 +1497,7 @@ export default function PopupForVideoPlayer({
                                                                                             Post
                                                                                         </p>
                                                                                     </div>
+                                                                                    )}
                                                                                     <div
                                                                                         onClick={() =>
                                                                                             setIsReplyToCommentClicked(
@@ -1990,7 +1992,7 @@ export default function PopupForVideoPlayer({
                                                 )}
                                             </div>
 
-                                            {isUserLoggedIn() && (
+                                            {isUserLoggedIn() && (comment?.length > 0 || commentReply?.length > 0) && (
                                                 <div onClick={addCommentHandler} className="mr-1">
                                                     <p
                                                         className={`${comment?.length > 0

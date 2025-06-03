@@ -16,7 +16,9 @@ import {
     rightArrowCurved,
     weightedDownArrowInWhite,
     weightedDownArrow,
+    caesium
 } from '../../../icons';
+import { Box } from '@mui/material';
 import style from './Actions.module.scss';
 import LongPressButton from './LongPressEvent';
 import { io } from 'socket.io-client';
@@ -378,7 +380,10 @@ function Actions(props: any) {
                                                         <span>Unsupported media format</span>
                                                         )}
 
-                                                        ${item?.gift?.price}
+                                                        <Box component="span" sx={{ color: 'gold', fontSize: 9, mr: 0.5, mt:1, display: 'inline-block' }}>
+                                                            <img style={{ height: '13px' }} src={caesium} alt="Coin Icon" />
+                                                        </Box>
+                                                        {item?.gift?.price}
                                                         <svg
                                                         style={{ float: 'right', marginTop: '20px' }}
                                                         xmlns="http://www.w3.org/2000/svg"

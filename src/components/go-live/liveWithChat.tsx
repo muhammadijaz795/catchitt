@@ -888,7 +888,7 @@ const renderGiftRow = (gifts: any[]) => (
         >
           <Box sx={{ fontSize: 32, justifyItems: 'center' }}>
             {gift.imageUrl.endsWith('.mp4') ? (
-              <video src={gift.imageUrl} autoPlay loop muted style={{ width: 50, height: 50 }} />
+              <video src={gift.imageUrl} autoPlay loop muted style={{ width: f50, height: 50 }} />
             ) : (
               <img src={gift.imageUrl} alt={gift.name} style={{ width: 50, height: 50 }} />
             )}

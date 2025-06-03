@@ -396,8 +396,7 @@ const ChatComponent = () => {
     }, [recievedMsg]);
     
 
-    const chatSwitchH = (e: any) => {
-
+    const chatSwitchH = async (e: any) => {
         console.log(
             "chatSwitchH"
         );
@@ -413,13 +412,13 @@ const ChatComponent = () => {
         setMsg(messagesState[e] || ''); // Restore the message for the user being switched to
 
         setIsProfileSecVisible(false);
-        users?.forEach((user, index) => {
+        users?.forEach(async (user, index) => {
             if (user?.userId === e) {
                 setActiveChat({});
                 setSender(user?.senderId);
                 setReceiver(user?.receiverId);
                 setConversationId(user?.conversationId);
-                loadChatMessages(user?.senderId, user?.receiverId, user?.conversationId, user);
+                await loadChatMessages(user?.senderId, user?.receiverId, user?.conversationId, user);
                 setActiveUser(user);
                 localStorage.setItem('chatActiveUser', user?.userId);
                 setChatActiveUserId(user?.userId)
@@ -427,17 +426,16 @@ const ChatComponent = () => {
                 const mutableUsers = [...users];
                 mutableUsers[index].unReadMsgs = 0;
                 setUsers(mutableUsers);
-
-                  // Focus input after state updates
-                    setTimeout(() => {
-                        inputRef.current?.focus();
-                        scrollToBottom();
-                    }, 100);
-
+                setTimeout(() => {
+                    inputRef.current?.focus();
+                    scrollToBottom();
+                }, 500);
             }
         });
 
         setstaredMsgs([]);
+         // Focus input after state updates
+         
     };
 
     const fetchStaredMessages = async () => {
@@ -1160,9 +1158,9 @@ const ChatComponent = () => {
         }, 500);
     }, []);
     
-    useEffect(() => {
-        scrollToBottom();
-    }, [activeChat?.chats]); // Scroll when chats update
+    // useEffect(() => {
+    //     scrollToBottom();
+    // }, [activeChat?.chats]); // Scroll when chats update
 
     const scrollToBottom = () => {
         console.log(
@@ -1191,7 +1189,13 @@ const ChatComponent = () => {
     useEffect(() => {
         if (Object.keys(activeUser).length == 0 && users.length > 0) {
             setConversationId(users[0]?.conversationId);
-            loadChatMessages(users[0]?.senderId, users[0]?.receiverId, users[0]?.conversationId, users[0]);
+            (async () => {
+                await loadChatMessages(users[0]?.senderId, users[0]?.receiverId, users[0]?.conversationId, users[0]);
+                setTimeout(() => {
+                    inputRef.current?.focus();
+                    scrollToBottom();
+                }, 500);
+            })();
             if (valueReceived) {
                 chatSwitchH(valueReceived);
             } else {
