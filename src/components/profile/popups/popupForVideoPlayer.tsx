@@ -1,4 +1,4 @@
-import { CircularProgress, ClickAwayListener, createTheme, Divider, IconButton, Menu, MenuItem, Modal, ThemeProvider } from '@mui/material';
+import { Box, CircularProgress, ClickAwayListener, createTheme, Divider, Grid, IconButton, Menu, MenuItem, Modal, Paper, Popper, TextField, ThemeProvider, Typography } from '@mui/material';
 import style from './popupForVideoPlayer.module.scss';
 import VideoModel from '../components/videoModel';
 import moment from 'moment';
@@ -48,6 +48,7 @@ import PopupForPrivacySettings from './popupForPrivacySettings';
 import { useUpdateEffect } from 'react-use';
 import CustomContextMenu from '../../homePage/components/CustomContextMenu';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
+import { EmojiObjects } from '@mui/icons-material';
 
 // import PopupForDeleteMedia from './popupForDeleteMedia';
 
@@ -141,6 +142,19 @@ export default function PopupForVideoPlayer({
     const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [isFetchingUsers, setIsFetchingUsers] = useState(false);
+// handle gift popup
+
+    const [giftAnchor, setGiftAnchor] = useState(null);
+
+  const handleGiftClick = (event) => {
+    setGiftAnchor(giftAnchor ? null : event.currentTarget);
+  };
+
+  const handleGiftClose = () => {
+    setGiftAnchor(null);
+  };
+
+  const giftOpen = Boolean(giftAnchor);
 
 
     const handleContextMenu = (e: React.MouseEvent<HTMLVideoElement>) => {
@@ -1277,8 +1291,8 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     </div>
                                     {/* recieved gifts section */}
-                                    <div className={style.gifts}>
-                                        <p className={style.receivedGifftsText}>Gifts received</p>
+                                    {/* <div className={style.gifts}>
+                                        <p className={style.receivedGifftsText}>Gifts received </p>
                                         <div>
                                         {giftsDetails.details.map((item: any) => {
                                             const isVideo = item.imageUrl?.endsWith('.mp4') || item.imageUrl?.endsWith('.webm') || item.imageUrl?.endsWith('.ogg');
@@ -1300,10 +1314,95 @@ export default function PopupForVideoPlayer({
                                                 />
                                             );
                                             })}
-
-
                                         </div>
-                                    </div>
+                                    </div> */}
+                                    {giftOpen && (
+                                    <ClickAwayListener onClickAway={handleGiftClose}>
+                                        <Box
+                                        position="absolute"
+                                        bottom={0}
+                                        right={0}
+                                        width="100%"
+                                        height="20rem"
+                                        zIndex={1}
+                                        boxShadow={3}
+                                        borderRadius={2}
+                                        >
+                                        <Paper elevation={3} sx={{ width: '100%', p: 2, height: '20rem', overflowY: 'auto' }}>
+                                            <Box display="flex"  alignItems="center" mb={2}>
+                                            <Typography variant="h6" color="error">Recharge</Typography>
+                                            <Box display="flex" alignItems="center">
+                                                <svg style={{padding: '0.25rem'}} width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <mask id="mask0_2454_21248"  x="0" y="0" width="25" height="25">
+                                                    <path d="M0.404297 0.253906H24.4043V24.2539H0.404297V0.253906Z" fill="white"/>
+                                                    </mask>
+                                                    <g mask="url(#mask0_2454_21248)">
+                                                    <path d="M24.4043 12.2539C24.4043 15.4365 23.14 18.4888 20.8896 20.7392C18.6391 22.9896 15.5869 24.2539 12.4043 24.2539C9.2217 24.2539 6.16945 22.9896 3.91902 20.7392C1.66858 18.4888 0.404297 15.4365 0.404297 12.2539C0.404297 9.07131 1.66858 6.01906 3.91902 3.76862C6.16945 1.51819 9.2217 0.253906 12.4043 0.253906C15.5869 0.253906 18.6391 1.51819 20.8896 3.76862C23.14 6.01906 24.4043 9.07131 24.4043 12.2539Z" fill="#FFB84D"/>
+                                                    <path d="M23.9043 12.2539C23.9043 13.7641 23.6068 15.2595 23.0289 16.6548C22.451 18.05 21.6039 19.3178 20.536 20.3856C19.4682 21.4535 18.2004 22.3006 16.8052 22.8785C15.4099 23.4564 13.9145 23.7539 12.4043 23.7539C10.8941 23.7539 9.39868 23.4564 8.00344 22.8785C6.60819 22.3006 5.34044 21.4535 4.27257 20.3856C3.2047 19.3178 2.35761 18.05 1.77968 16.6548C1.20175 15.2595 0.904297 13.7641 0.904297 12.2539C0.904297 9.20392 2.1159 6.27885 4.27257 4.12218C6.42924 1.96551 9.35431 0.753906 12.4043 0.753906C15.4543 0.753906 18.3794 1.96551 20.536 4.12218C22.6927 6.27885 23.9043 9.20392 23.9043 12.2539Z" fill="#FFDE55"/>
+                                                    <path d="M21.4043 12.2539C21.4043 13.4358 21.1715 14.6061 20.7192 15.6981C20.2669 16.79 19.604 17.7821 18.7683 18.6179C17.9325 19.4536 16.9404 20.1165 15.8484 20.5688C14.7565 21.0211 13.5862 21.2539 12.4043 21.2539C11.2224 21.2539 10.0521 21.0211 8.96015 20.5688C7.86822 20.1165 6.87606 19.4536 6.04034 18.6179C5.20461 17.7821 4.54167 16.79 4.08938 15.6981C3.63709 14.6061 3.4043 13.4358 3.4043 12.2539C3.4043 9.86696 4.35251 7.57777 6.04034 5.88995C7.72816 4.20212 10.0173 3.25391 12.4043 3.25391C14.7912 3.25391 17.0804 4.20212 18.7683 5.88995C20.4561 7.57777 21.4043 9.86696 21.4043 12.2539Z" fill="#F7A300"/>
+                                                    <path d="M21.4043 12.2539C21.4043 13.4358 21.1715 14.6061 20.7192 15.6981C20.2669 16.79 19.604 17.7821 18.7683 18.6179C17.9325 19.4536 16.9404 20.1165 15.8484 20.5688C14.7565 21.0211 13.5862 21.2539 12.4043 21.2539C11.2224 21.2539 10.0521 21.0211 8.96015 20.5688C7.86822 20.1165 6.87606 19.4536 6.04034 18.6179C5.20461 17.7821 4.54167 16.79 4.08938 15.6981C3.63709 14.6061 3.4043 13.4358 3.4043 12.2539C3.4043 9.86696 4.35251 7.57777 6.04034 5.88995C7.72816 4.20212 10.0173 3.25391 12.4043 3.25391C14.7912 3.25391 17.0804 4.20212 18.7683 5.88995C20.4561 7.57777 21.4043 9.86696 21.4043 12.2539Z" fill="#F7A80F"/>
+                                                    <path d="M21.3743 13.0038C21.4758 11.7641 21.3192 10.5169 20.9145 9.34085C20.5097 8.16476 19.8656 7.08534 19.0228 6.17068C18.1799 5.25603 17.1566 4.526 16.0175 4.02667C14.8784 3.52733 13.6481 3.26953 12.4043 3.26953C11.1605 3.26953 9.93025 3.52733 8.7911 4.02667C7.65196 4.526 6.62868 5.25603 5.78583 6.17068C4.94299 7.08534 4.29888 8.16476 3.89414 9.34085C3.4894 10.5169 3.33283 11.7641 3.4343 13.0038C3.61866 10.7515 4.64359 8.65092 6.30545 7.11954C7.96731 5.58815 10.1445 4.738 12.4043 4.738C14.6641 4.738 16.8413 5.58815 18.5031 7.11954C20.165 8.65092 21.1899 10.7515 21.3743 13.0038Z" fill="#E88B00"/>
+                                                    <path d="M21.3743 13.0038C21.4758 11.7641 21.3192 10.5169 20.9145 9.34085C20.5097 8.16476 19.8656 7.08534 19.0228 6.17068C18.1799 5.25603 17.1566 4.526 16.0175 4.02667C14.8784 3.52733 13.6481 3.26953 12.4043 3.26953C11.1605 3.26953 9.93025 3.52733 8.7911 4.02667C7.65196 4.526 6.62868 5.25603 5.78583 6.17068C4.94299 7.08534 4.29888 8.16476 3.89414 9.34085C3.4894 10.5169 3.33283 11.7641 3.4343 13.0038C3.61866 10.7515 4.64359 8.65092 6.30545 7.11954C7.96731 5.58815 10.1445 4.738 12.4043 4.738C14.6641 4.738 16.8413 5.58815 18.5031 7.11954C20.165 8.65092 21.1899 10.7515 21.3743 13.0038Z" fill="#F09207"/>
+                                                    </g>
+                                                </svg>
+
+                                                <Typography>0</Typography>
+                                            </Box>
+                                            </Box>
+
+                                            <Grid container spacing={2} px={2}>
+                                                <div className={`${style.gifts} `}>
+                                                {giftsDetails.details.map((item: any) => {
+                                                    const isVideo = item.imageUrl?.endsWith('.mp4') || item.imageUrl?.endsWith('.webm') || item.imageUrl?.endsWith('.ogg');
+
+                                                    return isVideo ? (
+                                                        <video
+                                                        key={item._id}
+                                                        src={item.imageUrl + '#t=0.1'}
+                                                        muted
+                                                        controls={false}
+                                                        onClick={() => addGiftComment(item._id)}
+                                                        style={{ width: '3rem', height: 'auto', borderRadius: '50%', cursor: 'pointer' }}   
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                        src={item.imageUrl}
+                                                        alt={item.name}
+                                                        key={item._id}
+                                                        onClick={() => addGiftComment(item._id)}
+                                                        style={{ width: '3rem', height: 'auto', borderRadius: '50%', cursor: 'pointer' }}
+                                                        />
+                                                    );
+                                                    })}
+                                                </div>
+                                            {/* {giftItems.map((gift, index) => (
+                                                <Grid item xs={4} sm={4} key={index}>
+                                                <Box
+                                                    border={gift === '1st Place' ? '2px solid red' : 'none'}
+                                                    borderRadius={2}
+                                                    textAlign="center"
+                                                    p={1}
+                                                    bgcolor="#f9f9f9"
+                                                >
+                                                    <Box
+                                                    width={40}
+                                                    height={40}
+                                                    borderRadius="50%"
+                                                    bgcolor="#e0e0e0"
+                                                    mx="auto"
+                                                    mb={1}
+                                                    ></Box>
+                                                    <Typography variant="body2" fontSize={12}>{gift}</Typography>
+                                                    <Typography variant="caption" color="textSecondary">5 Coins</Typography>
+                                                </Box>
+                                                </Grid>
+                                            ))} */}
+                                            </Grid>
+                                        </Paper>
+                                        </Box>
+                                        </ClickAwayListener>
+                                        
+                                    )}
                                     {/* Comment and creator video tab */}
                                     <div className="flex flex-row justify-center items-center mt-2.5 w-full px-3">
                                         <div
@@ -1453,6 +1552,11 @@ export default function PopupForVideoPlayer({
                                                                                         </form>
 
                                                                                         <div className="flex flex-row items-center">
+                                                                                            <span>
+                                                                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                                <path d="M12 6.16667V21.3333M12 6.16667H7.875C7.26721 6.16667 6.68432 5.92084 6.25455 5.48324C5.82477 5.04566 5.58333 4.45217 5.58333 3.83333C5.58333 3.2145 5.82477 2.621 6.25455 2.18342C6.68432 1.74583 7.26721 1.5 7.875 1.5C11.0833 1.5 12 6.16667 12 6.16667ZM12 6.16667H16.125C16.7328 6.16667 17.3157 5.92084 17.7455 5.48324C18.1752 5.04566 18.4167 4.45217 18.4167 3.83333C18.4167 3.2145 18.1752 2.621 17.7455 2.18342C17.3157 1.74583 16.7328 1.5 16.125 1.5C12.9166 1.5 12 6.16667 12 6.16667ZM3.83333 12H20.1667V18.7667C20.1667 20.0734 20.1667 20.7269 19.9123 21.226C19.6887 21.665 19.3317 22.022 18.8927 22.2457C18.3936 22.5 17.7401 22.5 16.4333 22.5H7.56667C6.25987 22.5 5.60648 22.5 5.10736 22.2457C4.6683 22.022 4.31135 21.665 4.08765 21.226C3.83333 20.7269 3.83333 20.0734 3.83333 18.7667V12ZM3.36667 12H20.6333C21.2868 12 21.6134 12 21.863 11.8728C22.0826 11.7609 22.261 11.5826 22.3728 11.363C22.5 11.1135 22.5 10.7868 22.5 10.1333V8.03333C22.5 7.37994 22.5 7.05324 22.3728 6.80368C22.261 6.58416 22.0826 6.40568 21.863 6.29382C21.6134 6.16667 21.2868 6.16667 20.6333 6.16667H3.36667C2.71327 6.16667 2.38657 6.16667 2.13701 6.29382C1.91749 6.40568 1.73901 6.58416 1.62715 6.80368C1.5 7.05324 1.5 7.37994 1.5 8.03333V10.1333C1.5 10.7868 1.5 11.1135 1.62715 11.363C1.73901 11.5826 1.91749 11.7609 2.13701 11.8728C2.38657 12 2.71327 12 3.36667 12Z" stroke="#FF2C55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                                                </svg>
+                                                                                            </span>
                                                                                             <div
                                                                                                 onClick={
                                                                                                     atRateHandler
@@ -1513,6 +1617,8 @@ export default function PopupForVideoPlayer({
                                                                                 </div>
                                                                             )}
                                                                     </div>
+                                                                    
+
                                                                     <EmojiPicker className="mt-2" open={(commentEmojiIndex === comment_index) ? true : false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onReplyEmojiClick} />
                                                                 </div>
 
@@ -1967,6 +2073,11 @@ export default function PopupForVideoPlayer({
                                                 {/* <EmojiInputPicker isPickerVisible={isPickerVisible} onEmojiSelect={onEmojiClick} inputRef={inputRef} /> */}
                                                 {isUserLoggedIn() && (
                                                     <div className="flex flex-row items-center">
+                                                        <span className='cursor-pointer' onClick={handleGiftClick}>
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M12 6.16667V21.3333M12 6.16667H7.875C7.26721 6.16667 6.68432 5.92084 6.25455 5.48324C5.82477 5.04566 5.58333 4.45217 5.58333 3.83333C5.58333 3.2145 5.82477 2.621 6.25455 2.18342C6.68432 1.74583 7.26721 1.5 7.875 1.5C11.0833 1.5 12 6.16667 12 6.16667ZM12 6.16667H16.125C16.7328 6.16667 17.3157 5.92084 17.7455 5.48324C18.1752 5.04566 18.4167 4.45217 18.4167 3.83333C18.4167 3.2145 18.1752 2.621 17.7455 2.18342C17.3157 1.74583 16.7328 1.5 16.125 1.5C12.9166 1.5 12 6.16667 12 6.16667ZM3.83333 12H20.1667V18.7667C20.1667 20.0734 20.1667 20.7269 19.9123 21.226C19.6887 21.665 19.3317 22.022 18.8927 22.2457C18.3936 22.5 17.7401 22.5 16.4333 22.5H7.56667C6.25987 22.5 5.60648 22.5 5.10736 22.2457C4.6683 22.022 4.31135 21.665 4.08765 21.226C3.83333 20.7269 3.83333 20.0734 3.83333 18.7667V12ZM3.36667 12H20.6333C21.2868 12 21.6134 12 21.863 11.8728C22.0826 11.7609 22.261 11.5826 22.3728 11.363C22.5 11.1135 22.5 10.7868 22.5 10.1333V8.03333C22.5 7.37994 22.5 7.05324 22.3728 6.80368C22.261 6.58416 22.0826 6.40568 21.863 6.29382C21.6134 6.16667 21.2868 6.16667 20.6333 6.16667H3.36667C2.71327 6.16667 2.38657 6.16667 2.13701 6.29382C1.91749 6.40568 1.73901 6.58416 1.62715 6.80368C1.5 7.05324 1.5 7.37994 1.5 8.03333V10.1333C1.5 10.7868 1.5 11.1135 1.62715 11.363C1.73901 11.5826 1.91749 11.7609 2.13701 11.8728C2.38657 12 2.71327 12 3.36667 12Z" stroke="#FF2C55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                            </svg>
+                                                        </span>
                                                         <div
                                                             onClick={atRateHandler}
                                                             className="rounded-lg cursor-pointer hover:bg-[#1618230f] p-[0.313rem] my-[0.438rem] mx-[0.188rem] mr-1"
@@ -1985,10 +2096,12 @@ export default function PopupForVideoPlayer({
                                                             />
                                                         </div>
 
-
+                                                        
+                                                        
                                                     </div>
                                                 )}
                                             </div>
+                                            
 
                                             {isUserLoggedIn() && (
                                                 <div onClick={addCommentHandler} className="mr-1">
@@ -2008,6 +2121,8 @@ export default function PopupForVideoPlayer({
                                                 </div>
                                             )}
                                         </div>
+                                        
+
                                         <EmojiPicker className="mt-2" open={commentEmojiIndex === -2 ? true : false} theme={Theme.DARK} height={300} width="auto" onEmojiClick={onEmojiClick} />
 
                                         
