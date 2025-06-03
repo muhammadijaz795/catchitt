@@ -92,6 +92,7 @@ function LiveCategoryPosts() {
 }, {});
 
   const filteredStreams = categoryName ? { [categoryName]: groupedStreams[categoryName] || [] } : groupedStreams; 
+  const filteredCategory = postCategories.items.find((item: any) => item.name.toLowerCase() === categoryName?.toLowerCase());
   
   useEffect(() => {
     loadRecommendedLiveVideos();
@@ -168,20 +169,16 @@ function LiveCategoryPosts() {
       />
       <Box>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
-          {stream.name || "Mobile Legends: Bang Bang"}
+          {stream.name || ''}
         </Typography>
         <Typography variant="body2" color="text.secondary" gutterBottom>
-          {stream.watching || "45.2k"} watching
+          {stream.watching || 0} watching
         </Typography>
-        <Chip label="RPG" size="small" sx={{ mb: 1 }} />
+        {/* <Chip label="RPG" size="small" sx={{ mb: 1 }} /> */}
         <Typography variant="body2" color="text.secondary">
-          {stream.description ||
-            `Mobile Legends: Bang Bang (MLBB) is a mobile multiplayer online
-            battle arena (MOBA) game developed and published by Moonton, a
-            subsidiary of ByteDance. Released in 2016, the game grew in
-            popularity; most...`}
+          {stream.description || ''}
         </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
+        {/* <Typography variant="body2" sx={{ mt: 1 }}>
           View on{" "}
           <Link to={"https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang"} >
             Wikipedia
@@ -190,7 +187,7 @@ function LiveCategoryPosts() {
           <Link to={"https://en.wikipedia.org/wiki/Mobile_Legends:_Bang_Bang"} >
             license
           </Link>
-        </Typography>
+        </Typography> */}
       </Box>
     </Box>
   );
@@ -202,13 +199,11 @@ function LiveCategoryPosts() {
         <div className='py-3 px-10'>
           <Box  sx={{ mt: 4 }}>
               <Box display="flex" flexWrap="wrap" gap={3} mb={3}>
-                {postCategories.items.slice(0, 1).map((item: any) => (
-                  <Box key={item._id} sx={{ maxWidth: 'calc(100% - 25vw)', width: '100%' }}>
-                    <RecommendedCard stream={item} />
-                    
+                {filteredCategory &&
+                  <Box key={filteredCategory._id} sx={{ maxWidth: 'calc(100% - 25vw)', width: '100%' }}>
+                    <RecommendedCard stream={filteredCategory} />
                   </Box>
-                  
-                ))}
+                }
               </Box>
           </Box>
           {Object.entries(filteredStreams).map(([topicName, streams]) => (
