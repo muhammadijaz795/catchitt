@@ -244,22 +244,22 @@ function UserChat(props: any) {
                 {lastMsg ? (
                     <div>
                         {isGroup ? (
-        <img
-          style={{ padding: 8, background: '#EAEAEA' }}
-          src={groupDefaultIcon}
-          alt="Group"
-        />
-      ) : userImage && userImage !== '' && !imageError ? (
-        <img
-          src={userImage}
-          alt="User"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <AvatarUser userName={userName} useImage={true} />
+                            <img
+                            style={{ padding: 8, background: '#EAEAEA' }}
+                            src={groupDefaultIcon}
+                            alt="Group"
+                            />
+                        ) : userImage && userImage !== '' && !imageError ? (
+                            <img
+                            src={userImage}
+                            alt="User"
+                            onError={() => setImageError(true)}
+                            />
+                        ) : (
+                            <AvatarUser userName={userName} useImage={true} />
 
-        // <AvatarUser userName={userName} />
-      )}
+                            // <AvatarUser userName={userName} />
+                        )}
 
                         {/* <div className={style.avatar}>{userName}</div> */}
 
@@ -396,7 +396,7 @@ function UserChat(props: any) {
                 
             </div>
 
-            <PopupForReport className={style.popupReport}
+                    <PopupForReport className={style.popupReport}
                         openReport={reportPopup}
                         onReportClose={() => { setreportPopup(false);  handleClose(); }}
                         isChatReport={true}

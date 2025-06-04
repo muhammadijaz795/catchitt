@@ -29,6 +29,7 @@ import { getLatestMsgDateFormat } from '../../utils/helpers';
 import ProfileSec from './components/ProfileSec';
 import ConfirmDelete from './components/ConfirmDelete';
 import { useSelector } from 'react-redux';
+import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -1422,8 +1423,13 @@ const ChatComponent = () => {
         // dangetBtnText={dangetBtnText}
         // onBlock={onBlock}
         >
-            <img onClick={()=>navigate('/')} className='float-left mt-3 ml-4 cursor-pointer' src={isDarkTheme?leftArrowCurvedinWhite:leftArrowCurved} alt="" />
-            <div className={`${style.parent} ${isDarkTheme}`}>
+            
+            {/* <img onClick={()=>navigate('/')} className='float-left mt-3 ml-4 cursor-pointer' src={isDarkTheme?leftArrowCurvedinWhite:leftArrowCurved} alt="" /> */}
+            <div className='flex'>
+                <div className='max-w-72'>
+                <SideNavBar />
+                </div>
+                <div className={`${style.parent} ${isDarkTheme}`}>
                 <ConfirmDelete deleteHandler={deleteH} deleteForEveryone={deleteForEveryone} isDarkTheme={isDarkTheme} msg={selectedMsg} handleClose={()=>setSelectedMsg(null)} />
                 <UserChats
                     // onUsersInputChangeHandler={onUsersInputChangeHandler}
@@ -1659,6 +1665,7 @@ const ChatComponent = () => {
                     />
                 )}
                 {isProfileSecVisible && <ProfileSec data={activeUser} isDarkTheme={isDarkTheme} onClose={() => setIsProfileSecVisible(false)} searchMessage={showSearchMessage} manipulateUsers={setUsers} manipulateActiveUser={setActiveUser} />}
+            </div>
             </div>
             {/* 
                 <SearchUser

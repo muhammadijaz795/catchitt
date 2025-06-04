@@ -16,6 +16,7 @@ import ForGroups from './components/welcomeScreens/ForGroups';
 import ForPeoples from './components/welcomeScreens/ForPeoples';
 import hook from './hook/useChat';
 import style from './index.module.scss';
+import { SideNavBar } from '../side-nav-bar/side-nav-bar';
 
 function ChatsSec() {
     const {
@@ -95,7 +96,7 @@ function ChatsSec() {
             DangerText={DangerText}
             dangetBtnText={dangetBtnText}
             onBlock={onBlock}
-        >
+        >            
             <div className={style.parent}>
                 <UserChats
                     onUsersInputChangeHandler={onUsersInputChangeHandler}
