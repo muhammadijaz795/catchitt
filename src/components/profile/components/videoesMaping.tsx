@@ -62,9 +62,9 @@ export default function VideoesMaping({ videos, fetchMore, openVideoModal, setEd
                     className={`${styles.post} cursor-pointer ${styles.mediaWrapper}`}
                 >
                     {/* <div className={styles.mediaWrapper}> */}
-                        <img src={item.templateImage} />
+                        <img className='w-100' src={item.templateImage} />
                         <video
-                            className={`${styles.thumbnail} ${hoveredIndex === i ? 'block' : 'hidden'
+                            className={`w-100 ${styles.thumbnail} ${hoveredIndex === i ? 'block' : 'hidden'
                                 }`}
                             src={
                                 item?.reducedVideoUrl.length > 0
@@ -78,7 +78,7 @@ export default function VideoesMaping({ videos, fetchMore, openVideoModal, setEd
                             playsInline
                         />
                         <img
-                            className={`${styles.thumbnail} ${hoveredIndex === i ? 'hidden' : 'block'
+                            className={`w-100 ${styles.thumbnail} ${hoveredIndex === i ? 'hidden' : 'block'
                                 }`}
                             src={item?.thumbnailUrl}
                             alt=""
