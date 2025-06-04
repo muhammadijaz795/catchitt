@@ -103,11 +103,11 @@ export const Profile = (props: any) => {
             icon: <Liked active={activeTab === 'Liked Videos'} />,
             key: 4,
         },
-        {
-            title: 'Badges',
-            icon: <Badge active={activeTab === 'Badges'} />,
-            key: 5,
-        },
+        // {
+        //     title: 'Badges',
+        //     icon: <Badge active={activeTab === 'Badges'} />,
+        //     key: 5,
+        // },
         {
             title: 'Tagged Posts',
             icon: <Tagged active={activeTab === 'Tagged Posts'} />,
