@@ -19,12 +19,12 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any, r
     removeCurrentUser
 }) => {
     console.log('ny user', user);
-    console.log('ny user follower', user?.follower_userID?.isFollower);
+    console.log('ny user follower', user?.follower_userID?.isFollowing);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState('Remove');
-    const [isFollower, setIsFollower] = useState( user?.follower_userID?.isFollower   ? true : false);
-    const [followBackText, setFollowBackText] = useState( user?.follower_userID?.isFollower ? 'Requested' : 'Follow Back');
+    const [isFollower, setIsFollower] = useState( user?.follower_userID?.isFollowing   ? true : false);
+    const [followBackText, setFollowBackText] = useState( user?.follower_userID?.isFollowing ? 'Requested' : 'Follow Back');
 
     const [unfollowPopup, setUnfollowPopup] = useState(false);
     const [clickedUser, setClickedUser] = useState({});

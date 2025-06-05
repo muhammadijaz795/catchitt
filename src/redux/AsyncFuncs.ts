@@ -252,7 +252,7 @@ export const loadFollowers: any = createAsyncThunk('get/profileSlice/followers',
     const token = localStorage.getItem('token');
     if (token) {
         try {
-            const response = await fetch(`${API_KEY}/profile/${userId}/following?page=${page}&pageSize=10`, {
+            const response = await fetch(`${API_KEY}/profile/v2/${userId}/followers?page=${page}&pageSize=10`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -302,7 +302,7 @@ export const loadFollowing: any = createAsyncThunk('get/profileSlice/following',
     const token = localStorage.getItem('token');
     if (token) {
         try {
-            const response = await fetch(`${API_KEY}/profile/${userId}/followers?page=${page}&pageSize=10`, {
+            const response = await fetch(`${API_KEY}/profile/v2/${userId}/following?page=${page}&pageSize=10`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
