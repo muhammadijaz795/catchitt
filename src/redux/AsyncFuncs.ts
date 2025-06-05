@@ -11,7 +11,7 @@ export const followingsMethod: any = createAsyncThunk(
             if (id) {
                 let res = await post(`/profile/follow/${id}/`);
             }
-            const response = await get(`/profile/${userId}/followers`);
+            const response = await get(`/profile/v2/${userId}/followers`);
 
             if (response?.data?.data) {
                 const responseData = response?.data;

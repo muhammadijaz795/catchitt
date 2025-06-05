@@ -7,6 +7,8 @@ import MessageTab from './MessageTab';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFriends, getRandomUsers, loadFollowers, loadFollowing } from '../../../redux/AsyncFuncs';
 import settingsIcon from '../svg-components/cross-light-icon.svg';
+import { del, get, post } from '../../../axios/axiosClient';
+
 
 import { useUpdateEffect } from 'react-use';
 const API_KEY = process.env.VITE_API_URL;
@@ -68,14 +70,55 @@ const FollowModal: React.FC<{ openTab: string | null, onClose: () => void; isPub
         }) || [];
     }, [publicFollowing, searchQuery]);
 
+    const [filteredFollowers, setFilteredFollowers] = useState<any[]>([]);
+
+
+    useEffect(() => {
+        const fetchFilteredFollowers = async () => {
+            // if (!searchQuery.trim()) {
+            //     setFilteredFollowers(followers || []);
+            //     return;
+            // }
+    
+            // setIsLoading(true);
+    
+            try {
+                const response = await get(`/profile/v2/${userId}/followers?search=${searchQuery}`);
+                if (response?.data?.data) {
+                    console.log('Filtered Followers Data:', response.data.data);
+                    let allFollowers = response.data.data.data;
+                    const filtered = allFollowers.filter((user: any) =>
+                        user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                    setFilteredFollowers(filtered);
+
+                    // setFilteredFollowers(response.data.data.data);
+                } else {
+                    setFilteredFollowers([]);
+                }
+            } catch (error) {
+                console.error('Error fetching filtered followers:', error);
+                setFilteredFollowers([]);
+            } finally {
+                // setIsLoading(false);
+            }
+        };
+    
+        fetchFilteredFollowers();
+    }, [searchQuery, userId]);
+
+  
+   
+    
+
 
     // Filtered Followers
-    const filteredFollowers = useMemo(() => {
-        if (!searchQuery.trim()) return followers || [];
-        return followers?.filter((user: any) => {
-            return user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
-        }) || [];
-    }, [followers, searchQuery]);
+    // const filteredFollowers = useMemo(() => {
+    //     if (!searchQuery.trim()) return followers || [];
+    //     return followers?.filter((user: any) => {
+    //         return user?.follower_userID?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+    //     }) || [];
+    // }, [followers, searchQuery]);
     
     const filteredPublicFollowers = useMemo(() => {
         if (!searchQuery.trim()) return publicFollowers || [];

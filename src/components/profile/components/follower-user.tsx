@@ -50,7 +50,11 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any, r
 
     const handleFollowBack = async (userId: any) => {
             console.log("handleFollowBack", userId)
-            setFollowBackText('Requested');
+            if(followBackText == 'Requested') {
+                setFollowBackText('Follow Back');
+            }else{
+                setFollowBackText('Requested');
+            }
             const token = localStorage.getItem('token');
             // return false;
             try {
@@ -62,16 +66,16 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any, r
                 // );
                 // const responseData = await response.json();
                 // if (responseData.isFollowed == false) {
-                    const res = await post(`/profile/follow/${userId}`);
-                    console.log("handleFollowBack", res);
+                    // const res = await post(`/profile/follow/${userId}`);
+                    // console.log("handleFollowBack", res);
                     dispatch(followingsMethod(userId)).then(() => {
                         dispatch(refreshFollowing());
                         // dispatch(loadFollowing(1));
                         // dispatch(loadFollowers(1));
                     });
-                    if (res?.data) {
-                        console.log("handleFollowBack", res?.data)
-                    }
+                    // if (res?.data) {
+                    //     console.log("handleFollowBack", res?.data)
+                    // }
                 // }
                 const LoggedInUserId = localStorage.getItem('userId');
                 const result = await post(`/chat/messages`, {
