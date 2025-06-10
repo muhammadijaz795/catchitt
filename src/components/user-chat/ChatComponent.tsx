@@ -73,7 +73,7 @@ const ChatComponent = () => {
     const [DangerText, setDengerText] = useState<string>('');
     const [msg, setMsg] = useState<string>('');
     const [msgType, setMsgType] = useState<string>('');
-    const [selectedGift, setSelectedGift] = useState<{ _id: string } | null>(null);
+    const [selectedGift, setSelectedGift] = useState<{ _id: string; price: number } | null>(null);
 
     const [activeUser, setActiveUser] = useState<any>({});
     const [activeChat, setActiveChat] = useState<any>({});
@@ -995,14 +995,19 @@ const ChatComponent = () => {
         e.stopPropagation();
         let messageType = msgType;
         if(selectedGift){
-            console.log('start of gift..')
+            console.log('start of gift..');
+            console.log(selectedGift);
             // setMsgType('Gift');
-            messageType = 'Gift';
+            
             if(balance == 0)
             {
                 showToastError('Do not have enough balance.');
                 return;
+            }else if(balance < selectedGift?.price){
+                showToastError('Do not have enough balance.');
+                return;
             }
+            
         }
        
         let messageData = {

@@ -71,6 +71,10 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
     video.onloadedmetadata = function () {
         setDuration(video?.duration);
         setPlayingTime(video?.currentTime);
+        if (videoRef.current) {
+            videoRef.current.volume = level; // Set initial volume
+            videoRef.current.muted = isMutedVolume; // Set initial mute state
+        }
     };
     // console.log("number", number);
     video.src = src; // Replace with the URL of your video
@@ -109,13 +113,17 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
           videoRef.current.muted = isMutedVolume;
           console.log('Video volume updated:', { level, muted: isMutedVolume });
         }
-      }, [level, isMutedVolume, videoRef.current]); // Add videoRef.current to dependencies
+      }, [level, isMutedVolume]); 
+    //   , videoRef.current
 
 
     const handleVolumeChange = (newLevel:any) => {
         // console.log('volume change...', e.target.value); // Log the volume change event value
         // const newVolume = parseFloat(e.target.value);
         dispatch(setVolume(newLevel)); // Update the volume in Redux
+        if (videoRef.current) {
+            videoRef.current.volume = newLevel; // Also set it directly on the video
+        }
     };
 
      // Handle mouse enter on the volume container
@@ -276,7 +284,9 @@ function CustomPlayer({ isMuted, src, videoModal, post, thumbnailImage, controls
         if (isPlaying) {
             if (onMediaPlay && post?.mediaId) {
             }
-            video.pause();
+           if (video) {
+                video.pause();
+            }
         } else {
             video.play();
             if (onMediaPlay && post?.mediaId) {

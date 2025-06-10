@@ -54,7 +54,7 @@ function FollowingVideos(props: any) {
     // @ts-ignore
     const suggestedUsers = useSelector((store) => store.reducers.suggestedAccounts.data);
     const { isMutedVolume } = useSelector((state: any) => state?.reducers?.volume);
-    
+    const [activeMediaId, setActiveMediaId] = useState<string | null>(null); // Track active video mediaId
     const dispatch = useDispatch();
     const userActions: any = [
         { img: moreInHome, actionType: 'more' },
@@ -172,6 +172,36 @@ function FollowingVideos(props: any) {
         }
     }, [page]);
 
+    const handleVideoEnd = (endedMediaId: string) => {
+    const currentIndex = videoes.findIndex((post: any) => post.mediaId === endedMediaId);
+    if (currentIndex === -1 || currentIndex >= videoes.length - 1) return;
+  
+    const nextMediaId = videoes[currentIndex + 1].mediaId;
+    
+    // Scroll to next video
+    scrollToVideo(true);
+    
+    // Play next video after scroll completes
+    setTimeout(() => { console.info('here next video'+nextMediaId);
+      setActiveMediaId(nextMediaId);
+    }, 500); // Adjust timeout based on your scroll duration
+  };
+  
+  // Add this scroll function in your main component
+  const scrollToVideo = (isNext: boolean) => {
+    if (!scrollableDivRef.current) return;
+    const videoHeight = (scrollableDivRef.current.children[0] as HTMLElement)?.offsetHeight + 32;
+    const { scrollTop } = scrollableDivRef.current;
+    console.log({
+        top: scrollTop + (isNext ? videoHeight : -videoHeight),
+        behavior: 'smooth'
+      });
+    scrollableDivRef.current.scrollTo({
+      top: scrollTop + (isNext ? videoHeight : -videoHeight),
+      behavior: 'smooth'
+    });
+  };
+
     const handleScroll = () => {
         if (scrollableDivRef.current) {
             const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef.current;
@@ -182,6 +212,22 @@ function FollowingVideos(props: any) {
             }
         }
     };
+
+    useEffect(() => {
+        // If no video is playing, set the first video as active (or any other criteria)
+        if (!activeMediaId && videoes.length > 0) {
+            // setActiveMediaId(videoes[0]?.mediaId); // Set the first video as the active one
+        }
+
+        // You can also set a fallback or default logic, for example, last played video, or first available video, etc.
+
+        // For example, if you have a "last played" video stored in local storage or database:
+        // const lastPlayedVideo = getLastPlayedVideoFromStorage();
+        // if (lastPlayedVideo) {
+        //     setActiveMediaId(lastPlayedVideo);
+        // }
+    }, [videoes, activeMediaId]); // This will run on initial load or when `videoes` changes
+    
 
     useEffect(() => {
         if (scrollableDivRef.current) {
@@ -300,6 +346,7 @@ function FollowingVideos(props: any) {
                                             className={style.mainContainer}
                                         >
                                             <CustomPlayer
+                                                onEnded={handleVideoEnd}
                                                 isMuted={isMuted} 
                                                 // onMuteToggle={toggleMute}
                                                 isPlaying={isPlaying}
