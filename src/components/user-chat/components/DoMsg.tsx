@@ -498,6 +498,13 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
                 400
                 <AddCircleIcon />
               </button> */}
+              <div className='flex gap-1'>
+                <span style={{color: '#FF2C55'}}>
+                  Recharge
+                </span>   
+              <img style={{ height: '13px', marginTop: '5px' }} src={caesium} alt="Coin Icon" />                 
+                120
+              </div>
               <button className={style.btnHide} onClick={hideGiftPopup}>
               <CloseIcon />
               </button>
