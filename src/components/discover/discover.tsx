@@ -37,7 +37,7 @@ export default function Discover() {
         let identifier = selectedCategory ? `/${selectedCategory}` : '';
         try {
             const response = await fetch(
-                `${API_KEY}/media-content/public/videos/feed/upgraded${identifier}?page=${exploredVideos.page}&pageSize=${exploredVideos.pageSize}&forWeb=1`,
+                `${API_KEY}/discover/v2/videos-by-hashtag?Seezitt=${identifier}&page=${exploredVideos.page}&pageSize=${exploredVideos.pageSize}&forWeb=1`,
                 {
                     method: 'GET',
                     headers: {

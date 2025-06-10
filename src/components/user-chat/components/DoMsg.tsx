@@ -33,6 +33,7 @@ import { ClickAwayListener } from '@mui/material';
 // import commentEmoji from '../../../icons/commentEmoji.svg';
 import CloseIcon from '@mui/icons-material/Close';
 import GifIcon from '@mui/icons-material/Gif';
+import { useAuthStore } from '../../../store/authStore';
 
 const CameraIcon = () => ( <svg width="21" height="19" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M13.5 0.5C14.0046 0.49984 14.4906 0.690406 14.8605 1.0335C15.2305 1.37659 15.4572 1.84684 15.495 2.35L15.5 2.5C15.5 2.74493 15.59 2.98134 15.7527 3.16437C15.9155 3.34741 16.1397 3.46434 16.383 3.493L16.5 3.5H17.5C18.2652 3.49996 19.0015 3.79233 19.5583 4.31728C20.115 4.84224 20.4501 5.56011 20.495 6.324L20.5 6.5V15.5C20.5 16.2652 20.2077 17.0015 19.6827 17.5583C19.1578 18.115 18.4399 18.4501 17.676 18.495L17.5 18.5H3.5C2.73479 18.5 1.99849 18.2077 1.44174 17.6827C0.884993 17.1578 0.549892 16.4399 0.505 15.676L0.5 15.5V6.5C0.499957 5.73479 0.792325 4.99849 1.31728 4.44174C1.84224 3.88499 2.56011 3.54989 3.324 3.505L3.5 3.5H4.5C4.76522 3.5 5.01957 3.39464 5.20711 3.20711C5.39464 3.01957 5.5 2.76522 5.5 2.5C5.49984 1.99542 5.69041 1.50943 6.0335 1.13945C6.37659 0.769471 6.84685 0.542843 7.35 0.505L7.5 0.5H13.5ZM10.5 7.5C9.75659 7.49994 9.03964 7.7759 8.48813 8.27439C7.93662 8.77287 7.58984 9.45837 7.515 10.198L7.504 10.35L7.5 10.5L7.504 10.65C7.53335 11.2362 7.73402 11.801 8.08117 12.2743C8.42832 12.7476 8.90669 13.1087 9.45702 13.3128C10.0074 13.5169 10.6055 13.5551 11.1773 13.4226C11.7491 13.2901 12.2695 12.9928 12.674 12.5675C13.0786 12.1422 13.3494 11.6076 13.4531 11.0298C13.5568 10.4521 13.4887 9.85663 13.2572 9.31721C13.0258 8.77779 12.6412 8.31811 12.1511 7.9951C11.6611 7.67209 11.087 7.49995 10.5 7.5Z" fill="#111111"/>
@@ -74,6 +75,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false); 
   const [isDivVisible, setIsDivVisible] = useState(false);
+  const { balance } = useAuthStore();
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -503,7 +505,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
                   Recharge
                 </span>   
               <img style={{ height: '13px', marginTop: '5px' }} src={caesium} alt="Coin Icon" />                 
-                120
+                {balance}
               </div>
               <button className={style.btnHide} onClick={hideGiftPopup}>
               <CloseIcon />
