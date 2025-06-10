@@ -1322,7 +1322,7 @@ export default function PopupForVideoPlayer({
                                         </div>
                                     </div>
                                     {/* recieved gifts section */}
-                                    {commentsAllowed ? <div className={style.gifts}>
+                                    {/* {commentsAllowed ? <div className={style.gifts}>
                                         <p className={style.receivedGifftsText}>Gifts received</p>
                                         <div>
                                         {giftsDetails.details.map((item: any) => {
@@ -1346,7 +1346,7 @@ export default function PopupForVideoPlayer({
                                             );
                                             })}
                                         </div>
-                                    </div>:''}
+                                    </div>:''} */}
                                     {giftOpen && (
                                     <ClickAwayListener onClickAway={handleGiftClose}>
                                         <Box
