@@ -601,12 +601,15 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
         )}
         <div>
           <div className={style.actions}>
-          <input
+          {/* <input
             type="button"
             onClick={() => setOpenFiles(true)}
             className={style.filetype}
             accept="image/*, video/*"
-          />
+          /> */}
+            <input type="file" onChange={(e) => { uploadfile(e) }} className={style.filetype} accept="image/*, video/*" />
+
+
           <img src={paperClip} alt="attach" />
         </div>
          {openFiles && (
@@ -641,7 +644,7 @@ const DoMsg = ({ onSubmit, msg, setMessage, setMessageType, isDarkTheme, data,cu
           </Box>
         </ClickAwayListener>
           )
-        };
+        }
           {/* <div className={style.actions}>
                     <img src={mic} alt="" />
                 </div> */}

@@ -25,11 +25,13 @@ import ForPeoples from './components/welcomeScreens/ForPeoples';
 import ForGroups from './components/welcomeScreens/ForGroups';
 import { useUpdateEffect } from 'react-use';
 import Forwardusers from './components/modals/Forwardusers';
+import { showToast, showToastSuccess, showToastError } from '../../utils/constants';
 import { getLatestMsgDateFormat } from '../../utils/helpers';
 import ProfileSec from './components/ProfileSec';
 import ConfirmDelete from './components/ConfirmDelete';
 import { useSelector } from 'react-redux';
 import { SideNavBar } from '../side-nav-bar/side-nav-bar';
+import { useAuthStore } from '../../store/authStore';
 
 const ChatComponent = () => {
     // const socket = useSocket();
@@ -104,6 +106,7 @@ const ChatComponent = () => {
     const [isMuted, setIsMuted] = useState(false);
     const userAvatar = useSelector((state: any) => state?.reducers?.profile?.avatar);
     const [messagesState, setMessagesState] = useState<Record<string, string>>({});
+    const { balance } = useAuthStore();
 
     const longPressH = (item: any, newItem=true) => {   
         const tempArr: any[] = [];
@@ -995,6 +998,11 @@ const ChatComponent = () => {
             console.log('start of gift..')
             // setMsgType('Gift');
             messageType = 'Gift';
+            if(balance == 0)
+            {
+                showToastError('Do not have enough balance.');
+                return;
+            }
         }
        
         let messageData = {
