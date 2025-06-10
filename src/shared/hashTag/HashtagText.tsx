@@ -6,7 +6,7 @@ const HashtagText = ({ text, maxLength }: { text: string, maxLength: number }) =
   const [isExpanded, setIsExpanded] = useState(false);
 
   const navigateToHashtag = (hashtag: string) => {
-    navigate(`/discover/${hashtag}`);
+    navigate(`/discover/${hashtag}?hastag=true`);
   };
 
   const isTruncated = text?.length > maxLength;

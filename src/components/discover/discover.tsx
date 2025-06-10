@@ -33,11 +33,15 @@ export default function Discover() {
     // theme
     const [darkTheme, setdarkTheme] = useState('');
 
-    const getExplorePageData:any = async (signal: AbortSignal) => {
+    const getExplorePageData:any = async (signal: AbortSignal, isHashTagCall=false) => {
         let identifier = selectedCategory ? `/${selectedCategory}` : '';
+        let url = `${API_KEY}/media-content/public/videos/feed/upgraded${identifier}?page=${exploredVideos.page}&pageSize=${exploredVideos.pageSize}&forWeb=1`;
+        if(isHashTagCall){
+            url = `${API_KEY}/discover/v2/videos-by-hashtag?Seezitt=${identifier}&page=${exploredVideos.page}&pageSize=${exploredVideos.pageSize}&forWeb=1`;
+        }
         try {
             const response = await fetch(
-                `${API_KEY}/discover/v2/videos-by-hashtag?Seezitt=${identifier}&page=${exploredVideos.page}&pageSize=${exploredVideos.pageSize}&forWeb=1`,
+                url,
                 {
                     method: 'GET',
                     headers: {
@@ -87,7 +91,7 @@ export default function Discover() {
         const signal = controller.signal;
         const fetchVedios = async () => {
             setIsLoading(true);
-            await getExplorePageData(signal);
+            await getExplorePageData(signal, true);
             setIsLoading(false);
         };
         fetchVedios();
