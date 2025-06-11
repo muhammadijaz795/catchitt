@@ -120,7 +120,7 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
                             <div className={`w-3 h-3 rounded-full ${showCardFields ? "bg-red-600" : "border border-gray-400"}`} />
                             <span className="text-sm font-semibold">Add Credit Or Debit Card</span>
                             <div className="ml-auto flex gap-1">
-                            <svg style={{transform: 'scale(1.3)', marginLeft: '5px', marginRight: '5px'}} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 -86.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
+                            <svg style={{transform: 'scale(1.3)', marginLeft: '5px', marginRight: '5px'}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 -86.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
                                 <defs>
                                     <linearGradient x1="45.9741966%" y1="-2.00617467%" x2="54.8768726%" y2="100%" id="linearGradient-1">
                                         <stop stop-color="#222357" offset="0%"></stop>

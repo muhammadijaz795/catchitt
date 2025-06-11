@@ -21,7 +21,7 @@ const style = {
   p: 4,
 };
 
-const InvitationCodeModal = ({ open, onClose }) => {
+const InvitationCodeModal = ({ open, onClose }: { open: any; onClose: any; }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={style}>

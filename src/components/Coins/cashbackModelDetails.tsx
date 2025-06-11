@@ -22,7 +22,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { modelMininon, modelDiscountDivider, logoAuthWhite, modelCoins, bgModelIcon,} from "../../icons";
 
-export default function CashBackWaveDialogDetails({ open , onClose }) {
+export default function CashBackWaveDialogDetails({ open , onClose }: { open: any; onClose: any;}) {
   const [tab, setTab] = React.useState(0);
 
   return (

@@ -41,7 +41,7 @@ const coinOptions = [
   { index: 7, coins: '17,500', price: '221.05', unit: '$' },
   { index: 8, coins: 'Custom', price: 'Large amount supported', unit: '', isCustom: true },
 ];
-const InfoItem = ({ icon, title, description, iconColor }) => (
+const InfoItem = ({ icon, title, description, iconColor }: { icon: any; title: any; description: any; iconColor: any; }) => (
   <Stack direction="row" spacing={2} alignItems="flex-start">
     <Box color={iconColor} mt={0.5}>
       {icon}
@@ -245,7 +245,7 @@ export default function Coins() {
                         borderBottom: '1px solid #ccc',
                         backgroundColor: 'transparent',
                       }}
-                      onChange={(e) => setSelected(prevState => ({ ...prevState, coins: e.target.value, price: (e.target.value * 0.0116).toFixed(2), unit: '$' }))}
+                      onChange={(e) => setSelected(prevState => ({ ...prevState, coins: e.target.value, price: (Number(e.target.value) * 0.0116).toFixed(2), unit: '$' }))}
                     />
                   ) : (
                     <Typography sx={{color: '#000'}} fontWeight={600} fontSize="0.875rem">
@@ -266,7 +266,7 @@ export default function Coins() {
           <Typography component="span" fontSize="0.875rem" color="text.secondary">
             Payment method
           </Typography>
-          <svg style={{transform: 'scale(1.3)', marginLeft: '5px', marginRight: '5px'}} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 -86.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
+          <svg style={{transform: 'scale(1.3)', marginLeft: '5px', marginRight: '5px'}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 -86.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
               <defs>
                   <linearGradient x1="45.9741966%" y1="-2.00617467%" x2="54.8768726%" y2="100%" id="linearGradient-1">
                       <stop stop-color="#222357" offset="0%"></stop>
