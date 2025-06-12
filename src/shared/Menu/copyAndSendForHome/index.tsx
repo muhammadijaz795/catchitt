@@ -55,7 +55,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
 
     const shareToWhatsApp = () => {
         let url = `${BASE_URL_FRONTEND}/${userName}/video/${extractVideoId(videoUrl)}`;
-        window.open(`https://api.whatsapp.com/send?text=${videoTitle} - ${url}`, '_blank');
+        window.open(`https://api.whatsapp.com/send?text=${url} ${videoTitle}`, '_blank');
     };
 
     const shareToFacebook = () => {
