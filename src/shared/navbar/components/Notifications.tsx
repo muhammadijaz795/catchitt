@@ -554,160 +554,161 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
                             <button className={`${style.buttontab} ${followerSection ? activeClass : ''}`} onClick={handlefollower}>Followers</button>
                             {/* <button className={`${style.buttontab} ${messageRequest ? activeClass : ''} `} onClick={handleMessageRequest}>Message Requests</button> */}
                         </div>
-
-                        <div className={`${style.inboxList} no-scrollbar`}>
-                            {likeSection && (notification.like?.length > 0 ?
-                                notification.like.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
-                                    <div className={`${style.inboxListItem}`}>
-                                        <div className={`${style.inboxListInner}`}>
-                                            <div className={`${style.avatar}`}>
-                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
-                                                                                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
-                                                                                                                                    (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
-                                                                                                                                }} alt="Profile image" />
-                                            </div>
-                                            <div className={`${style.gridLine}`}>
-                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>{noti.message||'liked your video.'}</p>
-                                            </div>
-                                        </div>
-                                        {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                    </div>
-                                </div>)) :
-                                (<div className={`${style.inboxNoLikes}`}>
-                                    <div className={`${style.inboxNoLikesInner}`}>
-                                        <FavoriteBorder style={{ fontSize: 50 }} />
-                                        <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px', fontWeight: '600' }} >Likes on your videos</p>
-                                        <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }} >When someone likes one of your videos, you'll see it here</p>
-                                    </div>
-                                </div>))
-                            }
-
-                            {commentSection && (notification.comment?.length > 0 ?
-                                notification.comment.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
-                                    <div className={`${style.inboxListItem}`}>
-                                        <div className={`${style.inboxListInner}`}>
-                                            <div className={`${style.avatar}`}>
-                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
-                                                                                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
-                                                                                                                                    (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
-                                                                                                                                }} alt="Profile image" />
-                                            </div>
-                                            <div className={`${style.gridLine}`}>
-                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>{noti.message||'commented on your video.'}</p>
-                                            </div>
-                                        </div>
-                                        {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                    </div>
-                                </div>)) :
-                                (<div className={`${style.inboxNoComments}`}>
-                                    <div className={`${style.inboxNoCommentsInner}`}>
-                                        <ChatBubbleOutlineSharp style={{ fontSize: 50 }} />
-                                        <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>Comments on your videos</p>
-                                        <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>When someone likes one of your comments, you'll see it here</p>
-                                    </div>
-                                </div>))
-                            }
-
-                            {tagSection && (notification.tag?.length > 0 ?
-                                notification.tag.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
-                                    <div className={`${style.inboxListItem}`}>
-                                        <div className={`${style.inboxListInner}`}>
-                                            <div className={`${style.avatar}`}>
-                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
-                                                                                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
-                                                                                                                                    (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
-                                                                                                                                }} alt="Profile image" />
-                                            </div>
-                                            <div className={`${style.gridLine}`}>
-                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>{noti.message || 'mention you'}</p>
-                                            </div>
-                                        </div>
-                                        {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
-                                    </div>
-                                </div> )) :
-                                (<div className={`${style.inboxNoMentions}`}>
-                                    <div className={`${style.inboxNoMentionsInner}`}>
-                                        <AlternateEmail style={{ fontSize: 50 }} />
-                                        <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>Mentions of you</p>
-                                        <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>When someone mentions you, you'll see it here</p>
-                                    </div>
-                                </div>
-                                ))
-                            }
-
-                            {followerSection && (notification.follow?.length > 0 ?
-                                notification.follow.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
-                                    <div className={`${style.inboxListItem}`}>
-                                        <div className={`${style.inboxListInner}`}>
-                                            <div className={`${style.avatar}`}>
-                                                <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
-                                                                                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
-                                                                                                                                    (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
-                                                                                                                                }} alt="Profile image" />
-                                            </div>
-                                            <div className={`${style.gridLine}`}>
-                                                {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
-                                                <p className={`${style.notificationContent}`}>{noti.message||'Follows you.'}</p>
-                                            </div>
-                                        </div>
-                                        <button className={`${style.inboxFollow}`} onClick={() => { handleFollowBack(noti?.triggeredUser?._id) }}>Follow back</button>
-                                    </div>
-                                </div> )) :
-                                (<div className={`${style.inboxNoMentions}`}>
-                                    <div className={`${style.inboxNoMentionsInner}`}>
-                                        <AlternateEmail style={{ fontSize: 50 }} />
-                                        <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>Follow of you</p>
-                                        <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>When someone follows you, you'll see it here</p>
-                                    </div>
-                                </div>
-                                ))
-                            }
-                            <div  className={`${style.inboxList}`}  onScroll={(event)=>handleScroll(event)}>
-                                {messageRequest && (receiveMessageRequest && receiveMessageRequest.length > 0 ? (
-                                    receiveMessageRequest.map((noti: any, key: number) => {
-                                        // Print the notification object for debugging
-                                        const user = noti?.users?.[0]; // Accessing the first user
-                                        const userName = user?.name ? `${user.name} sent request.` : 'User sent request.'; // Fallback name
-                                        const userAvatar = user?.avatar || defaultProfileIcon; // Fallback avatar
-
-                                        return (
-                                            <div key={key}>
-                                                <div className={`${style.inboxListItem}`}>
-                                                    <div className={`${style.inboxListInner}`}>
-                                                        <div className={`${style.avatar}`}>
-                                                            <img src={userAvatar} onError={(e) => {
-                                                                                                                                    (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
-                                                                                                                                    (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
-                                                                                                                                }} alt="Profile image" />
-                                                        </div>
-                                                        <div className={`${style.gridLine}`}>
-                                                            <p className={`${style.notificationContent}`}>{userName}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className={`${style.buttonContainer}`}>
-                                                        <button style={{ margin: '5px' }} onClick={() => acceptRequest(noti)} className={`${style.inboxFollow}`}>Accept</button>
-                                                        <button style={{ margin: '5px' }} onClick={() => rejectRequest(noti)} className={`${style.inboxFollow}`}>Reject</button>
-                                                    </div>
+                        <div className={`${style.outerBox} pl-3`}>
+                            <div className={`${style.inboxList}  no-scrollbar`}>
+                                {likeSection && (notification.like?.length > 0 ?
+                                    notification.like.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                        <div className={`${style.inboxListItem}`}>
+                                            <div className={`${style.inboxListInner}`}>
+                                                <div className={`${style.avatar}`}>
+                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
+                                                                                                                                        (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                                                                                        (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
+                                                                                                                                    }} alt="Profile image" />
+                                                </div>
+                                                <div className={`${style.gridLine}`}>
+                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
+                                                    <p className={`${style.notificationContent}`}>{noti.message||'liked your video.'}</p>
                                                 </div>
                                             </div>
-                                        );
-                                    })
-                                ) : (
-                                    <div className={`${style.inboxNoMentions}`}>
+                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                        </div>
+                                    </div>)) :
+                                    (<div className={`${style.inboxNoLikes}`}>
+                                        <div className={`${style.inboxNoLikesInner}`}>
+                                            <FavoriteBorder style={{ fontSize: 50 }} />
+                                            <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px', fontWeight: '600' }} >Likes on your videos</p>
+                                            <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }} >When someone likes one of your videos, you'll see it here</p>
+                                        </div>
+                                    </div>))
+                                }
+
+                                {commentSection && (notification.comment?.length > 0 ?
+                                    notification.comment.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                        <div className={`${style.inboxListItem}`}>
+                                            <div className={`${style.inboxListInner}`}>
+                                                <div className={`${style.avatar}`}>
+                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
+                                                                                                                                        (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                                                                                        (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
+                                                                                                                                    }} alt="Profile image" />
+                                                </div>
+                                                <div className={`${style.gridLine}`}>
+                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
+                                                    <p className={`${style.notificationContent}`}>{noti.message||'commented on your video.'}</p>
+                                                </div>
+                                            </div>
+                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                        </div>
+                                    </div>)) :
+                                    (<div className={`${style.inboxNoComments}`}>
+                                        <div className={`${style.inboxNoCommentsInner}`}>
+                                            <ChatBubbleOutlineSharp style={{ fontSize: 50 }} />
+                                            <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>Comments on your videos</p>
+                                            <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>When someone likes one of your comments, you'll see it here</p>
+                                        </div>
+                                    </div>))
+                                }
+
+                                {tagSection && (notification.tag?.length > 0 ?
+                                    notification.tag.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                        <div className={`${style.inboxListItem}`}>
+                                            <div className={`${style.inboxListInner}`}>
+                                                <div className={`${style.avatar}`}>
+                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
+                                                                                                                                        (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                                                                                        (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
+                                                                                                                                    }} alt="Profile image" />
+                                                </div>
+                                                <div className={`${style.gridLine}`}>
+                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
+                                                    <p className={`${style.notificationContent}`}>{noti.message || 'mention you'}</p>
+                                                </div>
+                                            </div>
+                                            {/* <button className={`${style.inboxFollow}`}>Follow back</button> */}
+                                        </div>
+                                    </div> )) :
+                                    (<div className={`${style.inboxNoMentions}`}>
                                         <div className={`${style.inboxNoMentionsInner}`}>
                                             <AlternateEmail style={{ fontSize: 50 }} />
-                                            <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>No new requests</p>
-                                            <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>You'll see your requests here when someone sends them.</p>
+                                            <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>Mentions of you</p>
+                                            <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>When someone mentions you, you'll see it here</p>
                                         </div>
                                     </div>
-                                ))}
+                                    ))
+                                }
+
+                                {followerSection && (notification.follow?.length > 0 ?
+                                    notification.follow.map((noti: any, key: number) => (<div key={key} className={`${style.notificationList}`}>
+                                        <div className={`${style.inboxListItem}`}>
+                                            <div className={`${style.inboxListInner}`}>
+                                                <div className={`${style.avatar}`}>
+                                                    <img src={noti?.triggeredUser?.avatar ? noti?.triggeredUser?.avatar : defaultProfileIcon} onError={(e) => {
+                                                                                                                                        (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                                                                                        (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
+                                                                                                                                    }} alt="Profile image" />
+                                                </div>
+                                                <div className={`${style.gridLine}`}>
+                                                    {/* <p className={`${style.notificationUsername}`}>{noti?.triggeredUser?.name}</p> */}
+                                                    <p className={`${style.notificationContent}`}>{noti.message||'Follows you.'}</p>
+                                                </div>
+                                            </div>
+                                            <button className={`${style.inboxFollow}`} onClick={() => { handleFollowBack(noti?.triggeredUser?._id) }}>Follow back</button>
+                                        </div>
+                                    </div> )) :
+                                    (<div className={`${style.inboxNoMentions}`}>
+                                        <div className={`${style.inboxNoMentionsInner}`}>
+                                            <AlternateEmail style={{ fontSize: 50 }} />
+                                            <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>Follow of you</p>
+                                            <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>When someone follows you, you'll see it here</p>
+                                        </div>
+                                    </div>
+                                    ))
+                                }
+                                <div  className={`${style.inboxList}`}  onScroll={(event)=>handleScroll(event)}>
+                                    {messageRequest && (receiveMessageRequest && receiveMessageRequest.length > 0 ? (
+                                        receiveMessageRequest.map((noti: any, key: number) => {
+                                            // Print the notification object for debugging
+                                            const user = noti?.users?.[0]; // Accessing the first user
+                                            const userName = user?.name ? `${user.name} sent request.` : 'User sent request.'; // Fallback name
+                                            const userAvatar = user?.avatar || defaultProfileIcon; // Fallback avatar
+
+                                            return (
+                                                <div key={key}>
+                                                    <div className={`${style.inboxListItem}`}>
+                                                        <div className={`${style.inboxListInner}`}>
+                                                            <div className={`${style.avatar}`}>
+                                                                <img src={userAvatar} onError={(e) => {
+                                                                                                                                        (e.target as HTMLImageElement).onerror = null;  // Prevent looping in case defaultAvatar fails
+                                                                                                                                        (e.target as HTMLImageElement).src = defaultProfileIcon;  // Set default image if there's an error
+                                                                                                                                    }} alt="Profile image" />
+                                                            </div>
+                                                            <div className={`${style.gridLine}`}>
+                                                                <p className={`${style.notificationContent}`}>{userName}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className={`${style.buttonContainer}`}>
+                                                            <button style={{ margin: '5px' }} onClick={() => acceptRequest(noti)} className={`${style.inboxFollow}`}>Accept</button>
+                                                            <button style={{ margin: '5px' }} onClick={() => rejectRequest(noti)} className={`${style.inboxFollow}`}>Reject</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className={`${style.inboxNoMentions}`}>
+                                            <div className={`${style.inboxNoMentionsInner}`}>
+                                                <AlternateEmail style={{ fontSize: 50 }} />
+                                                <p className={`${style.inboxBoldText}`} style={{ fontSize: '20px',  fontWeight: '600'}}>No new requests</p>
+                                                <p style={{ fontSize: '14px', marginTop: '0.5rem', fontWeight: '500' }}>You'll see your requests here when someone sends them.</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+
                             </div>
-
-
-                        </div>
+                      
 
 
                         {allSection && notification.all?.length > 0 ? (
@@ -866,7 +867,7 @@ export default function NavbarMunu({ onViewProfile, Onlogout, onSettings }: any)
 
                                 )
                             })) : null}
-
+                        </div>
 
                         {/* <div className={`${style.inboxList}`}>
                         <p className={`${style.inboxListDuration}`}>Today</p>

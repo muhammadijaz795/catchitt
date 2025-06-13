@@ -640,8 +640,8 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
 
                 {isOpenOverlayActivity && (
                     <div className={styles.overlay} onClick={handleCloseOverlayActivity}>
-                        <div className={styles.overlayContent}>
-                            <div className='d-flex justify-between'>
+                        <div className={`${styles.overlayContent} p-0`}>
+                            <div className='d-flex justify-between p-3'>
                                 <p className='font-semibold text-lg'>Notifications</p>
                                 <button onClick={() => setIsOpenOverlayActivity(false)} className='border-0 bg-[#AEA5A530] rounded-full p-1'>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

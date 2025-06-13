@@ -17,8 +17,8 @@
 }
 
 .inboxList {
-  max-height: calc(100vh - 10rem);
-  overflow-y: auto;
+  // max-height: calc(100vh - 10rem);
+  // overflow-y: auto;
 }
 
 .inboxFollow {
@@ -143,4 +143,8 @@
 .inboxFollow {
   width: 100%; /* Optional: make buttons full width */
   padding: 8px 0; /* Adjust padding as needed */
+}
+.outerBox{
+  height: calc(100vh - 10rem);
+  overflow-y: auto;
 }
