@@ -194,7 +194,7 @@ function Layout(props: any) {
                     style={{
                         overflow: isScrollActive ? 'scroll' : 'auto',
                         height: 'auto',
-                        paddingBottom: paddingBottomProp ? 0 : 40,
+                        paddingBottom: paddingBottomProp ? 0 : 0,
                         display: 'block',
                         flex: 1,
                         // paddingTop: '1%',
