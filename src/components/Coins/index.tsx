@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
@@ -30,7 +30,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import SearchIcon from '@mui/icons-material/Search';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import style from './index.module.scss';
 const coinOptions = [
   { index: 1, coins: '30', price: '0.37', unit: '$' },
   { index: 2, coins: '350', price: '4.45', unit: '$' },
@@ -76,6 +76,17 @@ const ShieldSvg = () => (
 );
 
 export default function Coins() {
+ const [isDarkTheme, setIsDarkTheme] = useState('');
+      
+      useEffect(() => {
+              var themeColor = window.localStorage.getItem('theme');
+              if (themeColor == 'dark') {
+                  setIsDarkTheme(style.darkTheme);
+              }
+          });
+
+
+
   const [selected, setSelected] = useState(coinOptions[0]);
   const [opencashInviteModel, setOpencashInviteModel] = useState(false);
   const [openCartModal, setOpenCartModal] = useState(false);
@@ -127,9 +138,11 @@ export default function Coins() {
   const [hovering, setHovering] = useState(false);
 
   return (
-    <>
+    <div style={{
+    backgroundColor: isDarkTheme ? '#121212' : '#ffffff',
+  }}>
     <Navbar/>
-    <Box maxWidth="1200px" mx="auto" mt={8} textAlign={'left'} p={6} position="relative">
+    <Box className={`${isDarkTheme}`} maxWidth="1200px" mx="auto" mt={8} textAlign={'left'} p={6} position="relative">
       <Card sx={{ borderRadius: 3, p: 4 }}>
         {/* Header */}
         <Box display="flex" justifyContent="space-between" mb={4}>
@@ -141,13 +154,13 @@ export default function Coins() {
         {/* User info */}
         <Box display="flex" alignItems="center" maxWidth={'fit-content'} gap={2} mb={3}
           sx={{
-            background: '#f5f5f5',
+            // background: '#f5f5f5',
             p: 2,
             borderRadius: 2
           }}
         >
           <Avatar src={userProfile?.avatar} alt={userProfile?.username} sx={{ width: 40, height: 40 }}/>
-          <Box>
+          <Box >
             <Typography fontWeight="medium">{userProfile?.username}</Typography>
             <Typography color="text.secondary" fontSize="0.875rem">🪙 {balance}</Typography>
           </Box>
@@ -186,7 +199,7 @@ export default function Coins() {
                 size="small"
                 sx={{ padding: '2px', verticalAlign: 'middle', marginLeft: '4px' }}
               >
-                <InfoOutlinedIcon fontSize="small" />
+                  <InfoOutlinedIcon fontSize="small" sx={{ color: isDarkTheme ? '#ffffff' : '#000000' }} />
               </IconButton>
             </Tooltip>.
           </Box>
@@ -203,22 +216,31 @@ export default function Coins() {
             const isChosen = selected.index === option.index;
             return (
               <Paper
-                key={option.coins}
-                onClick={() => setSelected(option)}
-                variant="outlined"
-                sx={{
-                  p: 2,
-                  height: 100,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                  borderColor: isChosen ? 'rgba(254, 44, 85, 0.6)' : 'grey.300',
-                  bgcolor: isChosen ? 'rgba(254, 44, 85, 0.07)' : 'background.paper',
-                  transition: 'all 200ms',
-                }}
-              >
+                    key={option.coins}
+                    onClick={() => setSelected(option)}
+                    variant="outlined"
+                    sx={{
+                      p: 2,
+                      height: 100,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      borderColor: isChosen
+                        ? 'rgba(254, 44, 85, 0.6)'
+                        : isDarkTheme
+                        ? 'grey.700'
+                        : 'grey.300',
+                      bgcolor: isChosen
+                        ? 'rgba(254, 44, 85, 0.07)'
+                        : isDarkTheme
+                        ? '#1e1e1e'
+                        : 'background.paper',
+                      color: isDarkTheme ? '#fff' : 'inherit',
+                      transition: 'all 200ms',
+                    }}
+                  >
                 <Box display="flex" alignItems="center" gap={1}>
                   <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="mask0_2212_38168"  maskUnits="userSpaceOnUse" x="0" y="0" width="33" height="33">
@@ -260,7 +282,9 @@ export default function Coins() {
             );
           })}
         </Box>
-        <CashbackCard />
+        <div  className={`${isDarkTheme}`}>
+          <CashbackCard />
+        </div>
         {/* Payment info */}
         <Box mb={1} display={'flex'}>
           <Typography component="span" fontSize="0.875rem" color="text.secondary">
@@ -325,6 +349,8 @@ export default function Coins() {
                   borderRadius: 3,
                   boxShadow: 5,
                   p: 2,
+                   bgcolor: isDarkTheme ? '#1e1e1e' : '#fff',
+    color: isDarkTheme ? '#fff' : 'inherit',
                 }}
               >
                 <CardContent>
@@ -412,6 +438,6 @@ export default function Coins() {
         next={handleMethodSelection}
       />
     )}
-    </>
+    </div>
   );
 }

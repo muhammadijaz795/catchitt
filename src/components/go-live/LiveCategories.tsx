@@ -7,17 +7,14 @@ import { Link } from 'react-router-dom';
 import  style  from './GoLive.module.scss';
 
 function LiveCategories() {
- const [isDarkTheme, setIsDarkTheme] = useState('');
-      
-      useEffect(() => {
-              var themeColor = window.localStorage.getItem('theme');
-              if (themeColor == 'dark') {
-                  setIsDarkTheme(style.darkTheme);
-              }
-          });
+    const [isDarkTheme, setIsDarkTheme] = useState('');
+    useEffect(() => {
+            var themeColor = window.localStorage.getItem('theme');
+            if (themeColor == 'dark') {
+                setIsDarkTheme(style.darkTheme);
+            }
+        });
   
-
-
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
