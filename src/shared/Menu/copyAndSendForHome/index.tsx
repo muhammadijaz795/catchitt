@@ -82,7 +82,8 @@ export default function COPY_AND_SEND_MODAL_HOME({
         dispatch(videoRepostHandle(mediaId));
         handleClose();
     }
-    const ThemeColor = localStorage.getItem('themeColor');
+    const ThemeColor = window.localStorage.getItem('theme');
+    // console.log('Dark Theme:'+ThemeColor)
 
     const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
     
