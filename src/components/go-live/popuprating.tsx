@@ -12,7 +12,7 @@ import {
   Box
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface RankingSettingsModalProps {
   open: boolean;
@@ -41,7 +41,7 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
         console.log('error blocking user', error);
     }
   }
-
+        var themeColor = window.localStorage.getItem('theme');
   return (
     <Dialog
       open={open}
@@ -52,6 +52,7 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
         sx: {
           borderRadius: 2,
           maxWidth: 600,
+          backgroundColor: themeColor === 'dark' ? '#000' : '#fff',
         },
       }}
     >
@@ -89,7 +90,8 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
 
       {/* Footer Buttons */}
       <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #ccc' }}>
-        <Button onClick={onClose} variant="outlined"  color="inherit" sx={{ textTransform: 'capitalize', px: 3, borderColor: '#ccc' }}>
+        <Button onClick={onClose} variant="outlined"  color="inherit" sx={{           color: themeColor === 'dark' ? '#fff' : '#000',
+ textTransform: 'capitalize', px: 3, borderColor: '#ccc' }}>
           Cancel
         </Button>
         <Button variant="contained" onClick={() => { onClose(); rankingClickInternal(); }}   sx={{px:4, backgroundColor: '#F9184C', textTransform: 'capitalize' }}>

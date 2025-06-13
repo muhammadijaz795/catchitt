@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 // import Image from "next/image";
 import { defaultGreyBackground } from '../../icons';
 import PersonIcon from '@mui/icons-material/Person';
+import style from 'index.module.scss';
 
 function GamingLiveUI() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -36,6 +37,15 @@ const [recommendedLiveVideos, setRecommendedLiveVideos] = useState<any>(
     }
   );      
 
+  const [isDarkTheme, setIsDarkTheme] = useState('');
+    
+    useEffect(() => {
+            var themeColor = window.localStorage.getItem('theme');
+            if (themeColor == 'dark') {
+                setIsDarkTheme(style.darkTheme);
+            }
+        });
+
         useEffect(() => {
           loadPostCategories();
         }, []);
@@ -61,6 +71,7 @@ const [recommendedLiveVideos, setRecommendedLiveVideos] = useState<any>(
       },
     };
 
+    
     setPostCategories((prev: any) => ({ ...prev, isLoading: true }));
 
     fetch(endpoint, requestOptions)
@@ -97,7 +108,7 @@ const [recommendedLiveVideos, setRecommendedLiveVideos] = useState<any>(
     );
     
   return (
-    <div className="p-6">
+    <div  >
           <div>
           <Box display="flex" alignItems="center" mb={3} gap={1}>
               <IconButton

@@ -43,6 +43,10 @@ export default function VideoesMaping({ fetchMore, videos, openVideoModal, muteS
             className="mt-6 mb-20 flex flex-row flex-wrap w-full gap-4"
             // scrollThreshold={0.6}
             scrollableTarget="scrollableDiv"
+            style={{display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))'
+  ,gap: '1px',
+  padding: '16px'}}
             endMessage={
                 <div className={`flex justify-center items-center mt-8 ${videos.totalItems === 0 ? ' h-[70vh]' : ''} w-full`}>
                     <span className="text-white font-bold text-xl">
@@ -56,13 +60,13 @@ export default function VideoesMaping({ fetchMore, videos, openVideoModal, muteS
             }
         >
             {videos?.items.map((item: any, i: number) => (
-               <div>
+               <div  >
                      <div
                     onMouseEnter={() => setHoveredIndex(i)}
                     onMouseLeave={() => setHoveredIndex(null)}
                     key={i}
                     onClick={() => openVideoModal(item)}
-                    className="h-[22rem] w-[16.5rem] flex-shrink-0 rounded-lg overflow-hidden relative cursor-pointer"
+                    className="h-[22rem] flex-shrink-0 rounded-lg overflow-hidden relative cursor-pointer"
                 >
                     <video
                         className={`w-full h-full object-cover ${hoveredIndex === i ? 'block' : 'hidden'}`}

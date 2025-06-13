@@ -10,6 +10,7 @@ import ShareIcon from '../profile/svg-components/ShareIcon';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Link } from 'react-router-dom';
 import { defaultGreyBackground } from '../../icons';
+import style from './index.module.scss';
 
 function DiscoverLive() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -110,7 +111,14 @@ function DiscoverLive() {
   acc[topicName].push(stream);
   return acc;
 }, {});
+    const [isDarkTheme, setIsDarkTheme] = useState('');
 
+useEffect(() => {
+        var themeColor = window.localStorage.getItem('theme');
+        if (themeColor == 'dark') {
+            setIsDarkTheme(style.darkTheme);
+        }
+    });
   useEffect(() => {
     loadRecommendedLiveVideos();
     loadPostCategories();
@@ -219,7 +227,7 @@ function DiscoverLive() {
     </Box>
   );
   return (
-    <div className='flex' style={{ background: '#000' }}>
+    <div className={`${isDarkTheme} flex`} style={{ background: '#000' }}>
       <SideNavBar />
       <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
         <div className='py-3 px-10'> 
@@ -308,7 +316,7 @@ function DiscoverLive() {
 
           </Box>
 
-          <Box  sx={{ mt: 4 }}>
+          <Box className={style.liveEvents}  sx={{ mt: 4 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                   LIVE Events

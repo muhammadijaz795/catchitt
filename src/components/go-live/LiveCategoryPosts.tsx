@@ -4,11 +4,19 @@ import { Box, Typography, CardMedia, Stack, Avatar, Grid, Chip } from '@mui/mate
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useParams } from 'react-router-dom';
 import { defaultGreyBackground } from '../../icons';
+import  style  from './GoLive.module.scss';
 
 function LiveCategoryPosts() {
   const { categoryName } = useParams();
   const scrollRef = useRef<HTMLDivElement>(null);
-
+const [isDarkTheme, setIsDarkTheme] = useState('');
+      
+      useEffect(() => {
+              var themeColor = window.localStorage.getItem('theme');
+              if (themeColor == 'dark') {
+                  setIsDarkTheme(style.darkTheme);
+              }
+          });
   const scroll = (direction: 'left' | 'right') => {
     const { current } = scrollRef;
     if (current) {
@@ -193,7 +201,7 @@ function LiveCategoryPosts() {
   );
 };
   return (
-    <div className='flex' style={{ background: '#000' }}>
+    <div className={`${isDarkTheme} flex w-full min-h-screen`} style={{ background: '#000' }}>
       <SideNavBar />
       <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
         <div className='py-3 px-10'>

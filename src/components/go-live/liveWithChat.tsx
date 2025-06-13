@@ -47,6 +47,7 @@ import  styles  from './GoLive.module.scss';
 import { caesium,defaultGreyBackground } from '../../icons';
 import { abs } from 'mathjs';
 import  GamingLiveUI  from './categories';
+import { dark } from '@mui/material/styles/createPalette';
 
 
 
@@ -1049,35 +1050,55 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                         </svg>
                       </IconButton>
                                 <Menu
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
-                                    PaperProps={{
-                                    sx: {
-                                        mt: 1,
-                                        borderRadius: '12px',
-                                        px: 1,
-                                        py: 0.5,
-                                        boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
-                                        width: 220,
-                                    }
-                                    }}
-                                    anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right'
-                                    }}
-                                    transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                    }}
-                                >
-                                    {shareOptions.map((option, index) => (
-                                    <MenuItem key={index} onClick={() => { socialShareText[option.action as keyof typeof socialShareText](`${window.location.origin}/golive?streamId=${selectedLiveVideo?.details?.id}`); handleClose(); }}>
-                                        <ListItemIcon>{option.icon}</ListItemIcon>
-                                        <ListItemText>{option.label}</ListItemText>
-                                    </MenuItem>
-                                    ))}
-                                </Menu>
+                                      anchorEl={anchorEl}
+                                      open={open}
+                                      onClose={handleClose}
+                                      PaperProps={{
+                                        sx: {
+                                          mt: 1,
+                                          borderRadius: '12px',
+                                          px: 1,
+                                          py: 0.5,
+                                          boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
+                                          width: 220,
+                                          backgroundColor: darkTheme ? '#121212' : '#fff', // dark or light bg
+                                          color: darkTheme ? '#fff' : 'inherit', // text color
+                                        },
+                                        className: '{{root}}',
+                                      }}
+                                      anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right'
+                                      }}
+                                      transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right'
+                                      }}
+                                    >
+                                      {shareOptions.map((option, index) => (
+                                        <MenuItem
+                                          key={index}
+                                          onClick={() => {
+                                            socialShareText[option.action as keyof typeof socialShareText](
+                                              `${window.location.origin}/golive?streamId=${selectedLiveVideo?.details?.id}`
+                                            );
+                                            handleClose();
+                                          }}
+                                          sx={{
+                                            color: darkTheme ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                              backgroundColor: darkTheme ? '#1f1f1f' : '#f5f5f5',
+                                            },
+                                          }}
+                                        >
+                                          <ListItemIcon sx={{ color: darkTheme ? '#fff' : 'inherit' }}>
+                                            {option.icon}
+                                          </ListItemIcon>
+                                          <ListItemText>{option.label}</ListItemText>
+                                        </MenuItem>
+                                      ))}
+                                    </Menu>
+
                             <IconButton
                                      onMouseEnter={handleMoreClick}
                                      onMouseLeave={handleMoreClick}
@@ -1096,6 +1117,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                             py: 2,
                                             px: 1,
                                             boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
+                                             backgroundColor: darkTheme ? '#121212' : '#fff', // dark or light bg
+                                          color: darkTheme ? '#fff' : 'inherit', // text color
                                         }
                                         }}
                                         anchorOrigin={{
@@ -1110,10 +1133,19 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         <MenuItem onClick={handleOpenReport}>
                                         <ListItemIcon>
                                             <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.74528 5.04475V14.6592C6.27982 14.4833 6.92828 14.3026 7.64696 14.1695C9.59734 13.8083 12.2551 13.7653 14.5 15.3688C16.0468 16.4736 17.9932 16.5166 19.699 16.2007C20.536 16.0457 21.2696 15.812 21.7943 15.6162C21.8654 15.5896 21.9325 15.5639 21.9953 15.5392V5.92471C21.4607 6.1007 20.8123 6.2814 20.0936 6.41448C18.1432 6.77567 15.4855 6.81868 13.2406 5.21518C11.6938 4.11035 9.74738 4.06733 8.04151 4.38324C7.20453 4.53824 6.471 4.77197 5.94627 4.96776C5.87512 4.9943 5.80804 5.02007 5.74528 5.04475ZM22.5947 3.36438C22.9304 3.19678 23.329 3.21482 23.6482 3.4121C23.9675 3.60949 24.1619 3.95818 24.1619 4.33364V16.2503C24.1619 16.6607 23.9301 17.0358 23.5631 17.2193L23.0786 16.2503C23.5631 17.2193 23.5624 17.2196 23.5624 17.2196L23.5616 17.22L23.5595 17.2211L23.5539 17.2238L23.5369 17.2322C23.5287 17.2361 23.5189 17.2409 23.5073 17.2464C23.499 17.2504 23.4897 17.2548 23.4795 17.2596C23.4312 17.2824 23.363 17.314 23.2765 17.3522C23.1039 17.4286 22.8576 17.532 22.5517 17.6462C21.9424 17.8735 21.0847 18.1476 20.0936 18.3312C18.1432 18.6923 15.4855 18.7353 13.2406 17.1318C11.6938 16.027 9.74738 15.984 8.04151 16.2999C7.20453 16.4549 6.471 16.6887 5.94627 16.8844C5.87512 16.911 5.80804 16.9367 5.74528 16.9614V23.8337C5.74528 24.1328 5.50277 24.3753 5.20361 24.3753H4.12028C3.82113 24.3753 3.57861 24.1328 3.57861 23.8337V4.33364C3.57861 3.9233 3.81045 3.54818 4.17747 3.36467L4.66195 4.33364C4.17747 3.36467 4.17817 3.36432 4.17817 3.36432L4.17901 3.3639L4.18105 3.36289L4.18663 3.36013L4.20372 3.35176C4.21771 3.34495 4.2369 3.33572 4.26104 3.32431C4.30933 3.30151 4.37756 3.26998 4.46399 3.23176C4.63672 3.15538 4.883 3.05191 5.18883 2.9378C5.79822 2.71042 6.65582 2.43634 7.64696 2.2528C9.59734 1.89163 12.2551 1.84861 14.5 3.45209C16.0468 4.55693 17.9932 4.59994 19.699 4.28403C20.536 4.12903 21.2696 3.8953 21.7943 3.69951C22.0555 3.60204 22.2621 3.51508 22.4003 3.45392C22.4695 3.42338 22.5213 3.39937 22.5542 3.38382C22.5706 3.37605 22.5823 3.37041 22.5891 3.36713L22.5941 3.36467L22.5947 3.36438Z" fill="#161823"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.74528 5.04475V14.6592C6.27982 14.4833 6.92828 14.3026 7.64696 14.1695C9.59734 13.8083 12.2551 13.7653 14.5 15.3688C16.0468 16.4736 17.9932 16.5166 19.699 16.2007C20.536 16.0457 21.2696 15.812 21.7943 15.6162C21.8654 15.5896 21.9325 15.5639 21.9953 15.5392V5.92471C21.4607 6.1007 20.8123 6.2814 20.0936 6.41448C18.1432 6.77567 15.4855 6.81868 13.2406 5.21518C11.6938 4.11035 9.74738 4.06733 8.04151 4.38324C7.20453 4.53824 6.471 4.77197 5.94627 4.96776C5.87512 4.9943 5.80804 5.02007 5.74528 5.04475ZM22.5947 3.36438C22.9304 3.19678 23.329 3.21482 23.6482 3.4121C23.9675 3.60949 24.1619 3.95818 24.1619 4.33364V16.2503C24.1619 16.6607 23.9301 17.0358 23.5631 17.2193L23.0786 16.2503C23.5631 17.2193 23.5624 17.2196 23.5624 17.2196L23.5616 17.22L23.5595 17.2211L23.5539 17.2238L23.5369 17.2322C23.5287 17.2361 23.5189 17.2409 23.5073 17.2464C23.499 17.2504 23.4897 17.2548 23.4795 17.2596C23.4312 17.2824 23.363 17.314 23.2765 17.3522C23.1039 17.4286 22.8576 17.532 22.5517 17.6462C21.9424 17.8735 21.0847 18.1476 20.0936 18.3312C18.1432 18.6923 15.4855 18.7353 13.2406 17.1318C11.6938 16.027 9.74738 15.984 8.04151 16.2999C7.20453 16.4549 6.471 16.6887 5.94627 16.8844C5.87512 16.911 5.80804 16.9367 5.74528 16.9614V23.8337C5.74528 24.1328 5.50277 24.3753 5.20361 24.3753H4.12028C3.82113 24.3753 3.57861 24.1328 3.57861 23.8337V4.33364C3.57861 3.9233 3.81045 3.54818 4.17747 3.36467L4.66195 4.33364C4.17747 3.36467 4.17817 3.36432 4.17817 3.36432L4.17901 3.3639L4.18105 3.36289L4.18663 3.36013L4.20372 3.35176C4.21771 3.34495 4.2369 3.33572 4.26104 3.32431C4.30933 3.30151 4.37756 3.26998 4.46399 3.23176C4.63672 3.15538 4.883 3.05191 5.18883 2.9378C5.79822 2.71042 6.65582 2.43634 7.64696 2.2528C9.59734 1.89163 12.2551 1.84861 14.5 3.45209C16.0468 4.55693 17.9932 4.59994 19.699 4.28403C20.536 4.12903 21.2696 3.8953 21.7943 3.69951C22.0555 3.60204 22.2621 3.51508 22.4003 3.45392C22.4695 3.42338 22.5213 3.39937 22.5542 3.38382C22.5706 3.37605 22.5823 3.37041 22.5891 3.36713L22.5941 3.36467L22.5947 3.36438Z" 
+                                             fill={darkTheme ? '#ffffff' : '#161823'}
+                                            />
                                             </svg>
                                         </ListItemIcon>
-                                        <ListItemText>Report</ListItemText>
+                                        <ListItemText 
+                                         sx={{
+                                            color: darkTheme ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                              backgroundColor: darkTheme ? '#1f1f1f' : '#f5f5f5',
+                                            },
+                                          }}
+                                        >Report</ListItemText>
                                         </MenuItem>
 
                                         <MenuItem onClick={() => {
@@ -1122,10 +1154,19 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         }}>
                                         <ListItemIcon>
                                             <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.86249 15.0773C9.7522 15.0773 9.64455 15.1109 9.55391 15.1739L5.62842 17.8949C5.44881 18.0193 5.20329 17.8909 5.20329 17.6723V6.04449C5.20329 5.74534 5.44581 5.50282 5.74496 5.50282H18.7449C19.0442 5.50282 19.2866 5.74534 19.2866 6.04449V14.5357C19.2866 14.8348 19.0442 15.0773 18.7449 15.0773H9.86249ZM19.2866 17.3302H10.3491L4.29982 21.5233C3.75988 21.8976 3.03662 21.4952 3.03662 20.8204V5.50282C3.03662 4.25862 4.00668 3.25 5.20329 3.25H19.2866C20.4833 3.25 21.4533 4.25862 21.4533 5.50282V10.2372H23.3491C24.5458 10.2372 25.5158 11.2003 25.5158 12.3883V22.4841C25.5158 23.0585 24.9284 23.4489 24.3935 23.2298L20.4165 21.0599H13.0575C11.8608 21.0599 10.8908 20.0968 10.8908 18.9088V17.3333H13.0575V18.3671C13.0575 18.6663 13.3 18.9088 13.5991 18.9088H20.6901C20.7918 18.9088 20.8913 18.9374 20.9774 18.9913L23.1834 20.3717C23.2555 20.4169 23.3491 20.365 23.3491 20.2799V12.93C23.3491 12.6308 23.1067 12.3883 22.8074 12.3883H21.4533V15.0773C21.4533 16.3215 20.4833 17.3302 19.2866 17.3302Z" fill="#161823"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.86249 15.0773C9.7522 15.0773 9.64455 15.1109 9.55391 15.1739L5.62842 17.8949C5.44881 18.0193 5.20329 17.8909 5.20329 17.6723V6.04449C5.20329 5.74534 5.44581 5.50282 5.74496 5.50282H18.7449C19.0442 5.50282 19.2866 5.74534 19.2866 6.04449V14.5357C19.2866 14.8348 19.0442 15.0773 18.7449 15.0773H9.86249ZM19.2866 17.3302H10.3491L4.29982 21.5233C3.75988 21.8976 3.03662 21.4952 3.03662 20.8204V5.50282C3.03662 4.25862 4.00668 3.25 5.20329 3.25H19.2866C20.4833 3.25 21.4533 4.25862 21.4533 5.50282V10.2372H23.3491C24.5458 10.2372 25.5158 11.2003 25.5158 12.3883V22.4841C25.5158 23.0585 24.9284 23.4489 24.3935 23.2298L20.4165 21.0599H13.0575C11.8608 21.0599 10.8908 20.0968 10.8908 18.9088V17.3333H13.0575V18.3671C13.0575 18.6663 13.3 18.9088 13.5991 18.9088H20.6901C20.7918 18.9088 20.8913 18.9374 20.9774 18.9913L23.1834 20.3717C23.2555 20.4169 23.3491 20.365 23.3491 20.2799V12.93C23.3491 12.6308 23.1067 12.3883 22.8074 12.3883H21.4533V15.0773C21.4533 16.3215 20.4833 17.3302 19.2866 17.3302Z" 
+                                              fill={darkTheme ? '#ffffff' : '#161823'}
+                                            />
                                             </svg>
                                         </ListItemIcon>
-                                        <ListItemText>Ranking settings</ListItemText>
+                                        <ListItemText 
+                                         sx={{
+                                            color: darkTheme ? '#fff' : 'inherit',
+                                            '&:hover': {
+                                              backgroundColor: darkTheme ? '#1f1f1f' : '#f5f5f5',
+                                            },
+                                          }}
+                                        >Ranking settings</ListItemText>
                                         </MenuItem>
                                     </Menu>
                             </IconButton>
@@ -1159,15 +1200,18 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     horizontal: "center",
                                     }}
                                     PaperProps={{
-                                    sx: { borderRadius: 2, p: 2, boxShadow: 3, mt: 1.5 },
+                                    sx: { borderRadius: 2, p: 2, boxShadow: 3, mt: 1.5,
+                                       backgroundColor: darkTheme ? '#121212' : '#fff', // dark or light bg
+                                          color: darkTheme ? '#fff' : 'inherit', // text color
+                                     },
                                     }}
                                 >
-                                    <Typography sx={{ mb: 1 }}>Unfollow {selectedLiveVideo?.details?.owner?.name}?</Typography>
+                                    <Typography sx={{ mb: 1,  color: darkTheme ? '#fff' : 'inherit', }}>Unfollow {selectedLiveVideo?.details?.owner?.name}?</Typography>
                                     <Button 
                                     variant="outlined" 
                                     fullWidth 
                                     onClick={()=> {handleUnfollowClose(); handleFollow(selectedLiveVideo?.details?.owner?.id)}}
-                                    sx={{ textTransform: "none", borderRadius: 2, color: "#000", fontWeight: 500 }}
+                                    sx={{ color: darkTheme ? '#fff' : 'inherit', textTransform: "none", borderRadius: 2,  fontWeight: 500 }}
                                     >
                                     Unfollow
                                     </Button>
@@ -1321,7 +1365,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                 </>
                 )}
                 <Box sx={{px: 2}}>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" mt={3} mb={2}>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" pt={3} mb={2}>
                         <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
                         Recommended LIVE videos
                         </Typography>
@@ -1421,6 +1465,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                 px: 2,
                                 py: 1.5,
                                 borderBottom: "1px solid #eee",
+                                height: "100%",
                                 }}
                             >
                                 <IconButton size="small" onClick={() => setShowTopViewers(!showTopViewers)}>   
@@ -1452,7 +1497,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                 </Box>
                             </Box>
                             {/* Content */}
-                            <Box> 
+                            <Box p={2}> 
                               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                                 <Typography sx={{fontSize: 14}}>Name</Typography>
                                 <Typography sx={{ display: "flex", alignItems: "center", fontSize: 14 }}>
@@ -2491,7 +2536,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                 </IconButton>
                                               </InputAdornment>
                                             ),
-                                            sx: { borderRadius: 2 },
+                                            sx: { borderRadius: 2, color: darkTheme ? '#fff' : '#000', },
                                           }}
                                         />
 
@@ -2534,13 +2579,13 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     p: 0,
                     borderRadius: 2,
                     maxHeight: '90vh',
-                    overflowY: 'auto',
+                    overflowY: 'auto', 
+                    background : darkTheme ? '#0e0e0e' : '#fff',
                 }}
                 >
                 <Typography variant="h6" textAlign={'center'} sx={{ mb: 2, fontWeight: 'bold', p:2 }}>
                     Report
                 </Typography>
-
                 <FormControl component="fieldset" >
                     <RadioGroup value={selectedReason} onChange={handleReasonChange}>
                     <Grid container spacing={1} sx={{border: '1px solid #ccc'}}>
@@ -2570,10 +2615,11 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Box display="flex" justifyContent="space-between " borderTop={'1px solid #ccc'}>
-                    <Button variant="outlined" sx={{color: '#000',width: '50%', borderRadius: 0, border: 'none', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} onClick={handleCloseReport}>
+                    <Button variant="outlined" sx={{
+                      color : darkTheme ? '#fff' : '#000',width: '50%', borderRadius: 0, border: 'none', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} onClick={handleCloseReport}>
                     Cancel
                     </Button>
-                    <Button variant="contained" onClick={()=> submitReport()} sx={{width: '50%', borderRadius: 0, backgroundColor: 'rgba(22, 24, 35, 0.12)', color: '#000', fontWeight: '600', height: '100%', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} disabled={!selectedReason}>
+                    <Button variant="contained" onClick={()=> submitReport()} sx={{  color : darkTheme ? '#fff' : 'inherit', width: '50%', borderRadius: 0, backgroundColor: 'rgba(22, 24, 35, 0.12)', fontWeight: '600', height: '100%', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} disabled={!selectedReason}>
                     Submit
                     </Button>
                 </Box>
@@ -2581,7 +2627,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
            </Modal>
             {/* Modal Dialog */}
             <Dialog open={openFaq} onClose={handleCloseFaq} maxWidth="sm" fullWidth>
-                <DialogTitle sx={{ m: 0, p: 2, position: 'relative',  }}>
+                <DialogTitle sx={{ m: 0, p: 2, position: 'relative',       backgroundColor: darkTheme ? '#121212' : '#fff',
+ }}>
                     <Typography variant="h6" sx={{color: '#000', fontSize: '1.75rem'}}>FAQ</Typography>
                     <IconButton
                         aria-label="close"
@@ -2596,8 +2643,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <DialogContent dividers>
-                <Accordion defaultExpanded sx={{ boxShadow: 'none' }}>
+                <DialogContent dividers sx={{      backgroundColor: darkTheme ? '#121212' : '#fff',
+}}>
+                <Accordion defaultExpanded sx={{ boxShadow: 'none',       backgroundColor: darkTheme ? '#121212' : '#fff',
+ }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography fontWeight={600}>Top Viewers FAQ</Typography>
                     </AccordionSummary>

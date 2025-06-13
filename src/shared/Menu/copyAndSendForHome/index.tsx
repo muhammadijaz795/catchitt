@@ -121,7 +121,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
             </List>
             <Dialog  open={open} onClose={handleClose} maxWidth='xs'  >
             <DialogTitle className={isDarkTheme ? 'bg-[#181818]' : 'bg-white'} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#000' }}>
-                <span className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `} >Share to</span>
+                <span className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `} >Share to</span>
                 <DialogActions onClick={handleClose} sx={{ color: 'inherit', position: 'absolute', right: '1rem', cursor: 'pointer' }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19.35 6.06095C19.4432 5.96726 19.4954 5.84054 19.4954 5.70845C19.4954 5.57635 19.4432 5.44963 19.35 5.35595L18.65 4.64595C18.6035 4.59908 18.5482 4.56188 18.4873 4.5365C18.4264 4.51112 18.361 4.49805 18.295 4.49805C18.229 4.49805 18.1637 4.51112 18.1027 4.5365C18.0418 4.56188 17.9865 4.59908 17.94 4.64595L12 10.5859L6.06003 4.65095C5.96635 4.55782 5.83962 4.50555 5.70753 4.50555C5.57544 4.50555 5.44871 4.55782 5.35503 4.65095L4.64503 5.36095C4.5519 5.45463 4.49963 5.58135 4.49963 5.71345C4.49963 5.84554 4.5519 5.97226 4.64503 6.06595L10.585 12.0009L4.65003 17.9409C4.5569 18.0346 4.50463 18.1614 4.50463 18.2934C4.50463 18.4255 4.5569 18.5523 4.65003 18.6459L5.36003 19.3559C5.45371 19.4491 5.58044 19.5013 5.71253 19.5013C5.84462 19.5013 5.97135 19.4491 6.06503 19.3559L12 13.4159L17.94 19.3509C18.0337 19.4441 18.1604 19.4963 18.2925 19.4963C18.4246 19.4963 18.5513 19.4441 18.645 19.3509L19.355 18.6409C19.4482 18.5473 19.5004 18.4205 19.5004 18.2884C19.5004 18.1564 19.4482 18.0296 19.355 17.9359L13.415 12.0009L19.35 6.06095Z" fill={`${ThemeColor === 'dark' ? '#000' : '#fff'}`} />
@@ -147,7 +147,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                             <div className=" flex items-center justify-center rounded-full">
                                 <img className='!w-14 !h-14' src={RepostVideo}  alt="Copy Link" />
                             </div>
-                            <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `} >Repost</p>
+                            <p className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `} >Repost</p>
                         </div>
                     </MenuItem>
                     </Grid>
@@ -157,7 +157,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                                 <div className=" flex items-center justify-center bg-white shadow-md rounded-full">
                                     <img className='!w-14 !h-14' src={send}  alt="Send" />
                                 </div>
-                                <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Send to friends</p>
+                                <p className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `}>Send to friends</p>
                             </div>
                         </MenuItem>
                         </Grid>
@@ -166,7 +166,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                         <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                             <div className={style.menuItem} onClick={generateEmbedCodeHandler}>
                                 <img className='!w-14 !h-14' src={embedShare} />
-                                <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Embed</p>
+                                <p className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `}>Embed</p>
                             </div>
                         </MenuItem>
                         </Grid>
@@ -174,7 +174,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                         <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                             <div className={style.menuItem} onClick={shareToWhatsApp}>
                                 <img className='!w-14 !h-14' src={whatsappShare} />
-                                <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Whatsapp</p>
+                                <p className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `}>Whatsapp</p>
                             </div>
                         </MenuItem>
                         </Grid>
@@ -182,7 +182,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                         <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                             <div className={style.menuItem} onClick={shareToFacebook}>
                                 <img className='!w-14 !h-14' src={facebookShare} />
-                                <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Facebook</p>
+                                <p className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `}>Facebook</p>
                             </div>
                         </MenuItem>
                         </Grid>
@@ -190,7 +190,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                         <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                             <div className={style.menuItem} onClick={shareToTwitter}>
                                 <img className='!w-14 !h-14' src={twitterShare} />
-                                <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>Twitter</p>
+                                <p className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `}>Twitter</p>
                             </div>
                         </MenuItem>
                         </Grid>
@@ -198,7 +198,7 @@ export default function COPY_AND_SEND_MODAL_HOME({
                         <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
                             <div className={style.menuItem} onClick={shareToLinkedIn}>
                                 <img className='!w-14 !h-14' src={linkedInShare} />
-                                <p className={`${ThemeColor === 'dark' ? 'text-black' : 'text-white'} font-medium `}>LinkedIn</p>
+                                <p className={`${ThemeColor === 'dark' ? 'text-white' : 'text-black'} font-medium `}>LinkedIn</p>
                             </div>
                         </MenuItem>
                         </Grid>

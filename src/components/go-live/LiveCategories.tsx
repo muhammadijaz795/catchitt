@@ -4,8 +4,20 @@ import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Box, IconButton, Chip, Typography, CardMedia, Stack } from '@mui/material';
 import { defaultGreyBackground } from '../../icons';
 import { Link } from 'react-router-dom';
+import  style  from './GoLive.module.scss';
 
 function LiveCategories() {
+ const [isDarkTheme, setIsDarkTheme] = useState('');
+      
+      useEffect(() => {
+              var themeColor = window.localStorage.getItem('theme');
+              if (themeColor == 'dark') {
+                  setIsDarkTheme(style.darkTheme);
+              }
+          });
+  
+
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -15,6 +27,8 @@ function LiveCategories() {
       current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
+
+ 
 
   const [postCategories, setPostCategories] = useState<any>(
     {
@@ -80,9 +94,9 @@ function LiveCategories() {
     </Box>
   );
   return (
-    <div className='flex' style={{ background: '#000' }}>
+    <div className={`${isDarkTheme} flex`} style={{ background: '#000' }}>
       <SideNavBar />
-      <div className='w-[calc(100%-16rem)] ml-auto bg-white '>
+      <div className='w-[calc(100%-16rem)] ml-auto '>
         <div className='py-3 px-10'> 
           <div>
             <Box display="flex" alignItems="center" mb={3} gap={1}>
