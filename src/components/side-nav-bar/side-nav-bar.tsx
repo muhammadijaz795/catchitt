@@ -886,13 +886,9 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                                 </button>
                             </div>
                             {isUserLoggedIn() && (
-                            <div
-                            className='d-flex mt-2 p-2 cursor-pointer rounded-full' onClick={handleGetCoins} 
-                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")}
-                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-                            >
-                                <p className='font-medium'>Get Coins </p>
-                            </div>
+                            <Link className='d-flex mt-2 p-2 cursor-pointer rounded-full' to="/coins/recharge" onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f2f3f4")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
+                                <p className='font-medium hover:text-none'>Get Coins</p>
+                            </Link>
                             )}
                             {/* <div className='d-flex mt-4 cursor-pointer '>
                                 <p className='font-medium'>Create Seezitt effects </p>
