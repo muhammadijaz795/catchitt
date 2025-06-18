@@ -737,7 +737,9 @@ console.log('PATCH payload being sent:', JSON.stringify(payload, null, 2));
         if(selectedTemplate){
             postPayload.append('templateImage', selectedTemplate || '');
         }
-        
+        if(currentEditVideo?._id)
+            postPayload.append('soundId', currentEditVideo?._id || '');
+
         // postPayload.append('taggedUsers', state?.taggedUsers || []);
         // postPayload.append('replyOnComment', '');
 

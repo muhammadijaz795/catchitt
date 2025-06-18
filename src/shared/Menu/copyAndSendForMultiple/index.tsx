@@ -111,7 +111,7 @@ export default function COPY_AND_SEND_MENU_MULTIPLE({
 
     const shareToWhatsApp = () => {
         let url = BASE_URL_FRONTEND+URL;
-        window.open(`https://api.whatsapp.com/send?text=${title} - ${url}`, '_blank');
+        window.open(`https://api.whatsapp.com/send?text=${url} - ${title}`, '_blank');
     };
 
     const shareToFacebook = () => {
