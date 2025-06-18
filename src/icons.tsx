@@ -1,4 +1,5 @@
 
+import beautify from '../src/assets/beautify.png';
 import caesium from '../src/assets/caesium.png';
 import bgModelIcon from '../src/assets/bgmodelCoins.png';
 import modelCoins from '../src/assets/modelCoins.png';
@@ -217,6 +218,7 @@ import crossCloseDark from './assets/cross_close_dark.svg'
 import blackHeartOutline from './assets/black_heart_outline.svg'
 import blackCrossHeart from './assets/black_cross_heart.svg'
 export {
+    beautify,
     caesium,
      modelMininon, modelDiscountDivider, modelCoins, bgModelIcon,
     coinsImage,

@@ -285,7 +285,7 @@ export const SideNavBar = ({ className, settingsDropdownState }: SideNavBarProps
                         <p className={`${styles.linkWord} font-medium`}>Discover live</p>
                     </div>
                 </Link>   
-                <Link to="/discover" reloadDocument={false} style={{ textDecoration: 'none' }}>
+                <Link to="/prelive" reloadDocument={false} style={{ textDecoration: 'none' }}>
                     <div
                         className={classNames(
                             `${styles.navLink}`

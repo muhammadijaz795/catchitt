@@ -444,16 +444,16 @@ export const Profile = (props: any) => {
 
     const sortData = (criteria: string) =>
     {
-        const sortVideos = (videos: any) =>
+        const sortVideos = (videos: any, sortKey: any = 'createdTime') =>
         {
             switch (criteria)
             {
                 case 'latest':
-                    return [...videos].sort((a, b) => (new Date(b.createdTime) as any) - (new Date(a.createdTime) as any));
+                    return [...videos].sort((a, b) => (new Date(b[sortKey]) as any) - (new Date(a[sortKey]) as any));
                 case 'oldest':
-                    return [...videos].sort((a, b) => (new Date(a.createdTime) as any) - (new Date(b.createdTime) as any));
+                    return [...videos].sort((a, b) => (new Date(a[sortKey]) as any) - (new Date(b[sortKey]) as any));
                 case 'popular':
-                    return [...videos].sort((a, b) => b.likes - a.likes);
+                    return [...videos].sort((a, b) => b.views - a.views);
                 default:
                     return videos;
             }
@@ -464,7 +464,7 @@ export const Profile = (props: any) => {
         setBookmarkVideos((prev: any) => ({ ...prev, items: sortVideos(bookmarkVideos.items) }));
         setUserLikedVideos((prev: any) => ({ ...prev, items: sortVideos(userlikedVideos.items) }));
         setUserTaggedVideos((prev: any) => ({ ...prev, items: sortVideos(usertaggedVideos.items) }));
-        setRepostsVideos((prev: any) => ({ ...prev, items: sortVideos(repostVideos.items) }));
+        setRepostsVideos((prev: any) => ({ ...prev, items: sortVideos(repostVideos.items, 'repostedAt') }));
     };
 
     function togglePostLike(post: any, isLiked: boolean)
