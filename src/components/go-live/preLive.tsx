@@ -48,7 +48,7 @@ export default function LiveStreamUI() {
     const token = localStorage.getItem('token');
     const [filePreview, setFilePreview] = useState<string>('');
     const [fileUrl, setFileUrl] = useState<string>('');
-
+    const [liveGoals, setLiveGoals] = useState<any>([]);
 
     const EditIcon = () => {
             <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -746,7 +746,7 @@ const Promote = () => (
                         </CardContent>
                     </Card> 
                     }
-                    {showEditLiveGoal && <EditLiveGoal onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals) => setShowEditLiveGoal(!showEditLiveGoal)} /> }
+                    {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals)}} /> }
                     {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} /> }
                     {openSettings &&
                         <SettingsPanel />

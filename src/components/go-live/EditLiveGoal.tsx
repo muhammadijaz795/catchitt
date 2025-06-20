@@ -64,7 +64,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const LiveGoalModal = ({onConfirm, onLiveGoalAdded}: {onConfirm: any, onLiveGoalAdded: any}) => {
+const LiveGoalModal = ({liveGoals, onConfirm, onLiveGoalAdded}: {liveGoals: any, onConfirm: any, onLiveGoalAdded: any}) => {
     const [showAddGiftCard, setShowAddGiftCard] = useState(false);
 
   const handleToggle = () => setShowAddGiftCard(!showAddGiftCard);
@@ -122,19 +122,23 @@ const [goalDescription, setGoalDescription] = useState(
     {
       localStorage.removeItem('futureLiveGoals');
     }
-
-    // onLiveGoalAdded(selectedGifts);
   };
 
   useEffect(() => {
     loadGifts();
-
-    let futureLiveGoals = localStorage.getItem('futureLiveGoals');
-
-    if(futureLiveGoals)
+    if(liveGoals.length > 0)
     {
-      futureLiveGoals = JSON.parse(futureLiveGoals)
-      setSelectedGifts(futureLiveGoals);
+      setSelectedGifts(liveGoals);
+    }
+    else
+    {
+      let futureLiveGoals = localStorage.getItem('futureLiveGoals');
+
+      if(futureLiveGoals)
+      {
+        futureLiveGoals = JSON.parse(futureLiveGoals)
+        setSelectedGifts(futureLiveGoals);
+      }
     }
   }, []);
 
