@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -75,6 +75,38 @@ const [goalDescription, setGoalDescription] = useState(
     "Help me achieve my first goal and I’ll sing a song"
   );
   const [autoAdd, setAutoAdd] = useState(true);
+
+  const [gifts, setGifts] = useState<any>(
+    {
+      items: [],
+      isLoading: false,
+    }
+  );
+
+  function loadGifts()
+  {
+    let endpoint = `${process.env.VITE_API_URL}/gift`;
+    let requestOptions =
+    {
+      method: 'GET',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    setGifts((prev: any) => ({ ...prev, isLoading: true }));
+
+    fetch(endpoint, requestOptions)
+    .then((response) => response.json())
+    .then((response) => setGifts((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
+    .catch((error) => console.error('Fetch error:', error));
+  };
+
+  useEffect(() => {
+    loadGifts();
+  }, []);
 
   return (
     <>
@@ -251,14 +283,16 @@ const [goalDescription, setGoalDescription] = useState(
 
       {/* Grid of gifts */}
       <Grid container spacing={2} justifyContent="center">
-        {[...Array(9)].map((_, index) => (
+        {gifts.items.map((gift: any, index: number) => (
           <Grid item xs={4} key={index}>
             <Box>
-              <FavoriteIcon sx={{ color: "red", fontSize: 36 }} />
-              <Typography sx={{ fontSize: 13, mt: 0.5 }}>Heart Me</Typography>
+              <Box sx={{ fontSize: 32, justifyItems: 'center' }}>
+                { gift.imageUrl.endsWith('.mp4') ? <video src={gift.imageUrl} autoPlay loop muted style={{ width: 50, height: 50 }} /> : <img src={gift.imageUrl} alt={gift.name} style={{ width: 50, height: 50 }} /> }
+              </Box>
+              <Typography sx={{ fontSize: 13, mt: 0.5 }}>{ gift.name }</Typography>
               <Box display="flex" alignItems="center" justifyContent="center">
                 <CircleIcon sx={{ fontSize: 12, color: "gold", mr: 0.5 }} />
-                <Typography sx={{ fontSize: 12 }}>1</Typography>
+                <Typography sx={{ fontSize: 12 }}>{ gift.price }</Typography>
               </Box>
             </Box>
           </Grid>
