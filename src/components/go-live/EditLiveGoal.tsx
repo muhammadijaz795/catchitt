@@ -107,8 +107,10 @@ const [goalDescription, setGoalDescription] = useState(
     .catch((error) => console.error('Fetch error:', error));
   };
 
-  function addLiveGoal()
-  {};
+  function removeFromSelectedGifts(gift: any)
+  {
+    setSelectedGifts((prev: any) => prev.filter((item: any) => item._id !== gift._id));
+  };
 
   useEffect(() => {
     loadGifts();
@@ -176,6 +178,7 @@ const [goalDescription, setGoalDescription] = useState(
                   p: 0,
                 }}>
                 <IconButton
+                onClick={() => removeFromSelectedGifts(gift)}
                   size="small"
                   sx={{ position: 'absolute', top: 6, right: 6, color: 'white' }}>
                   <CloseIcon fontSize="small" />
@@ -348,7 +351,7 @@ const [goalDescription, setGoalDescription] = useState(
           "&:hover": { backgroundColor: "#ff1e52" },
           textTransform: "none",
         }}
-        onClick={()=> { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item) => item._id !== selectedGift._id), {...selectedGift, count: selectedGiftCount}]); } }
+        onClick={()=> { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item) => item._id !== selectedGift._id), {...selectedGift, count: selectedGiftCount}]); setSelectedGift({}); setSelectedGiftCount(1); } }
       >
         Confirm
       </Button>
@@ -392,7 +395,7 @@ const [goalDescription, setGoalDescription] = useState(
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={handleToggle}
+          onClick={() => { handleToggle; setShowLiveGoalAutomatically(false); } }
           sx={{ bgcolor: '#3a3a3a', color: '#fff', textTransform: 'none', borderRadius: 1 }}
         >
           Gift
@@ -414,6 +417,7 @@ const [goalDescription, setGoalDescription] = useState(
                   p: 0,
                 }}>
                 <IconButton
+                  onClick={() => removeFromSelectedGifts(gift)}
                   size="small"
                   sx={{ position: 'absolute', top: 6, right: 6, color: 'white' }}>
                   <CloseIcon fontSize="small" />
@@ -466,6 +470,7 @@ const [goalDescription, setGoalDescription] = useState(
       </Box>
 
       {/* Confirm button */}
+      {selectedGifts.length > 0 &&
       <Button
         variant="contained"
         fullWidth
@@ -480,6 +485,7 @@ const [goalDescription, setGoalDescription] = useState(
       >
         Confirm
       </Button>
+      }
       </Card>
     }
     </>
