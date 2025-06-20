@@ -82,6 +82,7 @@ const [goalDescription, setGoalDescription] = useState(
       isLoading: false,
     }
   );
+  const [selectedGifts, setSelectedGifts] = useState<any[]>([]);
 
   function loadGifts()
   {
@@ -102,6 +103,11 @@ const [goalDescription, setGoalDescription] = useState(
     .then((response) => response.json())
     .then((response) => setGifts((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
     .catch((error) => console.error('Fetch error:', error));
+  };
+
+  function toggleSelectedGifts(gift: any)
+  {
+    setSelectedGifts(prev => prev.includes(gift) ? prev.filter(g => g !== gift) : [...prev, gift]);
   };
 
   useEffect(() => {
@@ -285,7 +291,7 @@ const [goalDescription, setGoalDescription] = useState(
       <Grid container spacing={2} justifyContent="center">
         {gifts.items.map((gift: any, index: number) => (
           <Grid item xs={4} key={index}>
-            <Box>
+            <Box onClick={() => toggleSelectedGifts(gift)} sx={{ cursor: 'pointer', backgroundColor: selectedGifts.some(item => item._id === gift._id) ? '#2D2D2D' : 'transparent', '&:hover': { backgroundColor: '#2D2D2D' } }}>
               <Box sx={{ fontSize: 32, justifyItems: 'center' }}>
                 { gift.imageUrl.endsWith('.mp4') ? <video src={gift.imageUrl} autoPlay loop muted style={{ width: 50, height: 50 }} /> : <img src={gift.imageUrl} alt={gift.name} style={{ width: 50, height: 50 }} /> }
               </Box>
