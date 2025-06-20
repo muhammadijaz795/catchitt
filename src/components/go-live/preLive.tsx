@@ -150,7 +150,7 @@ const Promote = () => (
                     overflow: "hidden",
                     backgroundColor: "black",
                     color: "white",
-                    width: "calc(100% - 22.5rem)",
+                    width: "calc(100% - 23.5rem)",
                 }}
                 >
                 <img
@@ -474,7 +474,7 @@ const Promote = () => (
                 </Slide>
                 <ExploreFilters show={showExplore} setShow={setShowExplore} />
                 </Box>
-                <Box sx={{ width: 360, }}>
+                <Box >
                     {!showEditLiveGoal && !showFaqs && !openSettings && <Card sx={{ width: 400, overflow: "hidden", p:  1, boxShadow: "none" }}>
                         <Box sx={{ position: "absolute" }}>
                             <CardMedia
@@ -592,7 +592,7 @@ const Promote = () => (
                         </CardContent>
                     </Card> 
                     }
-                    {showEditLiveGoal && <EditLiveGoal /> }
+                    {showEditLiveGoal && !openSettings && <EditLiveGoal /> }
                     {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} /> }
                     {openSettings &&
                         <SettingsPanel />
