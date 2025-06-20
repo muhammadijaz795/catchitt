@@ -592,7 +592,7 @@ const Promote = () => (
                         </CardContent>
                     </Card> 
                     }
-                    {showEditLiveGoal && <EditLiveGoal /> }
+                    {showEditLiveGoal && <EditLiveGoal onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals) => setShowEditLiveGoal(!showEditLiveGoal)} /> }
                     {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} /> }
                     {openSettings &&
                         <SettingsPanel />

@@ -64,7 +64,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const LiveGoalModal = () => {
+const LiveGoalModal = ({onConfirm, onLiveGoalAdded}: {onConfirm: any, onLiveGoalAdded: any}) => {
     const [showAddGiftCard, setShowAddGiftCard] = useState(false);
 
   const handleToggle = () => setShowAddGiftCard(!showAddGiftCard);
@@ -82,6 +82,7 @@ const [goalDescription, setGoalDescription] = useState(
       isLoading: false,
     }
   );
+  const [selectedGifts, setSelectedGifts] = useState<any>([]);
   const [selectedGift, setSelectedGift] = useState<any>({});
   const [selectedGiftCount, setSelectedGiftCount] = useState<any>(1);
 
@@ -105,6 +106,9 @@ const [goalDescription, setGoalDescription] = useState(
     .then((response) => setGifts((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
     .catch((error) => console.error('Fetch error:', error));
   };
+
+  function addLiveGoal()
+  {};
 
   useEffect(() => {
     loadGifts();
@@ -256,7 +260,7 @@ const [goalDescription, setGoalDescription] = useState(
           fontWeight: 'bold',
           py: 1.2,
         }}
-        onClick={()=> setShowLiveGoalAutomatically(true) }
+        onClick={onConfirm}
       >
         Confirm
       </Button>
@@ -333,6 +337,7 @@ const [goalDescription, setGoalDescription] = useState(
       </Typography>
 
       {/* Confirm button */}
+      {selectedGiftCount > 0 && Object.keys(selectedGift).length > 0 &&
       <Button
         variant="contained"
         fullWidth
@@ -343,10 +348,11 @@ const [goalDescription, setGoalDescription] = useState(
           "&:hover": { backgroundColor: "#ff1e52" },
           textTransform: "none",
         }}
-        onClick={()=> setShowLiveGoalAutomatically(true) }
+        onClick={()=> { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item) => item._id !== selectedGift._id), {...selectedGift, count: selectedGiftCount}]); } }
       >
         Confirm
       </Button>
+      }
     </Card>
      )} </> }
     {showLiveGoalAutomatically && <Card
@@ -509,6 +515,7 @@ const [goalDescription, setGoalDescription] = useState(
           "&:hover": { backgroundColor: "#ff1e52" },
           textTransform: "none",
         }}
+        onClick={() => onLiveGoalAdded(selectedGifts)}
       >
         Confirm
       </Button>
