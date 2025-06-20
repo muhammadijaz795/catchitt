@@ -413,11 +413,11 @@ const [goalDescription, setGoalDescription] = useState(
                   minHeight: 80,
                   p: 0,
                 }}>
-                <IconButton
+                {/* <IconButton
                   size="small"
                   sx={{ position: 'absolute', top: 6, right: 6, color: 'white' }}>
                   <CloseIcon fontSize="small" />
-                </IconButton>
+                </IconButton> */}
                 <CardContent sx={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box fontSize={32} pt={3} display={'flex'} justifyContent="center">
                     <Box sx={{ fontSize: 32, justifyItems: 'center' }}>
