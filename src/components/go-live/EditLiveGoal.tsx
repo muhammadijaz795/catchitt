@@ -112,36 +112,9 @@ const [goalDescription, setGoalDescription] = useState(
     setSelectedGifts((prev: any) => prev.filter((item: any) => item._id !== gift._id));
   };
 
-  function saveLiveGoalsLocally()
-  {
-    if(autoAdd)
-    {
-      localStorage.setItem('futureLiveGoals', JSON.stringify(selectedGifts));
-    }
-    else
-    {
-      localStorage.removeItem('futureLiveGoals');
-    }
-  };
-
   useEffect(() => {
     loadGifts();
-
-    let futureLiveGoals = localStorage.getItem('futureLiveGoals');
-    futureLiveGoals && setAutoAdd(true);
-
-    if(liveGoals.length > 0)
-    {
-      setSelectedGifts(liveGoals);
-    }
-    else
-    {
-      if(futureLiveGoals)
-      {
-        futureLiveGoals = JSON.parse(futureLiveGoals)
-        setSelectedGifts(futureLiveGoals);
-      }
-    }
+    setSelectedGifts(liveGoals);
   }, []);
 
   return (
@@ -253,7 +226,7 @@ const [goalDescription, setGoalDescription] = useState(
           fontWeight: 'bold',
           py: 1.2,
         }}
-        onClick={() => { saveLiveGoalsLocally(); onConfirm() }}
+        onClick={() => { onConfirm() }}
       >
         Confirm
       </Button>
@@ -472,7 +445,7 @@ const [goalDescription, setGoalDescription] = useState(
           "&:hover": { backgroundColor: "#ff1e52" },
           textTransform: "none",
         }}
-        onClick={() => { saveLiveGoalsLocally(); onLiveGoalAdded(selectedGifts); }}
+        onClick={() => { onLiveGoalAdded(selectedGifts); }}
       >
         Confirm
       </Button>
