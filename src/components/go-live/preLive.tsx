@@ -77,6 +77,7 @@ export default function LiveStreamUI() {
   };
 
     const [liveGoals, setLiveGoals] = useState<any>([]);
+    const [addLiveGoalAutomatically, setAddLiveGoalAutomatically] = useState<any>(true);
 
     const EditIcon = () => {
             <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -251,9 +252,29 @@ const Promote = () => (
             });   
     };
 
+    function loadLiveGoals()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/v2/get-latest-live-goal`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => response.data && setLiveGoals(response.data))
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
      useEffect(() => {
         loadProfileDetails();
         loadPostCategories();
+        loadLiveGoals()
       }, []);
 
     function loadProfileDetails()
@@ -297,16 +318,8 @@ const Promote = () => (
             allowGifts: true,
             allowComments: true,
             coverImage: "",
-            liveGoal: [
-            {
-                giftId: "",
-                giftName: "",
-                giftImageUrl: "",
-                giftCoins: "",
-                count: ""
-            }
-            ],
-            addLiveGoalAutomatically: true,
+            liveGoal: liveGoals.map((gift: any) => ({ giftId: gift._id, giftName: gift.name, giftImageUrl: gift.imageUrl, giftCoins: gift.price, count: gift.count })),
+            addLiveGoalAutomatically,
             hearYourVoice: true,
             moderators: [],
             commentSettings: {
@@ -879,7 +892,7 @@ const Promote = () => (
                         </CardContent>
                     </Card> 
                     }
-                    {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals)}} /> }
+                    {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                     {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} /> }
                     {openSettings &&
                         // <SettingsPanel />
