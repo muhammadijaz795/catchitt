@@ -15,6 +15,7 @@ import { styled } from '@mui/material/styles';
 
 import ModeratorsList from './ModeratorSettings'; // your moderators component
 import AboutMe from './AboutSettings'; // your moderators component
+import Comments from './commentsSetting'; // your moderators component
 
 // Custom Switch styling
 const CustomSwitch = styled(Switch)(({ theme }) => ({
@@ -57,12 +58,12 @@ const settingsData = [
   { title: 'LIVE Gifts', type: 'switch', value: false },
   { title: 'Gift Gallery', description: 'Enable Gift Gallery to allow viewers to light up the Gifts in your Gift Gallery and become title gifters during your LIVE.', type: 'switch', value: true },
   { title: 'Rankings', type: 'link' },
-  { title: 'Comment settings', type: 'link' },
+  { title: 'Comment settings', type: 'link', component: 'comments' },
   { title: 'Content disclosure', type: 'link' },
 ];
 
 const SettingsPanel = () => {
-const [activeView, setActiveView] = useState<null | 'moderators' | 'faqs' | 'AboutMe'>(null);
+const [activeView, setActiveView] = useState<null | 'moderators' | 'comments' | 'AboutMe'>(null);
 
   const renderContent = () => {
   switch (activeView) {
@@ -70,6 +71,8 @@ const [activeView, setActiveView] = useState<null | 'moderators' | 'faqs' | 'Abo
       return <ModeratorsList onBack={() => setActiveView(null)} />;
     case 'AboutMe':
       return <AboutMe onBack={() => setActiveView(null)} />;
+      case 'comments':
+      return <Comments onBack={() => setActiveView(null)} />;
     default:
       return null;
   }
