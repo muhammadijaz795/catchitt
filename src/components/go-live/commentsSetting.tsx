@@ -13,6 +13,7 @@ import { styled } from "@mui/material/styles";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import FilterComments from "./Comments/FilterComments";
+import BlockedKeywords from "./Comments/BlockedKeywords";
 
 // Styled switch (same as before)
 const StyledSwitch = styled(Switch)(({ theme }) => ({
@@ -45,12 +46,19 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const Comments: React.FC = () => {
-  const [showFilterScreen, setShowFilterScreen] = useState(false);
+ const [showFilterScreen, setShowFilterScreen] = useState(false);
+  const [showBlockedKeywords, setShowBlockedKeywords] = useState(false); // NEW STATE
   const [allowComments, setAllowComments] = useState(true);
   const [showMostSent, setShowMostSent] = useState(true);
 
+  // Show Filter Screen
   if (showFilterScreen) {
     return <FilterComments onBack={() => setShowFilterScreen(false)} />;
+  }
+
+  // Show Blocked Keywords Screen
+  if (showBlockedKeywords) {
+    return <BlockedKeywords onBack={() => setShowBlockedKeywords(false)} />;
   }
 
   return (
@@ -112,7 +120,7 @@ const Comments: React.FC = () => {
           </ListItemSecondaryAction>
         </ListItem>
 
-        <ListItem button>
+        <ListItem button onClick={() => setShowBlockedKeywords(true)}>
           <ListItemText primary="Blocked keywords" />
           <ListItemSecondaryAction>
             <IconButton edge="end">

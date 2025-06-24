@@ -87,13 +87,7 @@ const FilterComments: React.FC<FilterCommentsProps> = ({ onBack }) => {
            
     <Box
       sx={{
-        maxHeight: "calc(100vh - 9rem)",
-        overflowY: "auto",
-        bgcolor: "white",
-        borderRadius: 2,
-        mx: "auto",
-        width: "100%",
-        maxWidth: 360,
+       
         position: 'relative'
       }}
     >
@@ -114,10 +108,16 @@ const FilterComments: React.FC<FilterCommentsProps> = ({ onBack }) => {
           Filter comments
         </Typography>
       </Box>
-        {filteredComments?.length === 0 ? (
-        <NoFilteredComments />
-        ) : (
-      <List dense>
+        {/* {filteredComments?.length === 0 ? ( */}
+        {/* <NoFilteredComments /> */}
+        {/* ) : ( */}
+      <List dense sx={{ maxHeight: "calc(100vh - 9rem)",
+        overflowY: "auto",
+        bgcolor: "white",
+        borderRadius: 2,
+        mx: "auto",
+        width: "100%",
+        maxWidth: 360,}}>
         {filters.map(({ label, description }) => (
         <ListItem
             key={label}
@@ -204,7 +204,7 @@ const FilterComments: React.FC<FilterCommentsProps> = ({ onBack }) => {
           </ListItemSecondaryAction>
         </ListItem>
       </List>
-      )}
+      {/* )} */}
     </Box>
   
   );
