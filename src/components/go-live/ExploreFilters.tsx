@@ -26,22 +26,31 @@ const filterOptions = [
   { label: 'Smooth', icon: <WaterDropIcon /> },
 ];
 
+<<<<<<< HEAD
 interface ExploreFiltersProps {
   show: boolean;
   setShow: (show: boolean) => void;
 }
 
 export default function ExploreFilters({ show, setShow }: ExploreFiltersProps) {
+=======
+export default function ExploreFilters({ show, setShow }: { show: any, setShow: any }) {
+>>>>>>> a6ca4a6bf052bbc696e94bb3706598e61c389a49
   const panelRef = useRef<HTMLDivElement>(null);
   const [tab, setTab] = React.useState(0);
 
   // Click outside to close
   useEffect(() => {
+<<<<<<< HEAD
     const handleClickOutside = (e: MouseEvent) => {
       if (
         panelRef.current &&
         !panelRef.current.contains(e.target as Node)
       ) {
+=======
+    const handleClickOutside = (e: any) => {
+      if (panelRef.current && !panelRef.current.contains(e.target)) {
+>>>>>>> a6ca4a6bf052bbc696e94bb3706598e61c389a49
         setShow(false);
       }
     };

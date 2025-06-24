@@ -47,9 +47,10 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 
 interface CommentsProps {
   updateSettings: (id: string, settings: { allowComments?: boolean; showMostSent?: boolean }) => void;
+  onBack: () => void;
 }
 
-const Comments: React.FC<CommentsProps> = ({ updateSettings }) => {
+const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
   const [showFilterScreen, setShowFilterScreen] = useState(false);
   const [showBlockedKeywords, setShowBlockedKeywords] = useState(false); // NEW STATE
   const [allowComments, setAllowComments] = useState(true);

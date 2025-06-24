@@ -161,9 +161,13 @@ const Promote = () => (
         const slideRef = useRef<HTMLDivElement>(null);
         const fileInputRef = useRef<HTMLInputElement>(null);
         const handleClick = () => {
+<<<<<<< HEAD
             if (fileInputRef.current) {
                 fileInputRef.current.click(); // Trigger the hidden input
             }
+=======
+            fileInputRef.current && fileInputRef.current.click(); // Trigger the hidden input
+>>>>>>> a6ca4a6bf052bbc696e94bb3706598e61c389a49
         };
         const [showEditLiveGoal, setShowEditLiveGoal] = useState(false);
         const [showFaqs, setShowFaqs] = useState(false);
@@ -381,6 +385,7 @@ const Promote = () => (
             config
             );
             console.log("API response:", response.data);
+<<<<<<< HEAD
         } catch (error) {
             if (typeof error === "object" && error !== null && "response" in error) {
                 // @ts-ignore
@@ -388,6 +393,10 @@ const Promote = () => (
             } else {
                 console.error("Upload failed:", error);
             }
+=======
+        } catch (error: any) {
+            console.error("Upload failed:", error.response?.data || error.message);
+>>>>>>> a6ca4a6bf052bbc696e94bb3706598e61c389a49
         }
     };
 
