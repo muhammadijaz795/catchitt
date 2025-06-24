@@ -50,9 +50,9 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 
 // Settings data
 const settingsData = [
-  { title: 'Moderators', type: 'link', component: 'moderators' },
+  { title: 'Moderators', type: 'link', component: 'moderators'  as const },
   { title: 'Practice mode', description: 'This pre-LIVE session is only visible to you.', type: 'link' },
-  { title: 'About me', description: 'Introduce yourself and your LIVE.', type: 'link', component: 'AboutMe' },
+  { title: 'About me', description: 'Introduce yourself and your LIVE.', type: 'link', component: 'AboutMe'  as const },
   { title: 'LIVE setup for client acquisition', type: 'link' },
   { title: 'Multi-guest fun kit', description: 'Explore interactive features and playbooks for your multi-guest LIVE.', type: 'link' },
   { title: 'Video quality', type: 'link' },
@@ -60,7 +60,7 @@ const settingsData = [
   { title: 'LIVE Gifts', type: 'switch', value: false },
   { title: 'Gift Gallery', description: 'Enable Gift Gallery to allow viewers to light up the Gifts in your Gift Gallery and become title gifters during your LIVE.', type: 'switch', value: true },
   { title: 'Rankings', type: 'link' },
-  { title: 'Comment settings', type: 'link', component: 'comments' },
+  { title: 'Comment settings', type: 'link', component: 'comments'  as const },
   { title: 'Content disclosure', type: 'link' },
 ];
 
@@ -72,7 +72,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails }) => {
   const [activeView, setActiveView] = useState<null | 'moderators' | 'comments' | 'AboutMe'>(null);
 
 
-const updateSettings = async (id, settings = {}) => {
+const updateSettings = async (id: any, settings = {}) => {
   // Destructure incoming settings with default values
   const { allowComments = true, showMostSent = true } = settings;
 

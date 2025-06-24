@@ -168,7 +168,7 @@ const [goalDescription, setGoalDescription] = useState(
 
       <Grid container spacing={1}>
         {selectedGifts.map(
-          (gift, i) => (
+          (gift: any, i: any) => (
             <Grid item xs={6} key={i}>
               <Card
                 sx={{
@@ -200,7 +200,7 @@ const [goalDescription, setGoalDescription] = useState(
                   </Typography>
                   
                   <Typography display="flex" justifyContent={'center'} variant="caption" color="white" mt={2} pt={1} borderTop="2px solid #444" >
-                    0/<span contentEditable suppressContentEditableWarning onBlur={(e) => {setSelectedGifts((prevGifts: any) => prevGifts.map(item => item._id === gift._id ? { ...item, count: e.target.textContent || 0 } : gift)); }}>{gift.count}</span>
+                    0/<span contentEditable suppressContentEditableWarning onBlur={(e) => {setSelectedGifts((prevGifts: any) => prevGifts.map((item: any) => item._id === gift._id ? { ...item, count: e.target.textContent || 0 } : gift)); }}>{gift.count}</span>
                     <svg className='pl-1' width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M6.24219 11.258C6.24219 10.9588 6.48469 10.7163 6.78385 10.7163H11.1172C11.4163 10.7163 11.6589 10.9588 11.6589 11.258C11.6589 11.5571 11.4163 11.7996 11.1172 11.7996H6.78385C6.48469 11.7996 6.24219 11.5571 6.24219 11.258Z" fill="#535353"/>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9933 4.27044C11.8652 3.39504 11.8282 2.24546 11.1771 1.54146C10.8596 1.19819 10.4077 0.978928 9.89589 0.966838C9.38217 0.954704 8.84993 1.15116 8.3588 1.56206C8.34623 1.57257 8.33416 1.58364 8.32262 1.59524L1.29788 8.64801C0.994535 8.95253 0.824219 9.3649 0.824219 9.79477V10.7121C0.824219 11.3087 1.30737 11.7996 1.90963 11.7996H2.81899C3.25109 11.7996 3.66539 11.6276 3.97032 11.3214L10.9933 4.27044ZM9.0614 3.02082C8.84988 2.80929 8.50689 2.80929 8.29537 3.02082C8.08385 3.23236 8.08385 3.57532 8.29537 3.78686L8.83704 4.32852C9.04856 4.54006 9.39154 4.54006 9.60306 4.32852C9.81458 4.11699 9.81458 3.77403 9.60306 3.56249L9.0614 3.02082Z" fill="#535353"/>
@@ -319,7 +319,7 @@ const [goalDescription, setGoalDescription] = useState(
           "&:hover": { backgroundColor: "#ff1e52" },
           textTransform: "none",
         }}
-        onClick={()=> { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item) => item._id !== selectedGift._id), {...selectedGift, count: selectedGiftCount}]); setSelectedGift({}); setSelectedGiftCount(1); } }
+        onClick={()=> { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item: any) => item._id !== selectedGift._id), {...selectedGift, count: selectedGiftCount}]); setSelectedGift({}); setSelectedGiftCount(1); } }
       >
         Confirm
       </Button>
@@ -373,7 +373,7 @@ const [goalDescription, setGoalDescription] = useState(
       {/* Grid of gifts */}
       <Grid container spacing={1}>
         {selectedGifts.map(
-          (gift, i) => (
+          (gift: any, i: any) => (
             <Grid item xs={12} key={i}>
               <Card
                 sx={{
@@ -409,7 +409,7 @@ const [goalDescription, setGoalDescription] = useState(
                   </Box>
                   
                   <Typography display="flex" justifyContent={'center'} variant="caption" color="white" mt={2} pt={1} >
-                    0/<span contentEditable suppressContentEditableWarning onBlur={(e) => {setSelectedGifts((prevGifts: any) => prevGifts.map(item => item._id === gift._id ? { ...item, count: e.target.textContent || 0 } : gift)); }}>{gift.count}</span>
+                    0/<span contentEditable suppressContentEditableWarning onBlur={(e) => {setSelectedGifts((prevGifts: any) => prevGifts.map((item: any) => item._id === gift._id ? { ...item, count: e.target.textContent || 0 } : gift)); }}>{gift.count}</span>
                     <svg className='pl-1' width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M6.24219 11.258C6.24219 10.9588 6.48469 10.7163 6.78385 10.7163H11.1172C11.4163 10.7163 11.6589 10.9588 11.6589 11.258C11.6589 11.5571 11.4163 11.7996 11.1172 11.7996H6.78385C6.48469 11.7996 6.24219 11.5571 6.24219 11.258Z" fill="#535353"/>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9933 4.27044C11.8652 3.39504 11.8282 2.24546 11.1771 1.54146C10.8596 1.19819 10.4077 0.978928 9.89589 0.966838C9.38217 0.954704 8.84993 1.15116 8.3588 1.56206C8.34623 1.57257 8.33416 1.58364 8.32262 1.59524L1.29788 8.64801C0.994535 8.95253 0.824219 9.3649 0.824219 9.79477V10.7121C0.824219 11.3087 1.30737 11.7996 1.90963 11.7996H2.81899C3.25109 11.7996 3.66539 11.6276 3.97032 11.3214L10.9933 4.27044ZM9.0614 3.02082C8.84988 2.80929 8.50689 2.80929 8.29537 3.02082C8.08385 3.23236 8.08385 3.57532 8.29537 3.78686L8.83704 4.32852C9.04856 4.54006 9.39154 4.54006 9.60306 4.32852C9.81458 4.11699 9.81458 3.77403 9.60306 3.56249L9.0614 3.02082Z" fill="#535353"/>

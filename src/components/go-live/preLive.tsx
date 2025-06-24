@@ -158,10 +158,10 @@ const Promote = () => (
         const toggleMoreExpenstion = () => setExpanded(prev => !prev);
         const [showMore, setShowMore] = useState(false);
         const toggleMore = () => setShowMore((prev) => !prev);
-        const slideRef = useRef(null);
-        const fileInputRef = useRef(null);
+        const slideRef = useRef<HTMLDivElement>(null);
+        const fileInputRef = useRef<HTMLInputElement>(null);
         const handleClick = () => {
-            fileInputRef.current.click(); // Trigger the hidden input
+            fileInputRef.current && fileInputRef.current.click(); // Trigger the hidden input
         };
         const [showEditLiveGoal, setShowEditLiveGoal] = useState(false);
         const [showFaqs, setShowFaqs] = useState(false);
@@ -170,7 +170,7 @@ const Promote = () => (
 
         // Detect click outside
         useEffect(() => {
-            const handleClickOutside = (event) => {
+            const handleClickOutside = (event: any) => {
             if (slideRef.current && !slideRef.current.contains(event.target)) {
                 setShowMore(false);
             }
@@ -379,7 +379,7 @@ const Promote = () => (
             config
             );
             console.log("API response:", response.data);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Upload failed:", error.response?.data || error.message);
         }
     };

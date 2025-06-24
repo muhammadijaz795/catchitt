@@ -60,7 +60,7 @@ const AddTopic: React.FC<AddTopicProps> = ({ onBack, postCategories,addToRoom })
 
       {/* List of topics */}
       <List disablePadding sx={{ maxWidth: 360,position: 'sticky', left: -1, top: 0, height: 'calc(100vh - 9rem) !important', bgcolor: '#fff', zIndex: 2, overflow: "auto"}}>
-        {postCategories.items.map((topic: any, index: any) => (
+        {postCategories.map((topic: any, index: any) => (
           <React.Fragment key={index}>
             <ListItem button sx={{ py: 1.5 }} onClick={() => addToRoom(topic)}>
               <ListItemAvatar>

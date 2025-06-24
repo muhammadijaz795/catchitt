@@ -12,6 +12,7 @@ import { styled } from '@mui/material/styles';
 
 interface AboutMeSettingsProps {
   onBack: () => void;
+  profileDetails: any;
 }
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
