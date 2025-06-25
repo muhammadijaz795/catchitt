@@ -14,6 +14,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import FilterComments from "./Comments/FilterComments";
 import BlockedKeywords from "./Comments/BlockedKeywords";
+import StarComment from "./Comments/StarComments";
+import CommentsMuteRules from "./Comments/CommentsMuteRules";
 
 // Styled switch (same as before)
 const StyledSwitch = styled(Switch)(({ theme }) => ({
@@ -55,8 +57,16 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
   const [showBlockedKeywords, setShowBlockedKeywords] = useState(false); // NEW STATE
   const [allowComments, setAllowComments] = useState(true);
   const [showMostSent, setShowMostSent] = useState(true);
+    const [showStarComment, setShowStarComment] = useState(false);
+    const [showMuteRules, setShowMuteRules] = useState(false);
   const id = 'a9a18957-e378-4dae-bbf8-90359f0e7838';
 
+    if (showMuteRules) {
+  return <CommentsMuteRules onBack={() => setShowMuteRules(false)} />;
+}
+if (showStarComment) {
+  return <StarComment onBack={() => setShowStarComment(false)} />;
+}
   // Show Filter Screen
   if (showFilterScreen) {
     return <FilterComments onBack={() => setShowFilterScreen(false)} />;
@@ -84,16 +94,18 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
       <Box
         sx={{
           borderBottom: "1px solid #e0e0e0",
-          p: 2,
+          p: 1,
           display: "flex",
           alignItems: "center",
           justifyContent: 'center'
         }}
       >
         <IconButton sx={{ position: "absolute", left: 1 }} size="small">
-          <ArrowBackIosNewIcon fontSize="small" />
+          <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </IconButton>
-        <Typography fontWeight="bold" fontSize="1.1rem" sx={{ ml: 1 }}>
+        <Typography fontWeight="bold" variant="body1" sx={{ ml: 1 }}>
           Comment Settings
         </Typography>
       </Box>
@@ -139,7 +151,7 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
           </ListItemSecondaryAction>
         </ListItem>
 
-        <ListItem button>
+        <ListItem button onClick={() => setShowStarComment(true)}>
           <ListItemText primary="Star Comment" />
           <ListItemSecondaryAction>
             <IconButton edge="end">
@@ -178,7 +190,7 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
           </ListItemSecondaryAction>
         </ListItem>
 
-        <ListItem button>
+        <ListItem button onClick={() => setShowMuteRules(true)}>
           <ListItemText
             primary="Mute rules"
             secondary="Add rules to mute viewers who comment specific words, phrases, and emojis."

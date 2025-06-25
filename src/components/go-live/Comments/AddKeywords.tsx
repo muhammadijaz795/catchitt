@@ -7,7 +7,6 @@ import {
   Switch,
   Container,
 } from "@mui/material";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { styled } from "@mui/material/styles";
 

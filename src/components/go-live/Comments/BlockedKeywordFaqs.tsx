@@ -32,7 +32,7 @@ const FaqScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           justifyContent: "center",
           position: "relative",
           mb: 2,
-          pb: 1,
+          p: 1,
           borderBottom: "1px solid #eee",
         }}
       >
@@ -40,9 +40,10 @@ const FaqScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           onClick={onBack}
           sx={{ position: "absolute", left: 0 }}
         >
-          <ArrowBackIosNewIcon fontSize="small" />
-        </IconButton>
-        <Typography fontWeight="bold" fontSize="1rem">
+        <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>        </IconButton>
+        <Typography fontWeight="bold" variant="body1">
           FAQs
         </Typography>
       </Box>
