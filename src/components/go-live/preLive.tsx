@@ -39,6 +39,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ExploreFilters from "./ExploreFilters";
 import LiveGoalFAQ from "./GoLiveFaq";
 import SettingsPanel from "./SettingPreLive";
+import { useNavigate } from 'react-router-dom';
+
 
 import axios from 'axios';
 
@@ -52,6 +54,7 @@ export default function LiveStreamUI() {
     const token = localStorage.getItem('token');
     const [filePreview, setFilePreview] = useState<string>('');
     const [fileUrl, setFileUrl] = useState<string>('');
+    const navigate = useNavigate();
      const [profileDetails, setProfileDetails] = useState<any>(
     {
         details: [],
@@ -243,7 +246,7 @@ const Promote = () => (
             let msgUrl = responce.data.data;
             console.log('msgUrl', msgUrl);
             setFileUrl(msgUrl);
-            updateStream();
+            // updateStream();
             console.log(msgUrl, "msgUrl");
             if (file_type(fileType) == "Video"){
                 setFilePreview(msgUrl);
@@ -313,7 +316,7 @@ const Promote = () => (
     useEffect(() => {
         if (currentTopicId && currentTopicName) {
             console.log('in useEffect...', currentTopicId, currentTopicName);
-            updateStream();
+            // updateStream();
         }
     }, [currentTopicId, currentTopicName]);
 
@@ -376,10 +379,16 @@ const Promote = () => (
 
         try {
             const response = await axios.post(
-            `${API_KEY}/live-stream/create-new-stream`,
-            finalPayload,
-            config
+                `${API_KEY}/live-stream/create-new-stream`,
+                finalPayload,
+                config
             );
+            if(response.data.status == 200) {
+                console.log(response.data.data.joinLink);
+                const url = response.data.data.joinLink;
+                const queryString = new URL(url).search;
+                //navigate('/postlive' + queryString)
+            }
             console.log("API response:", response.data);
         } catch (error) {
             if (typeof error === "object" && error !== null && "response" in error) {
@@ -651,6 +660,7 @@ const Promote = () => (
                 )}
                 <Box sx={{position: "absolute", bottom: 16, right: 8}}>
                     <Button
+                        onClick={()=> updateStream()}
                         variant="contained"
                         sx={{
                             backgroundColor: "#FF4D67",
@@ -792,7 +802,7 @@ const Promote = () => (
                     >
                         <Typography variant="body2" color="textSecondary">
                         {liveTitle || 'Add a title'}
-                        <IconButton onClick={()=> {setShowInputField(!showInputField); updateStream();}} size="small">
+                        <IconButton onClick={()=> {setShowInputField(!showInputField);}} size="small">
                             <svg xmlns="http://www.w3.org/2000/svg" className="feather feather-edit" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </IconButton>
                          {showInputField && <input type="text" value={liveTitle} onChange={(e) => setLiveTitle(e.target.value)}  /> }

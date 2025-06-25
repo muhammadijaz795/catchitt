@@ -49,6 +49,10 @@ import ShareIcon from '../../assets/postLive/Share.png'
 import EnhanceIcon from '../../assets/postLive/Enhance.png'
 import MoreIcon from '../../assets/postLive/More.png'
 import AvatarPostLive from '../../assets/postLive/Avatar.png'
+import { useSearchParams } from 'react-router-dom';
+import SidebarChat from './SidebarChat.jsx';
+
+
 
 export default function PostLive() {
 
@@ -103,6 +107,14 @@ export default function PostLive() {
             <path d="M13.4222 31.977C5.88316 31.977 0.535156 26.7491 0.535156 19.546C0.535156 15.722 2.82816 11.6021 2.92516 11.4301C3.12416 11.0761 3.51516 10.8831 3.92316 10.9281C4.32716 10.9801 4.65916 11.2711 4.76316 11.6641C4.76916 11.6881 5.38716 14.0001 6.20316 15.2841C6.75116 16.1481 7.30716 16.7591 7.93216 17.1831C7.50916 15.35 7.18516 12.5921 7.71216 9.76205C9.16016 1.99405 15.2742 0.135051 15.5362 0.0610505C15.8732 -0.0359495 16.2312 0.0510506 16.4872 0.284051C16.7432 0.519051 16.8602 0.870051 16.7942 1.21105C16.7842 1.26505 15.7742 6.70405 17.9172 11.3381C18.1122 11.7591 18.3832 12.2481 18.6752 12.7371C18.7582 12.0651 18.8872 11.3511 19.0852 10.6571C19.8712 7.90805 21.9042 6.96905 21.9892 6.93105C22.3282 6.77705 22.7242 6.82705 23.0162 7.05705C23.3082 7.28805 23.4492 7.66005 23.3812 8.02605C23.3702 8.09405 23.0872 9.96405 24.6792 12.6181C26.1172 15.0141 26.5312 16.567 26.5312 19.546C26.5312 26.7491 21.0172 31.976 13.4202 31.976L13.4222 31.977ZM3.64916 14.6151C3.10016 16.0001 2.53416 17.841 2.53416 19.546C2.53416 25.59 7.04016 29.976 13.4212 29.976C19.8592 29.976 24.5312 25.59 24.5312 19.545C24.5312 16.934 24.2082 15.7231 22.9642 13.6461C22.1322 12.2601 21.7212 11.0131 21.5252 10.0211C21.3272 10.3421 21.1432 10.7331 21.0092 11.2051C20.3992 13.3361 20.5532 15.8281 20.5552 15.8541C20.5842 16.3001 20.3132 16.713 19.8912 16.862C19.4692 17.011 18.9992 16.864 18.7402 16.498C18.6652 16.391 16.8862 13.8741 16.1032 12.1781C14.4752 8.66005 14.5022 4.85505 14.6692 2.66405C13.0212 3.62405 10.4922 5.76805 9.68016 10.1301C8.88916 14.3741 10.4262 18.618 10.4422 18.659C10.5752 19.0051 10.5052 19.3981 10.2612 19.677C10.0162 19.9541 9.63916 20.077 9.27516 19.99C9.15116 19.96 6.33716 19.2281 4.51416 16.3561C4.18916 15.8421 3.89716 15.2191 3.65016 14.6141L3.64916 14.6151Z" fill="white" />
         </svg>
     );
+    const [searchParams] = useSearchParams();
+    const streamId = searchParams.get('streamId');
+    const [selectedLiveVideo, setSelectedLiveVideo] = useState(
+        {
+          details: null,
+          isLoading: false,
+        }
+      );
 
     const filters = new Array(24).fill('').map((_, i) => ({
         id: i,
@@ -121,9 +133,63 @@ export default function PostLive() {
 
     const [openSettings, setOpenSettings] = useState(false);
 
+    const [profileDetails, setProfileDetails] = useState<any>(
+        {
+            details: [],
+            isLoading: false,
+        }
+    );
+
     const toggleSettings = () => {
         setOpenSettings((prev) => !prev);
     };
+
+    useEffect(() => {
+        loadRoomDetails();
+         loadProfileDetails();
+    }, []);
+
+    function loadProfileDetails()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/profile`;
+        let requestOptions =
+        {
+        method: 'GET',
+        headers:
+        {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+        },
+        };
+
+        setProfileDetails((prev: any) => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setProfileDetails((prev: any) => ({ ...prev, details: response.data, isLoading: false })))
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
+
+    const loadRoomDetails = () => {
+        let endpoint = `${process.env.VITE_API_URL}/live-stream/${streamId}`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+        console.log('endpoint', endpoint);
+        console.log('requestOptions', requestOptions);  
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => { setSelectedLiveVideo((prev: any) => ({...prev, details: response.data, isLoading: false})); })
+        .catch((error) => console.error('Fetch error:', error));
+    }
+
 
     return (
         <div className='flex ' style={{ background: '#000' }}>
@@ -168,10 +234,14 @@ export default function PostLive() {
                                         mb: 1
                                     }}
                                 >
-                                    <Avatar src="data:image/jpeg;base64,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" sx={{ width: 32, height: 32 }} />
-                                    <Box>
+                                <Avatar
+                                    src={ profileDetails?.details?.avatar }
+                                    alt={ profileDetails?.details?.name }
+                                    sx={{ width: 32, height: 32 }}
+                                />                                    
+                                <Box>
                                         <Typography fontSize={12} lineHeight={1} fontWeight={500}>
-                                            MBY
+                                             {profileDetails?.details?.name }
                                         </Typography>
                                         <span className="flex text-xs">
                                             <svg className="pr-1" width="11" height="10" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -191,7 +261,7 @@ export default function PostLive() {
                                     }}>
                                         <FavoriteIcon sx={{ fontSize: 16 }} />
                                         <Typography fontSize={12} ml={0.5}>
-                                            67
+                                             {profileDetails?.details?.followersNumber}
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -461,8 +531,9 @@ export default function PostLive() {
                             </Box>
                         </Box>
                     </Box>
+                    <SidebarChat selectedLiveVideo={selectedLiveVideo} />
                     {/* Right Sidebar */}
-                    <Box sx={{ width: 400, }}>
+                    {/* <Box sx={{ width: 400, }}>
                         {!showEditLiveGoal && !showFaqs && !openSettings && <Card sx={{ p: 1, boxShadow: "none" }}>
                             <Box sx={{ position: "absolute" }}>
                                 <CardMedia
@@ -585,7 +656,7 @@ export default function PostLive() {
                         {openSettings &&
                             <SettingsPanel />
                         }
-                    </Box>
+                    </Box> */}
                 </div>
             </div>
         </div>
