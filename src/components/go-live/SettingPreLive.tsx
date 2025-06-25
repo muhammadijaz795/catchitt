@@ -72,14 +72,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails }) => {
   const [activeView, setActiveView] = useState<null | 'moderators' | 'comments' | 'AboutMe'>(null);
 
 
-<<<<<<< HEAD
 const updateSettings = async (
   id: string,
   settings: { allowComments?: boolean; showMostSent?: boolean } = {}
 ) => {
-=======
-const updateSettings = async (id: any, settings = {}) => {
->>>>>>> a6ca4a6bf052bbc696e94bb3706598e61c389a49
   // Destructure incoming settings with default values
   const { allowComments = true, showMostSent = true } = settings;
 

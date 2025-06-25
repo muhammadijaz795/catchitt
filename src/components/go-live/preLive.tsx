@@ -161,13 +161,9 @@ const Promote = () => (
         const slideRef = useRef<HTMLDivElement>(null);
         const fileInputRef = useRef<HTMLInputElement>(null);
         const handleClick = () => {
-<<<<<<< HEAD
             if (fileInputRef.current) {
                 fileInputRef.current.click(); // Trigger the hidden input
             }
-=======
-            fileInputRef.current && fileInputRef.current.click(); // Trigger the hidden input
->>>>>>> a6ca4a6bf052bbc696e94bb3706598e61c389a49
         };
         const [showEditLiveGoal, setShowEditLiveGoal] = useState(false);
         const [showFaqs, setShowFaqs] = useState(false);
@@ -385,7 +381,6 @@ const Promote = () => (
             config
             );
             console.log("API response:", response.data);
-<<<<<<< HEAD
         } catch (error) {
             if (typeof error === "object" && error !== null && "response" in error) {
                 // @ts-ignore
@@ -393,10 +388,6 @@ const Promote = () => (
             } else {
                 console.error("Upload failed:", error);
             }
-=======
-        } catch (error: any) {
-            console.error("Upload failed:", error.response?.data || error.message);
->>>>>>> a6ca4a6bf052bbc696e94bb3706598e61c389a49
         }
     };
 
@@ -800,7 +791,7 @@ const Promote = () => (
                         }}
                     >
                         <Typography variant="body2" color="textSecondary">
-                        Add a title
+                        {liveTitle || 'Add a title'}
                         <IconButton onClick={()=> {setShowInputField(!showInputField); updateStream();}} size="small">
                             <svg xmlns="http://www.w3.org/2000/svg" className="feather feather-edit" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </IconButton>
@@ -916,7 +907,7 @@ const Promote = () => (
                     </Card> 
                     }
                     {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
-                    {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} /> }
+                    {showFaqs && <LiveGoalFAQ onBack={() => setShowFaqs(!showFaqs)} /> }
                     {openSettings &&
                         <SettingsPanel profileDetails={profileDetails} />
                     }
