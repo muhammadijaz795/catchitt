@@ -531,7 +531,7 @@ export default function PostLive() {
                             </Box>
                         </Box>
                     </Box>
-                    <SidebarChat selectedLiveVideo={selectedLiveVideo} />
+                    {profileDetails && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} /> }
                     {/* Right Sidebar */}
                     {/* <Box sx={{ width: 400, }}>
                         {!showEditLiveGoal && !showFaqs && !openSettings && <Card sx={{ p: 1, boxShadow: "none" }}>
