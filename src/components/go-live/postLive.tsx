@@ -131,10 +131,11 @@ export default function PostLive() {
     const slideRef = useRef(null);
     const [showEditLiveGoal, setShowEditLiveGoal] = useState(false);
     const [showFaqs, setShowFaqs] = useState(false);
+    const [showChatSideBar, setShowChatSideBar] = useState(true);
 
     const [openSettings, setOpenSettings] = useState(false);
     const [openGiftsPanel, setOpenGiftsPanel] = useState(false);
-     const [righSideEnable, setRighSideEnable] = useState(true);
+     const [righSideEnable, setRighSideEnable] = useState(false);
 
     const [profileDetails, setProfileDetails] = useState<any>(
         {
@@ -535,16 +536,16 @@ export default function PostLive() {
                             </Box>
                         </Box>
                     </Box>
-                    {/* {profileDetails && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); console.log("back button clicked...")}} /> } */}
+                    {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
                     {/* Right Sidebar */}
                     {showFaqs && <Box sx={{ width: 400, }}>
-                        <LiveGoalFAQ onBack={() => console.log('Back pressed')} />
+                        <LiveGoalFAQ onBack={() => {setShowFaqs(false); setShowChatSideBar(true)}} />
                     </Box>}
                     
 
-                    {righSideEnable && <Box sx={{ width: 400, }}>
+                     <Box sx={{ width: 400, }}>
                         {!showEditLiveGoal && !showFaqs && !openSettings && !openGiftsPanel && <Card sx={{ p: 1, boxShadow: "none" }}>
-                            <Box sx={{ position: "absolute" }}>
+                            {/* <Box sx={{ position: "absolute" }}>
                                 <CardMedia
                                     sx={{
                                         maxWidth: 100,
@@ -657,7 +658,7 @@ export default function PostLive() {
                                     </svg>
                                     Faqs
                                 </Button>
-                            </CardContent>
+                            </CardContent> */}
                         </Card>
                         }
                         {showEditLiveGoal && <EditLiveGoal onConfirm={() => setShowEditLiveGoal(!showEditLiveGoal)} onLiveGoalAdded={(goals) => setShowEditLiveGoal(!showEditLiveGoal)} />}
@@ -668,7 +669,7 @@ export default function PostLive() {
                         {openGiftsPanel && 
                         <GiftsPostLive />
                         }
-                    </Box> }
+                    </Box> 
                 </div>
             </div>
         </div>

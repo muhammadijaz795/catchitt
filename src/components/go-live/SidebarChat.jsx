@@ -455,7 +455,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                     },
                                   }}
                                 >
-                                  <IconButton size="small" onClick={handleClickOpenFaq}>
+                                  <IconButton size="small" onClick={()=> showFaqsSidebar()}>
                                     <HelpOutlineIcon fontSize="small" />
                                   </IconButton>
                                 </Tooltip>
