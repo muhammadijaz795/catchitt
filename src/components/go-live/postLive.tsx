@@ -38,6 +38,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ExploreFilters from "./ExploreFilters";
 import LiveGoalFAQ from "./TopViewersFaqs";
 import SettingsPanel from "./SettingPostLive";
+import GiftsPostLive from "./GiftsPostLive";
 import PostliveBg from '../../assets/postLive/postlive-bg.png'
 import LiveGoal from '../../assets/postLive/liveGoal.png'
 import HorizontalLine from '../../assets/postLive/horizontal-line.png'
@@ -120,9 +121,11 @@ export default function PostLive() {
     const [showFaqs, setShowFaqs] = useState(false);
 
     const [openSettings, setOpenSettings] = useState(false);
+    const [openGiftsPanel, setOpenGiftsPanel] = useState(false);
 
     const toggleSettings = () => {
-        setOpenSettings((prev) => !prev);
+        // setOpenSettings((prev) => !prev);
+        setOpenGiftsPanel((prev) => !prev);
     };
 
     return (
@@ -463,7 +466,7 @@ export default function PostLive() {
                     </Box>
                     {/* Right Sidebar */}
                     <Box sx={{ width: 400, }}>
-                        {!showEditLiveGoal && !showFaqs && !openSettings && <Card sx={{ p: 1, boxShadow: "none" }}>
+                        {!showEditLiveGoal && !showFaqs && !openSettings && !openGiftsPanel && <Card sx={{ p: 1, boxShadow: "none" }}>
                             <Box sx={{ position: "absolute" }}>
                                 <CardMedia
                                     sx={{
@@ -584,6 +587,9 @@ export default function PostLive() {
                         {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} />}
                         {openSettings &&
                             <SettingsPanel />
+                        }
+                        {openGiftsPanel && 
+                        <GiftsPostLive />
                         }
                     </Box>
                 </div>
