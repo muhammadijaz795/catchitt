@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { styled } from '@mui/material/styles';
-
+import MutedAccounts from './Comments/MutedAccounts'; // your moderators component
 import ModeratorsList from './ModeratorSettings'; // your moderators component
 import AboutMe from './AboutSettings'; // your moderators component
 import Comments from './commentsSetting'; // your moderators component
@@ -62,6 +62,7 @@ const settingsData = [
   { title: 'Rankings', type: 'link' },
   { title: 'Comment settings', type: 'link', component: 'comments'  as const },
   { title: 'Content disclosure', type: 'link' },
+  { title: 'Muted Accounts', description: 'These accounts are muted for the rest of the LIVE', type: 'link', component: 'MutedAccounts'  as const },
 ];
 
 interface SettingsPanelProps {
@@ -69,7 +70,7 @@ interface SettingsPanelProps {
 }
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails }) => {
-  const [activeView, setActiveView] = useState<null | 'moderators' | 'comments' | 'AboutMe'>(null);
+  const [activeView, setActiveView] = useState<null | 'moderators' | 'comments' | 'AboutMe' | 'MutedAccounts'>(null);
 
 
 const updateSettings = async (
@@ -139,6 +140,8 @@ const updateSettings = async (
       return <AboutMe profileDetails={profileDetails} onBack={() => setActiveView(null)} />;
       case 'comments':
       return <Comments updateSettings={updateSettings}  />;
+    case 'MutedAccounts':
+      return <MutedAccounts onBack={() => setActiveView(null)} />;
     default:
       return null;
   }
@@ -159,7 +162,7 @@ const updateSettings = async (
             {settingsData.map((item, index) => (
               <React.Fragment key={index}>
                 <ListItem
-                  onClick={() => item.type === 'link' && item.component && setActiveView(item.component as 'moderators' | 'comments' | 'AboutMe')}
+                  onClick={() => item.type === 'link' && item.component && setActiveView(item.component as 'moderators' | 'comments' | 'AboutMe' | 'MutedAccounts')}
                   sx={{ py: 1.5, cursor: item.type === 'link' ? 'pointer' : 'default', alignItems: 'flex-start' }}
                   secondaryAction={
                     item.type === 'switch' ? (
