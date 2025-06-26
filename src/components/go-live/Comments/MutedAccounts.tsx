@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -16,15 +16,56 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
 
-const mutedUsers = [
-  {
-    name: 'Giana Workman',
-    username: 'Giann34',
-    avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
-  },
-];
+// const mutedUsers = [
+//   {
+//     _id: '655fc1f193289d9edfaea217',
+//     name: 'Giana Workman 1',
+//     username: 'Giann34 1',
+//     avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
+//   },
+//   {
+//     _id: '655fc1f193289d9edfaea217',
+//     name: 'Giana Workman 2',
+//     username: 'Giann34 2',
+//     avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
+//   },
+//   {
+//     _id: '655fc1f193289d9edfaea217',
+//     name: 'Giana Workman 3',
+//     username: 'Giann34 3',
+//     avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
+//   },
+// ];
 
 export default function MutedAccounts({ onBack }: { onBack: () => void }) {
+  const [mutedUsers, setMutedUsers] = useState<any>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredUsers = mutedUsers.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  function loadMutedUsers()
+  {
+    let endpoint = `${process.env.VITE_API_URL}/live-stream/v2/get-muted-users`;
+    let requestOptions =
+    {
+      method: 'GET',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    fetch(endpoint, requestOptions)
+    .then((response) => response.json())
+    .then((response) => response.data.mutedUsers && setMutedUsers(response.data.mutedUsers))
+    .catch((error) => console.error('Fetch error:', error));
+  };
+
+  useEffect(() => {
+    loadMutedUsers()
+  }, []);
+
   return (
     <Box sx={{ maxWidth: 360, mx: 'auto', bgcolor: '#fff', position: 'fixed', right: 0, top: 0, zIndex: 3 }}>
       <Box
@@ -66,6 +107,8 @@ export default function MutedAccounts({ onBack }: { onBack: () => void }) {
             <input
                 type="text"
                 placeholder="Search accounts"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
                 border: 'none',
                 outline: 'none',
@@ -83,10 +126,9 @@ export default function MutedAccounts({ onBack }: { onBack: () => void }) {
         </Typography>
 
         <List>
-          {mutedUsers.map((user, index) => (
+          {filteredUsers.map((user, index) => (
             <ListItem key={index} disableGutters secondaryAction={
               <Button
-              onClick={}
                 variant="outlined"
                 size="small"
                 sx={{
@@ -114,7 +156,7 @@ export default function MutedAccounts({ onBack }: { onBack: () => void }) {
           ))}
         </List>
       </Box>
-      {/*  */}
+      {mutedUsers.length < 1 && (
       <Box
               sx={{
                 flexGrow: 1,
@@ -131,6 +173,7 @@ export default function MutedAccounts({ onBack }: { onBack: () => void }) {
                 Edit this list by tapping "Manage" on a viewer's personal card
               </Typography>
             </Box>
+      )}
       
     </Box>
   );
