@@ -192,14 +192,6 @@ if (showMutedAccounts) {
           </ListItemSecondaryAction>
         </ListItem>
 
-      <ListItem button onClick={() => setShowMutedAccounts(true)}>
-          <ListItemText primary="Muted Accounts" secondary="These accounts are muted for the rest of the LIVE" />
-          <ListItemSecondaryAction>
-            <IconButton edge="end">
-              <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
         <ListItem button onClick={() => setShowMutedAccounts(true)}>
           <ListItemText primary="Blocked Accounts"  />
           <ListItemSecondaryAction>
