@@ -202,7 +202,7 @@ export default function PostLive() {
             <div className={` w-[calc(100%-16rem)] ml-auto bg-white pt-2`}>
                 <div className="flex" >
                     {/* Live screen */}
-                    <Box style={{ width: "100%", }}>
+                    <Box className={`w-[calc(100%-20.5rem)]`}>
                         <Box
                             sx={{
                                 position: "relative",
@@ -536,14 +536,16 @@ export default function PostLive() {
                             </Box>
                         </Box>
                     </Box>
-                    {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
+                    
                     {/* Right Sidebar */}
+                                            {/* {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> } */}
+
                     {showFaqs && <Box sx={{ width: 400, }}>
                         <LiveGoalFAQ onBack={() => {setShowFaqs(false); setShowChatSideBar(true)}} />
                     </Box>}
                     
 
-                     <Box sx={{ width: 400, }}>
+                     <Box sx={{ width: '20rem', }}>
                         {!showEditLiveGoal && !showFaqs && !openSettings && !openGiftsPanel && <Card sx={{ p: 1, boxShadow: "none" }}>
                             {/* <Box sx={{ position: "absolute" }}>
                                 <CardMedia
