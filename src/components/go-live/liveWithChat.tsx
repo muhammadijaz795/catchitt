@@ -1465,7 +1465,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                 px: 2,
                                 py: 1.5,
                                 borderBottom: "1px solid #eee",
-                                height: "100%",
+                                height: "3rem",
                                 }}
                             >
                                 <IconButton size="small" onClick={() => setShowTopViewers(!showTopViewers)}>   
