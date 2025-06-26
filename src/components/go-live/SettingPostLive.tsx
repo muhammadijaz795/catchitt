@@ -176,7 +176,7 @@ const SettingsPanel = () => {
     }
   };
 
-  const updateSettings = async (
+const updateSettings = async (
   id: string,
   settings: {
     allowComments?: boolean;
@@ -187,12 +187,15 @@ const SettingsPanel = () => {
       communityFlaggedComments?: boolean;
       showInFeed?: boolean;
     };
+    blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
   } = {}
 ) => {
   const API_KEY = process.env.VITE_API_URL;
   const token = localStorage.getItem("token");
   const API_URL = `${API_KEY}/live-stream/v2/settings/${id}`;
-
+ console.log('data in top parent component..');
+  console.log(settings);
+  // console.log(settings.commentSettings.blockedKeywords);
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -226,10 +229,19 @@ const SettingsPanel = () => {
     });
   }
 
+  // Set blockedKeywords
+  if (Array.isArray(settings.commentSettings.blockedKeywords)) {
+    data.commentSettings = data.commentSettings || {};
+    data.commentSettings.blockedKeywords = settings.commentSettings.blockedKeywords;
+  }
+
   if (Object.keys(data).length === 0) {
     console.warn("No update fields provided.");
     return;
   }
+
+  console.log('data in top parent component..');
+  console.log(data);
 
   try {
     const response = await axios.patch(API_URL, data, config);
@@ -239,6 +251,7 @@ const SettingsPanel = () => {
     console.error("Update failed:", error);
   }
 };
+
 
 
 

@@ -78,7 +78,17 @@ if (showStarComment) {
 
   // Show Blocked Keywords Screen
   if (showBlockedKeywords) {
-    return <BlockedKeywords onBack={() => setShowBlockedKeywords(false)} />;
+    return <BlockedKeywords onBack={() => setShowBlockedKeywords(false)}  onSave={(blockedKeywords) =>
+        {
+          console.log('block keywords in parent..')
+          console.log(blockedKeywords);
+          updateSettings(id, {
+          commentSettings: {
+            blockedKeywords: blockedKeywords,
+          },
+        })
+      }
+      } />;
   }
 if (showMutedAccounts) {
     return <MutedAccounts onBack={() => setShowMutedAccounts(false)} />;
