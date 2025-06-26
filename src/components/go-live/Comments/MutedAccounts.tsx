@@ -41,7 +41,7 @@ import UnMuteButton from "./UnmuteButton";
 export default function MutedAccounts({ onBack }: { onBack: () => void }) {
   const [mutedUsers, setMutedUsers] = useState<any>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [unmuteUser, setUnmuteUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
   const [showAddMuteButton, setShowAddMuteButton] = useState(false);
 
   const filteredUsers = mutedUsers.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -65,13 +65,30 @@ export default function MutedAccounts({ onBack }: { onBack: () => void }) {
     .catch((error) => console.error('Fetch error:', error));
   };
 
+  function toggleMuteUser()
+  {
+    let endpoint = `${process.env.VITE_API_URL}/live-stream/roomId/mute/${selectedUser._id}`;
+    let requestOptions =
+    {
+      method: 'POST',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    fetch(endpoint, requestOptions)
+    .catch((error) => console.error('Fetch error:', error));
+  };
+
   useEffect(() => {
     loadMutedUsers()
   }, []);
 
   if(showAddMuteButton)
   {
-    return <UnMuteButton user={unmuteUser} onBack={() => { setUnmuteUser(null); setShowAddMuteButton(false); }} />;
+    return <UnMuteButton user={selectedUser} onBack={() => { setSelectedUser(null); setShowAddMuteButton(false); }} onConfirm={() => { toggleMuteUser(); setShowAddMuteButton(false); }} />;
   }
 
   return (
@@ -137,7 +154,7 @@ export default function MutedAccounts({ onBack }: { onBack: () => void }) {
           {filteredUsers.map((user, index) => (
             <ListItem key={index} disableGutters secondaryAction={
               <Button
-                onClick={() => { setUnmuteUser(user); setShowAddMuteButton(true); }}
+                onClick={() => { setSelectedUser(user); setShowAddMuteButton(true); }}
                 variant="outlined"
                 size="small"
                 sx={{
