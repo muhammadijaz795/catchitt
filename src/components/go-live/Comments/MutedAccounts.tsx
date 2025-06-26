@@ -135,7 +135,6 @@ export default function MutedAccounts({ onBack }: { onBack: () => void }) {
           {filteredUsers.map((user, index) => (
             <ListItem key={index} disableGutters secondaryAction={
               <Button
-                onClick={() => { setSelectedUser(user); setShowAddMuteButton(true); }}
                 variant="outlined"
                 size="small"
                 sx={{

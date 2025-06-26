@@ -6,9 +6,15 @@ import {
   TextField,
   Switch,
   Container,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { styled } from "@mui/material/styles";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+
+const blockedKeywords = ["Damn", "Hell", "Bastard", "Asshole"];
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -140,6 +146,36 @@ const AddKeyword: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 checked={blockSimilar}
                 onChange={() => setBlockSimilar(!blockSimilar)}
                 />
+            </Box>
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "gray", fontWeight: 600, mb: 1, textAlign: "left" }}
+              >
+                Blocked Keywords
+              </Typography>
+
+              <List disablePadding>
+                {blockedKeywords.map((keyword, index) => (
+                  <ListItem
+                    key={index}
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="delete" sx={{ color: "#ff1744" }}>
+                        <DeleteIcon />
+                      </IconButton>
+                    }
+                    sx={{ pl: 0, py: 0.5 }}
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {keyword}
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
             </Box>
         </Box>
     </Container>
