@@ -66,7 +66,7 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
   const id = searchParams.get('streamId');
 
     if (showMuteRules) {
-  return <CommentsMuteRules onBack={() => setShowMuteRules(false)} />;
+  return <CommentsMuteRules onBack={() => setShowMuteRules(false)} updateSettings={updateSettings} streamId={id} />;
 }
 if (showStarComment) {
   return <StarComment onBack={() => setShowStarComment(false)} />;

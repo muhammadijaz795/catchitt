@@ -188,6 +188,8 @@ const updateSettings = async (
       showInFeed?: boolean;
     };
     blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
+    muteRules?: { comment: string; duration: number }[];
+
   } = {}
 ) => {
   const API_KEY = process.env.VITE_API_URL;
@@ -230,9 +232,13 @@ const updateSettings = async (
   }
 
   // Set blockedKeywords
-  if (Array.isArray(settings.commentSettings.blockedKeywords)) {
+  if ( settings.commentSettings && Array.isArray(settings.commentSettings.blockedKeywords)) {
     data.commentSettings = data.commentSettings || {};
     data.commentSettings.blockedKeywords = settings.commentSettings.blockedKeywords;
+  }
+
+  if (settings.muteRules) {
+    data.muteRules = settings.muteRules;
   }
 
   if (Object.keys(data).length === 0) {

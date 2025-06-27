@@ -13,8 +13,8 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-
-const blockedKeywords = ["Damn", "Hell", "Bastard", "Asshole"];
+import BlockedKeywordsFAQs from "../BlockedKeywordsFaqs";
+// const blockedKeywords = ["Damn", "Hell", "Bastard", "Asshole"];
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -50,7 +50,15 @@ const AddKeyword: React.FC<{
 }> = ({ onBack, onAddKeyword }) => {
   const [blockSimilar, setBlockSimilar] = useState(true);
   const [input, setInput] = useState("");
+  const [showBlockKeywordFaqs, setShowBlockKeywordFaqs] = useState(false);
 
+  if(showBlockKeywordFaqs) {
+    return (
+      <BlockedKeywordsFAQs
+        onClose={() => {setShowBlockKeywordFaqs(false); console.log("Closed FAQs" )}}
+      />
+    );
+  }
 
   return (
     <Container
@@ -103,7 +111,7 @@ const AddKeyword: React.FC<{
             <Box textAlign={"left"} mt={1}>
                 <Typography fontWeight={600} fontSize="0.9rem">
                 Add a word, phrase, or emoji{" "}
-                <InfoOutlinedIcon sx={{ fontSize: 16, verticalAlign: "middle" }} />
+                <InfoOutlinedIcon onClick={() => setShowBlockKeywordFaqs(true)}  sx={{ fontSize: 16, verticalAlign: "middle" }} />
                 </Typography>
             </Box>
 

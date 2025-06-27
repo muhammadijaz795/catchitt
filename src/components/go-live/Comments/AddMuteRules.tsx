@@ -25,6 +25,15 @@ const durations = [
   "5 minute",
   "Entire LIVE",
 ];
+
+const durationMap = {
+  "5 seconds": 5,
+  "30 seconds": 30,
+  "1 minute": 60,
+  "5 minute": 300,
+  "Entire LIVE": 0
+};
+
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
   height: 24,
@@ -53,15 +62,31 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     opacity: 1,
   },
 }));
-const AddMuteRulesComment: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+
+interface AddMuteRulesCommentProps {
+  onBack: () => void;
+  addMuteRule: (rule: { comment: string; duration: number }) => void;
+}
+
+const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({ onBack, addMuteRule  }) => {
   const [selected, setSelected] = useState("Entire LIVE");
   const [open, setOpen] = useState(false);
   const [showAddMuteButton,setShowAddMuteButton] = useState(false)
+  const [comment, setComment] = useState("");
+
 
   const handleSelect = (value: string) => {
     setSelected(value);
     setOpen(false);
   };
+  
+  const handleSave = () => {
+    const muteRule = { comment, duration: durationMap[selected] };
+    // updateSettings(streamId, { muteRules: [muteRule] });
+    addMuteRule(muteRule);
+    onBack(); // Go back after saving
+  };
+
     if (showAddMuteButton) {
     // return <AddMuteButton onBack={() => setShowAddMuteButton(false)} />;
      return <UnMuteButton onBack={() => setShowAddMuteButton(false)} />;
@@ -95,14 +120,15 @@ const AddMuteRulesComment: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </IconButton>
-        <Typography  variant="body1" fontWeight="bold">
-          Add mute rule
-        </Typography>
         <Box sx={{cursor: 'pointer'}} onClick={() => setShowAddMuteButton(true)}>
-          <Typography color="#ff2d55" fontWeight={600} fontSize="0.9rem" >
+          <Typography onClick={handleSave} color="#ff2d55" fontWeight={600} fontSize="0.9rem" >
             Save
           </Typography>
         </Box>
+        <Typography  variant="body1" fontWeight="bold">
+          Add mute rule
+        </Typography>
+        
       </Box>
         <Box px={2}>
             {/* Input Label + Info */}
@@ -131,6 +157,7 @@ const AddMuteRulesComment: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     paddingBottom: '15px !important'
                     },
                 }}
+                onChange={(e) => setComment(e.target.value)}
                 />
             </Box>
             <Box my={2} textAlign={'left'}>
