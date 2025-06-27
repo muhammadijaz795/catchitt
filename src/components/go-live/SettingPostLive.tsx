@@ -15,6 +15,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { styled } from '@mui/material/styles';
 import CommentsSetting from './CommentsSetting'
 import MutedAccounts from './Comments/MutedAccounts';
+import BlockedAccounts from './Comments/BlockedAccounts';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -114,6 +115,7 @@ const settingsData = [
     title: 'Blocked Accounts',
     description: '',
     type: 'link',
+    view: 'BlockedAccounts',
   },
 ];
 
@@ -126,6 +128,10 @@ const SettingsPanel = ({customProps}: {customProps: any}) => {
   else if(activeView == 'MutedAccounts')
   {
     return <MutedAccounts customProps={customProps} onBack={() => setActiveView(null)} />;
+  }
+  else if(activeView == 'BlockedAccounts')
+  {
+    return <BlockedAccounts customProps={customProps} onBack={() => setActiveView(null)} />;
   }
 
   return (
