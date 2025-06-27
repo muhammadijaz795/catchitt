@@ -69,4 +69,4 @@ const TopViewersFAQ: React.FC<AboutMeFaqs> = ({ onBack }) => {
     );
 };
 
-export default AboutMeFaqs;
+export default TopViewersFAQ;

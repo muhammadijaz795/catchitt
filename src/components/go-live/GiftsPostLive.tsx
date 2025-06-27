@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import {
   Box,
   Typography,
@@ -28,6 +29,7 @@ import AboutLive from '../../assets/postLive/About-me.svg';
 import CompaignLive from '../../assets/postLive/Compaigns.svg';
 import ContentDisclosureLive from '../../assets/postLive/Content-disclosure.svg';
 import AIGeneratedLive from '../../assets/postLive/AI-generated.svg';
+import AboutMe from './AboutSettings';
 
 
 import { styled } from '@mui/material/styles';
@@ -148,7 +150,42 @@ const GiftsData = [
   },
 ];
 
+    
+
+    
+
 const GiftsPanel = () => {
+
+  const [profileDetails, setProfileDetails] = useState<any>({
+      details: [],
+      isLoading: false,
+    });
+
+    useEffect(() => {
+      loadProfileDetails();
+    }, []);
+
+    function loadProfileDetails()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/profile`;
+        let requestOptions =
+        {
+        method: 'GET',
+        headers:
+        {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+        },
+        };
+
+        setProfileDetails((prev: any) => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setProfileDetails((prev: any) => ({ ...prev, details: response.data, isLoading: false })))
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
   // Use a single state to manage which component is active
   // 'list' for the main list, or the ID of the component to show
   const [activePanel, setActivePanel] = useState('list'); // Default to showing the list
@@ -159,6 +196,8 @@ const GiftsPanel = () => {
       setActivePanel('settings');
     } else if (itemId === 'comments') { // Assuming 'Comments' opens BlockedFaqs
       setActivePanel('blocked-faqs');
+    } else if (itemId === 'about-me') {
+      setActivePanel('about-me');
     }
     // Add more conditions here for other panels
   };
@@ -236,6 +275,9 @@ const GiftsPanel = () => {
 
       {activePanel === 'settings' && (
         <SettingsPanel onClose={handleClosePanel} />
+      )}
+      {activePanel === 'about-me' && (
+        <AboutMe onBack={handleClosePanel}  profileDetails={profileDetails} />
       )}
 
       {activePanel === 'blocked-faqs' && (

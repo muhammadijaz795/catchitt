@@ -96,11 +96,13 @@ const staticOwner = {
   photo: 'https://i.pravatar.cc/50?img=10'
 };
 
+
+
 const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDetails, showFaqsSidebar }) => {
   const [showTopViewers, setShowTopViewers] = useState(false);
   const [isShowRanking, setIsShowRanking] = useState(true);
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState(staticMessages);
+  const [messages, setMessages] = useState([]);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
   const [isFollowed, setIsFollowed] = useState(false);
@@ -464,7 +466,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                             </Box>
 
                             {/* Scrollable Content */}
-                            <Box
+                          {selectedLiveVideo?.details?.topViewersGifts.length > 0 ?  <Box
                               sx={{
                                 p: 2,
                                 overflowY: 'auto',
@@ -523,6 +525,14 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                 })}
                               </Stack>
                             </Box>
+                            : (
+                              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
+                                <img src={TopViewersImage} alt="" />
+                                <Typography fontSize={13} fontWeight={600} mt={0.5}>
+                                    Viewers
+                                </Typography>
+                            </Box>
+                            )}
 
                             {/* Footer */}
                             <Box
@@ -575,7 +585,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                 </Typography>
                                 <ArrowForwardIosIcon sx={{ fontSize: 13 }} />
                             </Box>
-                            <Box
+                            {/* <Box
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
@@ -589,13 +599,8 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                 <IconButton sx={{ color: '#666', padding: 0 }}>
                                     <HelpOutlineIcon fontSize="small" />
                                 </IconButton>
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
-                                <img src={TopViewersImage} alt="" />
-                                <Typography fontSize={13} fontWeight={600} mt={0.5}>
-                                    Viewers
-                                </Typography>
-                            </Box>
+                            </Box> */}
+                            
                                     </>
                               } 
     
@@ -935,10 +940,10 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                             </>
                                             
     
-                                             <Divider textAlign="center" sx={{ fontSize: 12, mb: 1 }}>
+                                            {selectedLiveVideo?.details?.topViewersGifts.length > 0 &&  <Divider textAlign="center" sx={{ fontSize: 12, mb: 1 }}>
                                             New
                                             </Divider>
-                                            
+                                                  }
     
                                             <Box
                                               sx={{

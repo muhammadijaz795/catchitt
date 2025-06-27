@@ -543,7 +543,7 @@ export default function PostLive() {
                     </Box>
                     
                     {/* Right Sidebar */}
-                                            {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
+                                            {/* {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> } */}
 
                     {/* {showFaqs && <Box sx={{ width: 400, }}>
                         <LiveGoalFAQ onBack={() => {setShowFaqs(false); setShowChatSideBar(true)}} />
@@ -668,7 +668,7 @@ export default function PostLive() {
                         </Card>
                         }
                         {showEditLiveGoal && <EditLiveGoal onConfirm={() => setShowEditLiveGoal(!showEditLiveGoal)} onLiveGoalAdded={(goals) => setShowEditLiveGoal(!showEditLiveGoal)} />}
-                        {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} />}
+                        {showFaqs && <LiveGoalFAQ onBack={() => {setShowFaqs(!showFaqs); setShowMore(!showMore)}} />}
                         {openSettings &&
                             <SettingsPanel />
                         }
