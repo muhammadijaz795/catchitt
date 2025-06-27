@@ -67,9 +67,10 @@ const settingsData = [
 
 interface SettingsPanelProps {
   profileDetails: any;
+  customProps: any
 }
 
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails }) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails, customProps }) => {
   const [activeView, setActiveView] = useState<null | 'moderators' | 'comments' | 'AboutMe' | 'MutedAccounts'>(null);
 
 
@@ -141,7 +142,7 @@ const updateSettings = async (
       case 'comments':
       return <Comments updateSettings={updateSettings} onBack={() => setActiveView(null)} />;
     case 'MutedAccounts':
-      return <MutedAccounts onBack={() => setActiveView(null)} />;
+      return <MutedAccounts customProps={customProps} onBack={() => setActiveView(null)} />;
     default:
       return null;
   }

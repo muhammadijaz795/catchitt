@@ -82,6 +82,12 @@ export default function LiveStreamUI() {
 
     const [liveGoals, setLiveGoals] = useState<any>([]);
     const [addLiveGoalAutomatically, setAddLiveGoalAutomatically] = useState<any>(true);
+    const [mutedUsers, setMutedUsers] = useState<any>(
+        {
+            items: [],
+            isLoading: false,
+        }
+    );
 
     const EditIcon = () => {
             <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -277,10 +283,32 @@ const Promote = () => (
         .catch((error) => console.error('Fetch error:', error));
     };
 
+    function loadMutedUsers()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/live-stream/v2/get-muted-users`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        setMutedUsers((prev: any) => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setMutedUsers((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
      useEffect(() => {
         loadProfileDetails();
         loadPostCategories();
-        loadLiveGoals()
+        loadLiveGoals();
+        loadMutedUsers();
       }, []);
 
     function loadProfileDetails()
@@ -356,7 +384,7 @@ const Promote = () => (
                 duration: 0
             }
             ],
-            mutedUsers: [],
+            mutedUsers: mutedUsers.items,
             blockedUsers: []
         };
 
@@ -919,7 +947,7 @@ const Promote = () => (
                     {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                     {showFaqs && <LiveGoalFAQ onBack={() => setShowFaqs(!showFaqs)} /> }
                     {openSettings &&
-                        <SettingsPanel profileDetails={profileDetails} />
+                        <SettingsPanel profileDetails={profileDetails} customProps={{mutedUsers, setMutedUsers}} />
                     }
                     {showTopics &&
                         <AddTopic postCategories={postCategories.items} addToRoom={addToRoom} onBack={() => setShowTopics(!showTopics)}  />
