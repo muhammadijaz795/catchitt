@@ -1,8 +1,10 @@
 import { SideNavBar } from './goLiveSidebar';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-
+import { ChevronLeft, ChevronRight, FlipCameraAndroid, Videocam } from '@mui/icons-material';
+import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box,  Radio,
   RadioGroup,
@@ -56,6 +58,8 @@ import LiveInviteCard from './InviteGuestLive';
     document.querySelectorAll('*').forEach(el => el.scrollTo({ top: 0, behavior: 'smooth' }));
   };
 
+
+  
 const reasons = [
   'Violent extremism',
   'Hateful behavior',
@@ -123,6 +127,20 @@ const shareOptions = [
 ];
 
 function GuestLive({ darkTheme }: { darkTheme?: any }) {
+
+    const [showOverlay, setShowOverlay] = useState(false);
+
+  const handlePauseClick = () => {
+    setShowOverlay(true);
+  };
+
+  const handleGoLive = () => {
+    setShowOverlay(false);
+  };
+
+
+
+
   const navigate = useNavigate();
   const [showTopViewers, setShowTopViewers] = useState(false);
 
@@ -1232,15 +1250,106 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     )}
                     </Stack>
                 </Box>
-                <Box sx={{ width: '100%', height: '95%', background:'black' }}>
-                    {/* Placeholder for Video */}
-                    <Typography color="white" align="center" height="100%" >
-                      Video Player Area
-                    </Typography>
-                    
+                <Box sx={{ width: '100%', height: '95%', background: 'black', position: 'relative' }}>
+      {/* Pause Button */}
+      <IconButton
+        onClick={handlePauseClick}
+        sx={{ position: 'absolute', top: 10, right: 10, color: 'white', zIndex: 10 }}
+      >
+        <PauseCircleIcon fontSize="large" />
+      </IconButton>
 
-                    {/* Gift Bar */}
-                    <Box sx={{ position: 'absolute', bottom: 0, width: '100%', bgcolor: '#111', p: 1, display: 'flex', justifyContent: 'space-around' }}>
+      {/* Main Video Area */}
+      <Typography color="white" align="center" height="100%">
+        Video Player Area
+      </Typography>
+
+      {/* === OVERLAY ON PAUSE === */}
+      {showOverlay && (
+        <Box
+      sx={{
+        position: 'absolute',
+        inset: 0,
+        zIndex: 10,
+        bgcolor: 'rgba(0, 0, 0, 0.85)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {/* Center Card with Avatar */}
+      <Box
+        sx={{
+          bgcolor: '#1c1c1c',
+          p: 2,
+          borderRadius: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2,
+          boxShadow: 3,
+          width: '15rem',
+          height: '20rem',
+          position: 'relative',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1528475422887-f47817e10712?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZHVtbXl8ZW58MHx8MHx8fDA%3D)',
+          
+        }}
+      >
+        <Box></Box>
+
+        {/* Icons */}
+        <Box sx={{ display: 'flex', gap: 1, position: 'absolute', left: 2, top: 2 }}>
+          <IconButton sx={{ color: 'white' }}>
+            <Videocam />
+          </IconButton>
+          <IconButton sx={{ color: 'white' }}>
+            <FlipCameraAndroid />
+          </IconButton>
+        </Box>
+
+        {/* Avatar with ring */}
+        <Box
+          sx={{
+            borderRadius: '50%',
+            border: '4px solid white',
+            padding: 1,
+          }}
+        >
+          <Avatar src='https://images.unsplash.com/profile-1670919679768-80394c137330image?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.1.0' sx={{ width: 80, height: 80 }} />
+        </Box>
+
+        {/* Text */}
+        
+      </Box>
+          <Typography variant="body2" sx={{mt: 1, color: '#fff'}}>
+            You will connect using audio
+            </Typography>
+      {/* Bottom Button */}
+      <Box sx={{ position: 'absolute', bottom: 20, width: '20rem', px: 3 }}>
+        <Button
+          fullWidth
+          variant="contained"
+          sx={{
+            backgroundColor: '#FE2C55',
+            fontWeight: 'bold',
+            textTransform: 'none',
+            fontSize: 16,
+            py: 1.25,
+            '&:hover': {
+              backgroundColor: '#d62949',
+            },
+          }}
+        >
+          Go LIVE (5s)
+        </Button>
+      </Box>
+    </Box>
+      )}
+
+     <Box sx={{ position: 'absolute', bottom: 0, width: '100%', bgcolor: '#111', p: 1, display: 'flex', justifyContent: 'space-around' }}>
                          <Box
                                 sx={{
                                     bgcolor: '#1c1c1c',
@@ -1367,8 +1476,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                 </Link>
                             </Box>
                          </Box>
-                    </Box>
-                </Box>
+    </Box>
+    </Box>
+                
                 </>
                 )}
                 <Box sx={{px: 2}}>
