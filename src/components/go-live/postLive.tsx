@@ -144,6 +144,34 @@ export default function PostLive() {
         }
     );
 
+    const [mutedUsers, setMutedUsers] = useState<any>(
+        {
+            items: [],
+            isLoading: false,
+        }
+    );
+
+    function loadMutedUsers()
+    {
+        let endpoint = `${process.env.VITE_API_URL}/live-stream/v2/get-muted-users`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        setMutedUsers((prev: any) => ({ ...prev, isLoading: true }));
+
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => setMutedUsers((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
     const toggleSettings = () => {
         // setOpenSettings((prev) => !prev);
         setOpenGiftsPanel((prev) => !prev);
@@ -152,6 +180,7 @@ export default function PostLive() {
     useEffect(() => {
         loadRoomDetails();
          loadProfileDetails();
+        loadMutedUsers()
     }, []);
 
     function loadProfileDetails()
@@ -669,7 +698,7 @@ export default function PostLive() {
                             <SettingsPanel />
                         }
                         {openGiftsPanel && 
-                        <GiftsPostLive />
+                        <GiftsPostLive customProps={{mutedUsers, setMutedUsers}} />
                         }
                     </Box> 
                 </div>

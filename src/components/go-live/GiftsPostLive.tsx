@@ -148,7 +148,7 @@ const GiftsData = [
   },
 ];
 
-const GiftsPanel = () => {
+const GiftsPanel = ({customProps}: {customProps: any}) => {
   // Use a single state to manage which component is active
   // 'list' for the main list, or the ID of the component to show
   const [activePanel, setActivePanel] = useState('list'); // Default to showing the list
@@ -235,7 +235,7 @@ const GiftsPanel = () => {
       )}
 
       {activePanel === 'settings' && (
-        <SettingsPanel onClose={handleClosePanel} />
+        <SettingsPanel onClose={handleClosePanel} customProps={customProps} />
       )}
 
       {activePanel === 'blocked-faqs' && (
