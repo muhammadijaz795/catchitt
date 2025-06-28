@@ -67,7 +67,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded }: { liveGoals: any, profileDetails: any, onEdit: any, onLiveGoalAdded: any }) => {
+const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, onPinGoal }: { liveGoals: any, profileDetails: any, onEdit: any, onLiveGoalAdded: any, onPinGoal: any }) => {
   const [showAddGiftCard, setShowAddGiftCard] = useState(false);
 
   const handleToggle = () => setShowAddGiftCard(!showAddGiftCard);
@@ -224,6 +224,7 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded }
                       </CardContent>
 
                       <Button
+                      onClick={() => onPinGoal(gift)}
                         variant="contained"
                         sx={{
                           bgcolor: '#ff2c5c',

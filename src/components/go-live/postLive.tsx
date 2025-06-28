@@ -92,6 +92,7 @@ export default function PostLive() {
     const [showFaqs, setShowFaqs] = useState(false);
     const [showChatSideBar, setShowChatSideBar] = useState(true);
     const [liveGoals, setLiveGoals] = useState<any>([]);
+    const [pinLiveGoal, setPinLiveGoal] = useState<any>(null);
     const [addLiveGoalAutomatically, setAddLiveGoalAutomatically] = useState<any>(true);
     const [openSettings, setOpenSettings] = useState(false);
     const [openGiftsPanel, setOpenGiftsPanel] = useState(false);
@@ -462,6 +463,7 @@ export default function PostLive() {
                                         </Typography>
                                         <img src={LiveGoal} alt="" />
                                     </Box>
+                                    { pinLiveGoal && (
                                     <Box
                                         sx={{
                                             display: "flex",
@@ -471,17 +473,18 @@ export default function PostLive() {
                                     >
                                         <div style={{ display: "column" }}>
                                             <Typography fontSize={14} color="white" sx={{textAlign:'start',mb:0.5}} >
-                                                0/2
+                                                0/{ pinLiveGoal.count }
                                             </Typography>
                                             <img src={HorizontalLine} alt="" />
                                         </div>
                                         <div style={{ display: "column" }}>
-                                            <img src={HeartReact} alt="" style={{textAlign:'center',marginBottom:'0px',}} />
-                                            <Typography className="live-timer" fontSize={9}>
+                                            <img src={pinLiveGoal.imageUrl} alt="" style={{textAlign:'center', marginBottom:'0px', height: '40px', width: '40px'}} />
+                                            {/* <Typography className="live-timer" fontSize={9}>
                                                 2h11m
-                                            </Typography>
+                                            </Typography> */}
                                         </div>
                                     </Box>
+                                    )}
                                 </Box>
                             </Box>
                             <Box sx={{ position: "absolute", bottom: 7, left: 8 }}>
@@ -756,6 +759,7 @@ export default function PostLive() {
                             profileDetails={ profileDetails }
                             onEdit={() => {setOpenAddLiveGoal(false); setShowEditLiveGoal(true)}}
                             onLiveGoalAdded={(goals) => setOpenAddLiveGoal(false)}
+                            onPinGoal={(goal: any) => setPinLiveGoal(goal)}
                         />
                         }
                     </Box> 
