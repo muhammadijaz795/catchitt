@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -27,12 +27,25 @@ const MuteRules: React.FC<CommentsMuteRulesProps> = ({ onBack, updateSettings, s
 
   const handleDeleteRule = (indexToDelete: number) => {
   const updatedRules = muteRules.filter((_, index) => index !== indexToDelete);
-  setMuteRules(updatedRules);
-};
+    setMuteRules(updatedRules);
+  };
+
+  useEffect(() => {
+        saveAll();
+  }, [muteRules]);
+
+const [tempRule, setTempRule] = useState<{ comment: string; duration: number }>({ comment: '', duration: 0 }); // for preserving input
 
   if (showAddMuteRule) {
-    return <AddMuteRulesComment onBack={() => setShowAddMuteRule(false)}  addMuteRule={(newRule) => setMuteRules([...muteRules, newRule])}
-         />;
+    return  <AddMuteRulesComment
+    onBack={() => setShowAddMuteRule(false)}
+    tempRule={tempRule}
+    setTempRule={setTempRule}
+    setMuteRules={setMuteRules}
+    streamId={streamId}
+    setShowAddMuteRule={setShowAddMuteRule}
+    updateSettings={updateSettings}
+  />
   }
 
   if (showMuteHelp) {
@@ -43,7 +56,6 @@ const MuteRules: React.FC<CommentsMuteRulesProps> = ({ onBack, updateSettings, s
     // Here you would typically send the muteRules to your backend
     console.log("Saving mute rules:", muteRules);
     updateSettings(streamId, { muteRules });
-    onBack(); // Go back after saving
   };
   return (
     <Container
@@ -83,7 +95,7 @@ const MuteRules: React.FC<CommentsMuteRulesProps> = ({ onBack, updateSettings, s
             <path fill-rule="evenodd" clip-rule="evenodd" d="M0 11.5C0 5.42487 4.92487 0.5 11 0.5C17.0751 0.5 22 5.42487 22 11.5C22 17.5751 17.0751 22.5 11 22.5C4.92487 22.5 0 17.5751 0 11.5ZM11 2.5C6.02944 2.5 2 6.52944 2 11.5C2 16.4706 6.02944 20.5 11 20.5C15.9706 20.5 20 16.4706 20 11.5C20 6.52944 15.9706 2.5 11 2.5Z" fill="#111111"/>
           </svg>
         </IconButton>
-        <Button onClick={() => saveAll()}>Save All</Button>
+        {/* <Button onClick={() => saveAll()}>Save All</Button> */}
 
         <IconButton onClick={() => setShowMuteHelp(true)}>
           <svg width="20" height="21" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
