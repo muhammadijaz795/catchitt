@@ -417,7 +417,6 @@ export default function PostLive() {
                                         <ChevronRight />
                                     </Box>
                                     <Box
-                                        onClick={()=> setShowEditLiveGoal(!showEditLiveGoal) }
                                         sx={{
                                             backgroundColor: "#03002BCC",
                                             borderTopLeftRadius: '7px',
@@ -427,7 +426,7 @@ export default function PostLive() {
                                             gap: 1,
                                             cursor: "pointer"
                                         }}
-                                        onClick={() => setOpenAddLiveGoal(true)}
+                                        onClick={() => setOpenAddLiveGoal(!openAddLiveGoal)}
                                     >
                                         <Typography fontSize={12} color="white" sx={{ ml: 2 }}>
                                             Add Live Goal
@@ -723,7 +722,9 @@ export default function PostLive() {
                         }
                         {openAddLiveGoal && 
                         <AddLiveGoalModal
-                            onConfirm={() => setOpenAddLiveGoal(false)}
+                            liveGoals={liveGoals}
+                            profileDetails={ profileDetails }
+                            onEdit={() => {setOpenAddLiveGoal(false); setShowEditLiveGoal(true)}}
                             onLiveGoalAdded={(goals) => setOpenAddLiveGoal(false)}
                         />
                         }

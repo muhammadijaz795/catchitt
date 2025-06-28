@@ -67,7 +67,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveGoalAdded: any }) => {
+const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded }: { liveGoals: any, profileDetails: any, onEdit: any, onLiveGoalAdded: any }) => {
   const [showAddGiftCard, setShowAddGiftCard] = useState(false);
 
   const handleToggle = () => setShowAddGiftCard(!showAddGiftCard);
@@ -115,6 +115,7 @@ const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLi
 
   useEffect(() => {
     loadGifts();
+    setSelectedGifts(liveGoals);
   }, []);
 
   return (
@@ -141,7 +142,7 @@ const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLi
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', }}>
               <Box>
                 <Typography fontWeight="600" fontSize={14} mb={1} textAlign={'left'} sx={{ display: 'flex', alignItems: 'center', mr: '10px' }}>
-                  mira.ryd’s LIVE goal <span><img style={{ marginLeft: '10px' }} src={HelpIcon} alt="Add Live Goal" /></span>
+                  { profileDetails?.details?.name }'s LIVE goal <span><img style={{ marginLeft: '10px' }} src={HelpIcon} alt="Add Live Goal" /></span>
                 </Typography>
                 <Typography
                   textAlign={'left'}
@@ -161,7 +162,7 @@ const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLi
             <Box sx={{ background: 'linear-gradient(180deg, #312054 0%, #241A3C 100%)', borderRadius: '10px 10px 0px 0px', padding: '10px 13px' }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1} pt={2}>
                 <Typography>Progress:</Typography>
-                <Typography>0/3 Gifts</Typography>
+                <Typography>0/{ selectedGifts.length } Gifts</Typography>
 
               </Box>
 
@@ -171,6 +172,7 @@ const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLi
                 }}
               >
                 <Grid container spacing={2} p={1} justifyContent="center">
+                  {selectedGifts.map((gift: any, i: any) => (
                   <Grid item xs={6}>
                     <Card
                       sx={{
@@ -202,21 +204,22 @@ const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLi
                             mb: 1,
                           }}
                         >
+                          { gift.imageUrl.endsWith('.mp4') ? <video src={gift.imageUrl} autoPlay loop muted style={{ width: 50, height: 50 }} /> : <img src={gift.imageUrl} alt={gift.name} style={{ width: 50, height: 50 }} /> }
                         </Box>
 
                         <Typography variant="body1" fontWeight={600} mb={0.5}>
-                          Lion
+                          { gift.name }
                         </Typography>
 
                         <Box display="flex" alignItems="center" justifyContent="center" mb={0.5}>
                           <CircleIcon sx={{ fontSize: 14, color: '#FFBC04', mr: 0.5 }} />
                           <Typography variant="body2" fontWeight={600}>
-                            199
+                            { gift.price }
                           </Typography>
                         </Box>
 
                         <Typography variant="body2" color="#fff" mb={2}>
-                          0/1
+                          0/{ gift.count }
                         </Typography>
                       </CardContent>
 
@@ -240,76 +243,7 @@ const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLi
                       </Button>
                     </Card>
                   </Grid>
-                        <img src={VerticalLine} alt="" style={{height:107,position:'absolute',left:'50%',top:'40%'}}/>
-                  <Grid item xs={6}>
-                    <Card
-                      sx={{
-                        color: '#fff',
-                        borderRadius: 2,
-                        textAlign: 'center',
-                        py: 2,
-                        px: 1,
-                        minHeight: 180,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        bgcolor: 'transparent',
-                        boxShadow: 'none',
-                      }}
-                    >
-                      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-                        <Box
-                          sx={{
-                            width: 80,
-                            height: 80,
-                            borderRadius: '50%',
-                            bgcolor: '#4a307c',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            mx: 'auto',
-                            mb: 1,
-                          }}
-                        >
-                        </Box>
-
-                        <Typography variant="body1" fontWeight={600} mb={0.5}>
-                          Lion
-                        </Typography>
-
-                        <Box display="flex" alignItems="center" justifyContent="center" mb={0.5}>
-                          <CircleIcon sx={{ fontSize: 14, color: '#FFBC04', mr: 0.5 }} />
-                          <Typography variant="body2" fontWeight={600}>
-                            199
-                          </Typography>
-                        </Box>
-
-                        <Typography variant="body2" color="#fff" mb={2}>
-                          0/1
-                        </Typography>
-                      </CardContent>
-
-                      <Button
-                        variant="contained"
-                        sx={{
-                          bgcolor: '#ff2c5c',
-                          color: '#fff',
-                          borderRadius: 2,
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          py: 1,
-                          px: 3,
-                          width: '100%',
-                          '&:hover': {
-                            bgcolor: '#e01c4e',
-                          },
-                        }}
-                      >
-                        Pin
-                      </Button>
-                    </Card>
-                  </Grid>
+                  ))}
                 </Grid>
               </Box>
             </Box>
@@ -329,7 +263,7 @@ const AddLiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLi
                 py: 1.2,
                 mt: 2,
               }}
-              onClick={onConfirm}
+              onClick={onEdit}
             >
               Edit
             </Button>
