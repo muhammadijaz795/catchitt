@@ -543,8 +543,37 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     socket.emit('joinLiveStreamRoom', joinLiveStreamRoomPayload);
   };
 
+  function joinedLiveStreamRoom()
+  {
+    socket.on('joinedliveStreamRoom',
+      (data: any) =>
+      {
+        const newUser =
+        {
+          id: data.userId,
+          name: data.name,
+          photo: data.userImage
+        };
+
+        selectedLiveVideo?.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+          ...prev,
+          details:
+          {
+            ...prev.details,
+            consumers:
+            [
+              ...prev.details.consumers.filter((item: any) => item.id !== newUser.id),
+              newUser
+            ]
+          }
+        }));
+      }
+    );
+  };
+
   useEffect(() => {
     joinLiveStreamRoom(streamIdFromUrl);
+    joinedLiveStreamRoom();
   }, []);
 
   
