@@ -48,7 +48,7 @@ import { caesium,defaultGreyBackground } from '../../icons';
 import { abs } from 'mathjs';
 import  GamingLiveUI  from './categories';
 import { dark } from '@mui/material/styles/createPalette';
-
+import { socket } from '../../src/lib/socket';
 
 
 const reasons = [
@@ -183,6 +183,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
     const [inSuceedCase, setInSuceedCase] = useState(false);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
+    const authUser = JSON.parse(localStorage.getItem('profile')) || null;
 
     const [uploadedFile, setUploadedFile] = useState<string>('');
     const [openUploadPic, setOpenUploadPic] = useState(false);
@@ -524,6 +525,27 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
   
     joinRoom();
   }, [profileData]); 
+
+  function joinLiveStreamRoom(streamId: any)
+  {
+    const joinLiveStreamRoomPayload =
+    {
+      accessToken: token ?? '',
+      liveStreamRoomId: streamId || '',
+      userId: authUser?._id || '',
+      userFullName: authUser?.name || '',
+      name: authUser?.name,
+      userName: authUser?.username,
+      userEmail: authUser?.email,
+      userImage: authUser?.avatar || authUser?.cover,
+    };
+
+    socket.emit('joinLiveStreamRoom', joinLiveStreamRoomPayload);
+  };
+
+  useEffect(() => {
+    joinLiveStreamRoom(streamIdFromUrl);
+  }, []);
 
   
   function startSocket() {
