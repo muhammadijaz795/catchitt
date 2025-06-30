@@ -193,6 +193,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
     const [isDivVisible, setIsDivVisible] = useState(false);
     const [messageType, setMessageType] = useState('text');
     const loggedInUserId = localStorage.getItem('userId');
+    const [isUserMuted, setIsUserMuted] = useState(false);
 
     useEffect(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -532,6 +533,10 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         // (socketRef.current as any).emit('add-user', newAddUserObject);
         
         
+
+        (socketRef.current as any).on('user-muted', (data: any) => {
+          setIsUserMuted(true);
+        });
 
         (socketRef.current as any).on('getMessageFromLiveStreamRoom', (data: any) => {
           console.log(`Received message: ${JSON.stringify(data)}`);
@@ -2521,13 +2526,14 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                           variant="outlined"
                                           size="small"
                                           value={message}
+                                          disabled={isUserMuted}
                                           onChange={(e) => setMessage(e.target.value)}
                                           onKeyPress={handleKeyPress}
                                           InputProps={{
                                             endAdornment: (
                                               <InputAdornment position="end">
                                                 {/* Emoji button inside TextField */}
-                                                <IconButton onClick={() => setIsPickerVisible(!isPickerVisible)}>
+                                                <IconButton onClick={() => setIsPickerVisible(!isPickerVisible)} disabled={isUserMuted}>
                                                   <img
                                                     className="w-6 h-6 object-contain rounded-full"
                                                     src={emoji}
@@ -2541,7 +2547,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         />
 
                                         {/* Send button outside TextField */}
-                                        <IconButton onClick={handleSendMessage}>
+                                        <IconButton onClick={handleSendMessage} disabled={isUserMuted}>
                                           <SendIcon />
                                         </IconButton>
                                       </Box>
