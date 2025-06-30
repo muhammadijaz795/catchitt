@@ -69,7 +69,7 @@ const peopleData = {
   ],
 };
 
-const PersonRow: React.FC<PersonProps> = ({ name, role, button, avatar }) => (
+const PersonRow: React.FC = ({ name, role, button, photo }) => (
   <Box
     display="flex"
     alignItems="center"
@@ -77,7 +77,7 @@ const PersonRow: React.FC<PersonProps> = ({ name, role, button, avatar }) => (
     p={1}
   >
     <Box display="flex" alignItems="center" textAlign="left" gap={1.5}>
-      <Avatar src={avatar} />
+      <Avatar src={photo} />
       <Box>
         <Typography fontWeight={600}>{name}</Typography>
         {role && (
@@ -88,7 +88,7 @@ const PersonRow: React.FC<PersonProps> = ({ name, role, button, avatar }) => (
       </Box>
     </Box>
     <Box display="flex" textAlign="left" alignItems="center" gap={1}>
-      {button && (
+      {/* {button && ( */}
         <Button
           variant="contained"
           size="small"
@@ -103,9 +103,9 @@ const PersonRow: React.FC<PersonProps> = ({ name, role, button, avatar }) => (
             },
           }}
         >
-          {button}
+          Invite
         </Button>
-      )}
+      {/* )} */}
       <IconButton size="small">
         <Close fontSize="small" />
       </IconButton>
@@ -113,7 +113,7 @@ const PersonRow: React.FC<PersonProps> = ({ name, role, button, avatar }) => (
   </Box>
 );
 
-const GoLiveTogetherPanel: React.FC = () => {
+const GoLiveTogetherPanel: React.FC = ({post}) => {
   return (
     <Box
       maxWidth={360}
@@ -294,7 +294,7 @@ const GoLiveTogetherPanel: React.FC = () => {
       <Typography fontSize="14px" textAlign="left" fontWeight={'600'} color="text.secondary" mb={1}>
         Viewers
       </Typography>
-      {peopleData.viewers.map((person, i) => (
+      {post?.details?.consumers?.map((person, i) => (
         <PersonRow key={i} {...person} />
       ))}
     </Box>

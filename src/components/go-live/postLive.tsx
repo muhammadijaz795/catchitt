@@ -60,8 +60,8 @@ import {
 } from '../../redux/reducers/roomDetailsSlice';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
-
-
+import { socket } from '../../src/lib/socket';
+import GoLiveTogetherPanel from "./HostGoLiveTogather";
 
 export default function PostLive() {
 
@@ -103,6 +103,8 @@ export default function PostLive() {
     const SERVER_URL = 'https://prodapi.seezitt.com';
     const [isConnected, setIsConnected] = useState(false);
     const [profileData, setProfileData] = useState<any>([]);
+    const authUser = JSON.parse(localStorage.getItem('profile')) || null;
+    const [showGoLiveTogetherPanel, setShowGoLiveTogetherPanel] = useState(false);
          const API_KEY = process.env.VITE_API_URL;
         const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
     
@@ -195,6 +197,56 @@ export default function PostLive() {
         .then((response) => setBlockedUsers((prev: any) => ({ ...prev, items: response.data, isLoading: false })))
         .catch((error) => console.error('Fetch error:', error));
     };
+
+     function joinLiveStreamRoom(streamId: any)
+    {
+        const payload =
+        {
+            accessToken: token ?? '',
+            liveStreamRoomId: streamId || '',
+            userId: authUser?._id || '',
+            userFullName: authUser?.name || '',
+            name: authUser?.name,
+            userName: authUser?.username,
+            userEmail: authUser?.email,
+            userImage: authUser?.avatar || authUser?.cover,
+        };
+
+        socket.emit('joinLiveStreamRoom', payload);
+    };
+
+    function joinedLiveStreamRoom()
+    {
+        socket.on('joinedliveStreamRoom',
+            (data: any) =>
+            {
+                const newUser =
+                {
+                    id: data.userId,
+                    name: data.name,
+                    photo: data.userImage
+                };
+
+                selectedLiveVideo?.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+                    ...prev,
+                    details:
+                    {
+                        ...prev.details,
+                        consumers:
+                        [
+                            ...prev.details.consumers.filter((item: any) => item.id !== newUser.id),
+                            newUser
+                        ]
+                    }
+                }));
+            }
+        );
+    };
+
+    useEffect(() => {
+        joinedLiveStreamRoom();
+        joinLiveStreamRoom(streamId);
+    }, []);
 
     
       useEffect(() => {
@@ -492,6 +544,7 @@ export default function PostLive() {
                                 }}>
                                     <Avatar src="data:image/jpeg;base64,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" sx={{ width: 24, height: 24 }} />
                                     <Box
+                                        onClick={() => setShowGoLiveTogetherPanel(!showGoLiveTogetherPanel)}
                                         sx={{
 
                                             backgroundColor: "rgba(0,0,0,0.5)",
@@ -870,6 +923,7 @@ export default function PostLive() {
                             onPinGoal={(goal: any) => setPinLiveGoal(goal)}
                         />
                         }
+                        { showGoLiveTogetherPanel && <GoLiveTogetherPanel post={selectedLiveVideo} /> }
                     </Box> 
                 </div>
             </div>
