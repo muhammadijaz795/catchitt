@@ -283,6 +283,25 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
       return params.get('streamId');
     }, [location.search]);
 
+
+    const joinAsGuest = () => {
+        const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
+        const userData = {
+        userFullName: profileData?.name || '',
+        name: profileData?.name,
+        userName: profileData?.username, 
+        userEmail: profileData?.email,
+        avatar: profileData?.avatar || profileData?.cover,
+        accessToken: localStorage.getItem('token'),
+        id: profileData?._id || '',
+        liveStreamRoomId
+      };
+      console.log('joinLiveStreamUserAsGuest', userData);
+      (socketRef.current as any).emit('joinLiveStreamUserAsGuest', userData, (response: any) => {
+        console.log('Joined live stream room response:', response);
+      });
+    }
+
     const handleSendMessage = () => {
       if (!message.trim()) return; // Don't send empty messages
       console.log('handle send message')
@@ -544,6 +563,8 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
             timestamp: new Date()
           }]);
         });
+
+        
 
         (socketRef.current as any).on('sent-gift', (data: any) => {
           console.log(`Received message: ${JSON.stringify(data)}`);
@@ -1170,6 +1191,12 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         </MenuItem>
                                     </Menu>
                             </IconButton>
+
+                            <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
+                             <Button onClick={()=> joinAsGuest()} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
+                                          Join as Guest
+                            </Button>
+
                             <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
                             {!isFollowed && <Button onClick={() => handleFollow(selectedLiveVideo?.details?.owner?.id)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
                                 {isFollowed ? 'Followed': 'Follow'}&nbsp;

@@ -219,16 +219,49 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
     
       if (socketRef.current && isConnected) {
         const liveStreamRoomId = streamId;
-        (socketRef.current).emit('sendMessageToliveStreamRoom', { 
-          liveStreamRoomId: liveStreamRoomId, 
-          data: {
-            ...userData,
-            message,
-            liveStreamRoomId: liveStreamRoomId, 
-          }
-        }, (response) => {
-          console.log('Callback Response:', response);
-        });
+
+       console.log('=== SENDING MESSAGE DEBUG INFO ===');
+        console.log('Socket connected:', socketRef.current?.connected);
+        console.log('Socket ID:', socketRef.current?.id);
+        console.log('Stream ID:', streamId);
+        console.log('Profile Data:', profileData);
+
+        const messageData = {
+          userId: profileData?._id || '',
+          userFullName: profileData?.name || '',
+          userName: profileData?.username, 
+          userEmail: profileData?.email,
+          userImage: profileData?.avatar || profileData?.cover,
+          accessToken: localStorage.getItem('token'),
+          message: message,
+          liveStreamRoomId: streamId
+        };
+
+        console.log('Message data being sent:', messageData);
+
+        if (socketRef.current?.connected) {
+          console.log('Attempting to emit message...');
+          socketRef.current.emit('sendMessageToliveStreamRoom', messageData, (response) => {
+            console.log('Callback Response:', response);
+            if (!response) {
+              console.warn('No response received from server');
+            }
+          });
+          
+          setMessage('');
+        } else {
+          console.error('Socket not connected');
+        }
+        // socketRef.current.emit('sendMessageToliveStreamRoom', { 
+        //   liveStreamRoomId: liveStreamRoomId, 
+        //   data: {
+        //     ...userData,
+        //     message,
+        //     liveStreamRoomId: liveStreamRoomId, 
+        //   }
+        // }, (response) => {
+        //   console.log('Callback Response:', response);
+        // });
         setMessage('');       
       } else {
         console.error('Socket not connected');
@@ -278,6 +311,31 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
         socketRef.current.emit('joinLiveStreamRoom', joinLiveStreamRoom, (response) => {
           console.log('Joined live stream room response:', response);
         });
+
+        let data = {
+            userId: profileData?._id || '',
+             userFullName: profileData?.name || '',
+             name: profileData?.name,
+             userName: profileData?.username,
+            userEmail: profileData?.email,
+             userImage: profileData?.avatar || profileData?.cover,
+            "accessToken": token ?? '',
+            "message": "hi",
+            liveStreamRoomId: streamId || '',
+        };
+
+        setTimeout(() => {
+  socketRef.current.emit('sendMessageToliveStreamRoom', data, (res) => {
+    console.log('📨 Message sent response:', res);
+  });
+    console.log('joinLiveStreamRoom', joinLiveStreamRoom);
+        socketRef.current.emit('joinLiveStreamRoom01', joinLiveStreamRoom, (response) => {
+          console.log('Joined live stream room response:', response);
+        })
+}, 5000); // delay for room to be joined
+
+
+
       };
     
       

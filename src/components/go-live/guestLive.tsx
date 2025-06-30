@@ -529,6 +529,136 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
   }, [profileData]); 
 
   
+  const leaveRoom = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const leaveLiveStreamRoom = {
+      userId: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      userFullName: profileData?.name || '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      userImage: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('leaveLiveStreamRoom', leaveLiveStreamRoom);
+    (socketRef.current as any).emit('leaveLiveStreamRoom', leaveLiveStreamRoom, (response: any) => {
+      console.log('leave live stream room response:', response);
+    });
+  };
+
+  const leftRoom = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const leftLiveStreamRom = {
+      userId: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      userFullName: profileData?.name || '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      userImage: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('leftLiveStreamRom', leftLiveStreamRom);
+    (socketRef.current as any).emit('leftLiveStreamRom', leftLiveStreamRom, (response: any) => {
+      console.log('left live stream room response:', response);
+    });
+  }
+  const removeUserFromLiveStreamRoom = () => {
+      if (!profileData) return;
+      console.log('profileData',profileData);
+
+      const removeUserFromRoom = {
+        userId: profileData?._id || '',
+        liveStreamRoomId: streamIdFromUrl || '',
+        accessToken: token ?? ''
+      };
+
+      console.log('removeUserFromLiveStreamRoom', removeUserFromRoom);
+      (socketRef.current as any).emit('removeUserFromLiveStreamRoom', removeUserFromRoom, (response: any) => {
+        console.log('left live stream room response:', response);
+      });
+  }
+
+  const endLiveStreamRoom = () => {
+      if (!profileData) return;
+      console.log('profileData',profileData);
+
+      const endRoom = {
+        liveStreamRoomId: streamIdFromUrl || '',
+        accessToken: token ?? ''
+      };
+
+      console.log('endLiveStreamRoom', endRoom);
+      (socketRef.current as any).emit('endLiveStreamRoom', endRoom, (response: any) => {
+        console.log('left live stream room response:', response);
+      });
+  }
+
+  const sendInviteLiveStreamUser = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+    // id:viewerId
+    const sendInvite = {
+      userId: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      avatar: profileData?.avatar || profileData?.cover,
+      id:''
+    };
+
+    console.log('sendInviteLiveStreamUser', sendInvite);
+    (socketRef.current as any).emit('sendInviteLiveStreamUser', sendInvite, (response: any) => {
+      console.log('invite live stream room response:', response);
+    });
+  }
+
+  const acceptInviteLiveStreamUserAsGuest = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const acceptLiveStreamRom = {
+      id: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      userFullName: profileData?.name || '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      avatar: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('acceptInviteLiveStreamUserAsGuest', acceptLiveStreamRom);
+    (socketRef.current as any).emit('acceptInviteLiveStreamUserAsGuest', acceptLiveStreamRom, (response: any) => {
+      console.log('left live stream room response:', response);
+    });
+  }
+
+   const rejectInviteLiveStreamUserAsGuest = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const rejectLiveStreamRom = {
+      id: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      avatar: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('rejectInviteLiveStreamUserAsGuest', rejectLiveStreamRom);
+    (socketRef.current as any).emit('rejectInviteLiveStreamUserAsGuest', rejectLiveStreamRom, (response: any) => {
+      console.log('left live stream room response:', response);
+    });
+  }
+  
+  
   function startSocket() {
     if ((socketRef.current as any) && (socketRef.current as any).connected) {
         console.log('Socket already connected.');
@@ -578,6 +708,40 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           } else {
             console.warn('Gift data is missing or malformed:', data);
           }
+        });
+
+        (socketRef.current as any).on('LiveStreamRoomEnded', (data: any) => {
+          console.log(`Received message: ${JSON.stringify(data)}`);
+          const isLiveStreamEnded = data?.isLiveStreamEnded;
+          const accessToken = data?.accessToken;
+        });
+
+        (socketRef.current as any).on('invitedLiveStreamUserAsGuest', (data: any) => {
+          console.log(`Received message: ${JSON.stringify(data)}`);
+          const OwnerData = data?.OwnerData;
+          const accessToken = data?.accessToken;
+        });
+
+        (socketRef.current as any).on('inviteAcceptedByLiveStreamUserAsGuest', (data: any) => {
+          console.log(`Received message: ${JSON.stringify(data)}`);
+          const id = data?.id;
+          const name = data?.name;
+          const username = data?.username;
+          const avatar = data?.avatar;
+          const status = data?.status;
+          const liveStreamRoomId = data?.liveStreamRoomId;
+          const accessToken = data?.accessToken;
+        });
+
+        (socketRef.current as any).on('inviteRejectedByLiveStreamUserAsGuest', (data: any) => {
+          console.log(`Received message: ${JSON.stringify(data)}`);
+          const id = data?.id;
+          const name = data?.name;
+          const username = data?.username;
+          const avatar = data?.avatar;
+          const status = data?.status;
+          const liveStreamRoomId = data?.liveStreamRoomId;
+          const accessToken = data?.accessToken;
         });
 
         (socketRef.current as any).on('joinedliveStreamRoom', (data: any) => {
