@@ -644,12 +644,23 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     });
   };
 
+  function onUserBlocked()
+  {
+    socket.on('user-blocked',
+      (data: any) =>
+      {
+        navigate('/live/discover');
+      }
+    );
+  };
+
   useEffect(() => {
     joinedLiveStreamRoom();
     leftLiveStreamRoom();
     removedUserFromLiveStreamRoom();
     liveStreamRoomEnded();
     onUserMuted();
+    onUserBlocked();
   }, []);
 
   useEffect(() => {
