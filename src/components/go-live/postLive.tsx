@@ -624,8 +624,8 @@ export default function PostLive() {
                     </Box>} */}
                     
 
-                     <Box sx={{position: 'relative', right: 0, top: 0 }}>
-                        {!openGiftsPanel && !openSettings && profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
+                     <Box sx={{position: 'relative', right: 0, top: 0,width:'350px' }}>
+                        {!openGiftsPanel && !openSettings && !showFaqs && profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
                         {!showEditLiveGoal && !showFaqs && !openSettings && !openGiftsPanel && !openAddLiveGoal && <Card sx={{ p: 1, boxShadow: "none" }}>
                             
                             {/* <Box sx={{ position: "absolute" }}>
