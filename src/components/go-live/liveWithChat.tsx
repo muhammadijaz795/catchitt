@@ -637,11 +637,19 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     );
   };
 
+  function onUserMuted()
+  {
+    socket.on('user-muted', (data: any) => {
+      setIsUserMuted(true);
+    });
+  };
+
   useEffect(() => {
     joinedLiveStreamRoom();
     leftLiveStreamRoom();
     removedUserFromLiveStreamRoom();
     liveStreamRoomEnded();
+    onUserMuted();
   }, []);
 
   useEffect(() => {
@@ -685,9 +693,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         (socketRef.current as any).on('sendJoinRequestLiveStreamUserAsGuest', (response: any) => {
             alert()
           console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
-        });
-        (socketRef.current as any).on('user-muted', (data: any) => {
-          setIsUserMuted(true);
         });
 
         (socketRef.current as any).on('getMessageFromLiveStreamRoom', (data: any) => {
