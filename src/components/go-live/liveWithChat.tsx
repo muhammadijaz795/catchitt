@@ -734,6 +734,23 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     );
   };
 
+  function onTopViewers()
+  {
+      socket.on('top-viewers',
+          (data: any) =>
+          {
+              setSelectedLiveVideo((prev: any) => ({
+                  ...prev,
+                  details:
+                  {
+                      ...prev.details,
+                      topViewersGifts: data.topViewersGiftsObj
+                  }
+              }));
+          }
+      );
+  };
+
   useEffect(() => {
     joinedLiveStreamRoom();
     leftLiveStreamRoom();
@@ -742,7 +759,8 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     socketListeners();
     onUserMuted();
     onUserBlocked();
-    onSendGift()
+    onSendGift();
+    onTopViewers();
   }, []);
 
   useEffect(() => {
