@@ -1339,6 +1339,81 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     </Stack>
                     {/* Right Side: Buttons */}
                     <Stack direction="row" spacing={1}>
+                      <Tooltip
+                              title={
+                                <span style={{ 
+                                  fontSize: '14px', 
+                                  fontWeight: 600, 
+                                  color: '#fff', 
+                                  fontFamily: 'sans-serif' 
+                                }}>
+                                  Join as Guest
+                                </span>
+                              }
+                              arrow
+                              placement="bottom"
+                              PopperProps={{
+                                modifiers: [
+                                  {
+                                    name: 'offset',
+                                    options: {
+                                      offset: [0, 0],
+                                    },
+                                  },
+                                ],
+                              }}
+                              componentsProps={{
+                                tooltip: {
+                                  sx: {
+                                    backgroundColor: 'rgba(0,0,0,0.85)',
+                                    borderRadius: '12px',
+                                    px: 2.5,
+                                    py: 1,
+                                  },
+                                },
+                              }}
+                            >
+                              <IconButton onClick={()=> setSentGuestRequest(!sentGuestRequest)} sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F', p: 0.45, }}>
+                                <svg
+                                    width="30"
+                                    height="30"
+                                    viewBox="0 0 35 35"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <rect x="0.660156" y="0.609375" width="34" height="34" rx="4" fill="white" />
+                                    <rect
+                                      x="1.16016"
+                                      y="1.10938"
+                                      width="33"
+                                      height="33"
+                                      rx="3.5"
+                                      stroke="#161823"
+                                      strokeOpacity="0.12"
+                                    />
+                                    <path
+                                      d="M15.5471 17.6411C18.272 17.6411 20.4809 15.4321 20.4809 12.7073C20.4809 9.98239 18.272 7.77344 15.5471 7.77344C12.8222 7.77344 10.6133 9.98239 10.6133 12.7073C10.6133 15.4321 12.8222 17.6411 15.5471 17.6411Z"
+                                      fill="#161823"
+                                    />
+                                    <path
+                                      d="M15.5483 28.7426C20.3168 28.7426 24.1824 26.5337 24.1824 23.8088C24.1824 21.0839 20.3168 18.875 15.5483 18.875C10.7797 18.875 6.91406 21.0839 6.91406 23.8088C6.91406 26.5337 10.7797 28.7426 15.5483 28.7426Z"
+                                      fill="#161823"
+                                    />
+                                    <path
+                                      d="M21.832 16.1406H27.2852"
+                                      stroke="black"
+                                      strokeWidth="1.7"
+                                      strokeLinecap="round"
+                                    />
+                                    <path
+                                      d="M24.5625 13.4219L24.5625 18.875"
+                                      stroke="black"
+                                      strokeWidth="1.7"
+                                      strokeLinecap="round"
+                                    />
+                                  </svg>
+                              </IconButton>
+                            </Tooltip>
                       <IconButton 
                         onClick={handleClick}
                         sx={{borderRadius: '4px', color: '#000', border: '1px solid #1618231F'}}>
@@ -1476,9 +1551,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                             </IconButton>
 
                             <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
-                             <Button onClick={()=> setSentGuestRequest(!sentGuestRequest)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
+                             {/* <Button onClick={()=> setSentGuestRequest(!sentGuestRequest)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
                                           Join as Guest
-                            </Button>
+                            </Button> */}
+                            
 
                             <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
                             {!isFollowed && <Button onClick={() => handleFollow(selectedLiveVideo?.details?.owner?.id)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
