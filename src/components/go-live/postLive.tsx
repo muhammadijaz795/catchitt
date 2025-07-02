@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState,useCallback } from "react";
 import {
     Card,
     CardContent,
@@ -50,64 +50,23 @@ import ShareIcon from '../../assets/postLive/Share.png'
 import EnhanceIcon from '../../assets/postLive/Enhance.png'
 import MoreIcon from '../../assets/postLive/More.png'
 import AvatarPostLive from '../../assets/postLive/Avatar.png'
-import { useSearchParams } from 'react-router-dom';
-import SidebarChat from './SidebarChat.jsx';
-
-
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import SidebarChat from './SidebarChat';
+import AddLiveGoalModal from "./AddLiveGoalPost";
+import {
+  fetchRoomDetailsStart,
+  fetchRoomDetailsSuccess,
+  fetchRoomDetailsFailure,
+} from '../../redux/reducers/roomDetailsSlice';
+import { useDispatch } from 'react-redux';
+import { io } from 'socket.io-client';
+import { socket } from '../../src/lib/socket';
+import GoLiveTogetherPanel from "./HostGoLiveTogather";
 
 export default function PostLive() {
-
-    const Activity = () => (
-        <svg width="28" height="30" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.71963 11.2487C4.71855 9.33396 5.26296 7.46055 6.28595 5.85877C7.29896 4.26981 8.74995 3.02587 10.4543 2.28527C12.7271 1.30074 15.2915 1.30074 17.5642 2.28527C19.2693 3.02559 20.7209 4.26955 21.7343 5.85877C23.8138 9.11701 23.8259 13.3261 21.7651 16.5967L25.9539 24.2477L21.5416 23.3727L20.1304 27.7967L16.2419 20.6655C14.777 21.0443 13.2433 21.0443 11.7784 20.6655L7.88983 27.7967L6.47877 23.371L2.06641 24.2477L6.25526 16.5967C5.25079 15.0035 4.71745 13.1461 4.71963 11.2487Z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5743 7.36895C13.6564 7.19805 13.8261 7.08984 14.012 7.08984C14.1977 7.08984 14.3674 7.19805 14.4497 7.36895L15.3556 9.19945C15.4232 9.33801 15.549 9.43728 15.6969 9.46895L17.5942 9.8592C17.768 9.90129 17.9077 10.0332 17.9631 10.2072C18.0186 10.3812 17.9815 10.5723 17.8655 10.7114L16.5108 12.2864C16.4153 12.3984 16.3706 12.5467 16.388 12.6942L16.6387 14.8257C16.6641 15.0121 16.5869 15.1976 16.438 15.3076C16.2893 15.4177 16.0933 15.4343 15.9289 15.3507L14.2227 14.4617C14.0844 14.3891 13.9206 14.3891 13.7824 14.4617L12.0761 15.3507C11.9118 15.4343 11.7158 15.4177 11.5671 15.3076C11.4181 15.1976 11.341 15.0121 11.3663 14.8257L11.6173 12.6994C11.6344 12.5519 11.5898 12.4037 11.4944 12.2917L10.1396 10.7167C10.0208 10.5751 9.98423 10.3796 10.0436 10.203C10.103 10.0264 10.2493 9.89553 10.4279 9.8592L12.3253 9.4672C12.4732 9.43553 12.5989 9.33627 12.6666 9.1977L13.5743 7.36895Z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M7.36187 15.8919C6.97312 15.2801 6.16201 15.0994 5.5502 15.488C4.93838 15.8767 4.75753 16.6878 5.14628 17.2996L7.36187 15.8919ZM7.44846 18.1148L8.39741 17.2081L8.39333 17.2039L7.44846 18.1148ZM11.2482 20.5158L11.6582 19.2689L11.6565 19.2684L11.2482 20.5158ZM11.4578 21.9441C12.1598 22.1253 12.8755 21.7032 13.0566 21.0012C13.2378 20.2993 12.8155 19.5836 12.1136 19.4024L11.4578 21.9441ZM22.8717 17.2996C23.2604 16.6878 23.0796 15.8767 22.4678 15.488C21.856 15.0994 21.0449 15.2801 20.656 15.8919L22.8717 17.2996ZM20.5696 18.1148L19.6246 17.2039L19.6205 17.2081L20.5696 18.1148ZM16.7696 20.5158L16.3615 19.2684L16.3598 19.2689L16.7696 20.5158ZM15.9042 19.4024C15.2025 19.5836 14.7802 20.2993 14.9613 21.0012C15.1425 21.7032 15.8582 22.1253 16.5601 21.9441L15.9042 19.4024ZM5.14628 17.2996C5.54041 17.92 5.99508 18.4984 6.50356 19.0258L8.39333 17.2039C8.00769 16.8039 7.66204 16.3643 7.36187 15.8919L5.14628 17.2996ZM6.4995 19.0215C7.7041 20.2822 9.19373 21.2245 10.8401 21.7632L11.6565 19.2684C10.4258 18.8657 9.3065 18.1596 8.39741 17.2081L6.4995 19.0215ZM10.8384 21.7627C11.0429 21.8299 11.2494 21.8904 11.4578 21.9441L12.1136 19.4024C11.9604 19.3629 11.8085 19.3184 11.6582 19.2689L10.8384 21.7627ZM20.656 15.8919C20.3559 16.3643 20.0103 16.8039 19.6246 17.2039L21.5144 19.0258C22.0229 18.4984 22.4776 17.92 22.8717 17.2996L20.656 15.8919ZM19.6205 17.2081C18.7114 18.1596 17.5921 18.8657 16.3615 19.2684L17.1779 21.7632C18.8243 21.2245 20.3139 20.2822 21.5184 19.0215L19.6205 17.2081ZM16.3598 19.2689C16.2094 19.3184 16.0575 19.3629 15.9042 19.4024L16.5601 21.9441C16.7686 21.8904 16.9751 21.8299 17.1796 21.7627L16.3598 19.2689Z" fill="white" />
-        </svg>
-
-    )
-    const Board = () => (
-        <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M23.3946 6.66135C23.7239 6.00273 23.457 5.20182 22.7983 4.8725C22.1396 4.54318 21.3388 4.81015 21.0095 5.46879L17.7239 12.0398L14.26 9.44193C13.3112 8.73034 11.9552 8.99597 11.3451 10.0129L7.72537 16.0457C7.3465 16.6772 7.55125 17.4961 8.18269 17.8751C8.81413 18.2539 9.63314 18.0492 10.012 17.4177L13.2514 12.0188L16.763 14.6524C17.7612 15.4012 19.1938 15.0629 19.7519 13.9469L23.3946 6.66135Z" fill="white" />
-            <path fillRule="evenodd" clipRule="evenodd" d="M30.2005 4.73169C30.2005 2.52256 28.4097 0.731689 26.2005 0.731689H4.86719C2.65805 0.731689 0.867188 2.52256 0.867188 4.73169V18.065C0.867188 20.2742 2.65805 22.065 4.86719 22.065H13.4512L6.68028 27.7074C6.11457 28.1788 6.03813 29.0196 6.50956 29.5853C6.98097 30.151 7.82173 30.2274 8.38743 29.756L14.2005 24.9117V28.7317C14.2005 29.4681 14.7975 30.065 15.5339 30.065C16.2703 30.065 16.8672 29.4681 16.8672 28.7317V24.9117L22.6803 29.756C23.246 30.2274 24.0868 30.151 24.5581 29.5853C25.0296 29.0196 24.9532 28.1788 24.3875 27.7074L17.6165 22.065H26.2005C28.4097 22.065 30.2005 20.2742 30.2005 18.065V4.73169ZM27.5339 4.73169C27.5339 3.99532 26.9369 3.39836 26.2005 3.39836H4.86719C4.13081 3.39836 3.53385 3.99532 3.53385 4.73169V18.065C3.53385 18.8014 4.13081 19.3984 4.86719 19.3984H26.2005C26.9369 19.3984 27.5339 18.8014 27.5339 18.065V4.73169Z" fill="white" />
-        </svg>
-    );
-
-    const Dual = () => (
-        <svg width="25" height="31" viewBox="0 0 25 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M24.5352 16.5198L24.5322 16.5189L24.5315 27.7661C24.5315 29.2158 23.3562 30.3911 21.9065 30.3911L3.16379 30.3911C1.71404 30.3911 0.538787 29.2158 0.538787 27.7661L0.538787 14.2698L0.542688 14.2689L0.542539 3.02344C0.54254 1.57369 1.71779 0.398437 3.16754 0.398437L21.9102 0.398437C23.3599 0.398437 24.5352 1.57369 24.5352 3.02344L24.5352 16.5198ZM22.2815 27.7661L22.2815 16.5198L2.78879 16.5198L2.78879 27.7661C2.78879 27.9732 2.95664 28.1411 3.16379 28.1411L21.9065 28.1411C22.1136 28.1411 22.2815 27.9732 22.2815 27.7661ZM22.2852 14.2698L22.2852 3.02344C22.2852 2.81633 22.1173 2.64844 21.9102 2.64844L3.16754 2.64844C2.96039 2.64844 2.79254 2.81633 2.79254 3.02344L2.79254 14.2698L22.2852 14.2698ZM20.787 25.5233C20.787 26.1446 20.2833 26.6483 19.662 26.6483C19.0407 26.6483 18.537 26.1446 18.537 25.5233L18.537 18.7709C18.537 18.1496 19.0407 17.6459 19.662 17.6459C20.2833 17.6459 20.787 18.1496 20.787 18.7709L20.787 25.5233Z" fill="white" />
-        </svg>
-    );
-    const Share = () => (
-        <svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14.8687 1.73169V7.06502C6.10208 8.43569 2.84207 16.1157 1.53541 23.065C1.48607 23.3397 8.71407 15.1157 14.8687 15.065V20.3984L25.5354 11.065L14.8687 1.73169Z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-
-    );
-
-
-
-    const LiveCenter = () => (
-        <svg width="30" height="29" viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M25.0352 11.0656V20.6985C25.0352 23.2186 25.0352 24.4788 24.5447 25.4413C24.1133 26.2881 23.4249 26.9766 22.5782 27.408C22.3518 27.5233 22.109 27.6115 21.8372 27.679M21.8372 27.679C21.0599 24.3655 18.0857 21.8985 14.5352 21.8985C10.9847 21.8985 8.01041 24.3655 7.23319 27.679M21.8372 27.679C20.9532 27.8985 19.7627 27.8985 17.8352 27.8985H11.2352C9.30758 27.8985 8.11715 27.8985 7.23319 27.679M4.03516 11.0646V20.6985C4.03516 23.2186 4.03516 24.4788 4.52563 25.4413C4.95706 26.2881 5.64547 26.9766 6.4922 27.408C6.71857 27.5233 6.96139 27.6115 7.23319 27.679M28.0352 14.3985L19.8854 5.34439C18.0318 3.28524 17.1051 2.25567 16.0136 1.87557C15.0551 1.54173 14.0117 1.5418 13.053 1.87579C11.9616 2.25604 11.0351 3.28576 9.18187 5.34519L1.03516 14.3985M17.5352 14.3985C17.5352 16.0552 16.1921 17.3985 14.5352 17.3985C12.8783 17.3985 11.5352 16.0552 11.5352 14.3985C11.5352 12.7416 12.8783 11.3984 14.5352 11.3984C16.1921 11.3984 17.5352 12.7416 17.5352 14.3985Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-    );
-    const Leads = () => (
-        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M23.7852 23.875H7.28516C5.18496 23.875 4.13486 23.875 3.33269 23.4799C2.62708 23.1324 2.05341 22.5779 1.69388 21.8958C1.28516 21.1202 1.28516 20.1052 1.28516 18.075V2.125M5.03516 16.625L10.0352 11.7917L15.0352 16.625L22.5352 9.375M22.5352 9.375V14.2083M22.5352 9.375H17.5352" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-
-    );
-    const Poll = () => (
-        <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.86979 7.33341H14.9531M7.86979 13.0001H19.2031M7.86979 18.6667H12.1198M6.73646 1.66675H20.3365C21.9233 1.66675 22.7167 1.66675 23.3228 1.97557C23.8559 2.2472 24.2894 2.68064 24.561 3.21378C24.8698 3.81985 24.8698 4.61327 24.8698 6.20008V19.8001C24.8698 21.3869 24.8698 22.1804 24.561 22.7864C24.2894 23.3195 23.8559 23.753 23.3228 24.0246C22.7167 24.3334 21.9233 24.3334 20.3365 24.3334H6.73646C5.14965 24.3334 4.35623 24.3334 3.75015 24.0246C3.21702 23.753 2.78358 23.3195 2.51194 22.7864C2.20312 22.1804 2.20313 21.3869 2.20313 19.8001V6.20008C2.20313 4.61327 2.20312 3.81985 2.51194 3.21378C2.78358 2.68064 3.21702 2.2472 3.75015 1.97557C4.35623 1.66675 5.14965 1.66675 6.73646 1.66675Z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-    );
-
-    const Promote = () => (
-        <svg width="27" height="32" viewBox="0 0 27 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.4222 31.977C5.88316 31.977 0.535156 26.7491 0.535156 19.546C0.535156 15.722 2.82816 11.6021 2.92516 11.4301C3.12416 11.0761 3.51516 10.8831 3.92316 10.9281C4.32716 10.9801 4.65916 11.2711 4.76316 11.6641C4.76916 11.6881 5.38716 14.0001 6.20316 15.2841C6.75116 16.1481 7.30716 16.7591 7.93216 17.1831C7.50916 15.35 7.18516 12.5921 7.71216 9.76205C9.16016 1.99405 15.2742 0.135051 15.5362 0.0610505C15.8732 -0.0359495 16.2312 0.0510506 16.4872 0.284051C16.7432 0.519051 16.8602 0.870051 16.7942 1.21105C16.7842 1.26505 15.7742 6.70405 17.9172 11.3381C18.1122 11.7591 18.3832 12.2481 18.6752 12.7371C18.7582 12.0651 18.8872 11.3511 19.0852 10.6571C19.8712 7.90805 21.9042 6.96905 21.9892 6.93105C22.3282 6.77705 22.7242 6.82705 23.0162 7.05705C23.3082 7.28805 23.4492 7.66005 23.3812 8.02605C23.3702 8.09405 23.0872 9.96405 24.6792 12.6181C26.1172 15.0141 26.5312 16.567 26.5312 19.546C26.5312 26.7491 21.0172 31.976 13.4202 31.976L13.4222 31.977ZM3.64916 14.6151C3.10016 16.0001 2.53416 17.841 2.53416 19.546C2.53416 25.59 7.04016 29.976 13.4212 29.976C19.8592 29.976 24.5312 25.59 24.5312 19.545C24.5312 16.934 24.2082 15.7231 22.9642 13.6461C22.1322 12.2601 21.7212 11.0131 21.5252 10.0211C21.3272 10.3421 21.1432 10.7331 21.0092 11.2051C20.3992 13.3361 20.5532 15.8281 20.5552 15.8541C20.5842 16.3001 20.3132 16.713 19.8912 16.862C19.4692 17.011 18.9992 16.864 18.7402 16.498C18.6652 16.391 16.8862 13.8741 16.1032 12.1781C14.4752 8.66005 14.5022 4.85505 14.6692 2.66405C13.0212 3.62405 10.4922 5.76805 9.68016 10.1301C8.88916 14.3741 10.4262 18.618 10.4422 18.659C10.5752 19.0051 10.5052 19.3981 10.2612 19.677C10.0162 19.9541 9.63916 20.077 9.27516 19.99C9.15116 19.96 6.33716 19.2281 4.51416 16.3561C4.18916 15.8421 3.89716 15.2191 3.65016 14.6141L3.64916 14.6151Z" fill="white" />
-        </svg>
-    );
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+ 
     const [searchParams] = useSearchParams();
     const streamId = searchParams.get('streamId');
     const [selectedLiveVideo, setSelectedLiveVideo] = useState(
@@ -133,10 +92,29 @@ export default function PostLive() {
     const [showFaqs, setShowFaqs] = useState(false);
     const [showChatSideBar, setShowChatSideBar] = useState(true);
     const [liveGoals, setLiveGoals] = useState<any>([]);
+    const [pinLiveGoal, setPinLiveGoal] = useState<any>(null);
     const [addLiveGoalAutomatically, setAddLiveGoalAutomatically] = useState<any>(true);
     const [openSettings, setOpenSettings] = useState(false);
     const [openGiftsPanel, setOpenGiftsPanel] = useState(false);
+    const [openAddLiveGoal, setOpenAddLiveGoal] = useState(false);
      const [righSideEnable, setRighSideEnable] = useState(false);
+
+    // const socketRef = useRef();
+    const SERVER_URL = 'https://prodapi.seezitt.com';
+    // const [isConnected, setIsConnected] = useState(false);
+    const [profileData, setProfileData] = useState<any>([]);
+    const authUser = JSON.parse(localStorage.getItem('profile')) || null;
+    const [showGoLiveTogetherPanel, setShowGoLiveTogetherPanel] = useState(false);
+         const API_KEY = process.env.VITE_API_URL;
+        const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
+    
+        useEffect(() => {
+            const profileInfo = localStorage.getItem('profile');
+            if (profileInfo) {
+            setProfileData(JSON.parse(profileInfo));
+            }
+        }, []); // ✅ empty array = only runs once
+    
 
     const [profileDetails, setProfileDetails] = useState<any>(
         {
@@ -220,6 +198,346 @@ export default function PostLive() {
         .catch((error) => console.error('Fetch error:', error));
     };
 
+     function joinLiveStreamRoom(streamId: any)
+    {
+        const payload =
+        {
+            accessToken: token ?? '',
+            liveStreamRoomId: streamId || '',
+            userId: authUser?._id || '',
+            userFullName: authUser?.name || '',
+            name: authUser?.name,
+            userName: authUser?.username,
+            userEmail: authUser?.email,
+            userImage: authUser?.avatar || authUser?.cover,
+        };
+
+        socket.emit('joinLiveStreamRoom', payload);
+    };
+
+    function joinedLiveStreamRoom()
+    {
+        socket.on('joinedliveStreamRoom',
+            (data: any) =>
+            {
+                const newUser =
+                {
+                    id: data.userId,
+                    name: data.name,
+                    photo: data.userImage
+                };
+
+                selectedLiveVideo.details?.id === data.liveStreamRoomId && selectedLiveVideo.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+                    ...prev,
+                    details:
+                    {
+                        ...prev.details,
+                        consumers:
+                        [
+                            ...prev.details.consumers.filter((item: any) => item.id !== newUser.id),
+                            newUser
+                        ]
+                    }
+                }));
+            }
+        );
+    };
+
+    function leftLiveStreamRoom()
+    {
+        socket.on('leftliveStreamRoom',
+            (data: any) =>
+            {
+                selectedLiveVideo.details?.id === data.liveStreamRoomId && selectedLiveVideo.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+                    ...prev,
+                    details:
+                    {
+                        ...prev.details,
+                        consumers: [...prev.details.consumers.filter((item: any) => item.id !== data.userId)]
+                    }
+                }));
+            }
+        );
+    };
+
+    const acceptLiveStreamRoom = (user:any) => {    
+        const payload = {
+            accessToken: token,
+            liveStreamRoomId: streamId,
+            userId: user.id,
+            name: user.name,
+            username: user.username,
+            avatar: user.avatar,
+            id: user.id,
+            status:'joined'
+        };
+         socket.emit('acceptJoinLiveStreamUserAsGuest', payload);
+         loadRoomDetails();
+    }
+
+      const sendInviteLiveStreamUser = (user: any) => {
+       
+        const sendInvite = {
+            userId: user.id,
+            liveStreamRoomId: streamId,
+            accessToken: token,
+            name: user.name,
+            username: user.username || '',
+            avatar: user.avatar,
+            id:user.id
+        };
+
+        socket.emit('sendInviteLiveStreamUser', sendInvite, (response: any) => {
+            console.log('invite live stream room response:', response);
+        });
+    }
+
+    const removeInviteLiveSteamUser = (user: any) => {
+       
+        const sendInvite = {
+            liveStreamRoomId: streamId,
+            accessToken: token,
+            name: user.name,
+            username: user.username || '',
+            avatar: user.avatar,
+            id:user.id
+        };
+
+        socket.emit('removeInviteLiveStreamUserAsGuest', sendInvite, (response: any) => {
+            console.log('invite live stream room response:', response);
+        });
+    }
+
+
+    const rejecctLiveStreamRoom = (user:any) => {
+       const payload = {
+            accessToken: token,
+            liveStreamRoomId: streamId,
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            avatar: user.avatar
+        };
+         socket.emit('rejectJoinLiveStreamUserAsGuest', payload);
+         loadRoomDetails();
+    }
+
+    function removeUserFromLiveStreamRoom(streamId: string, userId: string)
+    {
+        const payload =
+        {
+            accessToken: token,
+            liveStreamRoomId: streamId,
+            userId: userId,
+        };
+
+        socket.emit('removeUserFromLiveStreamRoom', payload);
+    };
+
+    function removedUserFromLiveStreamRoom()
+    {
+        socket.on('user-removed',
+            (data: any) =>
+            {
+                selectedLiveVideo.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+                    ...prev,
+                    details:
+                    {
+                        ...prev.details,
+                        consumers: [...prev.details.consumers.filter((item: any) => item.id !== data.userId)]
+                    }
+                }));
+            }
+        );
+    };
+
+    function endLiveStreamRoom()
+    {
+        const payload =
+        {
+            accessToken: token,
+            liveStreamRoomId: streamId,
+        };
+
+        socket.emit('endLiveStreamRoom', payload);
+        navigate('/live/discover');
+    };
+
+    function onTopViewers()
+    {
+        socket.on('top-viewers',
+            (data: any) =>
+            {
+                setSelectedLiveVideo((prev: any) => ({
+                    ...prev,
+                    details:
+                    {
+                        ...prev.details,
+                        topViewersGifts: data.topViewersGiftsObj
+                    }
+                }));
+            }
+        );
+    };
+
+    useEffect(() => {
+        joinedLiveStreamRoom();
+        joinLiveStreamRoom(streamId);
+        leftLiveStreamRoom();
+        removedUserFromLiveStreamRoom();
+        onTopViewers();
+        socketListners();
+    }, []);
+
+    const socketListners = () => {
+        
+        socket.on('sendJoinRequestLiveStreamUserAsGuest',(response) => {
+            console.log('response of join request live stream..')
+            console.log(response);
+            loadRoomDetails();
+            setShowGoLiveTogetherPanel(true);
+        });
+        
+        socket.on('inviteRejectedByLiveStreamUserAsGuest',(response) => {
+            console.log('response of rejected join request live stream..')
+            console.log(response);
+            loadRoomDetails();
+            // setShowGoLiveTogetherPanel(true);
+        });
+        
+        socket.on('inviteAcceptedByLiveStreamUserAsGuest',(response) => {
+            console.log('response of accepted join request live stream..')
+            console.log(response);
+            loadRoomDetails();
+            // setShowGoLiveTogetherPanel(true);
+        });
+
+        socket.on('getMessageFromLiveStreamRoom', (data) => {
+            console.log(`Received message: ${JSON.stringify(data)}`);
+            // setMessages(prev => [...prev, {
+            //   id: Date.now().toString(),
+            //   name: data?.userFullName,
+            //   userName: data?.userName,
+            //   userImage: data?.userImage,
+            //   text: data.message,
+            //   timestamp: new Date()
+            // }]);
+        });
+
+    }
+
+
+    
+    //   useEffect(() => {
+    //     startSocket();
+    //   }, []);
+
+      
+          
+
+    //  function startSocket() {
+    //     if ((socketRef.current as any) && (socketRef.current as any).connected) {
+    //         console.log('Socket already connected.');
+    //         return;
+    //     }
+    //     (socketRef.current as any) = io(SERVER_URL, {
+    //         // transports: ['websocket'],
+    //         transports: ['websocket'], // Use WebSocket transport
+    //         upgrade: false,            // Prevent transport upgrades
+    //         reconnection: true, // Enable reconnection (default is true)
+    //         reconnectionAttempts: 5, // Number of reconnection attempts before giving up
+    //         reconnectionDelay: 1000, // Time (ms) to wait before trying to reconnect
+    //     });
+
+    
+
+    
+    //     (socketRef.current as any).on('connect', () => {
+    //         setIsConnected(true);
+    //         console.log('Connected to socket server.', (socketRef.current as any));
+    //         const profileInfo1 = localStorage.getItem('profile');
+    //         const profileParsed = JSON.parse(profileInfo1);
+    //         if (profileInfo1) {
+    //             setProfileData(JSON.parse(profileInfo1));
+    //         }
+
+    //         if(profileParsed){
+    //             console.log('profile data info', profileParsed);
+    //             console.log(profileParsed._id);
+    //               let addUserObject = { userId: profileParsed._id, accessToken: token };
+    //               let newAddUserObject = JSON.stringify(addUserObject);
+    //               (socketRef.current as any).emit('add-user', newAddUserObject);
+
+    //             let joinLiveStreamRoom: { userId: string, id: string, userFullName:string, userEmail:string, liveStreamRoomId: string; accessToken: string; name?: string; userName?: string; email?: string; userImage?: string } = {
+    //                 id: streamId,
+    //                 userId: profileParsed?._id || '',
+    //                 liveStreamRoomId: streamId,
+    //                 accessToken: token ?? '',
+    //                 userFullName: profileParsed?.name || '',
+    //                 name: profileParsed?.name,
+    //                 userName: profileParsed?.username, 
+    //                 userEmail: profileParsed?.email,
+    //                 userImage: profileParsed?.avatar || profileParsed?.cover,
+    //             };
+                
+    //             (socketRef.current as any).emit('joinLiveStreamRoom', joinLiveStreamRoom, (response: any) => {
+    //                 console.log('Joined live stream room response:', response);
+    //             });
+    //         }
+          
+
+
+    //         (socketRef.current as any).on('joinedliveStreamRoom', (data: any) => {
+             
+    //         });
+
+    //         (socketRef.current as any).on('sendJoinRequestLiveStreamUserAsGuest', (response: any) => {
+    //           console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+    //         });
+    
+
+    //         (socketRef.current as any).on('top-viewers', (response: any) => {
+    //           console.log('top viewers response:', response);
+    //         });
+            
+           
+    //     });
+    
+    //     (socketRef.current as any).on('connect_error', (error: any) => {
+    //         console.error('Connection Error:', error);
+    //     });
+    
+    //     (socketRef.current as any).on('disconnect', () => {
+    //         setIsConnected(false);
+    //         console.log('Disconnected from socket server.');
+    //     });
+    
+    //     (socketRef.current as any).onclose = (event: any) => {
+    //         console.error('WebSocket closed:', event);
+    //     };
+    
+    
+    //   }
+    
+
+    function updateSettings(payload: any)
+    {
+        let endpoint = `${process.env.VITE_API_URL}/live-stream/v2/settings/${streamId}`;
+        let requestOptions =
+        {
+            method: 'PATCH',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        };
+
+        fetch(endpoint, requestOptions)
+        .catch((error) => console.error('Fetch error:', error));
+    };
+
     const toggleSettings = () => {
         // setOpenSettings((prev) => !prev);
         setOpenGiftsPanel((prev) => !prev);
@@ -232,6 +550,16 @@ export default function PostLive() {
         loadMutedUsers();
         loadBlockedUsers();
     }, []);
+
+    useEffect(() => {
+        let payload =
+        {
+            liveGoal: liveGoals.map((gift: any) => ({ giftId: gift._id, giftName: gift.name, giftImageUrl: gift.imageUrl, giftCoins: gift.price, count: gift.count })),
+            addLiveGoalAutomatically,
+        };
+
+        updateSettings(payload);
+    }, [liveGoals]);
 
     function loadProfileDetails()
     {
@@ -266,12 +594,21 @@ export default function PostLive() {
                 'Content-Type': 'application/json',
             },
         };
+        dispatch(fetchRoomDetailsStart());
+
         console.log('endpoint', endpoint);
         console.log('requestOptions', requestOptions);  
         fetch(endpoint, requestOptions)
         .then((response) => response.json())
-        .then((response) => { setSelectedLiveVideo((prev: any) => ({...prev, details: response.data, isLoading: false})); })
-        .catch((error) => console.error('Fetch error:', error));
+        .then((response) => { 
+            console.log('response data of prelive', response.data);
+            dispatch(fetchRoomDetailsSuccess(response.data));
+            setSelectedLiveVideo((prev: any) => ({...prev, details: response.data, isLoading: false})); 
+        })
+        .catch((error) => {
+            console.error('Fetch error:', error);
+            dispatch(fetchRoomDetailsFailure(error.message || 'Failed to load room details'));
+        });
     }
 
 
@@ -281,7 +618,7 @@ export default function PostLive() {
             <div className={` w-[calc(100%-16rem)] ml-auto bg-white pt-2`}>
                 <div className="flex" >
                     {/* Live screen */}
-                    <Box className={`w-[calc(100%-20.5rem)]`}>
+                    <Box className={`w-[calc(100%-360px)]`}>
                         <Box
                             sx={{
                                 position: "relative",
@@ -296,7 +633,7 @@ export default function PostLive() {
                             <img
                                 src={PostliveBg} // Replace with real image path
                                 alt="Live Stream"
-                                style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                                style={{ width: "100%", height: "600px", objectFit: "cover" }}
                             />
 
                             {/* Top Left User Info */}
@@ -381,10 +718,12 @@ export default function PostLive() {
                                 <Box sx={{
                                     display: "flex",
                                     mr: 2,
+                                    gap: 1.5,
                                     justifyContent: "end",
                                 }}>
                                     <Avatar src="data:image/jpeg;base64,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" sx={{ width: 24, height: 24 }} />
                                     <Box
+                                        onClick={() => setShowGoLiveTogetherPanel(!showGoLiveTogetherPanel)}
                                         sx={{
 
                                             backgroundColor: "rgba(0,0,0,0.5)",
@@ -405,7 +744,7 @@ export default function PostLive() {
                                         1
                                     </Box>
                                     <span>
-                                        <PowerSettingsNew />
+                                        <PowerSettingsNew onClick={() => endLiveStreamRoom()} />
                                     </span>
                                 </Box>
                                 <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -448,21 +787,23 @@ export default function PostLive() {
                                         <ChevronRight />
                                     </Box>
                                     <Box
-                                        onClick={()=> setShowEditLiveGoal(!showEditLiveGoal) }
                                         sx={{
                                             backgroundColor: "#03002BCC",
                                             borderTopLeftRadius: '7px',
                                             borderBottomLeftRadius: '7px',
                                             display: "flex",
                                             alignItems: "center",
-                                            gap: 1
+                                            gap: 1,
+                                            cursor: "pointer"
                                         }}
+                                        onClick={() => setOpenAddLiveGoal(!openAddLiveGoal)}
                                     >
                                         <Typography fontSize={12} color="white" sx={{ ml: 2 }}>
                                             Add Live Goal
                                         </Typography>
                                         <img src={LiveGoal} alt="" />
                                     </Box>
+                                    { pinLiveGoal && (
                                     <Box
                                         sx={{
                                             display: "flex",
@@ -472,17 +813,18 @@ export default function PostLive() {
                                     >
                                         <div style={{ display: "column" }}>
                                             <Typography fontSize={14} color="white" sx={{textAlign:'start',mb:0.5}} >
-                                                0/2
+                                                0/{ pinLiveGoal.count }
                                             </Typography>
                                             <img src={HorizontalLine} alt="" />
                                         </div>
                                         <div style={{ display: "column" }}>
-                                            <img src={HeartReact} alt="" style={{textAlign:'center',marginBottom:'0px',}} />
-                                            <Typography className="live-timer" fontSize={9}>
+                                            <img src={pinLiveGoal.imageUrl} alt="" style={{textAlign:'center', marginBottom:'0px', height: '40px', width: '40px'}} />
+                                            {/* <Typography className="live-timer" fontSize={9}>
                                                 2h11m
-                                            </Typography>
+                                            </Typography> */}
                                         </div>
                                     </Box>
+                                    )}
                                 </Box>
                             </Box>
                             <Box sx={{ position: "absolute", bottom: 7, left: 8 }}>
@@ -618,15 +960,17 @@ export default function PostLive() {
                     </Box>
                     
                     {/* Right Sidebar */}
-                                            {/* {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> } */}
+                                            {/* {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} socket={socket} /> } */}
 
-                    {showFaqs && <Box sx={{ width: 400, }}>
-                        <LiveGoalFAQ onBack={() => {setShowFaqs(false); setShowChatSideBar(true)}} />
-                    </Box>}
+                    {/* {showFaqs && <Box sx={{ width: 400, }}>
+                        <LiveGoalFAQ onBack={() => {setShowFaqs(false); setShowChatSideBar(true)}} />   
+                    </Box>} */}
                     
 
-                     <Box sx={{ width: '20rem', }}>
-                        {!showEditLiveGoal && !showFaqs && !openSettings && !openGiftsPanel && <Card sx={{ p: 1, boxShadow: "none" }}>
+                     <Box sx={{position: 'relative', right: 0, top: 0,width:'350px' }}>
+                        {!showGoLiveTogetherPanel && !openGiftsPanel && !openSettings && !showFaqs && profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
+                        {!showEditLiveGoal && !showFaqs && !openSettings && !openGiftsPanel && !openAddLiveGoal && <Card sx={{ p: 1, boxShadow: "none" }}>
+                            
                             {/* <Box sx={{ position: "absolute" }}>
                                 <CardMedia
                                     sx={{
@@ -637,8 +981,7 @@ export default function PostLive() {
 
                                     }}
                                     component="img"
-                                    image="data:image/jpeg;base64,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"
-                                    alt="Thumbnail"
+                                    image="data:image/jpeg;base64,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" alt="Thumbnail"
                                 />
                                 <Box
                                     sx={{
@@ -743,13 +1086,32 @@ export default function PostLive() {
                             </CardContent> */}
                         </Card>
                         }
+                        {/* {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> } */}
                         {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
-                        {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} />}
+                        {showFaqs && <LiveGoalFAQ onBack={() => {setShowFaqs(!showFaqs); setShowChatSideBar(true)}} />}
                         {openSettings &&
                             <SettingsPanel />
                         }
                         {openGiftsPanel && 
                         <GiftsPostLive customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
+                        }
+                        {openAddLiveGoal && 
+                        <AddLiveGoalModal
+                            liveGoals={liveGoals}
+                            profileDetails={ profileDetails }
+                            onEdit={() => {setOpenAddLiveGoal(false); setShowEditLiveGoal(true)}}
+                            onLiveGoalAdded={(goals) => setOpenAddLiveGoal(false)}
+                            onPinGoal={(goal: any) => setPinLiveGoal(goal)}
+                        />
+                        }
+                        {!openSettings && showGoLiveTogetherPanel && <GoLiveTogetherPanel 
+                            onAcceptJoinLiveSteam={acceptLiveStreamRoom}  // Pass function reference
+                            onRejecctLiveStreamRoom={rejecctLiveStreamRoom}  // Pass function reference
+                            post={selectedLiveVideo} 
+                            sendInviteLiveStreamUser={sendInviteLiveStreamUser}
+                            removeInviteLiveSteamUser={removeInviteLiveSteamUser}
+                            onRemoveUser={(streamId: string, userId: string) => removeUserFromLiveStreamRoom(streamId, userId)} 
+                            /> 
                         }
                     </Box> 
                 </div>

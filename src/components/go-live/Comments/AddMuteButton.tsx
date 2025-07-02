@@ -3,7 +3,13 @@ import React from "react";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
-const AddMuteButton: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+interface AddMuteButtonProps {
+  onBack: () => void;
+  onConfirm: () => void;
+  comment: string;
+}
+
+const AddMuteButton: React.FC<AddMuteButtonProps> = ({ onBack, onConfirm, comment }) => {
   return (
     <Container
       maxWidth="xs"
@@ -32,7 +38,7 @@ const AddMuteButton: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <Typography variant="body1" fontSize="0.95rem">
           This will mute 0 viewers who commented{" "}
           <Typography component="span" fontWeight="bold" display="inline">
-            "Test"
+            "{comment}"
           </Typography>{" "}
           and anyone who comments it for the rest of the LIVE.
         </Typography>
@@ -80,6 +86,7 @@ const AddMuteButton: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               backgroundColor: "#e0244d",
             },
           }}
+          onClick={onConfirm}
         >
           Add
         </Button>

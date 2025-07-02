@@ -18,6 +18,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddMuteButton from './AddMuteButton'
 import UnMuteButton from "./UnmuteButton";
+
 const durations = [
   "5 seconds",
   "30 seconds",
@@ -25,6 +26,15 @@ const durations = [
   "5 minute",
   "Entire LIVE",
 ];
+
+const durationMap = {
+  "5 seconds": 5,
+  "30 seconds": 30,
+  "1 minute": 60,
+  "5 minute": 300,
+  "Entire LIVE": 0
+};
+
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
   height: 24,
@@ -53,18 +63,67 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     opacity: 1,
   },
 }));
-const AddMuteRulesComment: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+
+interface AddMuteRulesCommentProps {
+  onBack: () => void;
+  tempRule: { comment: string; duration: number };
+  setTempRule: React.Dispatch<React.SetStateAction<{ comment: string; duration: number }>>;
+  setMuteRules: React.Dispatch<React.SetStateAction<any[]>>;
+  streamId: string | null;
+  setShowAddMuteRule: (val: boolean) => void;
+  updateSettings: (streamId: string | null, settings: any) => Promise<void>;
+}
+
+const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
+  onBack,
+  tempRule,
+  setTempRule,
+  setMuteRules,
+  streamId,
+  setShowAddMuteRule,
+  updateSettings
+}) => {
   const [selected, setSelected] = useState("Entire LIVE");
   const [open, setOpen] = useState(false);
   const [showAddMuteButton,setShowAddMuteButton] = useState(false)
+  const [comment, setComment] = useState("");
+
+  const [showNewAddMuteButton, setShowNewAddMuteButton] = useState(false);
+
 
   const handleSelect = (value: string) => {
     setSelected(value);
     setOpen(false);
   };
+  
+  const handleSave = () => {
+    setTempRule({ ...tempRule, duration: durationMap[selected] });
+    setShowAddMuteButton(true);
+  };
+
     if (showAddMuteButton) {
     // return <AddMuteButton onBack={() => setShowAddMuteButton(false)} />;
      return <UnMuteButton onBack={() => setShowAddMuteButton(false)} />;
+  }
+
+  if (showNewAddMuteButton) {
+    return (
+      <AddMuteButton
+        onBack={() => setShowNewAddMuteButton(false)}
+        onConfirm={async () => {
+          try {
+            const newRule = { ...tempRule, duration: durationMap[selected] };
+            const response = await updateSettings(streamId, { muteRules: [newRule] }); // <- call API
+            setMuteRules(prev => [...prev, newRule]);
+            setTempRule({ comment: '', duration: 0 }); // Reset
+            setShowAddMuteRule(false);
+          } catch (err) {
+            console.error("Failed to update settings:", err);
+          }
+        }}
+        comment={tempRule.comment} 
+      />
+    );
   }
 
   return (
@@ -95,14 +154,16 @@ const AddMuteRulesComment: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </IconButton>
-        <Typography  variant="body1" fontWeight="bold">
-          Add mute rule
-        </Typography>
-        <Box sx={{cursor: 'pointer'}} onClick={() => setShowAddMuteButton(true)}>
-          <Typography color="#ff2d55" fontWeight={600} fontSize="0.9rem" >
+        <Box sx={{cursor: 'pointer'}}>
+          {/* onClick={handleSave}  */}
+          <Typography color="#ff2d55" onClick={()=> setShowNewAddMuteButton(!showNewAddMuteButton)} fontWeight={600} fontSize="0.9rem" >
             Save
           </Typography>
         </Box>
+        {/* <Typography  variant="body1" fontWeight="bold">
+          Add mute rule
+        </Typography> */}
+        
       </Box>
         <Box px={2}>
             {/* Input Label + Info */}
@@ -118,6 +179,7 @@ const AddMuteRulesComment: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 placeholder="Add word, phrase, or emoji"
                 fullWidth
                 variant="filled"
+                value={tempRule.comment}
                 inputProps={{ maxLength: 30 }}
                 InputProps={{
                     disableUnderline: true,
@@ -131,6 +193,7 @@ const AddMuteRulesComment: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     paddingBottom: '15px !important'
                     },
                 }}
+                onChange={(e) => setTempRule({ ...tempRule, comment: e.target.value })}
                 />
             </Box>
             <Box my={2} textAlign={'left'}>

@@ -12,7 +12,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
 
-const FaqScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <Container
       maxWidth="xs"
@@ -37,7 +37,7 @@ const FaqScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         }}
       >
         <IconButton
-          onClick={onBack}
+          onClick={()=>onClose()}
           sx={{ position: "absolute", left: 0 }}
         >
         <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">

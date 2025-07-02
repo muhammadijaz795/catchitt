@@ -12,7 +12,18 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 
-const InviteCard = () => {
+interface InviteCardProps {
+  receiverInfo: {
+    host?: {
+      name?: string;
+      photo?: string;
+    };
+  };
+  onAcceptHostRequest: () => void;
+  onDeclineHostRequest: () => void;
+}
+
+const InviteCard: React.FC<InviteCardProps> = ({receiverInfo, onAcceptHostRequest, onDeclineHostRequest}) => {
   const [checked, setChecked] = useState(true);
 
   return (
@@ -30,7 +41,7 @@ const InviteCard = () => {
       {/* Avatars */}
       <Stack direction="row" justifyContent="center" spacing={-1.5} mb={2}>
         <Avatar
-          src="https://randomuser.me/api/portraits/women/68.jpg"
+          src={receiverInfo?.host?.photo || "https://randomuser.me/api/portraits/women/68.jpg"}
           sx={{ width: 56, height: 56, border: '2px solid #fff' }}
         />
         <Avatar
@@ -41,7 +52,7 @@ const InviteCard = () => {
 
       {/* Heading */}
       <Typography fontWeight={700} mb={1}>
-        tomhades invites you to GO LIVE Together
+        {receiverInfo?.host?.name} invites you to GO LIVE Together
       </Typography>
 
       {/* Subtext */}
@@ -72,7 +83,7 @@ const InviteCard = () => {
       {/* Buttons */}
       <Stack direction="row" spacing={2} mt={3} justifyContent="center">
         <Button variant="outlined" sx={{ flex: 1, borderRadius: 2, color: '#000',
-            borderColor: '#000', }}>
+            borderColor: '#000', }} onClick={()=> onDeclineHostRequest()}>
           Decline
         </Button>
         <Button
@@ -84,8 +95,9 @@ const InviteCard = () => {
             bgcolor: '#f43f5e',
             '&:hover': { bgcolor: '#e11d48' },
           }}
+          onClick={()=> onAcceptHostRequest()}
         >
-          Invite
+          Accept
         </Button>
       </Stack>
     </Box>

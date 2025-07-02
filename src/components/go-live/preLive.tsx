@@ -440,10 +440,8 @@ const Promote = () => (
                 config
             );
             if(response.data.status == 200) {
-                console.log(response.data.data.joinLink);
-                const url = response.data.data.joinLink;
-                const queryString = new URL(url).search;
-                //navigate('/postlive' + queryString)
+                const streamId = response.data.data.id;
+                navigate('/postlive?streamId=' + streamId+'&stream=start')
             }
             console.log("API response:", response.data);
         } catch (error) {

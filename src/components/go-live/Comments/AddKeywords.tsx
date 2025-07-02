@@ -13,8 +13,8 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-
-const blockedKeywords = ["Damn", "Hell", "Bastard", "Asshole"];
+import BlockedKeywordsFAQs from "../BlockedKeywordsFaqs";
+// const blockedKeywords = ["Damn", "Hell", "Bastard", "Asshole"];
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -44,8 +44,21 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
     opacity: 1,
   },
 }));
-const AddKeyword: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+const AddKeyword: React.FC<{
+  onBack: () => void;
+  onAddKeyword: (keyword: { keyword: string; blockSimilarVersion: boolean }) => void;
+}> = ({ onBack, onAddKeyword }) => {
   const [blockSimilar, setBlockSimilar] = useState(true);
+  const [input, setInput] = useState("");
+  const [showBlockKeywordFaqs, setShowBlockKeywordFaqs] = useState(false);
+
+  if(showBlockKeywordFaqs) {
+    return (
+      <BlockedKeywordsFAQs
+        onClose={() => {setShowBlockKeywordFaqs(false); console.log("Closed FAQs" )}}
+      />
+    );
+  }
 
   return (
     <Container
@@ -78,7 +91,18 @@ const AddKeyword: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <Typography  variant="body1" fontWeight="bold">
           Add keyword
         </Typography>
-        <Typography color="#ff2d55" fontWeight={600} fontSize="0.9rem">
+        <Typography
+          onClick={() => {
+            if (input.trim()) {         
+              onAddKeyword({ keyword: input.trim(), blockSimilarVersion: blockSimilar });
+              onBack();
+            }
+          }}
+          sx={{ cursor: "pointer" }}
+          color="#ff2d55"
+          fontWeight={600}
+          fontSize="0.9rem"
+        >
           Save
         </Typography>
       </Box>
@@ -87,7 +111,7 @@ const AddKeyword: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <Box textAlign={"left"} mt={1}>
                 <Typography fontWeight={600} fontSize="0.9rem">
                 Add a word, phrase, or emoji{" "}
-                <InfoOutlinedIcon sx={{ fontSize: 16, verticalAlign: "middle" }} />
+                <InfoOutlinedIcon onClick={() => setShowBlockKeywordFaqs(true)}  sx={{ fontSize: 16, verticalAlign: "middle" }} />
                 </Typography>
             </Box>
 
@@ -95,6 +119,8 @@ const AddKeyword: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <Box mt={1.5}>
                 <TextField
                 placeholder="Keywords can be up to 30 characters"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
                 fullWidth
                 variant="filled"
                 inputProps={{ maxLength: 30 }}
@@ -147,7 +173,7 @@ const AddKeyword: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 onChange={() => setBlockSimilar(!blockSimilar)}
                 />
             </Box>
-            <Box mt={2}>
+            {/* <Box mt={2}>
               <Typography
                 variant="subtitle2"
                 sx={{ color: "gray", fontWeight: 600, mb: 1, textAlign: "left" }}
@@ -176,7 +202,7 @@ const AddKeyword: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   </ListItem>
                 ))}
               </List>
-            </Box>
+            </Box> */}
         </Box>
     </Container>
   );

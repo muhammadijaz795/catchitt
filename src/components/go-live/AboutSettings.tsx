@@ -9,6 +9,7 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
+import AboutMeFaqs from './AboutMeFaqs'; // Assuming you have a component for FAQs
 
 interface AboutMeSettingsProps {
   onBack: () => void;
@@ -51,6 +52,14 @@ const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetail
   const [enabled, setEnabled] = useState(false);
   console.log('profile Details in aboutSettings', profileDetails);
 
+  const [showFaqs, setShowFaqs] = useState(false);
+  if(showFaqs) {
+    return (
+      <AboutMeFaqs
+        onBack={() => {setShowFaqs(false); console.log("Closed FAQs" )}}
+      />
+    );
+  }
   return (
     <Box sx={{ maxWidth: 360, mx: 'auto',  position: 'fixed', right: 0, top: 0, height: '100vh', bgcolor: '#fff', zIndex: 2 }}>
       {/* Header */}
@@ -61,7 +70,7 @@ const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetail
           <Typography variant="h6" fontWeight="bold" ml={1}>
             About me
           </Typography>
-        <IconButton>
+        <IconButton onClick={() => setShowFaqs(true)}>
           <HelpOutlineIcon />
         </IconButton>
       </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Typography,
@@ -9,11 +9,9 @@ import {
   IconButton,
   Switch,
 } from "@mui/material";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { styled } from "@mui/material/styles";
-import NoFilteredComments from "./NoFIlterComments";
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -44,26 +42,64 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-
 interface FilterCommentsProps {
   onBack: () => void;
+  onUpdate: (filterComments: {
+    spamComments?: boolean;
+    unkindComments?: boolean;
+    communityFlaggedComments?: boolean;
+    showInFeed?: boolean;
+  }) => void;
+  filterSettings?: {
+    spamComments?: boolean;
+    unkindComments?: boolean;
+    communityFlaggedComments?: boolean;
+    showInFeed?: boolean;
+  };
 }
 
-const FilterComments: React.FC<FilterCommentsProps> = ({ onBack }) => {
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([
-    "Spam comments",
-    "Potentially unkind comments",
-    "Community-flagged comments",
-  ]);
+const FilterComments: React.FC<FilterCommentsProps> = ({ 
+  onBack, 
+  onUpdate,
+  filterSettings = {
+    spamComments: false,
+    unkindComments: false,
+    communityFlaggedComments: false,
+    showInFeed: false
+  }
+}) => {
+  // Derive selected filters from props
+  const getSelectedFilters = () => {
+    const filters = [];
+    if (filterSettings.spamComments) filters.push("Spam comments");
+    if (filterSettings.unkindComments) filters.push("Potentially unkind comments");
+    if (filterSettings.communityFlaggedComments) filters.push("Community-flagged comments");
+    return filters;
+  };
 
-  const [showInFeed, setShowInFeed] = useState(false);
+  const selectedFilters = getSelectedFilters();
+  const showInFeed = filterSettings.showInFeed || false;
 
   const toggleFilter = (label: string) => {
-    setSelectedFilters((prev) =>
-      prev.includes(label)
-        ? prev.filter((item) => item !== label)
-        : [...prev, label]
-    );
+    const updatedFilters = selectedFilters.includes(label)
+      ? selectedFilters.filter((item) => item !== label)
+      : [...selectedFilters, label];
+
+    // Map selected filters to boolean values for parent
+    onUpdate({
+      spamComments: updatedFilters.includes("Spam comments"),
+      unkindComments: updatedFilters.includes("Potentially unkind comments"),
+      communityFlaggedComments: updatedFilters.includes("Community-flagged comments"),
+      showInFeed // Keep existing showInFeed value
+    });
+  };
+
+  const handleToggleShowInFeed = () => {
+    const newValue = !showInFeed;
+    onUpdate({
+      ...filterSettings,
+      showInFeed: newValue
+    });
   };
 
   const filters = [
@@ -79,19 +115,12 @@ const FilterComments: React.FC<FilterCommentsProps> = ({ onBack }) => {
     {
       label: "Community-flagged comments",
       description:
-        "These comments are similar to those our community has previously flagged, but don’t violate our Community Guidelines.",
+        "These comments are similar to those our community has previously flagged, but don't violate our Community Guidelines.",
     },
   ];
 
   return (
-           
-    <Box
-      sx={{
-       
-        position: 'relative'
-      }}
-    >
-
+    <Box sx={{ position: 'relative' }}>
       <Box
         sx={{
           borderBottom: "1px solid #e0e0e0",
@@ -103,67 +132,59 @@ const FilterComments: React.FC<FilterCommentsProps> = ({ onBack }) => {
       >
         <IconButton onClick={onBack} sx={{ position: "absolute", left: 1 }} size="small">
           <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </IconButton>
         <Typography fontWeight="bold" variant="body1" sx={{ ml: 1 }}>
           Filter comments
         </Typography>
       </Box>
-        {/* {filteredComments?.length === 0 ? ( */}
-        {/* <NoFilteredComments /> */}
-        {/* ) : ( */}
-      <List dense sx={{ maxHeight: "calc(100vh - 9rem)",
+
+      <List dense sx={{ 
+        maxHeight: "calc(100vh - 9rem)",
         overflowY: "auto",
         bgcolor: "white",
         borderRadius: 2,
         mx: "auto",
         width: "100%",
-        maxWidth: 360,}}>
+        maxWidth: 360,
+      }}>
         {filters.map(({ label, description }) => (
-        <ListItem
+          <ListItem
             key={label}
             button
             alignItems="flex-start"
             onClick={() => toggleFilter(label)}
             sx={{ px: 2, py: 1 }}
-        >
+          >
             <ListItemText
-            primary={<Typography fontWeight="bold">{label}</Typography>}
-            secondary={
+              primary={<Typography fontWeight="bold">{label}</Typography>}
+              secondary={
                 <Typography variant="body2" color="text.secondary">
-                {description}
+                  {description}
                 </Typography>
-            }
+              }
             />
-
-            {selectedFilters.includes(label) ? (
             <ListItemSecondaryAction>
+              {selectedFilters.includes(label) ? (
                 <CheckCircleIcon sx={{ color: "#ff2d55" }} />
+              ) : (
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    backgroundColor: "#e0e0e0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CheckCircleIcon sx={{ color: "#fff", fontSize: 16 }} />
+                </Box>
+              )}
             </ListItemSecondaryAction>
-            ) : (
-            <ListItemSecondaryAction>
-  {selectedFilters.includes(label) ? (
-    <CheckCircleIcon sx={{ color: "#ff2d55" }} />
-  ) : (
-            <Box
-            sx={{
-                width: 20,
-                height: 20,
-                borderRadius: "50%",
-                backgroundColor: "#e0e0e0",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-            >
-            <CheckCircleIcon sx={{ color: "#fff", fontSize: 16 }} />
-            </Box>
-        )}
-        </ListItemSecondaryAction>
-
-                    )}
-        </ListItem>
+          </ListItem>
         ))}
 
         <ListItem button sx={{ px: 2 }}>
@@ -201,14 +222,12 @@ const FilterComments: React.FC<FilterCommentsProps> = ({ onBack }) => {
             <StyledSwitch
               edge="end"
               checked={showInFeed}
-              onChange={() => setShowInFeed((prev) => !prev)}
+              onChange={handleToggleShowInFeed}
             />
           </ListItemSecondaryAction>
         </ListItem>
       </List>
-      {/* )} */}
     </Box>
-  
   );
 };
 

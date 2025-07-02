@@ -2,7 +2,7 @@ import { SideNavBar } from './goLiveSidebar';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-
+import { notification } from 'antd';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box,  Radio,
   RadioGroup,
@@ -48,6 +48,9 @@ import { caesium,defaultGreyBackground } from '../../icons';
 import { abs } from 'mathjs';
 import  GamingLiveUI  from './categories';
 import { dark } from '@mui/material/styles/createPalette';
+import { socket } from '../../src/lib/socket';
+import GuestRequestCard from './GuestRequestCard';
+import LiveInviteCard from './InviteGuestLive';
 
 
 
@@ -123,6 +126,9 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
 
 
     const [showSidebar, setShowSidebar] = useState(true);
+    const [sentGuestRequest, setSentGuestRequest] = useState(false);
+    const [receiveHostRequest, setReceiveHostRequest] = useState(false);
+    const [receiverInfo, setReceiverInfo] = useState(null);
 
     const handleHideSidebar = () => {
         setShowSidebar(false);
@@ -183,6 +189,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
     const [inSuceedCase, setInSuceedCase] = useState(false);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
+    const authUser = JSON.parse(localStorage.getItem('profile')) || null;
 
     const [uploadedFile, setUploadedFile] = useState<string>('');
     const [openUploadPic, setOpenUploadPic] = useState(false);
@@ -193,6 +200,10 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
     const [isDivVisible, setIsDivVisible] = useState(false);
     const [messageType, setMessageType] = useState('text');
     const loggedInUserId = localStorage.getItem('userId');
+    const [isUserMuted, setIsUserMuted] = useState(false);
+
+    const [searchParams] = useSearchParams();
+    const streamId = searchParams.get('streamId');
 
     useEffect(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -283,6 +294,25 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
       return params.get('streamId');
     }, [location.search]);
 
+
+    const joinAsGuest = () => {
+        const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
+        const userData = {
+        userFullName: profileData?.name || '',
+        name: profileData?.name,
+        userName: profileData?.username, 
+        userEmail: profileData?.email,
+        avatar: profileData?.avatar || profileData?.cover,
+        accessToken: localStorage.getItem('token'),
+        id: profileData?._id || '',
+        liveStreamRoomId
+      };
+      console.log('joinLiveStreamUserAsGuest', userData);
+      socket.emit('joinLiveStreamUserAsGuest', userData, (response: any) => {
+        console.log('Joined live stream room response:', response);
+      });
+    }
+
     const handleSendMessage = () => {
       if (!message.trim()) return; // Don't send empty messages
       console.log('handle send message')
@@ -297,9 +327,28 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
         userImage: profileData?.avatar || profileData?.cover,
         accessToken: localStorage.getItem('token')
       };
+
+       const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
+        const messageData = {
+          userId: profileData?._id || '',
+          userFullName: profileData?.name || '',
+          userName: profileData?.username, 
+          userEmail: profileData?.email,
+          userImage: profileData?.avatar || profileData?.cover,
+          accessToken: localStorage.getItem('token'),
+          message: message,
+          liveStreamRoomId: liveStreamRoomId
+        };
+
+        console.log('here.. send message', messageData);
+        socket.emit('sendMessageToliveStreamRoom', messageData, (response) => {
+          console.log('Callback Response:', response);
+          if (!response) {
+            console.warn('No response received from server');
+          }
+        });
     
       if (socketRef.current && isConnected) {
-        const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
         (socketRef.current as any).emit('sendMessageToliveStreamRoom', { 
           liveStreamRoomId: liveStreamRoomId, 
           data: {
@@ -428,6 +477,51 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     setMoreAnchorEl(null);
   };
 
+
+
+  const onAcceptHostRequest = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const acceptLiveStreamRom = {
+      id: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      userFullName: profileData?.name || '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      avatar: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('acceptInviteLiveStreamUserAsGuest', acceptLiveStreamRom);
+    socket.emit('acceptInviteLiveStreamUserAsGuest', acceptLiveStreamRom, (response: any) => {
+      console.log('left live stream room response:', response);
+    });
+    setReceiveHostRequest(!receiveHostRequest);
+  }
+
+   const onDeclineHostRequest = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const rejectLiveStreamRom = {
+      id: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      avatar: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('rejectInviteLiveStreamUserAsGuest', rejectLiveStreamRom);
+    socket.emit('rejectInviteLiveStreamUserAsGuest', rejectLiveStreamRom, (response: any) => {
+      console.log('left live stream room response:', response);
+    });
+    setReceiveHostRequest(!receiveHostRequest);
+  }
+
+  
+
   const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -505,6 +599,198 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     joinRoom();
   }, [profileData]); 
 
+  function joinLiveStreamRoom(streamId: any)
+  {
+    const joinLiveStreamRoomPayload =
+    {
+      accessToken: token ?? '',
+      liveStreamRoomId: streamId || '',
+      userId: authUser?._id || '',
+      userFullName: authUser?.name || '',
+      name: authUser?.name,
+      userName: authUser?.username,
+      userEmail: authUser?.email,
+      userImage: authUser?.avatar || authUser?.cover,
+    };
+
+    socket.emit('joinLiveStreamRoom', joinLiveStreamRoomPayload);
+  };
+
+  function joinedLiveStreamRoom()
+  {
+    socket.on('joinedliveStreamRoom',
+      (data: any) =>
+      {
+        const newUser =
+        {
+          id: data.userId,
+          name: data.name,
+          photo: data.userImage
+        };
+
+        selectedLiveVideo?.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+          ...prev,
+          details:
+          {
+            ...prev.details,
+            consumers:
+            [
+              ...prev.details.consumers.filter((item: any) => item.id !== newUser.id),
+              newUser
+            ]
+          }
+        }));
+      }
+    );
+  };
+
+  function leaveLiveStreamRoom(streamId: any)
+  {
+    const Payload =
+    {
+      accessToken: token ?? '',
+      liveStreamRoomId: streamId || '',
+      userId: authUser?._id || '',
+      userFullName: authUser?.name || '',
+      name: authUser?.name,
+      userName: authUser?.username,
+      userEmail: authUser?.email,
+      userImage: authUser?.avatar || authUser?.cover,
+    };
+
+    socket.emit('leaveLiveStreamRoom', Payload);
+  };
+
+  function leftLiveStreamRoom()
+  {
+    socket.on('leftliveStreamRoom',
+      (data: any) =>
+      {
+        selectedLiveVideo.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+          ...prev,
+          details:
+          {
+            ...prev.details,
+            consumers: [...prev.details.consumers.filter((item: any) => item.id !== data.userId)]
+          }
+        }));
+      }
+    );
+  };
+
+  function removedUserFromLiveStreamRoom()
+  {
+    socket.on('user-removed',
+      (data: any) =>
+      {
+        selectedLiveVideo.details?.consumers && setSelectedLiveVideo((prev: any) => ({
+          ...prev,
+          details:
+          {
+            ...prev.details,
+            consumers: [...prev.details.consumers.filter((item: any) => item.id !== data.userId)]
+          }
+        }));
+
+        authUser?._id === data.userId && navigate('/live/discover');
+      }
+    );
+  };
+
+  function liveStreamRoomEnded()
+  {
+    socket.on('liveStreamRoomEnded',
+      (data: any) =>
+      {
+        navigate('/live/discover');
+      }
+    );
+  };
+
+  function onUserMuted()
+  {
+    socket.on('user-muted', (data: any) => {
+      setIsUserMuted(true);
+    });
+  };
+
+  function onUserBlocked()
+  {
+    socket.on('user-blocked',
+      (data: any) =>
+      {
+        navigate('/live/discover');
+      }
+    );
+  };
+
+  function onSendGift()
+  {
+    socket.on('send-gift',
+      (data: any) =>
+      {
+        data.sender.id !== authUser?._id && sendGift1(data.id, data);
+      }
+    );
+  };
+
+  function onTopViewers()
+  {
+      socket.on('top-viewers',
+          (data: any) =>
+          {
+              setSelectedLiveVideo((prev: any) => ({
+                  ...prev,
+                  details:
+                  {
+                      ...prev.details,
+                      topViewersGifts: data.topViewersGiftsObj
+                  }
+              }));
+          }
+      );
+  };
+
+  useEffect(() => {
+    joinedLiveStreamRoom();
+    leftLiveStreamRoom();
+    removedUserFromLiveStreamRoom();
+    liveStreamRoomEnded();
+    socketListeners();
+    onUserMuted();
+    onUserBlocked();
+    onSendGift();
+    onTopViewers();
+  }, []);
+
+  useEffect(() => {
+    streamId && joinLiveStreamRoom(streamId);
+    
+    return () =>
+    {
+      streamId && leaveLiveStreamRoom(streamId);
+    };
+  }, [streamId]);
+
+  const socketListeners = () => {
+      socket.on('acceptJoinRequestLiveStreamUserAsGuest', (response: any) => {
+          console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+          setSentGuestRequest(false);
+      });
+
+      socket.on('invitedLiveStreamUserAsGuest', (data: any) => {
+        console.log(`Received message admin invited..: ${JSON.stringify(data)}`);
+        setReceiverInfo(data);
+        setReceiveHostRequest(true);
+      });
+
+      socket.on('inviteRemovedByLiveStreamUserAsGuest', (response: any) => {
+          console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+          setReceiveHostRequest(false);
+      });
+      
+  }
+
   
   function startSocket() {
     if ((socketRef.current as any) && (socketRef.current as any).connected) {
@@ -526,12 +812,37 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         // let addUserObject = { userId: sender, accessToken: token };
         // let newAddUserObject = JSON.stringify(addUserObject);
 
-        // let addUserObject = { userId: profileData?._id, accessToken: token };
-        // console.log('addUserObject',addUserObject)
-        // let newAddUserObject = JSON.stringify(addUserObject);
-        // (socketRef.current as any).emit('add-user', newAddUserObject);
-        
-        
+          const profileInfo1 = localStorage.getItem('profile');
+          const profileParsed = JSON.parse(profileInfo1);
+           let addUserObject = { userId: profileParsed?._id || '', accessToken: token };
+          // console.log('addUserObject',addUserObject)
+          let newAddUserObject = JSON.stringify(addUserObject);
+          (socketRef.current as any).emit('add-user', newAddUserObject);
+        // },5000);
+
+        (socketRef.current as any).on('sendJoinRequestLiveStreamUserAsGuest', (response: any) => {
+          console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+        });
+
+        (socketRef.current as any).on('acceptJoinRequestLiveStreamUserAsGuest', (response: any) => {
+          console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+          setSentGuestRequest(false);
+        });
+
+        (socketRef.current as any).on('invitedLiveStreamUserAsGuest', (data: any) => {
+          setReceiverInfo(data);
+          console.log(`Received message admin invited..: ${JSON.stringify(data)}`);
+          setReceiveHostRequest(true);
+        });
+
+        (socketRef.current as any).on('inviteRemovedByLiveStreamUserAsGuest', (response: any) => {
+            console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+            setReceiveHostRequest(false);
+        });
+
+        (socketRef.current as any).on('rejectJoinRequestLiveStreamUserAsGuest', (response: any) => {
+            setReceiveHostRequest(false);
+        });
 
         (socketRef.current as any).on('getMessageFromLiveStreamRoom', (data: any) => {
           console.log(`Received message: ${JSON.stringify(data)}`);
@@ -543,18 +854,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
             text: data.message,
             timestamp: new Date()
           }]);
-        });
-
-        (socketRef.current as any).on('sent-gift', (data: any) => {
-          console.log(`Received message: ${JSON.stringify(data)}`);
-          const giftId = data?.gift?.id;
-          const gift = data?.gift;
-
-          if (giftId && gift) {
-            sendGift1(giftId, gift);
-          } else {
-            console.warn('Gift data is missing or malformed:', data);
-          }
         });
 
         (socketRef.current as any).on('joinedliveStreamRoom', (data: any) => {
@@ -752,10 +1051,14 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     .catch((error) => console.error('Fetch error:', error));
   };
 
-  function sendGift(giftId: string)
+  function sendGift(gift: any)
   {
-    console.log('selectedLiveVideo')
-    console.log(selectedLiveVideo);
+      if(gift.price > profileData?.balance)
+      {
+          notification.error({message: 'Do not have enough balance.',});
+          return;
+      }
+
       let endpoint = `${process.env.VITE_API_URL}/gift/live-stream/send`;
       let requestOptions =
       {
@@ -765,11 +1068,14 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ giftId, roomId:  streamIdFromUrl}),
+        body: JSON.stringify({ giftId: gift._id, roomId:  streamIdFromUrl}),
       };
       
       fetch(endpoint, requestOptions)
       .catch((error) => console.error('Fetch error:', error));
+
+      sendGift1(gift._id, gift);
+      setProfileData((prev: any) => ({ ...prev, balance: profileData?.balance -  gift.price}));
   };
 
   const [selectedLiveVideo, setSelectedLiveVideo] = useState<any>(
@@ -778,8 +1084,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
       isLoading: false,
     }
   );
-  const [searchParams] = useSearchParams();
-  const streamId = searchParams.get('streamId');
 
   function loadLiveVideo()
   {
@@ -930,7 +1234,7 @@ const renderGiftRow = (gifts: any[]) => (
                 bgcolor: '#d62949',
               },
             }}
-            onClick={() => {sendGift1(gift._id, gift); sendGift(gift._id);}}
+            onClick={() => {sendGift(gift);}}
           >
             Send
           </Button>
@@ -1024,7 +1328,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                           <path fill-rule="evenodd" clip-rule="evenodd" d="M5.72998 2.9974C4.57841 2.9974 3.64155 3.9342 3.64155 5.0939C3.64155 6.2536 4.57841 7.19036 5.72998 7.19036C6.88158 7.19036 7.81845 6.2536 7.81845 5.0939C7.81845 3.9342 6.88158 2.9974 5.72998 2.9974ZM2.30821 5.0939C2.30821 3.20148 3.83835 1.66406 5.72998 1.66406C7.62161 1.66406 9.15178 3.20148 9.15178 5.0939C9.15178 6.9863 7.62161 8.5237 5.72998 8.5237C3.83835 8.5237 2.30821 6.9863 2.30821 5.0939ZM12.0633 5.33073C11.3719 5.33073 10.7912 5.90463 10.7912 6.63776C10.7912 7.37086 11.3719 7.94476 12.0633 7.94476C12.7547 7.94476 13.3354 7.37086 13.3354 6.63776C13.3354 5.90463 12.7547 5.33073 12.0633 5.33073ZM9.45788 6.63776C9.45788 5.1908 10.6132 3.9974 12.0633 3.9974C13.5134 3.9974 14.6688 5.1908 14.6688 6.63776C14.6688 8.0847 13.5134 9.2781 12.0633 9.2781C10.6132 9.2781 9.45788 8.0847 9.45788 6.63776ZM5.72998 10.9799C3.94881 10.9799 2.44182 12.1714 1.96334 13.8061C1.91162 13.9828 1.73713 14.1 1.55669 14.0635L0.903278 13.9313C0.722841 13.8948 0.605161 13.7183 0.653061 13.5406C1.25727 11.2984 3.29959 9.64653 5.72998 9.64653C8.16038 9.64653 10.2027 11.2984 10.8069 13.5406C10.8548 13.7183 10.7371 13.8948 10.5567 13.9313L9.90328 14.0635C9.72285 14.1 9.54835 13.9828 9.49665 13.8061C9.01815 12.1714 7.51118 10.9799 5.72998 10.9799ZM11.73 11.6992C11.3781 11.6992 11.0859 11.7467 10.8415 11.8254C10.6663 11.8819 10.4656 11.8192 10.3818 11.6553L10.0782 11.0618C9.99435 10.8979 10.0588 10.6955 10.2302 10.6284C10.6702 10.4561 11.1693 10.3658 11.73 10.3658C12.9603 10.3658 13.8643 10.8023 14.4912 11.5098C15.0137 12.0994 15.3057 12.8343 15.4785 13.5416C15.5221 13.7205 15.4041 13.8962 15.2235 13.9322L14.5697 14.0626C14.3892 14.0986 14.2148 13.9811 14.1694 13.8027C14.0261 13.2403 13.8113 12.7528 13.4933 12.394C13.1392 11.9944 12.6096 11.6992 11.73 11.6992Z" fill="#161823"/>
                           </svg>
 
-                           {totalMembers} &nbsp;&nbsp;
+                           {selectedLiveVideo?.details?.consumers?.length} &nbsp;&nbsp;
                           <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M4.95659 2.89709C4.24213 3.09789 3.62277 3.54704 3.20993 4.16376C2.71659 4.89042 2.42326 5.99042 3.02326 7.55709C3.48993 8.78376 4.55659 10.0338 5.75659 11.1038C6.6603 11.91 7.64178 12.6246 8.68659 13.2371C9.73141 12.6246 10.7129 11.91 11.6166 11.1038C12.8166 10.0338 13.8833 8.78376 14.3499 7.55709C14.9499 5.99042 14.6599 4.89042 14.1666 4.16376C13.7546 3.54768 13.1365 3.0986 12.4233 2.89709C10.5999 2.52709 9.57659 3.69709 8.68659 4.95709C7.79659 3.69709 6.76326 2.53042 4.95326 2.89709H4.95659ZM8.68993 3.14709C9.75659 1.80709 11.2266 1.29376 12.6899 1.59042C13.4599 1.74376 14.5533 2.35042 15.2733 3.41709C16.0266 4.52376 16.3433 6.08042 15.5999 8.03376C15.0166 9.55709 13.7666 10.9771 12.5066 12.1004C11.4364 13.0614 10.2599 13.8968 8.99993 14.5904L8.68993 14.7538L8.37993 14.5904C7.11995 13.8968 5.94342 13.0614 4.87326 12.1004C3.61326 10.9771 2.36326 9.55709 1.77993 8.03376C1.03659 6.08042 1.35326 4.52376 2.10659 3.41709C2.82326 2.35042 3.91993 1.74376 4.68993 1.59042C6.15326 1.29042 7.62326 1.80709 8.68993 3.14709Z" fill="#161823"/>
                           </svg>
@@ -1170,6 +1474,12 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         </MenuItem>
                                     </Menu>
                             </IconButton>
+
+                            <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
+                             <Button onClick={()=> setSentGuestRequest(!sentGuestRequest)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
+                                          Join as Guest
+                            </Button>
+
                             <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
                             {!isFollowed && <Button onClick={() => handleFollow(selectedLiveVideo?.details?.owner?.id)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
                                 {isFollowed ? 'Followed': 'Follow'}&nbsp;
@@ -1251,10 +1561,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     className={`${styles.floatingGift}`}
                                     
                                   >
-                                    {gift.imageUrl.endsWith('.mp4') ? (
-                                      <video src={gift.imageUrl} autoPlay loop muted style={{ width: 60, height: 60 }} />
+                                    {gift.mediaFileUrl.endsWith('.mp4') ? (
+                                      <video src={gift.mediaFileUrl} autoPlay loop muted style={{ width: 60, height: 60 }} />
                                     ) : (
-                                      <img src={gift.imageUrl} alt={gift.name} style={{ width: 60, height: 60 }} />
+                                      <img src={gift.mediaFileUrl} alt={gift.name} style={{ width: 60, height: 60 }} />
                                     )}
                                   </Box>
                                 ))}
@@ -1335,7 +1645,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
 
                                 </Box>
                                 <Typography variant="body2" fontWeight="500">
-                                    0
+                                    { profileData?.balance }
                                 </Typography>
                                 </Box>
                                 <Link to="/coins/recharge" reloadDocument={false} style={{ textDecoration: 'none' }}>
@@ -1433,8 +1743,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     </Grid>
                 </Box> 
             </Grid>
+            {receiveHostRequest && <LiveInviteCard receiverInfo={receiverInfo} onAcceptHostRequest={onAcceptHostRequest} onDeclineHostRequest={onDeclineHostRequest} />}
+            {!receiveHostRequest &&  sentGuestRequest  && <GuestRequestCard joinAsGuest={joinAsGuest} />}
             {/* Right Sidebar */}
-            {showSidebar &&(
+            {!receiveHostRequest && !sentGuestRequest && showSidebar &&(
             <Grid item  sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
               <Box
                 sx={{
@@ -2521,13 +2833,14 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                           variant="outlined"
                                           size="small"
                                           value={message}
+                                          disabled={isUserMuted}
                                           onChange={(e) => setMessage(e.target.value)}
                                           onKeyPress={handleKeyPress}
                                           InputProps={{
                                             endAdornment: (
                                               <InputAdornment position="end">
                                                 {/* Emoji button inside TextField */}
-                                                <IconButton onClick={() => setIsPickerVisible(!isPickerVisible)}>
+                                                <IconButton onClick={() => setIsPickerVisible(!isPickerVisible)} disabled={isUserMuted}>
                                                   <img
                                                     className="w-6 h-6 object-contain rounded-full"
                                                     src={emoji}
@@ -2541,7 +2854,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         />
 
                                         {/* Send button outside TextField */}
-                                        <IconButton onClick={handleSendMessage}>
+                                        <IconButton onClick={handleSendMessage} disabled={isUserMuted}>
                                           <SendIcon />
                                         </IconButton>
                                       </Box>
@@ -2670,6 +2983,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                 </DialogContent>
             </Dialog>
            <RankingSettingsModal rankingClick={rankingClick} isShowRanking={isShowRanking} open={openRating} onClose={() => setOpenRating(false)} />
+
+            
         </Box>
   );
 }

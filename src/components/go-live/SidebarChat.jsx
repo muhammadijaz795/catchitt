@@ -27,9 +27,9 @@ import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import { io } from 'socket.io-client';
 import { useSearchParams } from 'react-router-dom';
 import CustomMediaPicker from '../user-chat/components/CustomMediaPicker';
-import  styles  from './GoLive.module.scss';
-
-
+import  styles  from './PostLive.module.scss';
+import TopViewersImage from '../../assets/postLive/TopViewers.png';
+import { socket } from '../../src/lib/socket';
 
 
 // Static data for top viewers
@@ -95,11 +95,13 @@ const staticOwner = {
   photo: 'https://i.pravatar.cc/50?img=10'
 };
 
+
+
 const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDetails, showFaqsSidebar }) => {
   const [showTopViewers, setShowTopViewers] = useState(false);
   const [isShowRanking, setIsShowRanking] = useState(true);
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState(staticMessages);
+  const [messages, setMessages] = useState([]);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
   const [isFollowed, setIsFollowed] = useState(false);
@@ -198,39 +200,32 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
     }
   };
 
-  
-    const handleSendMessage = () => {
-      if (!message.trim()) return; // Don't send empty messages
-      console.log('handle send message')
-      console.log(localStorage.getItem('token'));
-      console.log('profileData', profileData);
-      const userData = {
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    // if (socket) {  // Use the passed socket instead of socketRef.current
+      const messageData = {
         userId: profileData?._id || '',
         userFullName: profileData?.name || '',
-        name: profileData?.name,
         userName: profileData?.username, 
         userEmail: profileData?.email,
         userImage: profileData?.avatar || profileData?.cover,
-        accessToken: localStorage.getItem('token')
+        accessToken: localStorage.getItem('token'),
+        message: message,
+        liveStreamRoomId: streamId
       };
-    
-      if (socketRef.current && isConnected) {
-        const liveStreamRoomId = streamId;
-        (socketRef.current).emit('sendMessageToliveStreamRoom', { 
-          liveStreamRoomId: liveStreamRoomId, 
-          data: {
-            ...userData,
-            message,
-            liveStreamRoomId: liveStreamRoomId, 
-          }
-        }, (response) => {
-          console.log('Callback Response:', response);
-        });
-        setMessage('');       
-      } else {
-        console.error('Socket not connected');
-      }
-    };
+      console.log('here.. send message', messageData);
+      socket.emit('sendMessageToliveStreamRoom', messageData, (response) => {
+        console.log('Callback Response:', response);
+        if (!response) {
+          console.warn('No response received from server');
+        }
+      });
+      
+      setMessage('');
+    // } else {
+    //   console.error('Socket not available');
+    // }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -272,64 +267,43 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
         };
     
         console.log('joinLiveStreamRoom', joinLiveStreamRoom);
-        socketRef.current.emit('joinLiveStreamRoom', joinLiveStreamRoom, (response) => {
-          console.log('Joined live stream room response:', response);
-        });
+        if(socket){
+          socket.emit('joinLiveStreamRoom', joinLiveStreamRoom, (response) => {
+            console.log('Joined live stream room response:', response);
+          });
+        }
+        
+
+        let data = {
+            userId: profileData?._id || '',
+             userFullName: profileData?.name || '',
+             name: profileData?.name,
+             userName: profileData?.username,
+            userEmail: profileData?.email,
+             userImage: profileData?.avatar || profileData?.cover,
+            "accessToken": token ?? '',
+            "message": "hi",
+            liveStreamRoomId: streamId || '',
+        };
       };
     
       
     // }, [profileData]); 
   
     
-  useEffect(() => {
-    if (isConnected && profileData && profileData._id) {
-      joinRoom();
-    }
-  }, [isConnected, profileData]);
+    
+   useEffect(() => {
+        joinRoom();
+        // joinLiveStreamRoom(streamId);
+    }, []);
 
-  function startSocket() {
-      if (socketRef.current && socketRef.current.connected) {
-          console.log('Socket already connected.');
-          return;
-      }
-      socketRef.current = io(SERVER_URL, {
-          // transports: ['websocket'],
-          transports: ['websocket'], // Use WebSocket transport
-          upgrade: false,            // Prevent transport upgrades
-          reconnection: true, // Enable reconnection (default is true)
-          reconnectionAttempts: 5, // Number of reconnection attempts before giving up
-          reconnectionDelay: 1000, // Time (ms) to wait before trying to reconnect
-      });
+   useEffect(() => {
+      socketListerns();
+    }, []);
 
-      socketRef.current.on('connect', () => {
-          setIsConnected(true);
-          console.log('Connected to socket server.', socketRef.current);
-          // let addUserObject = { userId: sender, accessToken: token };
-          // let newAddUserObject = JSON.stringify(addUserObject);
-
-          // let addUserObject = { userId: profileData?._id, accessToken: token };
-          // console.log('addUserObject',addUserObject)
-          // let newAddUserObject = JSON.stringify(addUserObject);
-          // socketRef.current.emit('add-user', newAddUserObject);
-        
-          // joinRoom();
-         
-          
-          
-
-          socketRef.current.on('getMessageFromLiveStreamRoom', (data) => {
-            console.log(`Received message: ${JSON.stringify(data)}`);
-            setMessages(prev => [...prev, {
-              id: Date.now().toString(),
-              name: data?.userFullName,
-              userName: data?.userName,
-              userImage: data?.userImage,
-              text: data.message,
-              timestamp: new Date()
-            }]);
-          });
-
-          socketRef.current.on('sent-gift', (data) => {
+    const socketListerns = () => {
+      if(socket){
+        socket.on('sent-gift', (data) => {
             console.log(`Received message: ${JSON.stringify(data)}`);
             const giftId = data?.gift?.id;
             const gift = data?.gift;
@@ -339,9 +313,21 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
             } else {
               console.warn('Gift data is missing or malformed:', data);
             }
-          });
+      });
+      
+      socket.on('getMessageFromLiveStreamRoom', (data) => {
+            console.log(`Received message: ${JSON.stringify(data)}`);
+            setMessages(prev => [...prev, {
+              id: Date.now().toString(),
+              name: data?.userFullName,
+              userName: data?.userName,
+              userImage: data?.userImage,
+              text: data.message,
+              timestamp: new Date()
+            }]);
+      });
 
-          socketRef.current.on('joinedliveStreamRoom', (data) => {
+           socket.on('joinedliveStreamRoom', (data) => {
             console.log('joined listner called..')
             // setTotalMembers(totalMembers+1);
             setNewJoiner(data);
@@ -349,52 +335,18 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
               setNewJoiner(null);
             },10000)
             console.log(`Received message of joinedliveStreamRoom: ${JSON.stringify(data)}`);
-            // handleNewMessage(data); // Handle the incoming message
           });
 
-          // const topViewers = {
-          //   giftId: "640399f0aef73acc3bbca33e",
-          //   roomId: "8c29aab4-eb2e-4328-9089-4130148a932b"
-          // };
-          socketRef.current.on('top-viewers', (response) => {
+          socket.on('top-viewers', (response) => {
             console.log('top viewers response:', response);
           });
-      });
-
-      socketRef.current.on('connect_error', (error) => {
-          console.error('Connection Error:', error);
-      });
-
-      socketRef.current.on('disconnect', () => {
-          setIsConnected(false);
-          console.log('Disconnected from socket server.');
-      });
-
-      socketRef.current.onclose = (event) => {
-          console.error('WebSocket closed:', event);
-      };
-
-      socketRef.current.on('newMessage', (data) => {
-        setMessages(prev => [...prev, {
-          id: Date.now().toString(),
-          name: data.name,
-          userName: data.userName,
-          userImage: data.userImage,
-          text: data.text,
-          timestamp: new Date()
-        }]);
-      });
-  
+      }
+      
     }
-  
-
-   useEffect(() => {
-      // loadProfile();
-      startSocket();
-    }, []);
 
   return (
-    <Grid item  sx={{ zIndex:'9999', position: 'absolute', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
+    // <Grid item  sx={{ zIndex:'9999', position: 'absolute', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
+      <Box sx={{ minWidth: 350, mx: 'auto', right: 0, top: 0, p:0 }}>
                   <Box
                     sx={{
                         bgcolor: '#fff',
@@ -403,11 +355,11 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                         position: 'relative'
                     }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center',position: 'relative', p: 1, borderBottom: '1px solid rgba(22, 24, 35, 0.2)' }}>
-                         <span className='absolute left-3 top-3.5' onClick={handleHideSidebar}>
+                         {/* <span className='absolute left-3 top-3.5' onClick={handleHideSidebar}>
                             <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5005 8.62453H13.4095L8.84513 13.1889C8.6987 13.3353 8.6987 13.5728 8.84513 13.7192L9.90578 14.7799C10.0523 14.9263 10.2897 14.9263 10.4361 14.7799L16.921 8.29505C17.3603 7.8557 17.3603 7.14339 16.921 6.70404L10.4361 0.219212C10.2897 0.0727628 10.0523 0.0727628 9.90578 0.219212L8.84513 1.27987C8.6987 1.42632 8.6987 1.66375 8.84513 1.8102L13.4094 6.37453H4.5005C4.29338 6.37453 4.1255 6.54242 4.1255 6.74953V8.24953C4.1255 8.4566 4.29338 8.62453 4.5005 8.62453ZM3.00049 1.49951C3.00049 1.29241 2.83259 1.12451 2.62549 1.12451H1.12549C0.91838 1.12451 0.750488 1.29241 0.750488 1.49951V13.4995C0.750488 13.7066 0.91838 13.8745 1.12549 13.8745H2.62549C2.83259 13.8745 3.00049 13.7066 3.00049 13.4995V1.49951Z" fill="#161823"/>
                             </svg>
-                        </span>
+                        </span> */}
                         <Typography fontWeight={700} fontSize={18}>
                         LIVE chat
                         </Typography>
@@ -463,7 +415,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                             </Box>
 
                             {/* Scrollable Content */}
-                            <Box
+                          {selectedLiveVideo?.details?.topViewersGifts.length > 0 ?  <Box
                               sx={{
                                 p: 2,
                                 overflowY: 'auto',
@@ -522,6 +474,14 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                 })}
                               </Stack>
                             </Box>
+                            : (
+                              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
+                                <img src={TopViewersImage} alt="" />
+                                <Typography fontSize={13} fontWeight={600} mt={0.5}>
+                                    Viewers
+                                </Typography>
+                            </Box>
+                            )}
 
                             {/* Footer */}
                             <Box
@@ -556,7 +516,9 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                           
                          ): (                       
                             <Box>
-                                {<Box
+                                {
+                                  <>
+                                <Box
                                     sx={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -564,14 +526,31 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                     mt: 1.5,
                                     mb: 1,
                                     p: 1,
-                                    }}
+                                }}
                                 onClick={() => setShowTopViewers(true)}
-                                >
-                                    <Typography fontWeight={500} fontSize={16}>
+                            >
+                                <Typography fontWeight={500} fontSize={16}>
                                     Top viewers
-                                    </Typography>
-                                    <ArrowForwardIosIcon sx={{ fontSize: 13 }} />
-                                </Box>
+                                </Typography>
+                                <ArrowForwardIosIcon sx={{ fontSize: 13 }} />
+                            </Box>
+                            {/* <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    pb: 2, 
+                                    borderBottom: "1px solid rgba(22, 24, 35, 0.2)"                               }}
+                            >
+                                <Typography variant="body1" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
+                                    Top viewers
+                                </Typography>
+                                <IconButton sx={{ color: '#666', padding: 0 }}>
+                                    <HelpOutlineIcon fontSize="small" />
+                                </IconButton>
+                            </Box> */}
+                            
+                                    </>
                               } 
     
 
@@ -910,10 +889,10 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                             </>
                                             
     
-                                             <Divider textAlign="center" sx={{ fontSize: 12, mb: 1 }}>
+                                            {selectedLiveVideo?.details?.topViewersGifts.length > 0 &&  <Divider textAlign="center" sx={{ fontSize: 12, mb: 1 }}>
                                             New
                                             </Divider>
-                                            
+                                                  }
     
                                             <Box
                                               sx={{
@@ -1038,7 +1017,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                             </Box>  
                             )}
                   </Box>
-    </Grid>
+    </Box>
   );
 };
 

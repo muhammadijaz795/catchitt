@@ -23,6 +23,8 @@ import videoCategories from './reducers/videoCategories';
 import geoSlice from './reducers/geoServices';
 import autoScrollUserSettings from './reducers/autoScrollUserSettings';
 import volume from './reducers/volumeSlice';
+import roomDetails from './reducers/roomDetailsSlice';
+
 import currentPostReducer from './reducers/currentPostReducer';
 import currentEditVideoReducer from './reducers/currentEditVideoReducer';
 
@@ -366,6 +368,7 @@ export default combineReducers({
     setVideoUrl,
     autoScrollUserSettings, 
     volume,
+    roomDetails,
     currentPost: currentPostReducer,
     currentEditVideo: currentEditVideoReducer,
 });

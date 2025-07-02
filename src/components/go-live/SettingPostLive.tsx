@@ -14,8 +14,17 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { styled } from '@mui/material/styles';
 import CommentsSetting from './CommentsSetting'
+import axios from 'axios';
+
 import MutedAccounts from './Comments/MutedAccounts';
 import BlockedAccounts from './Comments/BlockedAccounts';
+import { useSearchParams } from 'react-router-dom';
+import {
+  fetchRoomDetailsStart,
+  fetchRoomDetailsSuccess,
+  fetchRoomDetailsFailure,
+} from '../../redux/reducers/roomDetailsSlice';
+import { useDispatch } from 'react-redux';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -120,12 +129,128 @@ const settingsData = [
 ];
 
 const SettingsPanel = ({customProps}: {customProps: any}) => {
-  const [activeView, setActiveView] = useState<any>(null);
+const [activeView, setActiveView] = useState<any>(null);
+const [showCommentSettings, setShowCommentSettings] = useState(false);
   
-  if (activeView == 'CommentsSetting') {
-    return <CommentsSetting onBack={() => setActiveView(null)} />;
+
+
+
+const updateSettings = async (
+  id: string,
+  settings: {
+    allowComments?: boolean;
+    showMostSent?: boolean;
+    filterComments?: {
+      spamComments?: boolean;
+      unkindComments?: boolean;
+      communityFlaggedComments?: boolean;
+      showInFeed?: boolean;
+    };
+    blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
+    muteRules?: { comment: string; duration: number }[];
+
+  } = {}
+) => {
+  const API_KEY = process.env.VITE_API_URL;
+  const token = localStorage.getItem("token");
+  const API_URL = `${API_KEY}/live-stream/v2/settings/${id}`;
+ console.log('data in top parent component..');
+  console.log(settings);
+  // console.log(settings.commentSettings.blockedKeywords);
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const data: any = {};
+
+  // Set allowComments
+  if (typeof settings.allowComments === "boolean") {
+    data.commentSettings = data.commentSettings || {};
+    data.commentSettings.allowComments = settings.allowComments;
   }
-  else if(activeView == 'MutedAccounts')
+
+  // Set showMostSentComments
+  if (typeof settings.showMostSent === "boolean") {
+    data.commentSettings = data.commentSettings || {};
+    data.commentSettings.showMostSentComments = settings.showMostSent;
+  }
+
+  // Set filterComments flags
+  if (settings.filterComments) {
+    data.commentSettings = data.commentSettings || {};
+    data.commentSettings.filterComments = data.commentSettings.filterComments || {};
+
+    Object.entries(settings.filterComments).forEach(([key, value]) => {
+      if (typeof value === 'boolean') {
+        data.commentSettings.filterComments[key] = value;
+      }
+    });
+  }
+
+  // Set blockedKeywords
+  if ( settings.commentSettings && Array.isArray(settings.commentSettings.blockedKeywords)) {
+    data.commentSettings = data.commentSettings || {};
+    data.commentSettings.blockedKeywords = settings.commentSettings.blockedKeywords;
+  }
+
+  if (settings.muteRules) {
+    data.muteRules = settings.muteRules;
+  }
+
+  if (Object.keys(data).length === 0) {
+    console.warn("No update fields provided.");
+    return;
+  }
+
+  console.log('data in top parent component..');
+  console.log(data);
+
+  try {
+    const response = await axios.patch(API_URL, data, config);
+    console.log("Updated settings:", response.data);
+    loadRoomDetails();
+    return response.data;
+  } catch (error) {
+    console.error("Update failed:", error);
+  }
+};
+
+const dispatch = useDispatch();
+const [searchParams] = useSearchParams();
+    const streamId = searchParams.get('streamId');
+
+ const loadRoomDetails = () => {
+        let endpoint = `${process.env.VITE_API_URL}/live-stream/${streamId}`;
+        let requestOptions =
+        {
+            method: 'GET',
+            headers:
+            {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+        };
+        dispatch(fetchRoomDetailsStart());
+
+        console.log('endpoint', endpoint);
+        console.log('requestOptions', requestOptions);  
+        fetch(endpoint, requestOptions)
+        .then((response) => response.json())
+        .then((response) => { 
+            console.log('response data of prelive', response.data);
+            dispatch(fetchRoomDetailsSuccess(response.data));
+        })
+        .catch((error) => {
+            console.error('Fetch error:', error);
+            dispatch(fetchRoomDetailsFailure(error.message || 'Failed to load room details'));
+        });
+    }
+
+
+  if(activeView == 'MutedAccounts')
   {
     return <MutedAccounts customProps={customProps} onBack={() => setActiveView(null)} />;
   }
@@ -133,6 +258,21 @@ const SettingsPanel = ({customProps}: {customProps: any}) => {
   {
     return <BlockedAccounts customProps={customProps} onBack={() => setActiveView(null)} />;
   }
+  
+  else if(activeView == 'CommentsSetting')
+  {
+    return <CommentsSetting updateSettings={updateSettings} onBack={() => setShowCommentSettings(false)} />;
+    // return <CommentsSetting customProps={customProps} onBack={() => setActiveView(null)} />;
+  }
+
+
+
+
+
+  // const [showCommentSettings, setShowCommentSettings] = useState(false);
+  // if (showCommentSettings) {
+  //   return <CommentsSetting updateSettings={updateSettings} onBack={() => setShowCommentSettings(false)} />;
+  // }
 
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto', right: 0, top: 0 }}>
