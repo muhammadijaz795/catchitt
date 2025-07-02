@@ -27,7 +27,7 @@ import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import { io } from 'socket.io-client';
 import { useSearchParams } from 'react-router-dom';
 import CustomMediaPicker from '../user-chat/components/CustomMediaPicker';
-import  styles  from './GoLive.module.scss';
+import  styles  from './PostLive.module.scss';
 import TopViewersImage from '../../assets/postLive/TopViewers.png';
 import { socket } from '../../src/lib/socket';
 
@@ -353,7 +353,8 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
     }
 
   return (
-    <Grid item  sx={{ zIndex:'9999', position: 'absolute', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
+    // <Grid item  sx={{ zIndex:'9999', position: 'absolute', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
+      <Box sx={{ minWidth: 350, mx: 'auto', right: 0, top: 0, p:0 }}>
                   <Box
                     sx={{
                         bgcolor: '#fff',
@@ -362,11 +363,11 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                         position: 'relative'
                     }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center',position: 'relative', p: 1, borderBottom: '1px solid rgba(22, 24, 35, 0.2)' }}>
-                         <span className='absolute left-3 top-3.5' onClick={handleHideSidebar}>
+                         {/* <span className='absolute left-3 top-3.5' onClick={handleHideSidebar}>
                             <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5005 8.62453H13.4095L8.84513 13.1889C8.6987 13.3353 8.6987 13.5728 8.84513 13.7192L9.90578 14.7799C10.0523 14.9263 10.2897 14.9263 10.4361 14.7799L16.921 8.29505C17.3603 7.8557 17.3603 7.14339 16.921 6.70404L10.4361 0.219212C10.2897 0.0727628 10.0523 0.0727628 9.90578 0.219212L8.84513 1.27987C8.6987 1.42632 8.6987 1.66375 8.84513 1.8102L13.4094 6.37453H4.5005C4.29338 6.37453 4.1255 6.54242 4.1255 6.74953V8.24953C4.1255 8.4566 4.29338 8.62453 4.5005 8.62453ZM3.00049 1.49951C3.00049 1.29241 2.83259 1.12451 2.62549 1.12451H1.12549C0.91838 1.12451 0.750488 1.29241 0.750488 1.49951V13.4995C0.750488 13.7066 0.91838 13.8745 1.12549 13.8745H2.62549C2.83259 13.8745 3.00049 13.7066 3.00049 13.4995V1.49951Z" fill="#161823"/>
                             </svg>
-                        </span>
+                        </span> */}
                         <Typography fontWeight={700} fontSize={18}>
                         LIVE chat
                         </Typography>
@@ -1024,7 +1025,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                             </Box>  
                             )}
                   </Box>
-    </Grid>
+    </Box>
   );
 };
 
