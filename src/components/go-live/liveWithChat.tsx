@@ -1543,10 +1543,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                     className={`${styles.floatingGift}`}
                                     
                                   >
-                                    {gift.imageUrl.endsWith('.mp4') ? (
-                                      <video src={gift.imageUrl} autoPlay loop muted style={{ width: 60, height: 60 }} />
+                                    {gift.mediaFileUrl.endsWith('.mp4') ? (
+                                      <video src={gift.mediaFileUrl} autoPlay loop muted style={{ width: 60, height: 60 }} />
                                     ) : (
-                                      <img src={gift.imageUrl} alt={gift.name} style={{ width: 60, height: 60 }} />
+                                      <img src={gift.mediaFileUrl} alt={gift.name} style={{ width: 60, height: 60 }} />
                                     )}
                                   </Box>
                                 ))}
