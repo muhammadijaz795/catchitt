@@ -2,7 +2,7 @@ import { SideNavBar } from './goLiveSidebar';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-
+import { notification } from 'antd';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box,  Radio,
   RadioGroup,
@@ -639,12 +639,42 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     );
   };
 
+  function onUserMuted()
+  {
+    socket.on('user-muted', (data: any) => {
+      setIsUserMuted(true);
+    });
+  };
+
+  function onUserBlocked()
+  {
+    socket.on('user-blocked',
+      (data: any) =>
+      {
+        navigate('/live/discover');
+      }
+    );
+  };
+
+  function onSendGift()
+  {
+    socket.on('send-gift',
+      (data: any) =>
+      {
+        data.sender.id !== authUser?._id && sendGift1(data.id, data);
+      }
+    );
+  };
+
   useEffect(() => {
     joinedLiveStreamRoom();
     leftLiveStreamRoom();
     removedUserFromLiveStreamRoom();
     liveStreamRoomEnded();
     socketListeners();
+    onUserMuted();
+    onUserBlocked();
+    onSendGift()
   }, []);
 
   useEffect(() => {
@@ -704,9 +734,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         (socketRef.current as any).on('sendJoinRequestLiveStreamUserAsGuest', (response: any) => {
           console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
         });
-        (socketRef.current as any).on('user-muted', (data: any) => {
-          setIsUserMuted(true);
-        });
 
         (socketRef.current as any).on('getMessageFromLiveStreamRoom', (data: any) => {
           console.log(`Received message: ${JSON.stringify(data)}`);
@@ -718,20 +745,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
             text: data.message,
             timestamp: new Date()
           }]);
-        });
-
-        
-
-        (socketRef.current as any).on('sent-gift', (data: any) => {
-          console.log(`Received message: ${JSON.stringify(data)}`);
-          const giftId = data?.gift?.id;
-          const gift = data?.gift;
-
-          if (giftId && gift) {
-            sendGift1(giftId, gift);
-          } else {
-            console.warn('Gift data is missing or malformed:', data);
-          }
         });
 
         (socketRef.current as any).on('joinedliveStreamRoom', (data: any) => {
@@ -929,10 +942,14 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     .catch((error) => console.error('Fetch error:', error));
   };
 
-  function sendGift(giftId: string)
+  function sendGift(gift: any)
   {
-    console.log('selectedLiveVideo')
-    console.log(selectedLiveVideo);
+      if(gift.price > profileData?.balance)
+      {
+          notification.error({message: 'Do not have enough balance.',});
+          return;
+      }
+
       let endpoint = `${process.env.VITE_API_URL}/gift/live-stream/send`;
       let requestOptions =
       {
@@ -942,11 +959,14 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ giftId, roomId:  streamIdFromUrl}),
+        body: JSON.stringify({ giftId: gift._id, roomId:  streamIdFromUrl}),
       };
       
       fetch(endpoint, requestOptions)
       .catch((error) => console.error('Fetch error:', error));
+
+      sendGift1(gift._id, gift);
+      setProfileData((prev: any) => ({ ...prev, balance: profileData?.balance -  gift.price}));
   };
 
   const [selectedLiveVideo, setSelectedLiveVideo] = useState<any>(
@@ -1105,7 +1125,7 @@ const renderGiftRow = (gifts: any[]) => (
                 bgcolor: '#d62949',
               },
             }}
-            onClick={() => {sendGift1(gift._id, gift); sendGift(gift._id);}}
+            onClick={() => {sendGift(gift);}}
           >
             Send
           </Button>
@@ -1516,7 +1536,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
 
                                 </Box>
                                 <Typography variant="body2" fontWeight="500">
-                                    0
+                                    { profileData?.balance }
                                 </Typography>
                                 </Box>
                                 <Link to="/coins/recharge" reloadDocument={false} style={{ textDecoration: 'none' }}>
