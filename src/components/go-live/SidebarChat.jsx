@@ -215,7 +215,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
         liveStreamRoomId: streamId
       };
       console.log('here.. send message', messageData);
-      socket.emit('sendMessageToliveStreamRoom', JSON.stringify(messageData), (response) => {
+      socket.emit('sendMessageToliveStreamRoom', messageData, (response) => {
         console.log('Callback Response:', response);
         if (!response) {
           console.warn('No response received from server');
@@ -268,9 +268,12 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
         };
     
         console.log('joinLiveStreamRoom', joinLiveStreamRoom);
-        socket.emit('joinLiveStreamRoom', joinLiveStreamRoom, (response) => {
-          console.log('Joined live stream room response:', response);
-        });
+        if(socket){
+          socket.emit('joinLiveStreamRoom', joinLiveStreamRoom, (response) => {
+            console.log('Joined live stream room response:', response);
+          });
+        }
+        
 
         let data = {
             userId: profileData?._id || '',
@@ -283,19 +286,6 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
             "message": "hi",
             liveStreamRoomId: streamId || '',
         };
-
-        setTimeout(() => {
-  socket.emit('sendMessageToliveStreamRoom', data, (res) => {
-    console.log('📨 Message sent response:', res);
-  });
-    console.log('joinLiveStreamRoom', joinLiveStreamRoom);
-        socket.emit('joinLiveStreamRoom01', joinLiveStreamRoom, (response) => {
-          console.log('Joined live stream room response:', response);
-        })
-}, 5000); // delay for room to be joined
-
-
-
       };
     
       
@@ -313,7 +303,8 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
     }, []);
 
     const socketListerns = () => {
-      socket.on('sent-gift', (data) => {
+      if(socket){
+        socket.on('sent-gift', (data) => {
             console.log(`Received message: ${JSON.stringify(data)}`);
             const giftId = data?.gift?.id;
             const gift = data?.gift;
@@ -335,7 +326,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
               text: data.message,
               timestamp: new Date()
             }]);
-          });
+      });
 
            socket.on('joinedliveStreamRoom', (data) => {
             console.log('joined listner called..')
@@ -350,6 +341,8 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
           socket.on('top-viewers', (response) => {
             console.log('top viewers response:', response);
           });
+      }
+      
     }
 
   return (

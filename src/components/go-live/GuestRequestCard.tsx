@@ -9,7 +9,11 @@ const pulse = keyframes`
   100% { transform: scale(1); opacity: 1; }
 `;
 
-const GuestRequestCard = () => {
+interface GuestRequestCardProps {
+  joinAsGuest: () => void;
+}
+
+const GuestRequestCard = ({ joinAsGuest }: GuestRequestCardProps) => {
   const [requestSent, setRequestSent] = useState(false);
  const [showSettings, setShowSettings] = useState(false);
 
@@ -99,7 +103,7 @@ const GuestRequestCard = () => {
           />
         </Stack>
 
-        {/* Text */}
+        
         <Typography variant="subtitle1" align="center" fontWeight={600}>
           {requestSent ? "Guest request sent" : "Request to join as a guest"}
         </Typography>
@@ -121,7 +125,7 @@ const GuestRequestCard = () => {
         <Button
           variant="contained"
           fullWidth
-          onClick={() => setRequestSent(!requestSent)}
+          onClick={() => {setRequestSent(!requestSent); if(!requestSent){ joinAsGuest(); } }}
           sx={{
             bgcolor: requestSent ? "#f5f5f5" : "#FF2C55",
             color: requestSent ? "#000" : "#fff",

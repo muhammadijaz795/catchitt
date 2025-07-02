@@ -292,6 +292,23 @@ export default function PostLive() {
         });
     }
 
+    const removeInviteLiveSteamUser = (user: any) => {
+       
+        const sendInvite = {
+            liveStreamRoomId: streamId,
+            accessToken: token,
+            name: user.name,
+            username: user.username || '',
+            avatar: user.avatar,
+            id:user.id
+        };
+
+        socket.emit('removeInviteLiveStreamUserAsGuest', sendInvite, (response: any) => {
+            console.log('invite live stream room response:', response);
+        });
+    }
+
+
     const rejecctLiveStreamRoom = (user:any) => {
        const payload = {
             accessToken: token,
@@ -356,11 +373,40 @@ export default function PostLive() {
     }, []);
 
     const socketListners = () => {
+        
         socket.on('sendJoinRequestLiveStreamUserAsGuest',(response) => {
             console.log('response of join request live stream..')
             console.log(response);
             loadRoomDetails();
+            setShowGoLiveTogetherPanel(true);
         });
+        
+        socket.on('inviteRejectedByLiveStreamUserAsGuest',(response) => {
+            console.log('response of rejected join request live stream..')
+            console.log(response);
+            loadRoomDetails();
+            // setShowGoLiveTogetherPanel(true);
+        });
+        
+        socket.on('inviteAcceptedByLiveStreamUserAsGuest',(response) => {
+            console.log('response of accepted join request live stream..')
+            console.log(response);
+            loadRoomDetails();
+            // setShowGoLiveTogetherPanel(true);
+        });
+
+        socket.on('getMessageFromLiveStreamRoom', (data) => {
+            console.log(`Received message: ${JSON.stringify(data)}`);
+            // setMessages(prev => [...prev, {
+            //   id: Date.now().toString(),
+            //   name: data?.userFullName,
+            //   userName: data?.userName,
+            //   userImage: data?.userImage,
+            //   text: data.message,
+            //   timestamp: new Date()
+            // }]);
+        });
+
     }
 
 
@@ -905,7 +951,7 @@ export default function PostLive() {
                     
 
                      <Box sx={{position: 'relative', right: 0, top: 0,width:'350px' }}>
-                        {!openGiftsPanel && !openSettings && !showFaqs && profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
+                        {!showGoLiveTogetherPanel && !openGiftsPanel && !openSettings && !showFaqs && profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> }
                         {!showEditLiveGoal && !showFaqs && !openSettings && !openGiftsPanel && !openAddLiveGoal && <Card sx={{ p: 1, boxShadow: "none" }}>
                             
                             {/* <Box sx={{ position: "absolute" }}>
@@ -1025,7 +1071,7 @@ export default function PostLive() {
                         }
                         {/* {profileDetails && showChatSideBar && <SidebarChat selectedLiveVideo={selectedLiveVideo} profileDetails={profileDetails} showFaqsSidebar={()=> {setShowFaqs(!showFaqs); setShowChatSideBar(false); console.log("back button clicked...")}} /> } */}
                         {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
-                        {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} />}
+                        {showFaqs && <LiveGoalFAQ onBack={() => {setShowFaqs(!showFaqs); setShowChatSideBar(true)}} />}
                         {openSettings &&
                             <SettingsPanel />
                         }
@@ -1041,11 +1087,12 @@ export default function PostLive() {
                             onPinGoal={(goal: any) => setPinLiveGoal(goal)}
                         />
                         }
-                        { showGoLiveTogetherPanel && <GoLiveTogetherPanel 
+                        {!openSettings && showGoLiveTogetherPanel && <GoLiveTogetherPanel 
                             onAcceptJoinLiveSteam={acceptLiveStreamRoom}  // Pass function reference
                             onRejecctLiveStreamRoom={rejecctLiveStreamRoom}  // Pass function reference
                             post={selectedLiveVideo} 
                             sendInviteLiveStreamUser={sendInviteLiveStreamUser}
+                            removeInviteLiveSteamUser={removeInviteLiveSteamUser}
                             onRemoveUser={(streamId: string, userId: string) => removeUserFromLiveStreamRoom(streamId, userId)} 
                             /> 
                         }

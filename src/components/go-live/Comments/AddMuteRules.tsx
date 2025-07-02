@@ -121,6 +121,7 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
             console.error("Failed to update settings:", err);
           }
         }}
+        comment={tempRule.comment} 
       />
     );
   }

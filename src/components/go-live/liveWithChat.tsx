@@ -50,6 +50,8 @@ import  GamingLiveUI  from './categories';
 import { dark } from '@mui/material/styles/createPalette';
 import { socket } from '../../src/lib/socket';
 import GuestRequestCard from './GuestRequestCard';
+import LiveInviteCard from './InviteGuestLive';
+
 
 
 const reasons = [
@@ -125,6 +127,8 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
 
     const [showSidebar, setShowSidebar] = useState(true);
     const [sentGuestRequest, setSentGuestRequest] = useState(false);
+    const [receiveHostRequest, setReceiveHostRequest] = useState(false);
+    const [receiverInfo, setReceiverInfo] = useState(null);
 
     const handleHideSidebar = () => {
         setShowSidebar(false);
@@ -323,9 +327,28 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
         userImage: profileData?.avatar || profileData?.cover,
         accessToken: localStorage.getItem('token')
       };
+
+       const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
+        const messageData = {
+          userId: profileData?._id || '',
+          userFullName: profileData?.name || '',
+          userName: profileData?.username, 
+          userEmail: profileData?.email,
+          userImage: profileData?.avatar || profileData?.cover,
+          accessToken: localStorage.getItem('token'),
+          message: message,
+          liveStreamRoomId: liveStreamRoomId
+        };
+
+        console.log('here.. send message', messageData);
+        socket.emit('sendMessageToliveStreamRoom', messageData, (response) => {
+          console.log('Callback Response:', response);
+          if (!response) {
+            console.warn('No response received from server');
+          }
+        });
     
       if (socketRef.current && isConnected) {
-        const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
         (socketRef.current as any).emit('sendMessageToliveStreamRoom', { 
           liveStreamRoomId: liveStreamRoomId, 
           data: {
@@ -453,6 +476,51 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
   const handleMoreClose = () => {
     setMoreAnchorEl(null);
   };
+
+
+
+  const onAcceptHostRequest = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const acceptLiveStreamRom = {
+      id: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      userFullName: profileData?.name || '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      avatar: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('acceptInviteLiveStreamUserAsGuest', acceptLiveStreamRom);
+    socket.emit('acceptInviteLiveStreamUserAsGuest', acceptLiveStreamRom, (response: any) => {
+      console.log('left live stream room response:', response);
+    });
+    setReceiveHostRequest(!receiveHostRequest);
+  }
+
+   const onDeclineHostRequest = () => {
+    if (!profileData) return;
+    console.log('profileData',profileData);
+
+    const rejectLiveStreamRom = {
+      id: profileData?._id || '',
+      liveStreamRoomId: streamIdFromUrl || '',
+      accessToken: token ?? '',
+      name: profileData?.name,
+      userName: profileData?.username,
+      avatar: profileData?.avatar || profileData?.cover,
+    };
+
+    console.log('rejectInviteLiveStreamUserAsGuest', rejectLiveStreamRom);
+    socket.emit('rejectInviteLiveStreamUserAsGuest', rejectLiveStreamRom, (response: any) => {
+      console.log('left live stream room response:', response);
+    });
+    setReceiveHostRequest(!receiveHostRequest);
+  }
+
+  
 
   const style = {
   position: 'absolute' as const,
@@ -692,14 +760,21 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
       });
       socket.on('acceptJoinRequestLiveStreamUserAsGuest', (response: any) => {
           console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+          setSentGuestRequest(false);
       });
 
       socket.on('invitedLiveStreamUserAsGuest', (data: any) => {
-          // setSentGuestRequest(true);
-          console.log(`Received message admin invited..: ${JSON.stringify(data)}`);
-          // const OwnerData = data?.OwnerData;
-          // const accessToken = data?.accessToken;
+        console.log(`Received message admin invited..: ${JSON.stringify(data)}`);
+        setReceiverInfo(data);
+        setReceiveHostRequest(true);
       });
+
+      socket.on('inviteRemovedByLiveStreamUserAsGuest', (response: any) => {
+          console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+          setReceiveHostRequest(false);
+      });
+
+      
   }
 
   
@@ -733,6 +808,22 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
 
         (socketRef.current as any).on('sendJoinRequestLiveStreamUserAsGuest', (response: any) => {
           console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+        });
+
+        (socketRef.current as any).on('acceptJoinRequestLiveStreamUserAsGuest', (response: any) => {
+          console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+          setSentGuestRequest(false);
+        });
+
+        (socketRef.current as any).on('invitedLiveStreamUserAsGuest', (data: any) => {
+          setReceiverInfo(data);
+          console.log(`Received message admin invited..: ${JSON.stringify(data)}`);
+          setReceiveHostRequest(true);
+        });
+
+        (socketRef.current as any).on('inviteRemovedByLiveStreamUserAsGuest', (response: any) => {
+            console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
+            setReceiveHostRequest(false);
         });
 
         (socketRef.current as any).on('getMessageFromLiveStreamRoom', (data: any) => {
@@ -1367,7 +1458,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                             </IconButton>
 
                             <Button className={`${styles.SUBSCRIBEbTN}`} variant="outlined" sx={{color: '#000', borderColor: '#1618231F', textTransform : 'capitalize'}}>Subscribe</Button>
-                             <Button onClick={()=> setSentGuestRequest(true)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
+                             <Button onClick={()=> setSentGuestRequest(!sentGuestRequest)} variant="contained" sx={{ background: '#FE2C55',  boxShadow: 'none', color: '#fff' , textTransform : 'capitalize'}} >
                                           Join as Guest
                             </Button>
 
@@ -1634,8 +1725,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     </Grid>
                 </Box> 
             </Grid>
+            {receiveHostRequest && <LiveInviteCard receiverInfo={receiverInfo} onAcceptHostRequest={onAcceptHostRequest} onDeclineHostRequest={onDeclineHostRequest} />}
+            {!receiveHostRequest &&  sentGuestRequest  && <GuestRequestCard joinAsGuest={joinAsGuest} />}
             {/* Right Sidebar */}
-            {showSidebar &&(
+            {!receiveHostRequest && !sentGuestRequest && showSidebar &&(
             <Grid item  sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
               <Box
                 sx={{
@@ -2873,7 +2966,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
             </Dialog>
            <RankingSettingsModal rankingClick={rankingClick} isShowRanking={isShowRanking} open={openRating} onClose={() => setOpenRating(false)} />
 
-            { sentGuestRequest  && <GuestRequestCard />}
+            
         </Box>
   );
 }

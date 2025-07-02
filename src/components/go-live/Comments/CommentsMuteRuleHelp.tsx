@@ -100,6 +100,7 @@ const MuteRulesHelp: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               backgroundColor: "#e0244d",
             },
           }}
+          onClick={onBack} 
         >
           Got it
         </Button>
