@@ -352,7 +352,7 @@ export default function PostLive() {
                                 </Box>
 
                                 {/* Top Left Badge */}
-                                <Box
+                                {/* <Box
                                     sx={{
 
                                         backgroundColor: "rgba(0,0,0,0.5)",
@@ -375,7 +375,7 @@ export default function PostLive() {
                                         </defs>
                                     </svg>
                                     Popular LIVE
-                                </Box>
+                                </Box> */}
                             </Box>
                             {/* Top Right Viewer Info */}
                             <Box sx={{ position: "absolute", top: 16, right: 0 }}>
@@ -745,13 +745,22 @@ export default function PostLive() {
                         {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                         {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} />}
                         {openSettings &&
-                            <SettingsPanel />
+                            <SettingsPanel customProps={{ mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers }} />
                         }
                         {openGiftsPanel && 
                         <GiftsPostLive customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
                         }
                         <Box >
-                            <GoLiveTogetherPanel />
+                            <GoLiveTogetherPanel
+                                post={selectedLiveVideo.details}
+                                onRemoveUser={() => {}}
+                                onAcceptJoinLiveSteam={() => {}}
+                                onRejecctLiveStreamRoom={() => {}}
+                                sendInviteLiveStreamUser={()=> {}}
+                                onToggleInvite={() => {}}
+                                isInvited={true}
+                                removeInviteLiveSteamUser={() => {}}
+                            />
                         </Box>
                     </Box> 
                 </div>

@@ -49,20 +49,21 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
+//phase 2
 // Settings data
 const settingsData = [
-  { title: 'Moderators', type: 'link', component: 'moderators'  as const },
-  { title: 'Practice mode', description: 'This pre-LIVE session is only visible to you.', type: 'link' },
+  // { title: 'Moderators', type: 'link', component: 'moderators'  as const },
+  // { title: 'Practice mode', description: 'This pre-LIVE session is only visible to you.', type: 'link' },
   { title: 'About me', description: 'Introduce yourself and your LIVE.', type: 'link', component: 'AboutMe'  as const },
-  { title: 'LIVE setup for client acquisition', type: 'link' },
-  { title: 'Multi-guest fun kit', description: 'Explore interactive features and playbooks for your multi-guest LIVE.', type: 'link' },
-  { title: 'Video quality', type: 'link' },
-  { title: 'Audience controls', description: 'This LIVE is limited to those aged 18 years and old..', type: 'switch', value: true },
-  { title: 'LIVE Gifts', type: 'switch', value: false },
-  { title: 'Gift Gallery', description: 'Enable Gift Gallery to allow viewers to light up the Gifts in your Gift Gallery and become title gifters during your LIVE.', type: 'switch', value: true },
-  { title: 'Rankings', type: 'link' },
+  // { title: 'LIVE setup for client acquisition', type: 'link' },
+  // { title: 'Multi-guest fun kit', description: 'Explore interactive features and playbooks for your multi-guest LIVE.', type: 'link' },
+  // { title: 'Video quality', type: 'link' },
+  // { title: 'Audience controls', description: 'This LIVE is limited to those aged 18 years and old..', type: 'switch', value: true },
+  // { title: 'LIVE Gifts', type: 'switch', value: false },
+  // { title: 'Gift Gallery', description: 'Enable Gift Gallery to allow viewers to light up the Gifts in your Gift Gallery and become title gifters during your LIVE.', type: 'switch', value: true },
+  // { title: 'Rankings', type: 'link' },
   { title: 'Comment settings', type: 'link', component: 'comments'  as const },
-  { title: 'Content disclosure', type: 'link' },
+  // { title: 'Content disclosure', type: 'link' },
   { title: 'Muted Accounts', description: 'These accounts are muted for the rest of the LIVE', type: 'link', component: 'MutedAccounts'  as const },
   { title: 'Blocked Accounts', type: 'link', component: 'BlockedAccounts'  as const },
 ];

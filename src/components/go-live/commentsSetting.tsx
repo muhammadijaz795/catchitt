@@ -51,11 +51,18 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 interface CommentsProps {
-  updateSettings: (id: string, settings: { allowComments?: boolean; showMostSent?: boolean }) => void;
+  updateSettings: (id: string, settings: { allowComments?: boolean; showMostSent?: boolean; filterComments?: any; blockedKeywords?: { keyword: string; blockSimilarVersion: boolean; }[] }) => void;
   onBack: () => void;
 }
 
 const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
+  // Wrap updateSettings to match the expected signature for CommentsMuteRules
+  const updateSettingsAsync = async (streamId: string | null, settings: any): Promise<void> => {
+    // If streamId is null, you may want to handle it differently
+    if (streamId) {
+      await Promise.resolve(updateSettings(streamId, settings));
+    }
+  };
   const [showFilterScreen, setShowFilterScreen] = useState(false);
   const [showBlockedKeywords, setShowBlockedKeywords] = useState(false); // NEW STATE
   const [allowComments, setAllowComments] = useState(true);
@@ -69,24 +76,19 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
   const roomDetails = useSelector((state: any) => state?.reducers?.roomDetails?.data);
   const commentSettings = roomDetails?.settings?.commentSettings;
 
-  useEffect(() => {
-    if (commentSettings) {
-      setAllowComments(commentSettings.allowComments ?? true);
-      setShowMostSent(commentSettings.showMostSentComments ?? true);
-    }
-  }, [commentSettings]);
+  // Removed invalid useEffect that returned JSX
 
 
   console.log('roomDetails in comments', roomDetails);
     if (showMuteRules) {
-      return <CommentsMuteRules onBack={() => setShowMuteRules(false)} updateSettings={updateSettings} streamId={id} />;
+      return <CommentsMuteRules onBack={() => setShowMuteRules(false)} updateSettings={updateSettingsAsync} streamId={id} />;
     }
     if (showStarComment) {
       return <StarComment onBack={() => setShowStarComment(false)} />;
     }
     // Show Filter Screen
     if (showFilterScreen) {
-      return <FilterComments onUpdate={(data) => updateSettings(id, { filterComments: data })} onBack={() => setShowFilterScreen(false)}  filterSettings={commentSettings?.filterComments || {
+      return <FilterComments onUpdate={(data) => updateSettings(id ?? '', { filterComments: data })} onBack={() => setShowFilterScreen(false)}  filterSettings={commentSettings?.filterComments || {
         spamComments: false,
         unkindComments: false,
         communityFlaggedComments: false,
@@ -100,16 +102,14 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
         {
           console.log('block keywords in parent..')
           console.log(blockedKeywords);
-          updateSettings(id, {
-          commentSettings: {
+          updateSettings(id ?? '', {
             blockedKeywords: blockedKeywords,
-          },
-        })
+          })
       }
       } />;
   }
 if (showMutedAccounts) {
-    return <MutedAccounts onBack={() => setShowMutedAccounts(false)} />;
+    return <MutedAccounts onBack={() => setShowMutedAccounts(false)} customProps={{}} />;
   }
   return (
     <Box
@@ -159,7 +159,7 @@ if (showMutedAccounts) {
               onChange={() => {
                 const newAllowComments = !allowComments;
                 setAllowComments(newAllowComments);
-                updateSettings(id, { allowComments: newAllowComments });
+                updateSettings(id ?? '', { allowComments: newAllowComments });
               }}
             />
           </ListItemSecondaryAction>
@@ -183,14 +183,14 @@ if (showMutedAccounts) {
           </ListItemSecondaryAction>
         </ListItem>
 
-        <ListItem button onClick={() => setShowStarComment(true)}>
+        {/* <ListItem button onClick={() => setShowStarComment(true)}>
           <ListItemText primary="Star Comment" />
           <ListItemSecondaryAction>
             <IconButton edge="end">
               <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
             </IconButton>
           </ListItemSecondaryAction>
-        </ListItem>
+        </ListItem> */}
 
         <ListItem>
           <ListItemText primary="Show the most sent comment" />
@@ -201,7 +201,7 @@ if (showMutedAccounts) {
               onChange={() => {
                 const newShowMostSent = !showMostSent;
                 setShowMostSent(newShowMostSent);
-                updateSettings(id, { showMostSent: newShowMostSent });
+                updateSettings(id ?? '', { showMostSent: newShowMostSent });
               }}
             />
           </ListItemSecondaryAction>
@@ -213,14 +213,14 @@ if (showMutedAccounts) {
           </Typography>
         </Box>
 
-        <ListItem button >
+        {/* <ListItem button >
           <ListItemText primary="Mute duration" secondary="Entire LIVE" />
           <ListItemSecondaryAction>
             <IconButton edge="end">
               <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
             </IconButton>
           </ListItemSecondaryAction>
-        </ListItem>
+        </ListItem> */}
 
         <ListItem button onClick={() => setShowMutedAccounts(true)}>
           <ListItemText primary="Blocked Accounts"  />

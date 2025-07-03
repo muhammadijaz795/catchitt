@@ -3,7 +3,11 @@ import { Box, Typography, Radio, RadioGroup, FormControlLabel, IconButton } from
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
-const LiveStatusSettings = ({ onBack }) => {
+interface LiveStatusSettingsProps {
+  onBack: () => void;
+}
+
+const LiveStatusSettings = ({ onBack }: LiveStatusSettingsProps) => {
   const [status, setStatus] = useState("hidden");
 
 

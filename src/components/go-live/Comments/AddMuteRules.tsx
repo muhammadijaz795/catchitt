@@ -25,9 +25,11 @@ const durations = [
   "1 minute",
   "5 minute",
   "Entire LIVE",
-];
+] as const;
 
-const durationMap = {
+type DurationKey = typeof durations[number];
+
+const durationMap: Record<DurationKey, number> = {
   "5 seconds": 5,
   "30 seconds": 30,
   "1 minute": 60,
@@ -73,17 +75,17 @@ interface AddMuteRulesCommentProps {
   setShowAddMuteRule: (val: boolean) => void;
   updateSettings: (streamId: string | null, settings: any) => Promise<void>;
 }
-
 const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
   onBack,
   tempRule,
   setTempRule,
+  muteRules,
   setMuteRules,
   streamId,
   setShowAddMuteRule,
   updateSettings
 }) => {
-  const [selected, setSelected] = useState("Entire LIVE");
+  const [selected, setSelected] = useState<DurationKey>("Entire LIVE");
   const [open, setOpen] = useState(false);
   const [showAddMuteButton,setShowAddMuteButton] = useState(false)
   const [comment, setComment] = useState("");
@@ -91,7 +93,7 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
   const [showNewAddMuteButton, setShowNewAddMuteButton] = useState(false);
 
 
-  const handleSelect = (value: string) => {
+  const handleSelect = (value: DurationKey) => {
     setSelected(value);
     setOpen(false);
   };
@@ -103,7 +105,16 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
 
     if (showAddMuteButton) {
     // return <AddMuteButton onBack={() => setShowAddMuteButton(false)} />;
-     return <UnMuteButton onBack={() => setShowAddMuteButton(false)} />;
+     return (
+       <UnMuteButton
+         user={null} // Replace null with the appropriate user object if available
+         onBack={() => setShowAddMuteButton(false)}
+         onConfirm={() => {
+           setShowAddMuteButton(false);
+           // Add any additional logic needed on confirm
+         }}
+       />
+     );
   }
 
   if (showNewAddMuteButton) {
@@ -112,11 +123,21 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
         onBack={() => setShowNewAddMuteButton(false)}
         onConfirm={async () => {
           try {
+            // const newRule = { ...tempRule, duration: durationMap[selected] };
+            // setMuteRules(prev => [...prev, newRule]);
+            // const response = await updateSettings(streamId, { muteRules: [newRule] });
+            // setTempRule({ comment: '', duration: 0 }); // Reset
+            // setShowAddMuteRule(false);
+
             const newRule = { ...tempRule, duration: durationMap[selected] };
-            const response = await updateSettings(streamId, { muteRules: [newRule] }); // <- call API
-            setMuteRules(prev => [...prev, newRule]);
-            setTempRule({ comment: '', duration: 0 }); // Reset
-            setShowAddMuteRule(false);
+            const updatedRules = [...muteRules, newRule]; // Combine previous and new rules
+
+            setMuteRules(updatedRules); // Update state
+            const response = await updateSettings(streamId, { muteRules: updatedRules }); // Send all rules
+
+            setTempRule({ comment: '', duration: 0 }); // Reset input
+            setShowAddMuteRule(false); // Hide form
+
           } catch (err) {
             console.error("Failed to update settings:", err);
           }

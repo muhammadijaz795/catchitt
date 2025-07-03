@@ -46,7 +46,7 @@ const BlockedKeywords: React.FC<{
   }
 
   if (showFAQ) {
-    return <FaqScreen onBack={() => setShowFAQ(false)} />;
+    return <FaqScreen onClose={() => setShowFAQ(false)} />;
   }
 
   return (

@@ -189,7 +189,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
     const [inSuceedCase, setInSuceedCase] = useState(false);
     const API_KEY = process.env.VITE_API_URL;
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
-    const authUser = JSON.parse(localStorage.getItem('profile')) || null;
+    const authUser = JSON.parse(localStorage.getItem('profile') || '{}') || null;
 
     const [uploadedFile, setUploadedFile] = useState<string>('');
     const [openUploadPic, setOpenUploadPic] = useState(false);
@@ -341,7 +341,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
         };
 
         console.log('here.. send message', messageData);
-        socket.emit('sendMessageToliveStreamRoom', messageData, (response) => {
+        socket.emit('sendMessageToliveStreamRoom', messageData, (response:any) => {
           console.log('Callback Response:', response);
           if (!response) {
             console.warn('No response received from server');
@@ -813,7 +813,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         // let newAddUserObject = JSON.stringify(addUserObject);
 
           const profileInfo1 = localStorage.getItem('profile');
-          const profileParsed = JSON.parse(profileInfo1);
+          const profileParsed = JSON.parse(profileInfo1 || '{}');
            let addUserObject = { userId: profileParsed?._id || '', accessToken: token };
           // console.log('addUserObject',addUserObject)
           let newAddUserObject = JSON.stringify(addUserObject);
@@ -1819,7 +1819,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     </Grid>
                 </Box> 
             </Grid>
-            {receiveHostRequest && <LiveInviteCard receiverInfo={receiverInfo} onAcceptHostRequest={onAcceptHostRequest} onDeclineHostRequest={onDeclineHostRequest} />}
+            {receiveHostRequest && <LiveInviteCard receiverInfo={receiverInfo ?? {}} onAcceptHostRequest={onAcceptHostRequest} onDeclineHostRequest={onDeclineHostRequest} />}
             {!receiveHostRequest &&  sentGuestRequest  && <GuestRequestCard joinAsGuest={joinAsGuest} />}
             {/* Right Sidebar */}
             {!receiveHostRequest && !sentGuestRequest && showSidebar &&(

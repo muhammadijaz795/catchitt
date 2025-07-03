@@ -20,7 +20,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from "@mui/icons-material/Edit";
 import CircleIcon from "@mui/icons-material/Circle";
-
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import LiveGoalFAQ from "./GoLiveFaq";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -85,6 +87,7 @@ const [goalDescription, setGoalDescription] = useState(
   const [selectedGifts, setSelectedGifts] = useState<any>([]);
   const [selectedGift, setSelectedGift] = useState<any>({});
   const [selectedGiftCount, setSelectedGiftCount] = useState<any>(1);
+  const [showFaqs, setShowFaqs] = useState(false)
 
   function loadGifts()
   {
@@ -120,7 +123,7 @@ const [goalDescription, setGoalDescription] = useState(
 
   return (
     <>
-    {!showLiveGoalAutomatically  && <>
+    {!showFaqs && !showLiveGoalAutomatically  && <>
      {!showAddGiftCard ? (
     <Box
       sx={{
@@ -132,8 +135,14 @@ const [goalDescription, setGoalDescription] = useState(
         mx: 'auto',
       }}
     >
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <Typography variant="h6">Edit your LIVE goal</Typography>
+      <Box textAlign={'left'} display="flex" alignItems="center" justifyContent="space-between" mb={3} >
+           <IconButton size="small" sx={{color:'#FFF'}}>
+            <ArrowBackIosNewIcon fontSize="small" />
+          </IconButton>
+         <Typography variant="h6">Edit your LIVE goal</Typography>
+         <IconButton sx={{color:'#FFF'}} onClick={() => {setShowFaqs(true);}}>
+          <HelpOutlineIcon />
+        </IconButton>
       </Box>
 
       <Typography variant="body2" color="gray" mt={1} mb={2}>
@@ -326,7 +335,7 @@ const [goalDescription, setGoalDescription] = useState(
       }
     </Card>
      )} </> }
-    {showLiveGoalAutomatically && <Card
+    {!showFaqs && showLiveGoalAutomatically && <Card
       sx={{
         width: 360,
         bgcolor: "#1e1e1e",
@@ -459,6 +468,8 @@ const [goalDescription, setGoalDescription] = useState(
       </Button>
       </Card>
     }
+
+    {showFaqs && <LiveGoalFAQ onBack={() => {setShowFaqs(!showFaqs)}} /> }
     </>
   );
 };

@@ -37,7 +37,6 @@ import { SideNavBar } from "./goLiveSidebar";
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ExploreFilters from "./ExploreFilters";
-import LiveGoalFAQ from "./GoLiveFaq";
 import SettingsPanel from "./SettingPreLive";
 import { useNavigate } from 'react-router-dom';
 
@@ -460,7 +459,11 @@ const Promote = () => (
     const [showTopics, setShowTopics] = useState(false);
 
   const toggleSettings = () => {
-    setOpenSettings((prev) => !prev);
+    if(openSettings){
+        setShowEditLiveGoal(false);
+        setShowTopics(false)   
+    }
+    setOpenSettings((prev) => !prev); 
   };
 
   return (
@@ -514,12 +517,13 @@ const Promote = () => (
                         <Typography fontSize={12} lineHeight={1} fontWeight={500}>
                         {profileDetails?.details?.name }
                         </Typography>
-                        <span className="flex text-xs">
+                        {/* phase 2 */}
+                        {/* <span className="flex text-xs">
                             <svg className="pr-1" width="11" height="10" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.6853 3.72379C12.6493 2.48236 12.0756 1.46198 11.2639 0.83817C10.2199 0.0349199 8.78046 -0.112455 7.58402 0.76392C7.18915 1.05417 6.81958 1.45579 6.50008 1.98342C6.18058 1.45579 5.81158 1.05417 5.41615 0.764482C4.21971 -0.112455 2.78083 0.0349198 1.73627 0.838732C0.924021 1.46254 0.350833 2.48292 0.314833 3.72436C0.295146 4.38361 0.396396 5.11936 0.758083 5.86354C1.32621 7.03186 3.99527 9.62948 6.47927 11.8727L6.49896 11.8941L6.50008 11.893L6.50121 11.8941L6.52146 11.8727C9.0049 9.63004 11.6734 7.03242 12.2421 5.86354C12.6043 5.11936 12.7045 4.38304 12.6853 3.72379Z" fill="white"/>
                             </svg>
                             {0}
-                        </span>
+                        </span> */}
                     </Box>
 
                     <Box display="flex" alignItems="center" color="orange" sx={{
@@ -538,7 +542,7 @@ const Promote = () => (
                 </Box>
 
                 {/* Top Left Badge */}
-                <Box
+                {/* <Box
                     sx={{
                     
                     backgroundColor: "rgba(0,0,0,0.5)",
@@ -561,10 +565,11 @@ const Promote = () => (
                     </defs>
                     </svg>
                     Popular LIVE
+                </Box> */}
                 </Box>
-                </Box>
+                {/* phase 2 */}
                 {/* Top Right Viewer Info */}
-                <Box sx={{ position: "absolute", top: 16, right: 0 }}>
+                {/* <Box sx={{ position: "absolute", top: 16, right: 0 }}>
                     <Box sx={{
                         display: "flex",
                         gap: 1,
@@ -628,7 +633,7 @@ const Promote = () => (
                         <ChevronRight />
 
                     </Box>
-                </Box>
+                </Box> */}
                 {/* Bottom Control Bar */}
                 {!showMore && (
                 <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
@@ -641,11 +646,11 @@ const Promote = () => (
                     >
                         {/* FIRST ROW - changes depending on expanded */}
                         <Box display="flex" justifyContent="space-between">
-                        <ControlItem onClick={toggleMore} icon={<img style={{ width: 24 }} src={beautify} alt="Beautify" />} label="Beautify" />
-                        <ControlItem onClick={toggleExplore} icon={<SentimentSatisfiedIcon />} label="Effects" />
+                        {/* <ControlItem onClick={toggleMore} icon={<img style={{ width: 24 }} src={beautify} alt="Beautify" />} label="Beautify" />
+                        <ControlItem onClick={toggleExplore} icon={<SentimentSatisfiedIcon />} label="Effects" /> */}
                         <ControlItem onClick={toggleSettings} icon={<SettingsIcon />} label="Settings" />
-
-                        {expanded ? (
+                        {/* Phase 2 */}
+                        {/* {expanded ? (
                             <ControlItem icon={<Activity />} label="Activities" />
                         ) : (
                             <ControlItem
@@ -670,7 +675,7 @@ const Promote = () => (
                             }
                             label="More"
                             />
-                        )}
+                        )} */}
                         </Box>
 
                         {/* SECOND ROW (only shown when expanded) */}
@@ -907,7 +912,7 @@ const Promote = () => (
                                 </svg>
                             Edit your LIVE Goal
                             </Button>
-                            <Button
+                            {/* <Button
                             fullWidth
                             
                             sx={{
@@ -927,55 +932,16 @@ const Promote = () => (
                                 <path d="M15.944 10.816L15.416 13.28H17.448V15.28H14.984L14.408 18H12.28L12.856 15.28H9.944L9.368 18H7.256L7.832 15.28H5.416V13.28H8.264L8.792 10.816H6.392V8.816H9.224L9.784 6.16H11.896L11.336 8.816H14.248L14.808 6.16H16.936L16.376 8.816H18.424V10.816H15.944ZM13.816 10.816H10.904L10.376 13.28H13.288L13.816 10.816Z" fill="white"/>
                                 </svg>
                             Faqs
-                            </Button>
-
-                            {/* <div>
-                                        <Box display="flex" alignItems="center" mb={3} gap={1}>
-                                          <IconButton
-                                            sx={{ backgroundColor: 'white', boxShadow: '0px 0px 9px 0px #e4e6eb' }}
-                                            onClick={() => scroll('left')}
-                                          >
-                                            <ChevronLeft />
-                                          </IconButton>
-                                          <Box
-                                            ref={scrollRef}
-                                            sx={{
-                                              display: 'flex',
-                                              overflowX: 'auto',
-                                              gap: 1,
-                                              scrollbarWidth: 'none',
-                                              '&::-webkit-scrollbar': { display: 'none' },
-                                            }}
-                                          >
-                                            {postCategories.items.map((item: any) => (
-                                              <Chip
-                                                sx={{ border: 'none', borderRadius: '8px', backgroundColor: '#1618230F', fontSize: '14px' }}
-                                         s       key={item._id}
-                                                label={item.name}
-                                                clickable
-                                                variant="outlined"
-                                                onClick={() => addToRoom(item)}
-                                              />
-                                            ))}
-                                          </Box>
-                                          <IconButton
-                                            sx={{ backgroundColor: 'white', boxShadow: '0px 0px 9px 0px #e4e6eb' }}
-                                            onClick={() => scroll('right')}
-                                          >
-                                            <ChevronRight />
-                                          </IconButton>
-                                        </Box>
-                                      </div> */}
-
+                            </Button> */}
                         </CardContent>
                     </Card> 
                     }
-                    {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
-                    {showFaqs && <LiveGoalFAQ onBack={() => setShowFaqs(!showFaqs)} /> }
+                    {!openSettings && showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
+                    
                     {openSettings &&
                         <SettingsPanel profileDetails={profileDetails} customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
                     }
-                    {showTopics &&
+                    {!openSettings && showTopics &&
                         <AddTopic postCategories={postCategories.items} addToRoom={addToRoom} onBack={() => setShowTopics(!showTopics)}  />
                     }
 

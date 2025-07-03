@@ -13,7 +13,7 @@ import {
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { styled } from '@mui/material/styles';
-import CommentsSetting from './CommentsSetting'
+import CommentsSetting from './commentsSetting';
 import axios from 'axios';
 
 import MutedAccounts from './Comments/MutedAccounts';
@@ -148,6 +148,9 @@ const updateSettings = async (
     };
     blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
     muteRules?: { comment: string; duration: number }[];
+    commentSettings?: {
+      blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
+    };
 
   } = {}
 ) => {
@@ -190,10 +193,9 @@ const updateSettings = async (
     });
   }
 
-  // Set blockedKeywords
-  if ( settings.commentSettings && Array.isArray(settings.commentSettings.blockedKeywords)) {
+  if (settings.blockedKeywords) {
     data.commentSettings = data.commentSettings || {};
-    data.commentSettings.blockedKeywords = settings.commentSettings.blockedKeywords;
+    data.commentSettings.blockedKeywords = settings.blockedKeywords;
   }
 
   if (settings.muteRules) {
@@ -290,8 +292,8 @@ const [searchParams] = useSearchParams();
         {settingsData.map((item, index) => (
           <React.Fragment key={index}>
             <ListItem
-                button={item.type === 'link'}
-                onClick={() => setActiveView(item.view)} // 👈 Use function from object
+                // button={item.type === 'link'}
+                onClick={item.type === 'link' ? () => setActiveView(item.view) : undefined}
                 secondaryAction={
                   item.type === 'switch' ? (
                     <CustomSwitch edge="end" checked={item.value} />

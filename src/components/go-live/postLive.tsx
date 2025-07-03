@@ -51,7 +51,7 @@ import EnhanceIcon from '../../assets/postLive/Enhance.png'
 import MoreIcon from '../../assets/postLive/More.png'
 import AvatarPostLive from '../../assets/postLive/Avatar.png'
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import SidebarChat from './SidebarChat';
+import SidebarChat from './SidebarChat.jsx';
 import AddLiveGoalModal from "./AddLiveGoalPost";
 import {
   fetchRoomDetailsStart,
@@ -69,12 +69,20 @@ export default function PostLive() {
  
     const [searchParams] = useSearchParams();
     const streamId = searchParams.get('streamId');
-    const [selectedLiveVideo, setSelectedLiveVideo] = useState(
-        {
-          details: null,
-          isLoading: false,
-        }
-      );
+    type LiveVideoDetails = {
+        id?: string;
+        consumers?: Array<{ id: string; name?: string; photo?: string }>;
+        topViewersGifts?: any;
+        [key: string]: any;
+    };
+    
+    const [selectedLiveVideo, setSelectedLiveVideo] = useState<{
+        details: LiveVideoDetails | null;
+        isLoading: boolean;
+    }>({
+        details: null,
+        isLoading: false,
+    });
 
     const filters = new Array(24).fill('').map((_, i) => ({
         id: i,
@@ -103,7 +111,7 @@ export default function PostLive() {
     const SERVER_URL = 'https://prodapi.seezitt.com';
     // const [isConnected, setIsConnected] = useState(false);
     const [profileData, setProfileData] = useState<any>([]);
-    const authUser = JSON.parse(localStorage.getItem('profile')) || null;
+    const authUser = JSON.parse(localStorage.getItem('profile') || '{}') || null;
     const [showGoLiveTogetherPanel, setShowGoLiveTogetherPanel] = useState(false);
          const API_KEY = process.env.VITE_API_URL;
         const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
@@ -688,7 +696,7 @@ export default function PostLive() {
                                 </Box>
 
                                 {/* Top Left Badge */}
-                                <Box
+                                {/* <Box
                                     sx={{
 
                                         backgroundColor: "rgba(0,0,0,0.5)",
@@ -711,7 +719,7 @@ export default function PostLive() {
                                         </defs>
                                     </svg>
                                     Popular LIVE
-                                </Box>
+                                </Box> */}
                             </Box>
                             {/* Top Right Viewer Info */}
                             <Box sx={{ position: "absolute", top: 16, right: 0 }}>
@@ -927,7 +935,7 @@ export default function PostLive() {
                             }}
                         >
                             <Typography variant="h6" sx={{ fontWeight: 600, whiteSpace: 'nowrap', color: '#000' }}>
-                                Chillin' with the Crew – Family Edition
+                               {selectedLiveVideo?.details?.streamTitle}
                             </Typography>
                             <Box
                                 sx={{
@@ -937,8 +945,8 @@ export default function PostLive() {
                                 }}
                             >
                                 <Avatar
-                                    alt="MBY"
-                                    src={AvatarPostLive}
+                                    alt={selectedLiveVideo?.details?.owner?.name}
+                                    src={selectedLiveVideo?.details?.owner?.photo || AvatarPostLive}
                                     sx={{ width: 32, height: 32, border: '1px solid white' }}
                                 />
                                 <Box
@@ -949,11 +957,11 @@ export default function PostLive() {
                                     }}
                                 >
                                     <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1, color: '#000' }}>
-                                        MBY
+                                        {selectedLiveVideo?.details?.owner?.name}
                                     </Typography>
-                                    <Typography variant="caption" sx={{ fontSize: '0.7rem', color: '#000' }}>
+                                    {/* <Typography variant="caption" sx={{ fontSize: '0.7rem', color: '#000' }}>
                                         1.9K
-                                    </Typography>
+                                    </Typography> */}
                                 </Box>
                             </Box>
                         </Box>
@@ -1090,7 +1098,7 @@ export default function PostLive() {
                         {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                         {showFaqs && <LiveGoalFAQ onBack={() => {setShowFaqs(!showFaqs); setShowChatSideBar(true)}} />}
                         {openSettings &&
-                            <SettingsPanel />
+                            <SettingsPanel customProps={{ mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers }} />
                         }
                         {openGiftsPanel && 
                         <GiftsPostLive customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
@@ -1100,7 +1108,7 @@ export default function PostLive() {
                             liveGoals={liveGoals}
                             profileDetails={ profileDetails }
                             onEdit={() => {setOpenAddLiveGoal(false); setShowEditLiveGoal(true)}}
-                            onLiveGoalAdded={(goals) => setOpenAddLiveGoal(false)}
+                            onLiveGoalAdded={(goals:any) => setOpenAddLiveGoal(false)}
                             onPinGoal={(goal: any) => setPinLiveGoal(goal)}
                         />
                         }
