@@ -346,7 +346,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
 
   return (
     // <Grid item  sx={{ zIndex:'9999', position: 'absolute', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
-      <Box sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', mx: 'auto', right: 0, top: 0, p:0 }}>
+      <Box sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '360px', bgcolor: '#fafafa', mx: 'auto', right: 0, top: 0, p:0 }}>
                   <Box
                     sx={{
                         bgcolor: '#fff',

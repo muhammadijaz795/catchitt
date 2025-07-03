@@ -61,13 +61,13 @@ const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetail
     );
   }
   return (
-    <Box sx={{ maxWidth: 360, mx: 'auto',  position: 'fixed', right: 0, top: 0, height: '100vh', bgcolor: '#fff', zIndex: 2 }}>
+    <Box sx={{ width: 360, mx: 'auto',  position: 'fixed', right: 0, top: 0, height: '100vh', bgcolor: '#fff', zIndex: 2, }}>
       {/* Header */}
-      <Box textAlign={'left'} display="flex" alignItems="center" justifyContent="space-between" mb={3} >
+      <Box textAlign={'left'} display="flex" alignItems="center" justifyContent="space-between" mb={3} borderBottom={'1px solid #eee'} py={0.5}>
            <IconButton onClick={onBack} size="small">
             <ArrowBackIosNewIcon fontSize="small" />
           </IconButton>
-          <Typography variant="h6" fontWeight="bold" ml={1}>
+          <Typography variant="h6" fontWeight="500" ml={1}>
             About me
           </Typography>
          <IconButton onClick={() => setShowFaqs(true)}>
