@@ -11,7 +11,11 @@ import TopViewer1 from '../../assets/postLive/top-viewer-faq-1.png'
 import TopViewer2 from '../../assets/postLive/top-viewer-faq-2.png'
 import TopViewer3 from '../../assets/postLive/top-viewer-faq-3.png'
 
-const StarCommentFaqs = ({ onBack }) => {
+interface StarCommentFaqsProps {
+    onBack: () => void;
+}
+
+const StarCommentFaqs = ({ onBack }: StarCommentFaqsProps) => {
     return (
         <Box
             sx={{

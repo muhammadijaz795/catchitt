@@ -51,7 +51,7 @@ import EnhanceIcon from '../../assets/postLive/Enhance.png'
 import MoreIcon from '../../assets/postLive/More.png'
 import AvatarPostLive from '../../assets/postLive/Avatar.png'
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import SidebarChat from './SidebarChat';
+import SidebarChat from './SidebarChat.jsx';
 import AddLiveGoalModal from "./AddLiveGoalPost";
 import {
   fetchRoomDetailsStart,
@@ -1100,7 +1100,7 @@ export default function PostLive() {
                             liveGoals={liveGoals}
                             profileDetails={ profileDetails }
                             onEdit={() => {setOpenAddLiveGoal(false); setShowEditLiveGoal(true)}}
-                            onLiveGoalAdded={(goals) => setOpenAddLiveGoal(false)}
+                            onLiveGoalAdded={(goals:any) => setOpenAddLiveGoal(false)}
                             onPinGoal={(goal: any) => setPinLiveGoal(goal)}
                         />
                         }

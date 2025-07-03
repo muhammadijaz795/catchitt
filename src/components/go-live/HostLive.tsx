@@ -745,13 +745,20 @@ export default function PostLive() {
                         {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                         {showFaqs && <LiveGoalFAQ onBack={() => console.log('Back pressed')} />}
                         {openSettings &&
-                            <SettingsPanel />
+                            <SettingsPanel customProps={{ mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers }} />
                         }
                         {openGiftsPanel && 
                         <GiftsPostLive customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
                         }
                         <Box >
-                            <GoLiveTogetherPanel />
+                            <GoLiveTogetherPanel
+                                post={selectedLiveVideo.details}
+                                onRemoveUser={() => {}}
+                                onAcceptJoinLiveSteam={() => {}}
+                                onRejecctLiveStreamRoom={() => {}}
+                                onInviteUser={() => {}}
+                                onSendRequest={() => {}}
+                            />
                         </Box>
                     </Box> 
                 </div>

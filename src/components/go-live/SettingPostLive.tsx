@@ -13,7 +13,7 @@ import {
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { styled } from '@mui/material/styles';
-import CommentsSetting from './CommentsSetting'
+import CommentsSetting from './commentsSetting';
 import axios from 'axios';
 
 import MutedAccounts from './Comments/MutedAccounts';
@@ -148,6 +148,9 @@ const updateSettings = async (
     };
     blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
     muteRules?: { comment: string; duration: number }[];
+    commentSettings?: {
+      blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
+    };
 
   } = {}
 ) => {

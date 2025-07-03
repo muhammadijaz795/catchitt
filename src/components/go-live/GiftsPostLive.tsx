@@ -190,7 +190,7 @@ const GiftsPanel = ({customProps}: {customProps: any}) => {
   // 'list' for the main list, or the ID of the component to show
   const [activePanel, setActivePanel] = useState('list'); // Default to showing the list
 
-  const handleItemClick = (itemId) => {
+  const handleItemClick = (itemId:any) => {
     // Determine which panel to show based on the clicked item's ID
     if (itemId === 'settings') {
       setActivePanel('settings');

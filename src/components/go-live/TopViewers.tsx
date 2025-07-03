@@ -8,7 +8,11 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import TopViewer1 from '../../assets/postLive/top-viewer-faq-1.png'
 
-const TopViewers = ({ onBack }) => {
+interface TopViewersProps {
+    onBack: () => void;
+}
+
+const TopViewers = ({ onBack }: TopViewersProps) => {
     return (
         <Box
             sx={{

@@ -350,7 +350,7 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, 
                   "&:hover": { backgroundColor: "#ff1e52" },
                   textTransform: "none",
                 }}
-                onClick={() => { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item) => item._id !== selectedGift._id), { ...selectedGift, count: selectedGiftCount }]); setSelectedGift({}); setSelectedGiftCount(1); }}
+                onClick={() => { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item:any) => item._id !== selectedGift._id), { ...selectedGift, count: selectedGiftCount }]); setSelectedGift({}); setSelectedGiftCount(1); }}
               >
                 Confirm
               </Button>

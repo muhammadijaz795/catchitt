@@ -12,7 +12,11 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Mangnifier from '../../assets/postLive/Magnifier.svg';
 
 
-const BlockedKeywordsFAQs = ({ onClose }) => {
+interface BlockedKeywordsFAQsProps {
+    onClose: () => void;
+}
+
+const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
     return (
         <Box sx={{
             maxWidth: 400,

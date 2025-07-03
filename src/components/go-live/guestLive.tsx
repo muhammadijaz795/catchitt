@@ -2834,7 +2834,15 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
             )}
             {/* <GuestRequestCard />
              */}
-             <LiveInviteCard />
+             <LiveInviteCard
+               receiverInfo={selectedLiveVideo?.details?.owner}
+               onAcceptHostRequest={() => {
+                 // TODO: implement accept host request logic
+               }}
+               onDeclineHostRequest={() => {
+                 // TODO: implement decline host request logic
+               }}
+             />
           </Grid>
 
            {/* <Modal open={inSuceedCase}>

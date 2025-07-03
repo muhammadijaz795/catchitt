@@ -164,7 +164,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
 
             <Grid container spacing={1}>
               {[{ icon: <FavoriteIcon />, label: 'Heart', coins: 10 }, { icon: <LocalFloristIcon />, label: 'Rose', coins: 1 }].map(
-                (gift, i) => (
+                (gift:any, i:any) => (
                   <Grid item xs={6} key={i}>
                     <Card
                       sx={{
@@ -355,7 +355,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
                   "&:hover": { backgroundColor: "#ff1e52" },
                   textTransform: "none",
                 }}
-                onClick={() => { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item) => item._id !== selectedGift._id), { ...selectedGift, count: selectedGiftCount }]); setSelectedGift({}); setSelectedGiftCount(1); }}
+                onClick={() => { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item:any) => item._id !== selectedGift._id), { ...selectedGift, count: selectedGiftCount }]); setSelectedGift({}); setSelectedGiftCount(1); }}
               >
                 Confirm
               </Button>
@@ -409,7 +409,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
         {/* Grid of gifts */}
         <Grid container spacing={1}>
           {selectedGifts.map(
-            (gift, i) => (
+            (gift:any, i:any) => (
               <Grid item xs={12} key={i}>
                 <Card
                   sx={{
