@@ -81,6 +81,7 @@ export default function LiveStreamUI() {
 
     const [liveGoals, setLiveGoals] = useState<any>([]);
     const [addLiveGoalAutomatically, setAddLiveGoalAutomatically] = useState<any>(true);
+    const [liveStreamSettings, setLiveStreamSettings] = useState<any>({});
     const [mutedUsers, setMutedUsers] = useState<any>(
         {
             items: [],
@@ -376,20 +377,25 @@ const Promote = () => (
     }, [currentTopicId, currentTopicName]);
 
     const updateStream = async () => {
-        console.log('updateStream...', currentTopicId, currentTopicName);
         const defaultPayload = {
             streamTitle: "",
             topicId: "",
             topicName: "",
             allowGifts: true,
-            allowComments: true,
+            allowComments: liveStreamSettings?.allowComments,
             coverImage: "",
-            liveGoal: liveGoals.map((gift: any) => ({ giftId: gift._id, giftName: gift.name, giftImageUrl: gift.imageUrl, giftCoins: gift.price, count: gift.count })),
+            liveGoal: liveGoals.map((gift: any) => ({
+            giftId: gift._id,
+            giftName: gift.name,
+            giftImageUrl: gift.imageUrl,
+            giftCoins: gift.price,
+            count: gift.count
+            })),
             addLiveGoalAutomatically,
             hearYourVoice: true,
             moderators: [],
             commentSettings: {
-            allowComments: true,
+            allowComments: liveStreamSettings?.allowComments,
             duration: 0,
             filterComments: {
                 spamComments: true,
@@ -397,13 +403,8 @@ const Promote = () => (
                 communityFlaggedComments: true,
                 showInFeed: true
             },
-            showMostSentComments: true,
-            blockedKeyworkds: [
-                {
-                keyword: "",
-                blockSimilarVersion: true
-                }
-            ]
+            showMostSentComments: liveStreamSettings?.showMostSent,
+            blockedKeyworkds:  liveStreamSettings?.blockedKeywords
             },
             muteRules: [
             {
@@ -415,7 +416,6 @@ const Promote = () => (
             blockedUsers: blockedUsers.items,
         };
 
-        // Override values
         const finalPayload = {
             ...defaultPayload,
             ...(liveTitle && { streamTitle: liveTitle }),
@@ -423,35 +423,32 @@ const Promote = () => (
             ...(currentTopicId && { topicId: currentTopicId }),
             ...(fileUrl && { coverImage: fileUrl }),
         };
-        
 
-        const config = {
-            headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-            },
-        };
+        // finalPayload.allowComments = liveStreamSettings?.allowComments;
+        // console.log('....');
+        // console.log(liveStreamSettings);
+        // console.log('final payload in prelive...')
+        // console.log(finalPayload);
+        // return false;
 
         try {
-            const response = await axios.post(
-                `${API_KEY}/live-stream/create-new-stream`,
-                finalPayload,
-                config
-            );
-            if(response.data.status == 200) {
-                const streamId = response.data.data.id;
-                navigate('/postlive?streamId=' + streamId+'&stream=start')
+            const response = await axios.post(`${API_KEY}/live-stream/create-new-stream`, finalPayload, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            });
+
+            if (response.data.status === 200) {
+            const streamId = response.data.data.id;
+            navigate('/postlive?streamId=' + streamId + '&stream=start');
             }
             console.log("API response:", response.data);
         } catch (error) {
-            if (typeof error === "object" && error !== null && "response" in error) {
-                // @ts-ignore
-                console.error("Upload failed:", (error as any).response?.data || (error as any).message);
-            } else {
-                console.error("Upload failed:", error);
-            }
+            // console.error("Upload failed:", error?.response?.data || error.message);
         }
-    };
+        };
+
 
 
 
@@ -939,7 +936,7 @@ const Promote = () => (
                     {!openSettings && showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                     
                     {openSettings &&
-                        <SettingsPanel profileDetails={profileDetails} customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
+                        <SettingsPanel profileDetails={profileDetails} onSettingsChange={setLiveStreamSettings} customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
                     }
                     {!openSettings && showTopics &&
                         <AddTopic postCategories={postCategories.items} addToRoom={addToRoom} onBack={() => setShowTopics(!showTopics)}  />

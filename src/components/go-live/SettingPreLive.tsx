@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -70,69 +70,136 @@ const settingsData = [
 
 interface SettingsPanelProps {
   profileDetails: any;
-  customProps: any
+  customProps: any;
+  onSettingsChange: (settings: any) => void;
 }
 
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails, customProps }) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails, customProps, onSettingsChange  }) => {
   const [activeView, setActiveView] = useState<null | 'moderators' | 'comments' | 'AboutMe' | 'MutedAccounts' | 'BlockedAccounts'>(null);
 
+  const [allowComments, setAllowComments] = useState(true);
+  const [showMostSent, setShowMostSent] = useState(true);
+  const [blockedKeywords, setBlockedKeywords] = useState<{ keyword: string; blockSimilarVersion: boolean }[]>([]);
+  const updateSettings = async (
+    id: string,
+    settings: {
+      allowComments?: boolean;
+      showMostSent?: boolean;
+      filterComments?: {
+        spamComments?: boolean;
+        unkindComments?: boolean;
+        communityFlaggedComments?: boolean;
+        showInFeed?: boolean;
+      };
+      blockedKeywords?: { keyword: string; blockSimilarVersion: boolean }[];
+      muteRules?: { comment: string; duration: number }[];
+    } = {}
+  ) => {
+    const data: any = {};
 
-const updateSettings = async (
-  id: string,
-  settings: { allowComments?: boolean; showMostSent?: boolean } = {}
-) => {
-  // Destructure incoming settings with default values
-  const { allowComments = true, showMostSent = true } = settings;
+    if (typeof settings.allowComments === "boolean") {
+      data.commentSettings = data.commentSettings || {};
+      data.commentSettings.allowComments = settings.allowComments;
+      setAllowComments(settings.allowComments);
+    }
 
-  const API_KEY = process.env.VITE_API_URL;
-  const token = localStorage.getItem('token');  
-  const API_URL = `${API_KEY}/live-stream/v2/settings/${id}`;
+    if (typeof settings.showMostSent === "boolean") {
+      data.commentSettings = data.commentSettings || {};
+      data.commentSettings.showMostSentComments = settings.showMostSent;
+      setShowMostSent(settings.showMostSent);
+    }
 
-  const config = {
-    headers: {
-      "Content-Type": "application/json", // Use application/json for PATCH
-      Authorization: `Bearer ${token}`,
-    },
+    if (settings.filterComments) {
+      data.commentSettings = data.commentSettings || {};
+      data.commentSettings.filterComments = data.commentSettings.filterComments || {};
+
+      Object.entries(settings.filterComments).forEach(([key, value]) => {
+        if (typeof value === 'boolean') {
+          data.commentSettings.filterComments[key] = value;
+        }
+      });
+    }
+
+    if (settings.blockedKeywords) {
+      data.commentSettings = data.commentSettings || {};
+      data.commentSettings.blockedKeywords = settings.blockedKeywords;
+      setBlockedKeywords(settings.blockedKeywords);
+    }
+
+    if (settings.muteRules) {
+      data.muteRules = settings.muteRules;
+    }
+
+    if (Object.keys(data).length === 0) {
+      console.warn("No update fields provided.");
+      return;
+    }
+
+    
+    // ✅ send data to parent
   };
 
-  const data = {
-    hearYourVoice: true,
-    moderators: [""],  // default empty string
-    commentSettings: {
-      allowComments: allowComments,
-      duration: 0,
-      filterComments: {
-        spamComments: true,
-        unkindComments: true,
-        communityFlaggedComments: true,
-        showInFeed: true,
-      },
-      showMostSentComments: showMostSent,
-      blockedKeyworkds: [
-        {
-          keyword: "", // empty string
-          blockSimilarVersion: true,
-        },
-      ],
-    },
-    muteRules: [
-      {
-        comment: "", // empty string
-        duration: 0,
-      },
-    ],
-    mutedUsers: [""],
-    blockedUsers: [""],
-  };
+  useEffect(()=> {
+    console.log('Sending to parent:', {allowComments, showMostSent});
+    console.log(blockedKeywords);
+     onSettingsChange({allowComments, showMostSent,blockedKeywords});
+  },[allowComments, showMostSent,blockedKeywords])
 
-  try {
-    const response = await axios.patch(API_URL, data, config);
-    console.log(response.data, "response data");
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
+// const updateSettings = async (
+//   id: string,
+//   settings: { allowComments?: boolean; showMostSent?: boolean } = {}
+// ) => {
+//   // Destructure incoming settings with default values
+//   const { allowComments = true, showMostSent = true } = settings;
+
+//   const API_KEY = process.env.VITE_API_URL;
+//   const token = localStorage.getItem('token');  
+//   const API_URL = `${API_KEY}/live-stream/v2/settings/${id}`;
+
+//   const config = {
+//     headers: {
+//       "Content-Type": "application/json", // Use application/json for PATCH
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+//   const data = {
+//     hearYourVoice: true,
+//     moderators: [""],  // default empty string
+//     commentSettings: {
+//       allowComments: allowComments,
+//       duration: 0,
+//       filterComments: {
+//         spamComments: true,
+//         unkindComments: true,
+//         communityFlaggedComments: true,
+//         showInFeed: true,
+//       },
+//       showMostSentComments: showMostSent,
+//       blockedKeyworkds: [
+//         {
+//           keyword: "", // empty string
+//           blockSimilarVersion: true,
+//         },
+//       ],
+//     },
+//     muteRules: [
+//       {
+//         comment: "", // empty string
+//         duration: 0,
+//       },
+//     ],
+//     mutedUsers: [""],
+//     blockedUsers: [""],
+//   };
+
+//   try {
+//     const response = await axios.patch(API_URL, data, config);
+//     console.log(response.data, "response data");
+//     return response.data;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 
 
