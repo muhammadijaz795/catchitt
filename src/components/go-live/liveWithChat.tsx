@@ -841,7 +841,9 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         });
 
         (socketRef.current as any).on('rejectJoinRequestLiveStreamUserAsGuest', (response: any) => {
-            setReceiveHostRequest(false);
+          console.log(response)
+          console.log('rejectJoinRequestLiveStreamUserAsGuest....')
+            setSentGuestRequest(false);
         });
 
         (socketRef.current as any).on('getMessageFromLiveStreamRoom', (data: any) => {
