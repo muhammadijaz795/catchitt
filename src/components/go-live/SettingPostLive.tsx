@@ -87,33 +87,33 @@ const settingsData = [
     type: 'switch',
     value: true,
   },
-  {
-    title: 'Rankings',
-    description: '',  
-    type: 'link',
-  },
+  // {
+  //   title: 'Rankings',
+  //   description: '',  
+  //   type: 'link',
+  // },
   // {
   //   title: 'Gift Gallery',
   //   description: 'Enable Gift Gallery to allow viewers to light up the Gifts in your Gift Gallery and become title gifters during your LIVE.',
   //   type: 'switch',
   //   value: true,
   // },
-  {
-     title: 'Topics',
-    description: 'Topic couldn’t be changed during LIVE',
-    // type: 'link',
-  },
+  // {
+  //    title: 'Topics',
+  //   description: 'Topic couldn’t be changed during LIVE',
+  //   // type: 'link',
+  // },
   {
     title: 'Comment settings',
     description: '',
     type: 'link',
     view: 'CommentsSetting',
   },
-   {
-    title: 'Moderators',
-    description: '',
-    type: 'link',
-  },
+  //  {
+  //   title: 'Moderators',
+  //   description: '',
+  //   type: 'link',
+  // },
   {
     title: 'Muted Accounts',
     description: 'These accounts are muted for the rest of the LIVE',
@@ -263,7 +263,7 @@ const [searchParams] = useSearchParams();
   
   else if(activeView == 'CommentsSetting')
   {
-    return <CommentsSetting updateSettings={updateSettings} onBack={() => setShowCommentSettings(false)} />;
+    return <CommentsSetting updateSettings={updateSettings}  onBack={() => setActiveView(null)} />;
     // return <CommentsSetting customProps={customProps} onBack={() => setActiveView(null)} />;
   }
 

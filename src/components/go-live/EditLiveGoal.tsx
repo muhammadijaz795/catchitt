@@ -136,7 +136,7 @@ const [goalDescription, setGoalDescription] = useState(
       }}
     >
       <Box textAlign={'left'} display="flex" alignItems="center" justifyContent="space-between" mb={3} >
-           <IconButton size="small" sx={{color:'#FFF'}}>
+           <IconButton onClick={()=> onConfirm()} size="small" sx={{color:'#FFF'}}>
             <ArrowBackIosNewIcon fontSize="small" />
           </IconButton>
          <Typography variant="h6">Edit your LIVE goal</Typography>

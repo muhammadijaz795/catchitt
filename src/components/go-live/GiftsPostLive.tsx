@@ -62,45 +62,45 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-
+// phase 2
 const GiftsData = [
-  {
-    title: 'Live Gifts',
-    rightdescription: 'New Gift series',
-    type: 'link',
-    image: <img src={LiveGiftLive} alt="Live Gifts" style={{ width: 24, height: 24 }} />,
-    id: 'live-gifts', // Added ID,
-  },
-  {
-    title: 'Flip Camera',
-    description: '',
-    type: 'link',
-    image: <img src={FlipCameraLive} alt="Flip Camera" style={{ width: 24, height: 24 }} />,
-    id: 'flip-camera', // Added ID
-  },
-  {
-    title: 'Mirror Video',
-    description: '',
-    type: 'switch',
-    value: true,
-    image: <img src={MirrorVideoLive} alt="Mirror Video" style={{ width: 24, height: 24 }} />,
-    id: 'mirror-video', // Added ID
-  },
-  {
-    title: 'Mute Microphone',
-    description: '',
-    type: 'switch',
-    value: true,
-    image: <img src={MuteAudioLive} alt="Mute Microphone" style={{ width: 24, height: 24 }} />,
-    id: 'mute-microphone', // Added ID
-  },
-  {
-    title: 'Pause Live',
-    description: '',
-    type: 'link',
-    image: <img src={PauseLive} alt="Pause Live" style={{ width: 24, height: 24 }} />,
-    id: 'pause-live', // Added ID
-  },
+  // {
+  //   title: 'Live Gifts',
+  //   rightdescription: 'New Gift series',
+  //   type: 'link',
+  //   image: <img src={LiveGiftLive} alt="Live Gifts" style={{ width: 24, height: 24 }} />,
+  //   id: 'live-gifts', // Added ID,
+  // },
+  // {
+  //   title: 'Flip Camera',
+  //   description: '',
+  //   type: 'link',
+  //   image: <img src={FlipCameraLive} alt="Flip Camera" style={{ width: 24, height: 24 }} />,
+  //   id: 'flip-camera', // Added ID
+  // },
+  // {
+  //   title: 'Mirror Video',
+  //   description: '',
+  //   type: 'switch',
+  //   value: true,
+  //   image: <img src={MirrorVideoLive} alt="Mirror Video" style={{ width: 24, height: 24 }} />,
+  //   id: 'mirror-video', // Added ID
+  // },
+  // {
+  //   title: 'Mute Microphone',
+  //   description: '',
+  //   type: 'switch',
+  //   value: true,
+  //   image: <img src={MuteAudioLive} alt="Mute Microphone" style={{ width: 24, height: 24 }} />,
+  //   id: 'mute-microphone', // Added ID
+  // },
+  // {
+  //   title: 'Pause Live',
+  //   description: '',
+  //   type: 'link',
+  //   image: <img src={PauseLive} alt="Pause Live" style={{ width: 24, height: 24 }} />,
+  //   id: 'pause-live', // Added ID
+  // },
   {
     title: 'Settings',
     description: '', // Keep description empty if not used for this item
@@ -108,13 +108,13 @@ const GiftsData = [
     type: 'link',
     image: <img src={SettingsLive} alt="Settings" style={{ width: 24, height: 24 }} />,
   },
-  {
-    title: 'Comments',
-    description: '',
-    id: 'comments', // Adding an ID for Comments to potentially open BlockedFaqs
-    type: 'link',
-    image: <img src={CommentsLive} alt="Comments" style={{ width: 24, height: 24 }} />,
-  },
+  // {
+  //   title: 'Comments',
+  //   description: '',
+  //   id: 'comments', // Adding an ID for Comments to potentially open BlockedFaqs
+  //   type: 'link',
+  //   image: <img src={CommentsLive} alt="Comments" style={{ width: 24, height: 24 }} />,
+  // },
   {
     title: 'About Me',
     description: '',
@@ -122,32 +122,32 @@ const GiftsData = [
     image: <img src={AboutLive} alt="About Me" style={{ width: 24, height: 24 }} />,
     id: 'about-me', // Added ID
   },
-  {
-    title: 'Campaigns',
-    rightdescription: 'New Gift series',
-    type: 'link',
-    image: <img src={CompaignLive} alt="Campaigns" style={{ width: 24, height: 24 }} />,
-    id: 'campaigns', // Added ID
-  },
-  {
-    title: 'Content Disclosure',
-    description: '',
-    type: 'link',
-    image: <img src={ContentDisclosureLive} alt="Content Disclosure" style={{ width: 24, height: 24 }} />,
-    id: 'content-disclosure', // Added ID
-  },
-  {
-    title: 'AI Generated Content',
-    description: 'Add this label to tell viewers your content was generated or edited with AI. Learn more',
-    type: 'switch',
-    value: true,
-    image: <img src={AIGeneratedLive} alt="AI Generated Content" style={{ width: 24, height: 24 }} />,
-    id: 'ai-generated', // Added ID
-  },
-  {
-    description: 'Need help? Report a problem',
-    id: 'help-report', // Added ID
-  },
+  // {
+  //   title: 'Campaigns',
+  //   rightdescription: 'New Gift series',
+  //   type: 'link',
+  //   image: <img src={CompaignLive} alt="Campaigns" style={{ width: 24, height: 24 }} />,
+  //   id: 'campaigns', // Added ID
+  // },
+  // {
+  //   title: 'Content Disclosure',
+  //   description: '',
+  //   type: 'link',
+  //   image: <img src={ContentDisclosureLive} alt="Content Disclosure" style={{ width: 24, height: 24 }} />,
+  //   id: 'content-disclosure', // Added ID
+  // },
+  // {
+  //   title: 'AI Generated Content',
+  //   description: 'Add this label to tell viewers your content was generated or edited with AI. Learn more',
+  //   type: 'switch',
+  //   value: true,
+  //   image: <img src={AIGeneratedLive} alt="AI Generated Content" style={{ width: 24, height: 24 }} />,
+  //   id: 'ai-generated', // Added ID
+  // },
+  // {
+  //   description: 'Need help? Report a problem',
+  //   id: 'help-report', // Added ID
+  // },
 ];
 
     
