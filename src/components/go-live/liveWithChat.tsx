@@ -1829,7 +1829,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                     bgcolor: '#fff',
                     borderRadius: 1,
                     boxShadow: 1,
-                    position: 'relative'
+                    position: 'relative',
+                    height: '100vh',
                 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center',position: 'relative', p: 1, borderBottom: '1px solid rgba(22, 24, 35, 0.2)' }}>
                      <span className='absolute left-3 top-3.5' onClick={handleHideSidebar}>

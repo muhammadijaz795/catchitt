@@ -346,13 +346,14 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
 
   return (
     // <Grid item  sx={{ zIndex:'9999', position: 'absolute', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', transform: showSidebar ? "translateX(0)" : "translateX(100%)", borderLeft: '1px solid #ddd', p: 0 }}>
-      <Box sx={{ minWidth: 350, mx: 'auto', right: 0, top: 0, p:0 }}>
+      <Box sx={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '20.5rem', bgcolor: '#fafafa', mx: 'auto', right: 0, top: 0, p:0 }}>
                   <Box
                     sx={{
                         bgcolor: '#fff',
                         borderRadius: 1,
                         boxShadow: 1,
-                        position: 'relative'
+                        position: 'relative',
+                        height: '100vh'
                     }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center',position: 'relative', p: 1, borderBottom: '1px solid rgba(22, 24, 35, 0.2)' }}>
                          {/* <span className='absolute left-3 top-3.5' onClick={handleHideSidebar}>
@@ -368,7 +369,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                         showTopViewers? (
                            <Box
                             sx={{
-                              width: '20.5rem',
+                              width: 360,
                               bgcolor: "#fff",
                               height: "100vh",
                               borderLeft: "1px solid #ddd",
@@ -475,7 +476,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                               </Stack>
                             </Box>
                             : (
-                              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
+                              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, height: 'calc(100vh - 12.5rem)' }}>
                                 <img src={TopViewersImage} alt="" />
                                 <Typography fontSize={13} fontWeight={600} mt={0.5}>
                                     Viewers
