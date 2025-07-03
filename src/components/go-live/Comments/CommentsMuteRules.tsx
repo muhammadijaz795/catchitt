@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 
 interface CommentsMuteRulesProps {
   onBack: () => void;
-  updateSettings: () => void;
+  updateSettings: (streamId: string | null, settings: any) => Promise<void>;
   streamId: string | null;
 }
 
@@ -41,9 +41,10 @@ const MuteRules: React.FC<CommentsMuteRulesProps> = ({ onBack, updateSettings, s
   }, [roomDetails?.settings?.muteRules]);
 
    const saveAll = () => {
-      // Here you would typically send the muteRules to your backend
       console.log("Saving mute rules:", muteRules);
-      updateSettings(streamId, { muteRules });
+      if (streamId) {
+        updateSettings(streamId, { muteRules });
+      }
     };
 
 

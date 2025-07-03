@@ -293,8 +293,8 @@ const [searchParams] = useSearchParams();
         {settingsData.map((item, index) => (
           <React.Fragment key={index}>
             <ListItem
-                button={item.type === 'link'}
-                onClick={() => setActiveView(item.view)} // 👈 Use function from object
+                // button={item.type === 'link'}
+                onClick={item.type === 'link' ? () => setActiveView(item.view) : undefined}
                 secondaryAction={
                   item.type === 'switch' ? (
                     <CustomSwitch edge="end" checked={item.value} />

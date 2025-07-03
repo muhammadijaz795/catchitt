@@ -7,7 +7,11 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
-const StarCommentFaqs = ({ onBack }) => {
+interface StarCommentFaqsProps {
+    onBack: () => void;
+}
+
+const StarCommentFaqs = ({ onBack }: StarCommentFaqsProps) => {
     return (
         <Box
             sx={{

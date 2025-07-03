@@ -79,6 +79,8 @@ interface PersonRowProps {
   onAcceptJoinLiveSteam?: () => void;
   onRejecctLiveStreamRoom?: () => void;
   sendInviteLiveStreamUser?: () => void;
+  onToggleInvite?: () => void;
+  isInvited?: boolean;
 }
 
 const PersonRow: React.FC<PersonRowProps> = ({ name, role, button, photo, avatar, onRemove, onAcceptJoinLiveSteam, onRejecctLiveStreamRoom, sendInviteLiveStreamUser, onToggleInvite, isInvited }) => (
@@ -222,8 +224,8 @@ const GoLiveTogetherPanel: React.FC<GoLiveTogetherPanelProps> = ({
 }) => {
     const [hiddenGuestIds, setHiddenGuestIds] = React.useState<string[]>([]);
     const hideGuestRow = (id: string) => {
-      setHiddenGuestIds(prev => [...prev, id]);
-      setVisibleGuestUsers(prev => prev.filter(user => user._id !== id));
+      setHiddenGuestIds((prev: string[]) => [...prev, id]);
+      setVisibleGuestUsers((prev: any[]) => prev.filter(user => user._id !== id));
     };
     const [visibleGuestUsers, setVisibleGuestUsers] = React.useState(post?.details?.guestUsers || []);
     const [invitedUserIds, setInvitedUserIds] = React.useState<string[]>([]);
@@ -438,7 +440,7 @@ const GoLiveTogetherPanel: React.FC<GoLiveTogetherPanelProps> = ({
       <Typography fontSize="14px" textAlign="left" fontWeight={'600'} color="text.secondary" mb={1}>
         Viewers
       </Typography>
-      {post?.details?.consumers?.map((person, i) => (
+      {post?.details?.consumers?.map((person:any, i:any) => (
         <PersonRow key={i} {...person} sendInviteLiveStreamUser={()=> sendInviteLiveStreamUser(person)} onToggleInvite={() => handleToggleInvite(person)} isInvited={invitedUserIds.includes(person.id)} onRemove={() => onRemoveUser(post.details.id, person.id)} />
       ))}
     </Box>

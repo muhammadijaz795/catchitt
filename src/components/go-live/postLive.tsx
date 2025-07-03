@@ -69,12 +69,20 @@ export default function PostLive() {
  
     const [searchParams] = useSearchParams();
     const streamId = searchParams.get('streamId');
-    const [selectedLiveVideo, setSelectedLiveVideo] = useState(
-        {
-          details: null,
-          isLoading: false,
-        }
-      );
+    type LiveVideoDetails = {
+        id?: string;
+        consumers?: Array<{ id: string; name?: string; photo?: string }>;
+        topViewersGifts?: any;
+        [key: string]: any;
+    };
+    
+    const [selectedLiveVideo, setSelectedLiveVideo] = useState<{
+        details: LiveVideoDetails | null;
+        isLoading: boolean;
+    }>({
+        details: null,
+        isLoading: false,
+    });
 
     const filters = new Array(24).fill('').map((_, i) => ({
         id: i,
@@ -103,7 +111,7 @@ export default function PostLive() {
     const SERVER_URL = 'https://prodapi.seezitt.com';
     // const [isConnected, setIsConnected] = useState(false);
     const [profileData, setProfileData] = useState<any>([]);
-    const authUser = JSON.parse(localStorage.getItem('profile')) || null;
+    const authUser = JSON.parse(localStorage.getItem('profile') || '{}') || null;
     const [showGoLiveTogetherPanel, setShowGoLiveTogetherPanel] = useState(false);
          const API_KEY = process.env.VITE_API_URL;
         const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
@@ -1090,7 +1098,7 @@ export default function PostLive() {
                         {showEditLiveGoal && <EditLiveGoal liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                         {showFaqs && <LiveGoalFAQ onBack={() => {setShowFaqs(!showFaqs); setShowChatSideBar(true)}} />}
                         {openSettings &&
-                            <SettingsPanel />
+                            <SettingsPanel customProps={{ mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers }} />
                         }
                         {openGiftsPanel && 
                         <GiftsPostLive customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />

@@ -22,7 +22,10 @@ export default function MutedAccounts({ customProps, onBack }: { customProps: an
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [showAddMuteButton, setShowAddMuteButton] = useState(false);
 
-  const filteredUsers = customProps.mutedUsers.items.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredUsers = customProps.mutedUsers.items.filter((user: { name: string; username: string }) => 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   function toggleMuteUser()
   {
@@ -108,7 +111,7 @@ export default function MutedAccounts({ customProps, onBack }: { customProps: an
         </Typography>
 
         <List>
-          {filteredUsers.map((user, index) => (
+          {filteredUsers.map((user:any, index:any) => (
             <ListItem key={index} disableGutters secondaryAction={
               <Button
                 variant="outlined"

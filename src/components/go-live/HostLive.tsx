@@ -756,8 +756,10 @@ export default function PostLive() {
                                 onRemoveUser={() => {}}
                                 onAcceptJoinLiveSteam={() => {}}
                                 onRejecctLiveStreamRoom={() => {}}
-                                onInviteUser={() => {}}
-                                onSendRequest={() => {}}
+                                sendInviteLiveStreamUser={()=> {}}
+                                onToggleInvite={() => {}}
+                                isInvited={true}
+                                removeInviteLiveSteamUser={() => {}}
                             />
                         </Box>
                     </Box> 

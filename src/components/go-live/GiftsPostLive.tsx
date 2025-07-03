@@ -274,7 +274,8 @@ const GiftsPanel = ({customProps}: {customProps: any}) => {
       )}
 
       {activePanel === 'settings' && (
-        <SettingsPanel onClose={handleClosePanel} customProps={customProps} />
+        // onClose={handleClosePanel}
+        <SettingsPanel  customProps={customProps} />
       )}
       {activePanel === 'about-me' && (
         <AboutMe onBack={handleClosePanel}  profileDetails={profileDetails} />

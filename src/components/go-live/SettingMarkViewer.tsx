@@ -85,7 +85,7 @@ const settingsData = [
 ];
 
 const SettingsMarkViewer = () => {
-  const [activeView, setActiveView] = useState(null);
+  const [activeView, setActiveView] = useState<string | null>(null);
 
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto' }}>
@@ -97,7 +97,7 @@ const SettingsMarkViewer = () => {
         {settingsData.map((item, index) => (
           <React.Fragment key={index}>
             <ListItem
-              button={item.type === 'link'}
+              // button={item.type === 'link'}
               onClick={() => item.type === 'link' && setActiveView(item.title)}
               sx={{ py: 1.5 }}
               secondaryAction={

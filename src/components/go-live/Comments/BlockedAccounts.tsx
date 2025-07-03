@@ -22,7 +22,17 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [showConfirmUnblock, setShowConfirmUnblock] = useState(false);
 
-  const filteredUsers = customProps.blockedUsers.items.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase()));
+  interface BlockedUser {
+    _id: string;
+    name: string;
+    username: string;
+    avatar?: string;
+  }
+
+  const filteredUsers = customProps.blockedUsers.items.filter((user: BlockedUser) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   function toggleBlockedUser()
   {
@@ -108,7 +118,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
         </Typography>
 
         <List>
-          {filteredUsers.map((user, index) => (
+          {filteredUsers.map((user:any, index:any) => (
             <ListItem key={index} disableGutters secondaryAction={
               <Button
                 variant="outlined"
