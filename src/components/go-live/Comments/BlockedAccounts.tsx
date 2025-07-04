@@ -32,7 +32,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
 
   function toggleBlockedUser()
   {
-    let endpoint = `${process.env.VITE_API_URL}/profile/${selectedUser._id}/block`;
+    let endpoint = `${process.env.VITE_API_URL}/profile/${selectedUser.id ?? selectedUser._id}/block`;
     let requestOptions =
     {
       method: 'POST',
@@ -56,7 +56,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
     {
       accessToken: localStorage.getItem('token'),
       liveStreamRoomId: searchParams.get('streamId'),
-      userId: user._id,
+      userId: user.id ?? user._id,
     };
 
     socket.emit('removeUserFromLiveStreamRoom', payload);
