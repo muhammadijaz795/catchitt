@@ -25,11 +25,11 @@ export default function MutedAccounts({ customProps, onBack }: { customProps: an
   const [showAddMuteButton, setShowAddMuteButton] = useState(false);
 
   const filteredUsers = customProps.mutedUsers.items.filter((user: any) => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase()));
-  const filteredConsumers = customProps.consumers.filter((user: any) => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase())).filter((item: any) => item.id !== localStorage.getItem('userId') && !filteredUsers.some((user: any) => user.id === item.id));
+  const filteredConsumers = customProps.consumers.filter((user: any) => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase())).filter((item: any) => item.id !== localStorage.getItem('userId') && !filteredUsers.some((user: any) => user.id === item.id || user._id === item._id || user._id === item.id || user.id === item._id));
 
   function toggleMuteUser()
   {
-    let endpoint = `${process.env.VITE_API_URL}/live-stream/${searchParams.get('streamId')}/mute/${selectedUser._id}`;
+    let endpoint = `${process.env.VITE_API_URL}/live-stream/${searchParams.get('streamId')}/mute/${selectedUser.id ?? selectedUser._id}`;
     let requestOptions =
     {
       method: 'POST',
