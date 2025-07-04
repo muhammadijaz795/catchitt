@@ -16,13 +16,20 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
 import UnblockButton from "./UnblockButton";
+import { socket } from '../../../src/lib/socket';
+import { useSearchParams } from 'react-router-dom';
+
+const isPostLive = window.location.pathname.includes('/postlive') ? true : false;
 
 export default function BlockedAccounts({ customProps, onBack }: { customProps: any, onBack: () => void }) {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [showConfirmUnblock, setShowConfirmUnblock] = useState(false);
+  const [consumers, setConsumers] = useState<any>(customProps.consumers);
 
   const filteredUsers = customProps.blockedUsers.items.filter((user: any) => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredConsumers = consumers.filter((user: any) => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase())).filter((item: any) => item.id !== localStorage.getItem('userId'));
 
   function toggleBlockedUser()
   {
@@ -41,6 +48,46 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
     .catch((error) => console.error('Fetch error:', error));
 
     customProps.setBlockedUsers((prev: any) => ({ ...prev, items: prev.items.filter((item: any) => item._id !== selectedUser._id) }));
+  };
+
+  function blockedUser(user: any)
+  {
+    let endpoint = `${process.env.VITE_API_URL}/profile/${user._id}/block`;
+    let requestOptions =
+    {
+      method: 'POST',
+      headers:
+      {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    fetch(endpoint, requestOptions)
+    .catch((error) => console.error('Fetch error:', error));
+
+    if(isPostLive)
+    {
+      setConsumers((prev: any) => prev.filter((item: any) => item._id !== user._id));
+      customProps.setBlockedUsers((prev: any) => ({ ...prev, items: [...prev.items, user] }));
+      removeUserFromLiveStreamRoom(user)
+    }
+    else
+    {
+      customProps.setBlockedUsers((prev: any) => ({ ...prev, items: prev.items.filter((item: any) => item._id !== user._id) }));
+    }
+  };
+
+  function removeUserFromLiveStreamRoom(user: any)
+  {
+    const payload =
+    {
+      accessToken: localStorage.getItem('token'),
+      liveStreamRoomId: searchParams.get('streamId'),
+      userId: user._id,
+    };
+
+    socket.emit('removeUserFromLiveStreamRoom', payload);
   };
 
   if(showConfirmUnblock)
@@ -114,6 +161,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
                 variant="outlined"
                 onClick={() => { setSelectedUser(user); setShowConfirmUnblock(true); }}
                 size="small"
+                disabled={window.location.pathname.includes('/postlive')}
                 sx={{
                   borderRadius: 2,
                   textTransform: 'none',
@@ -126,6 +174,37 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
                 }}
               >
                 Unblock
+              </Button>
+            }>
+              <ListItemAvatar>
+                <Avatar src={user.avatar} sx={{ width: 48, height: 48 }} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography fontWeight="bold">{user.name}</Typography>}
+                secondary={<Typography variant="caption" color="text.secondary">{user.username}</Typography>}
+              />
+            </ListItem>
+          ))}
+        </List>
+        <List>
+          {filteredConsumers.map((user: any, index: number) => (
+            <ListItem key={index} disableGutters secondaryAction={
+              <Button
+                variant="outlined"
+                onClick={() => { setSelectedUser(user); blockedUser(user); }}
+                size="small"
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '0.75rem',
+                  px: 2,
+                  height: 32,
+                  color: '#000',
+                  borderColor: '#000'
+                }}
+              >
+                Block
               </Button>
             }>
               <ListItemAvatar>

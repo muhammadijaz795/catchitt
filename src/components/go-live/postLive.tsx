@@ -1109,7 +1109,7 @@ export default function PostLive() {
                             <SettingsPanel customProps={{ mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers }} />
                         }
                         {openGiftsPanel && 
-                        <GiftsPostLive customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
+                        <GiftsPostLive customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers, consumers: selectedLiveVideo.details?.consumers}} />
                         }
                         {openAddLiveGoal && 
                         <AddLiveGoalModal

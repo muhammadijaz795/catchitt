@@ -931,7 +931,7 @@ const Promote = () => (
                     {!openSettings && showEditLiveGoal && <EditLiveGoal  liveGoals={liveGoals} addLiveGoalAutomatically={addLiveGoalAutomatically} onConfirm={()=> setShowEditLiveGoal(!showEditLiveGoal) } onLiveGoalAdded={(goals: any, addLiveGoalAutomatically: any) => { setShowEditLiveGoal(!showEditLiveGoal); setLiveGoals(goals); setAddLiveGoalAutomatically(addLiveGoalAutomatically) }} /> }
                     
                     {openSettings &&
-                        <SettingsPanel profileDetails={profileDetails} onSettingsChange={setLiveStreamSettings} customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers}} />
+                        <SettingsPanel profileDetails={profileDetails} onSettingsChange={setLiveStreamSettings} customProps={{mutedUsers, setMutedUsers, blockedUsers, setBlockedUsers, consumers: []}} />
                     }
                     {!openSettings && showTopics &&
                         <AddTopic postCategories={postCategories.items} addToRoom={addToRoom} onBack={() => setShowTopics(!showTopics)}  />
