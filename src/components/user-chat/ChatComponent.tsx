@@ -1007,6 +1007,7 @@ const ChatComponent = () => {
                 showToastError('Do not have enough balance.');
                 return;
             }
+            messageType='Gift';
             
         }
        
@@ -1030,7 +1031,7 @@ const ChatComponent = () => {
         // console.log(messageData)
         // Format the current time using moment.js
         const formattedTime = currentTime.format('h:mm A');
-        if (msg.length !== 0) {
+        if (messageType == 'Gift' || msg.length !== 0) {
             let tempUserArr: any[] = [];
             users?.forEach((user) => {
                 if (user?.userId === activeUser?.userId) {
