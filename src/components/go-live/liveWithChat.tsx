@@ -759,7 +759,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
 
       socket.on('getNewMessageFromLiveStreamRoom', (data) => {
         console.log(`Received message: ${JSON.stringify(data)}`);
-        setMessages(prev => [...prev, {
+        setMessages((prev:any) => [...prev, {
           id: Date.now().toString(),
           name: data?.userFullName,
           userName: data?.userName,
@@ -867,16 +867,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         console.error('WebSocket closed:', event);
     };
 
-    (socketRef.current as any).on('newMessage', (data: any) => {
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        name: data.name,
-        userName: data.userName,
-        userImage: data.userImage,
-        text: data.text,
-        timestamp: new Date()
-      }]);
-    });
 
   }
 
