@@ -15,7 +15,8 @@ import {
   Grid,
   Paper,
   Collapse,
-  Chip
+  Chip,
+  InputBase
 } from "@mui/material";
 import  {beautify}  from "../../icons";
 import EditIco from "@mui/icons-material/Edit";
@@ -184,6 +185,7 @@ const Promote = () => (
         const [showFaqs, setShowFaqs] = useState(false);
         const [showInputField, setShowInputField] = useState(false);
         const [liveTitle, setLiveTitle] = useState("");
+
 
         // Detect click outside
         useEffect(() => {
@@ -444,6 +446,7 @@ const Promote = () => (
 
     const [openSettings, setOpenSettings] = useState(false);
     const [showTopics, setShowTopics] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
 
   const toggleSettings = () => {
     if(openSettings){
@@ -514,13 +517,13 @@ const Promote = () => (
                     </Box>
 
                     <Box display="flex" alignItems="center" color="orange" sx={{
-                        backgroundColor: "#fff",
-                    px: 0.75,
-                    py: 0.75,
-                    borderRadius: 999,
-                    display: "flex",
-                    alignItems: "center",
-                    }}>
+                            backgroundColor: "#fff",
+                            px: 0.75,
+                            py: 0.75,
+                            borderRadius: 999,
+                            display: "flex",
+                            alignItems: "center",
+                            }}>
                     <FavoriteIcon sx={{ fontSize: 16 }} />
                     <Typography fontSize={12} ml={0.5}>
                         {profileDetails?.details?.followersNumber}
@@ -835,7 +838,7 @@ const Promote = () => (
                        <input type="file" ref={fileInputRef}  style={{ display: 'none' }} onChange={(e)=>{uploadfile(e) }} accept="image/*, video/*" />
                         
                    
-                    <Box
+                    {/* <Box
                         sx={{
                         backgroundColor: "#F1F1F2",
                         px: 2,
@@ -854,7 +857,75 @@ const Promote = () => (
                          {showInputField && <input type="text" value={liveTitle} onChange={(e) => setLiveTitle(e.target.value)}  /> }
                         </Typography>
                         
+                    </Box> */}
+
+                     <Box
+                        sx={{
+                            backgroundColor: "#F1F1F2",
+                            px: 2,
+                            py: 1,
+                            pl: 14,
+                            display: "flex",
+                            alignItems: "flex-start", // keeps content top-aligned
+                            height: "6.25rem",
+                        }}
+                        >
+                        <Box sx={{ display: "flex", alignItems: "flex-end", gap: 1 }}>
+                            {showInputField ? (
+                            <InputBase
+                                value={liveTitle}
+                                onChange={(e) => setLiveTitle(e.target.value)}
+                                onFocus={() => setInputFocused(true)}
+                                onBlur={() => setInputFocused(false)}
+                                placeholder="Add a title"
+                                autoFocus
+                                sx={{
+                                input: {
+                                    width: inputFocused ? "150px" : "150px",
+                                    transition: "width 0.3s ease",
+                                    backgroundColor: "transparent",
+                                    border: "none",
+                                    outline: "none",
+                                    borderBottom: "2px solid #1976d2",
+                                    fontSize: "0.875rem",
+                                    color: "#000",
+                                    paddingBottom: "2px",overflow: 'hidden',
+                                },
+                                }}
+                            />
+                            ) : (
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                sx={{ paddingBottom: "2px", maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                            >
+                                {liveTitle || "Add a title"}
+                            </Typography>
+                            )}
+
+                            <IconButton
+                            onClick={() => setShowInputField(!showInputField)}
+                            size="small"
+                            sx={{ alignSelf: "flex-end", paddingBottom: "2px" }}
+                            >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                height="16"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                width="24"
+                            >
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                            </IconButton>
+                        </Box>
                     </Box>
+
                     <CardContent sx={{ padding: 0 }}>
                         
                           
