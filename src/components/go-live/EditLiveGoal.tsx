@@ -131,7 +131,7 @@ const [goalDescription, setGoalDescription] = useState(
         color: '#fff',
         p: 2,
         borderRadius: 2,
-        width: 360,
+        width: 350,
         mx: 'auto',
       }}
     >
@@ -248,7 +248,7 @@ const [goalDescription, setGoalDescription] = useState(
      ) : (
     <Card
       sx={{
-        width: 360,
+        width: 350,
         bgcolor: "#1e1e1e",
         color: "#fff",
         borderRadius: 3,
@@ -337,7 +337,7 @@ const [goalDescription, setGoalDescription] = useState(
      )} </> }
     {!showFaqs && showLiveGoalAutomatically && <Card
       sx={{
-        width: 360,
+        width: 350,
         bgcolor: "#1e1e1e",
         color: "#fff",
         borderRadius: 3,

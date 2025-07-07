@@ -476,7 +476,7 @@ const Promote = () => (
                     overflow: "hidden",
                     backgroundColor: "black",
                     color: "white",
-                    width: "calc(100% - 23.5rem)",
+                    width: "calc(100% - 24.5rem)",
                 }}
                 >
                 <img
