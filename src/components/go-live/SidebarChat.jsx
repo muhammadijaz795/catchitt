@@ -32,68 +32,6 @@ import TopViewersImage from '../../assets/postLive/TopViewers.png';
 import { socket } from '../../src/lib/socket';
 
 
-// Static data for top viewers
-const staticTopViewers = [
-  {
-    userId: '1',
-    name: 'Alinuska',
-    avatar: 'https://i.pravatar.cc/50?img=1',
-    totalCoins: 132
-  },
-  {
-    userId: '2',
-    name: 'MK6',
-    avatar: 'https://i.pravatar.cc/50?img=2',
-    totalCoins: 39
-  },
-  {
-    userId: '3',
-    name: 'Timus Marina',
-    avatar: 'https://i.pravatar.cc/50?img=3',
-    totalCoins: 22
-  },
-  {
-    userId: '4',
-    name: 'Q noy Bae',
-    avatar: 'https://i.pravatar.cc/50?img=4',
-    totalCoins: 15
-  },
-  {
-    userId: '5',
-    name: 'PRIHARTONO',
-    avatar: 'https://i.pravatar.cc/50?img=5',
-    totalCoins: 12
-  }
-];
-
-// Static messages data
-const staticMessages = [
-  {
-    id: '1',
-    name: 'Alinuska',
-    userImage: 'https://i.pravatar.cc/50?img=1',
-    text: 'Hello everyone!'
-  },
-  {
-    id: '2',
-    name: 'MK6',
-    userImage: 'https://i.pravatar.cc/50?img=2',
-    text: 'How are you doing?'
-  },
-  {
-    id: '3',
-    name: 'Timus Marina',
-    userImage: 'https://i.pravatar.cc/50?img=3',
-    text: 'This is a great stream!'
-  }
-];
-
-// Static owner data
-const staticOwner = {
-  id: 'owner1',
-  name: 'desiLiv',
-  photo: 'https://i.pravatar.cc/50?img=10'
-};
 
 
 
@@ -101,6 +39,8 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
   const [showTopViewers, setShowTopViewers] = useState(false);
   const [isShowRanking, setIsShowRanking] = useState(true);
   const [message, setMessage] = useState('');
+  console.log('load old messages');
+  console.log(selectedLiveVideo?.details?.messages)
   const [messages, setMessages] = useState([]);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
@@ -214,7 +154,8 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
         liveStreamRoomId: streamId
       };
       console.log('here.. send message', messageData);
-      socket.emit('sendMessageToliveStreamRoom', messageData, (response) => {
+      console.log(socket);
+      socket.emit('sendNewMessageToLiveStreamRoom', messageData, (response) => {
         console.log('Callback Response:', response);
         if (!response) {
           console.warn('No response received from server');
@@ -247,6 +188,12 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  useEffect(() => {
+    if (selectedLiveVideo?.details?.messages) {
+      setMessages(selectedLiveVideo.details.messages);
+    }
+  }, [selectedLiveVideo]);
+
     // useEffect(() => {
       const joinRoom = () => {
         console.log("start room")
@@ -272,19 +219,6 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
             console.log('Joined live stream room response:', response);
           });
         }
-        
-
-        let data = {
-            userId: profileData?._id || '',
-             userFullName: profileData?.name || '',
-             name: profileData?.name,
-             userName: profileData?.username,
-            userEmail: profileData?.email,
-             userImage: profileData?.avatar || profileData?.cover,
-            "accessToken": token ?? '',
-            "message": "hi",
-            liveStreamRoomId: streamId || '',
-        };
       };
     
       
@@ -315,14 +249,14 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
             }
       });
       
-      socket.on('getMessageFromLiveStreamRoom', (data) => {
+      socket.on('getNewMessageFromLiveStreamRoom', (data) => {
             console.log(`Received message: ${JSON.stringify(data)}`);
             setMessages(prev => [...prev, {
               id: Date.now().toString(),
               name: data?.userFullName,
               userName: data?.userName,
               userImage: data?.userImage,
-              text: data.message,
+              message: data.message,
               timestamp: new Date()
             }]);
       });
@@ -772,7 +706,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                                   <Avatar onClick={(e) => handleToggle(e, msg)} src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
                                                   <Box flex="1" sx={{textAlign: 'left', wordBreak: 'break-word'}}>
                                                     <Typography  fontSize={13} fontWeight={600}>{msg.name}</Typography>
-                                                    <Typography fontSize={13}>{msg.text}</Typography>
+                                                    <Typography fontSize={13}>{msg.message}</Typography>
                                                   </Box>
     
                                                   

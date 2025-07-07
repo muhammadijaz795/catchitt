@@ -760,6 +760,7 @@ export default function PostLive() {
                                 onToggleInvite={() => {}}
                                 isInvited={true}
                                 removeInviteLiveSteamUser={() => {}}
+                                invitedUserIds={[]} // Pass an empty array or appropriate user IDs
                             />
                         </Box>
                     </Box> 

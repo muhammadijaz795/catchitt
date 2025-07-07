@@ -170,7 +170,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
       name: string;
       userName: string;
       userImage: string;
-      text: string;
+      message: string;
       timestamp: Date;
     }
     
@@ -340,48 +340,12 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
           liveStreamRoomId: liveStreamRoomId
         };
 
-        console.log('here.. send message', messageData);
-        socket.emit('sendMessageToliveStreamRoom', messageData, (response:any) => {
+        socket.emit('sendNewMessageToLiveStreamRoom', messageData, (response:any) => {
           console.log('Callback Response:', response);
           if (!response) {
             console.warn('No response received from server');
           }
         });
-    
-      if (socketRef.current && isConnected) {
-        (socketRef.current as any).emit('sendMessageToliveStreamRoom', { 
-          liveStreamRoomId: liveStreamRoomId, 
-          data: {
-            ...userData,
-            message,
-            liveStreamRoomId: liveStreamRoomId, 
-          }
-        }, (response:any) => {
-          console.log('Callback Response:', response);
-        });
-
-        // socketRef.on('liveStreamMessage', (data) => {
-        //   console.log(${data});
-        // });
-        
-        // Clear the input after sending
-        setMessage('');
-        setCurrentStream(null);
-        // setMessages(prev => [...prev, {
-        //   id: Date.now().toString(),
-        //   name: profileData.name,
-        //   userName: profileData.userName,
-        //   userImage: profileData?.avatar || profileData?.cover,
-        //   text: message,
-        //   timestamp: new Date()
-        // }]);
-      } else {
-        console.error('Socket not connected');
-      }
-
-      // (socketRef.current as any).on('liveStreamMessage', (data: any) => {
-      //   console.log(`Received message: ${JSON.stringify(data)}`);
-      // });
 
     };
     
@@ -792,6 +756,18 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           console.log('sendJoinRequestLiveStreamUserAsGuest response:', response);
           setReceiveHostRequest(false);
       });
+
+      socket.on('getNewMessageFromLiveStreamRoom', (data) => {
+        console.log(`Received message: ${JSON.stringify(data)}`);
+        setMessages(prev => [...prev, {
+          id: Date.now().toString(),
+          name: data?.userFullName,
+          userName: data?.userName,
+          userImage: data?.userImage,
+          message: data.message,
+          timestamp: new Date()
+        }]);
+      });
       
   }
 
@@ -848,18 +824,6 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
           console.log(response)
           console.log('rejectJoinRequestLiveStreamUserAsGuest....')
             setSentGuestRequest(false);
-        });
-
-        (socketRef.current as any).on('getMessageFromLiveStreamRoom', (data: any) => {
-          console.log(`Received message: ${JSON.stringify(data)}`);
-          setMessages(prev => [...prev, {
-            id: Date.now().toString(),
-            name: data?.userFullName,
-            userName: data?.userName,
-            userImage: data?.userImage,
-            text: data.message,
-            timestamp: new Date()
-          }]);
         });
 
         (socketRef.current as any).on('joinedliveStreamRoom', (data: any) => {
