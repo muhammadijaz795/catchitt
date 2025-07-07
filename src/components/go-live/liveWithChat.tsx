@@ -855,6 +855,20 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     (socketRef.current as any).on('disconnect', () => {
         setIsConnected(false);
         console.log('Disconnected from socket server.');
+
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const params = new URLSearchParams(window.location.search); 
+        const streamId = params.get('streamId');
+        if(streamId){
+          const data = {
+            userId: userId,
+            token: token,
+            join:true,
+            liveStreamRoomId:streamId
+          }
+          streamId && token && userId && (socketRef.current as any).emit('isUserExistInLiveStreamRoom', data);
+        }
     });
 
     (socketRef.current as any).onclose = (event: any) => {

@@ -53,7 +53,6 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
   const [openReport, setOpenReport] = useState(false);
   const messagesEndRef = useRef(null);
   const [darkTheme, setdarkTheme] = useState('');
-  const socketRef = useRef();
   const SERVER_URL = 'https://prodapi.seezitt.com';
   const [isConnected, setIsConnected] = useState(false);
   console.log('profileDetails',profileDetails.details)
