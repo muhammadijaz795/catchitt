@@ -401,12 +401,7 @@ const Promote = () => (
             showMostSentComments: liveStreamSettings?.showMostSent,
             blockedKeyworkds:  liveStreamSettings?.blockedKeywords
             },
-            muteRules: [
-            {
-                comment: "",
-                duration: 0
-            }
-            ],
+            muteRules: liveStreamSettings?.muteRules,
             mutedUsers: mutedUsers.items,
             blockedUsers: blockedUsers.items,
         };

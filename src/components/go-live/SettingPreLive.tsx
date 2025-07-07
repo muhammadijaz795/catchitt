@@ -81,6 +81,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails, customPro
   const [showMostSent, setShowMostSent] = useState(true);
   const [blockedKeywords, setBlockedKeywords] = useState<{ keyword: string; blockSimilarVersion: boolean }[]>([]);
   const [filterComments, setFilterComments] = useState([]);
+  const [muteRules, setMuteRules] = useState<{ comment: string; duration: number }[]>([])
   const updateSettings = async (
     id: string,
     settings: {
@@ -97,7 +98,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails, customPro
     } = {}
   ) => {
     const data: any = {};
-
+    console.log('prelive settings');
+    console.log(settings.muteRules);
     if (typeof settings.allowComments === "boolean") {
       data.commentSettings = data.commentSettings || {};
       data.commentSettings.allowComments = settings.allowComments;
@@ -128,9 +130,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails, customPro
       data.commentSettings.blockedKeywords = settings.blockedKeywords;
       setBlockedKeywords(settings.blockedKeywords);
     }
-
+    // console.log(settings.muteRules);
+    // console.log('mute rules settings...');
     if (settings.muteRules) {
       data.muteRules = settings.muteRules;
+      setMuteRules(settings.muteRules)
     }
 
     if (Object.keys(data).length === 0) {
@@ -143,8 +147,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ profileDetails, customPro
   useEffect(()=> {
     console.log('Sending to parent:', {allowComments, showMostSent});
     console.log(blockedKeywords);
-     onSettingsChange({allowComments, showMostSent,blockedKeywords, filterComments});
-  },[allowComments, showMostSent,blockedKeywords,filterComments])
+     onSettingsChange({allowComments, showMostSent,blockedKeywords, filterComments, muteRules});
+  },[allowComments, showMostSent,blockedKeywords,filterComments, muteRules])
 
 // const updateSettings = async (
 //   id: string,
