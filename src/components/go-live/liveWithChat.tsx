@@ -167,7 +167,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
 
     interface Message {
       id: string;
-      name: string;
+      userFullName: string;
       userName: string;
       userImage: string;
       message: string;
@@ -209,6 +209,8 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       console.log('Messages updated:', messages);
     }, [messages]);
+
+    
 
     const submitReport = async () => {
       if (selectedReason) {
@@ -318,15 +320,6 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
       console.log('handle send message')
       console.log(localStorage.getItem('token'));
       console.log('profileData', profileData);
-      const userData = {
-        userId: profileData?._id || '',
-        userFullName: profileData?.name || '',
-        name: profileData?.name,
-        userName: profileData?.username, 
-        userEmail: profileData?.email,
-        userImage: profileData?.avatar || profileData?.cover,
-        accessToken: localStorage.getItem('token')
-      };
 
        const liveStreamRoomId = currentStream?._id || streamIdFromUrl;
         const messageData = {
@@ -346,6 +339,7 @@ function LiveWithChat({ darkTheme }: { darkTheme?: any }) {
             console.warn('No response received from server');
           }
         });
+        setMessage('');
 
     };
     
@@ -761,7 +755,7 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
         console.log(`Received message: ${JSON.stringify(data)}`);
         setMessages((prev:any) => [...prev, {
           id: Date.now().toString(),
-          name: data?.userFullName,
+          userFullName: data?.userFullName,
           userName: data?.userName,
           userImage: data?.userImage,
           message: data.message,
@@ -861,6 +855,20 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
     (socketRef.current as any).on('disconnect', () => {
         setIsConnected(false);
         console.log('Disconnected from socket server.');
+
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const params = new URLSearchParams(window.location.search); 
+        const streamId = params.get('streamId');
+        if(streamId){
+          const data = {
+            userId: userId,
+            token: token,
+            join:true,
+            liveStreamRoomId:streamId
+          }
+          streamId && token && userId && (socketRef.current as any).emit('isUserExistInLiveStreamRoom', data);
+        }
     });
 
     (socketRef.current as any).onclose = (event: any) => {
@@ -1044,6 +1052,12 @@ const [moreAnchorEl, setMoreAnchorEl] = useState<null | HTMLElement>(null);
       isLoading: false,
     }
   );
+
+  useEffect(() => {
+    if (selectedLiveVideo?.details?.messages) {
+      setMessages(selectedLiveVideo.details.messages);
+    }
+  }, [selectedLiveVideo]);
 
   function loadLiveVideo()
   {
@@ -2478,8 +2492,8 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                               
                                               <Avatar onClick={(e:any) => handleToggle(e, msg)} src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
                                               <Box flex="1" sx={{textAlign: 'left', wordBreak: 'break-word'}}>
-                                                <Typography  fontSize={13} fontWeight={600}>{msg.name}</Typography>
-                                                <Typography fontSize={13}>{msg.text}</Typography>
+                                                <Typography  fontSize={13} fontWeight={600}>{msg.userFullName}</Typography>
+                                                <Typography fontSize={13}>{msg.message}</Typography>
                                               </Box>
 
                                               {/* Always mounted, just hidden unless hovered */}
@@ -2521,7 +2535,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                             <Box>
                                                                 <Typography fontWeight="bold">{currentMessageUserData?.username ||''}</Typography>
                                                                 <Typography variant="body2" color="text.secondary">
-                                                                {currentMessageUserData?.name ||''}
+                                                                {currentMessageUserData?.userFullName ||''}
                                                                 </Typography>
                                                             </Box>
                                                             </Box>
@@ -2561,7 +2575,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                     cursor: 'pointer',
                                                     ml: 1,
                                                     visibility: 'hidden', // hidden by default
-                                                  }} ml="auto"  onClick={(e:any) => handleMenuOpen(e, msg.name)}>
+                                                  }} ml="auto"  onClick={(e:any) => handleMenuOpen(e, msg.userFullName)}>
                                                   <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                   <path fill-rule="evenodd" clip-rule="evenodd" d="M2.66016 12C2.66016 10.8954 3.55559 10 4.66016 10C5.76471 10 6.66016 10.8954 6.66016 12C6.66016 13.1045 5.76471 14 4.66016 14C3.55559 14 2.66016 13.1045 2.66016 12ZM10.6602 12C10.6602 10.8954 11.5556 10 12.6602 10C13.7647 10 14.6602 10.8954 14.6602 12C14.6602 13.1045 13.7647 14 12.6602 14C11.5556 14 10.6602 13.1045 10.6602 12ZM18.6602 12C18.6602 10.8954 19.5556 10 20.6602 10C21.7647 10 22.6602 10.8954 22.6602 12C22.6602 13.1045 21.7647 14 20.6602 14C19.5556 14 18.6602 13.1045 18.6602 12Z" fill="#161823"/>
                                                   </svg>

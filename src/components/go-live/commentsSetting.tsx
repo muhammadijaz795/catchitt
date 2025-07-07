@@ -61,6 +61,8 @@ const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
     // If streamId is null, you may want to handle it differently
     if (streamId) {
       await Promise.resolve(updateSettings(streamId, settings));
+    }else{
+      await Promise.resolve(updateSettings('0', settings));
     }
   };
   const [showFilterScreen, setShowFilterScreen] = useState(false);

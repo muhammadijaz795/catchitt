@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
-
 const SERVER_URL = 'https://prodapi.seezitt.com';
+
 
 export const socket = io(SERVER_URL,
     {
@@ -24,6 +24,19 @@ socket
   })
   .on('disconnect', (reason) => {
     console.log('❌ Socket disconnected:', reason);
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const params = new URLSearchParams(window.location.search); 
+    const streamId = params.get('streamId');
+    if(streamId){
+      const data = {
+        userId: userId,
+        token: token,
+        join:true,
+        liveStreamRoomId:streamId
+      }
+      streamId && token && userId && socket.emit('isUserExistInLiveStreamRoom', data);
+    }
   })
   .on('reconnect_attempt', (attempt) => {
     console.log('🔁 Reconnecting (attempt', attempt, ')');

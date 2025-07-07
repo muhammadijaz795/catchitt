@@ -53,7 +53,6 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
   const [openReport, setOpenReport] = useState(false);
   const messagesEndRef = useRef(null);
   const [darkTheme, setdarkTheme] = useState('');
-  const socketRef = useRef();
   const SERVER_URL = 'https://prodapi.seezitt.com';
   const [isConnected, setIsConnected] = useState(false);
   console.log('profileDetails',profileDetails.details)
@@ -113,6 +112,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
   };
 
   const handleMenuOpen = (event, msgId) => {
+    console.log('msgId', msgId);
     setMenuAnchor(event.currentTarget);
     setMenuMsgId(msgId);
   };
@@ -123,11 +123,10 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
   };
 
   const handleReply = (msgId) => {
-    const msg = messages.find(m => m.id === msgId);
-    if (msg) {
-      setMessage(`@${msg.name} `);
-    }
+    setMessage(prev => prev + `@${msgId} `);
+    console.log('Reply to message ID:', msgId);
     handleMenuClose();
+
   };
 
   const handleFollow = (userId) => {
@@ -253,7 +252,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
             console.log(`Received message: ${JSON.stringify(data)}`);
             setMessages(prev => [...prev, {
               id: Date.now().toString(),
-              name: data?.userFullName,
+              userFullName: data?.userFullName,
               userName: data?.userName,
               userImage: data?.userImage,
               message: data.message,
@@ -705,7 +704,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                                   
                                                   <Avatar onClick={(e) => handleToggle(e, msg)} src={msg.userImage} sx={{ width: 24, height: 24, mr: 1 }} />
                                                   <Box flex="1" sx={{textAlign: 'left', wordBreak: 'break-word'}}>
-                                                    <Typography  fontSize={13} fontWeight={600}>{msg.name}</Typography>
+                                                    <Typography  fontSize={13} fontWeight={600}>{msg.userFullName}</Typography>
                                                     <Typography fontSize={13}>{msg.message}</Typography>
                                                   </Box>
     
@@ -777,7 +776,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
                                                         cursor: 'pointer',
                                                         ml: 1,
                                                         visibility: 'hidden', // hidden by default
-                                                      }} ml="auto"  onClick={(e) => handleMenuOpen(e, msg.name)}>
+                                                      }} ml="auto"  onClick={(e) => handleMenuOpen(e, msg.userFullName)}>
                                                       <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                       <path fill-rule="evenodd" clip-rule="evenodd" d="M2.66016 12C2.66016 10.8954 3.55559 10 4.66016 10C5.76471 10 6.66016 10.8954 6.66016 12C6.66016 13.1045 5.76471 14 4.66016 14C3.55559 14 2.66016 13.1045 2.66016 12ZM10.6602 12C10.6602 10.8954 11.5556 10 12.6602 10C13.7647 10 14.6602 10.8954 14.6602 12C14.6602 13.1045 13.7647 14 12.6602 14C11.5556 14 10.6602 13.1045 10.6602 12ZM18.6602 12C18.6602 10.8954 19.5556 10 20.6602 10C21.7647 10 22.6602 10.8954 22.6602 12C22.6602 13.1045 21.7647 14 20.6602 14C19.5556 14 18.6602 13.1045 18.6602 12Z" fill="#161823"/>
                                                       </svg>
@@ -811,7 +810,7 @@ const SidebarChat = ({ selectedLiveVideo, showSidebar, onHideSidebar, profileDet
     
                                                 {/* <MenuItem onClick={() => handleReport(menuMsgId!)}>Report</MenuItem> */}
     
-                                                <MenuItem  sx={{ py: 1.25 , '&:hover': { bgcolor: '#f5f5f5'}}}>
+                                                <MenuItem onClick={() => handleReply(menuMsgId)}   sx={{ py: 1.25 , '&:hover': { bgcolor: '#f5f5f5'}}}>
                                                     <ListItemIcon>
                                                         <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10.7727 18.8672C8.97271 18.8672 7.39771 18.5047 6.05188 17.7839C4.74007 17.1113 3.65482 16.0681 2.93104 14.7839C2.18855 13.3963 1.81683 11.8405 1.85188 10.2672C1.85188 8.58385 2.21438 7.11302 2.93521 5.84635C3.65857 4.57576 4.73362 3.54123 6.03104 2.86719C7.36438 2.15885 8.89771 1.80469 10.631 1.80469C12.3144 1.80469 13.7935 2.12552 15.0727 2.76302C16.3644 3.39219 17.3644 4.29219 18.0727 5.46719C18.8128 6.69691 19.1884 8.11149 19.156 9.54635C19.156 11.013 18.8144 12.213 18.131 13.1464C17.4519 14.063 16.4935 14.5255 15.256 14.5255C14.481 14.5255 13.8644 14.3589 13.4144 14.0255C13.1836 13.8414 12.9985 13.6065 12.8735 13.3391C12.7484 13.0717 12.6869 12.779 12.6935 12.4839L12.9727 12.6089C12.78 13.1936 12.3915 13.694 11.8727 14.0255C11.3012 14.3728 10.6411 14.5465 9.97271 14.5255C9.28713 14.5518 8.60862 14.3789 8.01926 14.0276C7.42991 13.6764 6.95496 13.1619 6.65188 12.5464C6.32154 11.8742 6.15723 11.1326 6.17271 10.3839C6.17271 9.57135 6.32688 8.85885 6.63104 8.24635C6.93266 7.63416 7.40435 7.12188 7.98962 6.77087C8.5749 6.41985 9.24894 6.24498 9.93104 6.26719C10.681 6.26719 11.306 6.43802 11.8144 6.78385C12.331 7.11719 12.6894 7.59219 12.8727 8.20469L12.5935 8.54635V6.86302C12.5935 6.75251 12.6374 6.64653 12.7156 6.56839C12.7937 6.49025 12.8997 6.44635 13.0102 6.44635H13.956C14.0666 6.44635 14.1725 6.49025 14.2507 6.56839C14.3288 6.64653 14.3727 6.75251 14.3727 6.86302V11.8839C14.3727 12.2464 14.4644 12.5089 14.6519 12.6839C14.8519 12.8464 15.1185 12.9255 15.4519 12.9255C16.0269 12.9255 16.4727 12.613 16.7935 11.9839C17.1269 11.3464 17.2935 10.5505 17.2935 9.60885C17.2935 8.33802 17.0144 7.23802 16.4519 6.30469C15.9135 5.38042 15.1131 4.63656 14.1519 4.16719C13.0768 3.63967 11.8908 3.37817 10.6935 3.40469C9.31854 3.40469 8.09771 3.69219 7.03104 4.26719C6.00107 4.81853 5.14863 5.65075 4.57271 6.66719C3.96934 7.76191 3.66604 8.99667 3.69354 10.2464C3.69354 11.6589 3.98521 12.8922 4.57271 13.9464C5.15604 14.988 5.98938 15.7839 7.07271 16.3464C8.26001 16.93 9.57099 17.2173 10.8935 17.1839H15.0977C15.2082 17.1839 15.3142 17.2278 15.3923 17.3059C15.4705 17.384 15.5144 17.49 15.5144 17.6005V18.4505C15.5144 18.561 15.4705 18.667 15.3923 18.7451C15.3142 18.8233 15.2082 18.8672 15.0977 18.8672H10.7727ZM10.356 12.9839C11.0727 12.9839 11.6394 12.7505 12.0519 12.2839C12.481 11.8172 12.6935 11.1839 12.6935 10.3839C12.6935 9.58385 12.481 8.95052 12.0519 8.48385C11.8377 8.24898 11.5742 8.06441 11.2803 7.94339C10.9864 7.82237 10.6693 7.76788 10.3519 7.78385C9.64354 7.78385 9.08104 8.01719 8.65188 8.48385C8.23938 8.95052 8.03104 9.58385 8.03104 10.3839C8.03104 11.1839 8.23938 11.8172 8.65604 12.2839C8.87135 12.5161 9.13443 12.699 9.42719 12.8198C9.71995 12.9407 10.0354 12.9966 10.3519 12.9839H10.356Z" fill="#161823"/>
