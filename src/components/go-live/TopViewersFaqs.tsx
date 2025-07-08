@@ -94,7 +94,7 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                 </Typography>
 
                 <Typography variant="body2" color="#111111" mb={1}>
-                    • The top 2 viewers' profile photos will be shown to everyone at the top of the LIVE.
+                    <strong>• The top 2 viewers</strong> profile photos will be shown to everyone at the top of the LIVE.
                 </Typography>
                 <Box
                     sx={{
@@ -117,7 +117,7 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                     />
                 </Box>
                 <Typography variant="body2" color="#111111" mb={1}>
-                    • The top 3 viewers have the chance to get a top viewer badge if the value of the Gifts they send is in the top 3. The top viewer badges will be displayed next to their usernames in the comments, their profiles, and the Top Viewer Ranking. The top 3 viewers' ranking position will also be notified in the comments.
+                    <strong>• The top 3 viewers</strong> have the chance to get a top viewer badge if the value of the Gifts they send is in the top 3. The top viewer badges will be displayed next to their usernames in the comments, their profiles, and the Top Viewer Ranking. The top 3 viewers' ranking position will also be notified in the comments.
                 </Typography>
                 <Box
                     sx={{
@@ -159,7 +159,7 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                     />
                 </Box>
                 <Typography variant="body2" color="#111111" mb={1}>
-                    • The top 99 viewers will be displayed in the Top Viewer Ranking. View the ranking by tapping the number at the top of a LIVE.
+                    <strong>• The top 99 viewers</strong> will be displayed in the Top Viewer Ranking. View the ranking by tapping the number at the top of a LIVE.
                 </Typography>
                 <Typography fontWeight="bold" mb={1} sx={{ mt: 2 }}>
                     3. Can I choose not to be shown in the rankings?
