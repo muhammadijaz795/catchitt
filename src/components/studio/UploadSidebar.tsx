@@ -67,7 +67,7 @@ import {
     const navigate = useNavigate();
     const [darkTheme, setdarkTheme] = useState<any>('');
     const [logo, setLogo] = useState(logoAuth);
-    const { t: translate, i18n } = useTranslation();
+    const { t: translate } = useTranslation();
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
