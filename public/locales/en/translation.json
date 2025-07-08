@@ -1,4 +1,14 @@
 {
+  "Upload": "Upload",
+  "Manage": "Manage",
+  "Home": "Home",
+  "Posts": "Posts",
+  "Analytics": "Analytics",
+  "Comments": "Comments",
+  "Others": "Others",
+  "Feedback": "Feedback",
+  "Back to Seezitt": "Back to Seezitt",
+
   "login.title": "Login to your account",
   "email.input": "Email",
   "password.input": "Password",
