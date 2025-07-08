@@ -26,14 +26,14 @@ import ExploreIcon from "@mui/icons-material/Explore";
 import AddIcon from "@mui/icons-material/Add";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
+import { useTranslation } from 'react-i18next';
 
 function FormLeftSide({ selectedVideoSrc, selectFilesHandler, darkTheme, videoInfo,state }: any) {
     const [replaceVideoPopup, setReplaceVideoPopup] = React.useState(false);
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const [value, setValue] = React.useState(1); // Default: Profile
     const selectedTemplate = useSelector((store: any) => store?.reducers?.isuploading?.selectedTemplate);
-
+    const { t: translate } = useTranslation();
 
      let isEditMode = false;
       const { id: postId } = useParams(); 
@@ -248,9 +248,9 @@ const handleSeekWeb = (e: any) => {
             },
           }}
         >
-          <Tab label="Feed" value={0} />
-          <Tab label="Profile" value={1} />
-          <Tab label="Web/TV" value={2} />
+          <Tab label={translate('Feed')} value={0} />
+          <Tab label={translate('Profile')} value={1} />
+          <Tab label={translate('Web/TV')} value={2} />
         </Tabs>
         </Paper>
 
@@ -315,7 +315,7 @@ const handleSeekWeb = (e: any) => {
                           letterSpacing: '0.5px',
                         }}
                       >
-                        LIVE
+                        {translate('LIVE')}
                       </Box>
 
                       {/* Centered tabs */}
@@ -327,7 +327,7 @@ const handleSeekWeb = (e: any) => {
                             fontWeight: 500,
                           }}
                         >
-                          Following
+                          {translate('Following')}
                         </Typography>
                         <Box sx={{ textAlign: 'center' }}>
                           <Typography
@@ -337,7 +337,7 @@ const handleSeekWeb = (e: any) => {
                               color: 'white',
                             }}
                           >
-                            For You
+                            {translate('For You')}
                           </Typography>
                           <Box
                             sx={{
@@ -422,7 +422,7 @@ const handleSeekWeb = (e: any) => {
                     <p className="font-medium text-[0.8rem] text-white">@{name}</p>
                     <p className="font-medium text-[0.6rem] text-white mt-[0.2rem]">
                         {state.category.name?.length > 50
-                            ? `${state.category.name?.slice(0, 60)}... See more`
+                            ? `${state.category.name?.slice(0, 60)}... ${translate('See more')}`
                             : state.category.name}
                     </p>
                     <div className="mt-[0.1rem] flex gap-1 leading-3" >
@@ -734,7 +734,7 @@ const handleSeekWeb = (e: any) => {
                 <p className="font-medium text-[0.5rem] text-white">@{name}</p>
                 <p className="font-medium text-[0.5rem] text-white mt-[0.2rem]">
                     {state.category.name?.length > 50
-                        ? `${state.category.name?.slice(0, 60)}... See more`
+                        ? `${state.category.name?.slice(0, 60)}... ${translate('See more')}`
                         : state.category.name}
                 </p>
                 <div className="mt-[0.1rem] flex gap-1 leading-3" >
@@ -832,7 +832,7 @@ const handleSeekWeb = (e: any) => {
                 onClick={() => setOpenEditModal(true)}
                 textSize="14px"
                 islight
-                text="Edit video"
+                text={translate('Edit video')}
                 backgroundColor="#0000000D"
                 color="black"
                 icon={MyIcon}
@@ -848,10 +848,10 @@ const handleSeekWeb = (e: any) => {
             /> */}
             <CustomPopup
                 open={replaceVideoPopup}
-                title="Replace this video?"
-                description="Caption and video settings will still be saved."
-                btnText="Continue editing"
-                primaryBtnText="Replace"
+                title={translate('Replace this video?')}
+                description={translate('Caption and video settings will still be saved.')}
+                btnText={translate('Continue editing')}
+                primaryBtnText={translate('Replace')}
                 onBtnClick={() => setReplaceVideoPopup(false)}
                 onPrimaryBtnClick={selectFilesHandler}
                 onClose={() => setReplaceVideoPopup(false)}
