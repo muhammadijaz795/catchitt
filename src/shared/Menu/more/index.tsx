@@ -5,6 +5,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+
 
 import { copyLink, notAllowed, report, saveVideo, send, repost, blackHeartOutline, blackCrossHeart } from '../../../icons';
 import style from './index.module.scss';
@@ -29,7 +31,7 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
     const { isEnabled } = useSelector((store: any) => store?.reducers?.autoScrollUserSettings);
     console.info('isEnabled in more menu',isEnabled)
     const [autoScroll, setAutoScroll] = React.useState(isEnabled);
-
+    const { t, i18n } = useTranslation();
     // Update autoScroll when isEnabled changes (if isEnabled is dynamic)
     React.useEffect(() => {
         setAutoScroll(isEnabled);
@@ -290,7 +292,7 @@ export default function MORE_MENU_HOME({ visibleReportPopup, url, postMediaId,ac
                 <MenuItem onClick={()=>{ notInterestedInVideo(postMediaId),handleClose() }} style={{ padding: '0px', margin: '0px' }}>
                     <div className={style.menuItem}  style={{padding:'0.5rem 1rem'}}>
                         <img width="20" src={blackCrossHeart} />
-                        <p className={`${style.p} ${style.black_500}`}>Not interested</p>
+                        <p className={`${style.p} ${style.black_500}`}>{t('notinterested.text')}</p>
                     </div>
                 </MenuItem>
                 <MenuItem onClick={handleClose} style={{ padding: '0px', margin: '0px' }}>
