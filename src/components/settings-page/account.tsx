@@ -2455,12 +2455,14 @@ const Account = ({ className, openModal }: AccountProps) => {
                             >
                                 <div className={styles.contentPrefHeader}>
                                     <h4 className={`${styles.contentPrefModalHeader} ${darkTheme !== '' ? 'text-white' : 'text-black'}`}>
-                                        Content Preference
+                                        {t('contentPreference')}
+
                                     </h4>
                                     <p className={styles.blueText}>
-                                        Choose the topics that interest you most.
+                                        {t('chooseTopics')}
+
                                     </p>
-                                    <p className={styles.greyText}>You can choose from 1 to 5 topics</p>
+                                    <p className={styles.greyText}>{t('choose1to5')}</p>
                                 </div>
                                 <div
                                     className={
@@ -2517,7 +2519,7 @@ const Account = ({ className, openModal }: AccountProps) => {
                                             onClick={handleSubmitPrefContent}
                                             disabled={notAcceptable}
                                         >
-                                            Done
+                                            {t('Done')}
                                         </Button>
                                     </FormGroup>
                                 </div>

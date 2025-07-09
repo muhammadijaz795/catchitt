@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material";
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 
 const screenTimeBreaks: React.FC = () => {
- 
+    const { t, i18n } = useTranslation();
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const [selectedTimes, setSelectedTimes] = useState<{ daily: string }>({ daily: "" });
     const [openDropdown, setOpenDropdown] = useState(null);
@@ -94,8 +96,8 @@ const screenTimeBreaks: React.FC = () => {
                     </svg>
                     </span>
                     <div>
-                        <p className='d-flex  mb-1'>Schedule a break</p>
-                        <span className='text-xs text-[#16182399]'>Get reminded to take a break from Seezitt after a period of uninterrupted screen time.</span>
+                        <p className='d-flex  mb-1'>{t('scheduleABreak')}</p>
+                        <span className='text-xs text-[#16182399]'>{t('breakReminderDescription')}</span>
                     </div>
             </div>
             <div className='text-left d-flex mt-3 '>
@@ -105,8 +107,8 @@ const screenTimeBreaks: React.FC = () => {
                 </svg>
                     </span>
                     <div>
-                        <p className='d-flex mb-1'>Tailor your experience</p>
-                        <span className='text-xs text-[#16182399]'>Snooze to get reminded again or edit future reminders.</span>
+                        <p className='d-flex mb-1'>{t('tailorExperience')}</p>
+                        <span className='text-xs text-[#16182399]'>{t('snoozeReminder')}</span>
                     </div>
                 </div>
         </div>
@@ -114,7 +116,7 @@ const screenTimeBreaks: React.FC = () => {
             <div className="d-flex justify-between">
                 <div>
                     <div className='text-left'>
-                        <p className='text-base'>Schedule screen time breaks</p>
+                        <p className='text-base'>{t('scheduleBreaks')}</p>
                     </div>
                 </div>
                 <label className={`toggle-switch !left-1 ${isEnabled ? 'checkedToggle' : ''}`}>
@@ -142,7 +144,7 @@ const screenTimeBreaks: React.FC = () => {
         )}
         <div className='d-flex mt-3 justify-end'>
             <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm" onClick={() => saveChanges()}>
-                <p className="text-[rgb(255, 59, 92)] font-normal">Done</p>
+                <p className="text-[rgb(255, 59, 92)] font-normal">{t('Done')}</p>
             </button>
         </div>
       </div>

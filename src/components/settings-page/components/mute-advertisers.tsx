@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material";
-
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 const MuteAdvertisers: React.FC = () => {
+      const { t, i18n } = useTranslation();
     const [Sponsored, setSponsored] = useState(
         {
             items: [],
@@ -39,7 +41,7 @@ const MuteAdvertisers: React.FC = () => {
             <div className="d-flex justify-between py-3 d-none">
                 <div >
                     <div className='text-left'>
-                        <p className='text-base'>Smart Valley</p>
+                        <p className='text-base'>{t('smartValley')}</p>
                     </div>
                 </div>
                 <label className="toggle-switch !left-1">

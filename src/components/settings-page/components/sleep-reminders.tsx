@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { AccessTime } from "@mui/icons-material";
 import styles from '../account.module.scss';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 const SleepReminder: React.FC = () => {
-
+  const { t, i18n } = useTranslation();
   var themeColor = window.localStorage.getItem('theme');
   
     const [darkTheme, setdarkTheme] = useState('');
@@ -57,8 +59,8 @@ const SleepReminder: React.FC = () => {
             <AccessTime className="text-gray-600 mr-2" />
           </span>
           <div>
-            <p className='d-flex mb-1'>Set your sleep time</p>
-            <span className='text-xs text-[#16182399]'>You’ll get reminded if you reach your sleep time</span>
+            <p className='d-flex mb-1'>{t('setSleepTime')}</p>
+            <span className='text-xs text-[#16182399]'>{t('sleepTimeReminder')}</span>
           </div>
         </div>
       </div>
@@ -66,7 +68,7 @@ const SleepReminder: React.FC = () => {
       <Typography className="border-top pt-3 mt-3">
         <div className="d-flex justify-between">
           <div>
-            <p className='text-base'>Set up sleep reminders</p>
+            <p className='text-base'>{t('setSleepReminders')}</p>
           </div>
           <label className={`toggle-switch !left-1 ${isEnabled ? 'checkedToggle' : ''}`}>
             <input 
@@ -82,7 +84,7 @@ const SleepReminder: React.FC = () => {
 
       {isEnabled && (
         <div className={`${darkTheme ? '' : 'bg-gray-200' } p-4 mt-4 rounded-md`}>
-          <p className="font-medium">Sleep reminders</p>
+          <p className="font-medium">{t('sleepReminders')}</p>
           <div className="flex items-center gap-3">
             <div className="relative w-[8rem]">
               <input
@@ -99,10 +101,9 @@ const SleepReminder: React.FC = () => {
           </div>
         </div>
       )}
-
       <div className='d-flex mt-3 justify-end'>
         <button className="bg-[#FE2C55] text-white font-semibold px-4 rounded-sm text-sm" onClick={() => saveChanges()}>
-          Done
+          {t('Done')}
         </button>
       </div>
     </div>

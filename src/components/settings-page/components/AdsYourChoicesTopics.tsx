@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AppBar, Tabs, Tab, Box, Typography, Modal, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { styled } from "@mui/material";
 import styles from '../account.module.scss';
-
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -48,6 +49,7 @@ const CustomTabs = styled(Tabs)({
 });
 
 const AdsYourChoicesTopics: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
   const [open, setOpen] = useState(false); 
@@ -155,9 +157,9 @@ const AdsYourChoicesTopics: React.FC = () => {
   return (
     <>
     <Box>
-        <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>Your choices</h4>
-        <span className='text-left px-3 text-[#000000A6] d-block text-sm'>These are the topics you specified as being interested or not interested in. You can update your preferences anytime.</span>
-        <span className='text-left px-3 text-[#000000A6] font-semibold d-block text-sm mt-3'>Manage topics</span>
+        <h4 className={`${darkTheme ? 'text-white' : 'text-black'} mb-0 font-semibold text-xl p-3`}>{t('your.choices')}</h4>
+        <span className='text-left px-3 text-[#000000A6] d-block text-sm'>{t('ads.topicsInterestInfo')}</span>
+        <span className='text-left px-3 text-[#000000A6] font-semibold d-block text-sm mt-3'>{t('manageTopics')}</span>
         {allCategories.items.map((category, index) => (
         <div className="px-3" key={index}>
           <div className={styles.accountCards} onClick={() => openModalList(category)}>
@@ -185,20 +187,20 @@ const AdsYourChoicesTopics: React.FC = () => {
             </span>
             <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">{selectedTopic?.name}</Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>
-              Personalized ads can be based on inferences that Seezitt has made about you. Changes can take up to 48 hours to take effect.
+              {t('personalizedInferenceDelay')}
             </Typography>
             <RadioGroup value={isInterested} onChange={(event) => setIsInterested(event.target.value == 'true')}>
             <Box className="mt-3" display="flex" alignItems="center" justifyContent="space-between">
             <span>
-                <Typography>Interested</Typography>
-                <span className="text-sm">We'll try to show you more ads related to this topic.</span>
+                <Typography>{t('interested')}</Typography>
+                <span className="text-sm">{t('show.more.ads')}</span>
               </span>
               <FormControlLabel value="true" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
             </Box>
             <Box className="mt-3" display="flex" alignItems="center" justifyContent="space-between">
               <span>
-                <Typography>Not interested</Typography>
-                <span className="text-sm">We'll try to show you less ads related to this topic.</span>
+                <Typography><span className="text-sm">{t('not.interested')}</span></Typography>
+                <span className="text-sm"><span className="text-sm">{t('show.less.ads')}</span></span>
               </span>
               <FormControlLabel value="false" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
             </Box>

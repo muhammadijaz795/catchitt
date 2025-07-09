@@ -257,14 +257,14 @@ const Ads: React.FC = () => {
             <Box className="mt-3" display="flex" alignItems="center" justifyContent="space-between">
             <span>
                 <Typography>{t("interested")}</Typography>
-                <span className="text-sm">{t("show_more_ads")}</span>
+                <span className="text-sm">{t("show.more.ads")}</span>
               </span>
               <FormControlLabel value="true" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
             </Box>
             <Box className="mt-3" display="flex" alignItems="center" justifyContent="space-between">
               <span>
                 <Typography>{t("not_interested")}</Typography>
-                <span className="text-sm">{t("show_less_ads")}</span>
+                <span className="text-sm">{t("show.less.ads")}</span>
               </span>
               <FormControlLabel value="false" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
             </Box>
@@ -285,19 +285,19 @@ const Ads: React.FC = () => {
             <path d="M38.7 12.12a1 1 0 0 0 0-1.41l-1.4-1.42a1 1 0 0 0-1.42 0L24 21.17 12.12 9.3a1 1 0 0 0-1.41 0l-1.42 1.42a1 1 0 0 0 0 1.41L21.17 24 9.3 35.88a1 1 0 0 0 0 1.41l1.42 1.42a1 1 0 0 0 1.41 0L24 26.83 35.88 38.7a1 1 0 0 0 1.41 0l1.42-1.42a1 1 0 0 0 0-1.41L26.83 24 38.7 12.12Z"></path>
             </svg>
           </span>
-          <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">Gender</Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>Personalized ads can be based on inferences that Seezitt has made about you. Updates apply only to your ad settings and do not affect other Seezitt services.</Typography>
+          <Typography id="modal-modal-title" sx={{ textAlign: 'center'}} variant="h5" component="p">{t("gender")}</Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: '16px' }}>{t('Gender.popup.ads.description')}</Typography>
           <RadioGroup value={gender} onChange={handleChangeGender}>
           <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Typography>Male</Typography>
+            <Typography>{t("Male")}</Typography>
             <FormControlLabel value="male" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Typography>Female</Typography>
+            <Typography>{t("Female")}</Typography>
             <FormControlLabel value="female" control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between">
-            <TextField variant="standard" placeholder="Custom" sx={{ width: '70%' }} onChange={(e) => setCustomGender(e.target.value)}/>
+            <TextField variant="standard" placeholder={t("Custom")} sx={{ width: '70%' }} onChange={(e) => setCustomGender(e.target.value)}/>
             <FormControlLabel value={customGender} control={<Radio sx={{ color: '#FE2C55', '&.Mui-checked': { color: '#FE2C55' } }} />} label="" />
           </Box>
         </RadioGroup>

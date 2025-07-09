@@ -16,6 +16,9 @@ import secondParagraphIcon from '../svg-components/secondParagraphIcon.svg';
 import thirdParagraphIcon from '../svg-components/thirdParagraphIcon.svg';
 import { useDispatch } from 'react-redux';
 import { updateProfileType } from '../../../redux/reducers/auth';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
+
 
 export interface SwitchToBusinessPopupProps {
     darkTheme?: any;
@@ -202,6 +205,8 @@ export const SwitchToBusinessPopup = ({
         handleFetchCategoriesNames();
     }, []);
 
+    const { t, i18n } = useTranslation();
+
     return (
         <div className={classNames(styles.root, className)}>
             <div>
@@ -214,19 +219,18 @@ export const SwitchToBusinessPopup = ({
                                 >
                                     <img src={businessAccountIcon} alt="" />
                                 </div>
-                                <h4 className={styles.contentPrefModalHeader}>Business</h4>
-                                <p className={styles.blueText}>Switch to Business account</p>
+                                <h4 className={styles.contentPrefModalHeader}>{t('Business')}</h4>
+                                <p className={styles.blueText}>{t('account.switch.toBusiness')}</p>
                             </div>
                             <div className={styles.cardsDiv}>
                                 <div className={styles.cardDiv}>
                                     <img src={firstParagraphIcon} alt="" />
                                     <div className={styles.textDiv}>
                                         <p className={`${styles.paragraphTitle} ${darkTheme!==''&&'text-white'}`}>
-                                            Learn about your customers
+                                            {t('account.learnAboutCustomers')}
                                         </p>
                                         <p className={styles.paragraphText}>
-                                            Get insights on video performance and engagement to help
-                                            you create content that converts.
+                                            {t('account.videoInsights.description')}
                                         </p>
                                     </div>
                                 </div>
@@ -234,21 +238,19 @@ export const SwitchToBusinessPopup = ({
                                     <img src={secondParagraphIcon} alt="" />
                                     <div className={styles.textDiv}>
                                         <p className={`${styles.paragraphTitle} ${darkTheme!==''&&'text-white'}`}>
-                                            Use royalty-free sounds
+                                            {t('account.useRoyaltyFreeSounds')}
                                         </p>
                                         <p className={styles.paragraphText}>
-                                            Choose from royalty-free music and sounds available to
-                                            brands for commercial purposes .{' '}
+                                            {t('account.chooseRoyaltyFreeMusicDescription')}{' '}
                                         </p>
                                     </div>
                                 </div>
                                 <div className={styles.cardDiv}>
                                     <img src={thirdParagraphIcon} alt="" />
                                     <div className={styles.textDiv}>
-                                        <p className={`${styles.paragraphTitle} ${darkTheme!==''&&'text-white'}`}>Get inspired</p>
+                                        <p className={`${styles.paragraphTitle} ${darkTheme!==''&&'text-white'}`}>{t('Get.inspired')}</p>
                                         <p className={styles.paragraphText}>
-                                            Get guidance and inspiration for your content in our
-                                            Business Creative Hub .{' '}
+                                           {t('account.businessCreativeHubDescription')} {' '}
                                         </p>
                                     </div>
                                 </div>
@@ -256,11 +258,10 @@ export const SwitchToBusinessPopup = ({
                                     <img src={fourthParagraphIcon} alt="" />
                                     <div className={styles.textDiv}>
                                         <p className={`${styles.paragraphTitle} ${darkTheme!==''&&'text-white'}`}>
-                                            Access Business Suit tools
+                                            {t('account.accessBusinessSuite')}
                                         </p>
                                         <p className={styles.paragraphText}>
-                                            Manage your business on Seezltt with post scheduler ,
-                                            Auto-messaging ,and more features coming soon !{' '}
+                                            {t('account.manageBusinessOnSeezltt')}{' '}
                                         </p>
                                     </div>
                                 </div>
@@ -269,7 +270,7 @@ export const SwitchToBusinessPopup = ({
                                     variant="contained"
                                     onClick={handleOpenContentPrefModal}
                                 >
-                                    Next
+                                    {t('Next')}
                                 </Button>
                             </div>
                         </div>
@@ -287,12 +288,11 @@ export const SwitchToBusinessPopup = ({
                             <Box sx={contentPrefModalStyle}>
                                 <div className={styles.contentPrefHeader}>
                                     <h4 className={styles.contentPrefModalHeader}>
-                                        Business Category
+                                        {t('Business.category')}
                                     </h4>
-                                    <p className={styles.blueText}>Choose Category</p>
+                                    <p className={styles.blueText}>{t('Choose.Category')}</p>
                                     <p className={styles.greyText}>
-                                        Select the category that best describes your account. This
-                                        category won’t be displayed publicly.
+                                        {t('account.categorySelectionInfo')}
                                     </p>
                                 </div>
                                 <div className={styles.formCards}>
@@ -344,7 +344,7 @@ export const SwitchToBusinessPopup = ({
                                             onClick={handleOpenConfirmationFirstModal}
                                             // disabled={notAcceptable}
                                         >
-                                            Next
+                                            {t('Next')}
                                         </Button>
                                     </FormGroup>
                                 </div>
@@ -355,99 +355,102 @@ export const SwitchToBusinessPopup = ({
                 {openConfirmationModal && (
                     <>
                         <Modal
-                            open={openConfirmationModal}
-                            onClose={handleCloseConfirmationFirstModal}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={mainModalstyle}>
-                                <div className={styles.frame}>
+                                open={openConfirmationModal}
+                                onClose={handleCloseConfirmationFirstModal}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                                >
+                                <Box sx={mainModalstyle}>
+                                    <div className={styles.frame}>
                                     <div className={styles.contentPrefHeaderConfirmationModal}>
                                         <div
-                                            className={styles.leftArrowImg}
-                                            onClick={handleGoBackTofirstModal}
+                                        className={styles.leftArrowImg}
+                                        onClick={handleGoBackTofirstModal}
                                         >
-                                            <img src={LeftArrow} alt="" />
+                                        <img src={LeftArrow} alt="" />
                                         </div>
                                         <div className={styles.headerTextDiv}>
-                                            <h4 className={styles.contentPrefModalHeader}>
-                                                Business Email
-                                            </h4>
-                                            <p className={styles.blueText}>Add your Email</p>
-                                            <p
-                                                className={styles.greyText}
-                                                style={{ width: '380px' }}
-                                            >
-                                                Add an email to your profile to connect with your
-                                                customers directly . You can always change this
-                                                later.{' '}
-                                            </p>
+                                        <h4 className={styles.contentPrefModalHeader}>
+                                            {t('businessEmail.header')}
+                                        </h4>
+                                        <p className={styles.blueText}>{t('businessEmail.subheader')}</p>
+                                        <p
+                                            className={styles.greyText}
+                                            style={{ width: '380px' }}
+                                        >
+                                            {t('businessEmail.description')}
+                                        </p>
                                         </div>
                                     </div>
                                     <div style={{ marginBottom: '24px', width: '100%' }}>
                                         <InputField
-                                            placeholder="Email address"
-                                            type="email"
-                                            value={user.email}
-                                            onChange={(e: { target: { value: string } }) => {
-                                                onUserChange('email', e.target.value);
-                                            }}
+                                        placeholder={t('businessEmail.placeholder')}
+                                        type="email"
+                                        value={user.email}
+                                        onChange={(e: { target: { value: string } }) => {
+                                            onUserChange('email', e.target.value);
+                                        }}
                                         />
                                     </div>
-                                </div>
-                                <div className={styles.btnsDiv}>
+                                    </div>
+                                    <div className={styles.btnsDiv}>
                                     <Button
                                         variant="contained"
                                         sx={mainModalBtnstyle}
                                         onClick={(e: React.FormEvent) =>
-                                            handleSwitchToBusiness(e, user.email)
+                                        handleSwitchToBusiness(e, user.email)
                                         }
                                     >
-                                        Next
+                                        {t('businessEmail.next')}
                                     </Button>
                                     <button
                                         type="reset"
                                         className={styles.cancelBtn}
                                         onClick={handleClose}
                                     >
-                                        Skip
+                                        {t('businessEmail.skip')}
                                     </button>
-                                </div>
-                            </Box>
-                        </Modal>
+                                    </div>
+                                </Box>
+                                </Modal>
+
                     </>
                 )}
                 {openConfirmationLastModal && (
                     <>
-                        <Modal
+                       <Modal
                             open={openConfirmationLastModal}
                             onClose={handleCloseConfirmationLastModal}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
-                        >
+                            >
                             <Box sx={lastConfirmationModalstyle}>
                                 <div className={styles.frame} style={{ marginBottom: '0' }}>
-                                    <div
-                                        className={styles.finalDeleteConfirmationDiv}
-                                        style={{ textAlign: 'center' }}
-                                    >
-                                        <h4 className={darkTheme!==''?'texh-white':'text-black'}>Business profile created</h4>
-                                        <img
-                                            src={congratsIcon}
-                                            alt=""
-                                            style={{ marginTop: '32px' }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <h1 className={`${styles.boldText} ${darkTheme!==''&&'text-white'}`}>You’re all set</h1>
-                                        <p className={darkTheme!==''?styles.greyText:styles.blackText}>
-                                            Now you can access more tools to better connect with
-                                            your customers and grow your business.
-                                        </p>
-                                    </div>
+                                <div
+                                    className={styles.finalDeleteConfirmationDiv}
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    <h4 className={darkTheme !== '' ? 'text-white' : 'text-black'}>
+                                    {t('businessProfile.created')}
+                                    </h4>
+                                    <img
+                                    src={congratsIcon}
+                                    alt=""
+                                    style={{ marginTop: '32px' }}
+                                    />
+                                </div>
+                                <div>
+                                    <h1 className={`${styles.boldText} ${darkTheme !== '' && 'text-white'}`}>
+                                    {t('businessProfile.ready')}
+                                    </h1>
+                                    <p className={darkTheme !== '' ? styles.greyText : styles.blackText}>
+                                    {t('businessProfile.description')}
+                                    </p>
+                                </div>
                                 </div>
                             </Box>
                         </Modal>
+
                     </>
                 )}
             </div>

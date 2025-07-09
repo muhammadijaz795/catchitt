@@ -7,6 +7,8 @@ import { useAuthStore } from '../../../store/authStore';
 
 import { useDispatch } from 'react-redux';
 import { updateProfileType } from '../../../redux/reducers/auth';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 export interface SwitchToPersonalPopupProps {
     darkTheme?: any;
@@ -45,8 +47,9 @@ export const SwitchToPersonalPopup = ({
     const API_KEY = process.env.VITE_API_URL;
 
     const navigate = useNavigate();
-
+const { t, i18n } = useTranslation();
     const handleSwitchToPersonal = async (event: React.FormEvent) => {
+        
         event.preventDefault();
         try {
             const response = await fetch(`${API_KEY}/profile/`, {
@@ -88,14 +91,12 @@ export const SwitchToPersonalPopup = ({
                         <div className={styles.frame}>
                             <div className={styles.contentPrefHeader}>
                                 <h4 className={`${styles.contentPrefModalHeader} ${darkTheme!==''?'text-white':'text-black'}`}>
-                                    Switch to Personal Account?
+                                    {t('account.switchToPersonal')}
                                 </h4>
                                 <p className={styles.greyText}>
-                                    You will lose all the Business Account features, your profile{' '}
-                                    <br></br>will not show the business website and email, you will
-                                    still <br></br>be responsible for any violations received on
-                                    your<br></br>
-                                    business account.
+                                    {t('account.lossWarning.message', {
+                                        interpolation: { escapeValue: false }
+                                    })}
                                 </p>
                             </div>
                             <form className={styles.formStyle}>
@@ -104,14 +105,14 @@ export const SwitchToPersonalPopup = ({
                                         className={styles.submitBtn}
                                         onClick={handleSwitchToPersonal}
                                     >
-                                        Switch anyway
+                                        {t('account.switch.anyway')}
                                     </button>
                                     <button
                                         type="reset"
                                         className={styles.cancelBtn}
                                         onClick={handleCloseModal}
                                     >
-                                        Cancel
+                                        {t('Cancel')}
                                     </button>
                                 </div>
                             </form>

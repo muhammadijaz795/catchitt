@@ -12,6 +12,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 import InputField from '../../reusables/InputField';
 import LeftArrow from '../svg-components/LeftArrow.svg';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
+import { Trans } from 'react-i18next';
 
 export interface DeleteReasonPopupProps {
     darkTheme?: any;
@@ -32,6 +35,7 @@ const defaultUser: User = {
 };
 
 export const DeleteReasonPopup = ({
+    
     darkTheme,
     className,
     onSubmit,
@@ -208,7 +212,7 @@ export const DeleteReasonPopup = ({
             setNotAcceptable(false);
         }
     }, [deleteReason]);
-
+    const { t, i18n } = useTranslation();
     return (
         <div className={classNames(styles.root, className)}>
             <div>
@@ -216,12 +220,10 @@ export const DeleteReasonPopup = ({
                     <>
                         <div className={styles.frame}>
                             <div className={styles.contentPrefHeader}>
-                                <h4 className={`${styles.contentPrefModalHeader} ${darkTheme!==''?'text-white':'text-black'}`}>Delete account</h4>
-                                <p className={styles.blueText}>Why are you leaving Seezitt?</p>
+                                <h4 className={`${styles.contentPrefModalHeader} ${darkTheme!==''?'text-white':'text-black'}`}>{t('deleteAccount')}</h4>
+                                <p className={styles.blueText}>{t('leaveReason')}</p>
                                 <p className={styles.greyText}>
-                                    It is sad to see you leave. Could you tell us the reason you are
-                                    leaving? It well help us provide a happier environment for our
-                                    community.
+                                    {t('leaveMessage')}
                                 </p>
                             </div>
                             <form
@@ -278,7 +280,7 @@ export const DeleteReasonPopup = ({
                                                     }}
                                                 />
                                             }
-                                            label="Another reason"
+                                            label={t('anotherReason')}
                                             style={{
                                                 // borderBottom: '1px solid #DFDFDF',
                                                 paddingBottom: '18px',
@@ -289,9 +291,7 @@ export const DeleteReasonPopup = ({
                                         {otherReasonField && (
                                             <input
                                                 className={styles.otherReasonInputField}
-                                                placeholder={
-                                                    'Please tell us the reason you are leaving'
-                                                }
+                                                placeholder={t('leaveReasonPlaceholder')}
                                                 onChange={(e) => setDeleteReason(e.target.value)}
                                             />
                                         )}
@@ -303,7 +303,7 @@ export const DeleteReasonPopup = ({
                                         className={styles.cancelBtn}
                                         onClick={handleClose}
                                     >
-                                        Skip
+                                        {t('Skip')}
                                     </button>
                                     <button
                                         type="submit"
@@ -315,7 +315,7 @@ export const DeleteReasonPopup = ({
                                         onClick={handleOpenConfirmationFirstModal}
                                         disabled={notAcceptable}
                                     >
-                                        Continue
+                                        {t('Continue')}
                                     </button>
                                 </div>
                             </form>
@@ -342,48 +342,46 @@ export const DeleteReasonPopup = ({
                                         </div>
                                         <div className={styles.headerTextDiv}>
                                             <h4 className={`${styles.contentPrefModalHeader} ${darkTheme!==''?'text-white':'text-black'}`}>
-                                                Delete account?
+                                                {t('deleteAccount')}?
                                             </h4>
                                             <p className={styles.blueText}>
-                                                Delete {username} account?
+                                                {t('Delete')} {username} {t('account')}?
                                             </p>
                                             <p
                                                 className={styles.greyText}
                                                 style={{ width: '372px' }}
                                             >
-                                                Your account will deactivate for 30 days, it will
-                                                not be <br></br>
-                                                visible to public. You can reactivate your account{' '}
-                                                <br></br>
-                                                by login in anytime during these 30 days.
+                                                <Trans i18nKey="deactivationNotice">
+                                                    Your account will deactivate for 30 days, it will<br />
+                                                    not be visible to public. You can reactivate your account<br />
+                                                    by logging in anytime during these 30 days.
+                                                    </Trans>
                                             </p>
                                         </div>
                                     </div>
                                     <div>
                                         <p className={styles.bodyText}>
-                                            By deleting your account:<br></br>
+                                            {t('deleteAccountNote')}<br></br>
                                         </p>
                                         <p className={styles.bodyText}>
                                             <ul style={{ padding: '0 24px 0 24px' }}>
                                                 <li>
-                                                    You no longer can login to this account.
+                                                    {t('accountLoginDisabled')}
                                                     <br></br>
                                                 </li>
                                                 <li>
-                                                    You lose all your drafts, and posted videos and
-                                                    images.<br></br>
+                                                    {t('loseAllDraftsMedia')}<br></br>
                                                 </li>
                                                 <li>
-                                                    You can’t get a refund on any items purchased or
-                                                    recieved.<br></br>
+                                                   {t('noRefunds')}<br></br>
                                                 </li>
                                                 <li>
-                                                    You lose all your direct messages, but others
-                                                    may still be able to see it.<br></br>
+                                                    {t('loseMessagesVisibleToOthers')}<br></br>
                                                 </li>
                                             </ul>
                                             <br></br>
-                                            Do you still wish to continue?
+                                            {t('confirmContinue')}
+
                                         </p>
                                     </div>
                                 </div>
@@ -392,7 +390,7 @@ export const DeleteReasonPopup = ({
                                     sx={mainModalBtnstyle}
                                     onClick={handleOpenPasswordCheckModal}
                                 >
-                                    Continue
+                                    {t('Continue')}
                                 </Button>
                             </Box>
                         </Modal>
@@ -417,16 +415,21 @@ export const DeleteReasonPopup = ({
                                         </div>
                                         <div className={styles.headerTextDiv}>
                                             <h4 className={`${styles.contentPrefModalHeader} ${darkTheme!==''?'text-white':'text-black'}`}>
-                                                Delete account
+                                                {t('Delete.account')}
                                             </h4>
-                                            <p className={styles.blueText}>Enter password</p>
+                                            <p className={styles.blueText}>{t('enterPassword')}</p>
                                             <p
                                                 className={styles.greyText}
                                                 style={{ width: '372px' }}
                                             >
-                                                To continue, please enter your password to confirm
+                                                <Trans i18nKey="ContinuePEnterter">
+                                                    To continue, please enter your password to confirm<br />
+                                                    <br />
+                                                    this account belongs to you.
+                                                </Trans>
+                                                
                                                 <br></br>
-                                                this account belongs to you.
+                                               
                                             </p>
                                         </div>
                                     </div>
@@ -461,7 +464,7 @@ export const DeleteReasonPopup = ({
                                     <div style={{ width: '100%' }}>
                                         <InputField
                                             type="password"
-                                            placeholder={'Enter password'}
+                                            placeholder={t('enterPassword')}
                                             className="formInputFields"
                                             value={user.password}
                                             onChange={(e: { target: { value: string } }) => {
@@ -475,7 +478,7 @@ export const DeleteReasonPopup = ({
                                     sx={mainModalBtnstyle}
                                     onClick={() => handleSignIn(email ? email : '', user.password)}
                                 >
-                                    Delete {username}
+                                    {t('Delete')} {username}
                                 </Button>
                             </Box>
                         </Modal>
@@ -496,16 +499,15 @@ export const DeleteReasonPopup = ({
                                         style={{ textAlign: 'center' }}
                                     >
                                         <h4>
-                                            Are you sure you want to delete<br></br>
-                                            account {username} ?
+                                            {t('confirm.delete')}<br></br>
+                                            {t('Account')} {username} ?
                                         </h4>
                                     </div>
                                     <div className={styles.confirmationBtnsDiv}>
                                         <button
                                             onClick={handleDeleteSubmit}
-                                            style={{ background: '#DE0C0C', color: 'white' }}
-                                        >
-                                            Delete
+                                            style={{ background: '#DE0C0C', color: 'white' }}>
+                                            {t('Delete')}
                                         </button>
                                         <button
                                             onClick={handleCloseConfirmationLastModal}
@@ -513,9 +515,8 @@ export const DeleteReasonPopup = ({
                                                 border: '1px solid rgb(255, 59, 92)',
                                                 background: '#FFF',
                                                 color: 'rgb(255, 59, 92)',
-                                            }}
-                                        >
-                                            Cancel
+                                            }}>
+                                            {t('Cancel')}
                                         </button>
                                     </div>
                                 </div>
