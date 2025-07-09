@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid,  ResponsiveContainer, Bar
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
   import dayjs from 'dayjs'; // If you want date formatting
+import { useTranslation } from 'react-i18next';
 
   const newViewersData = [
     { date: 'Apr 6', viewers: 30 },
@@ -23,6 +24,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
   ];
 
 function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
+  const { t: translate } = useTranslation();
   const value = 70;
   const [tabIndex, setTabIndex] = useState(0);
   const [tab, setTab] = useState(0);
@@ -186,8 +188,8 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                         },
                     }}
                     >
-                    <Tab label="Total viewers" />
-                    <Tab label="New viewers" />
+                    <Tab label={translate('Total viewers')} />
+                    <Tab label={translate('New viewers')} />
                     </Tabs>
 
                     {/* Top Section */}
@@ -271,9 +273,9 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                 <CardContent sx={{p:0}}>
                     <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
                         <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
-                        Most active times
+                        {translate('Most active times')}
                         </Typography>
-                        <Tooltip title="Shows when your viewers are most active." arrow>
+                        <Tooltip title={translate('Shows when your viewers are most active.')} arrow>
                         <IconButton size="small" sx={{ p: 0.5 }}>
                             <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
                         </IconButton>
@@ -307,8 +309,8 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
                         },
                         }}
                     >
-                        <Tab label="Hour" />
-                        <Tab label="Day" />
+                        <Tab label={translate('Hour')} />
+                        <Tab label={translate('Day')} />
                     </Tabs>
                     {tab === 1 ? (
                     // Day View
@@ -407,9 +409,9 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
             
                 <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
                         <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
-                        Posts your viewers also viewed
+                        {translate('Posts your viewers also viewed')}
                         </Typography>
-                        <Tooltip title="Shows when your viewers are most active." arrow>
+                        <Tooltip title={translate('Shows when your viewers are most active.')} arrow>
                         <IconButton size="small" sx={{ p: 0.5 }}>
                             <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
                         </IconButton>
@@ -474,9 +476,9 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
            <Card variant="outlined" sx={{ p: 0, my: 3, borderRadius: 2 }}>
                     <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
                         <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
-                        Creators your viewers also watched
+                        {translate('Creators your viewers also watched')}
                         </Typography>
-                        <Tooltip title="Shows when your viewers are most active." arrow>
+                        <Tooltip title={translate('Shows when your viewers are most active.')} arrow>
                         <IconButton size="small" sx={{ p: 0.5 }}>
                         <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
                         </IconButton>
@@ -536,11 +538,11 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
 
           {/* Locations */}
           <Paper variant="outlined" sx={{ mb: 3 }}>
-            <CardHeader title="Locations" />
+            <CardHeader title={translate('Locations')} />
             <Box sx={{ p: 2 }}>
               {(!analyticsDetails?.details?.countryPercentages || Object.values(analyticsDetails.details.countryPercentages).every(p => p === "0%")) && (
               <Typography color="text.secondary" fontSize={14} mb={2}>
-                You’ll be able to see this information once there’s enough data for analysis.
+                {translate('You’ll be able to see this information once there’s enough data for analysis.')}
               </Typography>
               )}
               {Object.entries(analyticsDetails?.details?.countryPercentages).map(([country, percentage]) => (
@@ -556,10 +558,10 @@ function ViewersTab({analyticsDetails, selectedPeriod, isDarkThemes}: any) {
           </Paper>
           {/* Age */}
           <Paper variant="outlined">
-                    <CardHeader title="Age" />
+                    <CardHeader title={translate('Age')} />
                     <Box sx={{ p: 2 }}>
                     <Typography color="text.secondary" fontSize={14} mb={2}>
-                        You’ll be able to see this information once there’s enough data for analysis.
+                        {translate('You’ll be able to see this information once there’s enough data for analysis.')}
                     </Typography>
 
                     {Array.from({ length: 6 }).map((_, i) => (
