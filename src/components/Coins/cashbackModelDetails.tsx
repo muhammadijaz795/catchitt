@@ -21,9 +21,35 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { modelMininon, modelDiscountDivider, logoAuthWhite, modelCoins, bgModelIcon,} from "../../icons";
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
+import cookies from 'js-cookie';
 
 export default function CashBackWaveDialogDetails({ open , onClose }: { open: any; onClose: any;}) {
   const [tab, setTab] = React.useState(0);
+
+  interface Languages {
+    code: string;
+    name: string;
+    country_code: string;
+  }
+        
+  const languages: Languages[] = [
+      {
+          code: 'en',
+          name: 'English',
+          country_code: 'gb',
+      },
+      {
+          code: 'ar',
+          name: 'العربية',
+          country_code: 'sa',
+      },
+  ];
+
+  const currentLanguageCode = cookies.get('i18next') || 'en';
+  const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+  const { t, i18n } = useTranslation();
 
   return (
     
@@ -64,7 +90,7 @@ export default function CashBackWaveDialogDetails({ open , onClose }: { open: an
                 }}
                 >
                 <Typography variant="h6" fontWeight="bold">
-                    Cash Back Wave
+                    {t('Cash Back Wave')}
                 </Typography>
                 <img style={{width: '20rem', margin: 'auto'}} src={modelCoins} alt="" />
                 </Box>

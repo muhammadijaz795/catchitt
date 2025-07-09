@@ -11,12 +11,38 @@ import CloseIcon from "@mui/icons-material/Close";
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import SecurityIcon from '@mui/icons-material/Security'
 import { useSelector } from 'react-redux';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
+import cookies from 'js-cookie';
 
 const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {mode: 'light'}}), openPaymentModal, onClosePaymentModal, next, coinData: {coinsAmount, coinsPrice, coinsUnit} }: any) => {
     const userProfile = useSelector((state: any) => state?.reducers?.profile);
     const [selectedMethod, setSelectedMethod] = React.useState('PayPal');
     const [isProceedToBuy, setIsProceedToBuy] = React.useState(false);
       const [showCardFields, setShowCardFields] = useState(false);
+
+      interface Languages {
+                code: string;
+                name: string;
+                country_code: string;
+      }
+        
+    const languages: Languages[] = [
+        {
+            code: 'en',
+            name: 'English',
+            country_code: 'gb',
+        },
+        {
+            code: 'ar',
+            name: 'العربية',
+            country_code: 'sa',
+        },
+    ];
+    
+    const currentLanguageCode = cookies.get('i18next') || 'en';
+    const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+    const { t, i18n } = useTranslation();
 
     const handleSelectPaymentMethod = (method: string) => {
         setSelectedMethod(method);
@@ -61,13 +87,13 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
                     }}>
                         <div className="flex justify-between items-start  border-b pb-3 ">
                             <div className="text-lg ">
-                            Order summary
+                            {t('Order summary')}
                             <p className="text-xs text-[#008568] flex gap-1">
                                 <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M8.06498 4.65681L7.63998 4.38931C7.58258 4.35403 7.51355 4.34291 7.44797 4.35837C7.38239 4.37382 7.32559 4.41461 7.28998 4.47181L5.62748 7.13681L4.72748 6.11181C4.70612 6.08649 4.67993 6.06567 4.65045 6.05056C4.62096 6.03545 4.58877 6.02635 4.55574 6.02379C4.52271 6.02124 4.4895 6.02527 4.45804 6.03566C4.42658 6.04605 4.3975 6.06258 4.37248 6.08431L3.99248 6.41681C3.94229 6.4607 3.9115 6.52265 3.90681 6.58916C3.90213 6.65566 3.92394 6.72132 3.96748 6.77181L5.31248 8.30931C5.36383 8.36943 5.4287 8.41653 5.50177 8.44672C5.57484 8.47691 5.65402 8.48935 5.73283 8.48301C5.81164 8.47666 5.88782 8.45172 5.95512 8.41023C6.02242 8.36873 6.07892 8.31187 6.11998 8.24431L8.14499 5.00431C8.21749 4.88431 8.18248 4.72931 8.06498 4.65431V4.65681Z" fill="#008568"/>
                                 <path d="M1.25 3.13591V6.30341C1.25 9.84341 4.94 11.7659 5.815 12.1709C5.935 12.2259 6.065 12.2259 6.185 12.1709C7.06 11.7659 10.75 9.84591 10.75 6.30341V3.13591C10.75 2.83591 10.485 2.58841 10.185 2.56341C9.42 2.49841 7.965 2.18091 6.3475 0.813407C6.24997 0.732056 6.127 0.6875 6 0.6875C5.873 0.6875 5.75003 0.732056 5.6525 0.813407C4.035 2.18091 2.5775 2.49841 1.815 2.56341C1.515 2.58841 1.25 2.83341 1.25 3.13591ZM2.25 6.30341V3.52091C3.1625 3.38591 4.525 2.97841 6 1.81841C7.475 2.97841 8.8375 3.38591 9.75 3.51841V6.30341C9.75 7.69841 9.03 8.81841 8.11 9.68591C7.47794 10.269 6.76779 10.7612 6 11.1484C5.2331 10.761 4.52381 10.2687 3.8925 9.68591C2.9725 8.81841 2.25 7.69841 2.25 6.30341Z" fill="#008568"/>
                                 </svg>
-                                Your info is private and secure.</p>
+                                {t('Your info is private and secure.')}</p>
                             </div>
                             <IconButton onClick={onClosePaymentModal}>
                                 <CloseIcon className="w-8 h-8 text-black" />
@@ -75,7 +101,7 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
                         </div>
 
                         <div className="flex justify-between items-center border-b py-3">
-                            <h2 className="text-sm font-semibold text-black">Account</h2>
+                            <h2 className="text-sm font-semibold text-black">{t('Account')}</h2>
                             <div className="flex justify-between items-center mt-1">
                             <Avatar src={userProfile?.avatar} alt={userProfile?.username} sx={{ width: 20, height: 20 }}/>
                             <span className="text-sm font-medium">{userProfile?.username}</span>
@@ -84,17 +110,17 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
 
                         <div className="mb-4 border-b py-3">
                             <div className="flex justify-between mt-1">
-                            <span className="text-sm font-semibold ">Total</span>
+                            <span className="text-sm font-semibold ">{t('Total')}</span>
                             <span className="text-sm font-medium">{coinsUnit}{coinsPrice}</span>
                             </div>
                             <div className="flex justify-between mt-1">
-                            <span className="text-sm">{coinsAmount} Coins</span>
+                            <span className="text-sm">{coinsAmount} {t('Coins')}</span>
                             <span className="text-sm font-medium">{coinsUnit}{coinsPrice}</span>
                             </div>
                         </div>
 
                     <div className={styles.paymentInstructions}>
-                        <p className={`${styles.title} ${darkTheme&&'text-white'}`}>Payment Method</p>
+                        <p className={`${styles.title} ${darkTheme&&'text-white'}`}>{t('Payment Method')}</p>
                         {/* <p style={{ color: 'rgb(255, 59, 92)' }}>Choose your payment method</p>
                         <p className={darkTheme&&'text-white'} style={{ width: '70%', textAlign: 'center' }}>You will not be charged until you confirm this order
                             on the next page.</p> */}
@@ -118,7 +144,7 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
                     <Card className="p-4 border border-gray-300 cursor-pointer mt-2 d-none" onClick={() => setShowCardFields(true)}>
                         <div className="flex items-center gap-2 mb-3">
                             <div className={`w-3 h-3 rounded-full ${showCardFields ? "bg-red-600" : "border border-gray-400"}`} />
-                            <span className="text-sm font-semibold">Add Credit Or Debit Card</span>
+                            <span className="text-sm font-semibold">{t('Add Credit Or Debit Card')}</span>
                             <div className="ml-auto flex gap-1">
                             <svg style={{transform: 'scale(1.3)', marginLeft: '5px', marginRight: '5px'}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 -86.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
                                 <defs>
@@ -145,7 +171,7 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
                                 {/* Card Number */}
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                    label="Card number"
+                                    label={t('Card number')}
                                     placeholder="1234 3213 2313 3213"
                                     fullWidth
                                     variant="outlined"
@@ -220,7 +246,7 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
                             <div className="flex items-center gap-2 text-xs text-gray-600">
                                 <Checkbox id="linkCard" />
                                 <label htmlFor="linkCard">
-                                Link this payment method for faster checkout. If you don’t wish to link, uncheck the box now or unlink it later on the payment methods page.
+                                    {t('Link this payment method for faster checkout')}
                                 </label>
                             </div>
                             </>
@@ -231,16 +257,16 @@ const PaymentMethodModal = ({ darkTheme = '', palette = createTheme({palette: {m
 
 
                     <p className="text-[10px] text-gray-600 mt-4">
-                            By tapping <strong>Pay now</strong>, you agree to the <strong>Terms of Purchase for Coins</strong>. By using any amount of Coins within 14 days after tapping <strong>Pay now</strong>, you acknowledge and confirm that you will no longer be eligible for a refund of this order.
+                            {t('By tapping')} <strong>{t('Pay now')}</strong>, {t('you agree to the')} <strong>{t('Terms of Purchase for Coins')}</strong>. {t('By using any amount of Coins within 14 days after tapping')} <strong>{t('Pay now')}</strong>, {t('you acknowledge and confirm that you will no longer be eligible for a refund of this order.')}
                         </p>
                         <p className="text-[10px] text-gray-600 mt-1">
-                            By continuing this purchase, you confirm that you live in <strong>Pakistan</strong>.
+                            {t('By continuing this purchase, you confirm that you live in')} <strong>Pakistan</strong>.
                         </p>
                 </div>
                 {/* footer */}
                 <div style={{ display: 'flex', gap: '16px', flexDirection: 'column',  borderTop: '1px solid rgb(229, 231, 235)', width: '100%',  alignItems: 'center', paddingTop: '10px' }}>
                     <button onClick={paymentMethodSelected} className={`${styles.btnFullWidth} } w-28 ml-auto`}>
-                      {isProceedToBuy?<CircularProgress style={{width:'1.5rem',height:'1.5rem',color:'white',margin:'0 0.5rem'}} />:<p>Pay now</p>}
+                      {isProceedToBuy?<CircularProgress style={{width:'1.5rem',height:'1.5rem',color:'white',margin:'0 0.5rem'}} />:<p>{t('Pay now')}</p>}
                     </button>
                 </div>
             </Box>

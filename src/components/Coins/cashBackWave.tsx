@@ -9,9 +9,36 @@ import {
 } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { coinsImage } from '../../icons';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
+import cookies from 'js-cookie';
 
 
 const CashBackWaveCard = () => {
+
+  interface Languages {
+    code: string;
+    name: string;
+    country_code: string;
+  }
+        
+  const languages: Languages[] = [
+      {
+          code: 'en',
+          name: 'English',
+          country_code: 'gb',
+      },
+      {
+          code: 'ar',
+          name: 'العربية',
+          country_code: 'sa',
+      },
+  ];
+    
+  const currentLanguageCode = cookies.get('i18next') || 'en';
+  const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+  const { t, i18n } = useTranslation();
+
   return (
     <Card
       elevation={1}
@@ -46,7 +73,7 @@ const CashBackWaveCard = () => {
         {/* Text Content */}
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="subtitle1" fontWeight={600}>
-            Cash Back Wave
+            {t('Cash Back Wave')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Apr 23 – Apr 30

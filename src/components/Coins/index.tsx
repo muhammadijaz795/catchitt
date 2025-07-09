@@ -1,6 +1,9 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
+import cookies from 'js-cookie';
 import {
   Box,
   Button,
@@ -78,12 +81,12 @@ const ShieldSvg = () => (
 export default function Coins() {
  const [isDarkTheme, setIsDarkTheme] = useState('');
       
-      useEffect(() => {
-              var themeColor = window.localStorage.getItem('theme');
-              if (themeColor == 'dark') {
-                  setIsDarkTheme(style.darkTheme);
-              }
-          });
+    useEffect(() => {
+            var themeColor = window.localStorage.getItem('theme');
+            if (themeColor == 'dark') {
+                setIsDarkTheme(style.darkTheme);
+            }
+        });
 
 
 
@@ -93,6 +96,29 @@ export default function Coins() {
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const API_KEY = process.env.VITE_API_URL;
   const token = localStorage.getItem('token');
+
+  interface Languages {
+                code: string;
+                name: string;
+                country_code: string;
+            }
+        
+  const languages: Languages[] = [
+      {
+          code: 'en',
+          name: 'English',
+          country_code: 'gb',
+      },
+      {
+          code: 'ar',
+          name: 'العربية',
+          country_code: 'sa',
+      },
+  ];
+
+  const currentLanguageCode = cookies.get('i18next') || 'en';
+  const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+  const { t, i18n } = useTranslation();
 
   const userProfile = useSelector((state: any) => state?.reducers?.profile);
   const { balance } = useAuthStore();
@@ -146,9 +172,9 @@ export default function Coins() {
       <Card sx={{ borderRadius: 3, p: 4 }}>
         {/* Header */}
         <Box display="flex" justifyContent="space-between" mb={4}>
-          <Typography variant="h6" fontWeight="bold">Get Coins</Typography>
+          <Typography variant="h6" fontWeight="bold">{t('Get Coins')}</Typography>
           <Link to="/settings/account/transaction-history" reloadDocument={false} style={{ textDecoration: 'none' }}>
-          <Button color="inherit" sx={{fontWeight: 'bold'}} size="small">View transaction history</Button>
+          <Button color="inherit" sx={{fontWeight: 'bold'}} size="small">{t('VIEW TRANSACTION HISTORY')}</Button>
           </Link>
         </Box>
         {/* User info */}
@@ -168,10 +194,10 @@ export default function Coins() {
 
         {/* Note */}
         <Typography fontSize="0.875rem" fontWeight="bold" mb={4}>
-          Recharge: 
-          <Box component="span" sx={{ color: 'rgba(254, 44, 85, 1)' }}>Save around 25% with a lower third-party service fee.
+          {t('Recharge')}: 
+          <Box component="span" sx={{ color: 'rgba(254, 44, 85, 1)' }}>{t('Save around 25% with a lower third-party service fee.')}
             <Tooltip
-              title="Recharging on seezitt.com/coin will save you on third-party service fees compared to recharging on the Seezitt app"
+              title={t('Recharging on seezitt.com/coin will save you on third-party service fees compared to recharging on the Seezitt app')}
               placement="top"
               PopperProps={{
                 modifiers: [
@@ -288,7 +314,7 @@ export default function Coins() {
         {/* Payment info */}
         <Box mb={1} display={'flex'}>
           <Typography component="span" fontSize="0.875rem" color="text.secondary">
-            Payment method
+            {t('Payment method')}
           </Typography>
           <svg style={{transform: 'scale(1.3)', marginLeft: '5px', marginRight: '5px'}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 -86.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
               <defs>
@@ -309,7 +335,7 @@ export default function Coins() {
         {/* Total & button */}
         <Box mb={4}>
           <Typography fontSize="1rem">
-            Total {selected.unit}<Box component="span" fontWeight="bold">{selected.price}</Box>
+            {t('Total')} {selected.unit}<Box component="span" fontWeight="bold">{selected.price}</Box>
           </Typography>
         </Box>
 
@@ -319,7 +345,7 @@ export default function Coins() {
           sx={{ py: 1.25,  px: 7,fontSize: '1rem', textTransform: 'none', borderRadius: 2, bgcolor: 'rgba(254, 44, 85, 1)', '&:hover': { bgcolor: 'rgba(254, 44, 85, 0.9)' } }}
           disabled={parseFloat(selected.price) < 0.01 || selected.price == 'Large amount supported' }
         >
-          Recharge
+          {t('Recharge')}
         </Button>
         
          <Box
@@ -355,7 +381,7 @@ export default function Coins() {
               >
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    Secure payment
+                    {t('Secure payment')}
                   </Typography>
 
                   <Stack spacing={3} mt={2}>
@@ -418,7 +444,7 @@ export default function Coins() {
       </Card>
       <CashBackWaveCard />
        <Button variant="outlined" onClick={() => setOpencashInviteModel(true)}>
-        Open Campaign
+        {t('Open Campaign')}
       </Button>
       <CashBackWaveDialogDetails open={opencashInviteModel} onClose={() => setOpencashInviteModel(false)} />
     </Box>
