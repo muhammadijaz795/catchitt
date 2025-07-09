@@ -18,29 +18,17 @@ interface BlockedKeywordsFAQsProps {
 
 const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
     return (
-        <Box sx={{
-            maxWidth: 400,
-            mx: 'auto',
-            bgcolor: 'background.paper',
-            height: '100vh',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1300,
-            display: 'flex',
-            flexDirection: 'column',
-            background: 'white',
-            pb: 3,
-        }}>
+        <Box sx={{ width: 360, mx: 'auto',  position: 'fixed', right: 0, top: 0, height: '100vh', bgcolor: '#fff', zIndex: 2, }}>
             <Box sx={{
                 position: 'relative',
                 display: 'flex',
-                p: 2,
+                p: 1,
                 borderBottom: '1px solid #EFEFEF',
             }}>
                 <IconButton onClick={onClose} sx={{ mr: 1,p: 0,position: 'absolute', left: 0, }}>
-                    <ArrowBackIosNewIcon sx={{ color: 'text.primary' }} />
+                     <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>  
                 </IconButton>
                 <Typography variant="h6" fontWeight={600} sx={{ flexGrow: 1, }}>
                     Faqs
@@ -60,7 +48,7 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                 </Typography>
             </Box>
 
-            <Box sx={{ flexGrow: 1, overflowY: 'auto', }}>
+            <Box sx={{ flexGrow: 1, overflowY: 'auto', height: 'calc(100vh - 20rem)'}}>
                 <Accordion disableGutters elevation={0} defaultExpanded={false}
                     sx={{
                         '&:before': { display: 'none' },

@@ -13,25 +13,16 @@ interface AboutMeFaqs {
 const TopViewersFAQ: React.FC<AboutMeFaqs> = ({ onBack }) => {
     return (
         <Box
-            sx={{
-                backgroundColor: '#fff',
-                color: '#000',
-                mx: 'auto',
-                textAlign: 'left',
-                position: 'relative',
-                height: '90vh',
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
-                mt: 1,
-            }}
+            sx={{ width: 360, mx: 'auto',  position: 'fixed', right: 0, top: 0, height: '100vh', bgcolor: '#fff', zIndex: 2, }}
         >
             <Box
                 mb={2}
                 sx={{
                     flexShrink: 0,
                     borderBottom: '1px solid #eee',
-                    pb: 1
+                    pb: 1,
+                    height: 50,
+                    pt: 1.5
                 }}
             >
                <Box
@@ -43,7 +34,7 @@ const TopViewersFAQ: React.FC<AboutMeFaqs> = ({ onBack }) => {
                     <IconButton onClick={onBack} sx={{ color: '#000', padding: 0 }}>
                         <ArrowBackIosNewIcon fontSize="small" />
                     </IconButton>
-                    <Typography variant="body1" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
+                    <Typography variant="h6" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
                         FAQs
                     </Typography>
                 </Box>
