@@ -20,7 +20,10 @@ const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         bgcolor: "white",
         py: 2,
         px: '0 !important',
-        width: 360
+        width: 360,
+        position: 'fixed',
+        right: 0,
+        top: 1,
 
       }}
     >
