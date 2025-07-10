@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton/IconButton';
 import Layout from '../../shared/layout';
 import { LeftArrow } from '../push-notifications-page/svg-components/LeftArrow';
 import styles from './styles.module.scss';
+import { useTranslation } from 'react-i18next';
 
 export interface PrivacyPolicyPageProps {
     className?: string;
@@ -25,6 +26,7 @@ export const PrivacyPolicyPage = ({ className }: PrivacyPolicyPageProps) => {
         setSettingsDropdown(true);
     }, []);
 
+    const { t, i18n } = useTranslation();
     const [darkTheme, setdarkTheme] = useState('');
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
