@@ -109,7 +109,7 @@ export default function AddModerators({ onBack }: Props) {
               }}
               onClick={() => handleToggleModerator(user.id)}
             >
-              {user.isModerator ? 'Remove' : 'Add'}
+              {user.isModerator ? t('livestream.remove') : 'Add'}
             </Button>
           </ListItem>
         ))}

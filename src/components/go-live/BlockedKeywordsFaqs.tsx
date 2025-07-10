@@ -52,12 +52,12 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                 <img src={Mangnifier} alt="Magnifying Glass" style={{ fontSize: 80, color: '#FF2C55' }} />
             </Box>
             <Typography sx={{ fontSize: 21 }} variant="h5" fontWeight={600} mb={1}>
-                How blocked keywords work
+                {t('livestream.how_blocked_keywords_work')}
             </Typography>
 
             <Box sx={{ px: 3, textAlign: 'center', mb: 3 }}>
                 <Typography sx={{ fontSize: 12 }} variant="body2" color="text.secondary">
-                    We'll block LIVE comments with words, phrases, and emoji you add as keywords.
+                    {t('livestream.how_blocked_keywords_live_comments')}
                 </Typography>
             </Box>
 
@@ -88,15 +88,14 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                             },
                         }}
                     >
-                        <Typography sx={{ fontSize: 14 }} fontWeight={500}>Upper and lower case keywords</Typography>
+                        <Typography sx={{ fontSize: 14 }} fontWeight={500}>{t('livestream.upper_and_lower_case_keywords')}</Typography>
                     </AccordionSummary>
                     <AccordionDetails  sx={{
                             borderBottom: '1px solid #DFDFDF',
                             backgroundColor: '#F8F8F8',
                         }}>
                         <Typography sx={{ fontSize: 12,textAlign:'left' }} variant="body2" color="text.secondary">
-                            You don't need to add upper and lower case keywords.
-                            For example, bad blocks BAD and BAD.
+                            {t('livestream.upper_and_lower_case_keywords_description')}
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -125,7 +124,7 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                             },
                         }}
                     >
-                        <Typography sx={{ fontSize: 14 }} fontWeight={500}>Spaces inside of keywords</Typography>
+                        <Typography sx={{ fontSize: 14 }} fontWeight={500}>{t('livestream.spaces_inside_keywords')}</Typography>
                     </AccordionSummary>
                     <AccordionDetails
                     sx={{
@@ -133,7 +132,7 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                             backgroundColor: '#F8F8F8',
                         }}>
                         <Typography sx={{ fontSize: 12, textAlign: 'left', }} variant="body2" color="text.secondary">
-                            You don't need to add spaces inside of keywords. For example, bad blocks Bad chat and bad chat.
+                            {t('livestream.spaces_inside_keywords_description')}
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -162,7 +161,7 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                             },
                         }}
                     >
-                        <Typography sx={{ fontSize: 14 }} fontWeight={500}>Special Characters</Typography>
+                        <Typography sx={{ fontSize: 14 }} fontWeight={500}>{t('livestream.special_characters')}</Typography>
                     </AccordionSummary>
                     <AccordionDetails
                     sx={{
@@ -170,8 +169,7 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                             backgroundColor: '#F8F8F8',
                         }}>
                         <Typography sx={{ fontSize: 12, textAlign: 'left', }} variant="body2" color="text.secondary">
-                            You don't need to add keywords with special characters.
-                            For example, bad blocks b@d.
+                            {t('livestream.special_characters_description')}
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -207,11 +205,11 @@ const BlockedKeywordsFAQs = ({ onClose }: BlockedKeywordsFAQsProps) => {
                             borderBottomRightRadius: 11,
                         }}>
                         <Typography sx={{ fontSize: 12, textAlign: 'left', }} variant="body2" color="text.secondary">
-                            When this setting is on (default):<br />
-                            We'll block similar versions of a keyword. For example, bad blocks badness and badnesss.<br /><br />
-                            When this setting is off:<br />
-                            We'll only block a keyword if it has spaces on both sides.<br />
-                            For example, bad blocks a bad chat, but not abadchat.
+                            {t('livestream.default_settings_faqs_1')}<br />
+                            {t('livestream.default_settings_faqs_2')}<br /><br />
+                            {t('livestream.default_settings_faqs_3')}<br />
+                            {t('livestream.default_settings_faqs_4')}<br />
+                            {t('livestream.default_settings_faqs_5')}
                         </Typography>
                     </AccordionDetails>
                 </Accordion>

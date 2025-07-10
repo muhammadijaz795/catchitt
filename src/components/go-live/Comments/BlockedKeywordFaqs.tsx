@@ -67,7 +67,7 @@ const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
         <Typography pt={2} fontWeight="bold" fontSize="1.1rem" mb={0.5}>
-          How blocked keywords work
+          {t('livestream.how_blocked_keywords_work')}
         </Typography>
         <Typography
           variant="body2"

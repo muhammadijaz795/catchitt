@@ -62,8 +62,9 @@ import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import { socket } from '../../src/lib/socket';
 import GoLiveTogetherPanel from "./HostGoLiveTogather";
-
+import { useTranslation } from 'react-i18next';
 export default function PostLive() {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
  
@@ -821,7 +822,7 @@ export default function PostLive() {
                                         onClick={() => {if(openAddLiveGoal){setShowChatSideBar(true)} setOpenAddLiveGoal(!openAddLiveGoal);  } }
                                     >
                                         <Typography fontSize={12} color="white" sx={{ ml: 2 }}>
-                                            Add Live Goal
+                                            {t('livestream.add_live_goal')}
                                         </Typography>
                                         <img src={LiveGoal} alt="" />
                                     </Box>
@@ -934,7 +935,7 @@ export default function PostLive() {
                                             {/* <ControlItem icon={<img style={{ width: 24 }} src={InteractIcon} alt="Interact" />} label="Interact" />
                                             <ControlItem icon={<img style={{ width: 24 }} src={ShareIcon} alt="Share" />} label="Share" />
                                             <ControlItem icon={<img style={{ width: 24 }} src={EnhanceIcon} alt="Enhance" />} label="Enhance" /> */}
-                                            <ControlItem onClick={toggleSettings} icon={<img style={{ width: 24 }} src={MoreIcon} alt="More" />} label="More" />
+                                            <ControlItem onClick={toggleSettings} icon={<img style={{ width: 24 }} src={MoreIcon} alt={t('livestream.more')} />} label={t('livestream.more')} />
                                         </Box>
                                     </Box>
                                 </Box>

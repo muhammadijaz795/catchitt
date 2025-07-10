@@ -725,7 +725,7 @@ const Promote = () => (
                             ":hover": { backgroundColor: "#db2777" }
                         }}
                         >
-                        Go LIVE
+                        {t('livestream.go_live')}
                     </Button>
                 </Box>
                 

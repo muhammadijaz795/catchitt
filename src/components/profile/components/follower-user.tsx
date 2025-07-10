@@ -6,7 +6,7 @@ import UnfollowPopup from './unfollow-popup';
 import { get, post } from '../../../axios/axiosClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { followingsMethod, refreshFollowing, loadFollowing, loadFollowers } from '../../../redux/AsyncFuncs';
-
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -18,11 +18,12 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any, r
     popupClose,
     removeCurrentUser
 }) => {
+    const { t, i18n } = useTranslation();
     console.log('ny user', user);
     console.log('ny user follower', user?.follower_userID?.isFollower);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const [text, setText] = useState('Remove');
+    const [text, setText] = useState(t('livestream.remove'));
     const [isFollower, setIsFollower] = useState( user?.follower_userID?.isFollower   ? true : false);
     const [followBackText, setFollowBackText] = useState( user?.follower_userID?.isFollower ? 'Requested' : 'Follow Back');
 
@@ -155,7 +156,7 @@ const FollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: any, r
                     user={clickedUser}
                     description={`Seezitt won’t tell ${user?.follower_userID?.name} they were removed from your followers`}
                     heading={`Remove Follower?`}
-                    btnText={'Remove'}
+                    btnText={t('livestream.remove')}
                     IsFollowerTab={true}
                     removeCurrentUser={() => removeCurrentUser1(user)} 
                 />

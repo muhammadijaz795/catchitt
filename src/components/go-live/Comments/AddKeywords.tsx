@@ -164,8 +164,7 @@ const AddKeyword: React.FC<{
                     mt={0.3}
                     lineHeight={1.4}
                     >
-                    We’ll block comments with similar versions of this keyword. For
-                    example, bad blocks badness and badnesss.
+                    {t('livestream.block_similar_versions_description')}
                     </Typography>
                 </Box>
                 </Box>

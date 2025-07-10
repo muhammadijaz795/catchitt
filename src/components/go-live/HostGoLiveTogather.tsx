@@ -8,6 +8,7 @@ import {
   Divider,
 } from '@mui/material';
 import { MicOff, ScreenShare, Close } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 interface PersonProps {
   name: string;
@@ -30,48 +31,51 @@ interface PersonRowProps {
   isInvited?: boolean;
 }
 
-const PersonRow: React.FC<PersonRowProps> = ({ name, role, button, photo, avatar, onRemove, onAcceptJoinLiveSteam, onRejecctLiveStreamRoom, sendInviteLiveStreamUser, onToggleInvite, isInvited }) => (
-  <Box
-    display="flex"
-    alignItems="center"
-    justifyContent="space-between"
-    p={1}
-  >
-    <Box display="flex" alignItems="center" textAlign="left" gap={1.5}>
-      <Avatar src={photo || avatar} />
-      <Box>
-        <Typography fontWeight={600}>{name}</Typography>
-        {role && (
-          <Typography fontSize="13px" color="text.secondary">
-            {role}
-          </Typography>
-        )}
+const PersonRow: React.FC<PersonRowProps> = ({ name, role, button, photo, avatar, onRemove, onAcceptJoinLiveSteam, onRejecctLiveStreamRoom, sendInviteLiveStreamUser, onToggleInvite, isInvited }) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      p={1}
+    >
+      <Box display="flex" alignItems="center" textAlign="left" gap={1.5}>
+        <Avatar src={photo || avatar} />
+        <Box>
+          <Typography fontWeight={600}>{name}</Typography>
+          {role && (
+            <Typography fontSize="13px" color="text.secondary">
+              {role}
+            </Typography>
+          )}
+        </Box>
+      </Box>
+      <Box display="flex" textAlign="left" alignItems="center" gap={1}>
+        
+           <Button
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: '#FE2C55',
+                textTransform: 'none',
+                fontWeight: 600,
+                px: 3,
+                '&:hover': { backgroundColor: '#d62849' },
+              }}
+              onClick={onToggleInvite}
+            >
+              {isInvited ? t('livestream.remove') : t('livestream.invite')}
+            </Button>
+
+        {/* )} */}
+        <IconButton size="small" onClick={onRemove}>
+          <Close fontSize="small" />
+        </IconButton>
       </Box>
     </Box>
-    <Box display="flex" textAlign="left" alignItems="center" gap={1}>
-      
-         <Button
-            variant="contained"
-            size="small"
-            sx={{
-              backgroundColor: '#FE2C55',
-              textTransform: 'none',
-              fontWeight: 600,
-              px: 3,
-              '&:hover': { backgroundColor: '#d62849' },
-            }}
-            onClick={onToggleInvite}
-          >
-            {isInvited ? 'Remove' : 'Invite'}
-          </Button>
-
-      {/* )} */}
-      <IconButton size="small" onClick={onRemove}>
-        <Close fontSize="small" />
-      </IconButton>
-    </Box>
-  </Box>
-);
+  );
+};
 
 interface GuestRequestRowProps {
   id?: string;
@@ -91,45 +95,47 @@ const GuestRequestRow: React.FC<GuestRequestRowProps> = ({
   avatar, 
   onRejecctLiveStreamRoom, 
   onAcceptJoinLiveSteam 
-}) => (
+}) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      p={1}
+    >
+      <Box display="flex" alignItems="center" textAlign="left" gap={1.5}>
+        <Avatar src={avatar} />
+        <Box>
+          <Typography fontWeight={600}>{name}</Typography>
+        </Box>
+      </Box>
+      <Box display="flex" textAlign="left" alignItems="center" gap={1}>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              backgroundColor: '#FE2C55',
+              textTransform: 'none',
+              fontWeight: 600,
+              px: 3,
+              '&:hover': {
+                backgroundColor: '#d62849',
 
-  <Box
-    display="flex"
-    alignItems="center"
-    justifyContent="space-between"
-    p={1}
-  >
-    <Box display="flex" alignItems="center" textAlign="left" gap={1.5}>
-      <Avatar src={avatar} />
-      <Box>
-        <Typography fontWeight={600}>{name}</Typography>
+              },
+            }}
+            onClick={onAcceptJoinLiveSteam}
+          >
+            {t('livestream.accept')}
+          </Button>
+        {/* )} */}
+        <IconButton size="small" onClick={onRejecctLiveStreamRoom}>
+          <Close fontSize="small" />
+        </IconButton>
       </Box>
     </Box>
-    <Box display="flex" textAlign="left" alignItems="center" gap={1}>
-        <Button
-          variant="contained"
-          size="small"
-          sx={{
-            backgroundColor: '#FE2C55',
-            textTransform: 'none',
-            fontWeight: 600,
-            px: 3,
-            '&:hover': {
-              backgroundColor: '#d62849',
-
-            },
-          }}
-          onClick={onAcceptJoinLiveSteam}
-        >
-          Accept
-        </Button>
-      {/* )} */}
-      <IconButton size="small" onClick={onRejecctLiveStreamRoom}>
-        <Close fontSize="small" />
-      </IconButton>
-    </Box>
-  </Box>
-);
+  );
+};
 
 interface GoLiveTogetherPanelProps {
   post: any; // Consider using a proper type here
@@ -156,6 +162,7 @@ const GoLiveTogetherPanel: React.FC<GoLiveTogetherPanelProps> = ({
   invitedUserIds,
   onBack
 }) => {
+  const { t, i18n } = useTranslation();
     const [hiddenGuestIds, setHiddenGuestIds] = React.useState<string[]>([]);
     const hideGuestRow = (id: string) => {
       setHiddenGuestIds((prev: string[]) => [...prev, id]);
@@ -194,7 +201,7 @@ const GoLiveTogetherPanel: React.FC<GoLiveTogetherPanelProps> = ({
         <path d="M7.56641 1.61719L1.56641 7.61719L7.56641 13.6172" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
 
-        <Typography fontWeight={700}>Go LIVE Together</Typography>
+        <Typography fontWeight={700}>{t('livestream.go_live_together')}</Typography>
         <Box display="flex" gap={1}>
           <IconButton size="small">
             <svg
@@ -339,7 +346,7 @@ const GoLiveTogetherPanel: React.FC<GoLiveTogetherPanelProps> = ({
     </Box>
   </Box> */}
     <Typography fontSize="14px" textAlign="left" fontWeight={'600'}    color="text.secondary" mb={1}>
-        Guests
+        {t('livestream.guests')}
     </Typography>
   {post?.details?.guestUsers?.map((person:any, i:any) => (
         <PersonRow key={i} {...person} sendInviteLiveStreamUser={()=> sendInviteLiveStreamUser(person)} onToggleInvite={() => handleToggleInvite(person)} isInvited={invitedUserIds.includes(person.id)} onRemove={() => onRemoveUser(post.details.id, person.id)} />
@@ -352,7 +359,7 @@ const GoLiveTogetherPanel: React.FC<GoLiveTogetherPanelProps> = ({
 
       {/* Guest Requests */}
       <Typography fontSize="14px" textAlign="left" fontWeight={'600'}    color="text.secondary" mb={1}>
-        {visibleGuestUsers.length} guest requests
+        {visibleGuestUsers.length} {t('livestream.guest_requests')}
       </Typography>
       {visibleGuestUsers.map((person: any, i: number) =>
         !hiddenGuestIds.includes(person._id) && (
@@ -376,7 +383,7 @@ const GoLiveTogetherPanel: React.FC<GoLiveTogetherPanelProps> = ({
       </Box>
       {/* Viewers */}
       <Typography fontSize="14px" textAlign="left" fontWeight={'600'} color="text.secondary" mb={1}>
-        Viewers
+        {t('livestream.viewers')}
       </Typography>
       {post?.details?.consumers?.map((person:any, i:any) => (
         <PersonRow key={i} {...person} sendInviteLiveStreamUser={()=> sendInviteLiveStreamUser(person)} onToggleInvite={() => handleToggleInvite(person)} isInvited={invitedUserIds.includes(person.id)} onRemove={() => onRemoveUser(post.details.id, person.id)} />

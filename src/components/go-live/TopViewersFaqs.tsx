@@ -10,12 +10,14 @@ import TopProfiles from '../../assets/postLive/top-viewer-faq-4.png'
 import TopViewer1 from '../../assets/postLive/top-viewer-faq-1.png'
 import TopViewer2 from '../../assets/postLive/top-viewer-faq-2.png'
 import TopViewer3 from '../../assets/postLive/top-viewer-faq-3.png'
+import { useTranslation } from 'react-i18next';
 
 interface TopViewersFAQProps {
     onBack: () => void;
 }
 
 const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
+     const { t, i18n } = useTranslation();
     return (
         <Box
             sx={{
@@ -46,7 +48,7 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                     mb={2}
                 >
                     <Typography variant="body1" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                        Top viewers
+                        {t('livestream.top_viewers')}
                     </Typography>
                     <IconButton sx={{ color: '#666', padding: 0 }}>
                         <HelpOutlineIcon fontSize="small" />
@@ -63,7 +65,7 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                         <ArrowBackIosNewIcon fontSize="small" />
                     </IconButton>
                     <Typography variant="body1" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                        Frequently asked questions
+                        {t('livestream.faq')}
                     </Typography>
                 </Box>
             </Box>
@@ -76,25 +78,25 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                 }}
             >
                 <Typography fontWeight="bold" mb={1} sx={{ mt: 2 }}>
-                    1. Who can become top viewers?
+                    {t('livestream.who_can_be_top_viewer')}
                 </Typography>
 
                 <Typography variant="body2" color="#111111" mb={1}>
-                    Top viewers are ranked based on likes, comments, gift count, and watch time. Viewers who send more likes, comments, and gifts will rank higher. Points are calculated by the following rules: 1 like = 1 point (max- 3 points every 10 mins) 1 comment = 1 point (max. 3 points every 10 mins) 1 Coin = 1 point Viewers with no points will be ranked based on how long they have been watching the LIVE. Viewers who are underage in their respective country or region are unable to view top viewer rankings.
+                    {t('livestream.top_viewer_rules')}
                 </Typography>
                 <Typography variant="body2" color="#111111" mb={1}>
-                    Viewers can check the number of Coins they used to send Gifts in this LIVE if they are in the top 99. However, some top viewers' activity information may be concealed depending on their ranking position.
+                    {t('livestream.coin_check_info')}
                 </Typography>
                 <Typography variant="body2" color="#111111" mb={2}>
-                    If viewers become the top 2 by sending Gifts, they'll get the chance to have their profile photos shown to everyone at the top of the LIVE.
+                    {t('livestream.top_2_benefit')}
                 </Typography>
 
                 <Typography fontWeight="bold" mb={1} sx={{ mt: 2 }}>
-                    2. What can I get if I become a top viewer?
+                    {t('livestream.what_get_as_top_viewer')}
                 </Typography>
 
                 <Typography variant="body2" color="#111111" mb={1}>
-                    <strong>• The top 2 viewers</strong> profile photos will be shown to everyone at the top of the LIVE.
+                    {t('livestream.profile_photo_reward')}
                 </Typography>
                 <Box
                     sx={{
@@ -117,7 +119,7 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                     />
                 </Box>
                 <Typography variant="body2" color="#111111" mb={1}>
-                    <strong>• The top 3 viewers</strong> have the chance to get a top viewer badge if the value of the Gifts they send is in the top 3. The top viewer badges will be displayed next to their usernames in the comments, their profiles, and the Top Viewer Ranking. The top 3 viewers' ranking position will also be notified in the comments.
+                    <strong>• {t('livestream.top_3_badge_info')}</strong> {t('livestream.badge_conditions')}
                 </Typography>
                 <Box
                     sx={{
@@ -159,13 +161,13 @@ const TopViewersFAQ: React.FC<TopViewersFAQProps> = ({ onBack }) => {
                     />
                 </Box>
                 <Typography variant="body2" color="#111111" mb={1}>
-                    <strong>• The top 99 viewers</strong> will be displayed in the Top Viewer Ranking. View the ranking by tapping the number at the top of a LIVE.
+                    <strong>• {t('livestream.top_99_info')}</strong> {t('livestream.rank_display')}
                 </Typography>
                 <Typography fontWeight="bold" mb={1} sx={{ mt: 2 }}>
-                    3. Can I choose not to be shown in the rankings?
+                    {t('livestream.can_hide_ranking')}
                 </Typography>
                 <Typography variant="body2" color="#111111" mb={1}>
-                    Yes, If you choose not to be shown in the rankings, go to [Share] &gt; [Settings] &gt; [Rankings] to change your visibility settings.
+                    {t('livestream.ranking_visibility_change')}
                 </Typography>
             </Box>
         </Box>

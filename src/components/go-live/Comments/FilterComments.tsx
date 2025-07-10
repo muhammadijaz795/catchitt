@@ -250,12 +250,12 @@ const FilterComments: React.FC<FilterCommentsProps> = ({
           <ListItemText
             primary={
               <Typography fontWeight="bold">
-                Show filtered comments in feed
+                {t('livestream.show_filtered_comments')}
               </Typography>
             }
             secondary={
               <Typography variant="body2" color="text.secondary">
-                Community-flagged comments will be visible to you during the LIVE.
+                {t('livestream.community_flagged_info')}
               </Typography>
             }
           />

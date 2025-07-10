@@ -133,7 +133,7 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, 
           >
             <Box position="relative" textAlign="center">
               <Typography fontSize={14} mb={1} sx={{ position: 'absolute', left: 0, top: 0, color: '#fff' }}>
-                Ends in
+                {t('livestream.ends_in')}
               </Typography>
               <Typography fontSize={14} mb={1}>
                 04:00:00
@@ -142,7 +142,7 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', }}>
               <Box>
                 <Typography fontWeight="600" fontSize={14} mb={1} textAlign={'left'} sx={{ display: 'flex', alignItems: 'center', mr: '10px' }}>
-                  { profileDetails?.details?.name }'s LIVE goal <span><img style={{ marginLeft: '10px' }} src={HelpIcon} alt="Add Live Goal" /></span>
+                  { profileDetails?.details?.name }'s LIVE goal <span><img style={{ marginLeft: '10px' }} src={HelpIcon} alt={t('livestream.add_live_goal')} /></span>
                 </Typography>
                 <Typography
                   textAlign={'left'}
@@ -156,13 +156,13 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, 
                 </Typography>
               </Box>
               <Box>
-                <img src={AddLiveGoal} alt="Add Live Goal" style={{ width: '80px', height: 'auto', marginBottom: '30px' }} />
+                <img src={AddLiveGoal} alt={t('livestream.add_live_goal')} style={{ width: '80px', height: 'auto', marginBottom: '30px' }} />
               </Box>
             </Box>
             <Box sx={{ background: 'linear-gradient(180deg, #312054 0%, #241A3C 100%)', borderRadius: '10px 10px 0px 0px', padding: '10px 13px' }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1} pt={2}>
-                <Typography>Progress:</Typography>
-                <Typography>0/{ selectedGifts.length } Gifts</Typography>
+                <Typography>{t('livestream.progress')}</Typography>
+                <Typography>0/{ selectedGifts.length } {t('livestream.gifts')}</Typography>
 
               </Box>
 
@@ -250,7 +250,7 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, 
             </Box>
             <Box bgcolor="#2F2740" textAlign={'left'} sx={{padding: '10px 13px' }}>
               <Typography variant="caption" color="#FFFFFFCC" mt={2} mb={1}  >
-                Change 🐦 ❤ to Gifts with fewer Coins to make your goal easier
+                {t('livestream.gift_changes_fewer_coins')}
               </Typography>
             </Box>
             <Button
@@ -266,7 +266,7 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, 
               }}
               onClick={onEdit}
             >
-              Edit
+              {t('livestream.edit')}
             </Button>
           </Box>
         ) : (
@@ -390,14 +390,14 @@ const AddLiveGoalModal = ({ liveGoals, profileDetails, onEdit, onLiveGoalAdded, 
         </Typography>
         <Box>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={1} borderTop="1px solid #444">
-            <Typography>Progress:</Typography>
+            <Typography>{t('livestream.progress')}</Typography>
             <Button
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => { handleToggle; setShowLiveGoalAutomatically(false); }}
               sx={{ bgcolor: '#3a3a3a', color: '#fff', textTransform: 'none', borderRadius: 1 }}
             >
-              0/3 Gifts
+              0/3 {t('livestream.gifts')}
             </Button>
           </Box>
 

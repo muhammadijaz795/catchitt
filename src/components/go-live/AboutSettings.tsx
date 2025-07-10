@@ -117,7 +117,7 @@ const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetail
             {profileDetails?.details?.name || ''}
           </Typography>
           <Typography fontSize={14} lineHeight="1.5">
-            {profileDetails?.details?.bio || "Welcome to my LIVE! Leave a comment to interact with me and other viewers. Follow my account if you enjoy today's video!"}
+            {profileDetails?.details?.bio || t('livestream.welcome_message')}
             
           </Typography>
         </Box>
