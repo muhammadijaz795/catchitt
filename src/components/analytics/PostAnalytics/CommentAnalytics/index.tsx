@@ -3,6 +3,7 @@ import Layout from '../../../../shared/layout';
 import { Box, FormControl, InputBase, MenuItem, Paper, Select, SelectChangeEvent } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useTranslation } from 'react-i18next';
 
 const filterStyle = {
     backgroundColor: '#f5f5f5',
@@ -19,6 +20,7 @@ const filterStyle = {
 
 
 const CommentAnalytics = () => {
+    const { t: translate } = useTranslation();
     const [commentSort, setCommentSort] = useState('latest');
     const [commentType, setCommentType] = useState('all');
     const [postedBy, setPostedBy] = useState('all');
@@ -39,7 +41,7 @@ const CommentAnalytics = () => {
         <div className='flex justify-between align-items-center p-4 flex-row-reverse' >
                 <div className="">
                         <button className="bg-[#F43F5E] text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-[#e03555]">
-                            Select another post
+                            {translate('Select another post')}
                         </button>
                     </div>
 
@@ -48,7 +50,7 @@ const CommentAnalytics = () => {
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
-                        Back to posts
+                        {translate('Back to posts')}
                     </button>
             </div>
             <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-md px-8 py-6 relative">
@@ -110,7 +112,7 @@ const CommentAnalytics = () => {
                             <textarea
                                 className="w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 resize-none focus:outline-none"
                                 rows={2}
-                                placeholder="Reply to comment"
+                                placeholder={translate('Reply to comment')}
                                 maxLength={150}
                             ></textarea>
                             <div className="flex justify-between items-center mt-1">
@@ -150,7 +152,7 @@ const CommentAnalytics = () => {
 
                     </span>
                     <InputBase
-                        placeholder="Search for comment or username"
+                        placeholder={translate('Search for comment or username')}
                         sx={{
                         flex: 1,
                         fontSize: '14px',
@@ -170,8 +172,8 @@ const CommentAnalytics = () => {
                         IconComponent={KeyboardArrowDownIcon}
 
                         >
-                        <MenuItem value="latest">Sort by latest comments</MenuItem>
-                        <MenuItem value="oldest">Sort by oldest comments</MenuItem>
+                        <MenuItem value="latest">{translate('Sort by latest comments')}</MenuItem>
+                        <MenuItem value="oldest">{translate('Sort by oldest comments')}</MenuItem>
                         </Select>
                     </FormControl>
 
@@ -183,9 +185,9 @@ const CommentAnalytics = () => {
                         IconComponent={KeyboardArrowDownIcon}
 
                         >
-                        <MenuItem value="all">All comments</MenuItem>
-                        <MenuItem value="replied">Replied</MenuItem>
-                        <MenuItem value="not_replied">Not replied</MenuItem>
+                        <MenuItem value="all">{translate('All comments')}</MenuItem>
+                        <MenuItem value="replied">{translate('Replied')}</MenuItem>
+                        <MenuItem value="not_replied">{translate('Not replied')}</MenuItem>
                         </Select>
                     </FormControl>
 
@@ -197,9 +199,9 @@ const CommentAnalytics = () => {
                         IconComponent={KeyboardArrowDownIcon}
 
                         >
-                        <MenuItem value="all">Posted by all</MenuItem>
-                        <MenuItem value="followers">Posted by followers</MenuItem>
-                        <MenuItem value="non-followers">Posted by non-followers</MenuItem>
+                        <MenuItem value="all">{translate('Posted by all')}</MenuItem>
+                        <MenuItem value="followers">{translate('Posted by followers')}</MenuItem>
+                        <MenuItem value="non-followers">{translate('Posted by non-followers')}</MenuItem>
                         </Select>
                     </FormControl>
 
@@ -210,11 +212,11 @@ const CommentAnalytics = () => {
                         sx={filterStyle}
                         IconComponent={KeyboardArrowDownIcon}
                         >
-                        <MenuItem value="all">All follower counts</MenuItem>
-                        <MenuItem value="<5K">Less than 5K</MenuItem>
+                        <MenuItem value="all">{translate('All follower counts')}</MenuItem>
+                        <MenuItem value="<5K">{translate('Less than 5K')}</MenuItem>
                         <MenuItem value="5K-10K">5K–10K</MenuItem>
                         <MenuItem value="10K-100K">10K–100K</MenuItem>
-                        <MenuItem value=">100K">More than 100K</MenuItem>
+                        <MenuItem value=">100K">{translate('More than 100K')}</MenuItem>
                         </Select>
                     </FormControl>
                     </Box>
@@ -224,15 +226,15 @@ const CommentAnalytics = () => {
                 <div className="mt-4 text-left">
                     <div className="inline-flex gap-2 border border-gray-300 px-4 py-2 rounded-md text-sm text-gray-700 bg-white">
                         <span role="img" aria-label="calendar">📅</span>
-                        <span>Comment date <strong>3/18/2025 - 4/17/2025</strong></span>
+                        <span>{translate('Comment date')} <strong>3/18/2025 - 4/17/2025</strong></span>
                     </div>
                 </div>
 
                 {/* No results */}
                 <div className="text-center mt-12 text-gray-500">
-                    <p className="text-sm">No results found</p>
+                    <p className="text-sm">No results found{translate('Clear')}</p>
                     <button className="mt-3 px-10 py-2 bg-white text-[#FE2C55] !border border-[#F43F5E] rounded-md hover:bg-[#fef2f4] text-sm">
-                        Clear all
+                        {translate('Clear all')}
                     </button>
                 </div>
             </div>
