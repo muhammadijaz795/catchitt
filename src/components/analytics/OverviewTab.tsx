@@ -11,7 +11,7 @@ import {
   } from '@mui/material';
   import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
   import dayjs from 'dayjs'; // If you want date formatting
-
+import { useTranslation } from 'react-i18next';
   
     
 const CardHeader = ({
@@ -99,7 +99,7 @@ const isDark = Boolean(isDarkTheme); // optional if using inside helper
 
 
 function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
-
+    const { t: translate } = useTranslation();
     const [activeTab, setActiveTab] = useState(STATISTICSTABS.VIDEO_VIEWS)
     const [chartData, setChartData] = useState<any>(
       [...Array(7)].map((_, i) => ({
@@ -141,11 +141,11 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
             {/* statistics card */}
             <div className={`${isDarkTheme ? 'bg-[#181818]' : 'bg-white'} rounded shadow-sm`}>
                 <div className='inline-flex w-full ' >
-                    <div onClick={switchTab} id={STATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.VIDEO_VIEWS ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} rounded-tl-md`}>Video views <br /><span className={`${activeTab === STATISTICSTABS.VIDEO_VIEWS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.totalViewers || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.PROFILE_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.PROFILE_VIEWS ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Profile views <br /> <span className={`${activeTab === STATISTICSTABS.PROFILE_VIEWS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.profileViews || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.LIKES.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.LIKES ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Likes <br /> <span className={`${activeTab === STATISTICSTABS.LIKES ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.totalLikes || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.COMMENTS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.COMMENTS ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>Comments <br /> <span className={`${activeTab === STATISTICSTABS.COMMENTS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.totalComments || 0}</span></div>
-                    <div onClick={switchTab} id={STATISTICSTABS.SHARES.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.SHARES ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} rounded-tr-md`}>Shares <br /> <span className={`${activeTab === STATISTICSTABS.SHARES ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.repostCounts || 0}</span></div>
+                    <div onClick={switchTab} id={STATISTICSTABS.VIDEO_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.VIDEO_VIEWS ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} rounded-tl-md`}>{translate('Video views')} <br /><span className={`${activeTab === STATISTICSTABS.VIDEO_VIEWS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.totalViewers || 0}</span></div>
+                    <div onClick={switchTab} id={STATISTICSTABS.PROFILE_VIEWS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.PROFILE_VIEWS ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>{translate('Profile views')} <br /> <span className={`${activeTab === STATISTICSTABS.PROFILE_VIEWS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.profileViews || 0}</span></div>
+                    <div onClick={switchTab} id={STATISTICSTABS.LIKES.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.LIKES ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>{translate('Likes')} <br /> <span className={`${activeTab === STATISTICSTABS.LIKES ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.totalLikes || 0}</span></div>
+                    <div onClick={switchTab} id={STATISTICSTABS.COMMENTS.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.COMMENTS ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} border-x`}>{translate('Comments')} <br /> <span className={`${activeTab === STATISTICSTABS.COMMENTS ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.totalComments || 0}</span></div>
+                    <div onClick={switchTab} id={STATISTICSTABS.SHARES.toString()} className={`cursor-pointer w-1/5 py-16 ${activeTab === STATISTICSTABS.SHARES ? 'border-t-blue-500 border-t-4' : 'border-t border-b'} rounded-tr-md`}>{translate('Shares')} <br /> <span className={`${activeTab === STATISTICSTABS.SHARES ? 'text-blue-500' : ''} text-2xl font-semibold`}>{analyticsDetails?.details?.repostCounts || 0}</span></div>
                 </div>
                 {/* Chart Section */}
                 <div className="m-4 border-t pt-6 mb-6">
@@ -216,9 +216,9 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
                     <Grid item xs={12} md={6}>
                     <Paper sx={{ bgcolor: isDarkTheme ? '#181818' : '#fff' }} variant="outlined">
                     <CardHeader
-                        title="Traffic source"
+                        title={translate('Traffic source')}
                         isDark={isDarkTheme}
-                        tooltipText="It shows the places where your viewers discover your posts. The main source types on Seezitt are the For You feed, the feed, pages, profile pages, search pages, and direct messages. The other types are grouped into 'Other'."
+                        tooltipText={translate("It shows the places where your viewers discover your posts. The main source types on Seezitt are the For You feed, the feed, pages, profile pages, search pages, and direct messages. The other types are grouped into 'Other'.")}
                         />                        
                         <Box sx={{ p: 2 }}>
                         {/* <Typography color={isDarkTheme ? 'grey.400' : 'text.secondary'} fontSize={14}>
@@ -258,14 +258,12 @@ function OverviewTab({ analyticsDetails, analyticsData, isDarkTheme }: any) {
                     <Grid item xs={12} md={6}>
                     <Paper sx={{ bgcolor: isDarkTheme ? '#181818' : '#fff' }} variant="outlined">
                     <CardHeader
-                        title="Search queries"
+                        title={translate('Search queries')}
                         isDark={isDarkTheme}
-                        tooltipText="These are search queries from viewers that led them to your post. Data is displayed for the last 90 days only."
+                        tooltipText={translate('These are search queries from viewers that led them to your post.')}
                         />
                         <Box sx={{ p: 2 }}>
-                        <Typography color={isDarkTheme ? 'grey.400' : 'text.secondary'} fontSize={14}>
-                            You’ll be able to see this information once there’s enough data for analysis.
-                        </Typography>
+                        <Typography color={isDarkTheme ? 'grey.400' : 'text.secondary'} fontSize={14}>{translate("You’ll be able to see this information once there’s enough data for analysis.")}</Typography>
                         {Array.from({ length: 5 }).map((_, i) => (
                             <Box
                             key={i}

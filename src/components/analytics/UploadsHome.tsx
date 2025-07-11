@@ -16,6 +16,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { formatCustomDate } from '../../utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 interface RecentPostsInterface
 {
@@ -103,6 +104,7 @@ const articles = [
   ];
 
 const UploadsHome = () => {
+  const { t: translate } = useTranslation();
   const { tab } = useParams();
   const [currentTab, setCurrentTab] = useState(ANALYTICSTABS.OVERVIEW);
   const [analyticsData, setAnalyticsData] = useState<any>('');
@@ -491,7 +493,7 @@ const UploadsHome = () => {
                     { profileDetails?.details?.name }
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                    Likes { profileDetails?.details?.likesNum } · Followers { profileDetails?.details?.followersNumber } · Following { profileDetails?.details?.followingNumber }
+                    {translate('Likes')} { profileDetails?.details?.likesNum } · {translate('Followers')} { profileDetails?.details?.followersNumber } · {translate('Following')} { profileDetails?.details?.followingNumber }
                     </Typography>
                 </Box>
             </Paper>
@@ -508,7 +510,7 @@ const UploadsHome = () => {
             {/* <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-gray-500 font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a> */}
           {/* </nav> */}
           <Link to="/analytics" reloadDocument={false} style={{ textDecoration: 'none' }}>
-          <h6 className='h6 d-flex align-items-center font-semibold m-0 text-black'>Key metrics <svg className='ml-1' width="5" height="10" viewBox="0 0 5 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <h6 className='h6 d-flex align-items-center font-semibold m-0 text-black'>{translate('Key metrics')} <svg className='ml-1' width="5" height="10" viewBox="0 0 5 10" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M0.4758 8.83939C0.376032 8.75408 0.294046 8.64994 0.234525 8.53293C0.175004 8.41593 0.139114 8.28834 0.128904 8.15746C0.118694 8.02658 0.134363 7.89498 0.175018 7.77016C0.215673 7.64533 0.280516 7.52974 0.365846 7.42998L2.80783 4.58117L0.366846 1.73336C0.277126 1.63436 0.208162 1.51839 0.164027 1.39229C0.119893 1.26619 0.101485 1.13252 0.109891 0.99919C0.118297 0.865855 0.153347 0.735557 0.212969 0.615999C0.27259 0.496441 0.355574 0.390048 0.457015 0.303108C0.558456 0.216168 0.676297 0.150445 0.803571 0.109824C0.930846 0.0692029 1.06497 0.0545083 1.19802 0.066608C1.33107 0.0787077 1.46035 0.117356 1.57821 0.18027C1.69607 0.243183 1.80012 0.329086 1.88421 0.432899L4.60408 3.60657C4.83691 3.8783 4.96488 4.22434 4.96488 4.58217C4.96488 4.94 4.83691 5.28604 4.60408 5.55776L1.88521 8.73144C1.71262 8.93264 1.46717 9.05704 1.20286 9.07729C0.938552 9.09754 0.677022 9.01196 0.4758 8.83939Z" fill="black"/>
             </svg>
           </h6>
@@ -523,7 +525,7 @@ const UploadsHome = () => {
               onClick={handleClick}
               className={`inline-flex mx-2 items-center  border-0 py-2 px-3 focus:outline-none  rounded-full text-sm`}
             >
-              Last {selectedPeriod} Days &#129087;
+              {translate('Last')} {selectedPeriod} {translate('Days')} &#129087;
             </button>
 
           <Menu
@@ -599,7 +601,7 @@ const UploadsHome = () => {
              {/* <ContentTab isDarkTheme={darkTheme} /> */}
                 <Box sx={{ p: 2 }}>
                 <Typography variant="body1" sx={{ display: 'flex'}} fontWeight="bold" mb={2}>
-                  <Link to="/analytics/content" reloadDocument={false} style={{ textDecoration: 'none' }}>Recent posts</Link> 
+                  <Link to="/analytics/content" reloadDocument={false} style={{ textDecoration: 'none' }}>{translate('Recent posts')}</Link> 
                     <svg className='ml-1' width="5" height="10" viewBox="0 0 5 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M0.4758 8.83939C0.376032 8.75408 0.294046 8.64994 0.234525 8.53293C0.175004 8.41593 0.139114 8.28834 0.128904 8.15746C0.118694 8.02658 0.134363 7.89498 0.175018 7.77016C0.215673 7.64533 0.280516 7.52974 0.365846 7.42998L2.80783 4.58117L0.366846 1.73336C0.277126 1.63436 0.208162 1.51839 0.164027 1.39229C0.119893 1.26619 0.101485 1.13252 0.109891 0.99919C0.118297 0.865855 0.153347 0.735557 0.212969 0.615999C0.27259 0.496441 0.355574 0.390048 0.457015 0.303108C0.558456 0.216168 0.676297 0.150445 0.803571 0.109824C0.930846 0.0692029 1.06497 0.0545083 1.19802 0.066608C1.33107 0.0787077 1.46035 0.117356 1.57821 0.18027C1.69607 0.243183 1.80012 0.329086 1.88421 0.432899L4.60408 3.60657C4.83691 3.8783 4.96488 4.22434 4.96488 4.58217C4.96488 4.94 4.83691 5.28604 4.60408 5.55776L1.88521 8.73144C1.71262 8.93264 1.46717 9.05704 1.20286 9.07729C0.938552 9.09754 0.677022 9.01196 0.4758 8.83939Z" fill="black"/>
                     </svg>
@@ -613,7 +615,7 @@ const UploadsHome = () => {
                             <Avatar
                             variant="rounded"
                             src={post.thumbnailUrl}
-                            alt="thumbnail"
+                            alt={translate('Thumbnail')}
                             sx={{ width: 80, height: 80 }}
                             />
                             <Box
@@ -675,7 +677,7 @@ const UploadsHome = () => {
                 </Box>
                 <Box sx={{ p: 2 }}>
                     <Typography variant="body1" sx={{display: 'flex'}} fontWeight="bold" mb={2}>
-                        Latest comments
+                        {translate('Latest comments')}
                         <svg className='ml-1' width="5" height="10" viewBox="0 0 5 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M0.4758 8.83939C0.376032 8.75408 0.294046 8.64994 0.234525 8.53293C0.175004 8.41593 0.139114 8.28834 0.128904 8.15746C0.118694 8.02658 0.134363 7.89498 0.175018 7.77016C0.215673 7.64533 0.280516 7.52974 0.365846 7.42998L2.80783 4.58117L0.366846 1.73336C0.277126 1.63436 0.208162 1.51839 0.164027 1.39229C0.119893 1.26619 0.101485 1.13252 0.109891 0.99919C0.118297 0.865855 0.153347 0.735557 0.212969 0.615999C0.27259 0.496441 0.355574 0.390048 0.457015 0.303108C0.558456 0.216168 0.676297 0.150445 0.803571 0.109824C0.930846 0.0692029 1.06497 0.0545083 1.19802 0.066608C1.33107 0.0787077 1.46035 0.117356 1.57821 0.18027C1.69607 0.243183 1.80012 0.329086 1.88421 0.432899L4.60408 3.60657C4.83691 3.8783 4.96488 4.22434 4.96488 4.58217C4.96488 4.94 4.83691 5.28604 4.60408 5.55776L1.88521 8.73144C1.71262 8.93264 1.46717 9.05704 1.20286 9.07729C0.938552 9.09754 0.677022 9.01196 0.4758 8.83939Z" fill="black"/>
                         </svg>
@@ -724,14 +726,14 @@ const UploadsHome = () => {
                     </Box>
                     <Container sx={{ mt: 4 }}>
                         <h5 className="text-base font-semibold mb-4 flex items-center">
-                            Inspirations
+                            {translate('Inspirations')}
                             <svg className='ml-1' width="5" height="10" viewBox="0 0 5 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M0.4758 8.83939C0.376032 8.75408 0.294046 8.64994 0.234525 8.53293C0.175004 8.41593 0.139114 8.28834 0.128904 8.15746C0.118694 8.02658 0.134363 7.89498 0.175018 7.77016C0.215673 7.64533 0.280516 7.52974 0.365846 7.42998L2.80783 4.58117L0.366846 1.73336C0.277126 1.63436 0.208162 1.51839 0.164027 1.39229C0.119893 1.26619 0.101485 1.13252 0.109891 0.99919C0.118297 0.865855 0.153347 0.735557 0.212969 0.615999C0.27259 0.496441 0.355574 0.390048 0.457015 0.303108C0.558456 0.216168 0.676297 0.150445 0.803571 0.109824C0.930846 0.0692029 1.06497 0.0545083 1.19802 0.066608C1.33107 0.0787077 1.46035 0.117356 1.57821 0.18027C1.69607 0.243183 1.80012 0.329086 1.88421 0.432899L4.60408 3.60657C4.83691 3.8783 4.96488 4.22434 4.96488 4.58217C4.96488 4.94 4.83691 5.28604 4.60408 5.55776L1.88521 8.73144C1.71262 8.93264 1.46717 9.05704 1.20286 9.07729C0.938552 9.09754 0.677022 9.01196 0.4758 8.83939Z" fill="black"/>
                             </svg>
                         </h5>
                         {/* Tabs */}
                         <Tabs value={tabIndex} onChange={handleTabChange} sx={{ mb: 2, borderBottom: '1px solid #00000014' }}>
-                            <Tab label="Trending" sx={{textTransform: 'capitalize'}} />
+                            <Tab label={translate('Trending')} sx={{textTransform: 'capitalize'}} />
                             {/* <Tab label="Recommended" sx={{textTransform: 'capitalize'}} /> */}
                         </Tabs>
                         {tabIndex === 0 && (
@@ -745,7 +747,7 @@ const UploadsHome = () => {
                             sx={{ mb: 2,  borderRadius: 2, minHeight: '40px' }}
                             >
                             <Tab
-                                label="Posts"
+                                label={translate('Posts')}
                                 sx={{
                                 textTransform: 'none',
                                 fontWeight: 600,
@@ -785,7 +787,7 @@ const UploadsHome = () => {
                                 }}
                                 displayEmpty
                                 >
-                                <MenuItem value="all">All regions</MenuItem>
+                                <MenuItem value="all">{translate('All regions')}</MenuItem>
                                 {/* <MenuItem value="us">United States</MenuItem>
                                 <MenuItem value="asia">Asia</MenuItem> */}
                             </Select>
@@ -841,7 +843,7 @@ const UploadsHome = () => {
                             sx={{ mb: 2,  borderRadius: 2, minHeight: '40px' }}
                             >
                                 <Tab
-                                    label="Similar posts"
+                                    label={translate('Similar posts')}
                                     sx={{
                                     textTransform: 'none',
                                     fontWeight: 600,
@@ -854,7 +856,7 @@ const UploadsHome = () => {
                                     }}
                                 />
                                 <Tab
-                                    label=" Followers viewed"
+                                    label={translate('Followers viewed')}
                                     sx={{
                                     textTransform: 'none',
                                     fontWeight: 600,
@@ -867,7 +869,7 @@ const UploadsHome = () => {
                                     }}
                                 />
                                 <Tab
-                                    label="Similar creators"
+                                    label={translate('Similar creators')}
                                     sx={{
                                     textTransform: 'none',
                                     fontWeight: 600,
@@ -887,9 +889,7 @@ const UploadsHome = () => {
                         )}
                         {/* Video Grid */}
                         {videos.length === 0 ? (
-                            <Typography variant="h6" color="text.secondary" align="center" sx={{ width: '100%', mt: 4 }}>
-                              No data found
-                            </Typography>
+                            <Typography variant="h6" color="text.secondary" align="center" sx={{ width: '100%', mt: 4 }}>{translate('No data found')}</Typography>
                           ) : (
                         <Grid container spacing={2}>
                             {videos.map((video, index) => (
@@ -982,7 +982,7 @@ const UploadsHome = () => {
                               </Box>
                               <Box sx={{ ml: 'auto' }}>
                                 <Typography fontWeight="bold" variant='body2'>{creator.followers} </Typography>
-                                <Typography variant='caption'>Followers</Typography>
+                                <Typography variant='caption'>{translate('Followers')}</Typography>
                               </Box>
                             </Box>
                       
@@ -1021,18 +1021,16 @@ const UploadsHome = () => {
                           <Typography variant="body1"></Typography>
                         ) : (
                           <>
-                            <Typography variant="h5">No recommendations yet</Typography>
-                            <Typography variant="body2">
-                              This tab is only available for creators who have at least 1,000 followers.
-                            </Typography>
+                            <Typography variant="h5">{translate('No recommendations yet')}</Typography>
+                            <Typography variant="body2">{translate('This tab is only available for creators who have at least 1,000 followers.')}</Typography>
                           </>
                         )}
-                        <button className='w-100 my-4 bg-[#0000000D]'>View More</button>
+                        <button className='w-100 my-4 bg-[#0000000D]'>{translate('View More')}</button>
                     </Container>
             </div>
             <div className=" w-[30%] py-6">
                 <h5 className="text-base font-semibold mb-4 flex items-center">
-                    Knowledge for you 
+                    {translate('Knowledge for you')} 
                     <svg className='ml-1' width="5" height="10" viewBox="0 0 5 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M0.4758 8.83939C0.376032 8.75408 0.294046 8.64994 0.234525 8.53293C0.175004 8.41593 0.139114 8.28834 0.128904 8.15746C0.118694 8.02658 0.134363 7.89498 0.175018 7.77016C0.215673 7.64533 0.280516 7.52974 0.365846 7.42998L2.80783 4.58117L0.366846 1.73336C0.277126 1.63436 0.208162 1.51839 0.164027 1.39229C0.119893 1.26619 0.101485 1.13252 0.109891 0.99919C0.118297 0.865855 0.153347 0.735557 0.212969 0.615999C0.27259 0.496441 0.355574 0.390048 0.457015 0.303108C0.558456 0.216168 0.676297 0.150445 0.803571 0.109824C0.930846 0.0692029 1.06497 0.0545083 1.19802 0.066608C1.33107 0.0787077 1.46035 0.117356 1.57821 0.18027C1.69607 0.243183 1.80012 0.329086 1.88421 0.432899L4.60408 3.60657C4.83691 3.8783 4.96488 4.22434 4.96488 4.58217C4.96488 4.94 4.83691 5.28604 4.60408 5.55776L1.88521 8.73144C1.71262 8.93264 1.46717 9.05704 1.20286 9.07729C0.938552 9.09754 0.677022 9.01196 0.4758 8.83939Z" fill="black"/>
                     </svg>
@@ -1065,15 +1063,15 @@ const UploadsHome = () => {
                 }}
               >
                 <Typography variant="body2">
-                  Copyright © {new Date().getFullYear()} Seezitt
+                  {translate('Copyright')} © {new Date().getFullYear()} {translate('Seezitt')}
                 </Typography>
 
                 <Box sx={{ display: 'flex', gap: 2 }}>
                   <Link to="/terms" color="text.secondary">
-                    Terms of Service
+                    {translate('Terms of Service')}
                   </Link>
                   <Link to="/privacy" color="text.secondary">
-                    Privacy Policy
+                    {translate('Privacy Policy')}
                   </Link>
                 </Box>
               </Box>

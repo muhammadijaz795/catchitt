@@ -6,6 +6,7 @@ import {
   Typography,
   Button,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 interface ScheduleVideoPopupProps {
   open: boolean;
@@ -14,6 +15,7 @@ interface ScheduleVideoPopupProps {
 }
 
 const scheduleeVideoPopup = ({ open, onClose, onAllow }: ScheduleVideoPopupProps) => {
+  const { t: translate } = useTranslation();
   return (
     <Dialog
       open={open}
@@ -29,11 +31,11 @@ const scheduleeVideoPopup = ({ open, onClose, onAllow }: ScheduleVideoPopupProps
     >
       <DialogContent sx={{ px: 2, pb: 1 }}>
         <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-          Allow your video to be saved for scheduled posting?
+          {translate('Allow your video to be saved for scheduled posting?')}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          When you schedule a video, the video is saved on our servers before it is posted.
-          All videos posted to Seezitt must follow Seezitt Community Guidelines.
+          {translate('When you schedule a video, the video is saved on our servers before it is posted.')}
+          {translate('All videos posted to Seezitt must follow Seezitt Community Guidelines.')}
         </Typography>
       </DialogContent>
 
@@ -48,7 +50,7 @@ const scheduleeVideoPopup = ({ open, onClose, onAllow }: ScheduleVideoPopupProps
             px: 1.5,
             py: 0.5
           }} onClick={onClose}>
-          Cancel
+          {translate('Cancel')}
         </Button>
         <Button
           variant="contained"
@@ -64,7 +66,7 @@ const scheduleeVideoPopup = ({ open, onClose, onAllow }: ScheduleVideoPopupProps
             py: 0.5
           }}
         >
-          Allow
+          {translate('Allow')}
         </Button>
       </DialogActions>
     </Dialog>

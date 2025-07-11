@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid,  ResponsiveContainer, Bar
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
   import dayjs from 'dayjs'; // If you want date formatting
+import { useTranslation } from 'react-i18next';
 
   const newViewersData = [
     { date: 'Apr 6', viewers: 30 },
@@ -54,6 +55,7 @@ const creators = [
   ];
 
 function FollowersTab({analyticsDetails, selectedPeriod}: any) {
+  const { t: translate } = useTranslation();
   const value = 70;
   const [tabIndex, setTabIndex] = useState(0);
   const [tab, setTab] = useState(0);
@@ -216,8 +218,8 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
                 },
             }}
             >
-            <Tab label="Total followers" />
-            <Tab label="Net followers" />
+            <Tab label={translate('Total followers')} />
+            <Tab label={translate('Net followers')} />
             </Tabs>
 
             {/* Top Section */}
@@ -325,7 +327,7 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
         </Card>  */}
           {/* Gender */}
           <Paper variant="outlined" sx={{ my: 3 }}>
-            <CardHeader title="Gender" />
+            <CardHeader title={translate('Gender')} />
             {/* <Typography color="text.secondary" fontSize={14} m={2}>
                 Data will show when video views reach 100
               </Typography> */}
@@ -358,11 +360,11 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
 
           {/* Locations */}
           <Paper variant="outlined" sx={{ mb: 3 }}>
-            <CardHeader title="Locations" />
+            <CardHeader title={translate('Locations')} />
             <Box sx={{ p: 2 }}>
               {(!analyticsDetails?.details?.followerCountryPercentages || Object.values(analyticsDetails.details.followerCountryPercentages).every(p => p === "0%")) && (
               <Typography color="text.secondary" fontSize={14} mb={2}>
-                You’ll be able to see this information once there’s enough data for analysis.
+                {translate('You’ll be able to see this information once there’s enough data for analysis.')}
               </Typography>
               )}
               {Object.entries(analyticsDetails?.details?.followerCountryPercentages).map(([country, percentage]) => (
@@ -381,7 +383,7 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
                     <CardHeader title="Age" />
                     <Box sx={{ p: 2 }}>
                     <Typography color="text.secondary" fontSize={14} mb={2}>
-                        You’ll be able to see this information once there’s enough data for analysis.
+                        {translate('You’ll be able to see this information once there’s enough data for analysis.')}
                     </Typography>
 
                     {Array.from({ length: 6 }).map((_, i) => (
@@ -402,9 +404,9 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
               <CardContent sx={{p:0}}>
                   <Box display="flex" alignItems="center" mb={2} className='py-2 px-4 border-b mb-4 text-left'>
                       <Typography fontSize={'15px'} fontWeight="bold" mr={1}>
-                      Most active times
+                      {translate('Most active times')}
                       </Typography>
-                      <Tooltip title="Shows when your viewers are most active." arrow>
+                      <Tooltip title={translate('Shows when your viewers are most active.')} arrow>
                       <IconButton size="small" sx={{ p: 0.5 }}>
                           <InfoOutlinedIcon sx={{ fontSize: 14, cursor: 'help', color: 'text.secondary' }} />
                       </IconButton>
@@ -438,8 +440,8 @@ function FollowersTab({analyticsDetails, selectedPeriod}: any) {
                       },
                       }}
                   >
-                      <Tab label="Hour" />
-                      <Tab label="Day" />
+                      <Tab label={translate('Hour')} />
+                      <Tab label={translate('Day')} />
                   </Tabs>
                   {tab === 1 ? (
                   // Day View

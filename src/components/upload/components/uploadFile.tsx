@@ -10,10 +10,12 @@ import {
     FourKOutlined,
     CropOutlined,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 function UploadFile({ changeFileHandler }: any) {
     const [darkTheme, setdarkTheme] = useState('');
     const [lightTheme, setlightTheme] = useState('bg-custom-light');
+    const { t: translate } = useTranslation();
 
     useEffect(() => {
         // var themeColor = window.localStorage.getItem('theme');
@@ -33,13 +35,13 @@ function UploadFile({ changeFileHandler }: any) {
             <div className={`w-[calc(100%-14rem)] ml-auto bg-white h-4/6 flex flex-col items-center px-[1rem] py-[1.5rem] gap-4 justify-center shadow-sm rounded-2xl`}>
                 <DndContainer
                     className="w-full h-full cursor-pointer"
-                    text="Select video to upload"
-                    orText="drag and drop it here"
+                    text={translate('Select video to upload')}
+                    orText={translate('drag and drop it here')}
                     accept="video/*"
                     onChangeFile={changeFileHandler}
                 >
                     <CustomButton
-                        text="Select video"
+                        text={translate('Select video')}
                         width="16.938rem !important"
                         rounded="0.5rem"
                     />
@@ -50,10 +52,8 @@ function UploadFile({ changeFileHandler }: any) {
                             <path d="M4.08968 0.75C2.24885 0.75 0.756348 2.24165 0.756348 4.08165C0.756348 5.08998 1.1905 5.98252 1.89883 6.59335C1.1905 7.20421 0.756348 8.07001 0.756348 9.07831V12.41C0.756348 14.2492 2.24885 15.75 4.08968 15.75H9.92213C11.6538 15.75 13.093 14.435 13.2563 12.7475L15.9896 15.5067C16.5146 16.0317 17.4221 15.65 17.4221 14.9083V6.57997C17.4221 6.20914 17.1913 5.91918 16.9013 5.79918C16.6113 5.67918 16.2521 5.71914 15.9896 5.98081C15.6413 6.32914 14.3688 7.65411 13.2496 8.77331C13.1438 7.68661 12.543 6.75581 11.6471 6.22831C12.1513 5.64498 12.4221 4.91248 12.4221 4.08165C12.4221 2.24165 10.9296 0.75 9.08884 0.75C8.08051 0.75 7.20051 1.21336 6.58968 1.92085C5.97801 1.21336 5.09801 0.75 4.08968 0.75ZM4.08968 2.41585C5.00968 2.41585 5.75635 3.16165 5.75635 4.08165C5.75635 5.00082 5.00968 5.74664 4.08968 5.74664C3.16885 5.74664 2.42301 5.00165 2.42301 4.08165C2.42301 3.16165 3.16885 2.41585 4.08968 2.41585ZM9.08884 2.41585C10.0096 2.41585 10.7555 3.16165 10.7555 4.08165C10.7555 5.00082 10.0096 5.74664 9.08884 5.74664C8.16884 5.74664 7.42301 5.00165 7.42301 4.08165C7.42301 3.16165 8.16884 2.41585 9.08884 2.41585Z" fill="black"/>
                         </svg>
                         <div>
-                            <p className="font-semibold text-sm">Size and duration</p>
-                            <p className="text-gray-500 text-xs">
-                                Maximum size 10GB, video duration 60 minutes
-                            </p>
+                            <p className="font-semibold text-sm">{translate('Size and duration')}</p>
+                            <p className="text-gray-500 text-xs">{translate('Maximum size 10GB, video duration 60 minutes')}</p>
                         </div>
                     </div>
                     <div className="relative flex flex-row items-start text-left gap-1.5 pl-10">
@@ -61,10 +61,8 @@ function UploadFile({ changeFileHandler }: any) {
                             <path d="M2.51855 0.5625C1.1378 0.5625 0.0185547 1.68166 0.0185547 3.0625V4.72916V12.2292C0.0185547 14.07 1.51096 15.5625 3.35188 15.5625H11.6852C13.5261 15.5625 15.0185 14.07 15.0185 12.2292V4.72916C15.0185 4.26916 14.6455 3.89583 14.1852 3.89583C14.1852 3.89583 11.7662 3.89583 10.0185 3.89583C9.38961 3.89583 9.1873 3.69166 8.6904 2.69749C7.9373 1.19166 7.3063 0.5625 5.85188 0.5625H2.51855ZM2.51855 2.22916H5.85188C6.4808 2.22916 6.68314 2.43333 7.18005 3.4275C7.28879 3.645 7.33388 3.71416 7.44038 3.89583C4.5688 3.89583 2.50605 3.89583 1.68521 3.89583V3.0625C1.68521 2.6025 2.05831 2.22916 2.51855 2.22916ZM5.85188 8.89581H9.1852C9.6455 8.89581 10.0185 9.26921 10.0185 9.72921C10.0185 10.1892 9.6455 10.5625 9.1852 10.5625H5.85188C5.39163 10.5625 5.01855 10.1892 5.01855 9.72921C5.01855 9.26921 5.39163 8.89581 5.85188 8.89581Z" fill="black"/>
                         </svg>
                         <div>
-                            <p className="font-semibold text-sm">File formats</p>
-                            <p className="text-gray-500 text-xs">
-                                Recomended: ".mp4" but other major formats are supported.
-                            </p>
+                            <p className="font-semibold text-sm">{translate('File formats')}</p>
+                            <p className="text-gray-500 text-xs">{translate("Recommended: '.mp4' but other major formats are supported.")}</p>
                         </div>
                     </div>
                     <div className="relative flex flex-row items-start text-left gap-1.5 pl-10">
@@ -77,10 +75,8 @@ function UploadFile({ changeFileHandler }: any) {
                         </svg>
                         {/* <FourKOutlined className="text-gray-300 absolute left-2.5 -top-0.5"/> */}
                        <div>
-                        <p className="font-semibold text-sm">Video resolutions</p>
-                            <p className="text-gray-500 text-xs">
-                                Minimum resolution: 720p, 2K adn 4K supported
-                            </p>
+                        <p className="font-semibold text-sm">{translate('Video resolutions')}</p>
+                            <p className="text-gray-500 text-xs">{translate('Minimum resolution: 720p, 2K adn 4K supported')}</p>
                        </div>
                     </div>
                     <div className="relative flex flex-row items-start text-left gap-1.5 pl-10">
@@ -90,10 +86,8 @@ function UploadFile({ changeFileHandler }: any) {
 
                         {/* <CropOutlined className="text-gray-300 absolute left-2.5 -top-0.5" /> */}
                         <div>
-                            <p className="font-semibold text-sm">Aspect Ratios</p>
-                            <p className="text-gray-500 text-xs">
-                                Recomended: 16:9 for landscape, 9:16 for vertical
-                            </p>
+                            <p className="font-semibold text-sm">{translate('Aspect Ratios')}</p>
+                            <p className="text-gray-500 text-xs">{translate('Recommended: 16:9 for landscape, 9:16 for vertical')}</p>
                         </div>
                     </div>
                 </div>
@@ -113,12 +107,8 @@ function UploadFile({ changeFileHandler }: any) {
                         }}
                         >
                         <Box>
-                            <Typography variant="subtitle2" fontWeight={600}>
-                            Create high quality videos on CapCut Online
-                            </Typography>
-                            <Typography fontSize={'12px'} color="text.secondary">
-                            Automatically shorten your videos and create videos from scripts with AI-powered features.
-                            </Typography>
+                            <Typography variant="subtitle2" fontWeight={600}>{translate('Create high quality videos on CapCut Online')}</Typography>
+                            <Typography fontSize={'12px'} color="text.secondary">{translate('Automatically shorten your videos and create videos from scripts with AI-powered features.')}</Typography>
                         </Box>
                         <Box 
                             component="a" 
@@ -141,7 +131,7 @@ function UploadFile({ changeFileHandler }: any) {
                             <path d="M13.9616 5.25653V3.45437L11.7297 4.59363V4.52701C11.7297 3.80415 11.2001 3.37109 10.4339 3.37109H3.36516C2.55902 3.37109 2.06934 3.80415 2.06934 4.52368V6.34583L5.19064 7.91814L2.06934 9.50044V11.3193C2.06934 12.0321 2.55902 12.4652 3.36849 12.4652H10.4306C11.1967 12.4652 11.7297 12.0321 11.7297 11.3259V11.2326L13.9616 12.3852V10.5531L8.77497 7.92147L13.9583 5.25987L13.9616 5.25653ZM6.97281 8.81422L10.8037 10.7663H3.13198L6.97948 8.81422H6.97281ZM10.777 5.06666L6.97281 7.00873L3.12532 5.06666H10.777Z" fill="black"/>
                             </svg>
 
-                            Try now
+                            {translate('Try now')}
                         </Box>
                 </Paper>
             </div>

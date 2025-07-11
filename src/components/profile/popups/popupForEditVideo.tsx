@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import style from './popupForEditVideo.module.scss';
 import { EDIT_VIDEO_ACTIONS, TRACKSLOTDIFF, TRACKSLOTPERIODS } from '../../../utils/constants';
 import SoundGallery from '../components/soundGallery';
-
+import { useTranslation } from 'react-i18next';
 
 import { 
     Trecap,
@@ -47,7 +47,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any) {
-
+  const { t: translate } = useTranslation();
   const { onChangeFileHandler, updateTemplate  } = useUpload();
 
   const [loaded, setLoaded] = useState(false);
@@ -437,7 +437,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
 
   const EDIT_VIDEO_ACTIONS = [
     {
-      title: 'Sounds',
+      title: `${translate('Sounds')}`,
       icon: musicBlack,
       content: (
         <div className={`${style.recommendedContainer} grid m !max-w-[90%] border-r border-gray-200 relative`}>
@@ -456,7 +456,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
                   ></path>
                 </svg>
               </span>
-              <input type="text" className="bg-transparent pl-3 w-[85%]" placeholder="Search" value={searchQuery}  onChange={(e) => handleSearch(e.target.value)} />
+              <input type="text" className="bg-transparent pl-3 w-[85%]" placeholder={translate('Search')} value={searchQuery}  onChange={(e) => handleSearch(e.target.value)} />
               {searchQuery && (
                   <button 
                       onClick={() => {
@@ -478,14 +478,14 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
               id="Recommended"
               className={`${style.audioTab} ${audioTabSelected === 'Recommended' ? style.audioTabSelected : ''}`}
             >
-              Recommended
+              {translate('Recommended')}
             </span>
             <span
               onClick={switchAudioTab}
               id="Favorites"
               className={`${style.audioTab} ${audioTabSelected === 'Favorites' ? style.audioTabSelected : ''}`}
             >
-              Favorites
+              {translate('Favorites')}
             </span>
           </div>
 
@@ -513,7 +513,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
       ),
     },
     { 
-      title: 'Template',
+      title: `${translate('Template')}`,
       icon: svgTemplate,
       content: 
       <div className="grid grid-cols-3 gap-2 w-[90%] p-4 border-r">
@@ -530,7 +530,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
         >
           <img
             src={template.image}
-            alt={`Template ${index + 1}`}
+            alt={`${translate('Template')} ${index + 1}`}
             className="w-full h-full object-cover"
           />
         </Card>
@@ -563,7 +563,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
       >
         <div className={style.EditModal}>
           <div className={`${style.modalHeader} border-b border-gray-200 py-3`} >
-            <span className={`${style.modalTitle} !text-[17px]`}>Edit Video</span>
+            <span className={`${style.modalTitle} !text-[17px]`}>{translate('Edit Video')}</span>
           </div>
           <div className={`${style.modalBody} relative overflow-y-auto h-[calc(100vh-13rem)]`}>
             {isInProcess&&<div className={`absolute top-0 left-0 right-0 bottom-0 z-10 opacity-60 ${isDarkTheme?'bg-black':'bg-white'} flex justify-center items-center`}> <CircularProgress style={{width:'30px',height:'30px',color:'#f50057'}} /> </div>}
@@ -751,7 +751,7 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
 
                 <div onClick={addSound} className='flex gap-3 cursor-pointer'>
                   <img src={isDarkTheme ? music : musicBlack} alt="audio" />
-                  <span className={`text-[15px] ${isDarkTheme ? 'text-gray-500' : ''}`}>Add sound</span>
+                  <span className={`text-[15px] ${isDarkTheme ? 'text-gray-500' : ''}`}>{translate('Add sound')}</span>
                 </div>
               </div>}
             </div> :
@@ -762,8 +762,8 @@ function PopupForEditVideo({ isDarkTheme, open, targetVideo, handleClose }: any)
            
           </div>
           <div className="float-right px-3 mb-3">
-              <button className='mx-1 border-0 py-2' style={{ color: isDarkTheme ? '#fff' : 'rgb(22, 24, 35)', backgroundColor: isDarkTheme ? '#0000000D' : '#0000000D', minWidth: '100px', }} onClick={handleClose}>Cancel</button>
-              <button onClick={saveEdit} className='mx-1 py-2' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '100px' }} autoFocus>Save edit</button>
+              <button className='mx-1 border-0 py-2' style={{ color: isDarkTheme ? '#fff' : 'rgb(22, 24, 35)', backgroundColor: isDarkTheme ? '#0000000D' : '#0000000D', minWidth: '100px', }} onClick={handleClose}>{translate('Cancel')}</button>
+              <button onClick={saveEdit} className='mx-1 py-2' style={{ color: '#fff', backgroundColor: 'rgb(255, 59, 92)', minWidth: '100px' }} autoFocus>{translate('Save edit')}</button>
             </div>
         </div>
       </BootstrapDialog>

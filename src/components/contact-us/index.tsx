@@ -10,11 +10,12 @@ import {
     showToastSuccess,
 } from '../../utils/constants';
 import { ToastContainer } from 'react-toastify';
-
+import { useTranslation } from 'react-i18next';
 
 const ContactUs = () => {
     const navigate = useNavigate();
     const [darkTheme, setdarkTheme] = useState('');
+    const { t: translate } = useTranslation();
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -31,7 +32,7 @@ const ContactUs = () => {
 
     const handleContact = () => {
         console.log("Message sent successfully.");
-        showToastSuccess("Message sent successfully.");
+        showToastSuccess(translate('Message sent successfully.'));
         setTimeout(() => {
             window.location.reload();
         }, 1000);
@@ -53,15 +54,14 @@ const ContactUs = () => {
                         src={backArrow}
                         alt="back-arrow-icon"
                     />
-                    <p className="font-semibold text-xl text-[#222222]">Contact Us</p>
+                    <p className="font-semibold text-xl text-[#222222]">{translate('Contact Us')}</p>
                 </div>
                 <div className="mt-8 flex flex-row items-center">
                     <div className="text-center w-[38.563rem] h-[35.813rem] py-8 px-10 rounded-ss-2xl rounded-es-2xl bg-[#EFEDFF]">
-                        <p className="font-medium text-lg text-[#222222] mt-2">Contact Us</p>
-                        <p className="font-bold text-4xl text-[#222222] mt-4">Keep in Touch</p>
+                        <p className="font-medium text-lg text-[#222222] mt-2">{translate('Contact Us')}</p>
+                        <p className="font-bold text-4xl text-[#222222] mt-4">{translate('Keep in Touch')}</p>
                         <p className="font-normal text-base text-[#222222] mt-4">
-                            Our team is always happy to hear from you and get back to you. Reach out
-                            to us whenever you wish, your opinion greatly matters.
+                            {translate('Our team is always happy to hear from you and get back to you. Reach out to us whenever you wish, your opinion greatly matters.')}
                         </p>
                         <div className="flex flex-row items-center gap-10 mt-14">
                             <img src={emailMsg} height={24} width={26.67} alt="email" />
@@ -86,29 +86,29 @@ const ContactUs = () => {
                         </div>
                     </div>
                     <div className="w-[37.563rem] h-[35.813rem] rounded-se-2xl rounded-ee-2xl bg-white px-6 py-8">
-                        <h3 className="font-semibold text-xl text-[#222222] mt-2">Contact us</h3>
+                        <h3 className="font-semibold text-xl text-[#222222] mt-2">{translate('Contact us')}</h3>
                         <input
                             type="text"
                             name="name"
                             id="name"
-                            placeholder="Name"
+                            placeholder={translate('Name')}
                             className={`px-4 rounded-md  mt-4 border h-12 w-full ${darkTheme!==''?'text-white':'bg-[#F7F7F7] '}`}
                         />
                         <input
                             type="email"
                             name="email"
                             id="email"
-                            placeholder="Email Address"
+                            placeholder={translate('Email Address')}
                             className={`px-4 rounded-md  mt-4 border h-12 w-full ${darkTheme!==''?'text-white':'bg-[#F7F7F7] '}`}
                         />
                         <textarea
                             name="message"
                             id="message"
                             className={`h-[13.5rem] rounded-md  mt-4 border w-full resize-none p-3 ${darkTheme!==''?'text-white':'bg-[#F7F7F7] '}`}
-                            placeholder="Your message"
+                            placeholder={translate('Your message')}
                         ></textarea>
                         <button onClick={handleContact} className=" bg-custom-primary rounded-md px-4 h-12 text-white font-semibold text-base w-full mt-4">
-                            Send message
+                            {translate('Send message')}
                         </button>
                     </div>
                 </div>

@@ -16,8 +16,10 @@ import { academyOutlineDark, academyOutlineWhite, analyticsOutline, analyticsOut
 import CheckIcon from '@mui/icons-material/Check'; // import for tick icon
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // chevron
 import UploadSidebar from '../studio/UploadSidebar';
+import { useTranslation } from 'react-i18next';
 
 const Analytics = () => {
+    const { t: translate } = useTranslation();
     const { tab } = useParams();
     const [currentTab, setCurrentTab] = useState(ANALYTICSTABS.OVERVIEW);
     const API_KEY = process.env.VITE_API_URL;
@@ -170,10 +172,10 @@ const Analytics = () => {
                     <header className={`text-gray-600 body-font ${darkTheme === '' ? 'bg-white' : styles.header} border-b px-4`}>
                         <div className="flex flex-wrap flex-col md:flex-row items-center justify-between">
                             <nav className="flex flex-wrap items-center text-base text-gray-400">
-                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.OVERVIEW ? 'text-black font-semibold border-b-2 border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.OVERVIEW.toString()}>Overview</a>
-                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.CONTENT ? 'text-black font-semibold border-b-2 border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.CONTENT.toString()}>Content</a>
-                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.VIEWERS ? 'text-black font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.VIEWERS.toString()}>Viewers</a>
-                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-black font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>Followers</a>
+                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.OVERVIEW ? 'text-black font-semibold border-b-2 border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.OVERVIEW.toString()}>{translate('Overview')}</a>
+                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.CONTENT ? 'text-black font-semibold border-b-2 border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.CONTENT.toString()}>{translate('Content')}</a>
+                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.VIEWERS ? 'text-black font-semibold border-b border-gray-800' : ''} py-3 mr-5 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.VIEWERS.toString()}>{translate('Viewers')}</a>
+                                <a onClick={switchTab} className={`${currentTab === ANALYTICSTABS.FOLLOWERS ? 'text-black font-semibold border-b border-gray-800' : ''} py-3 ${darkTheme === '' ? 'hover:text-gray-900' : 'hover:text-white'} cursor-pointer`} id={ANALYTICSTABS.FOLLOWERS.toString()}>{translate('Followers')}</a>
                             </nav>
                             <div className="inline-flex lg:justify-end ml-5 lg:ml-0 my-2">
                             <button
@@ -187,7 +189,7 @@ const Analytics = () => {
                                             darkTheme === '' ? 'bg-transparent hover:bg-gray-100 text-black' : 'bg-transparent hover:bg-gray-900 text-white'
                                         }`}
                                         >
-                                        Last {selectedPeriod} Days
+                                        {translate('Last')} {selectedPeriod} {translate('Days')}
                                         <ExpandMoreIcon fontSize="small" />
                                     </button>
 
@@ -276,7 +278,7 @@ const Analytics = () => {
                                             </g>{" "}
                                         </g>
                                     </svg>
-                                    Download data
+                                    {translate('Download data')}
                                 </button>
                             </div>
                         </div>
@@ -307,9 +309,9 @@ const Analytics = () => {
                         },
                     }}
                    onClose={handleClose}>
-                        <DialogTitle component="div" sx={{ fontWeight: 600 }}>Download Overview data</DialogTitle>
+                        <DialogTitle component="div" sx={{ fontWeight: 600 }}>{translate('Download Overview data')}</DialogTitle>
                         <DialogContent>
-                            <Typography sx={{ mb: 1 }}>Select a file format:</Typography>
+                            <Typography sx={{ mb: 1 }}>{translate('Select a file format')}:</Typography>
                             <RadioGroup
                             row
                             value={fileFormat}
@@ -325,10 +327,10 @@ const Analytics = () => {
                         </DialogContent>
                         <DialogActions sx={{ px: 3, pb: 2 }}>
                             <Button onClick={handleClose} variant="contained"  sx={{ mr: 1, backgroundColor: '#0000000D', color: '#000', textTransform: 'capitalize', boxShadow: 'none' }}>
-                            Cancel
+                            {translate('Cancel')}
                             </Button>
                             <Button onClick={handleDownload} variant="contained" sx={{boxShadow: 'none', backgroundColor: '#f50057', color: '#fff', textTransform: 'capitalize'}}>
-                            Download
+                            {translate('Download')}
                             </Button>
                         </DialogActions>
                         </Dialog>

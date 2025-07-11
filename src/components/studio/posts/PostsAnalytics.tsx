@@ -49,9 +49,11 @@ import {
   import ChevronUpIcon from '@mui/icons-material/ExpandLess';
   import ChevronDownIcon from '@mui/icons-material/ExpandMore';
 import { setSelectedTemplate } from "../../../redux/reducers/upload";
+import { useTranslation } from 'react-i18next';
   // import { setSelectedTemplate } from "../../../redux/reducers/upload";
 
   export default function PostsAnalytics() {
+    const { t: translate } = useTranslation();
     const dispatch = useDispatch();
 
 
@@ -299,7 +301,7 @@ const handleMoreOptionsClose = () => {
           {/* Thumbnail image */}
           <img
             src={src}
-            alt="Video thumbnail"
+            alt={translate('Thumbnail')}
             style={{
               width: '100%',
               height: '100%',
@@ -611,7 +613,7 @@ const handleMoreOptionsClose = () => {
 
             }}
           >
-            Views
+            {translate('Views')}
           </Button>
     
           <Menu
@@ -659,7 +661,7 @@ const handleMoreOptionsClose = () => {
                   borderRadius: '8px',
                 }}
               >
-                Clear
+                {translate('Clear')}
               </Button>
               <Button
                 variant="contained"
@@ -676,7 +678,7 @@ const handleMoreOptionsClose = () => {
                   },
                 }}
               >
-                Apply
+                {translate('Apply')}
               </Button>
             </Box>
           </Menu>
@@ -694,7 +696,7 @@ const handleMoreOptionsClose = () => {
               textTransform: 'none',
             }}
           >
-            Likes
+            {translate('Likes')}
           </Button>
     
           <Menu
@@ -742,7 +744,7 @@ const handleMoreOptionsClose = () => {
                   borderRadius: '8px',
                 }}
               >
-                Clear
+                {translate('Clear')}
               </Button>
               <Button
                 variant="contained"
@@ -759,7 +761,7 @@ const handleMoreOptionsClose = () => {
                   },
                 }}
               >
-                Apply
+                {translate('Apply')}
               </Button>
             </Box>
           </Menu>
@@ -777,7 +779,7 @@ const handleMoreOptionsClose = () => {
               textTransform: 'none',
             }}
           >
-            Privacy
+            {translate('Privacy')}
           </Button>
     
           <Menu
@@ -825,7 +827,7 @@ const handleMoreOptionsClose = () => {
                   borderRadius: '8px',
                 }}
               >
-                Clear
+                {translate('Clear')}
               </Button>
               <Button
                 variant="contained"
@@ -842,7 +844,7 @@ const handleMoreOptionsClose = () => {
                   },
                 }}
               >
-                Apply
+                {translate('Apply')}
               </Button>
             </Box>
           </Menu>
@@ -860,7 +862,7 @@ const handleMoreOptionsClose = () => {
               textTransform: 'none',
             }}
           >
-            All comments
+            {translate('All comments')}
           </Button>
     
           <Menu
@@ -908,7 +910,7 @@ const handleMoreOptionsClose = () => {
                   borderRadius: '8px',
                 }}
               >
-                Clear
+                {translate('Clear')}
               </Button>
               <Button
                 variant="contained"
@@ -925,14 +927,14 @@ const handleMoreOptionsClose = () => {
                   },
                 }}
               >
-                Apply
+                {translate('Apply')}
               </Button>
             </Box>
           </Menu>
         </Box>
 
         <TextField
-          placeholder="Search posts..."
+          placeholder={translate('Search posts')}
           size="small"
           variant="outlined"
           value={searchQuery}
@@ -978,7 +980,7 @@ const handleMoreOptionsClose = () => {
                           gap: 1,
                         }}
                       >
-                        Posts (Created on)
+                        {translate('Posts (Created on)')}
                         <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
                               <ChevronUpIcon
                             sx={{
@@ -1012,7 +1014,7 @@ const handleMoreOptionsClose = () => {
                       </Typography>
                     </TableSortLabel>
                   </TableCell>
-                    <TableCell>Privacy</TableCell>
+                    <TableCell>{translate('Privacy')}</TableCell>
                     <TableCell align="center">
                       <TableSortLabel
                         active={sortConfig?.key === 'viewsCount'}
@@ -1028,7 +1030,7 @@ const handleMoreOptionsClose = () => {
                             gap: 1,
                           }}
                         >
-                          Views
+                          {translate('Views')}
                           <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
                               <ChevronUpIcon
                             sx={{
@@ -1075,7 +1077,7 @@ const handleMoreOptionsClose = () => {
                             gap: 1,
                           }}
                         >
-                          Likes
+                          {translate('Likes')}
                           <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
                               <ChevronUpIcon
                             sx={{
@@ -1123,7 +1125,7 @@ const handleMoreOptionsClose = () => {
                             gap: 1,
                           }}
                         >
-                          Comments
+                          {translate('Comments')}
                           <span className="border rounded-sm relative h-[1.25rem] w-[1.25rem]" style={{ display: 'flex', flexDirection: 'column', marginLeft: 4 }}>
                               <ChevronUpIcon
                             sx={{
@@ -1154,7 +1156,7 @@ const handleMoreOptionsClose = () => {
                         </Typography>
                       </TableSortLabel>
                     </TableCell>
-                    <TableCell align="center">Actions</TableCell>
+                    <TableCell align="center">{translate('Actions')}</TableCell>
                   </TableRow>
                 </TableHead>
     
@@ -1261,7 +1263,7 @@ const handleMoreOptionsClose = () => {
 
                               <span className="flex bg-[#ffccd6c4] px-1.5 py-0.5 rounded-sm mr-1">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" role="img" focusable="false" data-icon="pin" aria-hidden="true" fill="#E10543" will-change="auto" transform="rotate(0)"><path d="M14.998 2c-.266 0-.538.139-.73.322-1.549 1.483-2.023 2.723-1.457 4.421-1.32 1.013-2.155 1.261-3.804 1.261-2.255 0-3.727.272-4.728 1.273v.031a2.374 2.374 0 0 0 0 3.373l2.8 2.822-4.771 4.77c-.39.39-.42 1.044-.03 1.434.391.391 1.048.391 1.438 0l4.79-4.79 2.804 2.791a2.377 2.377 0 0 0 3.375 0h.031c1.002-1 1.282-2.284 1.282-4.716 0-1.546.317-2.637 1.278-3.785 1.848.542 2.924.023 4.44-1.493.188-.187.281-.453.281-.718 0-.352-.088-.89-.312-1.562a8 8 0 0 0-1.969-3.154 8 8 0 0 0-3.156-1.968C15.889 2.09 15.35 2 14.998 2m.387 2.055c1.062.197 2.132.9 2.894 1.662s1.41 1.694 1.679 2.916c-.954.916-1.538.988-2.493.486-.38-.201-.863-.13-1.168.174-1.82 1.82-2.3 3.471-2.3 5.7 0 1.94-.114 2.66-.718 3.31-.171.184-.406.156-.563 0l-7.031-7.027a.36.36 0 0 1-.025-.509c.357-.435 1.152-.773 3.338-.772 2.613.002 4.002-.671 5.718-2.28.305-.304.38-.77.188-1.155-.514-1.028-.434-1.57.48-2.505"></path></svg>
-                                <b className="text-[#E10543] text-xs pl-1"> Pinned</b>
+                                <b className="text-[#E10543] text-xs pl-1"> {translate('Pinned')}</b>
                               </span>)}
                             {formatCustomDate(post?.createdTime)}
                           </Typography>
@@ -1334,7 +1336,7 @@ const handleMoreOptionsClose = () => {
                     {/* Actions */}
                     <TableCell align="center">
                       <Box display="flex" justifyContent="center" gap={1}>
-                        <Tooltip title="Edit" onClick={()=>{dispatch(setSelectedTemplate(post.templateImage)); navigate(`/upload/${post._id}`)}}>
+                        <Tooltip title={translate('Edit')} onClick={()=>{dispatch(setSelectedTemplate(post.templateImage)); navigate(`/upload/${post._id}`)}}>
                           <IconButton size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path fill-rule="evenodd" clip-rule="evenodd" d="M1.3335 14.0339C1.3335 13.857 1.40373 13.6875 1.52876 13.5624C1.65378 13.4374 1.82335 13.3672 2.00016 13.3672H11.3335C11.5103 13.3672 11.6799 13.4374 11.8049 13.5624C11.9299 13.6875 12.0002 13.857 12.0002 14.0339C12.0002 14.2107 11.9299 14.3802 11.8049 14.5053C11.6799 14.6303 11.5103 14.7005 11.3335 14.7005H2.00016C1.82335 14.7005 1.65378 14.6303 1.52876 14.5053C1.40373 14.3802 1.3335 14.2107 1.3335 14.0339Z" fill="black"/>
@@ -1343,7 +1345,7 @@ const handleMoreOptionsClose = () => {
                           </IconButton>
                         </Tooltip>
   
-                        <Tooltip onClick={()=>navigate(`/analytics/post/${post._id}`)} title="View Analytics">
+                        <Tooltip onClick={()=>navigate(`/analytics/post/${post._id}`)} title={translate('View Analytics')}>
                           <IconButton size="small" sx={{ border: "1px solid #00000014", p: 1 }}>
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M10.6669 7.61194V9.33594H12.0002V6.00927C12.0002 5.92085 11.9828 5.83329 11.9489 5.7516C11.9151 5.6699 11.8655 5.59568 11.803 5.53315C11.7405 5.47063 11.6662 5.42103 11.5845 5.38719C11.5028 5.35335 11.4153 5.33594 11.3269 5.33594H8.0002V6.66927H9.7242L8.4882 7.90527C8.42573 7.96758 8.3411 8.00259 8.25286 8.0026H6.6842C6.30567 8.0026 5.93842 8.13144 5.64286 8.36794L4.2502 9.48194C4.11211 9.59244 4.02357 9.75328 4.00407 9.92907C3.98457 10.1048 4.03569 10.2812 4.1462 10.4193C4.2567 10.5574 4.41754 10.6459 4.59333 10.6654C4.76911 10.6849 4.94544 10.6338 5.08353 10.5233L6.4762 9.40927C6.5352 9.36193 6.60855 9.33607 6.6842 9.33594H8.25286C8.47175 9.33598 8.6885 9.2929 8.89074 9.20917C9.09297 9.12544 9.27674 9.00269 9.43153 8.84794L10.6669 7.61194Z" fill="black"/>
@@ -1352,7 +1354,7 @@ const handleMoreOptionsClose = () => {
                           </IconButton>
                         </Tooltip>
   
-                        <Tooltip onClick={()=>navigate(`/analytics/comment/${post._id}`)} title="View Comments">
+                        <Tooltip onClick={()=>navigate(`/analytics/comment/${post._id}`)} title={translate('View Comments')}>
                           <IconButton size="small"  sx={{ border: "1px solid #00000014", p: 1 }}>
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M2.66683 7.33073C2.66683 5.04606 4.9355 2.9974 8.00016 2.9974C11.0648 2.9974 13.3335 5.04606 13.3335 7.33073C13.3335 8.76273 12.6188 10.0221 11.6035 11.0767C10.9042 11.8027 10.0868 12.4047 9.3335 12.8654V11.6641H8.00016C4.9355 11.6641 2.66683 9.6154 2.66683 7.33073ZM8.00016 1.66406C4.43683 1.66406 1.3335 4.09273 1.3335 7.33073C1.3335 10.5687 4.43683 12.9974 8.00016 12.9974V13.9974C8.00022 14.111 8.02931 14.2227 8.08466 14.3219C8.14001 14.4211 8.21979 14.5045 8.31643 14.5642C8.41306 14.6239 8.52336 14.6579 8.63683 14.663C8.75031 14.6681 8.86322 14.6442 8.96483 14.5934C10.0082 14.0721 11.4115 13.1981 12.5635 12.0014C13.7148 10.8061 14.6668 9.23206 14.6668 7.33073C14.6668 4.09273 11.5628 1.66406 8.00016 1.66406ZM6.00016 7.4974C6.00016 7.71841 5.91237 7.93037 5.75609 8.08665C5.5998 8.24293 5.38784 8.33073 5.16683 8.33073C4.94582 8.33073 4.73385 8.24293 4.57757 8.08665C4.42129 7.93037 4.3335 7.71841 4.3335 7.4974C4.3335 7.27638 4.42129 7.06442 4.57757 6.90814C4.73385 6.75186 4.94582 6.66406 5.16683 6.66406C5.38784 6.66406 5.5998 6.75186 5.75609 6.90814C5.91237 7.06442 6.00016 7.27638 6.00016 7.4974ZM8.8335 7.4974C8.8335 7.71841 8.7457 7.93037 8.58942 8.08665C8.43314 8.24293 8.22118 8.33073 8.00016 8.33073C7.77915 8.33073 7.56719 8.24293 7.41091 8.08665C7.25463 7.93037 7.16683 7.71841 7.16683 7.4974C7.16683 7.27638 7.25463 7.06442 7.41091 6.90814C7.56719 6.75186 7.77915 6.66406 8.00016 6.66406C8.22118 6.66406 8.43314 6.75186 8.58942 6.90814C8.7457 7.06442 8.8335 7.27638 8.8335 7.4974ZM10.8335 8.33073C11.0545 8.33073 11.2665 8.24293 11.4228 8.08665C11.579 7.93037 11.6668 7.71841 11.6668 7.4974C11.6668 7.27638 11.579 7.06442 11.4228 6.90814C11.2665 6.75186 11.0545 6.66406 10.8335 6.66406C10.6125 6.66406 10.4005 6.75186 10.2442 6.90814C10.088 7.06442 10.0002 7.27638 10.0002 7.4974C10.0002 7.71841 10.088 7.93037 10.2442 8.08665C10.4005 8.24293 10.6125 8.33073 10.8335 8.33073Z" fill="black"/>
@@ -1394,7 +1396,7 @@ const handleMoreOptionsClose = () => {
                             }}>
                               <PushPinIcon sx={{ fontSize: 18, mr: 1, color: '#000' }} />
                               <Typography variant="body2" color="text.primary">
-                                {post.isPinned ? 'Unpin from top' : 'Pin to top'}
+                                {post.isPinned ? `${translate('Unpin from top')}` : `${translate('Pin to top')}`}
 
                               </Typography>
                             </MenuItem>
@@ -1405,7 +1407,7 @@ const handleMoreOptionsClose = () => {
 
                               {/* <DeleteIcon sx={{ fontSize: 18, mr: 1, color: '#f44336' }} /> */}
                               <Typography variant="body2" sx={{ color: '#DA3123' }}>
-                                Delete
+                                {translate('Delete')}
                               </Typography>
                             </MenuItem>
                           </Menu>
@@ -1420,8 +1422,8 @@ const handleMoreOptionsClose = () => {
 
           <div className='py-4'>
             <ReactPaginate
-              previousLabel={"Previous"}
-              nextLabel={"Next"}
+              previousLabel={translate('Previous')}
+              nextLabel={translate('Next')}
               breakLabel={"..."}
               pageCount={Math.ceil(posts.totalItems / posts.pageSize)}
               marginPagesDisplayed={2}

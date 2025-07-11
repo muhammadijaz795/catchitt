@@ -30,7 +30,7 @@ import SaveVideoPopup from './scheduleVideoPopup';
 import { useParams } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
+import { useTranslation } from 'react-i18next';
 import CheckIcon from '@mui/icons-material/Check';
 import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserToAnnotate, shareToLinkedIn, shareToTwitter, whatsappShareHandler, searchUsersAndHashes } from '../../../utils/helpers';
 
@@ -53,6 +53,7 @@ interface Location
 }
 
 function FormRightSide(props: any) {
+    const { t: translate } = useTranslation();
     let isEditMode = false;
     const { id: postId } = useParams(); 
     if(postId) {
@@ -718,14 +719,12 @@ function FormRightSide(props: any) {
         >
             <div className="w-[100%]">
                 <div className="w-[100%] flex flex-col gap-[1rem] pb-[2rem]">
-                    <p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">Details</p>
+                    <p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">{translate('Details')}</p>
                     <div className='bg-white p-3 rounded-sm shadow-sm position-relative'>
                         <div className=''>
                         <div className="w-[100%] flex flex-col gap-[1rem] relative">
                             <div className="flex justify-between w-[100%]">
-                                <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
-                                    Description
-                                </p>
+                                <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">{translate('Description')}</p>
                                 
                             </div>
                             {/* <BasicInput
@@ -738,7 +737,7 @@ function FormRightSide(props: any) {
                                 onChange={handleDescriptionChange}
                             /> */}
                             <Tooltip 
-                                title={isEditExpired ? "Captions and covers can only be edited within the first 7 days of posting" : ""}
+                                title={isEditExpired ? translate('Captions and covers can only be edited within the first 7 days of posting') : ""}
                                 placement="top"
                                 componentsProps={{
                                     tooltip: {
@@ -757,7 +756,7 @@ function FormRightSide(props: any) {
                             </Tooltip>
                            
                             <p className="text-gray-900 text-sm leading-[1.5rem] text-[1rem] font-medium absolute left-4 bottom-3">
-                                <span className="cursor-pointer" onClick={() => insertAtCursor('#')}># Hashtag</span> <span className="cursor-pointer" onClick={() => insertAtCursor('@')}>@ Mention</span>
+                                <span className="cursor-pointer" onClick={() => insertAtCursor('#')}># {translate('Hashtag')}</span> <span className="cursor-pointer" onClick={() => insertAtCursor('@')}>@ {translate('Mention')}</span>
                             </p>
 
                             
@@ -815,7 +814,7 @@ function FormRightSide(props: any) {
                                         )
                                     ) : (
                                         <div className="px-4 py-2 text-black min-w-32 text-left">
-                                            {isFetchingUsers? <CircularProgress style={{width:'20px',height:'20px',padding:'0px',marginBottom:'-4px'}}/>:'Following'} 
+                                            {isFetchingUsers? <CircularProgress style={{width:'20px',height:'20px',padding:'0px',marginBottom:'-4px'}}/>:translate('Following')} 
                                         </div>
                                     )}
                                 </div>
@@ -885,7 +884,7 @@ function FormRightSide(props: any) {
                                 <div className="relative h-full max-w-[20%]">
                                     <img
                                     src={state.thumbnailUrl}
-                                    alt="Video thumbnail"
+                                    alt={translate('Thumbnail')}
                                     className="h-full w-full object-cover rounded-md"
                                     />
                                     {!isEditExpired && (
@@ -893,7 +892,7 @@ function FormRightSide(props: any) {
                                         onClick={() => setThumbnailModalOpen(true)}
                                         style={{ fontSize: '12px' }}
                                         className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white w-[6rem] py-1.5 rounded-md shadow-sm hover:bg-black/70 transition-colors">
-                                        Edit Cover
+                                        {translate('Edit Cover')}
                                     </button>
                                        
                                     )}
@@ -1034,7 +1033,7 @@ function FormRightSide(props: any) {
                         <div className="w-[100%] flex flex-col pt-2">
                             <div className="flex justify-between w-[100%]">
                                 <p className="text-[0.875rem] font-medium text-custom-dark-222 leading-[1.7rem]">
-                                    {/* {videoInfo ? 'Edit' : 'Add'} location */} Location
+                                    {/* {videoInfo ? 'Edit' : 'Add'} location */} {translate('Location')}
                                     <Tooltip componentsProps={{
                                             tooltip: {
                                             sx: {
@@ -1042,7 +1041,7 @@ function FormRightSide(props: any) {
                                                 fontSize: "1rem",
                                             },
                                             },
-                                        }} title="Set a time to publish later">
+                                        }} title={translate('Location')}>
                                     <IconButton size="small">
                                     <svg className='ml-1' width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path opacity="0.989" d="M6.33905 0.511719C3.11961 0.511719 0.509888 3.12144 0.509888 6.34089C0.509888 9.56033 3.11961 12.1701 6.33905 12.1701C9.5585 12.1701 12.1682 9.56033 12.1682 6.34089C12.1682 3.12144 9.5585 0.511719 6.33905 0.511719ZM6.33905 1.67755C7.57585 1.67755 8.76198 2.16887 9.63653 3.04341C10.5111 3.91796 11.0024 5.10409 11.0024 6.34089C11.0024 7.57768 10.5111 8.76382 9.63653 9.63836C8.76198 10.5129 7.57585 11.0042 6.33905 11.0042C5.10226 11.0042 3.91612 10.5129 3.04158 9.63836C2.16704 8.76382 1.67572 7.57768 1.67572 6.34089C1.67572 5.10409 2.16704 3.91796 3.04158 3.04341C3.91612 2.16887 5.10226 1.67755 6.33905 1.67755ZM6.33905 3.4263C6.18446 3.4263 6.03619 3.48772 5.92687 3.59703C5.81755 3.70635 5.75614 3.85462 5.75614 4.00922C5.75614 4.16382 5.81755 4.31208 5.92687 4.4214C6.03619 4.53072 6.18446 4.59214 6.33905 4.59214C6.49365 4.59214 6.64192 4.53072 6.75124 4.4214C6.86056 4.31208 6.92197 4.16382 6.92197 4.00922C6.92197 3.85462 6.86056 3.70635 6.75124 3.59703C6.64192 3.48772 6.49365 3.4263 6.33905 3.4263ZM5.75614 5.17505C5.60154 5.17505 5.45327 5.23647 5.34395 5.34578C5.23464 5.4551 5.17322 5.60337 5.17322 5.75797C5.17322 6.03893 5.38249 6.24878 5.64655 6.30474L5.30088 7.98005C5.16564 8.65681 5.64946 9.25547 6.33847 9.25547H6.92139C7.07599 9.25547 7.22425 9.19406 7.33357 9.08474C7.44289 8.97542 7.50431 8.82715 7.50431 8.67255C7.50431 8.51795 7.44289 8.36969 7.33357 8.26037C7.22425 8.15105 7.07599 8.08964 6.92139 8.08964H6.46671L6.9039 5.86756C6.92146 5.78366 6.92004 5.6969 6.89973 5.61363C6.87942 5.53036 6.84075 5.45268 6.78654 5.38629C6.73233 5.3199 6.66396 5.26647 6.58643 5.22992C6.5089 5.19337 6.42418 5.17462 6.33847 5.17505H5.75614Z" fill="black" fill-opacity="0.34"/>
@@ -1085,7 +1084,7 @@ function FormRightSide(props: any) {
                                         renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            placeholder="Search locations"
+                                            placeholder={translate('Search locations')}
                                             variant="outlined"
                                             InputProps={{
                                             ...params.InputProps,
@@ -1229,15 +1228,13 @@ function FormRightSide(props: any) {
                         </div>
                     </div>
 
-                    <p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">Settings</p>
+                    <p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">{translate('Settings')}</p>
 
                     <div className='bg-white rounded-md shadow-sm'>
                         <div className=' p-3'>
                             <div className="text-left mb-2">
                             <FormControl>
-                                    <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
-                                        When to post
-                                    </p>
+                                    <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">{translate('When to post')}</p>
                                     <RadioGroup
                                         row
                                         value={postTimeOption}
@@ -1250,7 +1247,7 @@ function FormRightSide(props: any) {
                                             value="now"
                                             onClick={() => setShowSchedule(false)}
                                             control={<Radio sx={{ color: '#FF2C55', '&.Mui-checked': { color: '#FF2C55' } }} />}
-                                            label="Now"
+                                            label={translate('Now')}
                                         />
                                         <FormControlLabel
                                         disabled={isEditMode}
@@ -1264,7 +1261,7 @@ function FormRightSide(props: any) {
                                             control={<Radio sx={{ color: '#ccc', '&.Mui-checked': { color: '#FF2C55' } }} />}
                                             label={
                                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                    Schedule 
+                                                    {translate('Schedule')} 
                                                     <Tooltip componentsProps={{
                                                         tooltip: {
                                                         sx: {
@@ -1272,7 +1269,7 @@ function FormRightSide(props: any) {
                                                             fontSize: "1rem",
                                                         },
                                                         },
-                                                    }} title="Set a time to publish later">
+                                                    }} title={translate('Set a time to publish later')}>
                                                         <IconButton size="small">{/* your icon */}</IconButton>
                                                     </Tooltip>
                                                 </Box>
@@ -1309,25 +1306,19 @@ function FormRightSide(props: any) {
                                 open={permissionDialogOpen}
                                 onClose={handleDenySchedule}
                             >
-                                <DialogTitle>Enable Scheduling</DialogTitle>
+                                <DialogTitle>{translate('Enable Scheduling')}</DialogTitle>
                                 <DialogContent>
-                                <DialogContentText>
-                                    Scheduling posts requires permission. Would you like to allow it?
-                                </DialogContentText>
+                                <DialogContentText>{translate('Scheduling posts requires permission. Would you like to allow it?')}</DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
-                                <Button sx={{backgroundColor: 'lightgray', color: '#000', width: '6rem'}} onClick={handleDenySchedule}>Cancel</Button>
-                                <Button sx={{backgroundColor: '#ff3b5c',width: '6rem'}}  onClick={handleAllowSchedule} variant="contained" >
-                                    Allow
-                                </Button>
+                                <Button sx={{backgroundColor: 'lightgray', color: '#000', width: '6rem'}} onClick={handleDenySchedule}>{translate('Cancel')}</Button>
+                                <Button sx={{backgroundColor: '#ff3b5c',width: '6rem'}}  onClick={handleAllowSchedule} variant="contained" >{translate('Allow')}</Button>
                                 </DialogActions>
                             </Dialog>
                             </div>
                             <div className='text-left mb-2'>
                             <FormControl fullWidth>
-                                <p className="text-sm font-medium pb-2 text-custom-dark-222 leading-[1.7rem]">
-                                    Who can watch this video
-                                </p>
+                                <p className="text-sm font-medium pb-2 text-custom-dark-222 leading-[1.7rem]">{translate('Who can watch this video')}</p>
                                 <Select
                                         value={state?.canView || 'followers'}
                                         onChange={handleCanViewChange}
@@ -1370,9 +1361,7 @@ function FormRightSide(props: any) {
                             </div>
                             {showMore && (<><div className="w-[100%] flex flex-col gap-[0.5rem]">
                                 <div className="flex justify-between w-[100%]">
-                                    <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">
-                                        Allow users to:
-                                    </p>
+                                    <p className="text-sm font-medium text-custom-dark-222 leading-[1.7rem]">{translate('Allow users to:')}</p>
                                 </div>
                                 <div className="flex gap-10">
                                     <div className="flex gap-2 items-center">
@@ -1383,9 +1372,7 @@ function FormRightSide(props: any) {
                                             }
                                             checked={state?.allowComments}
                                         />
-                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
-                                            Comment
-                                        </p>
+                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">{translate('Comment')}</p>
                                     </div>
                                     <div className="flex gap-2 items-center">
                                         <BasicCheckBox
@@ -1395,9 +1382,7 @@ function FormRightSide(props: any) {
                                             }
                                             checked={state?.allowDuet}
                                         />
-                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
-                                            Duet
-                                        </p>
+                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">{translate('Duet')}</p>
                                     </div>
                                     <div className="flex gap-2 items-center">
                                         <BasicCheckBox
@@ -1407,17 +1392,13 @@ function FormRightSide(props: any) {
                                             }
                                             checked={state?.allowStitch || false}
                                         />
-                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">
-                                            Stitch
-                                        </p>
+                                        <p className="text-xs font-medium text-custom-dark-222 leading-[1.1rem]">{translate('Stitch')}</p>
                                     </div>
                                 </div>
                             </div>
                             
                                 <div className="flex justify-start items-center pt-3 gap-[1.5rem]">
-                                <p className="text-[13px] font-medium text-custom-dark-222 leading-[1.7rem]">
-                                    Disclose post content
-                                </p>
+                                <p className="text-[13px] font-medium text-custom-dark-222 leading-[1.7rem]">{translate('Disclose post content')}</p>
                                 <BasicSwitch
                                     checked={state?.disclosePost || false}
                                     onChange={(e:any) => updateState('disclosePost', e.target.checked)}
@@ -1472,13 +1453,13 @@ function FormRightSide(props: any) {
                     </div>
 
 
-                    {!isEditMode && ( <><p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">Checks</p>
+                    {!isEditMode && ( <><p className="text-start text-base pt-2 font-semibold leading-[1.5rem] text-custom-dark-222">{translate('Checks')}</p>
 
                     <div className='bg-white p-3 rounded-md shadow-sm'>                        
                         <div className="flex flex-col items-start justify-between">
                             <div className="flex justify-start items-center gap-[1rem]">
                                 <p className="text-xs font-medium flex text-custom-dark-222 leading-[1.7rem]">
-                                    Run a copyright check 
+                                    {translate('Run a copyright check')} 
                                     <svg className='ml-1' width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path opacity="0.989" d="M6.33905 0.511719C3.11961 0.511719 0.509888 3.12144 0.509888 6.34089C0.509888 9.56033 3.11961 12.1701 6.33905 12.1701C9.5585 12.1701 12.1682 9.56033 12.1682 6.34089C12.1682 3.12144 9.5585 0.511719 6.33905 0.511719ZM6.33905 1.67755C7.57585 1.67755 8.76198 2.16887 9.63653 3.04341C10.5111 3.91796 11.0024 5.10409 11.0024 6.34089C11.0024 7.57768 10.5111 8.76382 9.63653 9.63836C8.76198 10.5129 7.57585 11.0042 6.33905 11.0042C5.10226 11.0042 3.91612 10.5129 3.04158 9.63836C2.16704 8.76382 1.67572 7.57768 1.67572 6.34089C1.67572 5.10409 2.16704 3.91796 3.04158 3.04341C3.91612 2.16887 5.10226 1.67755 6.33905 1.67755ZM6.33905 3.4263C6.18446 3.4263 6.03619 3.48772 5.92687 3.59703C5.81755 3.70635 5.75614 3.85462 5.75614 4.00922C5.75614 4.16382 5.81755 4.31208 5.92687 4.4214C6.03619 4.53072 6.18446 4.59214 6.33905 4.59214C6.49365 4.59214 6.64192 4.53072 6.75124 4.4214C6.86056 4.31208 6.92197 4.16382 6.92197 4.00922C6.92197 3.85462 6.86056 3.70635 6.75124 3.59703C6.64192 3.48772 6.49365 3.4263 6.33905 3.4263ZM5.75614 5.17505C5.60154 5.17505 5.45327 5.23647 5.34395 5.34578C5.23464 5.4551 5.17322 5.60337 5.17322 5.75797C5.17322 6.03893 5.38249 6.24878 5.64655 6.30474L5.30088 7.98005C5.16564 8.65681 5.64946 9.25547 6.33847 9.25547H6.92139C7.07599 9.25547 7.22425 9.19406 7.33357 9.08474C7.44289 8.97542 7.50431 8.82715 7.50431 8.67255C7.50431 8.51795 7.44289 8.36969 7.33357 8.26037C7.22425 8.15105 7.07599 8.08964 6.92139 8.08964H6.46671L6.9039 5.86756C6.92146 5.78366 6.92004 5.6969 6.89973 5.61363C6.87942 5.53036 6.84075 5.45268 6.78654 5.38629C6.73233 5.3199 6.66396 5.26647 6.58643 5.22992C6.5089 5.19337 6.42418 5.17462 6.33847 5.17505H5.75614Z" fill="black" fill-opacity="0.34"/>
                                     </svg>
@@ -1492,14 +1473,12 @@ function FormRightSide(props: any) {
                             </div>
 
                             {showChecking && (
-                                <div className='p-2 mt-2 rounded-sm bg-[#0000000D] text-xs'>
-                                    Checking in progress. This will take about 1 minute.
-                                </div>
+                                <div className='p-2 mt-2 rounded-sm bg-[#0000000D] text-xs'>{translate('Checking in progress. This will take about 1 minute.')}</div>
                             )}
 
                             {showResult && (
                                 <div className='p-2 mt-2 rounded-sm bg-[#E1FBF3] flex text-xs'>
-                                    No issue detected 
+                                    {translate('No issue detected')} 
                                     <svg className='pl-1' width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M1.11768 4.41146L4.45101 7.74479L11.1177 1.07812" stroke="#1B959D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
@@ -1511,9 +1490,7 @@ function FormRightSide(props: any) {
                     )}
 
 {isEditExpired && (
-                                <p className="text-left text-sm mt-1">
-                                    Captions and covers can only be edited within the first 7 days of posting
-                                </p>
+                                <p className="text-left text-sm mt-1">{translate('Captions and covers can only be edited within the first 7 days of posting')}</p>
                             )}
 
 
@@ -1533,7 +1510,7 @@ function FormRightSide(props: any) {
                             textSize="16px "
                             width="169px !important"
                             height="40px !important"
-                            text="Post" //{videoInfo ? 'Update' : 'Post'}
+                            text={translate('Post')} //{videoInfo ? 'Update' : 'Post'}
                             onClick={SubmitHandler}
                             loading={isPosting}
                         />
@@ -1545,7 +1522,7 @@ function FormRightSide(props: any) {
                             backgroundColor='#0000000D'
                             color='#000000'
                             islight
-                            text="Save draft" //{videoInfo ? 'Update' : 'Post'}
+                            text={translate('Save draft')} //{videoInfo ? 'Update' : 'Post'}
                             onClick={() => {
                                 setShowDraftPopup(false);
                                 SubmitHandler(true);
@@ -1569,7 +1546,7 @@ function FormRightSide(props: any) {
                             backgroundColor='#0000000D'
                             border='0'
                             color="black"
-                            text="Discard"
+                            text={translate('Discard')}
                             height="40px !important"
                             onClick={() => setDiscardPostPopup(true)}
                         />
@@ -1584,10 +1561,10 @@ function FormRightSide(props: any) {
             
             <CustomPopup
                 open={discardPostPopup}
-                title="Discard this post?"
-                description="The video and all edits will be discarded."
-                primaryBtnText="Discard"
-                btnText="Continue editing"
+                title={translate('Discard this post?')}
+                description={translate('The video and all edits will be discarded.')}
+                primaryBtnText={translate('Discard')}
+                btnText={translate('Continue editing')}
                 onClose={() => setDiscardPostPopup(false)}
                 onPrimaryBtnClick={() => { setDiscardPostPopup(false); dispatch(setSelectedFile({ file: null }))} }
                 onBtnClick={() => setDiscardPostPopup(false)}
@@ -1602,7 +1579,7 @@ function FormRightSide(props: any) {
                             startAdornment={
                                 <img className="w-[1.5rem] h-[1.5rem]" src={search} alt="" />
                             }
-                            placeholder="Search"
+                            placeholder={translate('Search')}
                         />
                     </div>
                     <div className="flex flex-col h-[60vh] overflow-y-scroll gap-2">
@@ -1642,7 +1619,7 @@ function FormRightSide(props: any) {
                             startAdornment={
                                 <img className="w-[1.5rem] h-[1.5rem]" src={search} alt="" />
                             }
-                            placeholder="Search"
+                            placeholder={translate('Search')}
                         />
                     </div>
                     <div
@@ -1672,7 +1649,7 @@ function FormRightSide(props: any) {
                             endMessage={
                                 <div className="flex flex-row justify-center items-center mt-3">
                                     <p className="font-bold text-xl">
-                                        {totalFollowers === 0 && 'No followers available.'}
+                                        {totalFollowers === 0 && translate('No followers available.')}
                                     </p>
                                 </div>
                             }
@@ -1719,10 +1696,10 @@ function FormRightSide(props: any) {
 
             <CustomPopup
                 open={showDraftPopup}
-                title="Save as draft?"
-                description="You can continue editing this video later from your drafts."
-                primaryBtnText="Save as draft"
-                btnText="Discard"
+                title={translate('Save as draft')}
+                description={translate('You can continue editing this video later from your drafts.')}
+                primaryBtnText={translate('Save as draft')}
+                btnText={translate('Discard')}
                 onClose={() => setShowDraftPopup(false)}
                 onPrimaryBtnClick={() => {
                     setShowDraftPopup(false);

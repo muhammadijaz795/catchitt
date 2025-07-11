@@ -24,11 +24,13 @@ import {
 import { relative } from 'path';
 import { formatCustomDate } from '../../../utils/helpers';
 import UploadSidebar from '../UploadSidebar';
+import { useTranslation } from 'react-i18next';
 
 type PostedByOptions = "all" | "followers" | "non-followers";
 
 function CommentsPage() {
     const navigate = useNavigate();
+    const { t: translate } = useTranslation();
 
     const [darkTheme, setdarkTheme] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
@@ -338,7 +340,7 @@ const handleFollowerApply = () => {
                         borderRadius: '8px',
                     }}
                     >
-                    Clear
+                    {translate('Clear')}
                     </Button>
                     <Button
                     variant="contained"
@@ -355,7 +357,7 @@ const handleFollowerApply = () => {
                         },
                     }}
                     >
-                    Apply
+                    {translate('Apply')}
                     </Button>
                 </Box>
                 </Menu>
@@ -447,7 +449,7 @@ const handleFollowerApply = () => {
                     variant="body2"
                     sx={{ fontWeight: 400, fontSize: 12, cursor: 'pointer', color: 'gray' }}
                 >
-                    Reply
+                    {translate('Reply')}
                 </Typography>
 
                 {/* Vertical Divider */}
@@ -458,7 +460,7 @@ const handleFollowerApply = () => {
                     variant="body2"
                     sx={{ fontWeight: 400, fontSize: 12, cursor: 'pointer', color: 'gray' }}
                 >
-                    Delete
+                    {translate('Delete')}
                 </Typography>
                 </Box>
             </Box>
@@ -478,7 +480,7 @@ const handleFollowerApply = () => {
                 {/* Image */}
                 <img
                     src={comment.media.thumbnailUrl}
-                    alt="Thumbnail"
+                    alt={translate('Thumbnail')}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
 
@@ -516,7 +518,7 @@ const handleFollowerApply = () => {
                     fontSize: '1rem', // 14px for example
                 },
                 },
-            }}title="Open all comments" placement="top" >
+            }}title={translate('Open all comments')} placement="top" >
 
                 <Box sx={{
                     width: 30,

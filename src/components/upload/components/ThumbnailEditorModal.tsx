@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Cropper } from 'react-advanced-cropper';
 import 'react-advanced-cropper/dist/style.css';
 import { CropperRef } from 'react-advanced-cropper';
+import { useTranslation } from 'react-i18next';
 
 interface ThumbnailEditorModalProps {
   open: boolean;
@@ -43,6 +44,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isDraggingRef = useRef(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const { t: translate } = useTranslation();
 
   // Set initial preview when currentThumbnail changes
   useEffect(() => {
@@ -184,8 +186,8 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
             },
           }}
         >
-          <Tab value="select" label="Select cover" />
-          <Tab value="upload" label="Upload cover" />
+          <Tab value="select" label={translate('Select cover')} />
+          <Tab value="upload" label={translate('Upload cover')} />
         </Tabs>
         <IconButton onClick={onClose} sx={{ color: 'black', mr: 3 }}>
           <CloseIcon />
@@ -209,7 +211,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               {preview && (
                 <img
                   src={preview}
-                  alt="Preview"
+                  alt={translate('Preview')}
                   style={{ 
                     height: '200px', 
                     objectFit: 'contain', 
@@ -324,17 +326,15 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
                 <svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M32.4465 47.1592H43.6965C46.6942 47.1515 49.578 46.0103 51.7692 43.9647C53.9605 41.919 55.297 39.1204 55.5106 36.1303C55.7242 33.1402 54.799 30.18 52.9207 27.8437C51.0425 25.5074 48.3501 23.9679 45.384 23.5342C44.7891 19.8075 42.8114 16.4419 39.8452 14.1087C36.879 11.7755 33.1423 10.6461 29.3803 10.9458C25.6183 11.2455 22.1075 12.9523 19.5481 15.7257C16.9887 18.4991 15.5688 22.1353 15.5715 25.9092V25.9217C12.7891 26.0527 10.1694 27.2712 8.27655 29.3146C6.38367 31.3581 5.36895 34.0632 5.45089 36.8475C5.53283 39.6318 6.70487 42.2725 8.71465 44.2011C10.7244 46.1298 13.4112 47.192 16.1965 47.1592H28.6965V32.3092L25.459 35.5467C25.3421 35.6612 25.1851 35.7254 25.0215 35.7254C24.8579 35.7254 24.7008 35.6612 24.584 35.5467L22.809 33.7717C22.6945 33.6549 22.6303 33.4978 22.6303 33.3342C22.6303 33.1706 22.6945 33.0135 22.809 32.8967L29.2465 26.4592C29.598 26.1081 30.0746 25.9109 30.5715 25.9109C31.0684 25.9109 31.5449 26.1081 31.8965 26.4592L38.334 32.8967C38.584 33.1467 38.584 33.5217 38.334 33.7717L36.559 35.5467C36.4422 35.6612 36.2851 35.7254 36.1215 35.7254C35.9579 35.7254 35.8008 35.6612 35.684 35.5467L32.4465 32.3092V47.1592Z" fill="black" fillOpacity="0.34"/>
                 </svg>
-                <Typography variant="h5" sx={{ mb: 0, color: '#000 !important' }}>
-                  Drag and drop a file here
-                </Typography>
+                <Typography variant="h5" sx={{ mb: 0, color: '#000 !important' }}>{translate('Drag and drop a file here')}</Typography>
                 <Button
                   sx={{textTransform: 'lowercase'}}
                   variant="text"
                   onClick={triggerFileInput}
                 >
-                 <span className='text-black'>Or</span>  select a file
+                 <span className='text-black'>{translate('Or')}</span>  {translate('select a file')}
                 </Button>
-                <Typography variant='body2' sx={{color: '#00000052'}}>Supported formats: JPG, JPEG, and PNG.</Typography>
+                <Typography variant='body2' sx={{color: '#00000052'}}>{translate('Supported formats')}: JPG, JPEG, {translate('and')} PNG.</Typography>
               </Box>
             )}
           </Box>
@@ -369,7 +369,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               }}
               onClick={triggerFileInput}
             >
-              Upload new
+              {translate('Upload new')}
             </Button>
             <Button
               variant="contained"
@@ -384,7 +384,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
               onClick={handleSaveCroppedImage}
               disabled={!imageSrc}
             >
-              Confirm
+              {translate('Confirm')}
             </Button>
           </>
         ) : (
@@ -400,7 +400,7 @@ const ThumbnailEditorModal: React.FC<ThumbnailEditorModalProps> = ({
             }}
             onClick={onClose}
           >
-            Confirm
+            {translate('Confirm')}
           </Button>
         )}
       </Box>
