@@ -20,7 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from "@mui/icons-material/Edit";
 import CircleIcon from "@mui/icons-material/Circle";
-
+import { useTranslation } from 'react-i18next';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -66,13 +66,13 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 
 const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveGoalAdded: any }) => {
   const [showAddGiftCard, setShowAddGiftCard] = useState(false);
-
+ const { t, i18n } = useTranslation();
   const handleToggle = () => setShowAddGiftCard(!showAddGiftCard);
   const [showLiveGoalAutomatically, setShowLiveGoalAutomatically] = useState(false);
 
 
   const [goalDescription, setGoalDescription] = useState(
-    "Help me achieve my first goal and I’ll sing a song"
+    t('livestream.help_achieve_goal')
   );
   const [autoAdd, setAutoAdd] = useState(true);
 
@@ -129,15 +129,15 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
             }}
           >
             <Box display="flex" justifyContent="center" alignItems="center">
-              <Typography variant="h6">Edit your LIVE goal</Typography>
+              <Typography variant="h6">{t('livestream.edit_your_live_goal')}</Typography>
             </Box>
 
             <Typography variant="body2" color="gray" mt={1} mb={2}>
-              The goal will expire in 4 hours.
+              {t('livestream.goal_expire')}
             </Typography>
 
             <Typography fontWeight="600" fontSize={14} mb={1} textAlign={'left'}>
-              Describe your goal
+              {t('livestream.describle_your_goal')}
             </Typography>
 
             <Typography
@@ -147,18 +147,18 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
                 mb: 2,
                 fontSize: 12,
               }}>
-              Help me achieve my first goal and I’ll sing a song
+              {t('livestream.help_achieve_goal')}
             </Typography>
 
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={1} pt={2} borderTop="1px solid #444">
-              <Typography>Total Gifts: 2</Typography>
+              <Typography>{t('livestream.total_gifts')} 2</Typography>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={handleToggle}
                 sx={{ bgcolor: '#3a3a3a', color: '#fff', textTransform: 'none', borderRadius: 1 }}
               >
-                Gift
+                {t('livestream.gift')}
               </Button>
             </Box>
 
@@ -249,7 +249,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
 
             <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography mt={2} mb={2} fontSize={14} textAlign={'left'}>
-                Add this LIVE goal automatically
+                {t('livestream.add_goal_automatically')}
               </Typography>
               <CustomSwitch
                 checked={autoAdd}
@@ -269,7 +269,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
               }}
               onClick={onConfirm}
             >
-              Confirm
+              {t('livestream.confirm')}
             </Button>
           </Box>
         ) : (
@@ -284,13 +284,13 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
             }}
           >
             <Typography variant="h6" sx={{ mb: 1 }}>
-              Add Gift
+              {t('livestream.add_gift')}
             </Typography>
             <Typography
               variant="body2"
               sx={{ color: "#aaa", mb: 2, fontSize: 13 }}
             >
-              Your recommended Coin amount per Gift:{" "}
+              {t('livestream.your_recommended_coin_amount_per_gift')}
               <CircleIcon sx={{ fontSize: 12, color: "gold", mb: "-2px" }} /> 10
             </Typography>
 
@@ -340,7 +340,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
               variant="caption"
               sx={{ display: "block", color: "#aaa", mt: 1.2 }}
             >
-              Likely you’ll reach this goal. Go for it!
+              {t('livestream.likely_reach_goal')}
             </Typography>
 
             {/* Confirm button */}
@@ -357,7 +357,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
                 }}
                 onClick={() => { setShowLiveGoalAutomatically(true); setSelectedGifts((prev: any) => [...prev.filter((item:any) => item._id !== selectedGift._id), { ...selectedGift, count: selectedGiftCount }]); setSelectedGift({}); setSelectedGiftCount(1); }}
               >
-                Confirm
+                {t('livestream.confirm')}
               </Button>
             }
           </Card>
@@ -373,15 +373,15 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
         }}
       >
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Typography variant="h6">Edit your LIVE goal</Typography>
+          <Typography variant="h6">{t('livestream.edit_your_live_goal')}</Typography>
         </Box>
 
         <Typography variant="body2" color="gray" mt={1} mb={2}>
-          The goal will expire in 4 hours.
+          {t('livestream.goal_expire')}
         </Typography>
 
         <Typography fontWeight="600" fontSize={14} mb={1} textAlign={'left'}>
-          Describe your goal
+          {t('livestream.describle_your_goal')}
         </Typography>
 
         <Typography
@@ -391,18 +391,18 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
             mb: 2,
             fontSize: 12,
           }}>
-          Help me achieve my first goal and I’ll sing a song
+          {t('livestream.help_achieve_goal')}
         </Typography>
 
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1} pt={2} borderTop="1px solid #444">
-          <Typography>Total Gifts: {selectedGifts.length}</Typography>
+          <Typography>{t('livestream.total_gifts')} {selectedGifts.length}</Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => { handleToggle; setShowLiveGoalAutomatically(false); }}
             sx={{ bgcolor: '#3a3a3a', color: '#fff', textTransform: 'none', borderRadius: 1 }}
           >
-            Gift
+            {t('livestream.gift')}
           </Button>
         </Box>
 
@@ -461,10 +461,9 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
 
         <Box display="flex" justifyContent="space-between" alignItems="center" textAlign={"left"} mt={2}>
           <Box>
-            <Typography variant="subtitle2" fontWeight={700}>Add this LIVE goal automatically</Typography>
+            <Typography variant="subtitle2" fontWeight={700}>{t('livestream.add_goal_automatically')}</Typography>
             <Typography variant="caption" color="gray" lineHeight={1.5}>
-              Add this LIVE goal to all your future LIVE videos. You can change it
-              anytime.
+              {t('livestream.add_this_live_goal_for_future_live_videos')}
             </Typography>
           </Box>
           <CustomSwitch
@@ -487,7 +486,7 @@ const LiveGoalModal = ({ onConfirm, onLiveGoalAdded }: { onConfirm: any, onLiveG
             }}
             onClick={() => onLiveGoalAdded(selectedGifts)}
           >
-            Confirm
+            {t('livestream.confirm')}
           </Button>
         }
       </Card>

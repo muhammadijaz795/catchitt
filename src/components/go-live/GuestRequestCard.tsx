@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Typography, Button, Avatar, Stack, IconButton, keyframes } from "@mui/material";
 import LiveStatusSettings from "./LiveStatusSettings";
+import { useTranslation } from 'react-i18next';
 
 // Pulse animation keyframes
 const pulse = keyframes`
@@ -16,6 +17,7 @@ interface GuestRequestCardProps {
 const GuestRequestCard = ({ joinAsGuest }: GuestRequestCardProps) => {
   const [requestSent, setRequestSent] = useState(false);
  const [showSettings, setShowSettings] = useState(false);
+ const { t, i18n } = useTranslation();
 
   if (showSettings) {
     return <LiveStatusSettings onBack={() => setShowSettings(false)} />;
@@ -33,7 +35,7 @@ const GuestRequestCard = ({ joinAsGuest }: GuestRequestCardProps) => {
       {/* Top Bar */}
       <Box display="flex" justifyContent="center" alignItems="center" mb={2} height={65} borderBottom={'1px solid #E4E6EB'}>
         <Typography variant="subtitle1" fontWeight="bold">
-          Multi-guest LIVE
+          {t('livestream.mutli_guest_live')}
         </Typography>
         <Box sx={{}} position={"absolute"} right={2} >
           <IconButton size="small">
@@ -105,10 +107,10 @@ const GuestRequestCard = ({ joinAsGuest }: GuestRequestCardProps) => {
 
         
         <Typography variant="subtitle1" align="center" fontWeight={600}>
-          {requestSent ? "Guest request sent" : "Request to join as a guest"}
+          {requestSent ? t('livestream.guest_request_sent') : t('livestream.request_to_join')}
         </Typography>
         <Typography variant="body2" align="center" color="text.secondary">
-          {requestSent ? "1 viewer is requesting" : "Grab your chance to be the next guest!"}
+          {requestSent ? t('livestream.one_viewer_requesting') : t('livestream.chance_to_be_guest')}
         </Typography>
         <Typography
           variant="caption"
@@ -118,7 +120,7 @@ const GuestRequestCard = ({ joinAsGuest }: GuestRequestCardProps) => {
           mt={1}
           mb={2}
         >
-          Seezitt rewards both you and the creator for your popularity during this LIVE
+         {t('livestream.seezitt_rewards')}
         </Typography>
 
         {/* Button */}
@@ -137,7 +139,7 @@ const GuestRequestCard = ({ joinAsGuest }: GuestRequestCardProps) => {
             textTransform: 'capitalize'
           }}
         >
-          {requestSent ? "Cancel request" : "Request"}
+          {requestSent ? t('livestream.cancel_request') : t('livestream.request')}
         </Button>
       </Box>
     </Box>

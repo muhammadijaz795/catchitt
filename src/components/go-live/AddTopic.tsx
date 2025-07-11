@@ -11,6 +11,7 @@ import {
   Divider
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useTranslation } from 'react-i18next';
 
 interface Topic {
   title: string;
@@ -41,6 +42,7 @@ const topics: Topic[] = [
 ];
 
 const AddTopic: React.FC<AddTopicProps> = ({ onBack, postCategories,addToRoom }) => {
+  const { t, i18n } = useTranslation();
   return (
     <Box sx={{ maxWidth: 360, mx: 'auto', position: 'fixed', top: 6 }}>
       {/* Header */}
@@ -49,13 +51,13 @@ const AddTopic: React.FC<AddTopicProps> = ({ onBack, postCategories,addToRoom })
           <ArrowBackIosNewIcon fontSize="small" />
         </IconButton>
         <Typography variant="h6" fontWeight={600} ml={1}>
-          Add topic
+          {t('livestream.add_topic')}
         </Typography>
       </Box>
 
       {/* Subtext */}
       <Typography textAlign={'left'} variant="body2" color="text.secondary" mb={2}>
-        Topics will help your LIVE videos reach more viewers and the viewers can use topics to find your LIVE videos, more easily.
+        {t('livestream.topic_content')}
       </Typography>
 
       {/* List of topics */}

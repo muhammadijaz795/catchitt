@@ -18,10 +18,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import UnblockButton from "./UnblockButton";
 import { socket } from '../../../src/lib/socket';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const isPostLive = window.location.pathname.includes('/postlive') ? true : false;
 
 export default function BlockedAccounts({ customProps, onBack }: { customProps: any, onBack: () => void }) {
+  const { t, i18n } = useTranslation();
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -88,7 +90,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
                           <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>        </IconButton>
               <Typography fontWeight="bold" variant="body1">
-                Blocked Account
+                {t('livestream.blocked_account')}
               </Typography>
       </Box>
 
@@ -107,7 +109,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
             <SearchIcon sx={{ color: 'text.disabled', fontSize: 20, mr: 1 }} />
             <input
                 type="text"
-                placeholder="Search accounts"
+                placeholder={t('livestream.search_accounts')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
@@ -123,7 +125,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
 
 
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          These accounts are Blocked for the rest of the LIVE
+          {t('livestream.blocked_account_description')}
         </Typography>
 
         <List>
@@ -145,7 +147,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
                   borderColor: '#000'
                 }}
               >
-                Unblock
+                {t('livestream.unblock')}
               </Button>
             }>
               <ListItemAvatar>
@@ -176,7 +178,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
                   borderColor: '#000'
                 }}
               >
-                Block
+                {t('livestream.block')}
               </Button>
             }>
               <ListItemAvatar>
@@ -201,7 +203,7 @@ export default function BlockedAccounts({ customProps, onBack }: { customProps: 
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold">
-                No blocked accounts
+                {t('livestream.no_blocked_accounts')}
               </Typography>
               {/* <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxWidth: 280, px: 2 }}>
                 Edit this list by tapping "Manage" on a viewer's personal card

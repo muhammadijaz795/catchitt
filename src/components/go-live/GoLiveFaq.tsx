@@ -7,27 +7,29 @@ import {
   Paper,
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useTranslation } from 'react-i18next';
 
 interface LiveGoalFAQProps {
   onBack: () => void;
 }
 
 const LiveGoalFAQ = ({ onBack }: LiveGoalFAQProps) => {
+  const { t, i18n } = useTranslation();
   const commentBoxes = [
     {
-      text: "Help me achieve my first goal and I’ll sing a song.",
+      text: t('livestream.help_achieve_goal'),
       avatar: "/avatar1.png", // Replace with real path or src
     },
     {
-      text: "I’ll go LIVE for extra minutes if I achieve my first goal.",
+      text: t('livestream.example_extra_minutes'),
       avatar: "/avatar2.png",
     },
     {
-      text: "I am at dancing. I will dance disco if I make it.",
+      text: t('livestream.example_dancing'),
       avatar: "/avatar3.png",
     },
     {
-      text: "I love gym workout. I’ll do 20 sit-ups if I achieve the goal.",
+      text: t('livestream.example_gym'),
       avatar: "/avatar4.png",
     },
   ];
@@ -52,7 +54,7 @@ const LiveGoalFAQ = ({ onBack }: LiveGoalFAQProps) => {
           <ArrowBackIosNewIcon fontSize="small" />
         </IconButton>
         <Typography variant="h6" textAlign="center" fontWeight="600" ml={1}>
-          FAQs
+          {t('livestream.faqs')}
         </Typography>
       </Box>
       <Box  sx={{
@@ -74,20 +76,20 @@ const LiveGoalFAQ = ({ onBack }: LiveGoalFAQProps) => {
   }}>
       {/* Question */}
       <Typography fontWeight="600" mb={1}>
-        What is LIVE Goal?
+        {t('livestream.what_is_live_goal')}
       </Typography>
 
       <Typography variant="body2" color="grey.300" mb={1}>
-        LIVE goals can help you become more popular.
+        {t('livestream.live_goal_description')}
       </Typography>
       <Typography variant="body2" color="grey.300" mb={1}>
-        YmJ can set a LIVE goal with up to 3 Gifts. Viewers can send the Gifts during your LIVE streams to achieve the goal with you. When you achieve a goal, there will be a special effect to celebrate.
+        {t('livestream.live_goal_gift_info')}
       </Typography>
       <Typography variant="body2" color="grey.300" mb={1}>
-        Setting Gifts of different Coin amounts is a great way to provide options for your viewers to show appreciation to your LIVE.
+       {t('livestream.live_goal_gift_options')}
       </Typography>
       <Typography variant="body2" color="grey.300" mb={2}>
-        A brief and clear description can attract more viewers.
+        {t('livestream.live_goal_description_tip')}
       </Typography>
 
       {/* Examples */}
@@ -114,10 +116,10 @@ const LiveGoalFAQ = ({ onBack }: LiveGoalFAQProps) => {
 
       {/* Be relevant */}
       <Typography fontWeight="600" mt={2} mb={1}>
-        • Be relevant
+        • {t('livestream.be_relevant')}
       </Typography>
       <Typography variant="body2" color="grey.300" mb={2}>
-        Having a LIVE goal relevant to the theme of your LIVE might motivate your viewers more.
+        {t('livestream.be_relevant_tip')}
       </Typography>
 
       {commentBoxes.slice(2).map(({ text, avatar }, i) => (
@@ -143,10 +145,10 @@ const LiveGoalFAQ = ({ onBack }: LiveGoalFAQProps) => {
 
       {/* Be attainable */}
       <Typography fontWeight="600" mt={2} mb={1}>
-        • Be attainable
+        • {t('livestream.be_attainable')}
       </Typography>
       <Typography variant="body2" color="grey.300">
-        A LIVE goal will expire in 4 hours, so make sure your LIVE goal is attainable and not too challenging in the time limit.
+        {t('livestream.be_attainable_tip')}  
       </Typography>
       </Box>
     </Box>

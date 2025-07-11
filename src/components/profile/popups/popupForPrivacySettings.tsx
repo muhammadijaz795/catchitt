@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import { Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, SelectChangeEvent, styled, Switch, SwitchProps, Typography } from '@mui/material';
 import styles from './popupPrivacySettings.module.scss';
 import { API_KEY } from '../../../utils/constants';
-
+import { useTranslation } from 'react-i18next';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -68,7 +68,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
 }));
 
 function PopupForPrivacySettings({ fetchUpdatedMedia, isPrivacyModalOpened, setIsPrivacyModalOpened, mediaId }: any) {
-
+    const { t, i18n } = useTranslation();
     const token = localStorage.getItem('token');
 
     const handleClose = () => setIsPrivacyModalOpened(false);
@@ -188,7 +188,7 @@ function PopupForPrivacySettings({ fetchUpdatedMedia, isPrivacyModalOpened, setI
                         </Select>
                     </FormControl>
                     <div className='flex justify-between items-center mb-1 mt-2'>
-                        <span className=''>Allow comments</span>
+                        <span className=''>{t('livestream.allow_comments')}</span>
                         <IOSSwitch sx={{ m: 1 }} checked={privacyPrivilege.privacyOptions.allowComments || false} onChange={(e: any) => handleSwitchChange(e, true, 'allowComments')} />
                     </div>
                     <div className='flex justify-between items-center my-1'>

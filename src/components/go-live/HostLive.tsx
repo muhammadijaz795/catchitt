@@ -53,11 +53,11 @@ import AvatarPostLive from '../../assets/postLive/Avatar.png'
 import { useSearchParams } from 'react-router-dom';
 import SidebarChat from './SidebarChat.jsx';
 import GoLiveTogetherPanel from "./HostGoLiveTogather";
-
+import { useTranslation } from 'react-i18next';
 
 
 export default function PostLive() {
-
+    const { t, i18n } = useTranslation();
     const Activity = () => (
         <svg width="28" height="30" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M4.71963 11.2487C4.71855 9.33396 5.26296 7.46055 6.28595 5.85877C7.29896 4.26981 8.74995 3.02587 10.4543 2.28527C12.7271 1.30074 15.2915 1.30074 17.5642 2.28527C19.2693 3.02559 20.7209 4.26955 21.7343 5.85877C23.8138 9.11701 23.8259 13.3261 21.7651 16.5967L25.9539 24.2477L21.5416 23.3727L20.1304 27.7967L16.2419 20.6655C14.777 21.0443 13.2433 21.0443 11.7784 20.6655L7.88983 27.7967L6.47877 23.371L2.06641 24.2477L6.25526 16.5967C5.25079 15.0035 4.71745 13.1461 4.71963 11.2487Z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -460,7 +460,7 @@ export default function PostLive() {
                                         }}
                                     >
                                         <Typography fontSize={12} color="white" sx={{ ml: 2 }}>
-                                            Add Live Goal
+                                            {t('livestream.add_live_goal')}
                                         </Typography>
                                         <img src={LiveGoal} alt="" />
                                     </Box>
@@ -550,9 +550,9 @@ export default function PostLive() {
                                         },
                                     }}
                                 >
-                                    <img src={GuestIcon} alt="Guests" style={{ width: '23px', marginBottom: '5px' }} />
+                                    <img src={GuestIcon} alt={t('livestream.guests')} style={{ width: '23px', marginBottom: '5px' }} />
                                     <Typography fontSize={12} color="white" sx={{ fontWeight: 500 }}>
-                                        +Guests
+                                        +{t('livestream.guests')}
                                     </Typography>
                                 </Button>
                             </Box>

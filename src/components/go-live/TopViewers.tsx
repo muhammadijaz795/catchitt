@@ -7,12 +7,14 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import TopViewer1 from '../../assets/postLive/top-viewer-faq-1.png'
+import { useTranslation } from 'react-i18next';
 
 interface TopViewersProps {
     onBack: () => void;
 }
 
 const TopViewers = ({ onBack }: TopViewersProps) => {
+    const { t, i18n } = useTranslation();
     return (
         <Box
             sx={{
@@ -43,7 +45,7 @@ const TopViewers = ({ onBack }: TopViewersProps) => {
                     mb={2}
                 >
                     <Typography variant="body1" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                        Top viewers
+                        {t('livestream.top_viewers')}
                     </Typography>
                     <IconButton sx={{ color: '#666', padding: 0 }}>
                         <HelpOutlineIcon fontSize="small" />

@@ -11,9 +11,11 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Link } from 'react-router-dom';
 import { defaultGreyBackground } from '../../icons';
 import style from './index.module.scss';
+import { useTranslation } from 'react-i18next';
 
 function DiscoverLive() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation();
   const [mediaByCategory, setMediaByCategory] = useState({
     selectedCategory: 'all',
     items: [],
@@ -136,32 +138,7 @@ useEffect(() => {
     userAvatar: string;
   };
 
-  const dummyData2: LiveStream[] = [
-    {
-      id: '1',
-      title: 'Watch now and interact ',
-      username: '🔥G u j  ج ﻟ آ r x S I M B 🔺🔥',
-      viewers: 9,
-      imageUrl: 'https://images.unsplash.com/photo-1542332213-9b5a5a3fad35?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      userAvatar: 'https://images.unsplash.com/profile-1533004581829-aab5b0d67147?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    },
-    {
-      id: '2',
-      title: 'lag ke',
-      username: 'jia ( ͡° ͜ʖ ͡°)',
-      viewers: 4,
-      imageUrl: 'https://images.unsplash.com/photo-1542640244-7e672d6cef4e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      userAvatar: 'https://images.unsplash.com/profile-fb-1492571002-e2c96d7a6823.jpg?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    },
-    {
-      id: '3',
-      title: 'Event ws 9.50k',
-      username: 'ROOM TARKAM MAS R',
-      viewers: 7,
-      imageUrl: 'https://images.unsplash.com/photo-1543946207-39bd91e70ca7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      userAvatar: 'https://images.unsplash.com/profile-1611689283666-173278c4384eimage?w=32&dpr=2&crop=faces&bg=%23fff&h=32&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    },
-  ];
+ 
   
   const LiveStreamCard = ({ stream }: { stream: any }) => (
     <Box sx={{ borderRadius: 2, width: "100%", position: 'relative', mr: 2, textAlign: 'left' }}>
@@ -176,7 +153,7 @@ useEffect(() => {
         />
         <Box sx={{ position: 'absolute', top: 8, left: 8, display: 'flex', alignItems: 'center', gap: 0 }}>
             <span   className='w-9 rounded-sm text-sm ml-3 text-center text-white ' style={{ background: 'linear-gradient(113.02deg, #FF1764 0%, #ED3495 94.15%)'}}>
-                Live
+                {t('livestream.live')}
             </span>
           <span
           className='px-2'
@@ -222,7 +199,7 @@ useEffect(() => {
             {stream.name}
             </Typography>
             <Typography variant="caption" color="text.secondary" >
-            {stream.watching} watching
+            {stream.watching} {t('livestream.watching')}
             </Typography>
         </Box>
         </Stack>
@@ -304,11 +281,11 @@ useEffect(() => {
           <Box  sx={{ mt: 4 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
-                  Recommended categories
+                  {t('livestream.recommended_categories')}
                   </Typography>
                   <Link to="/live/category" reloadDocument={false} style={{ textDecoration: 'none' }}>
                   <Typography fontWeight={400} variant="body2" color="#16182399" sx={{ cursor: 'pointer' }}>
-                  View all
+                  {t('livestream.view_all')}
                   </Typography>
                   </Link>
               </Box>
@@ -327,10 +304,10 @@ useEffect(() => {
           <Box className={style.liveEvents}  sx={{ mt: 4 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="h6" fontSize={'22px'} color={'#161823'} fontWeight={600}>
-                  LIVE Events
+                  {t('livestream.live_events')}
                   </Typography>
                   <Typography fontWeight={400} variant="body2" color="#16182399" sx={{ cursor: 'pointer' }}>
-                  View all
+                  {t('livestream.view_all')}
                   </Typography>
               </Box>
               <Grid container spacing={2}>
@@ -340,10 +317,10 @@ useEffect(() => {
                       <Stack spacing={2}>
                         <Box display="flex" alignItems="center" gap={1}>
                         <span   className='w-16 rounded-sm text-xs py-0.5 text-center text-white ' style={{ background: 'linear-gradient(113.02deg, #FF1764 0%, #ED3495 94.15%)'}}>
-                            Live Event
+                            {t('livestream.live_event')}
                         </span>
                           <Typography variant="subtitle1" fontWeight="bold">
-                            Welcome to my LIVE
+                            {t('livestream.welcome_to_my_live')}
                           </Typography>
                         </Box>
 
@@ -357,7 +334,7 @@ useEffect(() => {
                             YAKOUT
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            1.1M Followers
+                            1.1M {t('livestream.followers')}
                           </Typography>
                         </Box>
 
@@ -373,7 +350,7 @@ useEffect(() => {
 
                         <Box>
                           <Button variant="contained"  sx={{ borderRadius: 2, background: '#FE2C55', }}>
-                            Register
+                            {t('livestream.register')}
                           </Button>
                         </Box>
                       </Stack>

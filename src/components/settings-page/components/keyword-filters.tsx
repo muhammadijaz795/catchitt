@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
 
 
 interface KeywordFiltersProps {
@@ -11,6 +12,7 @@ interface KeywordFiltersProps {
 
 const KeywordFilters: React.FC<KeywordFiltersProps> = ({ keywordData, onClose, onKeywordAdded }) => {
   var themeColor = window.localStorage.getItem('theme');
+  const { t, i18n } = useTranslation();
 
   const API_KEY = process.env.VITE_API_URL;
   const { token } = useSelector((store: any) => store?.reducers?.profile);
@@ -97,7 +99,7 @@ const KeywordFilters: React.FC<KeywordFiltersProps> = ({ keywordData, onClose, o
 
   return (
     <div className="w-full p-4 text-left">
-        <p className="h5">Add Keyword</p>
+        <p className="h5">{t('livestream.add_keyword')}</p>
         <p className="text-sm text-[#000000A6] mb-3">
             Enter a single word or hashtag to filter from selected feeds. Spelling isn't case-sensitive.
         </p>

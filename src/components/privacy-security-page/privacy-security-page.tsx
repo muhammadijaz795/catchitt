@@ -383,7 +383,7 @@ export const PrivacySecurityPage = () => {
                                     />
                                 </div>
                                 <div className={styles.card}>
-                                    <p>Allow Comments</p>
+                                    <p>{t('livestream.allow_comments')}</p>
                                     <FormControlLabel
                                         label={undefined}
                                         labelPlacement="start"

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-
+import { useTranslation } from 'react-i18next';
 interface InviteCardProps {
   receiverInfo: {
     host?: {
@@ -25,6 +25,7 @@ interface InviteCardProps {
 
 const InviteCard: React.FC<InviteCardProps> = ({receiverInfo, onAcceptHostRequest, onDeclineHostRequest}) => {
   const [checked, setChecked] = useState(true);
+  const { t, i18n } = useTranslation();
 
   return (
     <Box
@@ -52,12 +53,12 @@ const InviteCard: React.FC<InviteCardProps> = ({receiverInfo, onAcceptHostReques
 
       {/* Heading */}
       <Typography fontWeight={700} mb={1}>
-        {receiverInfo?.host?.name} invites you to GO LIVE Together
+        {receiverInfo?.host?.name} {t('livestream.invite_to_live')}
       </Typography>
 
       {/* Subtext */}
       <Typography variant="body2" color="text.secondary" mb={2}>
-        LIVE videos are public. Your followers may be notified and a recording of the LIVE video will be available to the host.
+        {t('livestream.live_public_notice')}
       </Typography>
 
       {/* Divider */}
@@ -75,7 +76,7 @@ const InviteCard: React.FC<InviteCardProps> = ({receiverInfo, onAcceptHostReques
         }
         label={
           <Typography variant="body2" color="text.secondary">
-            Turn off invitations for this LIVE video
+            {t('livestream.turn_off_invites')}
           </Typography>
         }
       />
@@ -84,7 +85,7 @@ const InviteCard: React.FC<InviteCardProps> = ({receiverInfo, onAcceptHostReques
       <Stack direction="row" spacing={2} mt={3} justifyContent="center">
         <Button variant="outlined" sx={{ flex: 1, borderRadius: 2, color: '#000',
             borderColor: '#000', }} onClick={()=> onDeclineHostRequest()}>
-          Decline
+          {t('livestream.decline')}
         </Button>
         <Button
           variant="contained"
@@ -97,7 +98,7 @@ const InviteCard: React.FC<InviteCardProps> = ({receiverInfo, onAcceptHostReques
           }}
           onClick={()=> onAcceptHostRequest()}
         >
-          Accept
+          {t('livestream.accept')}
         </Button>
       </Stack>
     </Box>

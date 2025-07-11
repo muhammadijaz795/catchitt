@@ -25,6 +25,8 @@ import {
   fetchRoomDetailsFailure,
 } from '../../redux/reducers/roomDetailsSlice';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -55,6 +57,13 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 
+
+
+const SettingsPanel = ({customProps}: {customProps: any}) => {
+const [activeView, setActiveView] = useState<any>(null);
+const [showCommentSettings, setShowCommentSettings] = useState(false);
+const { t, i18n } = useTranslation();
+  
 const settingsData = [
   // {
   //   title: 'Practice mode',
@@ -82,8 +91,8 @@ const settingsData = [
   //   type: 'link',
   // },
   {
-    title: 'Hear your voice',
-    description: 'Use headphones to hear how you sound to viewers',
+    title: t('livestream.hear_your_voice'),
+    description: t('livestream.use_headphones_to_hear'),
     type: 'switch',
     value: true,
   },
@@ -104,7 +113,7 @@ const settingsData = [
   //   // type: 'link',
   // },
   {
-    title: 'Comment settings',
+    title: t('livestream.comment_settings'),
     description: '',
     type: 'link',
     view: 'CommentsSetting',
@@ -115,24 +124,18 @@ const settingsData = [
   //   type: 'link',
   // },
   {
-    title: 'Muted Accounts',
-    description: 'These accounts are muted for the rest of the LIVE',
+    title: t('livestream.muted_account'),
+    description: t('livestream.muted_account_description'),
     type: 'link',
     view: 'MutedAccounts',
   },
    {
-    title: 'Blocked Accounts',
+    title: t('livestream.blocked_account'),
     description: '',
     type: 'link',
     view: 'BlockedAccounts',
   },
 ];
-
-const SettingsPanel = ({customProps}: {customProps: any}) => {
-const [activeView, setActiveView] = useState<any>(null);
-const [showCommentSettings, setShowCommentSettings] = useState(false);
-  
-
 
 
 const updateSettings = async (
@@ -279,7 +282,7 @@ const [searchParams] = useSearchParams();
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto', right: 0, top: 0 }}>
       <Typography variant="h6" fontWeight={600} borderBottom={'1px solid #EFEFEF'} pb={1}>
-        Settings
+        {t('livestream.settings')}
       </Typography>
       {/* <Typography variant="body2" fontWeight={600} textAlign={'left'} color="text.secondary" sx={{ mt: 1, mb: 2 }}>
         These settings apply to all LIVE videos.

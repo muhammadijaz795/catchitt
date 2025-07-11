@@ -5,12 +5,14 @@ import {
     Paper,
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useTranslation } from 'react-i18next';
 
 interface AboutMeFaqs {
     onBack: () => void;
 }
 
 const TopViewersFAQ: React.FC<AboutMeFaqs> = ({ onBack }) => {
+    const { t, i18n } = useTranslation();
     return (
         <Box
             sx={{
@@ -44,7 +46,7 @@ const TopViewersFAQ: React.FC<AboutMeFaqs> = ({ onBack }) => {
                         <ArrowBackIosNewIcon fontSize="small" />
                     </IconButton>
                     <Typography variant="body1" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                        FAQs
+                        {t('livestream.faqs')}
                     </Typography>
                 </Box>
             </Box>
@@ -57,12 +59,11 @@ const TopViewersFAQ: React.FC<AboutMeFaqs> = ({ onBack }) => {
                 }}
             >
                 <Typography fontWeight="bold" mb={1} sx={{ mt: 2 }}>
-                    1. Can I edit it once published?
+                    1. {t('livestream.edit_after_publish_question')}
                 </Typography>
 
                 <Typography variant="body2" color="#111111" mb={1}>
-                    Yes, feel free to edit it, Once passed Seezitt's safety review, the
-                    latest version will automatically replace the previous one.
+                    {t('livestream.edit_after_publish_answer')}
                 </Typography>
             </Box>
         </Box>

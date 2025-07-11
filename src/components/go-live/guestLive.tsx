@@ -52,6 +52,7 @@ import  GamingLiveUI  from './categories';
 import { dark } from '@mui/material/styles/createPalette';
 import GuestRequestCard from './GuestRequestCard';
 import LiveInviteCard from './InviteGuestLive';
+import { useTranslation } from 'react-i18next';
 
  function scrollToTop()
   {
@@ -127,7 +128,7 @@ const shareOptions = [
 ];
 
 function GuestLive({ darkTheme }: { darkTheme?: any }) {
-
+    const { t, i18n } = useTranslation();
     const [showOverlay, setShowOverlay] = useState(false);
 
   const handlePauseClick = () => {
@@ -1731,7 +1732,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                         </svg>
                     </span>
                     <Typography fontWeight={700} fontSize={18}>
-                    LIVE chat
+                    {t('livestream.live_chat')}
                     </Typography>
                 </Box>
                      {
@@ -1756,7 +1757,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
     
                                 </IconButton>
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Top viewers
+                                    {t('livestream.top_viewers')}
                                 </Typography>
                                 <Box>
                                 <Tooltip title="Help" arrow 
@@ -1925,10 +1926,10 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                 fullWidth
                                 sx={{ textTransform: "none", borderColor: "#f33", color: "#f33" }}
                                 >
-                                Send Gifts
+                                {t('livestream.send_gifts')}
                                 </Button>
                                 <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
-                                💗 Send Gifts to support and help desiLiv***
+                                {t('livestream.send_gifts_support')}
                                 </Typography>
                             </Box>
                         </Box>
@@ -1947,7 +1948,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                             onClick={() => setShowTopViewers(true)}
                             >
                                 <Typography fontWeight={500} fontSize={16}>
-                                Top viewers
+                                {t('livestream.top_viewers')}
                                 </Typography>
                                 <ArrowForwardIosIcon sx={{ fontSize: 13 }} />
                             </Box>
@@ -2718,7 +2719,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                         >
                                         {newJoiner && <Typography fontSize={12} color="text.secondary">🌿 {(newJoiner as {name: string}).name} joined</Typography>}
                                         <Typography fontSize={12} fontWeight={500}>
-                                        {newJoiner && (newJoiner as { from: string })?.from == loggedInUserId && <>💲 Welcome to Seezitt LIVE! Have fun interacting with others in real time. Creators must be 18 or older to go LIVE. Viewers must be 18 or older to recharge and send Gifts. Remember to follow our Community Guidelines.</>}
+                                        {newJoiner && (newJoiner as { from: string })?.from == loggedInUserId && <>{t('livestream.welcome_guidelines')}</>}
                                         </Typography>
                                         
                                         </Box>}
@@ -2747,9 +2748,9 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                             <Avatar src={selectedLiveVideo?.details?.owner?.photo} sx={{ width: 40, height: 40, mr: 1 }} />
 
                                             <Box flexGrow={1}>
-                                            <Typography fontSize={13} fontWeight={600}>Hi {profileData?.username},</Typography>
+                                            <Typography fontSize={13} fontWeight={600}>{t('livestream.hi')} {profileData?.username},</Typography>
                                             <Typography fontSize={12} color="text.secondary">
-                                                Stay tuned for my LIVE!
+                                                {t('livestream.stay_tuned')}
                                             </Typography>
                                             </Box>
                                             <IconButton onClick={() => setShowFollowDiv(false)} size="small" sx={{position: 'absolute', top: 8, right: 4}}>
@@ -2772,7 +2773,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                                 justifyContent: 'center',
                                             }}
                                             >
-                                            + Follow
+                                            + {t('livestream.follow')}
                                             </Box>
                                         </Box>
                                     </Paper>}
@@ -2798,7 +2799,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                                       >
                                         <TextField
                                           fullWidth
-                                          placeholder="Say something nice"
+                                          placeholder={t('livestream.say_something_nice')}
                                           variant="outlined"
                                           size="small"
                                           value={message}
@@ -2909,7 +2910,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
                 <Box display="flex" justifyContent="space-between " borderTop={'1px solid #ccc'}>
                     <Button variant="outlined" sx={{
                       color : darkTheme ? '#fff' : '#000',width: '50%', borderRadius: 0, border: 'none', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} onClick={handleCloseReport}>
-                    Cancel
+                    {t('livestream.cancel')}
                     </Button>
                     <Button variant="contained" onClick={()=> submitReport()} sx={{  color : darkTheme ? '#fff' : 'inherit', width: '50%', borderRadius: 0, backgroundColor: 'rgba(22, 24, 35, 0.12)', fontWeight: '600', height: '100%', py: 2, '&:hover': { backgroundColor: 'rgba(22, 24, 35, 0.12)', border: 'none'}}} disabled={!selectedReason}>
                     Submit
@@ -2950,7 +2951,7 @@ const isGiftOpenMenu = Boolean(menuGiftAnchorEl);
 
                     <Typography fontWeight={600}>What can I get if I am a top viewer?</Typography>
                     <Typography variant="body2" mb={2}>
-                        The top 2 viewers will have their profile photos shown on the top right corner of the LIVE. Ranking list will show the top 99 viewers.
+                        {t('livestream.profile_photo_reward')}
                     </Typography>
 
                     <Typography fontWeight={600}>What if I do not wish to be seen as a top viewer on the ranking list?</Typography>

@@ -12,6 +12,7 @@ import {
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { styled } from "@mui/material/styles";
+import { useTranslation } from 'react-i18next';
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -79,6 +80,7 @@ const FilterComments: React.FC<FilterCommentsProps> = ({
 
   const selectedFilters = getSelectedFilters();
   const showInFeed = filterSettings.showInFeed || false;
+  const { t, i18n } = useTranslation();
 
   const [localFilters, setLocalFilters] = useState({
     spamComments: false,
@@ -131,18 +133,16 @@ const FilterComments: React.FC<FilterCommentsProps> = ({
 
   const filters = [
     {
-      label: "Spam comments",
-      description: "These comments are disruptive or repetitive.",
+      label: t('livestream.spam_comments'),
+      description: t('livestream.spam_comments_description'),
     },
     {
-      label: "Potentially unkind comments",
-      description:
-        "These comments are suggestive, mean-spirited, or stereotyping towards another group.",
+      label: t('livestream.unkind_comments'),
+      description: t('livestream.unkind_comments_description')
     },
     {
-      label: "Community-flagged comments",
-      description:
-        "These comments are similar to those our community has previously flagged, but don't violate our Community Guidelines.",
+      label: t('livestream.community_flagged_comments'),
+      description: t('livestream.community_flagged_comments_description')
     },
   ];
 
@@ -176,7 +176,7 @@ const FilterComments: React.FC<FilterCommentsProps> = ({
           </svg>
         </IconButton>
         <Typography fontWeight="bold" variant="body1" sx={{ ml: 1 }}>
-          Filter comments
+          {t('livestream.filter_comments')}
         </Typography>
       </Box>
 
@@ -232,12 +232,12 @@ const FilterComments: React.FC<FilterCommentsProps> = ({
           <ListItemText
             primary={
               <Typography fontWeight="bold">
-                Review community-flagged comments
+                {t('livestream.review_community_flagged_comments')}
               </Typography>
             }
             secondary={
               <Typography variant="body2" color="text.secondary">
-                Turn this on to let creators and moderators approve community-flagged comments during LIVE.
+                {t('livestream.review_community_flagged_comments_description')}
               </Typography>
             }
           />
@@ -250,12 +250,12 @@ const FilterComments: React.FC<FilterCommentsProps> = ({
           <ListItemText
             primary={
               <Typography fontWeight="bold">
-                Show filtered comments in feed
+                {t('livestream.show_filtered_comments')}
               </Typography>
             }
             secondary={
               <Typography variant="body2" color="text.secondary">
-                Community-flagged comments will be visible to you during the LIVE.
+                {t('livestream.community_flagged_info')}
               </Typography>
             }
           />

@@ -5,8 +5,10 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { useTranslation } from 'react-i18next';
 
 const StarCommentFaq: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+   const { t, i18n } = useTranslation();
   return (
     <Container
       maxWidth="xs"
@@ -34,7 +36,7 @@ const StarCommentFaq: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 </svg> 
         </IconButton>
         <Typography fontWeight="bold" fontSize="1rem">
-          FAQs
+          {t('livestream.faqs')}
         </Typography>
       </Box>
 
@@ -73,7 +75,7 @@ const StarCommentFaq: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <Typography variant="body2" color="text.secondary">
           You can turn off Star Comment through{" "}
           <Typography component="span" fontWeight="bold">
-            Settings › Comment settings
+            Settings › {t('livestream.comment_settings')}
           </Typography>. Once you turn off this feature, viewers will not be able to send Star Comments in your LIVE videos.
         </Typography>
       </Box>

@@ -2,8 +2,10 @@
 import React from "react";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { useTranslation } from 'react-i18next';
 
 const UnMuteButton: React.FC<{ user: any, onBack: () => void, onConfirm: () => void }> = ({ user, onBack, onConfirm }) => {
+   const { t, i18n } = useTranslation();
   return (
     <Container
       maxWidth="xs"
@@ -30,11 +32,11 @@ const UnMuteButton: React.FC<{ user: any, onBack: () => void, onConfirm: () => v
       {/* Message */}
       <Box sx={{  py: 1, px: 3, textAlign: "left" }}>
         <Typography variant="body1" fontSize="1rem">
-          Can watch your LIVE after 
+          {t('livestream.can_watch_after')} 
           <Typography component="span" fontWeight="bold" display="inline">
             { " " + user?.name + " " }
           </Typography>
-          revoke
+          {t('livestream.revoke')}
         </Typography>
       </Box>
 
@@ -65,7 +67,7 @@ const UnMuteButton: React.FC<{ user: any, onBack: () => void, onConfirm: () => v
             },
           }}
         >
-          Cancel
+          {t('livestream.cancel')}
         </Button>
         <Button
           variant="contained"
@@ -82,7 +84,7 @@ const UnMuteButton: React.FC<{ user: any, onBack: () => void, onConfirm: () => v
             },
           }}
         >
-          Confirm
+          {t('livestream.confirm')}
         </Button>
       </Box>
     </Container>

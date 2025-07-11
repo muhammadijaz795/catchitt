@@ -6,9 +6,11 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const LiveStreaming = ({posts}: any) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const { t, i18n } = useTranslation();
   
   function handleNext()
   {
@@ -53,10 +55,10 @@ const LiveStreaming = ({posts}: any) => {
                       }}
                     >
                       <Typography variant="h6" fontWeight="bold" mb={1}>
-                        No LIVE streams for you yet
+                        {t('livestream.nostreams')}
                       </Typography>
                       <Typography variant="body2" color="#aaa" mb={3}>
-                        Go back to explore more videos
+                        {t('livestream.gobacktoexplore')}
                       </Typography>
                       <Button
                         variant="contained"
@@ -70,7 +72,7 @@ const LiveStreaming = ({posts}: any) => {
                           },
                         }}
                       >
-                        Go back
+                        {t('livestream.goback')}
                       </Button>
                     </Box>
       ) : (
@@ -102,7 +104,7 @@ const LiveStreaming = ({posts}: any) => {
         }}
       >
         <span   className='w-9 rounded-sm text-sm ml-3' style={{ background: 'linear-gradient(113.02deg, #FF1764 0%, #ED3495 94.15%)'}}>
-            Live
+            {t('livestream.live')}
         </span>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           {currentVideo?.streamTitle}
@@ -110,7 +112,7 @@ const LiveStreaming = ({posts}: any) => {
         <Typography variant="subtitle2" color="green">
           {currentVideo?.owner?.name}
         </Typography>
-        <Typography variant="caption">{currentVideo?.consumers?.length} watching</Typography>
+        <Typography variant="caption">{currentVideo?.consumers?.length} {t('livestream.watching')}</Typography>
       </Box>
 
       {/* Center button overlay */}
@@ -143,7 +145,7 @@ const LiveStreaming = ({posts}: any) => {
           <path d="M6.55038 16.1406H8.58115C8.91252 16.1406 9.18115 15.872 9.18115 15.5406V6.24062C9.18115 5.90925 8.91252 5.64062 8.58115 5.64062H6.55038C6.21901 5.64062 5.95038 5.90925 5.95038 6.24062V15.5406C5.95038 15.872 6.21901 16.1406 6.55038 16.1406Z" fill="white"/>
         </svg>
 
-        Click to watch LIVE
+        {t('livestream.clicktowatch')}
       </Button>
       </Link>
 

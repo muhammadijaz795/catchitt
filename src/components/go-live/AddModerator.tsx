@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
+import { useTranslation } from 'react-i18next';
 
 const initialUsers = [
   { id: 1, name: 'Gretchen Schleifer', username: 'Gretcn2', avatar: 'https://randomuser.me/api/portraits/women/1.jpg', isModerator: false },
@@ -30,6 +31,7 @@ type Props = {
 };
 
 export default function AddModerators({ onBack }: Props) {
+  const { t, i18n } = useTranslation();
   const [users, setUsers] = useState(initialUsers);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -64,7 +66,7 @@ export default function AddModerators({ onBack }: Props) {
         <TextField
           fullWidth
           variant="outlined"
-          placeholder="Search accounts"
+          placeholder={t('livestream.search_accounts')}
           size="small"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -107,7 +109,7 @@ export default function AddModerators({ onBack }: Props) {
               }}
               onClick={() => handleToggleModerator(user.id)}
             >
-              {user.isModerator ? 'Remove' : 'Add'}
+              {user.isModerator ? t('livestream.remove') : 'Add'}
             </Button>
           </ListItem>
         ))}

@@ -3,9 +3,11 @@ import { Box, Typography, Button, Avatar, List, ListItem, ListItemText, ListItem
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
 import styles from './golive.module.scss';
+import { useTranslation } from 'react-i18next';
 
 const CoHostWithCreators = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const { t, i18n } = useTranslation();
 
     const suggestedCreators = [
         {
@@ -98,7 +100,7 @@ const CoHostWithCreators = () => {
                             />
                             <div>
                                 <button className={styles.buttonWidth}>
-                                    {creator.isCoHosting ? 'Join' : 'Invite'}
+                                    {creator.isCoHosting ? 'Join' : t('livestream.invite')}
                                 </button>
                             </div>
                         </ListItem>

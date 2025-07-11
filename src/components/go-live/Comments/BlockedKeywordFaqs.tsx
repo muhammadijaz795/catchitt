@@ -11,8 +11,9 @@ import {
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { useTranslation } from 'react-i18next';
 const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { t, i18n } = useTranslation();
   return (
     <Container
       maxWidth="xs"
@@ -44,7 +45,7 @@ const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>        </IconButton>
         <Typography fontWeight="bold" variant="body1">
-          FAQs
+          {t('livestream.faqs')}
         </Typography>
       </Box>
 
@@ -66,7 +67,7 @@ const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
         <Typography pt={2} fontWeight="bold" fontSize="1.1rem" mb={0.5}>
-          How blocked keywords work
+          {t('livestream.how_blocked_keywords_work')}
         </Typography>
         <Typography
           variant="body2"
@@ -74,7 +75,7 @@ const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           textAlign="center"
           maxWidth={280}
         >
-          We’ll block LIVE comments with words, phrases, and emoji you add as keywords.
+          {t('livestream.blocked_keywords_info')}
         </Typography>
       </Box>
 
@@ -84,7 +85,7 @@ const FaqScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           "Upper and lower case keywords",
           "Spaces inside of keywords",
           "Special Characters",
-          "Block similar versions",
+          t('livestream.block_similar_versions'),
         ].map((item, index) => (
           <Accordion
             key={index}

@@ -16,11 +16,13 @@ import {
   ListItemText,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTranslation } from 'react-i18next';
 
 const BlockedKeywords: React.FC<{
   onBack: () => void;
   onSave: (keywords: { keyword: string; blockSimilarVersion: boolean }[]) => void;
 }> = ({ onBack, onSave }) => {
+  const { t, i18n } = useTranslation();
   const [showAddKeyword, setShowAddKeyword] = useState(false);
   const [showFAQ, setShowFAQ] = useState(false);
   const [blockedKeywords, setBlockedKeywords] = useState<
@@ -77,13 +79,13 @@ const BlockedKeywords: React.FC<{
           </svg>
         </IconButton>
         <Typography variant="body1" fontWeight="bold">
-          Blocked keywords
+          {t('livestream.blocked_keywords')}
         </Typography>
         <Button
           onClick={handleSave}
           sx={{ color: "#ff2d55", fontWeight: 600, fontSize: "0.9rem", textTransform: "none" }}
         >
-          Save
+          {t('livestream.save')}
         </Button>
       </Box>
 
@@ -99,10 +101,10 @@ const BlockedKeywords: React.FC<{
       >
         <AddIcon sx={{ fontSize: 50, fontWeight: '400 !important', color: "grey.400", mb: 1 }} />
         <Typography variant="subtitle1" fontWeight="bold">
-          Add keyword
+          {t('livestream.add_keyword')}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxWidth: 280, px: 2 }}>
-          We’ll block LIVE comments with words, phrases, and emoji you add as keywords.
+          {t('livestream.blocked_keywords_info')}
         </Typography>
       </Box>
 
@@ -124,7 +126,7 @@ const BlockedKeywords: React.FC<{
             },
           }}
         >
-          Add keyword
+          {t('livestream.add_keyword')}
         </Button>
       </Box>
       {/* Blocked Keywords List */}
@@ -134,7 +136,7 @@ const BlockedKeywords: React.FC<{
       variant="subtitle2"
       sx={{ color: "gray", fontWeight: 600, mb: 1, textAlign: "left" }}
     >
-      Blocked Keywords
+      {t('livestream.blocked_keywords')}
     </Typography>
 
     <List disablePadding>

@@ -7,9 +7,10 @@ import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import FlipCameraIosOutlinedIcon from '@mui/icons-material/FlipCameraIosOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import thumbnail from '../../assets/thumbnail.png';
-
+import { useTranslation } from 'react-i18next';
 const GoLiveGuest = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const { t, i18n } = useTranslation();
 
     const suggestedCreators = [
         {
@@ -71,7 +72,7 @@ const GoLiveGuest = () => {
                     <PersonOutlineOutlinedIcon style={{fontSize:'60px'}}/>
                     <Typography sx={{ pb: 1 }} variant="h6">No guests requests yet</Typography>
                     <Typography sx={{ pb: 1 }} variant="subtitle1">You can invite friends as guests</Typography>
-                    <button className={styles.inviteButton}>Invite</button>
+                    <button className={styles.inviteButton}>{t('livestream.invite')}</button>
                 </div>
             </Box>
         </Box>

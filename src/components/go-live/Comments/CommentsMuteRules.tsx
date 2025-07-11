@@ -13,7 +13,7 @@ import CommentsMuteRuleHelp from "./CommentsMuteRuleHelp"; // ← Import your FA
 import AddMuteRulesComment from "./AddMuteRules";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useSelector } from 'react-redux';
-
+import { useTranslation } from 'react-i18next';
 
 
 interface CommentsMuteRulesProps {
@@ -23,6 +23,7 @@ interface CommentsMuteRulesProps {
 }
 
 const MuteRules: React.FC<CommentsMuteRulesProps> = ({ onBack, updateSettings, streamId }) => {
+  const { t, i18n } = useTranslation();
   const [showAddMuteRule, setShowAddMuteRule] = useState(false);
   const [showMuteHelp, setShowMuteHelp] = useState(false);
   const [muteRules, setMuteRules] = useState<any[]>([]);
@@ -101,7 +102,7 @@ const [tempRule, setTempRule] = useState<{ comment: string; duration: number }>(
             </svg>
         </IconButton>
         <Typography variant="body1" fontWeight="bold">
-          Mute rules
+          {t('livestream.mute_rules')}
         </Typography>
         {/* <IconButton onClick={() => setShowMuteHelp(true)}>
           <svg width="20" height="21" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -132,10 +133,10 @@ const [tempRule, setTempRule] = useState<{ comment: string; duration: number }>(
         }}
       >
         <Typography variant="subtitle1" fontWeight="bold">
-          No mute rules yet
+          {t('livestream.no_mute_rules')}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxWidth: 280, px: 2 }}>
-          Automatically mute viewers who comment specific words, phrases, or emojis.
+          {t('livestream.auto_mute_description')}
         </Typography>
       </Box>
 
@@ -157,7 +158,7 @@ const [tempRule, setTempRule] = useState<{ comment: string; duration: number }>(
             },
           }}
         >
-          Add mute rule
+          {t('livestream.add_mute_rule')}
         </Button>
       </Box>
         {muteRules.length > 0 ? (
@@ -193,14 +194,14 @@ const [tempRule, setTempRule] = useState<{ comment: string; duration: number }>(
     }}
   >
     <Typography variant="subtitle1" fontWeight="bold">
-      No mute rules yet
+      {t('livestream.no_mute_rules')}
     </Typography>
     <Typography
       variant="body2"
       color="text.secondary"
       sx={{ mt: 1, maxWidth: 280, px: 2 }}
     >
-      Automatically mute viewers who comment specific words, phrases, or emojis.
+      {t('livestream.auto_mute_description')}
     </Typography>
   </Box>
 )}

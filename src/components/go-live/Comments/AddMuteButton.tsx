@@ -2,6 +2,7 @@
 import React from "react";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { useTranslation } from 'react-i18next';
 
 interface AddMuteButtonProps {
   onBack: () => void;
@@ -10,6 +11,7 @@ interface AddMuteButtonProps {
 }
 
 const AddMuteButton: React.FC<AddMuteButtonProps> = ({ onBack, onConfirm, comment }) => {
+  const { t, i18n } = useTranslation();
   return (
     <Container
       maxWidth="xs"
@@ -30,17 +32,17 @@ const AddMuteButton: React.FC<AddMuteButtonProps> = ({ onBack, onConfirm, commen
         <IconButton onClick={onBack} sx={{ position: "absolute", left: 8 }}>
           <ArrowBackIosNewIcon fontSize="small" />
         </IconButton>
-        <Typography fontWeight="bold">Add mute rule</Typography>
+        <Typography fontWeight="bold">{t('livestream.add_mute_rule')}</Typography>
       </Box>
 
       {/* Message */}
       <Box sx={{  p: 1, textAlign: "left" }}>
         <Typography variant="body1" fontSize="0.95rem">
-          This will mute 0 viewers who commented{" "}
+          {t('livestream.mute_summary')}
           <Typography component="span" fontWeight="bold" display="inline">
             "{comment}"
           </Typography>{" "}
-          and anyone who comments it for the rest of the LIVE.
+          {t('livestream.mute_rest_of_live')}
         </Typography>
       </Box>
 
@@ -71,7 +73,7 @@ const AddMuteButton: React.FC<AddMuteButtonProps> = ({ onBack, onConfirm, commen
             },
           }}
         >
-          Cancel
+          {t('livestream.cancel')}
         </Button>
         <Button
           variant="contained"
@@ -88,7 +90,7 @@ const AddMuteButton: React.FC<AddMuteButtonProps> = ({ onBack, onConfirm, commen
           }}
           onClick={onConfirm}
         >
-          Add
+          {t('livestream.add')}
         </Button>
       </Box>
     </Container>

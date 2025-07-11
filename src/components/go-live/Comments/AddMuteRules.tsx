@@ -18,24 +18,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddMuteButton from './AddMuteButton'
 import UnMuteButton from "./UnmuteButton";
+import { useTranslation } from 'react-i18next';
 
-const durations = [
-  "5 seconds",
-  "30 seconds",
-  "1 minute",
-  "5 minute",
-  "Entire LIVE",
-] as const;
 
-type DurationKey = typeof durations[number];
 
-const durationMap: Record<DurationKey, number> = {
-  "5 seconds": 5,
-  "30 seconds": 30,
-  "1 minute": 60,
-  "5 minute": 300,
-  "Entire LIVE": 0
-};
+
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -86,7 +73,31 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
   setShowAddMuteRule,
   updateSettings
 }) => {
-  const [selected, setSelected] = useState<DurationKey>("Entire LIVE");
+  const { t, i18n } = useTranslation();
+const duration5Seconds = t('livestream.duration_5_seconds');
+const durationEntireLive = t('livestream.entire_live');
+const duration30Seconds = t('livestream.duration_30_seconds');
+const duration1Minute = t('livestream.duration_1_minute');
+const duration5Minutes = t('livestream.duration_5_minutes');
+
+const durations = [
+  duration5Seconds,
+  duration30Seconds,
+  duration1Minute,
+  duration5Minutes,
+  durationEntireLive,
+] as const;
+type DurationKey = typeof durations[number];
+
+const durationMap: Record<DurationKey, number> = {
+  [duration5Seconds]: 5,
+  [duration30Seconds]: 30,
+  [duration1Minute]: 60,
+  [duration5Minutes]: 300,
+  [durationEntireLive]: 0,
+};
+
+  const [selected, setSelected] = useState<DurationKey>(t('livestream.entire_live'));
   const [open, setOpen] = useState(false);
   const [showAddMuteButton,setShowAddMuteButton] = useState(false)
   const [comment, setComment] = useState("");
@@ -179,7 +190,7 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
         <Box sx={{cursor: 'pointer'}}>
           {/* onClick={handleSave}  */}
           <Typography color="#ff2d55" onClick={()=> setShowNewAddMuteButton(!showNewAddMuteButton)} fontWeight={600} fontSize="0.9rem" >
-            Save
+            {t('livestream.save')}
           </Typography>
         </Box>
         {/* <Typography  variant="body1" fontWeight="bold">
@@ -191,7 +202,7 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
             {/* Input Label + Info */}
             <Box textAlign={"left"} mt={1}>
                 <Typography fontWeight={600} fontSize="0.9rem">
-                Mute viewers who comment
+                {t('livestream.mute_viewers_who_comment')}
                 </Typography>
             </Box>
 
@@ -220,12 +231,12 @@ const AddMuteRulesComment: React.FC<AddMuteRulesCommentProps> = ({
             </Box>
             <Box my={2} textAlign={'left'}>
               <Typography color='text.secondary' variant="body2">
-                We'll only mute viewers who comment the exact phrase without additional letters or words.
+                {t('livestream.exact_match_only')}
               </Typography>
             </Box>
             <Box textAlign={"left"} mt={1}>
                 <Typography mb={1} fontWeight={600} fontSize="0.9rem">
-                  Mute Duration
+                  {t('livestream.mute_duration')}
                 </Typography>
                  
 

@@ -4,7 +4,7 @@ import { defaultAvatar } from '../../../icons';
 import { Link } from 'react-router-dom';
 import UnfollowPopup from '../components/unfollow-popup';
 import { get, post } from '../../../axios/axiosClient';
-
+import { useTranslation } from 'react-i18next';
  
 const API_KEY = process.env.VITE_API_URL;
 
@@ -15,9 +15,10 @@ const PbulicFollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: 
     popupClose,
     removeCurrentUser
 }) => {
+    const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState(false);
-    const [text, setText] = useState('Remove');
-    const [followBackText, setFollowBackText] = useState('Follow Back');
+    const [text, setText] = useState(t('livestream.remove'));
+    const [followBackText,  setFollowBackText] = useState('Follow Back');
 
     const [unfollowPopup, setUnfollowPopup] = useState(false);
     const [clickedUser, setClickedUser] = useState({});
@@ -138,7 +139,7 @@ const PbulicFollowerUser: React.FC<{ user: any; onRemoveClick: any; popupClose: 
                     user={clickedUser}
                     description={`Seezitt won’t tell ${user?.followed_userID?.name} they were removed from your followers`}
                     heading={`Remove Follower?`}
-                    btnText={'Remove'}
+                    btnText={t('livestream.remove')}
                     IsFollowerTab={true}
                     removeCurrentUser={() => removeCurrentUser1(user)} 
                 />

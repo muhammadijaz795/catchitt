@@ -10,6 +10,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import AboutMeFaqs from './AboutMeFaqs'; // Assuming you have a component for FAQs
+import { useTranslation } from 'react-i18next';
 
 interface AboutMeSettingsProps {
   onBack: () => void;
@@ -51,6 +52,7 @@ interface SettingsPanelProps {
 const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetails }) => {
   const [enabled, setEnabled] = useState(false);
   console.log('profile Details in aboutSettings', profileDetails);
+  const { t, i18n } = useTranslation();
 
   const [showFaqs, setShowFaqs] = useState(false);
   if(showFaqs) {
@@ -68,7 +70,7 @@ const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetail
             <ArrowBackIosNewIcon fontSize="small" />
           </IconButton>
           <Typography variant="h6" fontWeight="500" ml={1}>
-            About me
+            {t('livestream.about_me')}
           </Typography>
          <IconButton onClick={() => setShowFaqs(true)}>
           <HelpOutlineIcon />
@@ -87,7 +89,7 @@ const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetail
       </Box>
 
       <Typography px={2} textAlign={'left'} color="text.secondary" fontSize={14} mb={3}>
-        Add an 'Intro to tell your viewers what your LIVE is about. Viewers will see this when they join your LIVE.
+        {t('livestream.intro_prompt')}
       </Typography>
 
       {/* Preview Card */}
@@ -115,7 +117,7 @@ const AboutMeSettings: React.FC<AboutMeSettingsProps> = ({ onBack, profileDetail
             {profileDetails?.details?.name || ''}
           </Typography>
           <Typography fontSize={14} lineHeight="1.5">
-            {profileDetails?.details?.bio || "Welcome to my LIVE! Leave a comment to interact with me and other viewers. Follow my account if you enjoy today's video!"}
+            {profileDetails?.details?.bio || t('livestream.welcome_message')}
             
           </Typography>
         </Box>

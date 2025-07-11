@@ -14,7 +14,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import BlockedKeywordsFAQs from "../BlockedKeywordsFaqs";
-// const blockedKeywords = ["Damn", "Hell", "Bastard", "Asshole"];
+import { useTranslation } from 'react-i18next';
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   width: 42,
@@ -48,6 +48,7 @@ const AddKeyword: React.FC<{
   onBack: () => void;
   onAddKeyword: (keyword: { keyword: string; blockSimilarVersion: boolean }) => void;
 }> = ({ onBack, onAddKeyword }) => {
+  const { t, i18n } = useTranslation();
   const [blockSimilar, setBlockSimilar] = useState(true);
   const [input, setInput] = useState("");
   const [showBlockKeywordFaqs, setShowBlockKeywordFaqs] = useState(false);
@@ -89,7 +90,7 @@ const AddKeyword: React.FC<{
             </svg>
         </IconButton>
         <Typography  variant="body1" fontWeight="bold">
-          Add keyword
+          {t('livestream.add_keyword')}
         </Typography>
         <Typography
           onClick={() => {
@@ -103,14 +104,14 @@ const AddKeyword: React.FC<{
           fontWeight={600}
           fontSize="0.9rem"
         >
-          Save
+          {t('livestream.save')}
         </Typography>
       </Box>
         <Box px={2}>
             {/* Input Label + Info */}
             <Box textAlign={"left"} mt={1}>
                 <Typography fontWeight={600} fontSize="0.9rem">
-                Add a word, phrase, or emoji{" "}
+                  {t('livestream.add_word_phrase_emoji')}
                 <InfoOutlinedIcon onClick={() => setShowBlockKeywordFaqs(true)}  sx={{ fontSize: 16, verticalAlign: "middle" }} />
                 </Typography>
             </Box>
@@ -118,7 +119,7 @@ const AddKeyword: React.FC<{
             {/* Input Field */}
             <Box mt={1.5}>
                 <TextField
-                placeholder="Keywords can be up to 30 characters"
+                placeholder={t('livestream.keyword_limit')}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 fullWidth
@@ -155,7 +156,7 @@ const AddKeyword: React.FC<{
                 </Typography>
                 <Box>
                     <Typography fontWeight={600} fontSize="0.9rem">
-                    Block similar versions
+                      {t('livestream.block_similar_versions')}
                     </Typography>
                     <Typography
                     color="text.secondary"
@@ -163,8 +164,7 @@ const AddKeyword: React.FC<{
                     mt={0.3}
                     lineHeight={1.4}
                     >
-                    We’ll block comments with similar versions of this keyword. For
-                    example, bad blocks badness and badnesss.
+                    {t('livestream.block_similar_versions_description')}
                     </Typography>
                 </Box>
                 </Box>

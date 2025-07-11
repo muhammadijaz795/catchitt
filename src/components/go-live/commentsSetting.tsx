@@ -19,6 +19,7 @@ import CommentsMuteRules from "./Comments/CommentsMuteRules";
 import MutedAccounts from "./Comments/MutedAccounts";
 import { useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 // Styled switch (same as before)
 const StyledSwitch = styled(Switch)(({ theme }) => ({
@@ -56,6 +57,7 @@ interface CommentsProps {
 }
 
 const Comments: React.FC<CommentsProps> = ({ updateSettings, onBack }) => {
+  const { t, i18n } = useTranslation();
   // Wrap updateSettings to match the expected signature for CommentsMuteRules
   const updateSettingsAsync = async (streamId: string | null, settings: any): Promise<void> => {
     // If streamId is null, you may want to handle it differently
@@ -139,7 +141,7 @@ if (showMutedAccounts) {
             </svg>
         </IconButton>
         <Typography fontWeight="600" variant="body1" sx={{ ml: 1 }}>
-          Comment Settings
+          {t('livestream.comment_settings')}
         </Typography>
       </Box>
 
@@ -148,12 +150,12 @@ if (showMutedAccounts) {
         overflowY: "auto",}}>
         <Box textAlign="left" px={2} pt={2} pb={1}>
           <Typography fontWeight={600} variant="caption" color="text.secondary">
-            Manage comments
+            {t('livestream.manage_comments')}
           </Typography>
         </Box>
 
         <ListItem>
-          <ListItemText primary="Allow comments"  primaryTypographyProps={{ sx: { fontWeight: 600 } }}/>
+          <ListItemText primary={t('livestream.allow_comments')}  primaryTypographyProps={{ sx: { fontWeight: 600 } }}/>
           <ListItemSecondaryAction>
             <StyledSwitch
               edge="end"
@@ -168,7 +170,7 @@ if (showMutedAccounts) {
         </ListItem>
 
         <ListItem button onClick={() => setShowFilterScreen(true)}>
-          <ListItemText primary="Filter comments" secondary="On" primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
+          <ListItemText primary={t('livestream.filter_comments')} secondary="On" primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
           <ListItemSecondaryAction>
             <IconButton edge="end">
               <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
@@ -177,7 +179,7 @@ if (showMutedAccounts) {
         </ListItem>
 
         <ListItem button onClick={() => setShowBlockedKeywords(true)}>
-          <ListItemText primary="Blocked keywords" primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
+          <ListItemText primary={t('livestream.blocked_keywords')} primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
           <ListItemSecondaryAction>
             <IconButton edge="end">
               <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
@@ -195,7 +197,7 @@ if (showMutedAccounts) {
         </ListItem> */}
 
         <ListItem>
-          <ListItemText primary="Show the most sent comment" primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
+          <ListItemText primary={t('livestream.show_most_sent_comment')} primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
           <ListItemSecondaryAction>
             <StyledSwitch
               edge="end"
@@ -211,7 +213,7 @@ if (showMutedAccounts) {
 
         <Box textAlign="left" px={2} pt={3} pb={1}>
           <Typography fontWeight={600} variant="caption" color="text.secondary" >
-            Manage viewers
+            {t('livestream.manage_viewers')}
           </Typography>
         </Box>
 
@@ -225,7 +227,7 @@ if (showMutedAccounts) {
         </ListItem> */}
 
         <ListItem button onClick={() => setShowMutedAccounts(true)}>
-          <ListItemText primary="Blocked Accounts" primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
+          <ListItemText primary={t('livestream.blocked_account')} primaryTypographyProps={{ sx: { fontWeight: 600 } }} />
           <ListItemSecondaryAction>
             <IconButton edge="end">
               <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
@@ -235,8 +237,8 @@ if (showMutedAccounts) {
         <ListItem button onClick={() => setShowMuteRules(true)}>
           <ListItemText
           primaryTypographyProps={{ sx: { fontWeight: 600 } }}
-            primary="Mute rules"
-            secondary="Add rules to mute viewers who comment specific words, phrases, and emojis."
+            primary={t('livestream.mute_rules')}
+            secondary={t('livestream.mute_rules_description')}
           />
           <ListItemSecondaryAction>
             <IconButton edge="end">

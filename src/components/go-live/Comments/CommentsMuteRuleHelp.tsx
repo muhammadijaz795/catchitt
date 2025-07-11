@@ -6,9 +6,9 @@ import {
   Button,
   Container,
 } from "@mui/material";
-
+import { useTranslation } from 'react-i18next';
 const MuteRulesHelp: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  
+  const { t, i18n } = useTranslation();
   return (
     <Container
       maxWidth="xs"
@@ -39,7 +39,7 @@ const MuteRulesHelp: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             </svg>
         </IconButton>
         <Typography variant="body1" fontWeight="bold">
-          Mute rules
+          {t('livestream.mute_rules')}
         </Typography>
       </Box>
 
@@ -54,32 +54,32 @@ const MuteRulesHelp: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         }}
       >
         <Typography variant="subtitle1" fontWeight="bold">
-          Reduce spamming with mute rules
+          {t('livestream.reduce_spam_with_mute')}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxWidth: 280, px: 2 }}>
-          Mute viewers who comment unwanted words,phrases, and emoji.
+          {t('livestream.mute_unwanted_comments')}
         </Typography>
       </Box>
 
         <Box textAlign={'left'} mt={2}>
             <Typography fontWeight="bold" mb={1}>
-                How it works
+                {t('livestream.how_it_works')}
             </Typography>
 
             <Box textAlign={'left'} component="ul" sx={{ pl: 2, mb: 2, display: "flex", flexDirection: 'column', gap: 2 }}>
                 <li >
                 <Typography variant="body2" color="text.secondary">
-                    • Add a word, phrase, or emoji and set a mute duration.
+                    • {t('livestream.mute_rule_instruction')}
                 </Typography>
                 </li>
                 <li>
                 <Typography variant="body2" color="text.secondary">
-                    • Viewers who comment or have previously commented the exact word will be muted.
+                    • {t('livestream.exact_match_rule_description')}
                 </Typography>
                 </li>
                 <li>
                 <Typography variant="body2" color="text.secondary">
-                    • Example: Adding "Boring" will only mute viewers who comment Boring", not "You're boring" or "Boringggg."
+                    • {t('livestream.example_boring_rule')}
                 </Typography>
                 </li>
             </Box>
@@ -102,7 +102,7 @@ const MuteRulesHelp: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           }}
           onClick={onBack} 
         >
-          Got it
+          {t('livestream.got_it')}
         </Button>
       </Box>
     </Container>

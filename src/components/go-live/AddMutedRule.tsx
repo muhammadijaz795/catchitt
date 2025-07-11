@@ -6,12 +6,14 @@ import {
     Paper,
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useTranslation } from 'react-i18next';
 
 interface AddMutedRule {
     onBack: () => void;
 }
 
 const AddMutedRule: React.FC<AddMutedRule> = ({ onBack }) => {
+     const { t, i18n } = useTranslation();
     return (
         <Box
             sx={{
@@ -47,7 +49,7 @@ const AddMutedRule: React.FC<AddMutedRule> = ({ onBack }) => {
                         <ArrowBackIosNewIcon fontSize="small" />
                     </IconButton>
                     <Typography variant="body1" fontWeight="600" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                        Add mute rule
+                        {t('livestream.add_mute_rule')}
                     </Typography>
                     {/* Spacer for alignment */}
                     <Box sx={{ width: 40 }} />
@@ -62,7 +64,7 @@ const AddMutedRule: React.FC<AddMutedRule> = ({ onBack }) => {
                 }}
             >
                 <Typography variant="body2" color="#111111" mb={1}>
-                  This will mute O viewers who commented <strong>"Test"</strong> and anyone who comments it for the rest of the LIVE.
+                  This will mute O viewers who commented <strong>"Test"</strong> {t('livestream.mute_rest_of_live')}.
                 </Typography>
             </Box>
             <Box
@@ -91,7 +93,7 @@ const AddMutedRule: React.FC<AddMutedRule> = ({ onBack }) => {
                         },
                     }}
                 >
-                    Cancel
+                    {t('livestream.cancel')}
                 </Button>
                 <Button
                     variant="contained"
@@ -110,7 +112,7 @@ const AddMutedRule: React.FC<AddMutedRule> = ({ onBack }) => {
                         },
                     }}
                 >
-                    Add
+                    {t('livestream.add')}
                 </Button>
             </Box>
         </Box>

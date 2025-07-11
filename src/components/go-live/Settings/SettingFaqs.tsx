@@ -6,12 +6,14 @@ import {
   Divider
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useTranslation } from 'react-i18next';
 
 interface FAQsProps {
   onBack: () => void;
 }
 
 const FAQs: React.FC<FAQsProps> = ({ onBack }) => {
+  const { t, i18n } = useTranslation();
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto', px: 2, py: 2 }}>
       {/* Header */}
@@ -22,7 +24,7 @@ const FAQs: React.FC<FAQsProps> = ({ onBack }) => {
                     </svg> 
         </IconButton>
         <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center', ml: -4 }}>
-          FAQs
+          {t('livestream.faqs')}
         </Typography>
       </Box>
 

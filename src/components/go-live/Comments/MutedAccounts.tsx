@@ -17,8 +17,10 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
 import UnMuteButton from "./UnmuteButton";
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function MutedAccounts({ customProps, onBack }: { customProps: any, onBack: () => void }) {
+  const { t, i18n } = useTranslation();
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -72,7 +74,7 @@ export default function MutedAccounts({ customProps, onBack }: { customProps: an
                           <path d="M7.69141 1.25L1.69141 7.25L7.69141 13.25" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>        </IconButton>
               <Typography fontWeight="bold" variant="body1">
-                Muted Account
+                {t('livestream.muted_account')}
               </Typography>
       </Box>
 
@@ -91,7 +93,7 @@ export default function MutedAccounts({ customProps, onBack }: { customProps: an
             <SearchIcon sx={{ color: 'text.disabled', fontSize: 20, mr: 1 }} />
             <input
                 type="text"
-                placeholder="Search accounts"
+                placeholder={t('livestream.search_accounts')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
@@ -107,7 +109,7 @@ export default function MutedAccounts({ customProps, onBack }: { customProps: an
 
 
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          These accounts are muted for the rest of the LIVE
+          {t('livestream.muted_account_description')}
         </Typography>
 
         <List>
@@ -184,10 +186,10 @@ export default function MutedAccounts({ customProps, onBack }: { customProps: an
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold">
-                No mute accounts
+                {t('livestream.no_muted_accounts')}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxWidth: 280, px: 2 }}>
-                Edit this list by tapping "Manage" on a viewer's personal card
+                {t('livestream.edit_muted_list_tip')}
               </Typography>
             </Box>
       )}

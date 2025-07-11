@@ -18,7 +18,7 @@ const NoFilteredComments: React.FC = () => {
         No filtered comments yet
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={3}>
-        Community-flagged comments will appear here
+        {t('livestream.community_flagged_apear')}
       </Typography>
 
       <Button

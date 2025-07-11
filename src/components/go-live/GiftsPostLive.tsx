@@ -33,6 +33,7 @@ import AboutMe from './AboutSettings';
 
 
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -73,7 +74,17 @@ type GiftItem = {
   value?: boolean;
 };
 
-const GiftsData: GiftItem[] = [
+
+
+    
+
+    
+
+const GiftsPanel = ({customProps}: {customProps: any}) => {
+
+  const { t, i18n } = useTranslation();
+
+  const GiftsData: GiftItem[] = [
   // {
   //   title: 'Live Gifts',
   //   rightdescription: 'New Gift series',
@@ -112,11 +123,11 @@ const GiftsData: GiftItem[] = [
   //   id: 'pause-live', // Added ID
   // },
   {
-    title: 'Settings',
+    title: t('livestream.settings'),
     description: '', // Keep description empty if not used for this item
     id: 'settings', // This is the ID for the SettingsPanel
     type: 'link',
-    image: <img src={SettingsLive} alt="Settings" style={{ width: 24, height: 24 }} />,
+    image: <img src={SettingsLive} alt={t('livestream.settings')} style={{ width: 24, height: 24 }} />,
   },
   // {
   //   title: 'Comments',
@@ -126,10 +137,10 @@ const GiftsData: GiftItem[] = [
   //   image: <img src={CommentsLive} alt="Comments" style={{ width: 24, height: 24 }} />,
   // },
   {
-    title: 'About Me',
+    title: t('livestream.about_me'),
     description: '',
     type: 'link',
-    image: <img src={AboutLive} alt="About Me" style={{ width: 24, height: 24 }} />,
+    image: <img src={AboutLive} alt={t('livestream.about_me')} style={{ width: 24, height: 24 }} />,
     id: 'about-me', // Added ID
   },
   // {
@@ -159,12 +170,6 @@ const GiftsData: GiftItem[] = [
   //   id: 'help-report', // Added ID
   // },
 ];
-
-    
-
-    
-
-const GiftsPanel = ({customProps}: {customProps: any}) => {
 
   const [profileDetails, setProfileDetails] = useState<any>({
       details: [],

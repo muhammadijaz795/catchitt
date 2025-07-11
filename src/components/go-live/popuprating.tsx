@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface RankingSettingsModalProps {
   open: boolean;
@@ -21,6 +22,7 @@ interface RankingSettingsModalProps {
   isShowRanking: boolean;
 }
 export default function RankingSettingsModal({ open, onClose, rankingClick, isShowRanking }: RankingSettingsModalProps) {
+  const { t, i18n } = useTranslation();
   const [value, setValue] = useState(isShowRanking ? 'show' : 'hide');
   const API_KEY = process.env.VITE_API_URL;
   const token = localStorage.getItem('token');
@@ -60,7 +62,7 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
       <DialogTitle
         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1, borderBottom: '1px solid #ccc', mb: 2 }}
       >
-        <Typography fontSize={20} color={'#000'} variant='subtitle1' fontWeight="bold">Ranking settings</Typography>
+        <Typography fontSize={20} color={'#000'} variant='subtitle1' fontWeight="bold">{t('livestream.ranking_settings')}</Typography>
         <IconButton onClick={onClose} size="small">
           <CloseIcon />
         </IconButton>
@@ -69,7 +71,7 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
       {/* Content */}
       <DialogContent sx={{ pt: 0 }}>
         <Typography sx={{ mb: 2 }}>
-          Show your username, gifting, and watching info in Top Viewers list
+          {t('livestream.ranking_description')}
         </Typography>
         <RadioGroup
           value={value}
@@ -78,12 +80,12 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
           <FormControlLabel
             value="show"
             control={<Radio color="error" />}
-            label="Show"
+            label={t('livestream.show')}
           />
           <FormControlLabel
             value="hide"
             control={<Radio />}
-            label="Hide"
+            label={t('livestream.hide')}
           />
         </RadioGroup>
       </DialogContent>
@@ -92,10 +94,10 @@ export default function RankingSettingsModal({ open, onClose, rankingClick, isSh
       <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #ccc' }}>
         <Button onClick={onClose} variant="outlined"  color="inherit" sx={{           color: themeColor === 'dark' ? '#fff' : '#000',
  textTransform: 'capitalize', px: 3, borderColor: '#ccc' }}>
-          Cancel
+          {t('livestream.cancel')}
         </Button>
         <Button variant="contained" onClick={() => { onClose(); rankingClickInternal(); }}   sx={{px:4, backgroundColor: '#F9184C', textTransform: 'capitalize' }}>
-          Save
+          {t('livestream.save')}
         </Button>
       </DialogActions>
     </Dialog>
