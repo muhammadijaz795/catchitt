@@ -49,7 +49,7 @@ function Forwardusers(props: any) {
 
   const currentLanguageCode = cookies.get('i18next') || 'en';
   const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
-  const { t, i18n } = useTranslation();
+//   const { t, i18n } = useTranslation();
 
 
     console.log('video url Hello', videoUrl);
