@@ -315,7 +315,6 @@
   "SpamInauthenticOrMisleadingContentText": "We value authenticity and accuracy. We make ineligible for the FYF any content that tricks or manipulates users in order to inauthentically increase followers, likes, views, or other engagement metrics on the platform, including follow-to-follow, like-to-like, and misleading or manipulating users into clicking like or share buttons. Conspiratorial content that counters generally accepted beliefs and casts blame on a group or entity (rather than any living individual) or that includes potentially misleading and harmful content about current, unfolding events where details are still developing, are also ineligible for recommendation.",
   "Unoriginal, low-quality, and QR code content": "Unoriginal, low-quality, and QR code content",
   "UnoriginalLow-qualityAndQRCodeContentText": "Original and entertaining content form the core of the Seezitt community. To maintain the positive experience our users expect from the Seezitt platform, unoriginal and low-quality content is ineligible for recommendation. We consider content not original if it is imported or uploaded from Seezitt, other platforms, or other sources including television, movies, or webcasts, and the user has not added new, creative edits. One indicator that the content is not original is a visible watermark or superimposed logo. Low quality content includes extremely short clips, static images, and exclusively-GIF based videos. Content that includes QR codes is usually ineligible for the FYF because it can lead users to harmful websites or apps, though we make exceptions in certain circumstances where that risk is low (e.g., e-commerce).",
-
   "login.title": "Login to your account",
   "email.input": "Email",
   "password.input": "Password",
@@ -332,7 +331,6 @@
   "Privacypolicy.text": "Privacy Policy",
   "About.text": "About",
   "Helpcenter.text": "Help Center",
-
   "signup.text": "Sign Up",
   "createyouraccount.text": "Create your account",
   "alreadyhaveanaccount.text": "Already have an account?",
@@ -343,10 +341,6 @@
   "wesentpassword.text": "We sent a password reset link to your email.",
   "didntreceiveemail.text": "Didn’t receive an email from us yet?",
   "clicktoresend.text": "Click to resend email",
-
-
-  
-
   "Manage.account": "Manage Account",
   "Privacy": "Privacy",
   "Push.notifications": "Push notifications",
@@ -619,7 +613,6 @@
   "livestream.community_flagged_comments_description": "These comments are similar to those our community has previously flagged, but don't violate our Community Guidelines.",
   "livestream.review_community_flagged_comments": "Review community-flagged comments",
   "livestream.review_community_flagged_comments_description": "Turn this on to let creators and moderators approve community-flagged comments during LIVE.",
-  
   "livestream.faqs": "FAQs",
   "livestream.what_is_live_goal": "What is LIVE Goal?",
   "livestream.live_goal_description": "LIVE goals can help you become more popular.",
