@@ -51,6 +51,7 @@ import volumeMute from './svg-components/volume-mute.svg';
 import volumeUnmute from './svg-components/volume-unmute.svg';
 import optionsMenuHorizontal from './svg-components/options-menu-horizontal.svg';
 import fullScreen from './svg-components/fullscreen.svg';
+import { useTranslation } from 'react-i18next';
 
 // css
 import styles from './video-page.module.scss';
@@ -109,6 +110,7 @@ const VideoPage = () => {
     const [isMentioning, setIsMentioning] = useState(false);
     const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
     const [isFetchingUsers, setIsFetchingUsers] = useState(false);
+    const { t, i18n } = useTranslation();
 
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
@@ -1694,7 +1696,7 @@ const VideoPage = () => {
                         endMessage={
                             <div className="flex flex-row justify-center items-center mt-3">
                                 <p className="font-bold text-xl">
-                                    {videoComments?.totalItems === 0 && 'Be the first to comment'}
+                                    {videoComments?.totalItems === 0 && t('comments.firstComment')}
                                 </p>
                             </div>
                         }

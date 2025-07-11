@@ -49,11 +49,12 @@ import { useUpdateEffect } from 'react-use';
 import CustomContextMenu from '../../homePage/components/CustomContextMenu';
 import MORE_MENU_HOME from '../../../shared/Menu/more';
 import { EmojiObjects } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 // import PopupForDeleteMedia from './popupForDeleteMedia';
 import { useAuthStore } from '../../../store/authStore';
 import i18next from 'i18next';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import cookies from 'js-cookie';
 
 
@@ -233,13 +234,13 @@ export default function PopupForVideoPlayer({
                 });
         
                 if (!response.ok) {
-                    throw new Error('Failed to fetch video');
+                    throw new Error(t('Failedtofetchvideo.text'));
                 }
                 const blob = await response.blob();
                 // Ensure the response is a valid video blob
                 const contentType = response.headers.get('Content-Type');
                 if (!contentType || !contentType.includes('video')) {
-                    throw new Error('The file is not a valid video');
+                    throw new Error(t('Thefileisnotavalidvideo.text'));
                 }
         
                 // Create a URL for the blob
@@ -423,7 +424,7 @@ export default function PopupForVideoPlayer({
 
     const copyEmbedCodeHandler = () => {
         navigator.clipboard.writeText(embedCode).then(() => {
-            showToastSuccess('Embed Code Copied.');
+            showToastSuccess(t('embedcodecopy.text'));
         });
     };
 
@@ -586,7 +587,7 @@ export default function PopupForVideoPlayer({
                 );
                 await addCommentResponse.json();
                 setCommentReply('');
-                showToastSuccess('Comment reply posted');
+                showToastSuccess(t('commentreplyposted.text'));
                 fetchMediaById(info?.mediaId);
                 setIsReplyToCommentClicked(false);
                 setCommentEmojiIndex(-1);
@@ -797,7 +798,7 @@ export default function PopupForVideoPlayer({
             );
             const data = await addCommentResponse.json();
             setComment('');
-            showToastSuccess('Comment posted');
+            showToastSuccess(t('Commentposted.text'));
             // fetchMediaById(info?.mediaId);
             setAddCommentLoading(false);
             // setVideoComments((prevComments: []) => [data?.data, ...prevComments]);
@@ -826,7 +827,7 @@ export default function PopupForVideoPlayer({
 
         if(balance == 0)
         {
-            showToastError('Do not have enough balance.');
+            showToastError(t('Donothaveenoughbalance.text'));
             return;
         }
 
@@ -839,7 +840,7 @@ export default function PopupForVideoPlayer({
             (response) =>
                 {
                     setComment('');
-                    showToastSuccess('Gift sent');
+                    showToastSuccess(t('giftsent.text'));
                     setAddCommentLoading(false);
                     paginateComments(true);
                     setCommentEmojiIndex(-1);
@@ -849,7 +850,7 @@ export default function PopupForVideoPlayer({
     };
 
     const handleFollowClick = async () => {
-        if (!userId) toast.error('Try again later');
+        if (!userId) toast.error(t('Tryagainlater.text'));
         setFollowLoading(true); // Set loading state before API call
         const response = await fetch(`${API_KEY}/profile/follow/${userId}/`, {
             method: 'POST',
@@ -2021,9 +2022,9 @@ export default function PopupForVideoPlayer({
                                                                         className="flex flex-row items-center gap-2 text-left hover:underline decoration-[#16182380] cursor-pointer mt-[0.688rem]"
                                                                     >
                                                                         <p className="text-[#FFFFFF80] font-medium text-sm">
-                                                                            View{' '}
+                                                                             {t('View')}{' '}
                                                                             {comment?.replies?.length}{' '}
-                                                                            replies
+                                                                            {t('replies.text')}
                                                                         </p>
                                                                         <img
                                                                             className="w-2.5 h-2.5 object-contain cursor-pointer"

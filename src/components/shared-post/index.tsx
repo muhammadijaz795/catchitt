@@ -43,6 +43,7 @@ import PopupForReport from '../profile/popups/PopupForReport';
 import Forwardusers from '../../shared/popups/shareTo/Forwardusers';
 import { defaultAvatar, linkedInShare, twitterShare } from '../../icons';
 import { isValidDocId } from '../../utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 
 export default function PostPage() {
@@ -52,6 +53,7 @@ export default function PostPage() {
     const API_KEY = process.env.VITE_API_URL;
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [info, setInfo] = useState<any>(null);
@@ -955,7 +957,7 @@ export default function PostPage() {
                                 endMessage={
                                     <div className="flex flex-row justify-center items-center mt-3">
                                         <p className="text-white font-normal text-sm">
-                                            {videoComments?.totalItems === 0 ? 'Be the first to comment' : 'No more comments'}
+                                            {videoComments?.totalItems === 0 ? t('comments.firstComment') : t('comments.noMoreComments')}
                                         </p>
                                     </div>
                                 }

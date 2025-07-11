@@ -46,6 +46,7 @@ import { copyLinkHandler, facebookShareHandler, getCaretCoordinates, searchUserT
 import HashtagText from '../../../shared/hashTag/HashtagText';
 import PopupForPrivacySettings from './popupForPrivacySettings';
 import { useUpdateEffect } from 'react-use';
+import { useTranslation } from 'react-i18next';
 // import PopupForDeleteMedia from './popupForDeleteMedia';
 
 interface CommentsComponentProps {
@@ -140,6 +141,7 @@ export default function CommentsComponent({
     const [privacyPrivilege, setPrivacyPrivilege] = useState<any>(null);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [isFetchingUsers, setIsFetchingUsers] = useState(false);
+    const { t, i18n } = useTranslation();
 
     const previewConfig = {
         defaultEmoji: "1f60a", // Default emoji if necessary
@@ -917,7 +919,7 @@ export default function CommentsComponent({
                                         endMessage={
                                             <div className="flex flex-row justify-center items-center mt-3">
                                                 <p className="text-black font-normal text-sm">
-                                                    {videoComments?.totalItems === 0 ? 'Be the first to comment' : 'No more comments'}
+                                                    {videoComments?.totalItems === 0 ? t('comments.firstComment') : t('comments.noMoreComments')}
                                                 </p>
                                             </div>
                                         }

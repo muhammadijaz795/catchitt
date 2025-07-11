@@ -2,10 +2,12 @@ import { ClickAwayListener, Modal } from '@mui/material'
 import style from './getApp.module.scss'
 import { useState, useEffect } from 'react'
 import {seezitt_qr,  google_play_Store, apple_play_store } from '../../icons'
+import { useTranslation } from 'react-i18next';
 export default function PopupForGetApp({ openAppPopup, closeAppPopup, info }: any) {
     const [popupH, setPopupH] = useState<any>()
     const [darkTheme, setdarkTheme] = useState('');
     const [lightDarkTheme, setlightDarkTheme] = useState('');
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         var themeColor = window.localStorage.getItem('theme');
@@ -23,7 +25,7 @@ export default function PopupForGetApp({ openAppPopup, closeAppPopup, info }: an
                     closeAppPopup()
                 }}>
                 <div onClick={(e) => e.stopPropagation()} className={`${style.parent}  ${lightDarkTheme}`}>
-                    <p className={style.text}>{"Get the Seezitt app"}</p>
+                    <p className={style.text}>{t('GettheSeezittapp.text')}</p>
                     {/* <hr/> */}
                     {/* <div>
                      <center>
@@ -33,7 +35,7 @@ export default function PopupForGetApp({ openAppPopup, closeAppPopup, info }: an
                     <div className={style.DivMainContentContainer}>
                         <center>
                             <div className={style.DivMainQRContentContainer}>
-                                <p className={style.SubTitle}>Scan QR code to download Seezitt</p>
+                                <p className={style.SubTitle}>{t('ScanQRcodetodownloadSeezitt.text')}</p>
                                 <div className={style.DivOfQRContainer}>
                     
                                     <div className="DivOfQRCodeWrapper">
@@ -42,7 +44,7 @@ export default function PopupForGetApp({ openAppPopup, closeAppPopup, info }: an
                                 </div>
                             </div>
                             <div className={style.DivOfDownloadLContainer}>
-                                <p className={style.SubTitle}>Download from app stores</p>
+                                <p className={style.SubTitle}>{t('Downloadfromappstores.text')}</p>
                                 <div className={style.DivOfDownloadContainer}>
                 
                                     <a href="https://apps.apple.com/us/app/seezitt/id6444735823" target="_blank"> 

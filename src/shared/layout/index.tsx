@@ -8,6 +8,7 @@ import Navbar from '../navbar';
 import BlockPopup from '../popups/BlockPopup';
 import style from './style.module.scss';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { e } from 'mathjs';
 import { useLocation } from 'react-router-dom';
 
@@ -38,6 +39,7 @@ function Layout(props: any) {
     const path = location.pathname.toLowerCase();
     const isSettingsRouteAccount = !path.includes('settings') && !path.includes('settings/account');
     console.log('isSettingsRouteAccount', isSettingsRouteAccount);
+    const { t, i18n } = useTranslation();
     if(!isSettingsRouteAccount){
         isSettingsRoute = false;
     }
@@ -182,7 +184,7 @@ function Layout(props: any) {
                                     paddingLeft: '1.5rem',
                                 }}
                             >
-                                🎉 Copied successfully
+                                {t('Copiedsuccessfully.text')}
                             </p>
                         </div>
                     </div>
@@ -209,7 +211,7 @@ function Layout(props: any) {
                                 className={style.GetAppButtonGetAppText}
                                 onClick={showAppPopup}
                             >
-                                Get app
+                                {t('Getapp.text')}
                             </button>
                         )}
                         <div className={style.GetAppDivExpandContainer}>
@@ -245,7 +247,7 @@ function Layout(props: any) {
                                             d="M8 7C8 4.23858 10.2386 2 13 2H35C37.7614 2 40 4.23858 40 7V41C40 43.7614 37.7614 46 35 46H13C10.2386 46 8 43.7614 8 41V7ZM13 6C12.4477 6 12 6.44772 12 7V41C12 41.5523 12.4477 42 13 42H35C35.5523 42 36 41.5523 36 41V7C36 6.44772 35.5523 6 35 6H13ZM18 10C18 9.44772 18.4477 9 19 9H29C29.5523 9 30 9.44772 30 10V12C30 12.5523 29.5523 13 29 13H19C18.4477 13 18 12.5523 18 12V10ZM24 39C25.6569 39 27 37.6569 27 36C27 34.3431 25.6569 33 24 33C22.3431 33 21 34.3431 21 36C21 37.6569 22.3431 39 24 39Z"
                                         ></path>
                                     </svg>
-                                    <span className={style.GetAppSpanText}>Get Seezitt App</span>
+                                    <span className={style.GetAppSpanText}>{t('GetSeezittApp.text')}</span>
                                 </div>
                             </div>
                         </div>

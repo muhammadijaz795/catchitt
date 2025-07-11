@@ -24,6 +24,7 @@ import Gifts from '../discover/popups/gifts';
 import { useSelector } from 'react-redux';
 import { useUpdateEffect } from 'react-use';
 import { logPostStats } from '../../utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 interface User {
     _id: string;
@@ -173,6 +174,7 @@ export const SearchPage = () => {
     const [followedUsersData, setFollowedUsersData] = useState<FollowedUser[]>([]);
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
+    const { t, i18n } = useTranslation();
 
     //Videos Filters and Sort
     const [videosFilter, setVideosFilter] = useState({
@@ -352,7 +354,7 @@ export const SearchPage = () => {
                         className={styles.usersList}
                         style={{ alignItems: 'center', background: 'transparent', height: '200px' }}
                     >
-                        <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                        <h6 style={{ fontSize: '2rem' }}>{t('No results found')}</h6>
                     </div>
                 ) : (
                     <div className={styles.postsList}>
@@ -426,7 +428,7 @@ export const SearchPage = () => {
                         className={styles.usersList}
                         style={{ alignItems: 'center', background: 'transparent', height: '200px' }}
                     >
-                        <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                        <h6 style={{ fontSize: '2rem' }}>{t('No results found')}</h6>
                     </div>
                 ) : (
                     <div className={styles.postsList}>
@@ -488,7 +490,7 @@ export const SearchPage = () => {
                         className={styles.usersList}
                         style={{ alignItems: 'center', background: 'transparent', height: '200px' }}
                     >
-                        <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                        <h6 style={{ fontSize: '2rem' }}>{t('No results found')}</h6>
                     </div>
                 ) : (
                     <div className={`${styles.usersList} ${darkTheme}`}>
@@ -528,7 +530,7 @@ export const SearchPage = () => {
                                                 <span style={{ fontWeight: '600' }}>
                                                     {user.numberOfFollowers}
                                                 </span>{' '}
-                                                followers
+                                                {t('followers.text')}
                                             </p>
                                         </div>
                                     </div>
@@ -602,7 +604,7 @@ export const SearchPage = () => {
                             className={styles.usersList}
                             style={{ alignItems: 'center', background: 'transparent', height: '200px' }}
                         >
-                            <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                            <h6 style={{ fontSize: '2rem' }}>{t('No results found')}</h6>
                         </div>
                     ) : (
                         <div className={`${styles.usersList} ${darkTheme} h-auto`}>
@@ -642,7 +644,7 @@ export const SearchPage = () => {
                                                     <span style={{ fontWeight: '600' }}>
                                                         {user.numberOfFollowers}
                                                     </span>{' '}
-                                                    followers
+                                                {t('followers.text')}
                                                 </p>
                                             </div>
                                         </div>
@@ -678,7 +680,7 @@ export const SearchPage = () => {
                             className={styles.usersList}
                             style={{ alignItems: 'center', background: 'transparent', height: '200px' }}
                         >
-                            <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                            <h6 style={{ fontSize: '2rem' }}>{t('No results found')}</h6>
                         </div>
                     ) : (
                         <div className={styles.postsList}>
@@ -750,7 +752,7 @@ export const SearchPage = () => {
                                 height: '200px',
                             }}
                         >
-                            <h6 style={{ fontSize: '2rem' }}>No results found</h6>
+                            <h6 style={{ fontSize: '2rem' }}>{t('No results found')}</h6>
                         </div>
                     ) : (
                         <div className={styles.usersList}>
@@ -777,7 +779,7 @@ export const SearchPage = () => {
                                             <h4 className={styles.userNameText}>{hashtag.name}</h4>
                                         </div>
                                         <div className={styles.viewsDiv}>
-                                            <p>{hashtag.views} views</p>
+                                            <p>{hashtag.views} {t('views.text')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -866,9 +868,9 @@ export const SearchPage = () => {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <h6 className={styles.filterModalTitle}>Filter</h6>
+                        <h6 className={styles.filterModalTitle}>{t('filter.text')}</h6>
                         <div className={styles.filtersFrame}>
-                            <h6 className={styles.filtersFrameTitle1}>Sort by</h6>
+                            <h6 className={styles.filtersFrameTitle1}>{t('Sortby.text')}</h6>
                         </div>
                         <FormGroup>
                             <FormControlLabel
@@ -898,7 +900,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Relevance"
+                                label={t('relevance.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -935,7 +937,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Like count"
+                                label={t('likecount.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -949,7 +951,7 @@ export const SearchPage = () => {
                                 }}
                             />
                         </FormGroup>
-                        <h6 className={styles.filtersFrameTitle1}>Video category</h6>
+                        <h6 className={styles.filtersFrameTitle1}>{t('Videocategory.text')}</h6>
                         <FormGroup>
                             <FormControlLabel
                                 control={
@@ -969,7 +971,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="All"
+                                label={t('All.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -998,7 +1000,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Liked"
+                                label={t('Liked.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1027,7 +1029,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="People you follow"
+                                label={t('Peopleyoufollow.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1047,10 +1049,10 @@ export const SearchPage = () => {
                                 style={{ color: '#FFF' }}
                                 className={styles.applyBtn}
                             >
-                                Apply
+                                {t('Apply.text')}
                             </button>
                             <button onClick={handleClose} className={styles.cancelBtn}>
-                                Cancel
+                                {t('Cancel.text')}
                             </button>
                         </Box>
                     </Box>
@@ -1069,9 +1071,9 @@ export const SearchPage = () => {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <h6 className={styles.filterModalTitle}>Filter</h6>
+                        <h6 className={styles.filterModalTitle}>{t('filter.text')}</h6>
                         <div className={styles.filtersFrame}>
-                            <h6 className={styles.filtersFrameTitle1}>Sort by</h6>
+                            <h6 className={styles.filtersFrameTitle1}>{t('Sortby.text')}</h6>
                         </div>
                         <FormGroup>
                             <FormControlLabel
@@ -1093,7 +1095,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="No limit"
+                                label={t('Nolimit.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1119,7 +1121,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="0 to 1K"
+                                label={t('0to1K.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1145,7 +1147,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="1K to 10K"
+                                label={t('1Kto10K.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1171,7 +1173,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="10K to 100K"
+                                label={t('10Kto100K.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1197,7 +1199,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="More than 100K"
+                                label={t('Morethan100K.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1214,7 +1216,7 @@ export const SearchPage = () => {
                         </FormGroup>
                         {/* Add filtering options here */}
                         <h6 style={{ marginTop: '1rem' }} className={styles.filtersFrameTitle1}>
-                            Types of profiles
+                            {t('Typesofprofiles.text')}
                         </h6>
                         <FormGroup>
                             <FormControlLabel
@@ -1233,7 +1235,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="All"
+                                label={t('All.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1263,7 +1265,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Verified"
+                                label={t('Verified.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1292,7 +1294,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Friends and followings"
+                                label={t('Friendsandfollowings.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1313,10 +1315,10 @@ export const SearchPage = () => {
                                 onClick={handleApplyClick}
                                 className={styles.applyBtn}
                             >
-                                Apply
+                            {t('Apply.text')}
                             </button>
                             <button onClick={handleClose} className={styles.cancelBtn}>
-                                Cancel
+                            {t('Cancel.text')}
                             </button>
                         </Box>
                     </Box>
@@ -1345,9 +1347,9 @@ export const SearchPage = () => {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <h6 className={styles.filterModalTitle}>Filter</h6>
+                        <h6 className={styles.filterModalTitle}>{t('filter.text')}</h6>
                         <div className={styles.filtersFrame}>
-                            <h6 className={styles.filtersFrameTitle1}>Filter By</h6>
+                            <h6 className={styles.filtersFrameTitle1}>{t('FilterBy.text')}</h6>
                         </div>
                         <FormGroup>
                             <FormControlLabel
@@ -1362,7 +1364,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="All"
+                                label={t('All.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1391,7 +1393,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Title"
+                                label={t('Title.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1420,7 +1422,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Creators"
+                                label={t('Creators.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1436,7 +1438,7 @@ export const SearchPage = () => {
                             />
                         </FormGroup>
                         {/* Add filtering options here */}
-                        <h6 className={styles.filtersFrameTitle1}>Sort By</h6>
+                        <h6 className={styles.filtersFrameTitle1}>{t('Sortby.text')}</h6>
                         <FormGroup>
                             <FormControlLabel
                                 control={
@@ -1454,7 +1456,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Relevance"
+                                label={t('relevance.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1480,7 +1482,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Most used"
+                                label={t('Mostused.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1509,7 +1511,7 @@ export const SearchPage = () => {
                                         }}
                                     />
                                 }
-                                label="Most recent"
+                                label={t('Mostrecent.text')}
                                 sx={{
                                     padding: '24px 0 24px 0',
                                     '& .MuiTypography-root': {
@@ -1530,10 +1532,10 @@ export const SearchPage = () => {
                                 onClick={handleApplyClick}
                                 className={styles.applyBtn}
                             >
-                                Apply
+                            {t('Apply.text')}
                             </button>
                             <button onClick={handleClose} className={styles.cancelBtn}>
-                                Cancel
+                            {t('Cancel.text')}
                             </button>
                         </Box>
                     </Box>
@@ -1544,7 +1546,7 @@ export const SearchPage = () => {
 
     const HashtagsModal = useMemo(() => {
         // Add your modal content for 'Hashtags' tab here
-        return <div>Hashtags Modal Content</div>;
+        return <div>{t('HashtagsModalContent.text')}</div>;
     }, [open]);
 
     return (
@@ -1654,7 +1656,7 @@ export const SearchPage = () => {
                                             : styles.searchTab
                                     }
                                 >
-                                    Top
+                                {t('Top.text')}
                                 </Tab>
                                 <Tab
                                     onClick={() => handleTabChange('Users')}
@@ -1664,7 +1666,7 @@ export const SearchPage = () => {
                                             : styles.searchTab
                                     }
                                 >
-                                    Users
+                                {t('Users.text')}
                                 </Tab>
                                 <Tab
                                     onClick={() => handleTabChange('Videos')}
@@ -1674,7 +1676,7 @@ export const SearchPage = () => {
                                             : styles.searchTab
                                     }
                                 >
-                                    Videos
+                                {t('Videos.text')}
                                 </Tab>
                                
                                 {/* <Tab
